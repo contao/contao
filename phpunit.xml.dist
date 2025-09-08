@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd" colors="true" defaultTestSuite="unit" bootstrap="vendor/autoload.php" beStrictAboutChangesToGlobalState="true">
-  <coverage>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/11.5/phpunit.xsd"
+        colors="true"
+        defaultTestSuite="unit"
+        bootstrap="vendor/autoload.php"
+        cacheDirectory=".phpunit.cache"
+        beStrictAboutChangesToGlobalState="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
+        displayDetailsOnTestsThatTriggerErrors="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnPhpunitDeprecations="true"
+>
+  <source>
     <include>
       <directory>./calendar-bundle/src</directory>
       <directory>./comments-bundle/src</directory>
@@ -16,11 +29,8 @@
       <directory>./*-bundle/src/Entity</directory>
       <directory>./*-bundle/src/Migration/Version*</directory>
     </exclude>
-  </coverage>
+  </source>
   <php>
-    <ini name="error_reporting" value="-1"/>
-    <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
-    <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0"/>
     <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel"/>
     <env name="DISABLE_HTTP_CACHE" value="1"/>
     <env name="APP_SECRET" value="foobar"/>
@@ -44,32 +54,8 @@
       <exclude>./core-bundle/tests/Functional</exclude>
     </testsuite>
   </testsuites>
-  <listeners>
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-      <arguments>
-        <array>
-          <element key="time-sensitive">
-            <array>
-              <element key="0"><string>Contao\CoreBundle\Command</string></element>
-              <element key="1"><string>Contao\CoreBundle\Controller\ContentElement</string></element>
-              <element key="2"><string>Contao\CoreBundle\Cron\Command</string></element>
-              <element key="3"><string>Contao\CoreBundle\EventListener\DataContainer</string></element>
-              <element key="4"><string>Contao\CoreBundle\Security\Authentication\Provider</string></element>
-              <element key="5"><string>Contao\CoreBundle\Security\Authentication\RememberMe</string></element>
-              <element key="6"><string>Contao\CoreBundle\Tests\Command</string></element>
-              <element key="7"><string>Contao\CoreBundle\Tests\Controller\ContentElement</string></element>
-              <element key="8"><string>Contao\CoreBundle\Tests\Cron</string></element>
-              <element key="9"><string>Contao\CoreBundle\Tests\EventListener\DataContainer</string></element>
-              <element key="10"><string>Contao\CoreBundle\Tests\Security\Authentication\Provider</string></element>
-              <element key="11"><string>Contao\CoreBundle\Tests\Security\Authentication\RememberMe</string></element>
-            </array>
-          </element>
-        </array>
-      </arguments>
-    </listener>
-  </listeners>
   <extensions>
-    <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
-    <extension class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
+    <bootstrap class="Contao\TestCase\ClearCachePhpunitExtension"/>
+    <bootstrap class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
   </extensions>
 </phpunit>

@@ -15,13 +15,12 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Idna;
 use Contao\StringUtil;
 use Contao\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ValidatorTest extends TestCase
 {
-    /**
-     * @dataProvider emailProvider
-     */
+    #[DataProvider('emailProvider')]
     public function testValidatesEmailAddresses(string $email, bool|int $expected): void
     {
         $this->assertSame(

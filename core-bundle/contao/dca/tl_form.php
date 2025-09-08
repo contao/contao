@@ -73,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('sendViaEmail', 'storeValues'),
-		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags;{confirm_legend},confirmation;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
+		'default'                     => '{title_legend},title,alias,jumpTo;{config_legend},ajax,allowTags,storeSession;{confirm_legend},confirmation;{email_legend},sendViaEmail;{store_legend:hide},storeValues;{template_legend:hide},customTpl;{expert_legend:hide},method,novalidate,attributes,formID'
 	),
 
 	// Sub-palettes
@@ -164,7 +164,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'skipEmpty' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -224,10 +223,17 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'allowTags' => array
+		(
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w25'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'storeSession' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',

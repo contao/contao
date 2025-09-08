@@ -1,0 +1,47 @@
+{% trans_default_domain "contao_default" %}
+
+{% set list_attributes = attrs()
+    .set('id', 'ctrl_' ~ id)
+    .set('data-controller', 'contao--row-wizard contao--sortable')
+    .set('data-contao--sortable-handle-value', '.drag-handle')
+    .set('data-contao--row-wizard-target', 'body')
+    .addClass('tl_listwizard')
+%}
+<ul{{ list_attributes }}>
+    {% for value in rows %}
+        {% set item_attributes = attrs()
+            .set('data-contao--row-wizard-target', 'row')
+        %}
+        <li{{ item_attributes }}>
+            {# Drag row #}
+            {% set drag_handle_attributes = attrs()
+                .set('type', 'button')
+                .set('data-action', 'keydown->contao--sortable#move')
+                .addClass('drag-handle')
+            %}
+            <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+            {% set value_attributes = attrs()
+                .set('type', 'text')
+                .set('name', "#{id}[]")
+                .set('value', value|default)
+                .addClass('tl_text')
+            %}
+            <input{{ value_attributes }}>
+
+            {# Controls #}
+            {# Copy row #}
+            {% set copy_button_attributes = attrs()
+                .set('type', 'button')
+                .set('data-action', 'contao--row-wizard#copy contao--scroll-offset#store')
+            %}
+            <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.ow_copy'|trans) }}</button>
+
+            {# Delete row #}
+            {% set delete_button_attributes = attrs()
+                .set('type', 'button')
+                .set('data-action', 'contao--row-wizard#delete contao--scroll-offset#store')
+            %}
+            <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.ow_delete'|trans) }}</button>
+        </li>
+    {% endfor %}
+</ul>

@@ -22,8 +22,8 @@
                 {# Theme selector #}
                 {% if themes|length %}
                     <form id="template-studio--theme-selector" method="post" action="{{ path('_contao_template_studio_select_theme.stream') }}" data-turbo-stream data-contao--template-studio-target="themeSelector">
-                        <label>
-                            <select name="theme" onchange="this.form.requestSubmit()" class="tl_select" data-controller="contao--choices">
+                        <label data-controller="contao--choices">
+                            <select name="theme" onchange="this.form.requestSubmit()" class="tl_select">
                                 <option{{ attrs().set('value', '').set('selected', current_theme is null) }}>{{ 'no_theme_context'|trans }}</option>
                                 {% for slug, name in themes %}
                                     <option{{ attrs().set('value', slug).set('selected', current_theme == slug) }}>{{ name }} [{{ slug}}]</option>
@@ -42,9 +42,8 @@
 
             {# Main editor section with multiple tabs #}
             {% embed "@Contao/backend/component/tabs/_container.html.twig" with {
-                tabs_container_attributes: attrs()
-                    .set('id', 'template-studio--tabs')
-                    .set('data-contao--template-studio-target', 'tabs'),
+                tabs_container_attributes: attrs().set('data-contao--template-studio-target', 'tabs'),
+                id: 'template-studio--tabs',
                 panels_container_id: 'template-studio--tab-panels',
             } %}
                 {% trans_default_domain "contao_template_studio" %}
@@ -67,10 +66,6 @@
 
             {# Info panel #}
             <div id="template-studio--info" data-panel></div>
-
-            {# Overlays #}
-            <div id="template-studio--message"></div>
-            <div id="template-studio--dialog"></div>
         </section>
     </main>
 {% endblock %}

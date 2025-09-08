@@ -18,6 +18,7 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\UserGroupModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Terminal;
@@ -120,9 +121,7 @@ class UserCreateCommandTest extends TestCase
         $this->assertSame(1, $code);
     }
 
-    /**
-     * @dataProvider usernamePasswordProvider
-     */
+    #[DataProvider('usernamePasswordProvider')]
     public function testUpdatesTheDatabaseOnSuccess(string $username, string $name, string $email, string $password): void
     {
         $connection = $this->createMock(Connection::class);

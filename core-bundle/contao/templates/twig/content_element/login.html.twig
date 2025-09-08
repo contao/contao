@@ -1,0 +1,98 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+
+{% set passkeyConfig = {
+    unsupported: 'ERR.passkeysUnsupported'|trans,
+    assertionFailure: 'ERR.passkeyAssertionFailure'|trans,
+    optionsUrl: path('webauthn.controller.security.contao_frontend.request.options'),
+    resultUrl: path('webauthn.controller.security.contao_frontend.request.result'),
+    requestTokenScript: path('contao_frontend_request_token_script'),
+    redirect: redirect|default|raw,
+} %}
+
+{% set attributes = attrs()
+    .addClass(logout|default ? 'logout' : 'login')
+    .set('data-passkey-login', not logout|default)
+    .set('data-passkey-config', passkeyConfig|json_encode, not logout|default)
+    .mergeWith(attributes|default)
+%}
+
+{% block content %}
+    {% set form_attributes = attrs()
+        .set('action', action|default)
+        .set('id', formId)
+        .set('method', 'post')
+    %}
+    <form{{ form_attributes }}>
+        <div class="formbody">
+            {% if message|default %}
+                <p class="error">{{ message }}</p>
+            {% endif %}
+            <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            <input type="hidden" name="_target_path" value="{{ targetPath|default }}">
+            <input type="hidden" name="_always_use_target_path" value="{{ forceTargetPath|default }}">
+            {% if remembered|default %}
+                <input type="hidden" name="username" value="{{ value }}">
+                <input type="hidden" name="autologin" value="{{ autologin|default ? '1' }}">
+            {% endif %}
+            {% if logout|default %}
+                <p class="login_info">{{ 'MSC.loggedInAs'|trans([app.user.userIdentifier]) }}{% if app.user.lastLogin %}<br>{{ 'MSC.lastLogin.1'|trans([app.user.lastLogin|date(contao.datim_format)]) }}{% endif %}</p>
+            {% elseif twoFactorEnabled|default %}
+                <h3>{{ 'MSC.twoFactorAuthentication'|trans }}</h3>
+                <div class="widget widget-text">
+                    <label for="verify">{{ 'MSC.twoFactorVerification'|trans }}</label>
+                    <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>
+                </div>
+                <div class="widget widget-checkbox">
+                    <fieldset class="checkbox_container">
+                        <span><input type="checkbox" name="trusted" id="trusted" value="1" class="tl_checkbox"> <label for="trusted">{{ 'MSC.twoFactorTrustDevice'|trans }}</label></span>
+                    </fieldset>
+                </div>
+            {% else %}
+                {% if remembered|default %}
+                    <p class="login_info">{{ 'MSC.loggedInAs'|trans([app.user.userIdentifier]) }}<br>{{ 'MSC.reauthenticate'|trans }}</p>
+                {% else %}
+                    <div class="widget widget-text">
+                        <label for="username">{{ 'MSC.username'|trans }}</label>
+                        <input type="text" name="username" id="username" class="text" value="{{ value|default }}" autocapitalize="off" autocomplete="username" required>
+                    </div>
+                {% endif %}
+                <div class="widget widget-password">
+                    <label for="password">{{ 'MSC.password.0'|trans }}</label>
+                    <input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>
+                </div>
+                {% if autologin|default and not remembered|default %}
+                    <div class="widget widget-checkbox">
+                        <fieldset class="checkbox_container">
+                          <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin">{{ 'MSC.autologin'|trans }}</label></span>
+                        </fieldset>
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="widget widget-submit">
+                <button type="submit" class="submit">{{ slabel|default('MSC.login'|trans) }}</button>
+                {% if twoFactorEnabled|default %}
+                    <a href="{{ path('contao_frontend_logout') }}">{{ 'MSC.cancelBT'|trans }} ›</a>
+                {% endif %}
+                {% if not logout|default and not twoFactorEnabled|default %}
+                    <button type="button" class="passkey-login" data-passkey-button>{{ 'MSC.passkeyLogin'|trans }}</button>
+                    <p class="error" data-passkey-error></p>
+                {% endif %}
+            </div>
+            {% if pwResetUrl|default %}
+                <div class="password-reset">
+                    <a href="{{ pwResetUrl }}">{{ 'MSC.lostPassword'|trans }}</a>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+{% endblock %}
+
+{% block script %}
+    {% if not as_editor_view and not logout|default %}
+        {% add "passkey_login" to head %}
+            <script src="{{ asset('passkey_login.js', 'contao_core') }}" async></script>
+        {% endadd %}
+    {% endif %}
+{% endblock %}

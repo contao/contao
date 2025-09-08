@@ -209,35 +209,71 @@
         <source>Synchronize the file system and the database</source>
         <target>Синхронизировать файловую систему и базу данных</target>
       </trans-unit>
-      <trans-unit id="tl_files.show">
+      <trans-unit id="tl_files.textTrackLanguage.0">
+        <source>Language</source>
+        <target>Язык</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.1">
+        <source>Please select the language of the file.</source>
+        <target>Выберите язык файла.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.0">
+        <source>Track type</source>
+        <target>Тип трека</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can select the type of text track.</source>
+        <target>Вы можете выбрать тип текстового трека.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.captions">
+        <source>Closed captions</source>
+        <target>Скрытые субтитры</target>
+      </trans-unit>
+      <trans-unit id="tl_files.descriptions">
+        <source>Audio descriptions</source>
+        <target>Аудиодескрипция</target>
+      </trans-unit>
+      <trans-unit id="tl_files.subtitles">
+        <source>Subtitles</source>
+        <target>Субтитры</target>
+      </trans-unit>
+      <trans-unit id="tl_files.chapters">
+        <source>Chapters</source>
+        <target>Главы</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metadata">
+        <source>Metadata</source>
+        <target>Метаданные</target>
+      </trans-unit>
+      <trans-unit id="tl_files.show.1">
         <source>Show the details of file or folder &quot;%s&quot;</source>
         <target>Показать детали файла или каталога &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.cut">
+      <trans-unit id="tl_files.cut.1">
         <source>Move file or folder &quot;%s&quot;</source>
         <target>Переместить файл или каталог &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.copy">
-        <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>Дублировать файл или каталог &quot;%s&quot;</target>
+      <trans-unit id="tl_files.copy.1">
+        <source>Copy file or folder &quot;%s&quot;</source>
+        <target>Копировать файл или каталог &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.edit">
+      <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder &quot;%s&quot;</source>
         <target>Редактировать файл или каталог &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.delete">
+      <trans-unit id="tl_files.delete.1">
         <source>Delete file or folder &quot;%s&quot;</source>
         <target>Удалить файл или каталог &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.drag">
+      <trans-unit id="tl_files.drag.1">
         <source>Drag file or folder &quot;%s&quot;</source>
         <target>Перетащить файл или каталог &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.source">
+      <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Редактировать исходный текст файла &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
+      <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>
         <target>Загрузить файл в каталог &quot;%s&quot;</target>
       </trans-unit>

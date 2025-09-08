@@ -19,6 +19,10 @@ use CmsIg\Seal\EngineInterface;
 use CmsIg\Seal\Reindex\ReindexConfig as SealReindexConfig;
 use CmsIg\Seal\Schema\Index;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
+use Contao\CoreBundle\Job\Job;
+use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Job\Owner;
+use Contao\CoreBundle\Job\Status;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
@@ -54,6 +58,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EngineInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
+            $this->createMock(Jobs::class),
             $webWorker,
             $this->createMock(SealReindexProvider::class),
         );
@@ -66,6 +71,7 @@ class BackendSearchTest extends TestCase
         $reindexConfig = (new ReindexConfig())
             ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']])) // Non-existent document, must be deleted!
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
+            ->withJobId('foobar')
         ;
 
         $reindexProvider = $this->createMock(SealReindexProvider::class);
@@ -77,7 +83,7 @@ class BackendSearchTest extends TestCase
             ->with(
                 [$reindexProvider],
                 $this->callback(
-                    static fn (SealReindexConfig $sealReindexConfig): bool => $reindexConfig->equals(SealUtil::sealReindexConfigToInternalReindexConfig($sealReindexConfig)),
+                    static fn (SealReindexConfig $sealReindexConfig): bool => $reindexConfig->equals(SealUtil::sealReindexConfigToInternalReindexConfig($sealReindexConfig)->withJobId('foobar')),
                 ),
             )
         ;
@@ -88,12 +94,39 @@ class BackendSearchTest extends TestCase
             ->with('contao_backend_search', [], ['foo__bar'])
         ;
 
+        $jobs = $this->createMock(Jobs::class);
+        $jobs
+            ->expects($this->once())
+            ->method('getByUuid')
+            ->with('foobar')
+            ->willReturn(Job::new(BackendSearch::REINDEX_JOB_TYPE, Owner::asSystem()))
+        ;
+
+        $expected = [
+            Status::pending,
+            Status::completed,
+        ];
+
+        $jobs
+            ->expects($this->exactly(2))
+            ->method('persist')
+            ->with($this->callback(
+                static function (Job $job) use (&$expected) {
+                    $status = $job->getStatus();
+                    $pos = array_search($status, $expected, true);
+                    unset($expected[$pos]);
+
+                    return false !== $pos;
+                }))
+        ;
+
         $backendSearch = new BackendSearch(
             [$this->createMock(ProviderInterface::class)],
             $this->createMock(Security::class),
             $engine,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
+            $jobs,
             $this->createMock(WebWorker::class),
             $reindexProvider,
         );
@@ -104,6 +137,7 @@ class BackendSearchTest extends TestCase
     public function testReindexAsync(): void
     {
         $reindexConfig = (new ReindexConfig())
+            ->withRequireJob(true)
             ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
         ;
@@ -116,12 +150,21 @@ class BackendSearchTest extends TestCase
             ->willReturn(new Envelope($this->createMock(ReindexMessage::class)))
         ;
 
+        $jobs = $this->createMock(Jobs::class);
+        $jobs
+            ->expects($this->once())
+            ->method('createJob')
+            ->with(BackendSearch::REINDEX_JOB_TYPE)
+            ->willReturn(Job::new(BackendSearch::REINDEX_JOB_TYPE, Owner::asSystem()))
+        ;
+
         $backendSearch = new BackendSearch(
             [],
             $this->createMock(Security::class),
             $this->createMock(EngineInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
+            $jobs,
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
         );
@@ -183,6 +226,7 @@ class BackendSearchTest extends TestCase
             $engine,
             $eventDispatcher,
             $this->createMock(MessageBusInterface::class),
+            $this->createMock(Jobs::class),
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
         );
@@ -256,6 +300,7 @@ class BackendSearchTest extends TestCase
             $engine,
             $eventDispatcher,
             $messageBus,
+            $this->createMock(Jobs::class),
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
         );
@@ -288,6 +333,7 @@ class BackendSearchTest extends TestCase
             $engine,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
+            $this->createMock(Jobs::class),
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
         );
@@ -316,6 +362,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EngineInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
+            $this->createMock(Jobs::class),
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
         );

@@ -14,12 +14,11 @@ namespace Contao\NewsletterBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\NewsletterBundle\EventListener\NewsletterRecipientsEditButtonsListener;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewsletterRecipientsEditButtonsListenerTest extends TestCase
 {
-    /**
-     * @dataProvider buttonProvider
-     */
+    #[DataProvider('buttonProvider')]
     public function testRemovesSaveNCloseButton(array $buttons, array $expected): void
     {
         $result = (new NewsletterRecipientsEditButtonsListener())($buttons);

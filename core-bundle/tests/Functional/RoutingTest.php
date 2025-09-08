@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RoutingTest extends FunctionalTestCase
 {
-    use ExpectDeprecationTrait;
-
     private static array|null $lastImport = null;
 
     protected function setUp(): void
@@ -32,9 +30,7 @@ class RoutingTest extends FunctionalTestCase
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
     }
 
-    /**
-     * @dataProvider getAliases
-     */
+    #[DataProvider('getAliases')]
     public function testResolvesAliases(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -248,9 +244,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getAliasesWithLocale
-     */
+    #[DataProvider('getAliasesWithLocale')]
     public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -266,7 +260,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement('UPDATE tl_page SET urlPrefix=language')
+            ->executeStatement('UPDATE tl_page SET urlPrefix = language')
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -479,9 +473,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getAliasesWithoutUrlSuffix
-     */
+    #[DataProvider('getAliasesWithoutUrlSuffix')]
     public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -497,7 +489,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlSuffix=''")
+            ->executeStatement("UPDATE tl_page SET urlSuffix = ''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -638,9 +630,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getRootAliases
-     */
+    #[DataProvider('getRootAliases')]
     public function testResolvesTheRootPage(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -727,9 +717,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getRootAliasesWithLocale
-     */
+    #[DataProvider('getRootAliasesWithLocale')]
     public function testResolvesTheRootPageWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -745,7 +733,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")
+            ->executeStatement("UPDATE tl_page SET urlPrefix = language WHERE urlPrefix = ''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -936,9 +924,8 @@ class RoutingTest extends FunctionalTestCase
 
     /**
      * @see https://github.com/contao/contao/issues/6328
-     *
-     * @dataProvider disabledLanguageRedirectsProvider
      */
+    #[DataProvider('disabledLanguageRedirectsProvider')]
     public function testCorrectHandlesDisabledLanguageRedirects(bool $disableLanguageRedirects, bool $indexAlias, string $requestLocale, string $expectedLocation): void
     {
         $request = 'https://example.local/';
@@ -953,19 +940,12 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles(['disable-language-redirect']);
 
+        $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
+        $alias = $indexAlias ? 'index' : 'home';
+
         $connection = self::getContainer()->get('doctrine')->getConnection();
-
-        $connection->executeStatement("
-            UPDATE tl_page
-            SET disableLanguageRedirect = '".($disableLanguageRedirects ? 1 : 0)."'
-            WHERE id = 3
-        ");
-
-        $connection->executeStatement("
-            UPDATE tl_page
-            SET alias = '".($indexAlias ? 'index' : 'home')."'
-            WHERE type = 'regular'
-        ");
+        $connection->executeStatement("UPDATE tl_page SET disableLanguageRedirect = $disableLanguageRedirect WHERE id = 3");
+        $connection->executeStatement("UPDATE tl_page SET alias = '$alias' WHERE type = 'regular'");
 
         $client->request('GET', $request);
         $response = $client->getResponse();
@@ -1099,9 +1079,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('Error 401 Page', $title);
     }
 
-    /**
-     * @dataProvider getUrlPrefixMixProvider
-     */
+    #[DataProvider('getUrlPrefixMixProvider')]
     public function testUrlPrefixMix(string $request, string $acceptLanguage, int $statusCode, string $pageTitle): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -1165,6 +1143,27 @@ class RoutingTest extends FunctionalTestCase
             404,
             'English 404 - English root',
         ];
+    }
+
+    public function testMultidomainWithLanguages(): void
+    {
+        $request = '/de/bar/bar';
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'example.ch';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en_US,en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'multidomain-languages']);
+
+        $crawler = $client->request('GET', "https://example.ch$request");
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Bar -', $title);
     }
 
     private function loadFixtureFiles(array $fileNames): void

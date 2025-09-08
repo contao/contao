@@ -31,14 +31,13 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageModelTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -132,11 +131,7 @@ class PageModelTest extends TestCase
         $this->assertSame('alias', $pageModel->alias);
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider similarAliasProvider
-     */
+    #[DataProvider('similarAliasProvider')]
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
     {
         PageModel::reset();
@@ -145,7 +140,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('execute')
-            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
             ->willReturn(new Result($rootData, ''))
         ;
 
@@ -160,7 +155,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('prepare')
-            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id!=?')
+            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id != ?')
             ->willReturn($aliasStatement)
         ;
 
@@ -302,9 +297,7 @@ class PageModelTest extends TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * @dataProvider layoutInheritanceParentPagesProvider
-     */
+    #[DataProvider('layoutInheritanceParentPagesProvider')]
     public function testInheritingLayoutFromParentsInLoadDetails(array $parents, int $expectedLayout): void
     {
         $page = new PageModel();
@@ -374,13 +367,8 @@ class PageModelTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     *
-     * @runInSeparateProcess
-     *
-     * @dataProvider folderUrlProvider
-     */
+    #[DataProvider('folderUrlProvider')]
+    #[RunInSeparateProcess]
     public function testFolderUrlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
     {
         if (!\defined('TL_MODE')) {
@@ -445,12 +433,9 @@ class PageModelTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -469,12 +454,9 @@ class PageModelTest extends TestCase
         $this->assertSame('/page', $page->getFrontendUrl());
     }
 
-    /**
-     * @group legacy
-     */
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -495,12 +477,9 @@ class PageModelTest extends TestCase
         $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
     }
 
-    /**
-     * @group legacy
-     */
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getAbsoluteUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;

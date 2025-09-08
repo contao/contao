@@ -16,19 +16,15 @@ use Contao\CoreBundle\String\SimpleTokenExpressionLanguage;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\Fixtures\IteratorAggregateStub;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 class SimpleTokenParserTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @dataProvider parseSimpleTokensProvider
-     */
+    #[DataProvider('parseSimpleTokensProvider')]
     public function testParsesSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
@@ -322,9 +318,8 @@ class SimpleTokenParserTest extends TestCase
 
     /**
      * @param bool|int|string|array<string> $value
-     *
-     * @dataProvider parsesSimpleTokensWithShorthandIfProvider
      */
+    #[DataProvider('parsesSimpleTokensWithShorthandIfProvider')]
     public function testParsesSimpleTokensWithShorthandIf(array|bool|int|string|null $value, bool $match): void
     {
         $this->assertSame(
@@ -348,9 +343,7 @@ class SimpleTokenParserTest extends TestCase
         yield 'Test empty array does not match' => [[], false];
     }
 
-    /**
-     * @dataProvider handlesUnknownTokensProvider
-     */
+    #[DataProvider('handlesUnknownTokensProvider')]
     public function testHandlesUnknownTokens(string $condition, string $logMessage, bool $match): void
     {
         $parser = $this->getParser();
@@ -439,9 +432,7 @@ class SimpleTokenParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider parseSimpleTokensCorrectNewlines
-     */
+    #[DataProvider('parseSimpleTokensCorrectNewlines')]
     public function testHandlesLineBreaksWhenParsingSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
@@ -487,9 +478,7 @@ class SimpleTokenParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider parseSimpleTokensDoesntExecutePhp
-     */
+    #[DataProvider('parseSimpleTokensDoesntExecutePhp')]
     public function testDoesNotExecutePhpCode(string $string): void
     {
         $this->assertSame($string, $this->getParser()->parse($string, []));
@@ -505,9 +494,7 @@ class SimpleTokenParserTest extends TestCase
         yield "(<script language='php'>)" => ["This <script language='php'> var_dump() </script> is a test."];
     }
 
-    /**
-     * @dataProvider parseSimpleTokensDoesntExecutePhpInToken
-     */
+    #[DataProvider('parseSimpleTokensDoesntExecutePhpInToken')]
     public function testDoesNotExecutePhpCodeInTokens(array $tokens): void
     {
         $this->assertSame($tokens['foo'], $this->getParser()->parse('##foo##', $tokens));
@@ -545,9 +532,7 @@ class SimpleTokenParserTest extends TestCase
         $this->getParser()->parse('{if constant("PHP_VERSION") > 7}match{else}no-match{endif}', []);
     }
 
-    /**
-     * @dataProvider parseSimpleTokensInvalidComparison
-     */
+    #[DataProvider('parseSimpleTokensInvalidComparison')]
     public function testFailsIfTheComparisonOperatorIsInvalid(string $string): void
     {
         $this->expectException('InvalidArgumentException');

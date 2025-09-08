@@ -7,18 +7,16 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\SaveOperation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Source;
 
-class SaveOperationTest extends AbstractOperationTest
+class SaveOperationTest extends AbstractOperationTestCase
 {
-    /**
-     * @dataProvider provideCommonContextsForExistingAndNonExistingUserTemplates
-     */
+    #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
     public function testCanExecute(OperationContext $context, bool $userTemplateExists): void
     {
         $this->assertSame(
@@ -27,9 +25,7 @@ class SaveOperationTest extends AbstractOperationTest
         );
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForNonExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
     public function testFailToSaveUserTemplateBecauseItDoesNotExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -49,7 +45,7 @@ class SaveOperationTest extends AbstractOperationTest
             ->willReturn('error.stream')
         ;
 
-        $operation = $this->getSaveOperation(storage: $storage, twig: $twig);
+        $operation = $this->getSaveOperation($storage, $twig);
 
         $response = $operation->execute(
             new Request(),
@@ -59,9 +55,7 @@ class SaveOperationTest extends AbstractOperationTest
         $this->assertSame('error.stream', $response->getContent());
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
     public function testSaveUserTemplate(string|null $themeSlug, string $path): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -82,7 +76,7 @@ class SaveOperationTest extends AbstractOperationTest
             ->willReturn('save_result.stream')
         ;
 
-        $operation = $this->getSaveOperation(storage: $storage, twig: $twig);
+        $operation = $this->getSaveOperation($storage, $twig);
 
         $response = $operation->execute(
             new Request(request: ['code' => '<updated code>']),
@@ -92,7 +86,26 @@ class SaveOperationTest extends AbstractOperationTest
         $this->assertSame('save_result.stream', $response->getContent());
     }
 
-    private function getSaveOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): SaveOperation
+    public function testThrowsExceptionIfTheTemplateCodeIsMissingWhenSaving(): void
+    {
+        $storage = $this->mockUserTemplatesStorage();
+        $storage
+            ->expects($this->never())
+            ->method('write')
+        ;
+
+        $twig = $this->mockTwigEnvironment();
+
+        $operation = $this->getSaveOperation($storage, $twig);
+        $context = $this->getOperationContext('content_element/existing_user_template');
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The request did not contain the template code.');
+
+        $operation->execute(new Request(), $context);
+    }
+
+    private function getSaveOperation(VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): SaveOperation
     {
         $templateInformation = new TemplateInformation(
             new Source(
@@ -131,7 +144,7 @@ class SaveOperationTest extends AbstractOperationTest
         ;
 
         $operation = new SaveOperation($inspector);
-        $operation->setContainer($this->getContainer($loader, $storage, $twig));
+        $operation->setContainer($this->getContainer(null, $storage, $twig));
         $operation->setName('save');
 
         return $operation;

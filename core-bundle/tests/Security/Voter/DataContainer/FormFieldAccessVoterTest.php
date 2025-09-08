@@ -18,78 +18,127 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class FormFieldAccessVoterTest extends TestCase
+class FormFieldAccessVoterTest extends AbstractAccessVoterTestCase
 {
-    public function testVoter(): void
+    public static function votesProvider(): \Generator
+    {
+        yield 'Permission granted with ReadAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
+            ],
+            true,
+            ReadAction::class,
+        ];
+
+        yield 'Permission granted with CreateAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
+            ],
+            true,
+            CreateAction::class,
+        ];
+
+        yield 'Permission granted with DeleteAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
+            ],
+            true,
+            DeleteAction::class,
+        ];
+
+        yield 'Permission denied on back end module' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', false],
+            ],
+            false,
+        ];
+
+        yield 'Permission denied on field type with CreateAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', false],
+            ],
+            false,
+            CreateAction::class,
+        ];
+
+        yield 'Permission denied on field type with UpdateAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', false],
+            ],
+            false,
+            UpdateAction::class,
+        ];
+
+        yield 'Permission denied on field type with DeleteAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', false],
+            ],
+            false,
+            DeleteAction::class,
+        ];
+
+        yield 'Permission denied on form with ReadAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, false],
+            ],
+            false,
+        ];
+
+        yield 'Permission denied on form with DeleteAction' => [
+            ['pid' => 42, 'type' => 'text'],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, false],
+            ],
+            false,
+            DeleteAction::class,
+        ];
+    }
+
+    public function testDeniesUpdateActionToNewType(): void
     {
         $token = $this->createMock(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
-            ->expects($this->exactly(5))
+            ->expects($this->exactly(3))
             ->method('decide')
-            ->withConsecutive(
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form'],
-                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 42],
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form'],
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form'],
-                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 42],
-            )
-            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
+            ->willReturnMap([
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'foobar', true],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', false],
+            ])
         ;
 
         $voter = new FormFieldAccessVoter($accessDecisionManager);
 
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_form_field'));
-        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_form'));
-        $this->assertTrue($voter->supportsType(CreateAction::class));
-        $this->assertTrue($voter->supportsType(ReadAction::class));
-        $this->assertTrue($voter->supportsType(UpdateAction::class));
-        $this->assertTrue($voter->supportsType(DeleteAction::class));
-        $this->assertFalse($voter->supportsType(FormFieldAccessVoter::class));
-
-        // Unsupported attribute
-        $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
-                ['whatever'],
-            ),
-        );
-
-        // Permission granted, so abstain! Our voters either deny or abstain, they must
-        // never grant access (see #6201).
-        $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
-            ),
-        );
-
-        // Permission denied on back end module
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
-            ),
-        );
-
-        // Permission denied on form
-        $this->assertSame(
-            VoterInterface::ACCESS_DENIED,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
+                new UpdateAction('tl_form_field', ['pid' => 42, 'type' => 'text'], ['pid' => 43, 'type' => 'foobar']),
                 [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
             ),
         );
@@ -101,14 +150,14 @@ class FormFieldAccessVoterTest extends TestCase
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('decide')
-            ->withConsecutive(
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 42],
-                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 43],
-            )
-            ->willReturnOnConsecutiveCalls(true, true, false)
+            ->willReturnMap([
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE], 'text', true],
+                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
+                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 43, false],
+            ])
         ;
 
         $voter = new FormFieldAccessVoter($accessDecisionManager);
@@ -117,9 +166,19 @@ class FormFieldAccessVoterTest extends TestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new UpdateAction('tl_form_field', ['pid' => 42], ['pid' => 43]),
+                new UpdateAction('tl_form_field', ['pid' => 42, 'type' => 'text'], ['pid' => 43]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
             ),
         );
+    }
+
+    protected function getVoterClass(): string
+    {
+        return FormFieldAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_form_field';
     }
 }

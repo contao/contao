@@ -41,15 +41,24 @@ parameters:
     ignoreErrors:
         - identifier: missingType.iterableValue
 
-        # Ignore the symlink warning in the file system test, because we need to create relative symlinks
-        - message: '#Function symlink is unsafe to use, rely on Symfony component Filesystem::symlink instead\.#'
-          path: %currentWorkingDirectory%/core-bundle/tests/DependencyInjection/Compiler/ConfigureFilesystemPassTest.php
+        # Disable the @internal handling, as the tag is often only used to mark
+        # things as "not covered by the BC promise".
+        - identifier: classConstant.internal
+        - identifier: method.internal
+        - identifier: method.internalClass
+        - identifier: new.internalClass
+        - identifier: parameter.internalClass
+        - identifier: property.internalClass
+        - identifier: staticMethod.internal
+        - identifier: staticMethod.internalClass
 
-        # Ignore the unused ModelMetadataTrait that will be removed in Contao 6
-        - '#Trait Contao\\CoreBundle\\File\\ModelMetadataTrait is used zero times and is not analysed\.#'
+        # Ignore @no-named-arguments errors caused by PHPUnit.
+        # https://github.com/sebastianbergmann/phpunit/issues/6163
+        - identifier: argument.named
+          path: %currentWorkingDirectory%/*-bundle/tests/*
 
-        # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
-        - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
+        # Ignore missing generated class names
+        - message: '#setMockClassName\(\) expects class-string, string given#'
 
     treatPhpDocTypesAsCertain: false
     rememberPossiblyImpureFunctionValues: false

@@ -13,7 +13,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 // Extend the default palette
 PaletteManipulator::create()
 	->addLegend('calendars_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
-	->addField(array('calendars', 'calendarp', 'calendarfeeds', 'calendarfeedp'), 'calendars_legend', PaletteManipulator::POSITION_APPEND)
+	->addField(array('calendars', 'calendarp'), 'calendars_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_user_group')
 ;
 
@@ -38,6 +38,7 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarp'] = array
 	'sql'                     => "blob NULL"
 );
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarfeeds'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarfeeds'],
@@ -48,6 +49,7 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarfeeds'] = array
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarfeedp'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarfeedp'],

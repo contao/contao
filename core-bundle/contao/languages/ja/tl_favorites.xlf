@@ -21,23 +21,19 @@
         <source>Title and URL</source>
         <target>題名とURL</target>
       </trans-unit>
-      <trans-unit id="tl_favorites.show">
+      <trans-unit id="tl_favorites.show.1">
         <source>Show the details of favorite ID %s</source>
         <target>ID %sのお気に入りの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_favorites.edit">
+      <trans-unit id="tl_favorites.edit.1">
         <source>Edit favorite ID %s</source>
         <target>ID %sのお気に入りを編集</target>
       </trans-unit>
-      <trans-unit id="tl_favorites.cut">
+      <trans-unit id="tl_favorites.cut.1">
         <source>Move favorite ID %s</source>
         <target>ID %sのお気に入りを移動</target>
       </trans-unit>
-      <trans-unit id="tl_favorites.copy">
-        <source>Duplicate favorite ID %s</source>
-        <target>ID %sのお気に入りを複製</target>
-      </trans-unit>
-      <trans-unit id="tl_favorites.delete">
+      <trans-unit id="tl_favorites.delete.1">
         <source>Delete favorite ID %s</source>
         <target>ID %sのお気に入りを削除</target>
       </trans-unit>

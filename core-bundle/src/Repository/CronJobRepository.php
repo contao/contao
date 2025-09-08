@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Repository;
 use Contao\CoreBundle\Entity\CronJob;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
@@ -39,26 +41,33 @@ class CronJobRepository extends ServiceEntityRepository
     }
 
     /**
-     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-     *             use the Symfony Lock component instead.
+     * Locks the tl_cron_job table with a lock wait timeout of only 1 second.
+     *
+     * @throws LockWaitTimeoutException
      */
     public function lockTable(): void
     {
-        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony Lock component instead.', __METHOD__);
-
         $table = $this->getClassMetadata()->getTableName();
 
-        $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
+        $defaultLockTimeout = $this->connection->fetchOne('SELECT @@lock_wait_timeout');
+
+        // Use default lock timeout from MariaDB, if it cannot be retrieved
+        if (false === $defaultLockTimeout) {
+            $defaultLockTimeout = 86400;
+        }
+
+        try {
+            // Set a short lock timeout, so that the next statement throws an exception sooner
+            $this->connection->executeStatement('SET SESSION lock_wait_timeout = 1');
+            $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
+        } finally {
+            // Restore the previous lock timeout
+            $this->connection->executeStatement('SET SESSION lock_wait_timeout = ?', [$defaultLockTimeout], [Types::INTEGER]);
+        }
     }
 
-    /**
-     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-     *             use the Symfony Lock component instead.
-     */
     public function unlockTable(): void
     {
-        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony Lock component instead.', __METHOD__);
-
         $this->connection->executeStatement('UNLOCK TABLES');
     }
 }

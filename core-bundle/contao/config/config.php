@@ -54,7 +54,6 @@ use Contao\LayoutModel;
 use Contao\ListWizard;
 use Contao\MemberGroupModel;
 use Contao\MemberModel;
-use Contao\Messages;
 use Contao\MetaWizard;
 use Contao\ModuleArticleList;
 use Contao\ModuleArticlenav;
@@ -222,6 +221,12 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_undo'),
 			'disablePermissionChecks' => true
+		),
+		'jobs' => array
+		(
+			'tables'                  => array('tl_job'),
+			'disablePermissionChecks' => true,
+			'hideInNavigation' 		  => true,
 		)
 	)
 );
@@ -269,6 +274,7 @@ $GLOBALS['TL_CTE'] = array
 	'links' => array(),
 	'files' => array(),
 	'media' => array(),
+	'user' => array(),
 	'miscellaneous' => array(),
 	'includes' => array
 	(
@@ -427,15 +433,6 @@ $GLOBALS['TL_PURGE'] = array
 		(
 			'callback' => array(Automator::class, 'generateSymlinks')
 		)
-	)
-);
-
-// Hooks
-$GLOBALS['TL_HOOKS'] = array
-(
-	'getSystemMessages' => array
-	(
-		array(Messages::class, 'languageFallback')
 	)
 );
 

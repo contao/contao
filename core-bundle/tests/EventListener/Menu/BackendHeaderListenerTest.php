@@ -118,6 +118,7 @@ class BackendHeaderListenerTest extends TestCase
                 'class' => 'icon-color-scheme',
                 'title' => '',
                 'data-controller' => 'contao--color-scheme',
+                'data-action' => 'contao--color-scheme#toggle',
                 'data-contao--color-scheme-target' => 'label',
                 'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',
             ],
@@ -125,7 +126,7 @@ class BackendHeaderListenerTest extends TestCase
         );
 
         // Submenu
-        $this->assertSame('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle">MSC.user foo</button>', $children['submenu']->getLabel());
+        $this->assertSame('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
         $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--profile', 'data-contao--profile-target' => 'menu', 'data-action' => 'click@document->contao--profile#documentClick'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());

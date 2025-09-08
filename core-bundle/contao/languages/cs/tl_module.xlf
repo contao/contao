@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Zvolte typ tohoto modulu</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>Popisek ARIA</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Pokud se na stránce nachází víc než jedna navigace, měla by mít každá z nich jedinečné označení.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Startovací úroveň</target>
@@ -129,6 +137,14 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Zvolte prosím stránku, na kterou bude přesměrovaný návštěvník poté, co kliknul na tlačítko odeslat.</target>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Stránka pro resetování hesla</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Zde můžeš vybrat stránku, na kterou budou návštěvníci přesměrováni po kliknutí na &lt;em&gt;Zapomněl si své heslo?&lt;/em&gt;</target>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
         <target>Stránka přehledu</target>
@@ -168,6 +184,14 @@
       <trans-unit id="tl_module.editable.1">
         <source>Show these fields in the front end form.</source>
         <target>Zobrazit tato pole ve formuláři ve frontendu.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>Vyžadovat plné ověření</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Uživatelé, kteří mají povolené jen cookies typu &quot;zapamatuj si mě&quot;, musí ověřit svou totožnost, aby mohli přistupovat k danému modulu.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -506,8 +530,8 @@
         <target>Vyberte modul pro každou kořenovou stránku webu.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Vybrat modul pro &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Vyber modul pro &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -632,31 +656,27 @@ Pokud jste o nic takového nepožádali, kontaktujte prosím správce webu.
         <source>Irrevocably delete account</source>
         <target>Nenávratné smazání účtu</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>Nové</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>Vytvořit nový modul</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>Zobrazit podrobnosti k modulu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>Editovat modul ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
-        <target>Duplikovat modul ID %s</target>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
+        <target>Zkopírovat modul ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>Přesunout modul ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>Smazat modul ID %s</target>
       </trans-unit>

@@ -53,7 +53,7 @@
       <trans-unit id="tl_templates.pasteinto.1">
         <source>Paste into folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_templates.compare">
+      <trans-unit id="tl_templates.compare.1">
         <source>Compare "%s" with another template</source>
       </trans-unit>
       <trans-unit id="tl_templates.twig_studio_hint">

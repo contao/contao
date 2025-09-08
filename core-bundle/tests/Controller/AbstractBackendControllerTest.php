@@ -23,6 +23,7 @@ use Contao\Environment as ContaoEnvironment;
 use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -110,17 +111,16 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
     }
 
-    /**
-     * @dataProvider provideRequests
-     */
-    public function testHandlesTurboRequests(Request $request, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html'): void
+    #[DataProvider('provideRequests')]
+    public function testHandlesTurboRequests(Request $request, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html', int $expectedStatus = Response::HTTP_OK, Response|null $response = null): void
     {
         $controller = new class() extends AbstractBackendController {
-            public function fooAction(bool|null $includeChromeContext): Response
+            public function fooAction(bool|null $includeChromeContext, Response|null $response = null): Response
             {
                 return $this->render(
                     'custom_be.html.twig',
                     ['version' => 'my version'],
+                    $response,
                     includeChromeContext: $includeChromeContext,
                 );
             }
@@ -148,9 +148,11 @@ class AbstractBackendControllerTest extends TestCase
 
         System::setContainer($container);
         $controller->setContainer($container);
+        $response = $controller->fooAction($includeChromeContext, $response);
 
-        $this->assertSame('<custom_be_main>', $controller->fooAction($includeChromeContext)->getContent());
+        $this->assertSame('<custom_be_main>', $response->getContent());
         $this->assertSame($expectedRequestFormat, $request->getRequestFormat());
+        $this->assertSame($expectedStatus, $response->getStatusCode());
     }
 
     public static function provideRequests(): iterable
@@ -237,6 +239,23 @@ class AbstractBackendControllerTest extends TestCase
             $plainRequest,
             false,
             $customContext,
+        ];
+
+        yield 'request with widget error' => [
+            new Request(attributes: ['_contao_widget_error' => true], server: ['HTTP_HOST' => 'localhost']),
+            false,
+            $customContext,
+            'html',
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+        ];
+
+        yield 'request with widget error and 500 response' => [
+            new Request(attributes: ['_contao_widget_error' => true], server: ['HTTP_HOST' => 'localhost']),
+            false,
+            $customContext,
+            'html',
+            Response::HTTP_INTERNAL_SERVER_ERROR,
+            new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR),
         ];
     }
 

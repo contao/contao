@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -31,6 +32,13 @@ class BackendAccessVoterTest extends TestCase
         parent::setUp();
 
         $this->voter = new BackendAccessVoter($this->mockContaoFramework());
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['BE_MOD']);
+
+        parent::tearDown();
     }
 
     public function testAbstainsIfTheAttributeIsContaoUser(): void
@@ -111,9 +119,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, new \stdClass(), ['contao_user.alexf']));
     }
 
-    /**
-     * @dataProvider userDataProvider
-     */
+    #[DataProvider('userDataProvider')]
     public function testGrantsAccessIfTheUserDataIntersects(array $userData, string $attribute, int|string|null $subject): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, $userData);
@@ -128,9 +134,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $subject, [$attribute]));
     }
 
-    /**
-     * @dataProvider userDataProvider
-     */
+    #[DataProvider('userDataProvider')]
     public function testDeniesAccessIfTheUserDataDoesNotIntersect(array $userData, string $attribute, int|string|null $subject): void
     {
         $userData = array_fill_keys(array_keys($userData), []);
@@ -474,9 +478,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, 1, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
     }
 
-    /**
-     * @dataProvider getPageAndArticlePermissions
-     */
+    #[DataProvider('getPageAndArticlePermissions')]
     public function testPageAndArticlePermissions(string $attribute, array $chmod, int $cuser, int $cgroup, int $expected): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);
@@ -649,6 +651,53 @@ class BackendAccessVoterTest extends TestCase
             ['g6'],
             1,
             1,
+            VoterInterface::ACCESS_GRANTED,
+        ];
+    }
+
+    #[DataProvider('getBackendModulePermissions')]
+    public function testBackendModulePermissions(array $allowedModules, string $requestedModule, array $config, int $expected): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'modules' => $allowedModules]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $GLOBALS['BE_MOD'] = $config;
+
+        $this->assertSame($expected, $this->voter->vote($token, $requestedModule, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE]));
+    }
+
+    public static function getBackendModulePermissions(): iterable
+    {
+        yield 'Denies access if module is not allowed for user' => [
+            ['foo'],
+            'bar',
+            [],
+            VoterInterface::ACCESS_DENIED,
+        ];
+
+        yield 'Allows access if module is allowed for user' => [
+            ['foo'],
+            'foo',
+            [],
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield 'Allows access if module does not need permission checks' => [
+            ['foo'],
+            'ipsum',
+            [
+                'lorem' => [
+                    'ipsum' => [
+                        'disablePermissionChecks' => true,
+                    ],
+                ],
+            ],
             VoterInterface::ACCESS_GRANTED,
         ];
     }

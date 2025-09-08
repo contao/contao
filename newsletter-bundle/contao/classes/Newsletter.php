@@ -98,14 +98,26 @@ class Newsletter extends Backend
 			}
 		}
 
-		// Replace insert tags
-		$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->content ?? '');
-		$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text ?? '');
+		$requestStack = System::getContainer()->get('request_stack');
+		$subRequest = $requestStack->getCurrentRequest()->duplicate();
+		$subRequest->attributes->set('_scope', 'frontend');
+		$requestStack->push($subRequest);
+
+		try
+		{
+			// Replace insert tags
+			$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->content ?? '');
+			$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text ?? '');
+		}
+		finally
+		{
+			$requestStack->pop();
+		}
 
 		// Convert relative URLs
 		$html = $this->convertRelativeUrls($html);
 
-		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
+		$objSession = $requestStack->getCurrentRequest()->getSession();
 		$token = Input::get('token');
 
 		// Send newsletter
@@ -405,7 +417,7 @@ class Newsletter extends Backend
 	{
 		if (\count(\func_get_args()) > 5)
 		{
-			trigger_deprecation('contao/newsletter-bundle', '5.3', 'Passing CSS to the Newsletter::sendNewsletter() method has been deprecated and will no longer work in Contao 6. Add the CSS in the template instead.');
+			trigger_deprecation('contao/newsletter-bundle', '5.3', 'Passing CSS to the Newsletter::sendNewsletter() method is deprecated and will no longer work in Contao 6. Add the CSS in the template instead.');
 		}
 
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
@@ -952,7 +964,7 @@ class Newsletter extends Backend
 				{
 					$db
 						->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
-						->execute(Input::post('disable') ? '' : 1, $objUser->email);
+						->execute(Input::post('disable') ? 0 : 1, $objUser->email);
 
 					$objUser->disable = Input::post('disable');
 				}
@@ -984,7 +996,7 @@ class Newsletter extends Backend
 	 */
 	public function purgeSubscriptions()
 	{
-		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "NewsletterRecipientsModel::findExpiredSubscriptions()" instead.', __METHOD__);
+		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "NewsletterRecipientsModel::findExpiredSubscriptions()" instead.', __METHOD__);
 
 		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
 

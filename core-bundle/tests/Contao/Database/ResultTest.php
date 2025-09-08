@@ -16,6 +16,7 @@ use Contao\Database\Result;
 use Doctrine\DBAL\Cache\ArrayResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result as DoctrineResult;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase
@@ -187,9 +188,7 @@ class ResultTest extends TestCase
         $this->assertSame(2, $result->count());
     }
 
-    /**
-     * @dataProvider getInvalidStatements
-     */
+    #[DataProvider('getInvalidStatements')]
     public function testInvalidStatements(array|object|string $statement): void
     {
         $this->expectException('InvalidArgumentException');
@@ -206,15 +205,25 @@ class ResultTest extends TestCase
     }
 
     /**
-     * @param array<array<string, string>> $data
+     * @param list<array<string, string>> $data
      *
      * @return array<Result|object>
      */
     private function createResults(array $data): array
     {
+        /** @phpstan-ignore classConstant.internalClass */
+        $reflection = new \ReflectionClass(ArrayResult::class);
+
+        if (\count($reflection->getConstructor()->getParameters()) > 1) {
+            $result = new ArrayResult(array_keys($data[0] ?? []), array_map(array_values(...), $data));
+        } else {
+            /** @phpstan-ignore arguments.count, argument.type */
+            $result = new ArrayResult($data);
+        }
+
         return [
             new Result(
-                new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
+                new DoctrineResult($result, $this->createMock(Connection::class)),
                 'SELECT * FROM test',
             ),
             new Result($data, 'SELECT * FROM test'),

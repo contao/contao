@@ -4,20 +4,20 @@ export default class extends Controller {
     static values = {
         type: String,
         readOnly: Boolean,
-    }
+    };
 
     connect() {
         // Create a div to apply the editor to
         this.container = document.createElement('div');
-        this.container.id = this.element.id + '_div';
+        this.container.id = `${this.element.id}_div`;
         this.container.className = this.element.className;
         this.element.parentNode.insertBefore(this.container, this.element.nextSibling);
 
         // Hide the textarea
-        this.element.style['display'] = 'none';
+        this.element.style.display = 'none';
 
         // Instantiate the editor
-        this.editor = ace.edit(this.container, {enableKeyboardAccessibility: true});
+        this.editor = ace.edit(this.container);
         this.editor.getSession().setValue(this.element.value);
 
         this.editor.on('focus', () => {
@@ -39,11 +39,24 @@ export default class extends Controller {
     }
 
     disconnect() {
-        this.editor.destroy();
-        this.container.remove();
+        this.editor?.destroy();
+        this.container?.remove();
+    }
+
+    beforeCache() {
+        // Remove the element container before Turbo caches the page. It will
+        // be recreated when the connect() call happens on the restored page.
+        this.disconnect();
+    }
+
+    colorChange(event) {
+        this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
     }
 
     setMaxLines() {
-        this.editor.setOption('maxLines', Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)));
+        this.editor.setOption(
+            'maxLines',
+            Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)),
+        );
     }
 }

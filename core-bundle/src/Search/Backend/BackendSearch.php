@@ -13,6 +13,7 @@ use CmsIg\Seal\Search\Condition\EqualCondition;
 use CmsIg\Seal\Search\Condition\SearchCondition;
 use CmsIg\Seal\Search\SearchBuilder;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
+use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
@@ -31,6 +32,8 @@ class BackendSearch
 {
     public const SEAL_INTERNAL_INDEX_NAME = 'contao_backend_search';
 
+    public const REINDEX_JOB_TYPE = 'contao_backend_search_reindex';
+
     /**
      * @param iterable<ProviderInterface> $providers
      */
@@ -40,6 +43,7 @@ class BackendSearch
         private readonly EngineInterface $engine,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly MessageBusInterface $messageBus,
+        private readonly Jobs $jobs,
         private readonly WebWorker $webWorker,
         private readonly SealReindexProvider $reindexProvider,
     ) {
@@ -57,7 +61,7 @@ class BackendSearch
         }
 
         if ($async) {
-            // Split into multiple messages of max 64kb if needed, otherwise messages with
+            // Split into multiple messages of max 64 KB if needed, otherwise messages with
             // hundreds of IDs would fail
             foreach ($groupedDocumentIds->split(65536) as $group) {
                 $this->messageBus->dispatch(new DeleteDocumentsMessage($group));
@@ -79,16 +83,52 @@ class BackendSearch
         return $this;
     }
 
-    public function reindex(ReindexConfig $config, bool $async = true): self
+    /**
+     * @return string|null The job ID for the job framework if any
+     */
+    public function reindex(ReindexConfig $config, bool $async = true): string|null
     {
+        $job = $config->getJobId() ? $this->jobs->getByUuid($config->getJobId()) : null;
+
+        // Create the job if required
+        if (!$job && $config->requiresJob()) {
+            $job = $this->jobs->createJob(self::REINDEX_JOB_TYPE);
+            $config = $config->withJobId($job->getUuid());
+        }
+
+        // Validate the job type just in case it was not created from this method
+        if ($job && self::REINDEX_JOB_TYPE !== $job->getType()) {
+            throw new \InvalidArgumentException(\sprintf('Provided a custom job type "%s" but must be "%s".', $job->getType(), self::REINDEX_JOB_TYPE));
+        }
+
         if ($async) {
             // Split into multiple messages of max 64kb if needed, otherwise messages with
             // hundreds of IDs would fail
-            foreach ($config->getLimitedDocumentIds()->split(65536) as $group) {
-                $this->messageBus->dispatch(new ReindexMessage($config->limitToDocumentIds($group)));
+            $documentIdGroups = $config->getLimitedDocumentIds()->split(65536);
+
+            // No special handling needed if it's just one group still (= no splitting needed)
+            if (1 === \count($documentIdGroups)) {
+                $this->messageBus->dispatch(new ReindexMessage($config));
+            } else {
+                foreach ($documentIdGroups as $documentIdGroup) {
+                    // Create a new config with the chunk of this document ID group
+                    $config = $config->limitToDocumentIds($documentIdGroup);
+
+                    // Create child jobs here, so we can track progress across multiple messages
+                    if ($job) {
+                        $config = $config->withJobId($this->jobs->createChildJob($job)->getUuid());
+                    }
+
+                    $this->messageBus->dispatch(new ReindexMessage($config));
+                }
             }
 
-            return $this;
+            return $config->getJobId();
+        }
+
+        // Mark job as pending now
+        if ($job) {
+            $this->jobs->persist($job->markPending());
         }
 
         // Seal does not delete unused documents, it just re-indexes. So if some
@@ -99,14 +139,18 @@ class BackendSearch
 
         $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config));
 
-        return $this;
+        // Mark job as completed
+        if ($job) {
+            $this->jobs->persist($job->markCompleted());
+        }
+
+        return $config->getJobId();
     }
 
     /**
      * TODO: This Query API object will change for sure because we might want to
-     * introduce searching for multiple tags which is currently not supported by SEAL.
-     * It's a matter of putting in some work there but it will affect the signature of
-     * this object.
+     * introduce searching for multiple tags. It's a matter of putting in some work
+     * there but it will affect the signature of this object.
      */
     public function search(Query $query): Result
     {
@@ -188,7 +232,11 @@ class BackendSearch
             return null;
         }
 
-        $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+        try {
+            $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+        } catch (\JsonException) {
+            return null;
+        }
 
         if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $document)) {
             return null;
@@ -196,7 +244,7 @@ class BackendSearch
 
         $hit = $fileProvider->convertDocumentToHit($document);
 
-        // The provider did not find any hit for it anymore so it must have been removed
+        // The provider did not find any hit for it anymore, so it must have been removed
         // or expired. Remove from the index.
         if (!$hit) {
             $this->deleteDocuments(new GroupedDocumentIds([$document->getType() => [$document->getId()]]));

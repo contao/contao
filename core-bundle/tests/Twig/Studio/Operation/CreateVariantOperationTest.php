@@ -9,14 +9,13 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractCreateVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-class CreateVariantOperationTest extends AbstractOperationTest
+class CreateVariantOperationTest extends AbstractOperationTestCase
 {
-    /**
-     * @dataProvider provideContextsAndIfAllowedToExecute
-     */
+    #[DataProvider('provideContextsAndIfAllowedToExecute')]
     public function testCanExecute(OperationContext $context, bool $canExecute): void
     {
         $this->assertSame(
@@ -25,30 +24,30 @@ class CreateVariantOperationTest extends AbstractOperationTest
         );
     }
 
-    public function provideContextsAndIfAllowedToExecute(): iterable
+    public static function provideContextsAndIfAllowedToExecute(): iterable
     {
         yield 'arbitrary identifier' => [
-            $this->getOperationContext('bar/foo'),
+            static::getOperationContext('bar/foo'),
             false,
         ];
 
         yield 'identifier matching the prefix' => [
-            $this->getOperationContext('prefix/foo'),
+            static::getOperationContext('prefix/foo'),
             true,
         ];
 
         yield 'nested identifier matching the prefix' => [
-            $this->getOperationContext('prefix/foo/baz'),
+            static::getOperationContext('prefix/foo/baz'),
             false,
         ];
 
         yield 'arbitrary identifier in theme context' => [
-            $this->getOperationContext('bar/foo', 'theme'),
+            static::getOperationContext('bar/foo', 'theme'),
             false,
         ];
 
         yield 'identifier matching the prefix in theme context' => [
-            $this->getOperationContext('prefix/foo', 'theme'),
+            static::getOperationContext('prefix/foo', 'theme'),
             false,
         ];
     }

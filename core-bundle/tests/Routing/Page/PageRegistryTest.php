@@ -20,6 +20,7 @@ use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PageRegistryTest extends TestCase
 {
@@ -92,9 +93,7 @@ class PageRegistryTest extends TestCase
         $this->assertSame('(/.+?)?', $route->getRequirement('parameters'));
     }
 
-    /**
-     * @dataProvider pageRouteWithPathProvider
-     */
+    #[DataProvider('pageRouteWithPathProvider')]
     public function testReturnsPageRouteWithPath(RouteConfig $config, string $urlPrefix, string $alias, string $urlSuffix, string $expectedPath): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -400,7 +399,7 @@ class PageRegistryTest extends TestCase
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
-            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
             ->willReturn(['', '.html'])
         ;
 
@@ -420,7 +419,7 @@ class PageRegistryTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
-            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
             ->willReturn([['urlPrefix' => $urlPrefix, 'urlSuffix' => $urlSuffix]])
         ;
 

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Monolog;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\SystemLogger;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\Callback;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -21,9 +22,7 @@ use Psr\Log\LogLevel;
 
 class SystemLoggerTest extends TestCase
 {
-    /**
-     * @dataProvider psrLogActionsProvider
-     */
+    #[DataProvider('psrLogActionsProvider')]
     public function testSetsContaoContextForPsrLogActions(string $method): void
     {
         $message = 'Log message';

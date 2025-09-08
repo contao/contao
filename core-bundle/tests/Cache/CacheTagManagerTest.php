@@ -28,6 +28,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CacheTagManagerTest extends DoctrineTestCase
@@ -127,9 +128,7 @@ class CacheTagManagerTest extends DoctrineTestCase
         $this->assertSame('contao.db.tl_page.5', $cacheTagManager->getTagForModelInstance($page));
     }
 
-    /**
-     * @dataProvider getArguments
-     */
+    #[DataProvider('getArguments')]
     public function testGetTags(mixed $argument, array $expectedTags): void
     {
         $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
@@ -218,16 +217,22 @@ class CacheTagManagerTest extends DoctrineTestCase
     public function testDelegatesToResponseTagger(): void
     {
         $responseTagger = $this->createMock(ResponseTagger::class);
+        $matcher = $this->exactly(5);
+
+        $expected = [
+            [['contao.db.tl_blog_post']],
+            [['contao.db.tl_blog_post.1']],
+            [['contao.db.tl_page']],
+            [['contao.db.tl_page.2']],
+            [['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo']],
+        ];
+
         $responseTagger
-            ->expects($this->exactly(5))
+            ->expects($matcher)
             ->method('addTags')
-            ->withConsecutive(
-                [['contao.db.tl_blog_post']],
-                [['contao.db.tl_blog_post.1']],
-                [['contao.db.tl_page']],
-                [['contao.db.tl_page.2']],
-                [['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo']],
-            )
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $post = (new BlogPost())->setId(1);
@@ -246,16 +251,22 @@ class CacheTagManagerTest extends DoctrineTestCase
     public function testDelegatesToCacheInvalidator(): void
     {
         $cacheTagInvalidator = $this->createMock(CacheInvalidator::class);
+        $matcher = $this->exactly(5);
+
+        $expected = [
+            [['contao.db.tl_blog_post']],
+            [['contao.db.tl_blog_post.1']],
+            [['contao.db.tl_page']],
+            [['contao.db.tl_page.2']],
+            [['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo']],
+        ];
+
         $cacheTagInvalidator
-            ->expects($this->exactly(5))
+            ->expects($matcher)
             ->method('invalidateTags')
-            ->withConsecutive(
-                [['contao.db.tl_blog_post']],
-                [['contao.db.tl_blog_post.1']],
-                [['contao.db.tl_page']],
-                [['contao.db.tl_page.2']],
-                [['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo']],
-            )
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $post = (new BlogPost())->setId(1);

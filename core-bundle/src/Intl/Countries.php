@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Intl;
 
 use Contao\ArrayUtil;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -26,10 +25,8 @@ class Countries
 
     public function __construct(
         private readonly TranslatorInterface&TranslatorBagInterface $translator,
-        private readonly RequestStack $requestStack,
         array $defaultCountries,
         array $configCountries,
-        private readonly string $defaultLocale,
     ) {
         $this->countries = ArrayUtil::alterListByConfig($defaultCountries, $configCountries);
     }
@@ -39,23 +36,30 @@ class Countries
      */
     public function getCountries(string|null $displayLocale = null): array
     {
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
-            $displayLocale = $request->getLocale();
-        }
+        $displayLocale ??= $this->translator->getLocale();
 
         $countries = [];
 
         foreach ($this->countries as $countryCode) {
-            $langKey = 'CNT.'.strtolower($countryCode);
+            [$country, $subdivision] = explode('-', $countryCode, 2) + [null, null];
+
+            $langKey = 'CNT.'.strtolower($country.$subdivision);
+            $langKeyShort = 'CNT.'.strtolower($country);
 
             if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_countries')) {
                 $countries[$countryCode] = $this->translator->trans($langKey, [], 'contao_countries', $displayLocale);
+            } elseif ($subdivision && $this->translator->getCatalogue($displayLocale)->has($langKeyShort, 'contao_countries')) {
+                $countries[$countryCode] = $this->translator->trans($langKeyShort, [], 'contao_countries', $displayLocale)." ($countryCode)";
             } else {
-                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale ?? $this->defaultLocale);
+                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale);
+
+                if ($subdivision) {
+                    $countries[$countryCode] .= " ($countryCode)";
+                }
             }
         }
 
-        (new \Collator($displayLocale ?? $this->defaultLocale))->asort($countries);
+        (new \Collator($displayLocale))->asort($countries);
 
         return $countries;
     }

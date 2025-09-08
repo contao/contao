@@ -103,9 +103,17 @@ class PageUrlListener
             return $value;
         }
 
-        // First check if another root page uses the same url prefix and domain
+        // First, check if another root page uses the same url prefix and domain
         $count = $this->connection->fetchOne(
-            "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
+            <<<'SQL'
+                SELECT COUNT(*)
+                FROM tl_page
+                WHERE
+                    urlPrefix = :urlPrefix
+                    AND dns = :dns
+                    AND id != :rootId
+                    AND type = 'root'
+                SQL,
             [
                 'urlPrefix' => $value,
                 'dns' => $currentRecord['dns'] ?? null,

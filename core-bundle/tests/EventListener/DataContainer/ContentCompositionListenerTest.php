@@ -25,8 +25,8 @@ use Contao\FrontendUser;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -82,8 +82,7 @@ class ContentCompositionListenerTest extends TestCase
         $operation = $this->createMock(DataContainerOperation::class);
         $operation
             ->expects($this->once())
-            ->method('setHtml')
-            ->with('')
+            ->method('hide')
         ;
 
         $listener = $this->getListener();
@@ -643,8 +642,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfPermissionIsDenied(): void
     {
-        ClockMock::withClockMock(true);
-
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -692,14 +689,10 @@ class ContentCompositionListenerTest extends TestCase
 
         $listener = $this->getListener($framework);
         $listener->generateArticleForPage($dc);
-
-        ClockMock::withClockMock(false);
     }
 
     public function testGenerateArticleForNewPage(): void
     {
-        ClockMock::withClockMock(true);
-
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -759,17 +752,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $listener = $this->getListener($framework);
         $listener->generateArticleForPage($dc);
-
-        ClockMock::withClockMock(false);
     }
 
-    /**
-     * @dataProvider moduleConfigProvider
-     */
+    #[DataProvider('moduleConfigProvider')]
     public function testUsesTheLayoutColumnForNewArticle(array $modules, string $expectedColumn): void
     {
-        ClockMock::withClockMock(true);
-
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -827,8 +814,6 @@ class ContentCompositionListenerTest extends TestCase
 
         $listener = $this->getListener($framework);
         $listener->generateArticleForPage($dc);
-
-        ClockMock::withClockMock(false);
     }
 
     public static function moduleConfigProvider(): iterable
@@ -952,7 +937,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT COUNT(*) FROM tl_article WHERE pid=:pid')
+            ->with('SELECT COUNT(*) FROM tl_article WHERE pid = :pid')
             ->willReturn($count)
         ;
     }

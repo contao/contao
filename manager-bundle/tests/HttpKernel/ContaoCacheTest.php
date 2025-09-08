@@ -20,6 +20,7 @@ use FOS\HttpCache\SymfonyCache\CleanupCacheTagsListener;
 use FOS\HttpCache\SymfonyCache\Events;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,9 +44,7 @@ class ContaoCacheTest extends ContaoTestCase
         $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[0][0]);
     }
 
-    /**
-     * @dataProvider cookieAllowListProvider
-     */
+    #[DataProvider('cookieAllowListProvider')]
     public function testCookieAllowListEnvVariable(string $env, array $expectedList): void
     {
         $_SERVER['COOKIE_ALLOW_LIST'] = $env;

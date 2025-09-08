@@ -14,6 +14,7 @@ use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -94,10 +95,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $deleteCredentialId);
-					}
+					$this->denyAccessUnlessGranted($credential);
 
 					$credentialRepo->remove($credential);
 				}
@@ -106,10 +104,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot edit credential ID ' . $editCredentialId);
-					}
+					$this->denyAccessUnlessGranted($credential);
 
 					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
 				}
@@ -123,10 +118,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot save credential ID ' . $saveCredentialId);
-					}
+					$this->denyAccessUnlessGranted($credential);
 
 					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
@@ -219,5 +211,13 @@ class ModuleTwoFactor extends BackendModule
 		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
+	}
+
+	private function denyAccessUnlessGranted(WebauthnCredential $credential): void
+	{
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP, $credential))
+		{
+			throw new AccessDeniedHttpException('Cannot access credential ID ' . $credential->getId());
+		}
 	}
 }

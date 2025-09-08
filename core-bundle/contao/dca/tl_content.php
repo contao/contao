@@ -16,6 +16,7 @@ use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -107,6 +108,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'teaser'                      => '{type_legend},title,type;{include_legend},article;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'form'                        => '{type_legend},title,type;headline;{include_legend},form;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'module'                      => '{type_legend},title,type;{include_legend},module;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'login'                       => '{type_legend},title,headline,type;{config_legend},autologin,pwResetPage;{redirect_legend},jumpTo,redirectBack;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'manage_passkeys'             => '{type_legend},title,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'two_factor'                  => '{type_legend},title,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
 	),
 
@@ -161,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'headline' => array
 		(
@@ -225,14 +228,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'imageTitle' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'size' => array
 		(
@@ -260,7 +263,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'floating' => array
 		(
@@ -641,7 +644,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
 			'inputType'               => 'checkbox',
-			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_nocookie', 'youtube_loop'),
+			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_nocookie', 'youtube_loop', 'youtube_mute'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
@@ -659,20 +662,20 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 300"
 		),
 		'sliderStartSlide' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'sliderContinuous' => array
@@ -757,6 +760,32 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+		),
+		'jumpTo' => array
+		(
+			'inputType'               => 'pageTree',
+			'foreignKey'              => 'tl_page.title',
+			'eval'                    => array('fieldType'=>'radio'),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'redirectBack' => array
+		(
+			'inputType'               => 'checkbox',
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
+		),
+		'autologin' => array
+		(
+			'inputType'               => 'checkbox',
+			'sql'                     => array('type'=>'boolean', 'default' =>false),
+		),
+		'pwResetPage' => array
+		(
+			'inputType'               => 'pageTree',
+			'foreignKey'              => 'tl_page.title',
+			'eval'                    => array('fieldType'=>'radio'),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'cssID' => array
 		(
@@ -980,7 +1009,15 @@ class tl_content extends Backend
 		$objModel->setRow($arrRow);
 
 		$class = 'cte_preview';
-		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		try
+		{
+			$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+		}
+		catch (Throwable $exception)
+		{
+			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
+		}
 
 		if (!empty($arrRow['sectionHeadline']))
 		{
@@ -998,9 +1035,17 @@ class tl_content extends Backend
 			$class .= ' empty';
 		}
 
+		$dragHandle = '';
+
+		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_content', new UpdateAction('tl_content', $arrRow)))
+		{
+			$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+		}
+
 		return '
-<div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . $class . '">' . $preview . '</div>';
+<div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>
+<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
 	}
 
 	/**

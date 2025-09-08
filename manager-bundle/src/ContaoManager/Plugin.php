@@ -510,7 +510,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $extensionConfigs[] = [
             'backend_search' => [
-                'dsn' => 'loupe://%kernel.project_dir%/var/backend_search',
+                'dsn' => 'loupe://%kernel.project_dir%/var/loupe',
             ],
         ];
 

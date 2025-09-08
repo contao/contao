@@ -70,8 +70,8 @@
         <target>robotsタグ</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>検索エンジンがページを扱う方法を指定します。</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>このページを検索エンジンが扱う方法を指定できます。この設定はページが&lt;code&gt;sitemap.xml&lt;/code&gt;ファイルに含めるかどうかも決定します。</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -393,14 +393,6 @@
         <source>Please assign the access rights for the page and its subpages.</source>
         <target>ページとその下位のページにアクセス権を割り当ててください。</target>
       </trans-unit>
-      <trans-unit id="tl_page.noSearch.0">
-        <source>Do not search</source>
-        <target>検索しない</target>
-      </trans-unit>
-      <trans-unit id="tl_page.noSearch.1">
-        <source>Exclude the page from the search index.</source>
-        <target>ページを検索のインデックス作成から除外します。</target>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>CSSのclass</target>
@@ -424,6 +416,14 @@
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
         <target>ナビゲーションメニューのページを表示しません。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+        <target>ログイン時は非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>メンバーがログインしている場合はページをナビゲーションに表示しません。</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -472,6 +472,62 @@
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>メンバーが2ファクター認証を設定するために移動するページを選択してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>CSPを有効</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>このウェブサイトでコンテンツ・セキュリティー・ポリシーを有効にします。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>コンテンツ・セキュリティー・ポリシー</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>独自のコンテンツ・セキュリティー・ポリシーの指示を設定できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>報告だけ</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>ポリシーを強制せずに違反したことだけ報告します。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>報告のログ出力を有効</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>コンテンツ・セキュリティー・ポリシーの違反をContaoのシステムログに記録します。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>フィードの形式</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>フィードの形式を選択してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>項目の最大数</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>フィードの項目の数を制限できます。0にするとすべて出力します。</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>フィードの説明</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the feed.</source>
+        <target>フィードの短い説明を入力できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -553,6 +609,18 @@
         <source>Two-factor authentication</source>
         <target>2ファクター認証</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>コンテンツ・セキュリティー・ポリシー</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>フィードの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>画像の設定</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 永続的なリダイレクト</target>
@@ -577,35 +645,31 @@
         <source>Inherit page layout</source>
         <target>ページのレイアウトを継承</target>
       </trans-unit>
-      <trans-unit id="tl_page.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
         <target>新しいページを作成</target>
       </trans-unit>
-      <trans-unit id="tl_page.show">
+      <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
         <target>ID %sのページの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit">
+      <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>ID %sのページを編集</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut">
+      <trans-unit id="tl_page.cut.1">
         <source>Move page ID %s</source>
         <target>ID %sのページを移動</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy">
-        <source>Duplicate page ID %s</source>
-        <target>ID %sのページを複製</target>
+      <trans-unit id="tl_page.copy.1">
+        <source>Copy page ID %s</source>
+        <target>ID %sのページをコピー</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
-        <source>Duplicate page ID %s with its subpages</source>
-        <target>下位のページを含めてID %sのページを複製</target>
+      <trans-unit id="tl_page.copyChildren.1">
+        <source>Copy page ID %s with its subpages</source>
+        <target>ID %sのページを下位のページと共にコピー </target>
       </trans-unit>
-      <trans-unit id="tl_page.delete">
+      <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
         <target>ID %sのページを削除</target>
       </trans-unit>
@@ -621,9 +685,13 @@
         <source>Publish page ID %s</source>
         <target>ID %sのページを公開</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste at the top</source>
-        <target>先頭に貼り付け</target>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+        <target>非公開</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
+        <target>公開</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -633,7 +701,23 @@
         <source>Paste after page ID %s</source>
         <target>ID %sのページの後に貼り付け</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles">
+      <trans-unit id="tl_page.pastenewtop.1">
+        <source>Add a new page at the top</source>
+        <target>最上位に新しいページを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.1">
+        <source>Add a new page after page ID %s</source>
+        <target>ID %sのページの後に新しいページを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.1">
+        <source>Add a new page inside page ID %s</source>
+        <target>ID %sのページの中に新しいページを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.0">
+        <source>Articles</source>
+        <target>アーティクル</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>
         <target>ID %sのページのアーティクルを編集</target>
       </trans-unit>

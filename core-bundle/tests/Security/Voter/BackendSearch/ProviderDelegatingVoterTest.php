@@ -16,15 +16,14 @@ use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\BackendSearch\ProviderDelegatingVoter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ProviderDelegatingVoterTest extends TestCase
 {
-    /**
-     * @dataProvider notSupportedProvider
-     */
+    #[DataProvider('notSupportedProvider')]
     public function testNotSupported(mixed $subject, array $attributes): void
     {
         $provider = $this->createMock(ProviderInterface::class);
@@ -40,9 +39,7 @@ class ProviderDelegatingVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
     }
 
-    /**
-     * @dataProvider supportedChecksCorrectlyProvider
-     */
+    #[DataProvider('supportedChecksCorrectlyProvider')]
     public function testSupportedChecksCorrectly(bool $accessGranted): void
     {
         $provider = $this->createMock(ProviderInterface::class);

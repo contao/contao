@@ -16,6 +16,7 @@ use Contao\CoreBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
 use FOS\HttpCache\SymfonyCache\CacheEvent;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\Events;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,8 +31,9 @@ class StripQueryParametersSubscriberTest extends TestCase
     }
 
     /**
-     * @dataProvider queryParametersProvider
+     * @param array<string, string|int> $expectedParameters
      */
+    #[DataProvider('queryParametersProvider')]
     public function testQueryParametersAreStrippedCorrectly(array $parameters, array $expectedParameters, array $allowList = [], array $removeFromDenyList = []): void
     {
         $request = Request::create('/', 'GET', $parameters);

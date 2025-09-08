@@ -292,7 +292,7 @@ abstract class Widget extends Controller
 
 			case 'disabled':
 			case 'readonly':
-				$this->blnSubmitInput = $varValue ? false : true;
+				$this->blnSubmitInput = !$varValue;
 				// no break
 
 			case 'autofocus':
@@ -323,7 +323,7 @@ abstract class Widget extends Controller
 			case 'spaceToUnderscore':
 			case 'doNotTrim':
 			case 'useRawRequestData':
-				$this->arrConfiguration[$strKey] = $varValue ? true : false;
+				$this->arrConfiguration[$strKey] = (bool) $varValue;
 				break;
 
 			case 'forAttribute':
@@ -1403,9 +1403,9 @@ abstract class Widget extends Controller
 				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
 			}
 
-			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['customSchemaOptions']['unique']))
+			if (!isset($arrAttributes['unique']) && (isset($arrAttributes['sql']['customSchemaOptions']['unique']) || isset($arrAttributes['sql']['platformOptions']['unique'])))
 			{
-				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
+				$arrAttributes['unique'] = $arrAttributes['sql']['platformOptions']['unique'] ?? $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}
 		}
 

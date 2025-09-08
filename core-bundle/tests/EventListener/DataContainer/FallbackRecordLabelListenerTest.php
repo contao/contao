@@ -48,7 +48,7 @@ class FallbackRecordLabelListenerTest extends TestCase
         $catalogue = $this->createMock(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
-            ->with('tl_foo.edit', 'contao_tl_foo')
+            ->with('tl_foo.edit.1', 'contao_tl_foo')
             ->willReturn(true)
         ;
 
@@ -62,7 +62,7 @@ class FallbackRecordLabelListenerTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with('tl_foo.edit', [123], 'contao_tl_foo')
+            ->with('tl_foo.edit.1', [123], 'contao_tl_foo')
             ->willReturn('Edit 123')
         ;
 

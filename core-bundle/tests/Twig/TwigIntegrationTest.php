@@ -25,6 +25,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -37,6 +38,7 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
@@ -95,7 +97,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -175,7 +177,7 @@ class TwigIntegrationTest extends TestCase
                 $filesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -183,7 +185,7 @@ class TwigIntegrationTest extends TestCase
         $container->set('twig', $environment);
         $container->set(ContextFactory::class, new ContextFactory());
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
 
         $container->set('contao.insert_tag.parser', $insertTagParser);
@@ -226,7 +228,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -278,7 +280,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -333,7 +335,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -342,9 +344,7 @@ class TwigIntegrationTest extends TestCase
         $this->assertSame($expectedOutput, $output);
     }
 
-    /**
-     * @dataProvider provideDeserializeFilterValues
-     */
+    #[DataProvider('provideDeserializeFilterValues')]
     public function testDeserializeFilter(mixed $values, string $expectedOutput): void
     {
         $templateContent = <<<'TEMPLATE'
@@ -363,7 +363,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 

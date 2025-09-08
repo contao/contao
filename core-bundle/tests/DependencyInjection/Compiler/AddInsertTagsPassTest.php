@@ -20,6 +20,7 @@ use Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\Resolver\DateInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,9 +54,7 @@ class AddInsertTagsPassTest extends TestCase
         $this->assertEmpty($definition->getMethodCalls());
     }
 
-    /**
-     * @dataProvider getAddsExpectedMethodCalls
-     */
+    #[DataProvider('getAddsExpectedMethodCalls')]
     public function testAddsExpectedMethodCalls(array $services, array $expectedMethodCalls, \Throwable|null $expectedException = null): void
     {
         $container = $this->getContainerBuilder();

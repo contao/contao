@@ -19,9 +19,9 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 
-abstract class AbstractDataContainerVoter implements VoterInterface, CacheableVoterInterface
+abstract class AbstractDataContainerVoter implements CacheableVoterInterface
 {
     public function supportsAttribute(string $attribute): bool
     {
@@ -33,7 +33,7 @@ abstract class AbstractDataContainerVoter implements VoterInterface, CacheableVo
         return \in_array($subjectType, [CreateAction::class, ReadAction::class, UpdateAction::class, DeleteAction::class], true);
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
     {
         foreach ($attributes as $attribute) {
             if (!$this->supportsAttribute($attribute)) {

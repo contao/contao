@@ -1,25 +1,25 @@
-import {Controller} from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
 export default class TooltipsController extends Controller {
     static defaultOptionsMap = {
-        'a img[alt]': {x: -9, y: 30},
-        '.sgallery img[alt]': {x: 0, y: 75},
-        'p.tl_tip': {x: 0, y: 23, useContent: true},
-        '#home[title]': {x: 6, y: 42},
-        '#tmenu a[title]': {x: 0, y: 42},
-        'a[title][class^="group-"]': {x: -6, y: 27},
-        'a[title].navigation': {x: 25, y: 32},
-        'img[title].gimage': {x: -9, y: 60},
-        'img[title]:not(.gimage)': {x: -9, y: 30},
-        'a[title].picker-wizard': {x: -4, y: 30},
-        'button img[alt]': {x: -9, y: 30},
-        '.tl_panel button[title]': {x: 0, y: 36},
-        'button[title].unselectable': {x: -4, y: 20},
-        'button[title]:not(.unselectable)': {x: -9, y: 30},
-        'a[title]:not(.picker-wizard)': {x: -9, y: 30},
-        'input[title]': {x: -9, y: 30},
-        'time[title]': {x: -9, y: 26},
-        'span[title]': {x: -9, y: 26},
+        'a img[alt]': { x: -9, y: 30 },
+        '.sgallery img[alt]': { x: 0, y: 75 },
+        'p.tl_tip': { x: 0, y: 23, useContent: true },
+        '#home[title]': { x: 6, y: 42 },
+        '#tmenu a[title]': { x: 0, y: 42 },
+        'a[title][class^="group-"]': { x: -6, y: 27 },
+        'a[title].navigation': { x: 25, y: 32 },
+        'img[title].gimage': { x: -9, y: 60 },
+        'img[title]:not(.gimage)': { x: -9, y: 30 },
+        'a[title].picker-wizard': { x: -4, y: 30 },
+        'button img[alt]': { x: -9, y: 30 },
+        '.tl_panel button[title]': { x: 0, y: 36 },
+        'button[title].unselectable': { x: -4, y: 20 },
+        'button[title]:not(.unselectable)': { x: -9, y: 30 },
+        'a[title]:not(.picker-wizard)': { x: -9, y: 30 },
+        'input[title]': { x: -9, y: 30 },
+        'time[title]': { x: -9, y: 26 },
+        'span[title]': { x: -9, y: 26 },
     };
 
     activeTargets = new Set();
@@ -30,15 +30,11 @@ export default class TooltipsController extends Controller {
      * DOM element is shared across targets.
      */
     connect() {
-        document.body.appendChild(this.tooltip = this._createTipContainer());
-
-        document.addEventListener('touchstart', this._touchStartDelegate);
+        this.tooltip = document.body.querySelector('body > div[role="tooltip"]') ?? this._createTipContainer();
     }
 
     disconnect() {
         this.tooltip.remove();
-
-        document.removeEventListener('touchstart', this._touchStartDelegate);
     }
 
     tooltipTargetConnected(el) {
@@ -76,11 +72,13 @@ export default class TooltipsController extends Controller {
         tooltip.style.position = 'absolute';
         tooltip.style.display = 'none';
 
+        document.body.appendChild(tooltip);
+
         return tooltip;
     }
 
-    _touchStartDelegate = (e) => {
-        [...this.activeTargets].filter(el => !el.contains(e.target)).forEach(this._hideTooltip.bind(this))
+    touchStart = (e) => {
+        [...this.activeTargets].filter((el) => !el.contains(e.target)).forEach(this._hideTooltip.bind(this));
     };
 
     _showTooltip(el, delay = 0) {
@@ -89,7 +87,7 @@ export default class TooltipsController extends Controller {
 
         if (options.useContent) {
             text = el.innerHTML;
-        } else if ('img' === el.nodeName.toLowerCase()) {
+        } else if (el instanceof HTMLImageElement) {
             text = el.getAttribute('alt');
             text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
         } else {
@@ -113,18 +111,18 @@ export default class TooltipsController extends Controller {
             const rtl = getComputedStyle(el).direction === 'rtl';
             const clientWidth = document.documentElement.clientWidth;
 
-            if ((rtl && position.x < 200) || (!rtl && position.x < (clientWidth - 200))) {
-                this.tooltip.style.left = `${(window.scrollX + position.left + options.x)}px`;
+            if ((rtl && position.x < 200) || (!rtl && position.x < clientWidth - 200)) {
+                this.tooltip.style.left = `${window.scrollX + position.left + options.x}px`;
                 this.tooltip.style.right = 'auto';
                 this.tooltip.classList.remove('tip--rtl');
             } else {
                 this.tooltip.style.left = 'auto';
-                this.tooltip.style.right = `${(clientWidth - window.scrollX - position.right + options.x)}px`;
+                this.tooltip.style.right = `${clientWidth - window.scrollX - position.right + options.x}px`;
                 this.tooltip.classList.add('tip--rtl');
             }
 
             this.tooltip.innerHTML = `<div>${text}</div>`;
-            this.tooltip.style.top = `${(window.scrollY + position.top + options.y)}px`;
+            this.tooltip.style.top = `${window.scrollY + position.top + options.y}px`;
             this.tooltip.style.display = 'block';
             this.tooltip.style.willChange = 'auto';
         }, delay);
@@ -160,7 +158,7 @@ export default class TooltipsController extends Controller {
             }
         }
 
-        return {x: -9, y: 30};
+        return { x: -9, y: 30 };
     }
 
     /**
@@ -169,40 +167,42 @@ export default class TooltipsController extends Controller {
     static afterLoad(identifier, application) {
         const targetSelectors = Object.keys(TooltipsController.defaultOptionsMap);
 
-        const migrateTarget = el => {
-            targetSelectors.forEach(target => {
+        const migrateTarget = (el) => {
+            for (const target of targetSelectors) {
                 if (!el.hasAttribute(`data-${identifier}-target`) && el.match(target)) {
                     el.setAttribute(`data-${identifier}-target`, 'tooltip');
                 }
 
-                el.querySelectorAll(target).forEach(sel => {
+                for (const sel of el.querySelectorAll(target)) {
                     if (!sel.hasAttribute(`data-${identifier}-target`)) {
                         sel.setAttribute(`data-${identifier}-target`, 'tooltip');
                     }
-                })
-            })
+                }
+            }
         };
 
-        new MutationObserver(function (mutationsList) {
+        new MutationObserver((mutationsList) => {
             for (const mutation of mutationsList) {
                 if (mutation.type !== 'childList') {
                     continue;
                 }
 
-                for (let node of mutation.addedNodes) {
+                for (const node of mutation.addedNodes) {
                     if (!(node instanceof HTMLElement)) {
                         continue;
                     }
 
-                    migrateTarget(node)
+                    migrateTarget(node);
                 }
             }
         }).observe(document, {
             childList: true,
-            subtree: true
+            subtree: true,
         });
 
         // Initially migrate all targets that are already in the DOM
-        document.querySelectorAll(targetSelectors.join(',')).forEach(el => migrateTarget(el));
+        for (const el of document.querySelectorAll(targetSelectors.join(','))) {
+            migrateTarget(el);
+        }
     }
 }

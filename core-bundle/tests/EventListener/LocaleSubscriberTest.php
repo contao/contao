@@ -16,6 +16,7 @@ use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,9 +27,7 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class LocaleSubscriberTest extends TestCase
 {
-    /**
-     * @dataProvider getLocaleRequestData
-     */
+    #[DataProvider('getLocaleRequestData')]
     public function testReadsTheLocaleFromTheRequest(string|null $locale, string $expected): void
     {
         $request = $this->createMock(Request::class);
@@ -76,9 +75,7 @@ class LocaleSubscriberTest extends TestCase
         yield ['zh-tw', 'zh_TW'];
     }
 
-    /**
-     * @dataProvider acceptLanguageTestData
-     */
+    #[DataProvider('acceptLanguageTestData')]
     public function testReadsTheLocaleFromTheAcceptLanguageHeader(string|null $locale, string $expected, array $available): void
     {
         $request = $this->createMock(Request::class);

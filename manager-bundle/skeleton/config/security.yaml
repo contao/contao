@@ -22,8 +22,8 @@ security:
                     enabled: true
                     profile: contao_backend
                     routes:
-                        options_path: /_contao/login/webauthn/options
-                        result_path: /_contao/login/webauthn/result
+                        options_path: /_contao/webauthn/backend/login/options
+                        result_path: /_contao/webauthn/backend/login/result
 
             login_link:
                 check_route: contao_backend_login_link
@@ -43,6 +43,13 @@ security:
             access_denied_handler: contao.security.access_denied_handler
             switch_user: false
             login_throttling: ~
+            webauthn:
+                authentication:
+                    enabled: true
+                    profile: contao_frontend
+                    routes:
+                        options_path: /_contao/webauthn/frontend/login/options
+                        result_path: /_contao/webauthn/frontend/login/result
 
             contao_login:
                 remember_me: true

@@ -86,6 +86,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=sync',
 				'class'               => 'header_sync',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'syncFiles')
 			),
 		),
@@ -99,6 +100,13 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'attributes'          => 'data-contao--deeplink-target="primary"',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editFile')
+			),
+			'source' => array
+			(
+				'href'                => 'act=source',
+				'icon'                => 'editor.svg',
+				'primary'             => true,
+				'button_callback'     => array('tl_files', 'editSource')
 			),
 			'copy' => array
 			(
@@ -127,13 +135,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'icon'                => 'show.svg',
 				'button_callback'     => array('tl_files', 'showFile')
 			),
-			'source' => array
-			(
-				'href'                => 'act=source',
-				'icon'                => 'editor.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_files', 'editSource')
-			),
+			'-',
 			'upload' => array
 			(
 				'href'                => 'act=move&amp;mode=2',
@@ -144,7 +146,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'drag' => array
 			(
 				'icon'                => 'drag.svg',
-				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'attributes'          => 'class="drag-handle"',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'dragFile')
 			)
@@ -174,6 +176,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'uuid' => array
 		(
+			'label'					  => &$GLOBALS['TL_LANG']['MSC']['fileUuid'],
 			'sql'                     => "binary(16) NULL"
 		),
 		'type' => array

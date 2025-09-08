@@ -67,6 +67,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'recipients' => array
 			(
 				'href'                => 'table=tl_newsletter_recipients',

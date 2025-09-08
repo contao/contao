@@ -25,7 +25,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -92,7 +94,6 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testIsCurrent(): void
     {
         $provider = $this->createTableProvider();
-
         $config = $this->mockPickerConfig('', '', 'tablePicker.article');
 
         $this->assertTrue($provider->isCurrent($config));
@@ -105,7 +106,6 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetDcaTableFromContext(): void
     {
         $config = $this->mockPickerConfig('tl_content');
-
         $provider = $this->createTableProvider();
 
         $this->assertSame('tl_content', $provider->getDcaTable($config));
@@ -127,9 +127,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame(0, $provider->convertDcaValue($config, []));
     }
 
-    /**
-     * @dataProvider dcaAttributesProvider
-     */
+    #[DataProvider('dcaAttributesProvider')]
     public function testGetDcaAttributes(array $extra, string $value, array $expected): void
     {
         $provider = $this->createTableProvider();
@@ -183,9 +181,7 @@ class TablePickerProviderTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @dataProvider menuItemsProvider
-     */
+    #[DataProvider('menuItemsProvider')]
     public function testAddMenuItems(array $modules, string $current): void
     {
         $expectedCurrent = [];
@@ -207,9 +203,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->addMenuItems($menu, $config);
     }
 
-    /**
-     * @dataProvider menuItemsProvider
-     */
+    #[DataProvider('menuItemsProvider')]
     public function testCreateMenuItem(array $modules, string $current): void
     {
         $expectedCurrent = [];
@@ -232,8 +226,8 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         $config = $this->mockPickerConfig('tl_foobar', '', 'tablePicker.'.$current, $expectedCurrent);
-        $provider = $this->createMenuTableProvider($modules, $current, $menu);
 
+        $provider = $this->createMenuTableProvider($modules, $current, $menu);
         $provider->createMenuItem($config);
     }
 
@@ -322,7 +316,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'popup' => '1',
             'picker' => 'foobar',
             'table' => 'tl_article',
-            'id' => '1',
+            'id' => 1,
         ];
 
         $config = $this->mockPickerConfig('tl_article', '42');
@@ -558,7 +552,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $expectedParams = [];
 
         if ($menu) {
-            $expectedItems[] = ['picker'];
+            $expectedItems[] = ['picker', []];
         } else {
             $menu = $this->createMock(ItemInterface::class);
         }
@@ -581,11 +575,15 @@ class TablePickerProviderTest extends ContaoTestCase
             ];
         }
 
+        $matcher = $this->exactly(\count($expectedItems));
+
         $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
-            ->expects($this->exactly(\count($expectedItems)))
+            ->expects($matcher)
             ->method('createItem')
-            ->withConsecutive(...$expectedItems)
+            ->with($this->callback(
+                static fn (...$parameters) => $expectedItems[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
             ->willReturn($menu)
         ;
 
@@ -620,12 +618,17 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($current)
         ;
 
-        $clone = $config
-            ->method('cloneForCurrent')
-        ;
+        $clone = $config->method('cloneForCurrent');
 
         if ($expectedCurrent) {
-            $clone->withConsecutive(...$expectedCurrent);
+            $clone->with($this->callback(
+                static function (...$parameters) use (&$expectedCurrent) {
+                    $pos = array_search($parameters, $expectedCurrent, true);
+                    unset($expectedCurrent[$pos]);
+
+                    return false !== $pos;
+                },
+            ));
         }
 
         $clone->willReturnSelf();
@@ -665,14 +668,18 @@ class TablePickerProviderTest extends ContaoTestCase
         $expected = [];
 
         foreach ($consecutive as $params) {
-            $expected[] = ['contao_backend', $params];
+            $expected[] = ['contao_backend', $params, UrlGeneratorInterface::ABSOLUTE_PATH];
         }
+
+        $matcher = $this->exactly(\count($expected));
 
         $router = $this->createMock(RouterInterface::class);
         $router
-            ->expects($this->exactly(\count($expected)))
+            ->expects($matcher)
             ->method('generate')
-            ->withConsecutive(...$expected)
+            ->with($this->callback(
+                static fn (...$parameters) => $expected[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
             ->willReturn('')
         ;
 
@@ -696,8 +703,8 @@ class TablePickerProviderTest extends ContaoTestCase
         $expr
             ->expects($this->once())
             ->method('eq')
-            ->with('id', $id)
-            ->willReturnSelf()
+            ->with('id', (string) $id)
+            ->willReturn(\sprintf("%s.id = '%s'", $table, $id))
         ;
 
         $result = $this->createMock(Result::class);
@@ -717,7 +724,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('select')
-            ->with(['id'])
+            ->with('id')
             ->willReturnSelf()
         ;
 
@@ -731,15 +738,24 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('where')
-            ->with($expr)
+            ->with(\sprintf("%s.id = '%s'", $table, $id))
             ->willReturnSelf()
         ;
 
         if ($ptable && $dynamicPtable) {
+            $expected = ['pid', 'ptable'];
+
             $queryBuilder
                 ->expects($this->exactly(2))
                 ->method('addSelect')
-                ->withConsecutive(['pid'], ['ptable'])
+                ->with($this->callback(
+                    static function (string $select) use (&$expected) {
+                        $pos = array_search($select, $expected, true);
+                        unset($expected[$pos]);
+
+                        return false !== $pos;
+                    },
+                ))
                 ->willReturnSelf()
             ;
         } elseif ($ptable) {
@@ -784,14 +800,18 @@ class TablePickerProviderTest extends ContaoTestCase
         $expected = [];
 
         foreach ($modules as $module) {
-            $expected[] = ['MOD.'.$module.'.0', [], 'contao_default'];
+            $expected[] = ['MOD.'.$module.'.0', [], 'contao_default', null];
         }
+
+        $matcher = $this->exactly(\count($modules));
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
-            ->expects($this->exactly(\count($modules)))
+            ->expects($matcher)
             ->method('trans')
-            ->withConsecutive(...$expected)
+            ->with($this->callback(
+                static fn (...$parameters) => $expected[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
             ->willReturnArgument(0)
         ;
 

@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string  $fop
  * @property array   $alexf
  * @property array   $imageSizes
+ * @property string  $doNotHideMessages
  */
 class BackendUser extends User
 {
@@ -45,6 +46,7 @@ class BackendUser extends User
 	/**
 	 * Name of the current cookie
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strCookie = 'BE_USER_AUTH';
 
@@ -147,7 +149,7 @@ class BackendUser extends User
 	 */
 	public function hasAccess($field, $array)
 	{
-		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
 
 		if ($this->isAdmin)
 		{
@@ -458,5 +460,15 @@ class BackendUser extends User
 		}
 
 		return parent::isEqualTo($user);
+	}
+
+	public function getDisplayName(): string
+	{
+		return $this->name;
+	}
+
+	public function getPasskeyUserHandle(): string
+	{
+		return 'backend.' . $this->id;
 	}
 }

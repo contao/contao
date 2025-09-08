@@ -373,6 +373,42 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>管理者の電子メールアドレスが設定されていません、サイトの管理者に連絡してください。</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>現在JavaScriptは無効、またはアクセスを禁止されています。JavaScriptなしでは、spam対策のための検証は失敗します。フォームの提出のためにはJavaScriptを一時的に有効にしてください。 </target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>spam対策の検証に失敗しました。あなたは人間ですか、それともロボットですか?</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+        <target>検証できません。後で、もう一度試してください。</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHAは安全なHTTPS接続なしでは利用できません。実運用中のWebサイトがHTTPSを使用していない(ことは推奨できません)場合は、代わりにセキュリティ質問を使用してください。</target>
+      </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>パスワードを変更できるモジュールとして少なくとも1つ、「個人データ」があります。これはセキュリティ上の弱点で、Contao 6では動作しなくなります。代わりに「パスワード変更」モジュールを使用してください。</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>この機器はパスキーをサポートしていません。</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>パスキーでログインできませんでした。</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>パスキーを作成できませんでした。</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>%dのIDの要素は既存の要素と競合するため、ここには挿入できません。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>
@@ -433,6 +469,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>順序付きや順序なしの箇条書きを生成します。</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>説明リスト</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>用語と詳細からなる説明リストを生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>表</target>
@@ -441,29 +485,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>並べ替えも可能な表を生成します。</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>アコーディオン</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>アコーディオンを生成します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>要素のグループ</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>入れ子の要素のグループを生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>ラッパーの開始</target>
+        <source>Accordion wrapper start</source>
+        <target>アコーディオンのラッパーの開始</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>アコーディオンのラッパーを開始する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>ラッパーの終了</target>
+        <source>Accordion wrapper stop</source>
+        <target>アコーディオンのラッパーの終了</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>アコーディオンのラッパーを終了する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>単一の要素</target>
+        <source>Accordion single element</source>
+        <target>単一のアコーディオンの要素</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +549,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>独自のテンプレートを挿入する要素を生成します。</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>コンテントスライダー</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>コンテントスライダーの要素を生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>コンテントスライダー</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>ラッパーの開始</target>
+        <source>Slider wrapper start</source>
+        <target>スライダーのラッパーの開始</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>スライダーのラッパーを開始する部分を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>ラッパーの終了</target>
+        <source>Slider wrapper stop</source>
+        <target>スライダーのラッパーの終了</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -641,6 +705,30 @@
         <source>Displays the teaser text of an article.</source>
         <target>アーティクルのティーザーのテキストを表示します。</target>
       </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>レガシーな要素</target>
+      </trans-unit>
+      <trans-unit id="CTE.user">
+        <source>User</source>
+        <target>ユーザー</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.0">
+        <source>Manage passkeys</source>
+        <target>パスキーを管理</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.1">
+        <source>Allows to manage the passkeys of a member.</source>
+        <target>メンバーのパスキーの管理を許可します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.0">
+        <source>Login form</source>
+        <target>ログインフォーム</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.1">
+        <source>Generates a login form.</source>
+        <target>ログインフォームを生成します。</target>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
         <target>説明</target>
@@ -745,13 +833,21 @@
         <source>A single-line input field that is not visible in the form.</source>
         <target>フォームに表示されない1行のテキストの入力項目です。</target>
       </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+        <target>ALTCHA spam防止</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>ALTCHA spam防止のフォームの項目を提供して、フォームが人間による提出であることを検証します。(CAPTCHA)</target>
+      </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
         <target>セキュリティ質問</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.1">
         <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
-        <target>(ボットのようなプログラムではなく)人間によってフォームが提出されたことを確認するための、やさしい計算問題です。(CAPTCHA)</target>
+        <target>人間によってフォームが提出されたことを確認するための、やさしい計算問題です。(CAPTCHA)</target>
       </trans-unit>
       <trans-unit id="FFL.submit.0">
         <source>Submit field</source>
@@ -1141,6 +1237,10 @@
         <source>Open the link in a new browser window.</source>
         <target>ブラウザーの新しいウィンドウでリンクを開きます。</target>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>新しいタブで開く</target>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1322,16 +1422,24 @@
         <target>行を削除</target>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
-        <source>Module</source>
-        <target>モジュール</target>
+        <source>Module or content element</source>
+        <target>モジュールまたはコンテント要素</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
         <target>レイアウトセクション</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
-        <source>Enable/disable the module</source>
-        <target>モジュールを有効または無効</target>
+        <source>Enable/disable the module or content element</source>
+        <target>モジュールまたはコンテント要素を有効化・無効化</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_modules">
+        <source>Front end modules</source>
+        <target>フロントエンドモジュール</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
+        <target>コンテント要素</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
@@ -1602,8 +1710,8 @@
         <target>バックエンドのキーボードのショートカット</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>&lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使って、作業の流れを高速化する方法を学びましょう。</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>&lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;キーボードのショートカット&lt;/a&gt;を使用した作業の流れを高速にする方法を学びましょう。</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1704,6 +1812,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>取り止め</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+        <source>Are you sure?</source>
+        <target>本当に?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2325,6 +2437,10 @@
         <source>Quick link</source>
         <target>クイックリンク</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>パスワードを忘れましたか?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>ユーザー名</target>
@@ -2344,6 +2460,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>ユーザー名とパスワードを入力しください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>パスワードを入力して、あなたの識別情報を検証してください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>検証</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2449,17 +2573,13 @@
         <source>Print this page</source>
         <target>このページを印刷</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>アーティクルをPDFとして保存</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Facebookで共有</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Twitterで共有</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>X(かつてのTwitter)で共有</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2492,6 +2612,10 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>1ページの結果の数</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>または</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2541,6 +2665,10 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>開こうとしているURLを確認できません。あなた自身でクリックしたか、信頼に値する人から受け取ったリンクでしたら、以下を承認して処理を進めて良いでしょう。</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>パスワードを何回も再設定し過ぎです。15分待ってから再度試してください。</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>バージョンの競合</target>
@@ -2574,20 +2702,20 @@
         <target>ファイルのメタデータを入力するにはウェブサイトのルートを追加しなければなりません。</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
-        <target>パンくずメニュー</target>
+        <source>Breadcrumb</source>
+        <target>パンくず</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
-        <target>メインナビゲーション</target>
+        <source>Main</source>
+        <target>メイン</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
-        <target>ヘッダーナビゲーション</target>
+        <source>Header</source>
+        <target>ヘッダー</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
-        <target>ページ分割のメニュー</target>
+        <source>Pagination</source>
+        <target>ページ分割</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2721,6 +2849,10 @@
         <source>Disable</source>
         <target>無効</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>編集</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Google検索の結果のプレビュー</target>
@@ -2793,6 +2925,10 @@
         <source>Manual</source>
         <target>マニュアル</target>
       </trans-unit>
+      <trans-unit id="MSC.jobs">
+        <source>Job overview</source>
+        <target>ジョブの概要</target>
+      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
         <target>動画を読み込むにはクリックしてください。</target>
@@ -2828,6 +2964,130 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>ライトモード</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>&lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;による保護</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+        <target>私はロボットでありません</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+        <target>私は人間です</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+        <target>検証中...</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
+        <target>検証中...しばらくお待ちください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>パスキー</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>パスキーを使用すると、パスワードや2ファクター認証の必要なしに安全で簡単にログインできます。</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>パスキーでサインイン</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>名前・ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>このパスキーの名前を設定...</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>作成日時</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>パスキーを追加</target>
+      </trans-unit>
+      <trans-unit id="MSC.editPasskey">
+        <source>Edit passkey &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というパスキーを編集</target>
+      </trans-unit>
+      <trans-unit id="MSC.savePasskey">
+        <source>Save passkey &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というパスキーを保存</target>
+      </trans-unit>
+      <trans-unit id="MSC.deletePasskey">
+        <source>Delete passkey &quot;%s&quot;</source>
+        <target>&quot;%s&quot;というパスキーを削除</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>入力すると検索を開始</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>少なくとも%s文字入力してください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+        <target>結果を読み込み中...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>%sを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>%sを編集</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>何も見つかりません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>次からの選択肢がありません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>項目を削除</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuExpand">
+        <source>Expand menu: </source>
+        <target>メニューを展開:</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuCollapse">
+        <source>Collapse menu: </source>
+        <target>メニューを折り畳む</target>
+      </trans-unit>
+      <trans-unit id="MSC.skipToContent">
+        <source>Skip to content</source>
+        <target>コンテントを飛ばす</target>
+      </trans-unit>
+      <trans-unit id="MSC.clipboardCopy">
+        <source>Copied to clipboard.</source>
+        <target>クリップボードにコピーしました。</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer</source>
+        <target>検索の索引作成者</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
+        <target>内部の検索インデックスを設定するロボットメタタグを上書きできます。</target>
+      </trans-unit>
+      <trans-unit id="MSC.always_index">
+        <source>Always index</source>
+        <target>常にインデックス</target>
+      </trans-unit>
+      <trans-unit id="MSC.never_index">
+        <source>Never index</source>
+        <target>常にインデックスしない</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2989,23 +3249,51 @@
         <source>Create a new element</source>
         <target>新しい要素を作成</target>
       </trans-unit>
-      <trans-unit id="DCA.show">
+      <trans-unit id="DCA.show.0">
+        <source>Details</source>
+        <target>詳細</target>
+      </trans-unit>
+      <trans-unit id="DCA.show.1">
         <source>Show the details of element ID %s</source>
         <target>ID %sの要素の詳細を表示</target>
       </trans-unit>
-      <trans-unit id="DCA.edit">
+      <trans-unit id="DCA.edit.0">
+        <source>Edit</source>
+        <target>編集</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit.1">
         <source>Edit element ID %s</source>
         <target>ID %sの要素の詳細を編集</target>
       </trans-unit>
-      <trans-unit id="DCA.cut">
+      <trans-unit id="DCA.cut.0">
+        <source>Move</source>
+        <target>移動</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut.1">
         <source>Move element ID %s</source>
         <target>ID %sの要素の詳細を移動</target>
       </trans-unit>
-      <trans-unit id="DCA.copy">
-        <source>Duplicate element ID %s</source>
-        <target>ID %sの要素の詳細を複製</target>
+      <trans-unit id="DCA.copy.0">
+        <source>Copy</source>
+        <target>コピー</target>
       </trans-unit>
-      <trans-unit id="DCA.delete">
+      <trans-unit id="DCA.copy.1">
+        <source>Copy element ID %s</source>
+        <target>ID %sの要素をコピー</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.0">
+        <source>Copy recursively</source>
+        <target>再帰的にコピー</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.1">
+        <source>Copy element ID %s with child nodes</source>
+        <target>ID %sの要素を子のノードと共にコピー</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.0">
+        <source>Delete</source>
+        <target>削除</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
         <target>ID %sの要素の詳細を削除</target>
       </trans-unit>
@@ -3013,7 +3301,19 @@
         <source>Drag element ID %s</source>
         <target>ID %sの要素の詳細をドラッグ</target>
       </trans-unit>
-      <trans-unit id="DCA.children">
+      <trans-unit id="DCA.global_operations">
+        <source>Show all global operations</source>
+        <target>すべての全体的な操作を表示</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>ID %sの要素の操作を表示</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.0">
+        <source>Child elements</source>
+        <target>子の要素</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
         <target>ID %sの要素の子の要素を編集</target>
       </trans-unit>
@@ -3029,29 +3329,61 @@
         <source>Publish element ID %s</source>
         <target>ID %sの要素を公開</target>
       </trans-unit>
-      <trans-unit id="DCA.pasteinto.0">
+      <trans-unit id="DCA.toggle.3">
+        <source>Unpublish</source>
+        <target>非公開</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.4">
+        <source>Publish</source>
+        <target>公開</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastetop">
         <source>Paste at the top</source>
         <target>先頭に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteroot">
+        <source>Paste at the top</source>
+        <target>先頭に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste into</source>
+        <target>この中に貼り付け</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
         <target>ID %sの要素の中に貼り付け</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>先頭に貼り付け</target>
+        <source>Paste after</source>
+        <target>この後に貼り付け</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
         <target>ID %sの要素の後ろに貼り付け</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.0">
+      <trans-unit id="DCA.pastenewtop.0">
+        <source>New at the top</source>
+        <target>最上位に作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
         <target>先頭に新しい要素を作成</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.1">
+      <trans-unit id="DCA.pastenewafter.0">
+        <source>New after</source>
+        <target>後に作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
         <target>ID %sの要素の後ろに新しい要素を作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.0">
+        <source>New inside</source>
+        <target>内部に作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.1">
+        <source>Create a new element inside element ID %s</source>
+        <target>ID %sの要素の中に新しい要素を作成</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

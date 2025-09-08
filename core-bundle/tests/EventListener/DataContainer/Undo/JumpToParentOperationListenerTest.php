@@ -88,7 +88,7 @@ class JumpToParentOperationListenerTest extends TestCase
         $listener($operation);
 
         $this->assertSame('Show origin of Content element ID 42', $operation['title']);
-        $this->assertSame(" onclick=\"Backend.openModalIframe({'title':'Show origin of Content element ID 42','url': this.href });return false\"", $operation['attributes']);
+        $this->assertSame(' onclick="Backend.openModalIframe({&apos;title&apos;:&apos;Show origin of Content element ID 42&apos;,&apos;url&apos;: this.href });return false"', (string) $operation['attributes']);
     }
 
     public function testRenderJumpToParentButtonForDirectParent(): void
@@ -116,7 +116,7 @@ class JumpToParentOperationListenerTest extends TestCase
         $listener($operation);
 
         $this->assertSame('Go to parent of tl_form_field ID 42', $operation['title']);
-        $this->assertSame(" onclick=\"Backend.openModalIframe({'title':'Go to parent of tl_form_field ID 42','url': this.href });return false\"", $operation['attributes']);
+        $this->assertSame(' onclick="Backend.openModalIframe({&apos;title&apos;:&apos;Go to parent of tl_form_field ID 42&apos;,&apos;url&apos;: this.href });return false"', (string) $operation['attributes']);
     }
 
     public function testRendersDisabledJumpToParentButtonWhenParentHasBeenDeleted(): void

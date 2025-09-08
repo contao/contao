@@ -114,8 +114,8 @@
         <target>XML dosyalarını yeniden oluştur</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>&lt;code&gt;shared&lt;/code&gt; klasöründeki XML dosyalarını yeniden oluşturur ve ardından paylaşılan ön belleği temizler. Böylece silinen kaynaklara bir bağlantı kalmaz.</target>
+        <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>&lt;code&gt;share&lt;/code&gt; klasöründeki XML dosyalarını yeniden oluşturur ve ardından paylaşılan ön belleği temizler. Böylece silinen kaynaklara bir bağlantı kalmaz.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>Toplayıcı bulduğu tüm adresleri derler. Buradan bu sonuçlarla ne yapılacağını belirtebilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>En fazla derinlik</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>En fazla tarama derinliği.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Ön yüz üyesi</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Korunmuş sayfaları dizine eklemek için otomatik olarak bir ön yüz kullanıcısı oturumu açılsın.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>Siteniz şu anda %d eşzamanlı istekle taranıyor. Sunucunuz %1$d taneden fazla eşzamanlı isteği işleyebiliyorsa, tarama sürecini hızlandırmak için sistem yöneticinizden sistem yapılandırmasındaki &lt;code&gt;%s&lt;/code&gt; ayarının değerini artırmasını isteyin. Ayrıntılı bilgi almak için &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao rehberine&lt;/a&gt; bakabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
@@ -172,6 +184,21 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Bozuk bağlantıları denetle</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+        <target>Yönetim bölümü araması</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+        <target>Yönetim bölümü aramasını kullanmak için lütfen &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt; eklentisini etkinleştirin.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>Dizini yeniden oluştur</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.confirmation">
+        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
       </trans-unit>
     </body>
   </file>

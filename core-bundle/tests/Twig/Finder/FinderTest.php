@@ -18,6 +18,7 @@ use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class FinderTest extends TestCase
@@ -147,9 +148,7 @@ class FinderTest extends TestCase
         $this->assertSame($expected, iterator_to_array($finder));
     }
 
-    /**
-     * @dataProvider provideRegexCases
-     */
+    #[DataProvider('provideRegexCases')]
     public function testFindWithRegularExpression(string $regex, bool $include, array $expected): void
     {
         $finder = $this->getFinder()

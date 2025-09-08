@@ -91,6 +91,7 @@ class BackendFavoritesListener
             ->setLinkAttribute('title', $this->translator->trans($collapsed ? 'MSC.expandNode' : 'MSC.collapseNode', [], 'contao_default'))
             ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
             ->setLinkAttribute('data-contao--toggle-navigation-category-param', 'favorites')
+            ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setLinkAttribute('aria-controls', 'favorites')
             ->setChildrenAttribute('id', 'favorites')
             ->setExtra('translation_domain', false)

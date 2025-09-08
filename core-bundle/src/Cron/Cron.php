@@ -16,13 +16,13 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Lock\LockFactory;
 
 class Cron
 {
@@ -45,7 +45,6 @@ class Cron
         private readonly \Closure $repository,
         private readonly \Closure $entityManager,
         private readonly CacheItemPoolInterface $cachePool,
-        private readonly LockFactory $lockFactory,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }
@@ -129,11 +128,12 @@ class Cron
         $entityManager = ($this->entityManager)();
         $cronJobsToBeRun = [];
 
-        $now = new \DateTimeImmutable();
+        $now = new \DateTime();
 
-        $lock = $this->lockFactory->createLock(__METHOD__, 3600);
-
-        if (!$lock->acquire()) {
+        // Return if another cron process is already running
+        try {
+            $repository->lockTable();
+        } catch (LockWaitTimeoutException) {
             return;
         }
 
@@ -173,7 +173,7 @@ class Cron
 
             $entityManager->flush();
         } finally {
-            $lock->release();
+            $repository->unlockTable();
         }
 
         // Callback to restore previous run date in case cronjob skips itself
@@ -184,13 +184,13 @@ class Cron
             $entityManager->flush();
         };
 
-        $this->executeCrons($cronJobsToBeRun, $scope, $onSkip);
+        $this->executeCrons($cronJobsToBeRun, $scope, $entityManager, $onSkip);
     }
 
     /**
      * @param array<CronJob> $crons
      */
-    private function executeCrons(array $crons, string $scope, \Closure $onSkip): void
+    private function executeCrons(array $crons, string $scope, EntityManagerInterface $entityManager, \Closure $onSkip): void
     {
         $promises = [];
         $exception = null;
@@ -232,6 +232,9 @@ class Cron
         }
 
         if ($promises) {
+            // Close the DB connection until async promises have completed.
+            $entityManager->getConnection()->close();
+
             Utils::settle($promises)->wait();
         }
 

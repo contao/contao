@@ -27,6 +27,7 @@ use Contao\FrontendTemplate;
 use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -45,7 +46,7 @@ class TemplateTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
 
         System::setContainer($container);
     }
@@ -333,9 +334,7 @@ class TemplateTest extends TestCase
         (new FrontendTemplate())->figure(1, null);
     }
 
-    /**
-     * @dataProvider provideBuffer
-     */
+    #[DataProvider('provideBuffer')]
     public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
     {
         $page = new \stdClass();

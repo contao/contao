@@ -114,8 +114,8 @@
         <target>XML-Dateien neu schreiben</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>Schreibt die XML-Dateien im Ordner &lt;code&gt;shared&lt;/code&gt; neu und leert anschließend den Shared-Cache, damit keine ungültigen Links zurückbleiben.</target>
+        <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Schreibt die XML-Dateien im Ordner &lt;code&gt;share&lt;/code&gt; neu und leert anschließend den Shared-Cache, damit keine ungültigen Links zurückbleiben.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>Der Crawler analysiert alle URLs, die er findet. Hier können Sie festlegen, was mit den Ergebnissen geschehen soll.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>Maximale Tiefe</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>Die maximale Crawl-Tiefe.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Frontend-Mitglied</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Um geschützte Seiten zu indizieren, muss ein Frontend-Mitglied angemeldet werden.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>Die Webseite wird momentan mit %d gleichzeitigen Requests gecrawlt. Wenn ihr Server mehr als %1$d gleichzeitige Requests verarbeiten kann, bitten Sie den Systemadministrator, die Einstellung &lt;code&gt;%s&lt;/code&gt; in der Systemkonfiguration zu erhöhen, um den Crawling-Prozess zu beschleunigen. Weitere Informationen dazu finden Sie im &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao-Handbuch&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
@@ -172,6 +184,22 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Nach defekten Links suchen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+        <target>Backend-Suche</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+        <target>Bitte aktivieren Sie das &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao Cronjob-Framework&lt;/a&gt;, um die Backend-Suche zu nutzen.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>Suchindex aufbauen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.confirmation">
+        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
+        <target>Der Aufbau läuft. In der Jobübersicht finden Sie den aktuellen Stand des Prozesses.</target>
       </trans-unit>
     </body>
   </file>

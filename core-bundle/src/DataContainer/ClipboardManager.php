@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Database;
+use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -31,8 +34,10 @@ class ClipboardManager
 
     private const SESSION_KEY = 'CLIPBOARD';
 
-    public function __construct(private readonly RequestStack $requestStack)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function get(string $table): array|null
@@ -47,7 +52,7 @@ class ClipboardManager
         return $clipboard[$table];
     }
 
-    public function set(string $table, int|string|null $id, array|null $children, string $mode): void
+    public function set(string $table, int|string|null $id, string|null $children, string $mode): void
     {
         $session = $this->requestStack->getSession();
         $clipboard = $session->get(self::SESSION_KEY);
@@ -113,6 +118,44 @@ class ClipboardManager
         $session->set(self::SESSION_KEY, []);
     }
 
+    public function isCutMode(string $table): bool
+    {
+        $clipboard = $this->get($table);
+
+        return $clipboard && (self::MODE_CUT === $clipboard['mode'] || self::MODE_CUT_ALL === $clipboard['mode']);
+    }
+
+    public function isCircularReference(string $table, int|string $id, bool $loadChildRecords = false): bool
+    {
+        // Only tree mode can have circular references. In extended tree, nodes (e.g.
+        // articles) only have one level.
+        if (DataContainer::MODE_TREE !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+            return false;
+        }
+
+        $clipboard = $this->get($table);
+
+        if (null === $clipboard) {
+            return false;
+        }
+
+        if (
+            (\is_array($clipboard['id']) && \in_array($id, $clipboard['id'], false))
+            || (!\is_array($clipboard['id']) && (string) $id === (string) $clipboard['id'])
+        ) {
+            return true;
+        }
+
+        if (!$loadChildRecords) {
+            return false;
+        }
+
+        $db = $this->framework->createInstance(Database::class);
+        $childrenOfClipboard = $db->getChildRecords($clipboard['id'], $table);
+
+        return \in_array($id, $childrenOfClipboard, false);
+    }
+
     public function canPasteAfterOrInto(string $table, int|string $id): bool
     {
         $clipboard = $this->get($table);
@@ -121,6 +164,6 @@ class ClipboardManager
             return false;
         }
 
-        return !(self::MODE_CUT === $clipboard['mode'] && $id === $clipboard['id']) && !(\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false));
+        return !(self::MODE_CUT === $clipboard['mode'] && (string) $id === (string) $clipboard['id']) && !(\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false));
     }
 }

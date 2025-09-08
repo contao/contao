@@ -16,14 +16,13 @@ use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Monolog\Level;
 use Monolog\LogRecord;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandlerTest extends TestCase
 {
-    /**
-     * @dataProvider writesCsvStreamProvider
-     */
+    #[DataProvider('writesCsvStreamProvider')]
     public function testWritesCsvStream(\DateTimeImmutable $dt, array $context, string $expectedContent, string $existingCsvContent = '', string $message = 'foobar'): void
     {
         $stream = fopen('php://memory', 'r+');

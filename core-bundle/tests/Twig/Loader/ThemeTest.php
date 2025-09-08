@@ -15,15 +15,11 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ThemeTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @dataProvider providePaths
-     */
+    #[DataProvider('providePaths')]
     public function testGenerateSlug(string $path, string $expectedSlug): void
     {
         $themeNamespace = new ThemeNamespace();
@@ -41,16 +37,12 @@ class ThemeTest extends TestCase
         yield 'nested' => ['foo/bar/baz', 'foo_bar_baz'];
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider provideRelativePaths
-     */
+    #[DataProvider('provideRelativePaths')]
     public function testGenerateRelativeSlug(string $path, string $expectedSlug): void
     {
         $themeNamespace = new ThemeNamespace();
 
-        $this->expectDeprecation('%sUsing paths outside of the template directory are deprecated and will no longer work in Contao 6.%s');
+        $this->expectUserDeprecationMessageMatches('/Using paths outside of the template directory is deprecated and will no longer work in Contao 6\./');
 
         $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
     }
@@ -94,9 +86,7 @@ class ThemeTest extends TestCase
         $this->assertSame('@Contao_Theme_foo_bar', (new ThemeNamespace())->getFromSlug('foo_bar'));
     }
 
-    /**
-     * @dataProvider provideNamespaces
-     */
+    #[DataProvider('provideNamespaces')]
     public function testMatchThemeNamespace(string $name, string|null $expectedSlug): void
     {
         $this->assertSame($expectedSlug, (new ThemeNamespace())->match($name));

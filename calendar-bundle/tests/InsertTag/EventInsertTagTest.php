@@ -21,6 +21,7 @@ use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class EventInsertTagTest extends ContaoTestCase
@@ -44,7 +45,8 @@ class EventInsertTagTest extends ContaoTestCase
         $this->assertEquals(new InsertTagResult('http://localhost/share/events.xml', OutputType::url), $url);
     }
 
-    public function testReplacesTheEventTags(): void
+    #[DataProvider('replacesTheEventTagsProvider')]
+    public function testReplacesTheEventTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->title = 'The "foobar" event';
@@ -56,95 +58,128 @@ class EventInsertTagTest extends ContaoTestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(10))
+            ->expects(null === $url ? $this->never() : $this->once())
             ->method('generate')
-            ->withConsecutive(
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-            )
-            ->willReturnOnConsecutiveCalls(
-                'events/the-foobar-event.html',
-                'events/the-foobar-event.html',
-                'events/the-foobar-event.html',
-                'events/the-foobar-event.html',
-                'http://domain.tld/events/the-foobar-event.html',
-                'http://domain.tld/events/the-foobar-event.html',
-                'events/the-foobar-event.html',
-                'http://domain.tld/events/the-foobar-event.html',
-                'http://domain.tld/events/the-foobar-event.html',
-                'http://domain.tld/events/the-foobar-event.html',
-            )
+            ->with($eventModel, [], $referenceType)
+            ->willReturn($url ?? '')
         ;
 
         $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
-        $this->assertSame(
-            '<a href="events/the-foobar-event.html">The "foobar" event</a>',
-            $listener(new ResolvedInsertTag('event', new ResolvedParameters(['2']), []))->getValue(),
-        );
+        $this->assertSame($expectedValue, $result->getValue());
+        $this->assertSame($expectedOutputType, $result->getOutputType());
+    }
 
-        $this->assertSame(
-            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
-            $listener(new ResolvedInsertTag('event', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="events/the-foobar-event.html">',
-            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
+    public static function replacesTheEventTagsProvider(): iterable
+    {
+        yield [
+            'event',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
-            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2']), []))->getValue(),
-        );
+            '<a href="events/the-foobar-event.html">The "foobar" event</a>',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'event',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'events/the-foobar-event.html',
+            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
+            OutputType::html,
+        ];
+
+        yield [
+            'event_open',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'events/the-foobar-event.html',
+            '<a href="events/the-foobar-event.html">',
+            OutputType::html,
+        ];
+
+        yield [
+            'event_open',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'events/the-foobar-event.html',
+            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
+
+        yield [
+            'event_open',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
-            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'event_open',
+            ['2', 'absolute', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
-            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'event_url',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'events/the-foobar-event.html',
+            'events/the-foobar-event.html',
+            OutputType::url,
+        ];
+
+        yield [
+            'event_url',
+            ['2', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
-            $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
+            'http://domain.tld/events/the-foobar-event.html',
+            OutputType::url,
+        ];
 
-        $this->assertEquals(
-            new InsertTagResult('The "foobar" event'),
-            $listener(new ResolvedInsertTag('event_title', new ResolvedParameters(['2']), [])),
-        );
+        yield [
+            'event_url',
+            ['2', 'absolute', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/events/the-foobar-event.html',
+            'http://domain.tld/events/the-foobar-event.html',
+            OutputType::url,
+        ];
 
-        $this->assertSame(
+        yield [
+            'event_url',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/events/the-foobar-event.html',
+            'http://domain.tld/events/the-foobar-event.html',
+            OutputType::url,
+        ];
+
+        yield [
+            'event_title',
+            ['2'],
+            null,
+            null,
+            'The "foobar" event',
+            OutputType::text,
+        ];
+
+        yield [
+            'event_teaser',
+            ['2'],
+            null,
+            null,
             '<p>The annual foobar event.</p>',
-            $listener(new ResolvedInsertTag('event_teaser', new ResolvedParameters(['2']), []))->getValue(),
-        );
+            OutputType::html,
+        ];
     }
 
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void

@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\NewsBundle\Security\Voter\NewsContentVoter;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -40,9 +41,7 @@ class NewsContentVoterTest extends TestCase
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
     }
 
-    /**
-     * @dataProvider checksElementAccessPermissionProvider
-     */
+    #[DataProvider('checksElementAccessPermissionProvider')]
     public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $newsArchives): void
     {
         $token = $this->createMock(TokenInterface::class);
@@ -68,7 +67,7 @@ class NewsContentVoterTest extends TestCase
                 $parent = array_pop($records);
 
                 $fetchAssociativeMap[] = [
-                    'SELECT id, pid, ptable FROM tl_content WHERE id=?',
+                    'SELECT id, pid, ptable FROM tl_content WHERE id = ?',
                     [(int) end($records)['pid']],
                     [],
                     $parent,
@@ -76,7 +75,7 @@ class NewsContentVoterTest extends TestCase
             }
 
             $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=:id'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=:ptable', 9),
+                'SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = :id'.str_repeat(' UNION SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = @pid AND ptable = :ptable', 9),
                 ['id' => $id, 'ptable' => 'tl_content'],
                 [],
                 $records,
@@ -87,7 +86,7 @@ class NewsContentVoterTest extends TestCase
 
         foreach ($newsArchives as $id => $pid) {
             $fetchOneMap[] = [
-                'SELECT pid FROM tl_news WHERE id=?',
+                'SELECT pid FROM tl_news WHERE id = ?',
                 [$id],
                 [],
                 $pid,

@@ -33,15 +33,13 @@ use Contao\ImageSizeModel;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class PreviewFactoryTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -154,9 +152,7 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviews($sourcePath, 128);
     }
 
-    /**
-     * @dataProvider getImageSizes
-     */
+    #[DataProvider('getImageSizes')]
     public function testGetPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $expectedSize, string $defaultDensities = ''): void
     {
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
@@ -343,12 +339,9 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
 
-    /**
-     * @group legacy
-     */
     public function testCreatePreviewFigureBuilder(): void
     {
-        $this->expectDeprecation('Since contao/image 1.2: Passing NULL as $rootDir is deprecated and will no longer work in version 2.0.%s');
+        $this->expectUserDeprecationMessageMatches('/Passing NULL as \$rootDir is deprecated and will no longer work in version 2.0\./');
 
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
         $factory = $this->createFactoryWithExampleProvider();

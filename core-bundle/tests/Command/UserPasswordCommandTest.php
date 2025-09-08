@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -48,7 +49,22 @@ class UserPasswordCommandTest extends TestCase
 
     public function testTakesAPasswordAsArgument(): void
     {
-        $command = $this->getCommand();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with(
+                'tl_user',
+                [
+                    'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
+                    'pwChange' => 0,
+                ],
+                ['username' => 'foobar'],
+            )
+            ->willReturn(1)
+        ;
+
+        $command = $this->getCommand($connection);
 
         $input = [
             'username' => 'foobar',
@@ -62,7 +78,22 @@ class UserPasswordCommandTest extends TestCase
 
     public function testAsksForThePasswordIfNotGiven(): void
     {
-        $command = $this->getCommand();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with(
+                'tl_user',
+                [
+                    'password' => '$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ',
+                    'pwChange' => 0,
+                ],
+                ['username' => 'foobar'],
+            )
+            ->willReturn(1)
+        ;
+
+        $command = $this->getCommand($connection);
 
         $question = $this->createMock(QuestionHelper::class);
         $question
@@ -169,9 +200,7 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    /**
-     * @dataProvider usernamePasswordProvider
-     */
+    #[DataProvider('usernamePasswordProvider')]
     public function testResetsPassword(string $username, string $password): void
     {
         $connection = $this->createMock(Connection::class);

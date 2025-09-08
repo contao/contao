@@ -27,10 +27,10 @@ use Contao\File;
 use Contao\Files;
 use Contao\Image\ImageInterface;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
@@ -83,9 +83,7 @@ class FigureRendererTest extends TestCase
         $this->assertSame('<result>', $figureRenderer->render('resource', '_size', $configuration));
     }
 
-    /**
-     * @dataProvider provideMetadataKeys
-     */
+    #[DataProvider('provideMetadataKeys')]
     public function testAllowsDefiningMetadataAsArray(string $key): void
     {
         $metadata = [Metadata::VALUE_ALT => 'foo'];
@@ -152,7 +150,7 @@ class FigureRendererTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
         $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
@@ -172,9 +170,7 @@ class FigureRendererTest extends TestCase
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
     }
 
-    /**
-     * @dataProvider provideInvalidTemplates
-     */
+    #[DataProvider('provideInvalidTemplates')]
     public function testFailsWithInvalidTemplate(string $invalidTemplate): void
     {
         $figureRenderer = $this->getFigureRenderer();

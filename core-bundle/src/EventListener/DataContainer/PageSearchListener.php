@@ -41,10 +41,10 @@ class PageSearchListener
         return $value;
     }
 
-    #[AsCallback(table: 'tl_page', target: 'fields.noSearch.save')]
-    public function onSaveNoSearch(string $value, DataContainer $dc): string
+    #[AsCallback(table: 'tl_page', target: 'fields.searchIndexer.save')]
+    public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (!$value || (bool) $value === (bool) ($dc->getCurrentRecord()['noSearch'] ?? false)) {
+        if ('always_index' === $value || ($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value || (!$value && str_starts_with((string) ($dc->getCurrentRecord()['robots'] ?? null), 'index'))) {
             return $value;
         }
 
@@ -56,7 +56,7 @@ class PageSearchListener
     #[AsCallback(table: 'tl_page', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || !str_starts_with($value, 'noindex')) {
+        if (str_starts_with($value, 'index') || ($dc->getCurrentRecord()['robots'] ?? null) === $value || (str_starts_with($value, 'noindex') && str_starts_with((string) ($dc->getCurrentRecord()['searchIndexer'] ?? null), 'always'))) {
             return $value;
         }
 
@@ -78,7 +78,7 @@ class PageSearchListener
     private function purgeSearchIndex(int $pageId): void
     {
         $urls = $this->connection->fetchFirstColumn(
-            'SELECT url FROM tl_search WHERE pid=:pageId',
+            'SELECT url FROM tl_search WHERE pid = :pageId',
             ['pageId' => $pageId],
         );
 

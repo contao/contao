@@ -1,0 +1,90 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_news_archive.php" source-language="en" target-language="it">
+    <body>
+      <trans-unit id="tl_news_archive.allowComments.0">
+        <source>Enable comments</source>
+        <target>Abilita i commenti</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.allowComments.1">
+        <source>Allow visitors to comment news items.</source>
+        <target>Abilita i visitatori a commentare le news.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify.0">
+        <source>Notify</source>
+        <target>Notifica</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify.1">
+        <source>Please choose who to notify when comments are added.</source>
+        <target>Seleziona a chi mandare una notifica quando sono aggiunti commenti.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.sortOrder.0">
+        <source>Sort order</source>
+        <target>Ordinamento</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.sortOrder.1">
+        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
+        <target>Per impostazione predefinita, i commenti sono ordinati in ordine crescente, a partire da quello più vecchio.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.perPage.0">
+        <source>Comments per page</source>
+        <target>Commenti per pagina</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.perPage.1">
+        <source>Number of comments per page. Set to 0 to disable pagination.</source>
+        <target>Numero di commenti per pagina. Impostare 0 per disabilitare impaginazione</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.moderate.0">
+        <source>Moderate comments</source>
+        <target>Modera i commenti</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.moderate.1">
+        <source>Approve comments before they are published on the website.</source>
+        <target>Approvare i commenti prima che vengano pubblicati sul sito web</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.bbcode.0">
+        <source>Allow BBCode</source>
+        <target>Permetti BBCode</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.bbcode.1">
+        <source>Allow visitors to format their comments with BBCode.</source>
+        <target>Permettere ai visitatori di formattare i loro commenti con BBCode</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.requireLogin.0">
+        <source>Require login to comment</source>
+        <target>Richiedere il login per poter aggiungere dei commenti</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.requireLogin.1">
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Consentire solo agli utenti autenticati di creare commenti.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>Disabilita la protezione spam</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.disableCaptcha.1">
+        <source>Use this option only if you have limited comments to authenticated users.</source>
+        <target>Utilizzare questa opzione solo se si fornisce un numero limitato di commenti per gli utenti autenticati.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.comments_legend">
+        <source>Comments</source>
+        <target>Commenti</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify_admin">
+        <source>System administrator</source>
+        <target>Amministratore di sistema</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify_author">
+        <source>Author of the news item</source>
+        <target>Autore della news</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify_both">
+        <source>Author and system administrator</source>
+        <target>Autore e amministratore di sistema</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.comments">
+        <source>Show comments of news archive ID %s</source>
+        <target>Mostra i commenti dell'archivio news ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

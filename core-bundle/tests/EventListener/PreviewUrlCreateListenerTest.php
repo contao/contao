@@ -12,27 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\ArticleModel;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\PageModel;
+use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PreviewUrlCreateListenerTest extends TestCase
 {
     public function testCreatesThePreviewUrlForPages(): void
     {
         $event = new PreviewUrlCreateEvent('page', 42);
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
 
-        $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findById' => $pageModel]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $listener = new PreviewUrlCreateListener($framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -40,26 +34,61 @@ class PreviewUrlCreateListenerTest extends TestCase
 
     public function testCreatesThePreviewUrlForArticles(): void
     {
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->expects($this->once())
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_article', 3])
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT pid FROM tl_article WHERE id=?', [3])
+            ->willReturn(42)
+        ;
+
         $event = new PreviewUrlCreateEvent('article', 3);
-        $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
 
-        $adapters = [
-            ArticleModel::class => $this->mockConfiguredAdapter(['findById' => $articleModel]),
-            PageModel::class => $this->mockConfiguredAdapter(['findById' => $pageModel]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $listener = new PreviewUrlCreateListener($framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $connection);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
     }
 
-    /**
-     * @dataProvider getValidDoParameters
-     */
+    public function testCreatesThePreviewUrlForContentElements(): void
+    {
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->expects($this->once())
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_content', 18])
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willReturn([['pid' => 3, 'ptable' => 'tl_article']])
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT pid FROM tl_article WHERE id=?', [3])
+            ->willReturn(42)
+        ;
+
+        $event = new PreviewUrlCreateEvent('article', 3);
+
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $connection);
+        $listener($event);
+
+        $this->assertSame('page=42', $event->getQuery());
+    }
+
+    #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateAnyPreviewUrlIfTheFrameworkIsNotInitialized(string $do): void
     {
         $framework = $this->createMock(ContaoFramework::class);
@@ -70,56 +99,35 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 42);
 
-        $listener = new PreviewUrlCreateListener($framework);
+        $listener = new PreviewUrlCreateListener($framework, $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * @dataProvider getInvalidDoParameters
-     */
+    #[DataProvider('getInvalidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfNeitherPageNorArticleParameterIsSet(string $do): void
     {
-        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener($framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * @dataProvider getValidDoParameters
-     */
+    #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfThereIsNoId(string $do): void
     {
-        $framework = $this->mockContaoFramework();
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_article', null])
+        ;
+
         $event = new PreviewUrlCreateEvent($do, 0);
 
-        $listener = new PreviewUrlCreateListener($framework);
-        $listener($event);
-
-        $this->assertNull($event->getQuery());
-    }
-
-    /**
-     * @dataProvider getValidDoParameters
-     */
-    public function testDoesNotCreateThePreviewUrlIfThereIsNoPageItem(string $do): void
-    {
-        $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
-
-        $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findById' => null]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findById' => $articleModel]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-        $event = new PreviewUrlCreateEvent($do, 1);
-
-        $listener = new PreviewUrlCreateListener($framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());

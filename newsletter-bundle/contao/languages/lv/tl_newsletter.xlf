@@ -17,6 +17,14 @@
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
         <target>Biļetens aizstājējvārds ir unikāla atsauce uz jaunumiem, ko var izsaukt pēc tā nosaukuma, nevis pēc tā ciparu ID.</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+        <target>Priekšskatījuma teksts</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Šeit varat ievadīt priekšskatījuma tekstu. Priekšskatījuma tekstam jābūt 40-130 rakstzīmju garam.</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
         <target>HTML saturs</target>
@@ -115,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.0">
         <source>Offset</source>
-        <target>Kompensācija (Offset)</target>
+        <target>Kompensācija</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
@@ -169,17 +177,17 @@
         <source>Not sent yet</source>
         <target>Nav vel izsūtīts</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
         <target>Izsūtīšanas datums</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.confirm">
         <source>The newsletter has been sent to %s recipients.</source>
-        <target>Biļetens ir nosūtīts% s saņēmējiem.</target>
+        <target>Biļetens ir nosūtīts %s saņēmējiem.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>% s nederīga e-pasta adrese (-es) ir/tika izslēgta (sk. sistēmas log).</target>
+        <target>%s nederīga(-s) e-pasta adrese(-es) ir/tika izslēgta(-s) (sk. sistēmas log).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>%s e-mail address(es) has/have been skipped.</source>
@@ -206,38 +214,34 @@
         <target>Vai tiešām vēlaties nosūtīt apkārtrakstu?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-        <target>Sūtīt apkārtrakstu</target>
+        <source>Send</source>
+        <target>Sūtīt</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
         <target>Sūtīt apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New</source>
-        <target>Jauns</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
         <target>Izveidot jaunu apkārtrakstu</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show">
+      <trans-unit id="tl_newsletter.show.1">
         <source>Show the details of newsletter ID %s</source>
         <target>Parādīt apkārtraksta ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit">
+      <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
         <target>Rediģēt apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy">
+      <trans-unit id="tl_newsletter.copy.1">
         <source>Duplicate newsletter ID %s</source>
         <target>Dublēt apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut">
+      <trans-unit id="tl_newsletter.cut.1">
         <source>Move newsletter ID %s</source>
         <target>Pārvietot apkārtrakstu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete">
+      <trans-unit id="tl_newsletter.delete.1">
         <source>Delete newsletter ID %s</source>
         <target>Dzēst apkārtrakstu ID %s</target>
       </trans-unit>

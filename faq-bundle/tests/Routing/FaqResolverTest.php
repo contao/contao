@@ -15,8 +15,10 @@ namespace Contao\FaqBundle\Tests\Routing;
 use Contao\FaqBundle\Routing\FaqResolver;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
+use Contao\Model;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FaqResolverTest extends ContaoTestCase
 {
@@ -47,30 +49,35 @@ class FaqResolverTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getParametersForContentProvider
+     * @param class-string<Model> $class
      */
-    public function testGetParametersForContent(object $content, array $expected): void
+    #[DataProvider('getParametersForContentProvider')]
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
+        $content = $this->mockClassWithProperties($class, $properties);
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new FaqResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the FAQ alias' => [
-            $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),
+            FaqModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses FAQ ID if alias is empty' => [
-            $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => '']),
+            FaqModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports FaqModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            PageModel::class,
+            [],
             [],
         ];
     }

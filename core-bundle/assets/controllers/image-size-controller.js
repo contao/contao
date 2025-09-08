@@ -1,58 +1,85 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    static targets = ['select', 'button', 'image', 'width', 'height'];
+
     static values = {
         config: Object,
+    };
+
+    connect() {
+        this._updateWizard();
+        this._updateInputs();
     }
 
-    initialize () {
-        this.updateWizard = this.updateWizard.bind(this);
-        this.openModal = this.openModal.bind(this);
+    widthTargetDisconnected(input) {
+        this._resetInput(input);
     }
 
-    connect () {
-        this.select = this.element.querySelector('select');
-        this.button = document.createElement('button');
-        this.button.type = 'button';
-        this.button.title = '';
-        this.buttonImage = document.createElement('img');
-        this.button.append(this.buttonImage);
-        this.element.parentNode.classList.add('wizard');
-        this.element.after(this.button);
-
-        this.select.addEventListener('change', this.updateWizard);
-        this.button.addEventListener('click', this.openModal);
-
-        this.updateWizard();
+    heightTargetDisconnected(input) {
+        this._resetInput(input);
     }
 
-    disconnect () {
-        this.element.parentNode.classList.remove('wizard');
-        this.select.removeEventListener('change', this.updateWizard);
-        this.buttonImage.remove();
-        this.button.remove();
+    update() {
+        this._updateWizard();
+        this._updateInputs();
     }
 
-    updateWizard () {
+    _updateWizard() {
         if (this.canEdit()) {
-            this.button.title = this.configValue.title;
-            this.button.disabled = false;
-            this.buttonImage.src = this.configValue.icon;
+            this.buttonTarget.title = this.configValue.title;
+            this.buttonTarget.disabled = false;
+
+            for (const img of this.imageTargets) {
+                img.src = this.configValue.icon;
+            }
         } else {
-            this.button.title = '';
-            this.button.disabled = true;
-            this.buttonImage.src = this.configValue.iconDisabled;
+            this.buttonTarget.title = '';
+            this.buttonTarget.disabled = true;
+
+            for (const img of this.imageTargets) {
+                img.src = this.configValue.iconDisabled;
+            }
         }
     }
 
-    openModal () {
+    _updateInputs() {
+        const select = this.selectTarget;
+        const value = select.value;
+
+        if (value === '' || value.indexOf('_') === 0 || value.toInt().toString() === value) {
+            let dimensions = select.options[select.selectedIndex].text;
+            dimensions = dimensions.split('(');
+            dimensions = dimensions.length > 1 ? dimensions.getLast().split(')')[0].split('x') : ['', ''];
+
+            this.widthTarget.readOnly = true;
+            this.heightTarget.readOnly = true;
+            this.widthTarget.value = '';
+            this.heightTarget.value = '';
+            this.widthTarget.setAttribute('placeholder', dimensions[0] * 1 || '');
+            this.heightTarget.setAttribute('placeholder', dimensions[1] * 1 || '');
+        } else {
+            this.widthTarget.readOnly = false;
+            this.heightTarget.readOnly = false;
+            this.widthTarget.removeAttribute('placeholder');
+            this.heightTarget.removeAttribute('placeholder');
+        }
+    }
+
+    _resetInput(input) {
+        input.value = '';
+        input.removeAttribute('placeholder');
+        input.readOnly = false;
+    }
+
+    openModal() {
         Backend.openModalIframe({
             title: this.configValue.title,
-            url: `${ this.configValue.href }&id=${ this.select.value }`
+            url: `${this.configValue.href}&id=${this.selectTarget.value}`,
         });
     }
 
-    canEdit () {
-        return this.configValue.ids.includes(Number(this.select.value));
+    canEdit() {
+        return this.configValue.ids.includes(Number(this.selectTarget.value));
     }
 }

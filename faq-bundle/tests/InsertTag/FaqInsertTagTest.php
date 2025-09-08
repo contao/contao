@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\FaqBundle\Tests\InsertTag;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
@@ -23,11 +22,13 @@ use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FaqInsertTagTest extends ContaoTestCase
 {
-    public function testReplacesTheFaqTags(): void
+    #[DataProvider('replacesTheFaqTagsProvider')]
+    public function testReplacesTheFaqTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
         $page = $this->createMock(PageModel::class);
 
@@ -52,90 +53,119 @@ class FaqInsertTagTest extends ContaoTestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(10))
+            ->expects(null === $url ? $this->never() : $this->once())
             ->method('generate')
-            ->withConsecutive(
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-            )
-            ->willReturnOnConsecutiveCalls(
-                'faq/what-does-foobar-mean.html',
-                'faq/what-does-foobar-mean.html',
-                'faq/what-does-foobar-mean.html',
-                'faq/what-does-foobar-mean.html',
-                'http://domain.tld/faq/what-does-foobar-mean.html',
-                'http://domain.tld/faq/what-does-foobar-mean.html',
-                'faq/what-does-foobar-mean.html',
-                'http://domain.tld/faq/what-does-foobar-mean.html',
-                'http://domain.tld/faq/what-does-foobar-mean.html',
-                'http://domain.tld/faq/what-does-foobar-mean.html',
-            )
+            ->with($faqModel, [], $referenceType)
+            ->willReturn($url ?? '')
         ;
 
         $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
-        $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html">What does "foobar" mean?</a>',
-            $listener(new ResolvedInsertTag('faq', new ResolvedParameters(['2']), []))->getValue(),
-        );
+        $this->assertSame($expectedValue, $result->getValue());
+        $this->assertSame($expectedOutputType, $result->getOutputType());
+    }
 
-        $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
-            $listener(new ResolvedInsertTag('faq', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html">',
-            $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
+    public static function replacesTheFaqTagsProvider(): iterable
+    {
+        yield [
+            'faq',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
             'faq/what-does-foobar-mean.html',
-            $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['2']), []))->getValue(),
-        );
+            '<a href="faq/what-does-foobar-mean.html">What does "foobar" mean?</a>',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'faq',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'faq/what-does-foobar-mean.html',
+            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
+            OutputType::html,
+        ];
+
+        yield [
+            'faq_open',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'faq/what-does-foobar-mean.html',
+            '<a href="faq/what-does-foobar-mean.html">',
+            OutputType::html,
+        ];
+
+        yield [
+            'faq_open',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'faq/what-does-foobar-mean.html',
+            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
+
+        yield [
+            'faq_open',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'faq_open',
+            ['2', 'absolute', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'faq_url',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'faq/what-does-foobar-mean.html',
+            'faq/what-does-foobar-mean.html',
+            OutputType::url,
+        ];
+
+        yield [
+            'faq_url',
+            ['2', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/faq/what-does-foobar-mean.html',
-            $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            OutputType::url,
+        ];
 
-        $this->assertEquals(
-            new InsertTagResult('What does "foobar" mean?', OutputType::text),
-            $listener(new ResolvedInsertTag('faq_title', new ResolvedParameters(['2']), [])),
-        );
+        yield [
+            'faq_url',
+            ['2', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            OutputType::url,
+        ];
+
+        yield [
+            'faq_url',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            OutputType::url,
+        ];
+
+        yield [
+            'faq_title',
+            ['2'],
+            null,
+            null,
+            'What does "foobar" mean?',
+            OutputType::text,
+        ];
     }
 
     public function testHandlesEmptyUrls(): void

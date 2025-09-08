@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.1">
         <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
-        <target>Vyprázdnit tabulku &lt;em&gt;tl_version&lt;/em&gt;, v níž se ukládají předešlé verze záznamů. Tento krok navždy odstraní dané záznamy.</target>
+        <target>Vyprázdnit tabulku &lt;code&gt;tl_version&lt;/code&gt;, v níž se ukládají předešlé verze záznamů. Tento krok navždy odstraní dané záznamy.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.0">
         <source>Purge the system log</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.1">
         <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
-        <target>Vyprázdnit tabulku &lt;e&gt;tl_log&lt;/em&gt;, která zaznamenává zprávy systému. Tento krok navždycky smaže současné záznamy v dané tabulce.</target>
+        <target>Vyprázdnit tabulku &lt;code&gt;tl_log&lt;/code&gt;, která zaznamenává zprávy systému. Tento krok navždycky smaže současné záznamy v dané tabulce.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
@@ -114,7 +114,7 @@
         <target>Přetvořit soubory XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>Přetvoří soubory XML ve &lt;code&gt;sdílené&lt;/code&gt; složce a vyčistí sdílené meziúložiště. Tím zmizí odkazy ke smazaným zdrojům.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>Crawler projde všechny linky. Zde pak můžete rozhodnout, jak naložíte s danými výsledky.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>Maximální hloubka</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>Maximální hloubka pro analýzu crawlu.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Člen frontendu</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Automaticky přihlásit frontendového člena, aby se daly indikovat chráněné stránky.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>Tvoje webová stránka je momentálně analyzováná crawlem jen %dze souběžného požadavku. Pokud může tvůj server zpracovat víc než %1$dze souběžného požadavku, obrať se na tvého správce a zvyš hodnotu na &lt;code&gt;%s&lt;/code&gt; v nastavení systému pro zrychlení procesu crawlu. Více informací v &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;návodu Contaa&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
@@ -172,6 +184,22 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Zkontrolovat poškozené odkazy</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+        <target>Hledání v backendu</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+        <target>Pro použítí hledání v backendu aktivujte prosím &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>Přetvořit index</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.confirmation">
+        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
+        <target>Probíhá znovuvytváření. Podívejte se na přehled úloh na pozadí, abyste se dozvěděli více o daném procesu. </target>
       </trans-unit>
     </body>
   </file>

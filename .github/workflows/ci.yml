@@ -89,9 +89,12 @@ jobs:
               with:
                   working-directory: vendor-bin/ecs
 
-            - name: Run ECS
+            - name: Run ECS legacy
               run: |
                   vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+
+            - name: Run ECS template
+              run: |
                   vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     phpstan:
@@ -130,8 +133,23 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Run YAMLlint
-              run: yamllint --format=github .
+    linter:
+        name: Linter
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
+
+            - name: Install the Node packages
+              run: npm install
+
+            - name: Run Biome
+              run: npx biome ci core-bundle/assets
+
+            - name: Run Stylelint
+              run: npx stylelint --fix core-bundle/assets/styles
 
     service-linter:
         name: Service linter
@@ -190,6 +208,8 @@ jobs:
                       $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
                       $data["repositories"][1]["type"] = "path";
                       $data["repositories"][1]["url"] = "../news-bundle";
+                      $data["repositories"][2]["type"] = "path";
+                      $data["repositories"][2]["url"] = "../test-case";
                       file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                   '
                   composer install --no-interaction --no-progress
@@ -204,7 +224,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [8.2, 8.3]
+                php: [8.2, 8.3, 8.4]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -259,17 +279,17 @@ jobs:
               uses: ramsey/composer-install@v3
 
             - name: Run the unit tests in reverse order
-              run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
+              run: vendor/bin/phpunit --order-by=reverse --extension Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
     nightly:
-        name: PHP 8.4
+        name: PHP nightly
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.4
+                  php-version: nightly
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 

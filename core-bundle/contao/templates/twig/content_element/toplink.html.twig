@@ -6,7 +6,6 @@
         {% set link_attributes = attrs()
             .set('href', '#top')
             .set('data-toplink')
-            .setIfExists('title', link_text)
             .mergeWith(link_attributes|default)
         %}
         <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>

@@ -17,6 +17,14 @@
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
         <target>Een nieuwsbrief alias is een unieke referentie naar een nieuwsbrief waarmee deze aangeroepen kan worden in plaats van met zijn numerieke ID.</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+        <target>Preheadertekst</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Hier kunt u een preheadertekst invoeren. Een preheadertekst moet tussen de 40-130 tekens lang zijn.</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
         <target>HTML inhoud</target>
@@ -169,7 +177,7 @@
         <source>Not sent yet</source>
         <target>Nog niet verstuurd</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
         <target>Postdatum</target>
       </trans-unit>
@@ -206,38 +214,33 @@
         <target>Wilt u de nieuwsbrief werkelijk versturen?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-        <target>Verstuur nieuwsbrief</target>
+        <source>Send</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
         <target>Verstuur nieuwsbrief ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New</source>
-        <target>Nieuw</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
         <target>Maak een nieuwe nieuwsbrief</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show">
+      <trans-unit id="tl_newsletter.show.1">
         <source>Show the details of newsletter ID %s</source>
         <target>Toon details van nieuwsbrief ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit">
+      <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
         <target>Bewerk nieuwsbrief ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy">
+      <trans-unit id="tl_newsletter.copy.1">
         <source>Duplicate newsletter ID %s</source>
         <target>Kopieer nieuwsbrief ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut">
+      <trans-unit id="tl_newsletter.cut.1">
         <source>Move newsletter ID %s</source>
         <target>Verplaats nieuwsbrief ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete">
+      <trans-unit id="tl_newsletter.delete.1">
         <source>Delete newsletter ID %s</source>
         <target>Verwijder nieuwsbrief ID %s</target>
       </trans-unit>

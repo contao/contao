@@ -53,17 +53,27 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			'new' => array
 			(
 				'href'                => 'act=paste&amp;mode=create',
-				'class'               => 'header_new_folder'
+				'class'               => 'header_new_folder',
+				'primary'             => true,
 			),
 			'new_tpl' => array
 			(
 				'href'                => 'key=new_tpl',
-				'class'               => 'header_new'
+				'class'               => 'header_new',
+				'primary'             => true,
 			),
 		),
 		'operations' => array
 		(
-			'!edit',
+			'edit',
+			'source' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
+				'href'                => 'act=source',
+				'icon'                => 'editor.svg',
+				'primary'             => true,
+				'button_callback'     => array('tl_templates', 'editSource')
+			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
@@ -82,14 +92,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'button_callback'     => array('tl_templates', 'cut')
 			),
 			'delete',
-			'source' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
-				'href'                => 'act=source',
-				'icon'                => 'editor.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_templates', 'editSource')
-			),
+			'-',
 			'compare' => array
 			(
 				'href'                => 'key=compare',
@@ -100,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'icon'                => 'drag.svg',
-				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'attributes'          => 'class="drag-handle"',
 				'primary'             => true,
 				'button_callback'     => array('tl_templates', 'dragFile')
 			)
@@ -353,7 +356,9 @@ class tl_templates extends Backend
 <div class="tl_tbox cf">
 <div class="w50 widget">
   <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
-  <select name="original" id="ctrl_original" class="tl_select" data-controller="contao--choices" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
+  <div class="tl_select_wrapper" data-controller="contao--choices">
+    <select name="original" id="ctrl_original" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>
+  </div>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">

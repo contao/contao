@@ -33,6 +33,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -60,9 +61,7 @@ class DebugPagesCommandTest extends TestCase
         $this->assertEmpty($command->getDefinition()->getOptions());
     }
 
-    /**
-     * @dataProvider commandOutputProvider
-     */
+    #[DataProvider('commandOutputProvider')]
     public function testCommandOutput(array $pages, array $legacyPages, string $expectedOutput): void
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);

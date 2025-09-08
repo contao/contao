@@ -27,92 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendLogoutListenerTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider getLogoutData
-     */
-    public function testAddsTheLogoutButton(TokenInterface $token, string $label, string $url): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
-
-        $security
-            ->expects($this->exactly(2))
-            ->method('getToken')
-            ->willReturn($token)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-
-        if ($token instanceof SwitchUserToken) {
-            $router
-                ->expects($this->once())
-                ->method('generate')
-                ->with('contao_backend', ['do' => 'user', '_switch_user' => SwitchUserListener::EXIT_VALUE])
-                ->willReturn('/contao?do=user&_switch_user=_exit')
-            ;
-        } else {
-            $router
-                ->expects($this->never())
-                ->method('generate')
-            ;
-        }
-
-        $urlGenerator = $this->createMock(BaseLogoutUrlGenerator::class);
-
-        if (!$token instanceof SwitchUserToken) {
-            $urlGenerator
-                ->expects($this->once())
-                ->method('getLogoutUrl')
-                ->willReturn('/contao/logout')
-            ;
-        } else {
-            $urlGenerator
-                ->expects($this->never())
-                ->method('getLogoutUrl')
-            ;
-        }
-
-        $factory = new MenuFactory();
-
-        $menu = $factory->createItem('headerMenu');
-        $menu->addChild($factory->createItem('submenu'));
-
-        $event = new MenuEvent($factory, $menu);
-
-        $listener = new BackendLogoutListener(
-            $security,
-            $router,
-            $urlGenerator,
-            $this->getTranslator(),
-        );
-
-        $listener($event);
-
-        $children = $event->getTree()->getChild('submenu')->getChildren();
-
-        $this->assertCount(1, $children);
-        $this->assertSame(['logout'], array_keys($children));
-
-        $this->assertSame($label, $children['logout']->getLabel());
-        $this->assertSame($url, $children['logout']->getUri());
-        $this->assertSame(['translation_domain' => false], $children['logout']->getExtras());
-
-        $this->assertSame(
-            [
-                'class' => 'icon-logout',
-                'accesskey' => 'q',
-                'data-turbo-prefetch' => 'false',
-            ],
-            $children['logout']->getLinkAttributes(),
-        );
-    }
-
-    public function getLogoutData(): iterable
+    public function testAddsTheLogoutButtonWithSwitchUserToken(): void
     {
         $switchUserToken = $this->createMock(SwitchUserToken::class);
         $switchUserToken
@@ -120,8 +35,12 @@ class BackendLogoutListenerTest extends ContaoTestCase
             ->willReturn($this->createMock(UsernamePasswordToken::class))
         ;
 
-        yield [$this->createMock(UsernamePasswordToken::class), 'MSC.logoutBT', '/contao/logout'];
-        yield [$switchUserToken, 'MSC.switchBT', '/contao?do=user&_switch_user=_exit'];
+        $this->assertLogoutButton($switchUserToken, 'MSC.switchBT', '/contao?do=user&_switch_user=_exit');
+    }
+
+    public function testAddsTheLogoutButtonWithRegularToken(): void
+    {
+        $this->assertLogoutButton($this->createMock(UsernamePasswordToken::class), 'MSC.logoutBT', '/contao/logout');
     }
 
     public function testDoesNotAddTheLogoutButtonIfTheUserRoleIsNotGranted(): void
@@ -212,6 +131,88 @@ class BackendLogoutListenerTest extends ContaoTestCase
         $children = $event->getTree()->getChildren();
 
         $this->assertCount(0, $children);
+    }
+
+    private function assertLogoutButton(TokenInterface $token, string $label, string $url): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
+        ;
+
+        $security
+            ->expects($this->exactly(2))
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+
+        if ($token instanceof SwitchUserToken) {
+            $router
+                ->expects($this->once())
+                ->method('generate')
+                ->with('contao_backend', ['do' => 'user', '_switch_user' => SwitchUserListener::EXIT_VALUE])
+                ->willReturn('/contao?do=user&_switch_user=_exit')
+            ;
+        } else {
+            $router
+                ->expects($this->never())
+                ->method('generate')
+            ;
+        }
+
+        $urlGenerator = $this->createMock(BaseLogoutUrlGenerator::class);
+
+        if (!$token instanceof SwitchUserToken) {
+            $urlGenerator
+                ->expects($this->once())
+                ->method('getLogoutUrl')
+                ->willReturn('/contao/logout')
+            ;
+        } else {
+            $urlGenerator
+                ->expects($this->never())
+                ->method('getLogoutUrl')
+            ;
+        }
+
+        $factory = new MenuFactory();
+
+        $menu = $factory->createItem('headerMenu');
+        $menu->addChild($factory->createItem('submenu'));
+
+        $event = new MenuEvent($factory, $menu);
+
+        $listener = new BackendLogoutListener(
+            $security,
+            $router,
+            $urlGenerator,
+            $this->getTranslator(),
+        );
+
+        $listener($event);
+
+        $children = $event->getTree()->getChild('submenu')->getChildren();
+
+        $this->assertCount(1, $children);
+        $this->assertSame(['logout'], array_keys($children));
+
+        $this->assertSame($label, $children['logout']->getLabel());
+        $this->assertSame($url, $children['logout']->getUri());
+        $this->assertSame(['translation_domain' => false], $children['logout']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-logout',
+                'accesskey' => 'q',
+                'data-turbo-prefetch' => 'false',
+            ],
+            $children['logout']->getLinkAttributes(),
+        );
     }
 
     private function getTranslator(): TranslatorInterface

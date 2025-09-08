@@ -25,8 +25,8 @@ use Contao\FilesModel;
 use Contao\Model;
 use Contao\Model\MetadataTrait;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class MetadataTest extends TestCase
@@ -36,7 +36,7 @@ class MetadataTest extends TestCase
         parent::setUp();
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -317,9 +317,7 @@ class MetadataTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider getMetadataTraitRows
-     */
+    #[DataProvider('getMetadataTraitRows')]
     public function testMetadataTraitEmptyValues(array $row, array|null $expected): void
     {
         System::getContainer()->get('contao.insert_tag.parser')->addSubscription(
