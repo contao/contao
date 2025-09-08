@@ -19,7 +19,8 @@
         "sortablejs": "^1.15",
         "stylelint": "^16.20",
         "stylelint-config-standard": "^38.0",
-        "svgo": "^3.3.2"
+        "svgo": "^3.3.2",
+        "webpack-dev-server": "^5.2"
     },
     "browserslist": [
         "defaults"
