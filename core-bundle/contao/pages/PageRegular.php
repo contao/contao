@@ -323,7 +323,7 @@ class PageRegular extends Frontend
 			/** @var class-string<Module> $strClass */
 			$strClass = Module::findClass($strType);
 
-			if (!$strClass::shouldPreload($strType, $objPage, $request))
+			if (!$strClass || !$strClass::shouldPreload($strType, $objPage, $request))
 			{
 				continue;
 			}
