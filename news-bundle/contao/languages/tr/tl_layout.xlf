@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.newsfeeds.1">
         <source>Please select the news feeds you want to add to the layout.</source>
-        <target>Düzene eklemek istediğiniz haber akışlarını seçin.</target>
+        <target>Yerleşime eklemek istediğiniz haber akışlarını seçin.</target>
       </trans-unit>
     </body>
   </file>

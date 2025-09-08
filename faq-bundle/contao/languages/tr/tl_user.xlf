@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_user.faqs.1">
         <source>Here you can grant access to one or more FAQ categories.</source>
-        <target>Buradan bir yada bir kaç SSS kategorisi için erişim izni verebilirsiniz.</target>
+        <target>Buradan bir ya da birkaç SSS kategorisi için erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.faqp.0">
         <source>FAQ category permissions</source>

@@ -81,14 +81,6 @@
         <source>Please choose the files you want to attach.</source>
         <target>Выберите файлы, которые хотите вложить.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.noComments.0">
-        <source>Disable comments</source>
-        <target>Отключить комментарии</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.1">
-        <source>Do not allow comments for this particular FAQ.</source>
-        <target>Отключить комментарии для данного вопроса.</target>
-      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>Опубликовать в вопросах и ответах</target>
@@ -117,39 +109,31 @@
         <source>Enclosures</source>
         <target>Вложения</target>
       </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-        <target>Экспертные настройки</target>
-      </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
         <target>Настройки публикации</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.new.0">
-        <source>New</source>
-        <target>Новый</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>Создать новый вопрос</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show">
+      <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
         <target>Показать детали вопроса ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit">
+      <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
         <target>Редактировать вопрос ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy">
+      <trans-unit id="tl_faq.copy.1">
         <source>Duplicate question ID %s</source>
         <target>Дублировать вопрос ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut">
+      <trans-unit id="tl_faq.cut.1">
         <source>Move question ID %s</source>
         <target>Переместить вопрос ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete">
+      <trans-unit id="tl_faq.delete.1">
         <source>Delete question ID %s</source>
         <target>Удалить вопрос ID %s</target>
       </trans-unit>
@@ -164,6 +148,14 @@
       <trans-unit id="tl_faq.toggle.2">
         <source>Publish question ID %s</source>
         <target>Опубликовать вопрос ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.3">
+        <source>Unpublish</source>
+        <target>Снять с публикации</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.4">
+        <source>Publish</source>
+        <target>Опубликовать</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

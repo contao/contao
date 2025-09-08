@@ -169,6 +169,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'uuid' => array
 		(
+			'label'					  => &$GLOBALS['TL_LANG']['MSC']['fileUuid'],
 			'sql'                     => "binary(16) NULL"
 		),
 		'type' => array

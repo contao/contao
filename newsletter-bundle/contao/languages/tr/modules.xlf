@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="FMD.subscribe.1">
         <source>Generates a form to subscribe to one or more channels</source>
-        <target>Bir ya da bir kaç kanala abone olmak için bir form oluşturur</target>
+        <target>Bir ya da birkaç kanala abone olmak için bir form oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.unsubscribe.0">
         <source>Unsubscribe</source>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="FMD.unsubscribe.1">
         <source>Generates a form to unsubscribe from one or more channels</source>
-        <target>Bir ya da bir kaç kanalın aboneliğinden ayrılmak için bir form oluşturur</target>
+        <target>Bir ya da birkaç kanalın aboneliğinden ayrılmak için bir form oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.newsletterlist.0">
         <source>Newsletter list</source>

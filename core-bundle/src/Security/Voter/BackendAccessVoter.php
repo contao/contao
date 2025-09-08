@@ -133,6 +133,17 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return !empty($this->pagemountsCache[$user->id]) && array_intersect($subject, $this->pagemountsCache[$user->id]);
         }
 
+        // Additionally check the "disablePermissionChecks" flag for modules
+        if ('modules' === $field) {
+            foreach ($subject as $module) {
+                foreach ($GLOBALS['BE_MOD'] as $modules) {
+                    if ($modules[$module]['disablePermissionChecks'] ?? false) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return false;
     }
 

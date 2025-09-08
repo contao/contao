@@ -835,20 +835,10 @@ abstract class DataContainer extends Backend
 	 */
 	protected function switchToEdit($id)
 	{
-		$arrKeys = array();
+		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
-		foreach (Input::getKeys() as $strKey)
-		{
-			if (!\in_array($strKey, $arrUnset))
-			{
-				$arrKeys[$strKey] = $strKey . '=' . Input::get($strKey);
-			}
-		}
-
-		$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?' . implode('&', $arrKeys);
-
-		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+		return Backend::addToUrl($strRequest, true, $arrUnset);
 	}
 
 	/**
@@ -924,6 +914,18 @@ abstract class DataContainer extends Backend
 		$legacyCallback = function (DataContainerOperation $config) {
 			trigger_deprecation('contao/core-bundle', '5.6', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
+			if (!\is_array($config['button_callback'] ?? null) && !\is_callable($config['button_callback'] ?? null))
+			{
+				return;
+			}
+
+			if ($config['icon'] ?? null)
+			{
+				$icon = Controller::addAssetsUrlTo(Image::getPath($config['icon']));
+				$config['attributes']->addStyle("background-image: url('$icon')");
+				$config['class'] = trim($config['class'] . ' header_icon');
+			}
+
 			if (\is_array($config['button_callback'] ?? null))
 			{
 				$callback = System::importStatic($config['button_callback'][0]);
@@ -935,7 +937,7 @@ abstract class DataContainer extends Backend
 			}
 		};
 
-		$operations = func_get_arg(0);
+		$operations = \func_num_args() ? func_get_arg(0) : null;
 
 		if ($operations instanceof DataContainerGlobalOperationsBuilder)
 		{

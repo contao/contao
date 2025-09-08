@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Välj modultyp.</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>ARIA etikett</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Om det finns mer än ett navigeringselement på sidan ska varje element ha en unik etikett.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Startnivå</target>
@@ -129,6 +137,14 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Denna inställning anger vilken sida en användare kommer att omdirigeras till vid en viss handling (t.ex. klickar på en länk eller godkänner ett formulär).</target>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Sidan Återställ lösenord</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Här kan du välja en sida som besökare ska omdirigeras till när du klickar på knappen &lt;em&gt;Glömt ditt lösenord?&lt;/em&gt; länk.</target>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
         <target>Översiktssida</target>
@@ -168,6 +184,14 @@
       <trans-unit id="tl_module.editable.1">
         <source>Show these fields in the front end form.</source>
         <target>Ange ett eller flera fält som ska vara redigerbara för medlemmen i frontend.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>Kräv fullständig autentisering</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Användare som endast har en ”kom ihåg mig”-cookie måste verifiera sin identitet för att få tillgång till modulen.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -506,8 +530,8 @@
         <target>Välj en modul för varje webbplatsrotsida.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Välj modul för &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Välj modul för ”%s” [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -633,31 +657,27 @@ Kontakta webbplatsadministratören om du inte begärde detta e-postmeddelande.
         <source>Irrevocably delete account</source>
         <target>Radera kontot permanent</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>Ny</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>Skapa en ny modul</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>Visa detaljer för modul med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>Redigera modul med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
-        <target>Kopiera modul med ID %s</target>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
+        <target>Kopiera modul ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>Flytta modul med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>Ta bort modul med ID %s</target>
       </trans-unit>

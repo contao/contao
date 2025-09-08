@@ -105,6 +105,18 @@
         <source>Here you can choose how featured events are handled.</source>
         <target>Овде можете изабрати како ће бити приказани истакнути догађаји.</target>
       </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+        <target>Користи тренутни URL за канонски линк</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Задржите тренутни URL уместо конфигурисане странице читача за канонске везе.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_overview_legend">
+        <source>Overview page</source>
+        <target>Преглед странице</target>
+      </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
         <target>Листа дешавања</target>

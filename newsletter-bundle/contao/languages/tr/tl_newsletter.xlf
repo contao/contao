@@ -17,6 +17,14 @@
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
         <target>Haber bülteni kısaltması haberin sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+        <target>Başlık öncesi metni</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Buraya bir başlık öncesi metni yazabilirsiniz. Başlık öncesi metninin uzunluğu 40-130 karakter arasında olmalıdır.</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
         <target>HTML içeriği</target>
@@ -39,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.addFile.1">
         <source>Attach one or more files to the newsletter.</source>
-        <target>Haber bültenine bir ya da birkaç dosya ekle.</target>
+        <target>Haber bültenine bir ya da birkaç dosya ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.files.0">
         <source>Attachments</source>
@@ -103,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailsPerCycle.1">
         <source>The sending process is split into several cycles to prevent the script from timing out.</source>
-        <target>Gönderme işlemi betiğin zaman aşımına uğramaması için bir kaç pakate bölünerek yapılır.</target>
+        <target>Gönderme işlemi betiğin zaman aşımına uğramaması için birkaç pakete bölünerek yapılır.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.timeout.0">
         <source>Timeout in seconds</source>
@@ -169,7 +177,7 @@
         <source>Not sent yet</source>
         <target>Henüz gönderilmemiş</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
         <target>Gönderilme tarihi</target>
       </trans-unit>
@@ -206,38 +214,33 @@
         <target>Haber bültenini göndermek istediğinize emin misiniz?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-        <target>Haber bültenini gönder</target>
+        <source>Send</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
         <target>%s kimlikli haber bültenini gönder</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New</source>
-        <target>Yeni</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
         <target>Yeni bir haber bülteni ekle</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show">
+      <trans-unit id="tl_newsletter.show.1">
         <source>Show the details of newsletter ID %s</source>
         <target>%s kimlikli haber bülteninin ayrıntılarını görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit">
+      <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
         <target>%s kimlikli haber bültenini düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy">
+      <trans-unit id="tl_newsletter.copy.1">
         <source>Duplicate newsletter ID %s</source>
         <target>%s kimlikli haber bültenini kopyala</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut">
+      <trans-unit id="tl_newsletter.cut.1">
         <source>Move newsletter ID %s</source>
         <target>%s kimlikli haber bültenini taşı</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete">
+      <trans-unit id="tl_newsletter.delete.1">
         <source>Delete newsletter ID %s</source>
         <target>%s kimlikli haber bültenini sil</target>
       </trans-unit>

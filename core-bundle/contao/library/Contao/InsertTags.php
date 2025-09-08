@@ -130,7 +130,6 @@ class InsertTags extends Controller
 		}
 
 		$arrBuffer = array();
-		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if (static::$strAllowedTagsRegex === null)
@@ -186,7 +185,7 @@ class InsertTags extends Controller
 			{
 				if (($elements[1] ?? null) == 'referer' || str_starts_with($elements[0], 'cache_'))
 				{
-					trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments are deprecated and will no longer work in Contao 6. Use #[AsInsertTag(asFragment: true)] instead.', $elements[0], strtolower($elements[0]));
+					trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag naming conventions {{cache_*}} and {{*::referer}} for fragments are deprecated and will no longer work in Contao 6. Use {{fragment::*}} instead.');
 
 					$attributes = array('insertTag' => '{{' . $strTag . '}}');
 

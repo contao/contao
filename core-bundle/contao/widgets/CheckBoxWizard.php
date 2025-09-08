@@ -133,7 +133,6 @@ class CheckBoxWizard extends Widget
 			$this->arrOptions = array_merge($arrOptions, $arrTemp);
 		}
 
-		$blnCheckAll = true;
 		$arrOptions = array();
 		$arrAllOptions = $this->arrOptions;
 

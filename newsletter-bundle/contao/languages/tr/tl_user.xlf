@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_user.newsletters.1">
         <source>Here you can grant access to one or more channels.</source>
-        <target>Buradan bir ya da bir kaç kanala izin verilebilirsiniz.</target>
+        <target>Buradan bir ya da birkaç kanala izin verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsletterp.0">
         <source>Channel permissions</source>

@@ -27,7 +27,7 @@ class FormInsertTag
     {
     }
 
-    #[AsInsertTag('form_session_data', asFragment: true)]
+    #[AsInsertTag('form_session_data')]
     public function replaceSessionData(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $value = $this->requestStack->getCurrentRequest()?->getSession()->get(Form::SESSION_KEY)?->getValue()[$insertTag->getParameters()->get(0)] ?? '';
@@ -39,7 +39,7 @@ class FormInsertTag
         return new InsertTagResult($value, OutputType::text);
     }
 
-    #[AsInsertTag('form_confirmation', asFragment: true)]
+    #[AsInsertTag('form_confirmation')]
     public function replaceConfirmation(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $message = '';

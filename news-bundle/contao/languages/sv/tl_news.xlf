@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Här kan du lägga till en anpassad metabeskrivning för att skriva över standardsidebeskrivningen.</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanonisk URL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Här kan du ställa in en anpassad kanonisk URL som https://example.com/.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Underrubrik</target>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Här kan du ange en eller flera stilmallsklasser (CSS-klass)</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Avaktivera kommentarer</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Tillåt inte kommentarer från besökare för denna nyhetsartikel.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Viktig nyhet</target>
@@ -273,35 +273,35 @@
         <source>Publish settings</source>
         <target>Publiceringsinställningar</target>
       </trans-unit>
-      <trans-unit id="tl_news.new.0">
-        <source>New</source>
-        <target>Ny</target>
-      </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Skapa en ny nyhet</target>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
         <target>Visa detaljer om nyhet ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>Redigera nyhet ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+        <target>Innehållselement</target>
+      </trans-unit>
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
         <target>Redigera innehållselementen i nyhetsartikel-ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
         <target>Duplicera nyhet ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
         <target>Flytta nyhet ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
         <target>Ta bort nyhet ID %s</target>
       </trans-unit>
@@ -317,6 +317,14 @@
         <source>Publish news item ID %s</source>
         <target>Publicera nyhet ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Publish</source>
+        <target>Publicera</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Unpublish</source>
+        <target>Avpublicera</target>
+      </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>Feature / unfeature nyhet ID %s</target>
@@ -328,6 +336,14 @@
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
         <target>Markera nyhet ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+        <target>Utan funktion</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
+        <target>Funktion</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

@@ -1,0 +1,42 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/jobs.php" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="jobs.tstamp.0">
+        <source>Created at</source>
+        <target>Skapad vid</target>
+      </trans-unit>
+      <trans-unit id="jobs.status.0">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="jobs.owner.0">
+        <source>Initiated by</source>
+        <target>Initierat av</target>
+      </trans-unit>
+      <trans-unit id="jobs.type.0">
+        <source>Type</source>
+        <target>Typ</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.new">
+        <source>New</source>
+        <target>Ny</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.pending">
+        <source>Pending</source>
+        <target>Avvaktande</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.completed">
+        <source>Completed</source>
+        <target>Färdigställd</target>
+      </trans-unit>
+      <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
+        <source>Rebuild the back end search index</source>
+        <target>Återuppbygga sökindexet i backend</target>
+      </trans-unit>
+      <trans-unit id="jobs.all_jobs_processed">
+        <source>All jobs have been processed.</source>
+        <target>Alla jobb har behandlats.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

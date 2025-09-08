@@ -89,6 +89,14 @@
         <source>Back to the event overview</source>
         <target>Zpět k přehledu událostí</target>
       </trans-unit>
+      <trans-unit id="PTY.calendar_feed.0">
+        <source>Calendar feed</source>
+        <target>Kanál kalendáře</target>
+      </trans-unit>
+      <trans-unit id="PTY.calendar_feed.1">
+        <source>Create an RSS, Atom or JSON feed from your calendars.</source>
+        <target>Vytvoří kanál událostí vašeho kalendáře ve formátu RSS, Atom nebo JSON.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

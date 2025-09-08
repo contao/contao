@@ -37,31 +37,27 @@
         <source>Visibility</source>
         <target>可視性</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
         <target>新しいメディアクエリを作成</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show">
+      <trans-unit id="tl_image_size_item.show.1">
         <source>Show the details of media query ID %s</source>
         <target>ID %sのメディアクエリの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit">
+      <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
         <target>ID %sのメディアクエリを編集</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut">
+      <trans-unit id="tl_image_size_item.cut.1">
         <source>Move media query ID %s</source>
         <target>画像サイズのメディアクエリを移動</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy">
-        <source>Duplicate media query ID %s</source>
-        <target>ID %sのメディアクエリを複製</target>
+      <trans-unit id="tl_image_size_item.copy.1">
+        <source>Copy media query ID %s</source>
+        <target>ID %sのメディアクエリをコピー</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete">
+      <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
         <target>ID %sのメディアクエリを削除</target>
       </trans-unit>

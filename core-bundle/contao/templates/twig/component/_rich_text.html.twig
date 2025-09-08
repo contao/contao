@@ -27,7 +27,7 @@
     %}
     <div{% block rich_text_attributes %}{{ rich_text_attributes }}{% endblock %}>
         {% block rich_text_inner %}
-            {{ rich_text.text|csp_inline_styles|insert_tag|encode_email|raw }}
+            {{ rich_text.text|csp_inline_styles|insert_tag_raw|encode_email|raw }}
         {% endblock %}
     </div>
 {% endblock %}
