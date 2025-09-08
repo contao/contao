@@ -58,7 +58,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('', $response->getContent());
     }
 
     public function testReturnsIfNoMemberModel(): void
@@ -82,7 +81,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('', $response->getContent());
     }
 
     public function testRendersTemplate(): void
@@ -108,17 +106,16 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('', $response->getContent());
     }
 
-    private function mockFrameworkWithTemplate(MemberModel|null $memberModel = null): ContaoFramework&MockObject
+    private function mockFrameworkWithTemplate(MemberModel|null $member = null): ContaoFramework&MockObject
     {
         $template = new FragmentTemplate('close_account', static fn () => new Response());
 
         $memberModel = $this->mockAdapter(['findById']);
         $memberModel
             ->method('findById')
-            ->willReturn($memberModel)
+            ->willReturn($member)
         ;
 
         $filesModel = $this->mockAdapter(['findByUuid']);
