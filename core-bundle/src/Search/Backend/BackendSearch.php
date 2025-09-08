@@ -56,6 +56,10 @@ class BackendSearch
 
     public function deleteDocuments(GroupedDocumentIds $groupedDocumentIds, bool $async = true): self
     {
+        if (!$this->isAvailable()) {
+            return $this;
+        }
+
         if ($groupedDocumentIds->isEmpty()) {
             return $this;
         }
@@ -84,20 +88,24 @@ class BackendSearch
     }
 
     /**
-     * @return string The job ID for the job framework
+     * @return string|null The job ID for the job framework if any
      */
-    public function reindex(ReindexConfig $config, bool $async = true): string
+    public function reindex(ReindexConfig $config, bool $async = true): string|null
     {
+        if (!$this->isAvailable()) {
+            return null;
+        }
+
         $job = $config->getJobId() ? $this->jobs->getByUuid($config->getJobId()) : null;
 
-        // Create the job if not done already
-        if (!$job) {
+        // Create the job if required
+        if (!$job && $config->requiresJob()) {
             $job = $this->jobs->createJob(self::REINDEX_JOB_TYPE);
             $config = $config->withJobId($job->getUuid());
         }
 
         // Validate the job type just in case it was not created from this method
-        if (self::REINDEX_JOB_TYPE !== $job->getType()) {
+        if ($job && self::REINDEX_JOB_TYPE !== $job->getType()) {
             throw new \InvalidArgumentException(\sprintf('Provided a custom job type "%s" but must be "%s".', $job->getType(), self::REINDEX_JOB_TYPE));
         }
 
@@ -115,7 +123,9 @@ class BackendSearch
                     $config = $config->limitToDocumentIds($documentIdGroup);
 
                     // Create child jobs here, so we can track progress across multiple messages
-                    $config = $config->withJobId($this->jobs->createChildJob($job)->getUuid());
+                    if ($job) {
+                        $config = $config->withJobId($this->jobs->createChildJob($job)->getUuid());
+                    }
 
                     $this->messageBus->dispatch(new ReindexMessage($config));
                 }
@@ -125,7 +135,9 @@ class BackendSearch
         }
 
         // Mark job as pending now
-        $this->jobs->persist($job->markPending());
+        if ($job) {
+            $this->jobs->persist($job->markPending());
+        }
 
         // Seal does not delete unused documents, it just re-indexes. So if some
         // identifier here does no longer exist, it would never get removed. Hence, we
@@ -136,7 +148,9 @@ class BackendSearch
         $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config));
 
         // Mark job as completed
-        $this->jobs->persist($job->markCompleted());
+        if ($job) {
+            $this->jobs->persist($job->markCompleted());
+        }
 
         return $config->getJobId();
     }
@@ -148,6 +162,10 @@ class BackendSearch
      */
     public function search(Query $query): Result
     {
+        if (!$this->isAvailable()) {
+            return Result::createEmpty();
+        }
+
         $sb = $this->createSearchBuilder($query);
 
         $hits = [];
@@ -194,6 +212,10 @@ class BackendSearch
 
     public function clear(): void
     {
+        if (!$this->isAvailable()) {
+            return;
+        }
+
         // TODO: We need an API for that in SEAL
         $this->engine->dropIndex(self::SEAL_INTERNAL_INDEX_NAME);
         $this->engine->createIndex(self::SEAL_INTERNAL_INDEX_NAME);

@@ -255,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_files.copy.1">
         <source>Copy file or folder &quot;%s&quot;</source>
+        <target>Zkopírovat soubor nebo složku &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder &quot;%s&quot;</source>
