@@ -8,7 +8,7 @@
 %}
 
 {% block content %}
-    {% with {items: images} %}{{ block('list_component') }}{% endwith %}
+    {% with {items: pagination.items|default(images), pagination: pagination|default} %}{{ block('list_component') }}{% endwith %}
 {% endblock %}
 
 {% block list_item %}

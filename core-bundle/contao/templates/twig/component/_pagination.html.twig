@@ -1,0 +1,82 @@
+{% trans_default_domain "contao_default" %}
+
+{% block pagination_component %}
+    {% set data = pagination.paginationData|default %}
+    {% set options = pagination.paginatorOptions|default %}
+    {% set pages = data.pagesInRange|default(range(1, number_of_pages|default(1))) %}
+    {% set route = app.request.attributes.get('_route') %}
+    {% set params = app.request.query.all %}
+
+    {% set pagination_attributes = attrs(pagination_attributes|default)
+        .set('data-pagination')
+        .set('aria-label', 'MSC.pagination'|trans)
+    %}
+    <nav{{ pagination_attributes }}>
+        <ul>
+            {% if data|default %}
+                {% if data.current|default != data.first|default %}
+                    {% block pagination_first %}
+                        <li>
+                            {% set first_attributes = attrs()
+                                .set('href', path(route, knp_pagination_query(params, data.first, options)))
+                                .set('title', 'MSC.goToPage'|trans([data.first]))
+                            %}
+                            <a{{ first_attributes }}>&laquo;</a>
+                        </li>
+                    {% endblock %}
+                {% endif %}
+                {% if data.previous|default %}
+                    {% block pagination_previous %}
+                        <li>
+                            {% set previous_attributes = attrs()
+                                .set('href', path(route, knp_pagination_query(params, data.previous, options)))
+                                .set('title', 'MSC.goToPage'|trans([data.previous]))
+                            %}
+                            <a{{ previous_attributes }}>&lsaquo;</a>
+                        </li>
+                    {% endblock %}
+                {% endif %}
+            {% endif %}
+
+            {% for page in pages %}
+                {% set href = data|default ? path(route, knp_pagination_query(app.request.query.all, page, options)) : '#' %}
+                {% block pagination_link %}
+                    <li>
+                        {% set link_attributes = attrs()
+                            .set('href', href)
+                            .set('title', 'MSC.goToPage'|trans([page]))
+                            .addClass('current', data.current|default == page)
+                            .mergeWith(link_attributes|default)
+                        %}
+                        <a{{ link_attributes }}>{{ page }}</a>
+                    </li>
+                {% endblock %}
+            {% endfor %}
+
+            {% if data|default %}
+                {% if data.next|default %}
+                    {% block pagination_next %}
+                        <li>
+                            {% set next_attributes = attrs()
+                                .set('href', path(route, knp_pagination_query(params, data.next, options)))
+                                .set('title', 'MSC.goToPage'|trans([data.next]))
+                            %}
+                            <a{{ next_attributes }}>&rsaquo;</a>
+                        </li>
+                    {% endblock %}
+                {% endif %}
+                {% if data.current|default != data.last|default %}
+                    {% block pagination_last %}
+                        <li>
+                            {% set last_attributes = attrs()
+                                .set('href', path(route, knp_pagination_query(params, data.last, options)))
+                                .set('title', 'MSC.goToPage'|trans([data.last]))
+                            %}
+                            <a{{ last_attributes }}>&raquo;</a>
+                        </li>
+                    {% endblock %}
+                {% endif %}
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

@@ -19,6 +19,7 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
+use Knp\Bundle\PaginatorBundle\KnpPaginatorBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
@@ -42,6 +43,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     public function getBundles(ParserInterface $parser): array
     {
         return [
+            BundleConfig::create(KnpPaginatorBundle::class),
             BundleConfig::create(KnpMenuBundle::class),
             BundleConfig::create(KnpTimeBundle::class),
             BundleConfig::create(SchebTwoFactorBundle::class),

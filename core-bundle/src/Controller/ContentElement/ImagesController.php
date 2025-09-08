@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\SortMode;
@@ -22,6 +23,8 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
+use Knp\Component\Pager\Exception\PageNumberOutOfRangeException;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +37,7 @@ class ImagesController extends AbstractContentElementController
         private readonly Security $security,
         private readonly VirtualFilesystem $filesStorage,
         private readonly Studio $studio,
+        private readonly PaginatorInterface $paginator,
         private readonly array $validExtensions,
     ) {
     }
@@ -82,6 +86,26 @@ class ImagesController extends AbstractContentElementController
 
         if (!$imageList) {
             return new Response();
+        }
+
+        if ($model->serverPagination && !$randomize) {
+            $param = 'page_g'.$model->id;
+
+            try {
+                $pagination = $this->paginator->paginate(
+                    $imageList,
+                    $request->query->getInt($param, 1),
+                    $model->perPage,
+                    [
+                        PaginatorInterface::PAGE_PARAMETER_NAME => $param,
+                        PaginatorInterface::PAGE_OUT_OF_RANGE => PaginatorInterface::PAGE_OUT_OF_RANGE_THROW_EXCEPTION,
+                    ],
+                );
+            } catch (PageNumberOutOfRangeException $e) {
+                throw new PageNotFoundException(\sprintf('Page not found: %s', $request->getUri()), previous: $e);
+            }
+
+            $template->set('pagination', $pagination);
         }
 
         $template->set('images', $imageList);
