@@ -87,6 +87,8 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\ContentElement\ChangePasswordController: ~
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
