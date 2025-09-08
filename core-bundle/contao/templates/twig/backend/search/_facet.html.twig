@@ -1,6 +1,6 @@
 {% trans_default_domain "contao_default" %}
 
-{% if facets %}
+{% if facets and facets|length > 1 %}
 <nav class="facet-{{ facetName }}">
     <h2>{{ ('MSC.searchFacetTitle.' ~ facetName) | trans }}</h2>
     <form method="post" data-turbo-stream>
