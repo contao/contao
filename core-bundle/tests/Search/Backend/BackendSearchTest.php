@@ -172,7 +172,7 @@ class BackendSearchTest extends TestCase
 
         $provider = $this->createMock(ProviderInterface::class);
         $provider
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('supportsType')
             ->with('type')
             ->willReturn(true)

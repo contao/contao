@@ -32,6 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @experimental
@@ -47,6 +48,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -144,6 +146,13 @@ class TableDataContainerProvider implements ProviderInterface
         );
     }
 
+    public function convertTypeToVisibleType(string $type): string
+    {
+        $table = substr($type, \strlen(self::TYPE_PREFIX));
+
+        return $this->translator->trans($table.'.tableLabel', [], 'contao_'.$table);
+    }
+
     private function addCurrentRowToDocumentIfNotAlreadyLoaded(Document $document): Document
     {
         if (isset($document->getMetadata()['row'])) {
@@ -163,7 +172,7 @@ class TableDataContainerProvider implements ProviderInterface
     /**
      * @return array<int, string>
      */
-    private function getTables(ReindexConfig $config): array
+    private function getTables(ReindexConfig|null $config = null): array
     {
         $this->contaoFramework->initialize();
 
@@ -175,7 +184,7 @@ class TableDataContainerProvider implements ProviderInterface
         )));
 
         // No document ID limits, consider all tables
-        if ($config->getLimitedDocumentIds()->isEmpty()) {
+        if (!$config || $config->getLimitedDocumentIds()->isEmpty()) {
             return $tables;
         }
 

@@ -323,6 +323,9 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Calendar event</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

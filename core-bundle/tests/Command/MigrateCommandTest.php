@@ -441,7 +441,6 @@ class MigrateCommandTest extends TestCase
         if (interface_exists(ServerInfoAwareConnection::class)) {
             /** @phpstan-ignore class.notFound */
             $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
-
             /** @phpstan-ignore class.notFound, phpunit.mockMethod */
             $driverConnection
                 ->method('getServerVersion')

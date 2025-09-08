@@ -44,7 +44,11 @@
             <span class="backend-search_message search-message--error">{{ 'ERR.general'|trans }}</span>
 
             {# Results #}
-            <ul id="backend-search--results" class="backend-search_results" data-contao--backend-search-target="results"></ul>
+            <div class="backend-search_facets">
+                <div id="backend-search--facet-types" class="backend-search_facet_types"></div>
+                <div id="backend-search--facet-tags" class="backend-search_facet_tags"></div>
+            </div>
+            <div id="backend-search--results" class="backend-search_results" data-contao--backend-search-target="results"></div>
         </div>
     </div>
 </div>

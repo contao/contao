@@ -1,0 +1,17 @@
+{% trans_default_domain "contao_default" %}
+
+{% if facets %}
+<nav class="facet-{{ facetName }}">
+    <h2>{{ ('MSC.searchFacetTitle.' ~ facetName) | trans }}</h2>
+    <form method="post" data-turbo-stream>
+        <ul>
+            {% for facet in facets %}
+                <li><button{{ attrs()
+                    .set('disabled', null, activeFilter == facet.key)
+                    .set('formaction', path('_contao_backend_search.stream', query.toUrlParams|merge({(filterName): facet.key})))
+                    }}>{{ facet.label }} ({{ facet.count }})</button></li>
+            {% endfor %}
+        </ul>
+    </form>
+</nav>
+{% endif %}

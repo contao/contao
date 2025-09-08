@@ -29,6 +29,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
 {
@@ -39,6 +40,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
             $this->createMock(RouterInterface::class),
+            $this->createMock(TranslatorInterface::class),
             'files',
         );
 
@@ -62,6 +64,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
             $this->createMock(RouterInterface::class),
+            $this->createMock(TranslatorInterface::class),
             'files',
         );
 
@@ -105,6 +108,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
             $this->createMock(RouterInterface::class),
+            $this->createMock(TranslatorInterface::class),
             'files',
         );
 
@@ -145,6 +149,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
             $this->createMock(RouterInterface::class),
+            $this->createMock(TranslatorInterface::class),
             'files',
         );
 
@@ -186,6 +191,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $security,
             $this->createMock(Studio::class),
             $this->createMock(RouterInterface::class),
+            $this->createMock(TranslatorInterface::class),
             'files',
         );
 

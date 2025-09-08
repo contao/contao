@@ -1,6 +1,7 @@
 {% trans_default_domain "contao_default" %}
 {% use "@Contao/component/_figure.html.twig" %}
 
+<ul class="backend-search_results" >
 {% for hit in hits %}
     <li class="tl_search_hit">
         {% block hit %}
@@ -50,6 +51,7 @@
                 {% block hit_context %}
                     <div class="hit_context-container">
                         <p class="context">{{ hit.context }}</p>
+                        <div class="type">{{ hit.visibleType }}</div>
                     </div>
                 {% endblock %}
             {% endif %}
@@ -58,3 +60,4 @@
 {% else %}
     <li class="search-message--empty">{{ 'MSC.noResults'|trans }}</li>
 {% endfor %}
+</ul>

@@ -83,6 +83,9 @@
       <trans-unit id="tl_newsletter_channel.recipients.1">
         <source>Edit the recipients of channel ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tableLabel">
+        <source>Newsletter channel</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

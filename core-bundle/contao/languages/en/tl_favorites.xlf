@@ -29,6 +29,9 @@
       <trans-unit id="tl_favorites.delete.1">
         <source>Delete favorite ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_favorites.tableLabel">
+        <source>Favorites</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
