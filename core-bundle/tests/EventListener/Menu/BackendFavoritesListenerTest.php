@@ -352,7 +352,6 @@ class BackendFavoritesListenerTest extends TestCase
         $factory = new MenuFactory();
 
         $tree = $factory->createItem('headerMenu');
-        $tree->addChild($factory->createItem('manual'));
         $tree->addChild($factory->createItem('alerts'));
 
         $event = new MenuEvent($factory, $tree);
@@ -370,7 +369,7 @@ class BackendFavoritesListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'favorite', 'alerts'], array_keys($tree->getChildren()));
+        $this->assertSame(['favorite', 'alerts'], array_keys($tree->getChildren()));
         $this->assertSame('favorite', $children['favorite']->getName());
         $this->assertSame('Save URL as favorite', $children['favorite']->getLabel());
         $this->assertTrue($children['favorite']->getExtra('safe_label'));
@@ -427,7 +426,6 @@ class BackendFavoritesListenerTest extends TestCase
         $factory = new MenuFactory();
 
         $tree = $factory->createItem('headerMenu');
-        $tree->addChild($factory->createItem('manual'));
 
         $event = new MenuEvent($factory, $tree);
 
@@ -444,7 +442,7 @@ class BackendFavoritesListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'favorite'], array_keys($tree->getChildren()));
+        $this->assertSame(['favorite'], array_keys($tree->getChildren()));
         $this->assertSame('favorite', $children['favorite']->getName());
         $this->assertSame('Edit favorites', $children['favorite']->getLabel());
         $this->assertTrue($children['favorite']->getExtra('safe_label'));

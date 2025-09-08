@@ -102,8 +102,8 @@ class BackendHeaderListenerTest extends TestCase
 
         $grandChildren = $children['submenu']->getChildren();
 
-        $this->assertCount(4, $grandChildren);
-        $this->assertSame(['info', 'login', 'security', 'favorites'], array_keys($grandChildren));
+        $this->assertCount(5, $grandChildren);
+        $this->assertSame(['info', 'login', 'security', 'color-scheme', 'favorites'], array_keys($grandChildren));
 
         // Info
         $this->assertSame('<strong>Foo Bar</strong> foo@bar.com', $grandChildren['info']->getLabel());
