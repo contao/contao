@@ -14,7 +14,6 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
-use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
