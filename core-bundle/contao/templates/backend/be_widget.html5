@@ -1,6 +1,5 @@
 
-<?php $label = $this->generateLabel(); ?>
-  <?php if (!empty($label)): ?>
-  <h3><?= $this->generateLabel().$this->xlabel ?></h3>
+  <?php if ($label = $this->generateLabel()): ?>
+  <h3><?= $label.$this->xlabel ?></h3>
   <?php endif ?>
   <?= $this->generateWithError(true) ?>
