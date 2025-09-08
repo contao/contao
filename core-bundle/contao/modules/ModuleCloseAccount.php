@@ -12,6 +12,9 @@ namespace Contao;
 
 /**
  * Front end module "close account".
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use the content element instead.
  */
 class ModuleCloseAccount extends Module
 {
@@ -25,9 +28,6 @@ class ModuleCloseAccount extends Module
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
-	 *             use the content element instead.
 	 */
 	public function generate()
 	{
