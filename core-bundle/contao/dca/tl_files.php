@@ -104,6 +104,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'source' => array
 			(
 				'href'                => 'act=source',
+				'prefetch'            => true,
 				'icon'                => 'editor.svg',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editSource')
@@ -176,6 +177,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'uuid' => array
 		(
+			'label'					  => &$GLOBALS['TL_LANG']['MSC']['fileUuid'],
 			'sql'                     => "binary(16) NULL"
 		),
 		'type' => array

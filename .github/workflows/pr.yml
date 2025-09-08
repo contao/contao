@@ -19,7 +19,7 @@ jobs:
             - name: Assign the milestone
               uses: zoispag/action-assign-milestone@v1
               with:
-                  milestone: 5.6
+                  milestone: 5.7
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Add the label

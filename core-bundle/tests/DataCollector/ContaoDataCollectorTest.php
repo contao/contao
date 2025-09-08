@@ -23,7 +23,7 @@ use Contao\LayoutModel;
 use Contao\Model;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Imagine\Image\ImagineInterface;
+use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +43,7 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector(
             $this->createMock(TokenChecker::class),
             $this->createMock(RequestStack::class),
-            $this->createMock(ImagineInterface::class),
+            $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $this->createMock(PageFinder::class),
         );
@@ -99,7 +99,7 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector(
             $this->createMock(TokenChecker::class),
             $this->createMock(RequestStack::class),
-            $this->createMock(ImagineInterface::class),
+            $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $pageFinder,
         );
@@ -160,7 +160,7 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector(
             $tokenChecker,
             $this->createMock(RequestStack::class),
-            $this->createMock(ImagineInterface::class),
+            $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $pageFinder,
         );
@@ -192,7 +192,7 @@ class ContaoDataCollectorTest extends TestCase
         $collector = new ContaoDataCollector(
             $this->createMock(TokenChecker::class),
             $this->createMock(RequestStack::class),
-            $this->createMock(ImagineInterface::class),
+            $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $this->createMock(PageFinder::class),
         );
