@@ -76,7 +76,6 @@
         "friendsofsymfony/http-cache-bundle": "^3.0",
         "guzzlehttp/promises": "^1.5 || ^2.0",
         "imagine/imagine": "^1.2.4",
-        "knplabs/knp-components": "^5.4",
         "knplabs/knp-menu": "^3.1",
         "knplabs/knp-menu-bundle": "^3.0",
         "knplabs/knp-paginator-bundle": "^6.9",
