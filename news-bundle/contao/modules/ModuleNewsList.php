@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\Model\Collection;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "news list".
@@ -251,5 +252,10 @@ class ModuleNewsList extends ModuleNews
 		}
 
 		return NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, array('order'=>$order));
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }
