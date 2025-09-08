@@ -4,7 +4,7 @@ const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 // Core bundle assets
 Encore
     .setOutputPath('core-bundle/public/')
-    .setPublicPath('/bundles/contaocore')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public' : '/bundles/contaocore')
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
@@ -23,6 +23,28 @@ Encore
     .addEntry('navigation', './core-bundle/assets/navigation.js')
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
     .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
+    .configureDevServerOptions(options => {
+        options.static = [
+            {
+                directory: 'core-bundle/contao/themes/flexible/icons',
+                publicPath: '/icons',
+            },
+            {
+                directory: 'core-bundle/contao/themes/flexible/fonts',
+                publicPath: '/fonts',
+            },
+        ],
+        options.hot = true,
+        //options.liveReload = true,
+        options.allowedHosts = 'all',
+        options.watchFiles = [
+            'core-bundle/assets/styles/**/*',
+            'core-bundle/contao/**/*',
+        ],
+        options.client = {
+            overlay: false
+        }
+    })
 ;
 
 const jsConfig = Encore.getWebpackConfig();
@@ -32,7 +54,7 @@ Encore.reset();
 // Back end theme "flexible"
 Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
-    .setPublicPath('/system/themes/flexible')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible' : '/system/themes/flexible')
     .setManifestKeyPrefix('')
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
@@ -70,7 +92,7 @@ Encore.reset();
 // Back end icons
 Encore
     .setOutputPath('core-bundle/contao/themes/flexible/icons')
-    .setPublicPath('/system/themes/flexible/icons')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible/icons' : '/system/themes/flexible/icons')
     .setManifestKeyPrefix('')
     .disableSingleRuntimeChunk()
     .addPlugin(new ImageMinimizerPlugin({
@@ -108,5 +130,8 @@ Encore
 ;
 
 const iconConfig = Encore.getWebpackConfig();
+
+delete themeConfig.devServer;
+delete iconConfig.devServer;
 
 module.exports = [jsConfig, themeConfig, iconConfig];
