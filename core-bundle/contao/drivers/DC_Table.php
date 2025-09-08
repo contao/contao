@@ -4495,7 +4495,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 				$new = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 				$new->addNewButton($operations::CREATE_TOP, $table, $objParent->id, $this->intId);
 
-				$return .= '<li class="new_operation">'.$new.'</li>';
+				$return .= '<li class="new_operation">' . $new . '</li>';
 			}
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
@@ -4635,7 +4635,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					$new = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 					$new->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id);
 
-					$return .= '<li class="new_operation">'.$new.'</li>';
+					$return .= '<li class="new_operation">' . $new . '</li>';
 				}
 			}
 		}
