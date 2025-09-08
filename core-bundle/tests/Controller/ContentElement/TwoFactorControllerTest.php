@@ -293,7 +293,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main')->getStatusCode();
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response);
     }
 
     public function testDoesNotRedirectIfTheTwoFactorCodeIsInvalid(): void
@@ -330,7 +330,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main')->getStatusCode();
 
-        $this->assertNotInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame(Response::HTTP_OK, $response);
     }
 
     public function testRedirectsIfTheTwoFactorCodeIsValid(): void
