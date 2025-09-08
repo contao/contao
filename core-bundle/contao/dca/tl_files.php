@@ -105,7 +105,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=source',
 				'prefetch'            => true,
- 				'icon'                => 'editor.svg',
+				'icon'                => 'editor.svg',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editSource')
 			),
