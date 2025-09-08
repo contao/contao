@@ -67,31 +67,6 @@ class BackendHeaderListener
 
         $tree->addChild($alerts);
 
-        $colorScheme = $event
-            ->getFactory()
-            ->createItem('color-scheme')
-            ->setUri('#')
-            ->setLinkAttribute('class', 'icon-color-scheme')
-            ->setLinkAttribute('title', '') // Required for the tips.js script
-            ->setLinkAttribute('data-controller', 'contao--color-scheme')
-            ->setLinkAttribute('data-action', 'contao--color-scheme#toggle')
-            ->setLinkAttribute('data-contao--color-scheme-target', 'label')
-            ->setLinkAttribute(
-                'data-contao--color-scheme-i18n-value',
-                json_encode(
-                    [
-                        'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
-                        'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
-                    ],
-                    JSON_THROW_ON_ERROR,
-                ),
-            )
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($colorScheme);
-
         $submenu = $factory
             ->createItem('submenu')
             ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
@@ -135,6 +110,30 @@ class BackendHeaderListener
         ;
 
         $submenu->addChild($security);
+
+        $colorScheme = $factory
+            ->createItem('color-scheme')
+            ->setUri('#')
+            ->setLinkAttribute('class', 'icon-color-scheme')
+            ->setLinkAttribute('title', '') // Required for the tips.js script
+            ->setLinkAttribute('data-controller', 'contao--color-scheme')
+            ->setLinkAttribute('data-action', 'contao--color-scheme#toggle')
+            ->setLinkAttribute('data-contao--color-scheme-target', 'label')
+            ->setLinkAttribute(
+                'data-contao--color-scheme-i18n-value',
+                json_encode(
+                    [
+                        'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
+                        'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
+                    ],
+                    JSON_THROW_ON_ERROR,
+                ),
+            )
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $submenu->addChild($colorScheme);
 
         $favorites = $factory
             ->createItem('favorites')

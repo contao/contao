@@ -88,28 +88,11 @@ class BackendHeaderListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
+        $this->assertSame(['alerts', 'submenu', 'burger'], array_keys($children));
 
         // Alerts
         $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
-
-        // Color scheme
-        $this->assertSame('color-scheme', $children['color-scheme']->getLabel());
-        $this->assertSame('#', $children['color-scheme']->getUri());
-        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['color-scheme']->getExtras());
-
-        $this->assertSame(
-            [
-                'class' => 'icon-color-scheme',
-                'title' => '',
-                'data-controller' => 'contao--color-scheme',
-                'data-action' => 'contao--color-scheme#toggle',
-                'data-contao--color-scheme-target' => 'label',
-                'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',
-            ],
-            $children['color-scheme']->getLinkAttributes(),
-        );
 
         // Submenu
         $this->assertSame('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
@@ -138,6 +121,23 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame('/contao?do=security&ref=bar', $grandChildren['security']->getUri());
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
+
+        // Color scheme
+        $this->assertSame('color-scheme', $grandChildren['color-scheme']->getLabel());
+        $this->assertSame('#', $grandChildren['color-scheme']->getUri());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $grandChildren['color-scheme']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-color-scheme',
+                'title' => '',
+                'data-controller' => 'contao--color-scheme',
+                'data-action' => 'contao--color-scheme#toggle',
+                'data-contao--color-scheme-target' => 'label',
+                'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',
+            ],
+            $grandChildren['color-scheme']->getLinkAttributes(),
+        );
 
         // Favorites
         $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());

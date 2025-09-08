@@ -90,10 +90,7 @@ class BackendMenuListener
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
-        $tree->addChild($debug);
-
-        // The last two items are "submenu" and "burger", so make this the third to last
-        (new MenuManipulator())->moveToPosition($debug, $tree->count() - 3);
+        $tree->getChild('submenu')->addChild($debug);
     }
 
     /**
