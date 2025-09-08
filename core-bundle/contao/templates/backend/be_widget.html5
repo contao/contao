@@ -1,5 +1,5 @@
 
   <?php if ($label = $this->generateLabel()): ?>
-  <h3><?= $label.$this->xlabel ?></h3>
+    <h3><?= $label.$this->xlabel ?></h3>
   <?php endif ?>
   <?= $this->generateWithError(true) ?>
