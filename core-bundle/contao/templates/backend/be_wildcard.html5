@@ -8,7 +8,7 @@
     <span class="upper"><?= $this->wildcard ?></span>
     <?php if ($this->link): ?>
       <br>
-      <?= $this->link ?> (<a href="<?= $this->href.'&amp;rt='.$this->requestToken ?>" class="tl_gray">ID: <?= $this->id ?></a>)
+      <?= $this->link ?> (<a href="<?= $this->href.'&amp;rt='.$this->requestToken ?>" onclick="Backend.openModalIframe({ title: 'Popup', url:this.href + '&popup=1&nb=1' });return false" class="tl_gray">ID: <?= $this->id ?></a>)
     <?php endif; ?>
   </div>
 <?php endif; ?>

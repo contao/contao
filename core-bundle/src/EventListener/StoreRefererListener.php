@@ -81,7 +81,7 @@ class StoreRefererListener
         // Set new current referer
         $referers[$refererId]['current'] = $request->getRequestUri();
 
-        $session->set($key, $referers);
+        $session->set($key, []);
     }
 
     private function canModifyBackendSession(Request $request): bool

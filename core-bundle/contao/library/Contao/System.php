@@ -378,7 +378,11 @@ abstract class System
 		{
 			if ($isBackend)
 			{
-				$return = static::getContainer()->get('router')->generate('contao_backend');
+				$container = System::getContainer();
+
+				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail();
+
+				$return = $trail[\count($trail) - 2]['url'] ?? $container->get('router')->generate('contao_backend');
 			}
 			else
 			{

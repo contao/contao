@@ -53,6 +53,6 @@ class RefererIdListener
             }
         }
 
-        $request->attributes->set('_contao_referer_id', $this->token);
+        $request->attributes->set('_contao_referer_id', '');
     }
 }
