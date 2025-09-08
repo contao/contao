@@ -15,11 +15,11 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Event\CloseAccountEvent;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FilesModel;
-use Contao\Folder;
 use Contao\FrontendUser;
 use Contao\Idna;
 use Contao\MemberModel;
@@ -42,6 +42,7 @@ class CloseAccountController extends AbstractContentElementController
         private readonly Security $security,
         private readonly ContentUrlGenerator $contentUrlGenerator,
         private readonly LoggerInterface $logger,
+        private readonly VirtualFilesystem $storage,
     ) {
     }
 
@@ -56,8 +57,8 @@ class CloseAccountController extends AbstractContentElementController
 
         $this->framework->initialize();
 
-        $memberModel = $this->framework->getAdapter(MemberModel::class);
-        $member = $memberModel->findById($user->id);
+        $memberModelAdapter = $this->framework->getAdapter(MemberModel::class);
+        $member = $memberModelAdapter->findById($user->id);
 
         if (!$member instanceof MemberModel) {
             return $template->getResponse();
@@ -78,12 +79,11 @@ class CloseAccountController extends AbstractContentElementController
             $this->eventDispatcher->dispatch(new CloseAccountEvent($member, $model->reg_close));
 
             if ('close_delete' === $model->reg_close) {
-                $filesModel = $this->framework->getAdapter(FilesModel::class);
-                $homeDir = $filesModel->findByUuid($member->homeDir);
+                $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
+                $homeDir = $filesModelAdapter->findByUuid($member->homeDir);
 
                 if ($model->reg_deleteDir && $member->assignDir && $homeDir) {
-                    $folder = new Folder($homeDir->path);
-                    $folder->delete();
+                    $this->storage->deleteDirectory($homeDir->path);
                 }
 
                 $member->delete();
@@ -103,8 +103,8 @@ class CloseAccountController extends AbstractContentElementController
             $this->security->logout(false);
 
             if ($model->jumpTo) {
-                $pageModel = $this->framework->getAdapter(PageModel::class);
-                $page = $pageModel->findById($model->jumpTo);
+                $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
+                $page = $pageModelAdapter->findById($model->jumpTo);
 
                 if ($page instanceof PageModel) {
                     return new RedirectResponse($this->contentUrlGenerator->generate($page));

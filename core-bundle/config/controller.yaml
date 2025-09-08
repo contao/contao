@@ -95,6 +95,7 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
             - '@monolog.logger.contao.access'
+            - '@contao.filesystem.virtual.files'
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
