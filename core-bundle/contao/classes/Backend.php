@@ -840,7 +840,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
 	 *              use the stimulus controller instead.
 	 */
 	public static function getTogglePasswordWizard($inputName)
