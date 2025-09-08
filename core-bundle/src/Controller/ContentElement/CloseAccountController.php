@@ -54,8 +54,10 @@ class CloseAccountController extends AbstractContentElementController
             return $template->getResponse();
         }
 
-        $memberModelAdapter = $this->framework->getAdapter(MemberModel::class);
-        $member = $memberModelAdapter->findById($user->id);
+        $this->framework->initialize();
+
+        $memberModel = $this->framework->getAdapter(MemberModel::class);
+        $member = $memberModel->findById($user->id);
 
         if (!$member instanceof MemberModel) {
             return $template->getResponse();
@@ -76,8 +78,8 @@ class CloseAccountController extends AbstractContentElementController
             $this->eventDispatcher->dispatch(new CloseAccountEvent($member, $model->reg_close));
 
             if ('close_delete' === $model->reg_close) {
-                $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);
-                $homeDir = $filesModelAdapter->findByUuid($member->homeDir);
+                $filesModel = $this->framework->getAdapter(FilesModel::class);
+                $homeDir = $filesModel->findByUuid($member->homeDir);
 
                 if ($model->reg_deleteDir && $member->assignDir && $homeDir) {
                     $folder = new Folder($homeDir->path);
@@ -101,8 +103,8 @@ class CloseAccountController extends AbstractContentElementController
             $this->security->logout(false);
 
             if ($model->jumpTo) {
-                $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
-                $page = $pageModelAdapter->findById($model->jumpTo);
+                $pageModel = $this->framework->getAdapter(PageModel::class);
+                $page = $pageModel->findById($model->jumpTo);
 
                 if ($page instanceof PageModel) {
                     return new RedirectResponse($this->contentUrlGenerator->generate($page));

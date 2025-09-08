@@ -1,0 +1,173 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Tests\Controller\ContentElement;
+
+use Contao\ContentModel;
+use Contao\CoreBundle\Cache\CacheTagManager;
+use Contao\CoreBundle\Controller\ContentElement\CloseAccountController;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\FilesModel;
+use Contao\FrontendUser;
+use Contao\MemberModel;
+use Contao\PageModel;
+use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class CloseAccountControllerTest extends ContentElementTestCase
+{
+    public function testReturnsIfNoFrontendUser(): void
+    {
+        $container = $this->getContainerWithFrameworkTemplate();
+
+        $controller = new CloseAccountController(
+            $this->getDefaultFramework(),
+            $this->createMock(PasswordHasherFactoryInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(Security::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(LoggerInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $request = new Request();
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testReturnsIfNoMemberModel(): void
+    {
+        $container = $this->getContainerWithFrameworkTemplate($this->createMock(FrontendUser::class));
+
+        $controller = new CloseAccountController(
+            $this->mockFrameworkWithTemplate(),
+            $this->createMock(PasswordHasherFactoryInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(Security::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(LoggerInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $request = new Request();
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testRendersTemplate(): void
+    {
+        $container = $this->getContainerWithFrameworkTemplate($this->createMock(FrontendUser::class));
+
+        $memberModel = $this->mockClassWithProperties(MemberModel::class);
+
+        $controller = new CloseAccountController(
+            $this->mockFrameworkWithTemplate($memberModel),
+            $this->createMock(PasswordHasherFactoryInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(Security::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(LoggerInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $request = new Request();
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('', $response->getContent());
+    }
+
+    private function mockFrameworkWithTemplate(MemberModel|null $memberModel = null): ContaoFramework&MockObject
+    {
+        $template = new FragmentTemplate('close_account', static fn () => new Response());
+
+        $memberModel = $this->mockAdapter(['findById']);
+        $memberModel
+            ->method('findById')
+            ->willReturn($memberModel)
+        ;
+
+        $filesModel = $this->mockAdapter(['findByUuid']);
+        $filesModel
+            ->method('findByUuid')
+            ->willReturn(null)
+        ;
+
+        $pageModel = $this->mockAdapter(['findById']);
+        $pageModel
+            ->method('findById')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            MemberModel::class => $memberModel,
+            FilesModel::class => $filesModel,
+            PageModel::class => $pageModel,
+        ]);
+
+        $framework
+            ->method('createInstance')
+            ->willReturn($template)
+        ;
+
+        return $framework;
+    }
+
+    private function mockTokenStorageWithToken(UserInterface|null $user = null): TokenStorageInterface&MockObject
+    {
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($user ? new PreAuthenticatedToken($user, 'contao_frontend') : null)
+        ;
+
+        return $tokenStorage;
+    }
+
+    private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, MemberModel|null $member = null): ContainerBuilder
+    {
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member));
+        $container->set('security.token_storage', $this->mockTokenStorageWithToken($user));
+        $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+
+        System::setContainer($container);
+
+        return $container;
+    }
+}
