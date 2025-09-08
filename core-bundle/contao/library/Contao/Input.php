@@ -988,8 +988,8 @@ class Input
 
 		$varValue = str_replace
 		(
-			array('[&amp;]', '&amp;', '[&lt;]', '&lt;', '[&gt;]', '&gt;', '[&nbsp;]', '&nbsp;', '[&shy;]', '&shy;'),
-			array('[&]', '[&]', '[lt]', '[lt]', '[gt]', '[gt]', '[nbsp]', '[nbsp]', '[-]', '[-]'),
+			array('[&amp;]', '&amp;', '[&lt;]', '&lt;', '[&gt;]', '&gt;', '[&nbsp;]', '&nbsp;', '[&shy;]', '&shy;', '[&lsqb;]', '&lsqb;', '[&rsqb;]', '&rsqb;'),
+			array('[&]', '[&]', '[lt]', '[lt]', '[gt]', '[gt]', '[nbsp]', '[nbsp]', '[-]', '[-]', '[lsqb]', '[lsqb]', '[rsqb]', '[rsqb]'),
 			$varValue
 		);
 

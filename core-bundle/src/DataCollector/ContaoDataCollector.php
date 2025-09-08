@@ -42,7 +42,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     public function __construct(
         private readonly TokenChecker $tokenChecker,
         private readonly RequestStack $requestStack,
-        private readonly ImagineInterface $imagine,
+        private readonly ImagineInterface&InfoProvider $imagine,
         private readonly RouterInterface $router,
         private readonly PageFinder $pageFinder,
     ) {
@@ -171,16 +171,12 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
         $info = [
             'label' => $format,
-            'supported' => false,
+            'supported' => $this->imagine->getDriverInfo()->isFormatSupported($format),
             'error' => '',
         ];
 
-        if ($this->imagine instanceof InfoProvider) {
-            $info['supported'] = $this->imagine->getDriverInfo()->isFormatSupported($format);
-        }
-
         if ($this->imagine instanceof ImagickImagine) {
-            $info['supported'] = \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
+            $info['supported'] = $info['supported'] || \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
 
             if ('pdf' === $format) {
                 try {
@@ -198,11 +194,11 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
 
         if ($this->imagine instanceof GmagickImagine) {
-            $info['supported'] = \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
+            $info['supported'] = $info['supported'] || \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
         }
 
         if ($this->imagine instanceof GdImagine) {
-            $info['supported'] = \function_exists('image'.$format);
+            $info['supported'] = $info['supported'] || \function_exists('image'.$format);
         }
 
         if (!$info['supported'] && !$info['error']) {
