@@ -84,7 +84,7 @@ class TableAccessVoter implements CacheableVoterInterface
         return self::ACCESS_ABSTAIN;
     }
 
-    private function hasAccessToModule(TokenInterface $token, CreateAction|ReadAction|UpdateAction|DeleteAction $subject): bool
+    private function hasAccessToModule(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $subject): bool
     {
         $table = $subject->getDataSource();
 
