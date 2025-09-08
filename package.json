@@ -9,6 +9,7 @@
         "@symfony/webpack-encore": "^5.1",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
         "accessible-menu": "^4.2",
+        "ace-builds": "^1.43.3",
         "file-loader": "^6.2",
         "focus-trap": "^7.6",
         "image-minimizer-webpack-plugin": "^4.1",
