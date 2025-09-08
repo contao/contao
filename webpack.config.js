@@ -23,8 +23,8 @@ Encore
     .addEntry('navigation', './core-bundle/assets/navigation.js')
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
     .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
-    .configureDevServerOptions((options) => Object.assign({}, options, {
-        static: [
+    .configureDevServerOptions(options => {
+        options.static = [
             {
                 directory: 'core-bundle/contao/themes/flexible/icons',
                 publicPath: '/icons',
@@ -34,17 +34,17 @@ Encore
                 publicPath: '/fonts',
             },
         ],
-        hot: true,
-        liveReload: true,
-        allowedHosts: 'all',
-        watchFiles: [
+        options.hot = true,
+        options.liveReload = true,
+        options.allowedHosts = 'all',
+        options.watchFiles = [
             'core-bundle/assets/styles/**/*',
             'core-bundle/contao/**/*',
         ],
-        client: {
+        options.client = {
             overlay: false
         }
-    }))
+    })
 ;
 
 const jsConfig = Encore.getWebpackConfig();
