@@ -25,9 +25,9 @@
                 <div class="qr-code">
                     <img src="data:image/svg+xml;base64,{{ code.qr_image }}" alt>
                 </div>
-                <div class="widget">
+                <div class="widget" style="{{ 'max-width: 100%; word-wrap: break-word; word-break: break-all;'|csp_unsafe_inline_style }}">
                     <p>{{ 'MSC.twoFactorTextCode'|trans }}</p>
-                    <code style="'word-break:break-all'|csp_unsafe_inline_style">{{ code.secret }}</code>
+                    <code>{{ code.secret }}</code>
                 </div>
                 <div class="widget widget-text">
                     <label for="verify">{{ 'MSC.twoFactorVerification'|trans }}</label>

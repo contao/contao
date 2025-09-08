@@ -34,7 +34,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  *
- * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
  *             use the content element instead.
  */
 #[AsFrontendModule(category: 'user', template: 'mod_two_factor')]
