@@ -71,8 +71,11 @@ class BackendMenuListenerTest extends ContaoTestCase
         $factory = new MenuFactory();
 
         $menu = $factory->createItem('headerMenu');
-        $menu->addChild($factory->createItem('submenu'));
-        $menu->addChild($factory->createItem('burger'));
+        $submenu = $menu->addChild($factory->createItem('submenu'));
+        $submenu->addChild($factory->createItem('info'));
+        $submenu->addChild($factory->createItem('login'));
+        $submenu->addChild($factory->createItem('security'));
+        $submenu->addChild($factory->createItem('color-scheme'));
 
         $event = new MenuEvent($factory, $menu);
         $jwtManager = $this->createMock(JwtManager::class);
@@ -81,10 +84,10 @@ class BackendMenuListenerTest extends ContaoTestCase
         $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, $jwtManager);
         $listener($event);
 
-        $children = $event->getTree()->getChildren();
+        $children = $event->getTree()->getChild('submenu')->getChildren();
 
-        $this->assertCount(3, $children);
-        $this->assertSame(['debug', 'submenu', 'burger'], array_keys($children));
+        $this->assertCount(5, $children);
+        $this->assertSame(['info', 'login', 'security', 'color-scheme', 'debug'], array_keys($children));
 
         $debug = $children['debug'];
 
@@ -104,6 +107,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $factory = new MenuFactory();
         $menu = $factory->createItem('headerMenu');
+        $menu->addChild($factory->createItem('submenu'));
 
         $event = new MenuEvent($factory, $menu);
         $jwtManager = $this->createMock(JwtManager::class);
@@ -112,7 +116,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $listener = new BackendMenuListener($security, $router, $requestStack, $translator, true, null, $jwtManager);
         $listener($event);
 
-        $children = $event->getTree()->getChildren();
+        $children = $event->getTree()->getChild('submenu')->getChildren();
 
         $this->assertSame(['class' => 'icon-debug hover', 'title' => 'debug_mode', 'data-turbo-prefetch' => 'false'], $children['debug']->getLinkAttributes());
     }
