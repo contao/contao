@@ -2192,9 +2192,6 @@
       <trans-unit id="MSC.parent">
         <source>Parent</source>
       </trans-unit>
-      <trans-unit id="MSC.manual">
-        <source>Manual</source>
-      </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
       </trans-unit>

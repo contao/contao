@@ -58,21 +58,6 @@ class BackendHeaderListener
         $tree = $event->getTree();
         $ref = $this->getRefererId();
 
-        $manualTitle = $this->translator->trans('MSC.manual', [], 'contao_default');
-
-        $manual = $factory
-            ->createItem('manual')
-            ->setLabel($manualTitle)
-            ->setUri('https://to.contao.org/manual')
-            ->setLinkAttribute('class', 'icon-manual')
-            ->setLinkAttribute('title', $manualTitle)
-            ->setLinkAttribute('target', '_blank')
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($manual);
-
         $alerts = $event->getFactory()
             ->createItem('alerts')
             ->setLabel($this->getAlertsLabel())

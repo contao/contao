@@ -88,21 +88,7 @@ class BackendHeaderListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
-
-        // Manual
-        $this->assertSame('MSC.manual', $children['manual']->getLabel());
-        $this->assertSame('https://to.contao.org/manual', $children['manual']->getUri());
-        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
-
-        $this->assertSame(
-            [
-                'class' => 'icon-manual',
-                'title' => 'MSC.manual',
-                'target' => '_blank',
-            ],
-            $children['manual']->getLinkAttributes(),
-        );
+        $this->assertSame(['alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
 
         // Alerts
         $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
