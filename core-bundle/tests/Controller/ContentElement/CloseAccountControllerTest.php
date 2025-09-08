@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\CloseAccountController;
-use Contao\CoreBundle\Event\CloseAccountEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -204,7 +203,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $passwordHasher
             ->expects($this->once())
             ->method('verify')
-            ->willReturn($willVerify);
+            ->willReturn($willVerify)
         ;
 
         $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
