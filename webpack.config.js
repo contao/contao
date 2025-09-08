@@ -4,7 +4,7 @@ const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 // Core bundle assets
 Encore
     .setOutputPath('core-bundle/public/')
-    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public/' : '/bundles/contaocore')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public' : '/bundles/contaocore')
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
@@ -54,7 +54,7 @@ Encore.reset();
 // Back end theme "flexible"
 Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
-    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible/' : '/system/themes/flexible')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible' : '/system/themes/flexible')
     .setManifestKeyPrefix('')
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
