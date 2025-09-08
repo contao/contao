@@ -69,7 +69,7 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">'.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
             ->setAttribute('data-controller', 'contao--profile')
             ->setAttribute('data-contao--profile-target', 'menu')
