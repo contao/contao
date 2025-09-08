@@ -98,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'key=compare',
 				'icon'                => 'diffTemplate.svg',
 				'button_callback'     => array('tl_templates', 'compareButton')
-			),
+			)
 		)
 	),
 

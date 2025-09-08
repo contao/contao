@@ -142,7 +142,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'icon'                => 'new.svg',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'uploadFile')
-			),
+			)
 		)
 	),
 
