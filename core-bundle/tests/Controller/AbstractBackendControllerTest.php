@@ -179,21 +179,21 @@ class AbstractBackendControllerTest extends TestCase
         $plainRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
 
         yield 'plain request' => [
-            $plainRequest,
+            clone $plainRequest,
             'custom_be.html.twig',
             null,
             [...$customContext, ...$defaultContext],
         ];
 
         yield 'plain request explicitly with chrome' => [
-            $plainRequest,
+            clone $plainRequest,
             'custom_be.html.twig',
             true,
             [...$customContext, ...$defaultContext],
         ];
 
         yield 'plain request without chrome' => [
-            $plainRequest,
+            clone $plainRequest,
             'custom_be.html.twig',
             false,
             $customContext,
@@ -222,14 +222,14 @@ class AbstractBackendControllerTest extends TestCase
         $requestAcceptingTurboStreams->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
 
         yield 'regular request accepting turbo stream' => [
-            $requestAcceptingTurboStreams,
+            clone $requestAcceptingTurboStreams,
             'custom_be.html.twig',
             null,
             [...$customContext, ...$defaultContext],
         ];
 
         yield 'turbo stream with chrome' => [
-            $requestAcceptingTurboStreams,
+            clone $requestAcceptingTurboStreams,
             'update.stream.html.twig',
             true,
             [...$customContext, ...$defaultContext],
@@ -237,7 +237,7 @@ class AbstractBackendControllerTest extends TestCase
         ];
 
         yield 'turbo stream explicitly without chrome' => [
-            $requestAcceptingTurboStreams,
+            clone $requestAcceptingTurboStreams,
             'update.stream.html.twig',
             false,
             $customContext,
