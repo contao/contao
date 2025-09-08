@@ -35,7 +35,7 @@ Encore
             },
         ],
         options.hot = true,
-        options.liveReload = true,
+        //options.liveReload = true,
         options.allowedHosts = 'all',
         options.watchFiles = [
             'core-bundle/assets/styles/**/*',
@@ -92,7 +92,7 @@ Encore.reset();
 // Back end icons
 Encore
     .setOutputPath('core-bundle/contao/themes/flexible/icons')
-    .setPublicPath(Encore.isDevServer() ? '/' : '/system/themes/flexible/icons')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible/icons' : '/system/themes/flexible/icons')
     .setManifestKeyPrefix('')
     .disableSingleRuntimeChunk()
     .addPlugin(new ImageMinimizerPlugin({
