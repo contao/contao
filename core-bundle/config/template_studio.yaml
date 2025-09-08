@@ -15,6 +15,7 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@contao.twig.studio.operation_context_factory'
             - '@contao.twig.studio.autocomplete'
+            - '@contao.twig.studio.environment_information'
             - '@database_connection'
             - !tagged_iterator { tag: contao.operation.template_studio_element, index_by: name }
 
@@ -23,6 +24,11 @@ services:
         arguments:
             - '@contao.twig.inspector'
             - '@contao.twig.finder_factory'
+            - '@twig'
+
+    contao.twig.studio.environment_information:
+        class: Contao\CoreBundle\Twig\Studio\EnvironmentInformation
+        arguments:
             - '@twig'
 
     contao.twig.studio.create_content_element_variant_operation:

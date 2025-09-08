@@ -22,6 +22,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
@@ -57,6 +58,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         private readonly ThemeNamespace $themeNamespace,
         private readonly OperationContextFactory $operationContextFactory,
         private readonly Autocomplete $autocomplete,
+        private readonly EnvironmentInformation $environmentInformation,
         private readonly Connection $connection,
         iterable $operations,
     ) {
@@ -85,6 +87,7 @@ class BackendTemplateStudioController extends AbstractBackendController
             'tree' => $this->generateTree(),
             'themes' => $availableThemes,
             'current_theme' => $themeContext,
+            'environment_information' => $this->environmentInformation->dump(),
         ]);
     }
 
