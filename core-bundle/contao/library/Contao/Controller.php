@@ -1026,13 +1026,13 @@ abstract class Controller extends System
 	/**
 	 * Add a request string to the current URL
 	 *
-	 * @param string $strRequest The string to be added
-	 * @param mixed  $unused     Not used anymore
-	 * @param array  $arrUnset   An optional array of keys to unset
+	 * @param string  $strRequest The string to be added
+	 * @param boolean $blnAddRef  Not used anymore
+	 * @param array   $arrUnset   An optional array of keys to unset
 	 *
 	 * @return string The new URL
 	 */
-	public static function addToUrl($strRequest, $unused=null, $arrUnset=array())
+	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
 		$pairs = array();
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();

@@ -148,9 +148,6 @@ sure to always submit at least an empty string in your widget:
 The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID`, `TL_SCRIPT`, `TL_MODE`
 and `REQUEST_TOKEN`  have been removed.
 
-`TL_REFERER_ID` was historically used for referrer management, it was previously replaced by the request attribute
-`_contao_referer_id` which was removed afterwards as well.
-
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
 ```php
@@ -517,5 +514,11 @@ converted when a record is saved in the back end.
 
 Calendar feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
 module. The `{{calendar_feed:id}}` insert tag is deprecated. You can use `{{link_url::id}}` instead.
+
+## Version 5.6 to 5.7
+
+### Referer ID
+
+The request attribute `_contao_referer_id` was removed.
 
 [1]: https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities
