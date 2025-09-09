@@ -379,7 +379,6 @@ abstract class System
 		{
 			if ($isBackend)
 			{
-
 				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail();
 
 				if ($trail[\count($trail) - 2]['url'] ?? null)
@@ -388,7 +387,7 @@ abstract class System
 				}
 				elseif (Input::get('do') && Input::get('act'))
 				{
-					$return = $container->get('router')->generate('contao_backend', ['do' => Input::get('do')]);
+					$return = $container->get('router')->generate('contao_backend', array('do' => Input::get('do')));
 				}
 				else
 				{
@@ -402,7 +401,7 @@ abstract class System
 
 				if (Input::get('picker'))
 				{
-					$return .= (str_contains($return, '?') ? '&' : '?') . 'picker='.rawurlencode(Input::get('picker'));
+					$return .= (str_contains($return, '?') ? '&' : '?') . 'picker=' . rawurlencode(Input::get('picker'));
 				}
 			}
 			else
