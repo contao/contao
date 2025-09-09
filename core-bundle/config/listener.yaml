@@ -157,6 +157,7 @@ services:
     contao.listener.data_container.jobs:
         class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
         arguments:
+            - '@contao.job.jobs'
             - '@security.helper'
             - '@database_connection'
             - '@request_stack'

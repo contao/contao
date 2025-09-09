@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Job;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
@@ -19,11 +23,28 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\MockClock;
+use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Routing\RouterInterface;
 
 class JobsTest extends ContaoTestCase
 {
+    private VirtualFilesystemInterface $vfs;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->vfs = new VirtualFilesystem(
+            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class),
+        );
+    }
+
     #[DataProvider('createJobProvider')]
     public function testCreateJob(bool $userLoggedIn): void
     {
@@ -176,7 +197,90 @@ class JobsTest extends ContaoTestCase
         $this->assertSame(Status::completed, $jobs->getByUuid($childJob2->getUuid())->getStatus());
     }
 
+    public function testHasAccessForSystemOwnerIsAlwaysTrue(): void
+    {
+        $jobs = $this->getJobs();
+        $job = Job::new('type', Owner::asSystem());
+
+        $this->assertTrue($jobs->hasAccess($job));
+    }
+
+    public function testHasAccessWithMatchingOwner(): void
+    {
+        $jobs = $this->getJobs($this->mockSecurity(42));
+        $job = Job::new('type', new Owner(42));
+
+        $this->assertTrue($jobs->hasAccess($job));
+    }
+
+    public function testHasAccessWithDifferentOwnerIsFalse(): void
+    {
+        $jobs = $this->getJobs($this->mockSecurity(1));
+        $job = Job::new('type', new Owner(42));
+
+        $this->assertFalse($jobs->hasAccess($job));
+    }
+
+    public function testAttachments(): void
+    {
+        $jobs = $this->getJobs();
+        $job = $jobs->createUserJob('type', 42);
+
+        $jobs->addAttachment($job, 'my-attachment-key', 'foobar');
+        $jobs->addAttachment($job, 'my-other-attachment-key', 'foobar');
+
+        $attachment = $jobs->getAttachment($job, 'my-attachment-key');
+        $this->assertSame('my-attachment-key', $attachment->getFilesystemItem()->getName());
+        $this->assertCount(2, iterator_to_array($this->vfs->listContents($job->getUuid())));
+        $this->assertCount(2, $jobs->getAttachments($job->getUuid()));
+    }
+
+    public function testPrune(): void
+    {
+        // Add job for 2 days ago
+        $jobs = $this->getJobs(null, new MockClock(new \DateTimeImmutable('-2 days')));
+        $job1 = $jobs->createUserJob('type', 1);
+        $jobs->addAttachment($job1, 'my-attachment-key', 'foobar');
+        $jobs->addAttachment($job1, 'my-other-attachment-key', 'foobar');
+
+        $this->assertNotNull($jobs->getByUuid($job1->getUuid()));
+        $this->assertCount(1, iterator_to_array($this->vfs->listContents('')));
+
+        // Add job now
+        $jobs = $this->getJobs();
+        $job2 = $jobs->createUserJob('type', 2);
+        $jobs->addAttachment($job2, 'my-attachment-key', 'foobar');
+
+        $this->assertNotNull($jobs->getByUuid($job2->getUuid()));
+        $this->assertCount(2, iterator_to_array($this->vfs->listContents('')));
+
+        // Prune now
+        $jobs->prune(86400);
+
+        // Job one must now be deleted as well as its attachments
+        $this->assertNull($jobs->getByUuid($job1->getUuid()));
+        $this->assertCount(0, iterator_to_array($this->vfs->listContents($job1->getUuid())));
+        $this->assertCount(1, iterator_to_array($this->vfs->listContents('')));
+
+        // But job 2 must still exist
+        $this->assertNotNull($jobs->getByUuid($job2->getUuid()));
+        $this->assertCount(1, iterator_to_array($this->vfs->listContents('')));
+    }
+
     private function mockSecurity(int|null $userId = null): Security
+    {
+        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->atLeastOnce())
+            ->method('getUser')
+            ->willReturn($userId ? $userMock : null)
+        ;
+
+        return $security;
+    }
+
+    private function mockFilesystem(int|null $userId = null): Security
     {
         $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
         $security = $this->createMock(Security::class);
@@ -199,7 +303,7 @@ class JobsTest extends ContaoTestCase
         return array_map(static fn (Job $job) => $job->getUuid(), $jobs);
     }
 
-    private function getJobs(Security|null $security = null): Jobs
+    private function getJobs(Security|null $security = null, ClockInterface $clock = new NativeClock()): Jobs
     {
         $connection = $this->createInMemorySQLiteConnection(
             [
@@ -217,7 +321,13 @@ class JobsTest extends ContaoTestCase
             ],
         );
 
-        return new Jobs($connection, $security ?? $this->createMock(Security::class));
+        return new Jobs(
+            $connection,
+            $security ?? $this->createMock(Security::class),
+            $this->vfs,
+            $this->createMock(RouterInterface::class),
+            $clock,
+        );
     }
 
     /**

@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\JobsListener;
+use Contao\CoreBundle\Job\Jobs;
 use Contao\DataContainer;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
@@ -26,6 +27,7 @@ class JobsListenerTest extends ContaoTestCase
     public function testInvokeWithoutRequest(): void
     {
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->createMock(Security::class),
             $this->createMock(Connection::class),
             $this->getRequestStack(),
@@ -40,6 +42,7 @@ class JobsListenerTest extends ContaoTestCase
     public function testInvokeWithoutUser(): void
     {
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->mockSecurity(),
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/')),
@@ -56,6 +59,7 @@ class JobsListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->mockSecurity(42),
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
@@ -83,6 +87,7 @@ class JobsListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->mockSecurity(42),
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
