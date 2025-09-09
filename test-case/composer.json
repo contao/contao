@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "contao/core-bundle": "self.version",
         "phpunit/phpunit": "^12.0",
         "symfony/yaml": "^6.4 || ^7.0"

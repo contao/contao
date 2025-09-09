@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-dom": "*",
         "ext-filter": "*",
         "ext-hash": "*",
