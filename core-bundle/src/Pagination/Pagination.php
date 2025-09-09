@@ -17,7 +17,7 @@ class Pagination implements PaginationInterface
 
     private readonly int $pageCount;
 
-    private readonly int $currentPage;
+    private int $currentPage;
 
     public function __construct(
         private readonly Request $request,
