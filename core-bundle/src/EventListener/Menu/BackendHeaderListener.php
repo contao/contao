@@ -93,6 +93,7 @@ class BackendHeaderListener
 
         $login = $factory
             ->createItem('login')
+            ->setAttribute('class', 'separator')
             ->setLabel('MSC.profile')
             ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'ref' => $ref]))
             ->setLinkAttribute('class', 'icon-profile')
@@ -111,8 +112,19 @@ class BackendHeaderListener
 
         $submenu->addChild($security);
 
+        $favorites = $factory
+            ->createItem('favorites')
+            ->setLabel('MSC.favorites')
+            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites', 'ref' => $ref]))
+            ->setLinkAttribute('class', 'icon-favorites')
+            ->setExtra('translation_domain', 'contao_default')
+        ;
+
+        $submenu->addChild($favorites);
+
         $colorScheme = $factory
             ->createItem('color-scheme')
+            ->setAttribute('class', 'separator')
             ->setUri('#')
             ->setLinkAttribute('class', 'icon-color-scheme')
             ->setLinkAttribute('title', '') // Required for the tips.js script
@@ -134,16 +146,6 @@ class BackendHeaderListener
         ;
 
         $submenu->addChild($colorScheme);
-
-        $favorites = $factory
-            ->createItem('favorites')
-            ->setLabel('MSC.favorites')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites', 'ref' => $ref]))
-            ->setLinkAttribute('class', 'icon-favorites')
-            ->setExtra('translation_domain', 'contao_default')
-        ;
-
-        $submenu->addChild($favorites);
 
         $burger = $factory
             ->createItem('burger')

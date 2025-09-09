@@ -76,7 +76,7 @@ class BackendMenuListener
         $class = 'icon-debug';
 
         if ($this->debug) {
-            $class .= ' hover';
+            $class .= ' enabled';
         }
 
         $debug = $event->getFactory()
