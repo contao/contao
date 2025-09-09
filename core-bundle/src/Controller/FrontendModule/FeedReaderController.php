@@ -101,6 +101,7 @@ class FeedReaderController extends AbstractFrontendModuleController
                     [
                         PaginatorInterface::PAGE_PARAMETER_NAME => $param,
                         PaginatorInterface::PAGE_OUT_OF_RANGE => PaginatorInterface::PAGE_OUT_OF_RANGE_THROW_EXCEPTION,
+                        PaginatorInterface::SORT_FIELD_ALLOW_LIST => [],
                     ],
                 );
             } catch (PageNumberOutOfRangeException $e) {
