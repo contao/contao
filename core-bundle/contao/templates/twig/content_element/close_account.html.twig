@@ -4,7 +4,7 @@
 {% block wrapper %}
     {% if as_editor_view %}
         <i class="placeholder-explanation">{{ ('CTE.' ~ type ~ '.1')|trans }}</i>
-    {% elseif has_member %}
+    {% elseif has_member|default %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
