@@ -84,7 +84,7 @@ class Pagination implements PaginationInterface
 
     public function getFirst(): int|null
     {
-        return $this->getCurrent() > 1 ? 1 : null;
+        return $this->getCurrent() > 2 ? 1 : null;
     }
 
     public function getPrevious(): int|null
@@ -98,7 +98,7 @@ class Pagination implements PaginationInterface
     {
         $lastPage = $this->getPageCount();
 
-        if ($this->getCurrent() === $lastPage) {
+        if ($this->getCurrent() >= $lastPage - 1) {
             return null;
         }
 

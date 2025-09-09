@@ -28,7 +28,7 @@ class PaginationTest extends TestCase
         $this->assertSame(2, $pagination->getCurrent());
         $this->assertSame(20, $pagination->getPageCount());
         $this->assertSame(100, $pagination->getTotal());
-        $this->assertSame(1, $pagination->getFirst());
+        $this->assertNull($pagination->getFirst());
         $this->assertSame(20, $pagination->getLast());
         $this->assertSame(1, $pagination->getPrevious());
         $this->assertSame(3, $pagination->getNext());
