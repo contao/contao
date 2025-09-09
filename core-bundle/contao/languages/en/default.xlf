@@ -548,6 +548,12 @@
       <trans-unit id="CTE.login.1">
         <source>Generates a login form.</source>
       </trans-unit>
+      <trans-unit id="CTE.lost_password.0">
+        <source>Lost password</source>
+      </trans-unit>
+      <trans-unit id="CTE.lost_password.1">
+        <source>Generates a form to request a new password.</source>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
       </trans-unit>

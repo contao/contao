@@ -125,6 +125,8 @@ services:
             - '@event_dispatcher'
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\ContentElement\LostPasswordController: ~
+
     Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
         arguments:
             - '@contao.repository.webauthn_credential'
