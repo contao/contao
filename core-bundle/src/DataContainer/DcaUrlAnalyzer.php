@@ -245,7 +245,7 @@ class DcaUrlAnalyzer
             return [null, null];
         }
 
-        if (isset($module['callback']) || isset($module[(string) $this->findGet('key')])) {
+        if (isset($module['callback'])) {
             return [$table, null];
         }
 
@@ -253,6 +253,10 @@ class DcaUrlAnalyzer
         $pid = (int) $this->findGet('pid') ?: null;
         $act = $this->findGet('act');
         $mode = $this->findGet('mode');
+
+        if (isset($module[(string) $this->findGet('key')])) {
+            return [$table, $id];
+        }
 
         // For these actions the id parameter refers to the parent record
         if (
