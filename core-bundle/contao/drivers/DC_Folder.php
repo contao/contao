@@ -2321,6 +2321,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$user = BackendUser::getInstance();
 		$security = System::getContainer()->get('security.helper');
+		$canRenameFiles = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
@@ -2383,7 +2384,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$dragHandle = '';
+
+			if ($canRenameFiles && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $currentFolder))))
+			{
+				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFolder'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
+			}
+
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
@@ -2497,7 +2505,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+
+			$dragHandle = '';
+
+			if ($canRenameFiles && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $currentFile))))
+			{
+				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFile'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
+			}
+
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)

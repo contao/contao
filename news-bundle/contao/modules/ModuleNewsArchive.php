@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "news archive".
@@ -230,5 +231,10 @@ class ModuleNewsArchive extends ModuleNews
 		$this->Template->headline = trim($this->headline);
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['empty'];
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }
