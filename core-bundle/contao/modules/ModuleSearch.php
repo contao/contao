@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Pagination\PaginationInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -189,27 +191,29 @@ class ModuleSearch extends Module
 			// Pagination
 			if ($this->perPage > 0)
 			{
-				$id = 'page_s' . $this->id;
-				$page = (int) (Input::get($id) ?? 1);
+				$param = 'page_s' . $this->id;
 				$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
-				// Do not index or cache the page if the page number is outside the range
-				if ($page < 1 || $page > max(ceil($count/$per_page), 1))
+				try
 				{
-					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+					/** @var PaginationInterface $pagination */
+					$pagination = System::getContainer()->get('contao.pagination.factory')->create($param, $count, $per_page);
+				}
+				catch (PageOutOfRangeException $e)
+				{
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 				}
 
-				$from = (($page - 1) * $per_page) + 1;
+				$from = (($pagination->getCurrent() - 1) * $per_page) + 1;
 				$to = (($from + $per_page) > $count) ? $count : ($from + $per_page - 1);
 
 				// Pagination menu
 				if ($to < $count || $from > 1)
 				{
-					$objPagination = new Pagination($count, $per_page, Config::get('maxPaginationLinks'), $id);
-					$this->Template->pagination = $objPagination->generate("\n  ");
+					$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 				}
 
-				$this->Template->page = $page;
+				$this->Template->page = $pagination->getCurrent();
 			}
 
 			$contextLength = 48;

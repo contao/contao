@@ -14,7 +14,7 @@ class PaginationFactory implements PaginationFactoryInterface
     ) {
     }
 
-    public function create(string $param, int $total, int $perPage, int|null $pageRange = null): PaginationInterface
+    public function create(string $param, int $total, int $perPage, int|null $pageRange = null, bool $throw = true): PaginationInterface
     {
         return new Pagination(
             $this->requestStack->getCurrentRequest(),
@@ -22,6 +22,7 @@ class PaginationFactory implements PaginationFactoryInterface
             $total,
             $perPage,
             $pageRange ?? $this->pageRange,
+            $throw,
         );
     }
 }

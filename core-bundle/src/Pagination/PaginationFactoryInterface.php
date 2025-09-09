@@ -6,5 +6,5 @@ namespace Contao\CoreBundle\Pagination;
 
 interface PaginationFactoryInterface
 {
-    public function create(string $param, int $total, int $perPage, int|null $pageRange = null): PaginationInterface;
+    public function create(string $param, int $total, int $perPage, int|null $pageRange = null, bool $throw = true): PaginationInterface;
 }

@@ -25,13 +25,18 @@ class Pagination implements PaginationInterface
         private readonly int $total,
         private readonly int $perPage,
         private int|null $pageRange = null,
+        bool $throw = true,
     ) {
         $this->pageCount = (int) ceil($total / $perPage);
 
         $this->currentPage = $this->request->query->getInt($this->getParam(), 1);
 
         if ($this->currentPage < 1 || $this->currentPage > $this->pageCount) {
-            throw new PageOutOfRangeException(\sprintf('Page %s is out of range.', $this->currentPage));
+            if ($throw) {
+                throw new PageOutOfRangeException(\sprintf('Page %s is out of range.', $this->currentPage));
+            }
+
+            $this->currentPage = max(1, min($this->currentPage, $this->pageCount));
         }
 
         if (null === $pageRange || $pageRange > $this->pageCount) {

@@ -706,6 +706,7 @@ services:
 
     contao.pagination.factory:
         class: Contao\CoreBundle\Pagination\PaginationFactory
+        public: true
         arguments:
             - '@request_stack'
 

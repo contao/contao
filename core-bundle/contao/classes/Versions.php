@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Pagination\PaginationInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Doctrine\DBAL\Types\BinaryType;
@@ -678,13 +679,12 @@ class Versions extends Controller
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
 								->execute(...$params);
 
-		$intLast   = ceil($objTotal->count / 15);
-		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
-		$intOffset = ($intPage - 1) * 15;
+		/** @var PaginationInterface $pagination */
+		$pagination = System::getContainer()->get('contao.pagination.factory')->create('vp', $objTotal->count, 15, 7, false);
+		$intOffset = ($pagination->getCurrent() - 1) * 15;
 
 		// Create the pagination menu
-		$objPagination = new Pagination($objTotal->count, 15, 7, 'vp', new BackendTemplate('be_pagination'));
-		$objTemplate->pagination = $objPagination->generate();
+		$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 
 		// Get the versions
 		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
