@@ -166,22 +166,19 @@
 .parent_view .new_operation {
     display: flex;
     justify-content: center;
-    margin: 8px 0 -10px;
+    margin: 4px 0 -14px;
 
     &:first-child {
-        margin-top: -10px;
+        margin-top: -12px;
     }
 
-    button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 3px;
-        border: 1px solid transparent;
-        border-radius: 50%;
+    > .operations {
+        visibility: hidden;
+    }
 
-        &:hover {
-            border-color: var(--border);
+    &:hover {
+        > .operations {
+            visibility: visible;
         }
     }
 }
