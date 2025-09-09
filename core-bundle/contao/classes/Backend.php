@@ -418,21 +418,7 @@ abstract class Backend extends Controller
 			$do = Input::get('do');
 
 			// Add the current action
-			if ($act == 'editAll')
-			{
-				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
-				{
-					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
-				}
-			}
-			elseif ($act == 'overrideAll')
-			{
-				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
-				{
-					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
-				}
-			}
-			elseif (Input::get('id'))
+			if (Input::get('id'))
 			{
 				if ($do == 'files' || $do == 'tpl_editor')
 				{
