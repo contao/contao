@@ -9,7 +9,6 @@ export default class extends Controller {
         toggleAction: String,
         loadAction: String,
         requestToken: String,
-        refererId: String,
         expand: String,
         collapse: String,
         expandAll: String,
@@ -91,9 +90,6 @@ export default class extends Controller {
         this.loadToggler(el, true);
 
         const url = new URL(location.href);
-        const search = url.searchParams;
-        search.set('ref', this.refererIdValue);
-        url.search = search.toString();
 
         const response = await fetch(url, {
             method: 'POST',
