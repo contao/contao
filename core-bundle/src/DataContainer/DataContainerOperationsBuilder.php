@@ -125,10 +125,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             if ('edit' === $k) {
                 $v['attributes'] = (new HtmlAttributes($v['attributes'] ?? null))->set(
                     'onclick',
-                    \sprintf(
-                        "Backend.openModalIframe({title:'%s', url:this.href+'&popup=1&nb=1'});return false",
-                        StringUtil::specialchars($v['title']),
-                    ),
+                    "Backend.openModalIframe({title:'\u{A0}', url:this.href+'&popup=1&nb=1'});return false",
                 );
             }
 
