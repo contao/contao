@@ -28,6 +28,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'debug.stopwatch',
         'fragment.handler',
         'mailer',
+        'messenger.bus.default',
         'monolog.logger.contao',
         'security.authentication_utils',
         'security.authentication.trust_resolver',

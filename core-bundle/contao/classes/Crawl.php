@@ -10,18 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Crawl\Escargot\Factory;
-use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
-use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
-use Contao\CoreBundle\Exception\ResponseException;
-use Monolog\Handler\GroupHandler;
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Terminal42\Escargot\Exception\InvalidJobIdException;
+use Contao\CoreBundle\Messenger\Message\CrawlMessage;
 
 /**
  * Maintenance module "crawl".
@@ -34,18 +23,13 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	private $valid = true;
 
 	/**
-	 * @var string
-	 */
-	private $logDir;
-
-	/**
 	 * Return true if the module is active
 	 *
 	 * @return boolean
 	 */
 	public function isActive()
 	{
-		return Input::get('act') == 'crawl' && $this->valid;
+		return Input::post('trigger_crawl');
 	}
 
 	/**
@@ -55,11 +39,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	 */
 	public function run()
 	{
-		if (!System::getContainer()->has('contao.crawl.escargot.factory'))
-		{
-			return '';
-		}
-
 		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 
@@ -73,253 +52,55 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		}
 
 		$template = new BackendTemplate('be_crawl');
-		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->maxDepthWidget = $maxDepthWidget;
 		$template->memberWidget = $memberWidget;
 
-		if (!$this->isActive())
+		if ($this->isActive() && $this->valid)
 		{
-			return $template->parse();
-		}
+			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-		$activeSubscribers = $subscribersWidget->value;
-
-		$template->isRunning = true;
-		$template->activeSubscribers = $factory->getSubscribers($activeSubscribers);
-
-		$jobId = Input::get('jobId');
-		$queue = $factory->createLazyQueue();
-
-		$debugLogPath = $this->getLogDir() . '/' . $jobId . '_log.csv';
-		$resultCache = $this->getLogDir() . '/' . $jobId . '.result-cache';
-
-		if ($downloadLog = Input::get('downloadLog'))
-		{
-			if ('debug' === $downloadLog)
+			if ($memberWidget?->value)
 			{
-				$filePath = $debugLogPath;
-				$fileName = 'crawl_debug_log.csv';
+				$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
+					->execute((int) $memberWidget->value);
+
+				if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
+				{
+					$objAuthenticator->removeFrontendAuthentication();
+					$clientOptions = array();
+				}
+				else
+				{
+					// TODO: we need a way to authenticate with a token instead of our own cookie
+					$session = System::getContainer()->get('request_stack')->getSession();
+					$headers = array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId()));
+				}
 			}
 			else
-			{
-				$filePath = $this->getSubscriberLogFilePath($downloadLog, $jobId);
-				$fileName = 'crawl_' . $downloadLog . '_log.csv';
-			}
-
-			$response = new BinaryFileResponse($filePath);
-			$response->setPrivate();
-			$response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $fileName);
-
-			throw new ResponseException($response);
-		}
-
-		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
-
-		if ($memberWidget?->value)
-		{
-			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
-												->execute((int) $memberWidget->value);
-
-			if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
 			{
 				$objAuthenticator->removeFrontendAuthentication();
-				$clientOptions = array();
-			}
-			else
-			{
-				// TODO: we need a way to authenticate with a token instead of our own cookie
-				$session = System::getContainer()->get('request_stack')->getSession();
-				$clientOptions = array('headers' => array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId())));
-			}
-		}
-		else
-		{
-			$objAuthenticator->removeFrontendAuthentication();
-			$clientOptions = array();
-		}
-
-		if (!$jobId)
-		{
-			$baseUris = $factory->getCrawlUriCollection();
-			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
-
-			Controller::redirect(Controller::addToUrl('&jobId=' . $escargot->getJobId()));
-		}
-
-		$escargot = null;
-
-		try
-		{
-			$escargot = $factory->createFromJobId($jobId, $queue, $activeSubscribers, $clientOptions);
-		}
-		catch (InvalidJobIdException $e)
-		{
-			if (file_exists($resultCache))
-			{
-				$results = json_decode(file_get_contents($resultCache), true);
-
-				if (Environment::get('isAjaxRequest'))
-				{
-					$response = new JsonResponse(array(
-						'pending' => 0,
-						'total' => 0,
-						'finished' => true,
-						'results' => $results,
-						'hasDebugLog' => file_exists($debugLogPath),
-					));
-
-					throw new ResponseException($response);
-				}
-
-				$subscriberLogHrefs = array();
-
-				foreach (array_keys($results) as $name)
-				{
-					$subscriberLogHrefs[$name] = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=' . $name);
-				}
-
-				$template->subscriberLogHrefs = $subscriberLogHrefs;
-				$template->debugLogHref = Controller::addToUrl('&jobId=' . $jobId . '&downloadLog=debug');
-
-				return $template->parse();
+				$headers = array();
 			}
 
-			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('requestUri')));
-		}
+			$subscribers = $subscribersWidget->value;
+			$maxDepth = $maxDepthWidget->value;
 
-		$concurrency = System::getContainer()->getParameter('contao.backend.crawl_concurrency');
-
-		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
-		$escargot = $escargot
-			->withConcurrency($concurrency)
-			->withMaxDepth($maxDepthWidget->value)
-			->withMaxDurationInSeconds(20)
-			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
-
-		$template->hint = \sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency', 'https://to.contao.org/docs/crawler');
-
-		if (Environment::get('isAjaxRequest'))
-		{
-			// Start crawling
-			if ('true' !== Environment::get('httpOnlyStatusUpdate'))
-			{
-				$escargot->crawl();
-			}
-
-			// Commit the result on the lazy queue
-			$queue->commit($jobId);
-
-			// Save the results between requests
-			$results = array();
-			$existingResults = array();
-
-			if (file_exists($resultCache))
-			{
-				$existingResults = json_decode(file_get_contents($resultCache), true);
-			}
-
-			foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
-			{
-				$previousResult = null;
-				$name = $subscriber->getName();
-
-				if (isset($existingResults[$name]))
-				{
-					$previousResult = SubscriberResult::fromArray($existingResults[$name]);
-				}
-
-				$results[$name] = $subscriber->getResult($previousResult)->toArray();
-				$results[$name]['hasLog'] = file_exists($this->getSubscriberLogFilePath($name, $jobId));
-			}
-
-			file_put_contents($resultCache, json_encode($results));
-
-			// Return the results
-			$pending = $queue->countPending($jobId);
-			$all = $queue->countAll($jobId);
-			$finished = 0 === $pending;
-
-			if ($finished)
-			{
-				$queue->deleteJobId($jobId);
-			}
-
-			$response = new JsonResponse(array(
-				'pending' => $pending,
-				'total' => $all,
-				'finished' => $finished,
-				'results' => $results,
-				'hasDebugLog' => file_exists($debugLogPath),
+			$job = System::getContainer()->get('contao.job.jobs')->createJob('crawl');
+			System::getContainer()->get('messenger.bus.default')->dispatch(new CrawlMessage(
+				$job->getUuid(),
+				$subscribers,
+				$maxDepth,
+				$headers,
 			));
 
-			throw new ResponseException($response);
+			// TODO: translation
+			Message::addConfirmation('Yo! Check the jobs framework!', self::class);
+
+			$this->reload();
 		}
-
-		$template->debugLogHref = Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=debug');
-
-		$subscriberLogHrefs = array();
-
-		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
-		{
-			$name = $subscriber->getName();
-			$subscriberLogHrefs[$name] = Controller::addToUrl('&jobId=' . $escargot->getJobId() . '&downloadLog=' . $name);
-		}
-
-		$template->subscriberLogHrefs = $subscriberLogHrefs;
 
 		return $template->parse();
-	}
-
-	/**
-	 * Creates a logger that logs everything on debug level in a general debug
-	 * log file and everything above info level into a subscriber specific log
-	 * file.
-	 */
-	private function createLogger(Factory $factory, array $activeSubscribers, string $jobId, string $debugLogPath): LoggerInterface
-	{
-		$handlers = array();
-
-		// Create the general debug handler
-		$debugHandler = new CrawlCsvLogHandler($debugLogPath, Logger::DEBUG);
-		$handlers[] = $debugHandler;
-
-		// Create the subscriber specific info handlers
-		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
-		{
-			$subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Logger::INFO);
-			$subscriberHandler->setFilterSource(\get_class($subscriber));
-			$handlers[] = $subscriberHandler;
-		}
-
-		$groupHandler = new GroupHandler($handlers);
-
-		$logger = new Logger('crawl-logger');
-		$logger->pushHandler($groupHandler);
-
-		return $logger;
-	}
-
-	private function getLogDir(): string
-	{
-		if (null !== $this->logDir)
-		{
-			return $this->logDir;
-		}
-
-		$this->logDir = \sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
-
-		if (!is_dir($this->logDir))
-		{
-			(new Filesystem())->mkdir($this->logDir);
-		}
-
-		return $this->logDir;
-	}
-
-	private function getSubscriberLogFilePath(string $subscriberName, string $jobId): string
-	{
-		return $this->getLogDir() . '/' . $jobId . '_' . $subscriberName . '_log.csv';
 	}
 
 	private function generateSubscribersWidget(array $subscriberNames): Widget
@@ -331,7 +112,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlSubscribers'][0];
 		$widget->mandatory = true;
 		$widget->multiple = true;
-		$widget->setInputCallback($this->getInputCallback($name));
 
 		$options = array();
 
@@ -372,7 +152,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$widget->id = $name;
 		$widget->name = $name;
 		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlDepth'][0];
-		$widget->setInputCallback($this->getInputCallback($name));
 
 		$options = array();
 
@@ -407,7 +186,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$widget->id = $name;
 		$widget->name = $name;
 		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlMember'][0];
-		$widget->setInputCallback($this->getInputCallback($name));
 
 		$time = time();
 		$options = array(array('value' => '', 'label' => '-', 'default' => true));
@@ -452,12 +230,5 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		}
 
 		return $widget;
-	}
-
-	private function getInputCallback(string $name): \Closure
-	{
-		return static function () use ($name) {
-			return Input::get($name);
-		};
 	}
 }
