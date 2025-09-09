@@ -38,4 +38,28 @@ class BackendJobsController extends AbstractBackendController
             'jobs' => $this->jobs->findMyNewOrPending(),
         ]);
     }
+
+    #[Route(
+        '%contao.backend.route_prefix%/jobs/download/{jobUuid}/{identifier}',
+        name: '_contao_jobs.download',
+        defaults: ['_scope' => 'backend'],
+        methods: ['GET'],
+        requirements: ['identifier' => '.+'],
+    )]
+    public function downloadJobAttachment(string $jobUuid, string $identifier): Response
+    {
+        $job = $this->jobs->getByUuid($jobUuid);
+
+        if (!$job || !$this->jobs->hasAccess($job)) {
+            throw $this->createNotFoundException();
+        }
+
+        $attachment = $this->jobs->getAttachment($jobUuid, $identifier);
+
+        if (!$attachment) {
+            throw $this->createNotFoundException();
+        }
+
+        return $attachment->toStreamedResponse();
+    }
 }

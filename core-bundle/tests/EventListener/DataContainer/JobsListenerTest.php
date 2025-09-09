@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\BackendUser;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\JobsListener;
+use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Tests\Job\AbstractJobsTestCase;
 use Contao\DataContainer;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
-class JobsListenerTest extends ContaoTestCase
+class JobsListenerTest extends AbstractJobsTestCase
 {
     protected function tearDown(): void
     {
@@ -23,9 +26,60 @@ class JobsListenerTest extends ContaoTestCase
         parent::tearDown();
     }
 
+    public function testAttachmentsCallback(): void
+    {
+        $security = $this->mockSecurity(42);
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->with('_contao_jobs.download')
+            ->willReturn('https://contao.org/contao/jobs/download')
+        ;
+
+        $jobs = $this->getJobs($security, new MockClock(), $router);
+        $job = $jobs->createJob('job-type');
+
+        $listener = new JobsListener(
+            $jobs,
+            $security,
+            $this->createMock(Connection::class),
+            $this->getRequestStack(),
+            $this->mockContaoFramework(),
+        );
+
+        $operation = new DataContainerOperation(
+            'attachments',
+            ['label' => 'attachments', 'title' => 'attachments'],
+            ['uuid' => 'i-do-not-exist'],
+            $this->createMock(DataContainer::class),
+        );
+
+        $listener->onAttachmentsCallback($operation);
+        $this->assertSame('', $operation->getHtml());
+
+        $operation = new DataContainerOperation(
+            'attachments',
+            ['label' => 'attachments', 'title' => 'attachments'],
+            ['uuid' => $job->getUuid()],
+            $this->createMock(DataContainer::class),
+        );
+
+        $listener->onAttachmentsCallback($operation);
+        $this->assertSame('', $operation->getHtml());
+
+        $jobs->addAttachment($job, 'foobar', 'foobar');
+        $jobs->addAttachment($job, 'foobar2', 'foobar2');
+
+        $listener->onAttachmentsCallback($operation);
+        $this->assertSame('https://contao.org/contao/jobs/download', $operation->getUrl());
+        $this->assertSame('theme_import.svg', $operation['icon']);
+    }
+
     public function testInvokeWithoutRequest(): void
     {
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->createMock(Security::class),
             $this->createMock(Connection::class),
             $this->getRequestStack(),
@@ -40,6 +94,7 @@ class JobsListenerTest extends ContaoTestCase
     public function testInvokeWithoutUser(): void
     {
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->mockSecurity(),
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/')),
@@ -56,6 +111,7 @@ class JobsListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->mockSecurity(42),
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
@@ -83,6 +139,7 @@ class JobsListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
+            $this->createMock(Jobs::class),
             $this->mockSecurity(42),
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
@@ -122,19 +179,5 @@ class JobsListenerTest extends ContaoTestCase
         }
 
         return $requestStack;
-    }
-
-    private function mockSecurity(int|null $userId = null): Security
-    {
-        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->atLeastOnce())
-            ->method('getUser')
-            ->willReturn($userId ? $userMock : null)
-        ;
-
-        return $security;
     }
 }
