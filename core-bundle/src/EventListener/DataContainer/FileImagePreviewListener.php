@@ -20,6 +20,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\File;
 use Contao\Image\ResizeConfiguration;
+use Contao\Message;
 use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsCallback(table: 'tl_files', target: 'fields.preview.input_field')]
@@ -52,7 +53,9 @@ class FileImagePreviewListener
 
         try {
             $image = rawurldecode($this->imageFactory->create($this->projectDir.'/'.$objFile->path, [699, 524, ResizeConfiguration::MODE_BOX])->getUrl($this->projectDir));
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            Message::addError($e->getMessage());
+
             return '';
         }
 
