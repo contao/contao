@@ -2155,24 +2155,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['children']['href'] ?? '', false, array('s2e', 'act', 'mode', 'pid')));
 			}
-			elseif (Input::post('saveNback') !== null)
-			{
-				Message::reset();
-
-				if (!$this->ptable)
-				{
-					$this->redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do'));
-				}
-				// TODO: try to abstract this
-				elseif ($this->ptable == 'tl_page' && $this->strTable == 'tl_article')
-				{
-					$this->redirect($this->getReferer(false, $this->strTable));
-				}
-				else
-				{
-					$this->redirect($this->getReferer(false, $this->ptable));
-				}
-			}
 			elseif (Input::post('saveNcreate') !== null)
 			{
 				Message::reset();
