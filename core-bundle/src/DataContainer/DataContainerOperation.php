@@ -82,7 +82,7 @@ class DataContainerOperation implements \ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (!$value instanceof HtmlAttributes && \in_array($offset, ['attributes', 'listAttributes', 'iconAttributes'])) {
+        if (!$value instanceof HtmlAttributes && \in_array($offset, ['attributes', 'listAttributes', 'iconAttributes'], true)) {
             $value = new HtmlAttributes($value);
         }
 
