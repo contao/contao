@@ -19,7 +19,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2 # not all packages are compatible with PHP 8.3 yet
+                  php-version: 8.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
                   coverage: none
