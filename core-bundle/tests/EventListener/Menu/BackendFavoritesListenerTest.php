@@ -427,9 +427,9 @@ class BackendFavoritesListenerTest extends TestCase
         $factory = new MenuFactory();
 
         $tree = $factory->createItem('headerMenu');
+        $tree->addChild($factory->createItem('manual'));
 
         $event = new MenuEvent($factory, $tree);
-        $tree->addChild($factory->createItem('manual'));
 
         $listener = new BackendFavoritesListener(
             $security,
