@@ -61,7 +61,6 @@ class BackendPassword extends Backend
 		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
 		$widget->dataContainer = $dc;
 		$widget->label = null;
-		$widget->description = null; // Hide the description as it is parsed through be_password
 		$widget->prependLabel = true;
 		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];

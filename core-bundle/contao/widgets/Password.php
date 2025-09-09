@@ -16,7 +16,6 @@ namespace Contao;
  * @property integer $maxlength
  * @property boolean $mandatory
  * @property string  $placeholder
- * @property string  $description
  */
 class Password extends Widget
 {
@@ -152,7 +151,6 @@ class Password extends Widget
 			'value' => $this->varValue ? '*****' : '',
 			'name' => $this->strName,
 			'attributes' => $this->getAttributes(),
-			'description' => ($this->description && Config::get('showHelp') && !$this->hasErrors()) ? $this->description : '',
 			'prependLabel' => $this->prependLabel ?? false
 		));
 	}
