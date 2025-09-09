@@ -16,20 +16,27 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\ChangePasswordController;
+use Contao\CoreBundle\Event\NewPasswordEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\MemberModel;
+use Contao\OptInModel;
 use Contao\PageModel;
 use Contao\System;
+use Contao\Versions;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ChangePasswordControllerTest extends ContentElementTestCase
 {
@@ -37,7 +44,37 @@ class ChangePasswordControllerTest extends ContentElementTestCase
     {
         $container = $this->getContainerWithFrameworkTemplate();
 
-        $controller = new ChangePasswordController($this->getDefaultFramework());
+        $controller = new ChangePasswordController(
+            $this->getDefaultFramework(),
+            $this->createMock(PasswordHasherFactoryInterface::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(RouterInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $request = new Request();
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    public function testReturnsIfNoFrontendMember(): void
+    {
+        $container = $this->getContainerWithFrameworkTemplate(
+            $this->createMock(FrontendUser::class),
+        );
+
+        $controller = new ChangePasswordController(
+            $this->mockFrameworkWithTemplate(),
+            $this->createMock(PasswordHasherFactoryInterface::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(RouterInterface::class),
+        );
 
         $controller->setContainer($container);
 
@@ -51,9 +88,20 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
     public function testExecutesOnloadCallbacks(): void
     {
-        $container = $this->getContainerWithFrameworkTemplate($this->createMock(FrontendUser::class));
+        $member = $this->mockClassWithProperties(MemberModel::class);
 
-        $controller = new ChangePasswordController($this->mockFrameworkWithTemplate(true));
+        $container = $this->getContainerWithFrameworkTemplate(
+            $this->createMock(FrontendUser::class),
+            $member,
+        );
+
+        $controller = new ChangePasswordController(
+            $this->mockFrameworkWithTemplate($member, null, null, null, true),
+            $this->createMock(PasswordHasherFactoryInterface::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(RouterInterface::class),
+        );
 
         $controller->setContainer($container);
 
@@ -68,22 +116,146 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+
+        unset($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']);
     }
 
-    private function mockFrameworkWithTemplate(bool $hasCallback = false): ContaoFramework&MockObject
+    public function testReturnsIfWrongOldPassword(): void
+    {
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->password = 'hashed-password';
+
+        $member = $this->mockClassWithProperties(MemberModel::class);
+
+        $container = $this->getContainerWithFrameworkTemplate($user, $member);
+
+        $controller = new ChangePasswordController(
+            $this->mockFrameworkWithTemplate($member),
+            $this->mockPasswordHasherFactory(false),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(RouterInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $request = new Request();
+        $request->request->set('FORM_SUBMIT', 'tl_change_password_');
+        $request->request->set('oldpassword', '12345678');
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    public function testChangesPassword(): void
+    {
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->password = 'hashed-password';
+
+        $member = $this->mockClassWithProperties(MemberModel::class);
+        $member->id = 1;
+        $member->username = 'username';
+
+        $container = $this->getContainerWithFrameworkTemplate($user, $member);
+
+        $optIn = $this->mockClassWithProperties(OptInModel::class);
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with(new NewPasswordEvent($member, '87654321'))
+        ;
+
+        $versions = $this->createMock(Versions::class);
+        $versions
+            ->expects($this->once())
+            ->method('setUsername')
+        ;
+
+        $versions
+            ->expects($this->once())
+            ->method('setEditUrl')
+        ;
+
+        $versions
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $versions
+            ->expects($this->once())
+            ->method('create')
+        ;
+
+        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->willReturn('/')
+        ;
+
+        $controller = new ChangePasswordController(
+            $this->mockFrameworkWithTemplate($member, $this->createMock(PageModel::class), $optIn, $versions, false),
+            $this->mockPasswordHasherFactory(true),
+            $contentUrlGenerator,
+            $eventDispatcher,
+            $this->createMock(RouterInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model->jumpTo = 1;
+        $request = new Request();
+        $request->request->set('FORM_SUBMIT', 'tl_change_password_');
+        $request->request->set('oldpassword', '12345678');
+        $request->request->set('password', '87654321');
+
+        $GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'] = true;
+
+        $response = $controller($request, $model, 'main');
+
+        unset($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning']);
+
+        $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
+    }
+
+    private function mockPasswordHasherFactory(bool $willVerify): PasswordHasherFactoryInterface&MockObject
+    {
+        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
+        $passwordHasher
+            ->expects($this->once())
+            ->method('verify')
+            ->willReturn($willVerify)
+        ;
+
+        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
+        $passwordHasherFactory
+            ->expects($this->once())
+            ->method('getPasswordHasher')
+            ->willReturn($passwordHasher)
+        ;
+
+        return $passwordHasherFactory;
+    }
+
+    private function mockFrameworkWithTemplate(MemberModel|null $member = null, PageModel|null $page = null, OptInModel|null $optIn = null, Versions|null $versions = null, bool $hasCallback = false): ContaoFramework&MockObject
     {
         $template = new FragmentTemplate('change_password', static fn () => new Response());
 
-        $memberModel = $this->mockAdapter(['findById']);
-        $memberModel
+        $memberAdapter = $this->mockAdapter(['findById']);
+        $memberAdapter
             ->method('findById')
-            ->willReturn(null)
+            ->willReturn($member)
         ;
 
-        $pageModel = $this->mockAdapter(['findById']);
-        $pageModel
+        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter
             ->method('findById')
-            ->willReturn(null)
+            ->willReturn($page)
         ;
 
         $systemAdapter = $this->mockAdapter(['importStatic']);
@@ -103,12 +275,32 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             ;
         }
 
+        $optInAdapter = $this->mockAdapter(['findUnconfirmedByRelatedTableAndId']);
+        $optInModel = $this->mockClassWithProperties(OptInModel::class);
+
+        if ($optIn) {
+            $optInAdapter
+                ->expects($this->once())
+                ->method('findUnconfirmedByRelatedTableAndId')
+                ->willReturn([$optInModel])
+            ;
+        }
+
         $framework = $this->mockContaoFramework([
-            MemberModel::class => $memberModel,
-            PageModel::class => $pageModel,
+            MemberModel::class => $memberAdapter,
+            PageModel::class => $pageAdapter,
             Controller::class => $this->mockAdapter(['loadDataContainer']),
             System::class => $systemAdapter,
+            OptInModel::class => $optInAdapter,
         ]);
+
+        if ($versions) {
+            $framework
+                ->method('createInstance')
+                ->with(Versions::class)
+                ->willReturn($versions)
+            ;
+        }
 
         $framework
             ->method('createInstance')
@@ -129,10 +321,10 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         return $tokenStorage;
     }
 
-    private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, MemberModel|null $member = null): ContainerBuilder
+    private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, MemberModel|null $member = null, PageModel|null $page = null): ContainerBuilder
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockFrameworkWithTemplate(false));
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member, $page));
         $container->set('security.token_storage', $this->mockTokenStorageWithToken($user));
         $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
