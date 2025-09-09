@@ -20,7 +20,6 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
 
 /**

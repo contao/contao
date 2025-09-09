@@ -51,27 +51,27 @@ class FileImagePreviewListener
         }
 
         try {
-            $image = rawurldecode($this->imageFactory->create($this->projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($this->projectDir));
+            $image = rawurldecode($this->imageFactory->create($this->projectDir.'/'.$objFile->path, [699, 524, ResizeConfiguration::MODE_BOX])->getUrl($this->projectDir));
         } catch (\Exception) {
             return '';
         }
 
         $objImage = new File($image);
-        $ctrl = 'ctrl_preview_' . substr(md5($image), 0, 8);
+        $ctrl = 'ctrl_preview_'.substr(md5($image), 0, 8);
 
         $strPreview = '
-<div id="' . $ctrl . '" class="tl_edit_preview">
-<img src="' . $objImage->dataUri . '" width="' . $objImage->width . '" height="' . $objImage->height . '" alt="">
+<div id="'.$ctrl.'" class="tl_edit_preview">
+<img src="'.$objImage->dataUri.'" width="'.$objImage->width.'" height="'.$objImage->height.'" alt="">
 </div>';
 
         // Add the script to mark the important part
-        $strPreview .= '<script>Backend.editPreviewWizard($(\'' . $ctrl . '\'));</script>';
+        $strPreview .= '<script>Backend.editPreviewWizard($(\''.$ctrl.'\'));</script>';
 
         if ($this->framework->getAdapter(Config::class)->get('showHelp')) {
-            $strPreview .= '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['preview'][1] . '</p>';
+            $strPreview .= '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_files']['preview'][1].'</p>';
         }
 
-        $strPreview = '<div class="widget">' . $strPreview . '</div>';
+        $strPreview = '<div class="widget">'.$strPreview.'</div>';
 
         return $strPreview;
     }
