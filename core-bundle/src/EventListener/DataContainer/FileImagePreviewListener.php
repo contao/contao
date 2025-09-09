@@ -65,14 +65,12 @@ class FileImagePreviewListener
 </div>';
 
         // Add the script to mark the important part
-        $strPreview .= '<script>Backend.editPreviewWizard($(\''.$ctrl.'\'));</script>';
+        $strPreview .= '<script>Backend.editPreviewWizard($(\''.$ctrl."'));</script>";
 
         if ($this->framework->getAdapter(Config::class)->get('showHelp')) {
             $strPreview .= '<p class="tl_help tl_tip">'.$GLOBALS['TL_LANG']['tl_files']['preview'][1].'</p>';
         }
 
-        $strPreview = '<div class="widget">'.$strPreview.'</div>';
-
-        return $strPreview;
+        return '<div class="widget">'.$strPreview.'</div>';
     }
 }
