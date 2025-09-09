@@ -580,6 +580,10 @@
     background: linear-gradient(transparent, var(--content-bg) 60%);
 }
 
+[data-contao--limit-height-target][style*="max-height"] .limit_toggler {
+    background: linear-gradient(transparent, var(--content-bg) 60%);
+}
+
 .limit_toggler {
     width: 100%;
     position: absolute;
@@ -609,4 +613,8 @@
     position: relative;
     top: -4px;
     z-index: 1;
+}
+
+.hover-div:hover .cte_content[style*="max-height"] .limit_toggler {
+    background: linear-gradient(transparent, var(--hover-row) 60%);
 }
