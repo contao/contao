@@ -1334,9 +1334,6 @@
       <trans-unit id="MSC.homeTitle">
         <source>Back to the back end start page</source>
       </trans-unit>
-      <trans-unit id="MSC.learnMore">
-        <source>More on %s</source>
-      </trans-unit>
       <trans-unit id="MSC.user">
         <source>User</source>
       </trans-unit>
@@ -2191,6 +2188,9 @@
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Open the manual</source>
       </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>

@@ -242,7 +242,7 @@ class BackendMain extends Backend
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
 		$data['isPopup'] = Input::get('popup');
-		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://to.contao.org/manual" target="_blank" rel="noreferrer noopener">docs.contao.org</a>');
+		$data['manual'] = '<a href="https://to.contao.org/manual" target="_blank" rel="noreferrer noopener">'.$GLOBALS['TL_LANG']['MSC']['manual'].'</a>';
 
 		$twig = $container->get('twig');
 		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();

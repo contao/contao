@@ -92,7 +92,7 @@ $this->bodyAttributes = $this
             <div class="version">
               <?php $this->block('version'); ?>
                 <?= $this->version ?>
-                <div class="learn-more"><?= $this->learnMore ?></div>
+                <div class="open-manual"><?= $this->manual ?></div>
               <?php $this->endblock(); ?>
             </div>
           </aside>
