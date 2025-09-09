@@ -71,7 +71,7 @@
         "composer/composer": "^2.0",
         "contao/test-case": "self.version",
         "contao/news-bundle": "self.version",
-        "phpunit/phpunit": "^12.0"
+        "phpunit/phpunit": "^12.4"
     },
     "autoload": {
         "psr-4": {
