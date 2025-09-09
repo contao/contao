@@ -1,4 +1,4 @@
 
 <?php foreach ($this->matches as $section): ?>
-  <?php $this->insert($section['template'], ['id' => $section['id'], 'content' => $section['content']]); ?>
+  <?php $this->insert($section['template'], ['id' => $section['id'], 'standardized_id' => $section['standardized_id'], 'content' => $section['content']]); ?>
 <?php endforeach; ?>

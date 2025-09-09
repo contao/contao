@@ -1,0 +1,10 @@
+
+<ul class="cols_{{ perRow }}">
+    {% for row in body %}
+        {% for row as col %}
+            {% if col.addImage %}
+                <li>{% include "@Contao/image.html.twig" with col %}</li>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</ul>

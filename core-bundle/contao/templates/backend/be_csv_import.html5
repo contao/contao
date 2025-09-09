@@ -1,5 +1,5 @@
 
-<?= Contao\Message::generate() ?>
+<?= $this->messages; ?>
 
 <div id="tl_buttons">
   <a href="<?= Contao\StringUtil::ampersand($this->backUrl) ?>" class="header_back" title="<?= Contao\StringUtil::specialchars($this->backBTTitle) ?>" accesskey="b"><?= $this->backBT ?></a>

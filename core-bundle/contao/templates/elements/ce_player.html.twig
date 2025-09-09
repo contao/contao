@@ -1,0 +1,26 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+  <figure class="{{ containerClass }}">
+    {% if isVideo %}
+      <video{{ size }}{% if poster %} poster="{{ poster }}"{% endif %}{% if preload %} preload="{{ preload }}"{% endif %} {{ attributes|join(' ') }}>
+        {% for file in files %}
+          {% do addCspSource('media-src', file.path) %}
+          <source type="{{ file.mime }}" src="{{ file.path ~ range }}">
+        {% endfor %}
+      </video>
+    {% else %}
+      <audio{% if preload %} preload="{{ preload }}"{% endif %} {{ attributes|join(' ') }}>
+        {% for file in files %}
+          {% do addCspSource('media-src', file.path) %}
+          <source type="{{ file.mime }}" src="{{ file.path }}">
+        {% endfor %}
+      </audio>
+    {% endif %}
+    {% if caption %}
+      <figcaption class="caption">{{ caption }}</figcaption>
+    {% endif %}
+  </figure>
+
+{% endblock %}

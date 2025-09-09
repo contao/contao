@@ -1,0 +1,15 @@
+
+<div class="comment_default" id="{{ id }}">
+  <p class="info">{{ by }} {% if website %}<a href="{{ website }}" target="_blank" rel="nofollow noreferrer noopener">{{ name }}</a>{% else %}{{ name }}{% endif %} | <time datetime="{{ datetime }}" class="date">{{ date }}</time></p>
+  <div class="comment">
+    {{ comment }}
+  </div>
+  {% if addReply %}
+    <div class="reply">
+      <p class="info">{{ rby }} {{ author.name }}</p>
+      <div class="comment">
+        {{ cspInlineStyles(reply) }}
+      </div>
+    </div>
+  {% endif %}
+</div>

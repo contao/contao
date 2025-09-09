@@ -1,0 +1,13 @@
+{% set wrapperAttributes = attrs(cssID)
+    .addClass([class, 'block'])
+    .addStyle(style|default)
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+?>
+
+<!-- indexer::stop -->
+<div{{ wrapperAttributes }}>
+  <a href="{{ request }}#top" title="{{ title }}">{{ label }}</a>
+</div>
+<!-- indexer::continue -->

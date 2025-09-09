@@ -1,0 +1,25 @@
+{% extends "@Contao/form_row.html.twig" %}
+
+{% block label %}
+  {% if label %}
+    <label for="ctrl_{{ id }}"{% if class %} class="{{ class }}"{% endif %}>
+      {% if mandatory %}
+        <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
+      {% else %}
+        {{ label }}
+      {% endif %}
+    </label>
+  {% endif %}
+{% endblock %}
+
+{% block field %}
+  {% if hasErrors.invoke() %}
+    <p class="error">{{ getErrorAsString.invoke() }}</p>
+  {% endif %}
+
+  <textarea name="{{ name }}" id="ctrl_{{ id }}" class="textarea{% if class %} {{ class }}{% endif %}" rows="{{ rows }}" cols="{{ cols }}"{% if help %} aria-describedby="help_ctrl_{{ id }}"{% endif %}{{ getAttributes.invoke() }}>{{ value }}</textarea>
+
+  {% if help %}
+    <p class="help" id="help_ctrl_{{ id }}">{{ help }}</p>
+  {% endif %}
+{% endblock %}

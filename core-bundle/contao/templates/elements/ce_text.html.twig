@@ -1,0 +1,17 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% block content %}
+
+  {% if not addBefore %}
+    {% do cspInlineStyles(text) %}
+  {% endif %}
+
+  {% if addImage %}
+    {% include "@Contao/image.html.twig" %}
+  {% endif %}
+
+  {% if addBefore %}
+    {% do cspInlineStyles(text) %}
+  {% endif %}
+
+{% endblock %}

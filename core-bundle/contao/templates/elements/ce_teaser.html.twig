@@ -1,0 +1,15 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% set wrapperAttributes = attrs()
+    .addClass('ce_text')
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+{% set hl = 'h1' %}
+
+{% block content %}
+
+  {{ text }}
+  <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }}<span class="invisible"> {{ headline }}</span></a></p>
+
+{% endblock %}

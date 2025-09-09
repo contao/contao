@@ -1,0 +1,22 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% block content %}
+
+  {% if useImage %}
+    <figure class="image_container">
+      {{ embed_pre }}
+      <a href="{{ href }}"{% if linkTitle %} title="{{ linkTitle }}"{% endif %} class="hyperlink_img"{{ attribute }}{{ target }}{{ rel }}>
+          {% include "@Contao/picture_default" with picture %}
+      </a>
+      {{ embed_post }}
+      {% if caption %}
+        <figcaption class="caption">{{ caption }}</figcaption>
+      {% endif %}
+    </figure>
+  {% else %}
+    {{ embed_pre }}
+    <a href="{{ href }}" class="hyperlink_txt" title="{{ linkTitle }}"{{ attribute }}{{ target }}{{ rel }}>{{ link }}</a>
+    {{ embed_post }}
+  {% endif %}
+
+{% endblock %}

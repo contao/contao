@@ -1,0 +1,14 @@
+
+{% if title %}
+  <h1>{{ title }}</h1>
+{% endif %}
+
+{% if wildcard %}
+  <div class="tl_gray">
+    <span class="upper">{{ wildcard }}</span>
+    {% if link %}
+      <br>
+      {{ link }} (<a href="{{ href ~ '&amp;rt=' ~ request_token }}" class="tl_gray">ID: {{ id }}</a>)
+    {% endif %}
+  </div>
+{% endif %}

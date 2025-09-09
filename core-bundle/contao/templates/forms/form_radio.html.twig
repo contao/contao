@@ -1,0 +1,40 @@
+{% extends "@Contao/form_row.html.twig" %}
+
+{% block field %}
+  <fieldset id="ctrl_{{ id }}" class="radio_container{% if class %} {{ class }}{% endif %}"{% if help %} aria-describedby="help_ctrl_{{ id }}"{% endif %}>
+
+    {% if label %}
+      <legend>
+        {% if mandatory %}
+          <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
+        {% else %}
+          {{ label }}
+        {% endif %}
+      </legend>
+    {% endif %}
+
+    {% if hasErrors.invoke() %}
+      <p class="error">{{ getErrorAsString.invoke() }}</p>
+    {% endif %}
+
+    {% for option in getOptions.invoke() %}
+      {% if option.type == 'group_start' %}
+        <fieldset>
+        <legend>{{ option.label }}</legend>
+      {% endif %}
+
+      {% if option.type == 'option' %}
+        <span><input type="radio" name="{{ option.name }}" id="opt_{{ option.id }}" class="radio" value="{{ option.value }}"{{ option.checked }}{{ option.attributes }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label }}</label></span>
+      {% endif %}
+
+      {% if option.type == 'group_end' %}
+        </fieldset>
+      {% endif %}
+    {% endfor %}
+
+    {% if help %}
+      <p class="help" id="help_ctrl_{{ id }}">{{ help }}</p>
+    {% endif %}
+
+  </fieldset>
+{% endblock %}

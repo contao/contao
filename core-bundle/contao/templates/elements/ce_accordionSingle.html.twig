@@ -1,0 +1,29 @@
+{% set wrapperAttributes = attrs(cssID)
+    .addClass([class, 'ce_accordion', 'ce_text', 'block'])
+    .addStyle(style|default)
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+<section{{ wrapperAttributes }}>
+
+  <div class="{{ toggler }}"{% if headlineStyle %} style="{{ headlineStyle }}"{% endif %}>
+    {{ headline }}
+  </div>
+
+  <div class="{{ accordion }}">
+    <div>
+      {% if not addBefore %}
+        {{ text }}
+      {% endif %}
+
+      {% if addImage %}
+        {% include "@Contao/image.html.twig" %}
+      {% endif %}
+
+      {% if addBefore %}
+        {{ text }}
+      {% endif %}
+    </div>
+  </div>
+
+</section>

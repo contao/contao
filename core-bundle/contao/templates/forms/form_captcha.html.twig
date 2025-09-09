@@ -1,0 +1,30 @@
+{% extends "@Contao/form_row.html.twig" %}
+
+{% block label %}
+  {% if label %}
+    <label for="ctrl_{{ id }}"{% if class %} class="{{ class }}"{% endif %}>
+      <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
+    </label>
+  {% endif %}
+{% endblock %}
+
+{% block field %}
+  {% if hasErrors.invoke() %}
+    <p class="error">{{ getErrorAsString.invoke() }}</p>
+  {% endif %}
+
+  <input type="text" name="{{ name }}" id="ctrl_{{ id }}" class="captcha mandatory{% if class %} {{ class }}{% endif %}" value="" aria-describedby="captcha_text_{{ id }}"{{ getAttributes.invoke() }}>
+  <span id="captcha_text_{{ id }}" class="captcha_text{% if class %} {{ class }}{% endif %}">{{ getQuestion.invoke() }}</span>
+  <input type="hidden" name="{{ name }}_hash{{ hasErrors.invoke() ? 1 + sum ** 2 : '' }}" value="{{ hasErrors.invoke() ? getHash.invoke() : '' }}">
+
+  {% if not hasErrors.invoke() %}
+    <div style="{{ cspUnsafeInlineStyle('display:none') }}">
+      <label for="ctrl_{{ id }}_hp">Do not fill in this field</label>
+      <input type="text" name="{{ name }}_name" id="ctrl_{{ id }}_hp" value="">
+    </div>
+    {% if not asEditorView %}
+      <script src="{{ getAjaxUrl.invoke() }}" data-id="{{ id }}" data-name="{{ name }}" async></script>
+    {% endif %}
+  {% endif %}
+
+{% endblock %}

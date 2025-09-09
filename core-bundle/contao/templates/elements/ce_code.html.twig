@@ -1,0 +1,11 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% add "highlight_php" to stylesheets %}
+    {% with {file: 'vendor/scrivo/highlight_php/styles/foundation.css' } %}{{ block('stylesheet_component') }}{% endwith %}
+{% endadd %}
+
+{% block content %}
+
+  <pre><code class="{{ cssClass }}">{{ code }}</code></pre>
+
+{% endblock %}

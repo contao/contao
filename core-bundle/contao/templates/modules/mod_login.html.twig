@@ -1,0 +1,72 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% set wrapperAttributes = attrs()
+    .addClass(logout ? 'logout' : 'login')
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+{% block content %}
+
+  <form{% if action %} action="{{ action }}"{% endif %} id="{{ formId }}" method="post">
+    <div class="formbody">
+      {% if message %}
+        <p class="error">{{ message }}</p>
+      {% endif %}
+      <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+      <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+      <input type="hidden" name="_target_path" value="{{ targetPath }}">
+      <input type="hidden" name="_always_use_target_path" value="{{ forceTargetPath }}">
+      {% if remembered %}
+        <input type="hidden" name="username" value="{{ value }}">
+        <input type="hidden" name="autologin" value="{{ autologin ? '1' : '' }}">
+      {% endif %}
+      {% if logout %}
+        <p class="login_info">{{ loggedInAs }}<br>{{ lastLogin }}</p>
+      {% elseif twoFactorEnabled %}
+        <h3>{{ twoFactorAuthentication }}</h3>
+        <div class="widget widget-text">
+          <label for="verify">{{ authCode }}</label>
+          <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>
+        </div>
+        <div class="widget widget-checkbox">
+          <fieldset class="checkbox_container">
+            <span><input type="checkbox" name="trusted" id="trusted" value="1" class="tl_checkbox"> <label for="trusted">{{ 'MSC.twoFactorTrustDevice'|trans }}</label></span>
+          </fieldset>
+        </div>
+      {% else %}
+        {% if remembered %}
+          <p class="login_info">{{ loggedInAs }}<br>{{ reauthenticate }}</p>
+        {% else %}
+          <div class="widget widget-text">
+            <label for="username">{{ username }}</label>
+            <input type="text" name="username" id="username" class="text" value="{{ value }}" autocapitalize="off" autocomplete="username" required>
+          </div>
+        {% endif %}
+        <div class="widget widget-password">
+          <label for="password">{{ password }}</label>
+          <input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>
+        </div>
+        {% if autologin and not remembered %}
+          <div class="widget widget-checkbox">
+            <fieldset class="checkbox_container">
+              <span><input type="checkbox" name="autologin" id="autologin" value="1" class="checkbox"> <label for="autologin">{{ autoLabel }}</label></span>
+            </fieldset>
+          </div>
+        {% endif %}
+      {% endif %}
+      <div class="widget widget-submit">
+        <button type="submit" class="submit">{{ slabel }}</button>
+        {% if twoFactorEnabled %}
+          <a href="{{ path('contao_frontend_logout') }}">{{ cancel }} ›</a>
+        {% endif %}
+      </div>
+      {% if pwResetUrl %}
+        <div class="password-reset">
+          <a href="{{ pwResetUrl }}">{{ 'MSC.lostPassword'|trans }}</a>
+        </div>
+      {% endif %}
+    </div>
+  </form>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+
+<table class="minicalendar">
+<thead>
+  <tr>
+    <th class="head previous">{% if prevHref %}<a href="{{ prevHref }}" title="{{ prevTitle }}" data-skip-search-index>{{ prevLabel }}</a>{% else %}&nbsp;{% endif %}</th>
+    <th colspan="5" class="head current">{{ current }}</th>
+    <th class="head next">{% if nextHref %}<a href="{{ nextHref }}" title="{{ nextTitle }}" data-skip-search-index>{{ nextLabel }}</a>{% else %}&nbsp;{% endif %}</th>
+  </tr>
+  <tr>
+    {% for day in days %}
+      <th class="label{{ day.class }}">{{ day.name[:substr] }}<span class="invisible">{{ day.name[substr:] }}</span></th>
+    {% endfor %}
+  </tr>
+</thead>
+<tbody>
+  {% for week in weeks %}
+    <tr>
+      {% for day in week %}
+        {% if day.href|default %}
+          <td{% if day.class|default %} class="{{ day.class }}"{% endif %}><a href="{{ day.href }}" title="{{ day.title }}">{{ day.label }}</a></td>
+        {% else %}
+          <td{% if day.class|default %} class="{{ day.class }}"{% endif %}>{{ day.label }}</td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+  {% endfor %}
+</tbody>
+</table>

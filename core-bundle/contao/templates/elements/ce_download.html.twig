@@ -1,0 +1,15 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% block content %}
+
+  {% if previews %}
+    {% for preview in previews %}
+      {% include "@Contao/image.html.twig" with preview.getLegacyTemplateData() %}
+    {% endfor %}
+  {% endif %}
+
+  <p class="download-element ext-{{ extension }}">
+    <a href="{{ href }}" title="{{ title }}" type="{{ mime }}">{{ link }} <span class="size">({{ filesize }})</span></a>
+  </p>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+
+{% for section in matches %}
+    {% include "@Contao/" ~ section.template ~ ".html.twig" with {
+        id: section.id,
+        stadardized_id: section.standardized_id,
+        content: section.content
+    } %}
+{% endfor %}

@@ -1,0 +1,6 @@
+
+  {% set label = generateLabel.invoke() %}
+  {% if label %}
+    <h3>{{ label.xlabel }}</h3>
+  {% endif %}
+  {{ generateWithError.invoke(true) }}

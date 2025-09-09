@@ -1,0 +1,8 @@
+{% set wrapperAttributes = attrs()
+    .addClass([prefix, 'explanation', class])
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+<div{{ wrapperAttributes }}>
+  {{ cspInlineStyles(generate.invoke()) }}
+</div>

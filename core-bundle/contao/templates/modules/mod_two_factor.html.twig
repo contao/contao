@@ -1,0 +1,120 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% set wrapperAttributes = attrs()
+    .addClass('two-factor')
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+{% block content %}
+
+  {% if enable %}
+    {% if message %}
+      <p class="tl_error">{{ message }}</p>
+    {% endif %}
+    <p>{{ 'MSC.twoFactorScan'|trans }}</p>
+    <form class="tl_two_factor_form" method="post">
+      <div class="formbody">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+        <div class="qr-code">
+          <img src="data:image/svg+xml;base64,{{ qrCode }}" alt>
+        </div>
+        <div class="widget">
+          <p>{{ 'MSC.twoFactorTextCode'|trans }}</p>
+          <code style="{{ cspUnsafeInlineStyle('word-break:break-all') }}">{{ secret }}</code>
+        </div>
+        <div class="widget widget-text">
+          <label for="verify">{{ 'MSC.twoFactorVerification'|trans }}</label>
+          <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>
+          <p class="help">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
+        </div>
+        <div class="submit_container">
+          <button type="submit" class="submit">{{ 'MSC.enable'|trans }}</button>
+          <a href="{{ targetPath }}" class="submit" >{{ 'MSC.cancelBT'|trans }}</a>
+        </div>
+      </div>
+    </form>
+  {% elseif isEnabled %}
+    <div class="message">
+      <p class="confirm">{{ 'MSC.twoFactorActive'|trans }}</p>
+    </div>
+    <form class="tl_two_factor_form" id="{{ formId }}" method="post">
+      <div class="formbody">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+        <div class="submit_container">
+          <a href="{{ href }}" class="submit">{{ 'MSC.edit'|trans }}</a>
+          <button type="submit" class="submit">{{ 'MSC.disable'|trans }}</button>
+        </div>
+      </div>
+    </form>
+    <div class="recovery_codes">
+      <h3>{{ 'MSC.twoFactorBackupCodesLabel'|trans }}</h3>
+      <p>{{ 'MSC.twoFactorBackupCodesExplain'|trans }}</p>
+      {% if showBackupCodes %}
+        <div class="message">
+          <p class="info">{{ 'MSC.twoFactorBackupCodesInfo'|trans }}</p>
+        </div>
+        <ul class="backup-codes">
+          {% for backupCode in backupCodes %}
+            <li><code>{{ backupCode }}</code></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        {% if backupCodes|length %}
+          <div class="message">
+            <p class="info">{{ 'MSC.twoFactorBackupCodesRegenerateInfo'|trans }}</p>
+          </div>
+        {% endif %}
+        <form class="tl_two_factor_form" method="post">
+          <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_generate_backup_codes">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+          <div class="submit_container cf">
+            <button type="submit" class="submit">{{ (backupCodes|default ? 'MSC.twoFactorBackupCodesGenerate' : 'MSC.twoFactorBackupCodesRegenerate')|trans }}</button>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+    <div class="trusted_devices">
+      <h3>{{ 'MSC.trustedDevices'|trans }}</h3>
+      {% if not trustedDevices %}
+        <p>{{ 'MSC.noTrustedDevices'|trans }}</p>
+      {% else %}
+        <div>
+          <table>
+            <tr>
+              <th>{{ 'MSC.device'|trans }}</th>
+              <th>{{ 'MSC.browser'|trans }}</th>
+              <th>{{ 'MSC.operatingSystem'|trans }}</th>
+              <th>{{ 'MSC.createdOn'|trans }}</th>
+            </tr>
+            {% for trustedDevice in trustedDevices %}
+              <tr>
+                <td>{{ trustedDevice.getDeviceFamily() }}</td>
+                <td>{{ trustedDevice.getUaFamily() }}</td>
+                <td>{{ trustedDevice.getOsFamily() }}</td>
+                <td>{{ trustedDevice.getCreated().format(contao.datim_format)) }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+        <form action="{{ action }}" class="tl_two_factor_form" method="post">
+          <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_clear_trusted_devices">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+            <div class="submit_container">
+              <button type="submit" class="submit">{{ 'MSC.clearTrustedDevices'|trans }}</button>
+            </div>
+          </div>
+        </form>
+      {% endif %}
+    </div>
+  {% else %}
+    <p>{{ 'MSC.twoFactorExplain'|trans }}</p>
+    <div class="submit_container">
+      <a href="{{ href }}" class="submit">{{ 'MSC.enable'|trans }}</a>
+    </div>
+  {% endif %}
+
+{% endblock %}

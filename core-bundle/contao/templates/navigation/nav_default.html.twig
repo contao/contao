@@ -1,0 +1,26 @@
+
+<ul class="{{ level }}">
+{% for item in items %}
+    {% if item.isActive %}
+        <li class="{{ item.class }}">
+            {% set item_attribues = attrs()
+                .addClass(item.class)
+                .set('aria-current', 'page')
+                .set('aria-haspopup', true, item.subitems|default)
+            %}
+            <strong{{ item_attributes }}>{{ item.link }}</strong>
+            {{- item.subitems|default -}}
+        </li>
+    {% else %}
+        <li{{ attrs().addClass(item.class|default) }}>
+            {% set item_attribues = attrs()
+                .set('href', item.href)
+                .addClass(item.class)
+                .setIfExiss('accesskey', item.accesskey|default)
+            %}
+            <a{{ item_attributes = attrs() }}>{{ item.link }}</a>
+            {{- item.subitems|default -}}
+        </li>
+    {% endif %}
+{% endfor %}
+</ul>

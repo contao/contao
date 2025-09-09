@@ -1,0 +1,14 @@
+{% set wrapperAttributes = attrs(cssID)
+    .addClass([class, 'ce_accordion', 'block'])
+    .addStyle(style|default)
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+<section{{ wrapperAttributes }}>
+
+  <div class="{{ toggler }}"{% if headlineStyle %} style="{{ headlineStyle }}"{% endif %}>
+    {{ headline }}
+  </div>
+
+  <div class="{{ accordion }}">
+    <div>

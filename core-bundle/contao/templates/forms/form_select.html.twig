@@ -1,0 +1,43 @@
+{% extends "@Contao/form_row.html.twig" %}
+
+{% block label %}
+  {% if label %}
+    <label for="ctrl_{{ id }}"{% if class %} class="{{ class }}"{% endif %}>
+      {% if mandatory %}
+        <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
+      {% else %}
+        {{ label }}
+      {% endif %}
+    </label>
+  {% endif %}
+{% endblock %}
+
+{% block field %}
+  {% if hasErrors.invoke() %}
+    <p class="error">{{ getErrorAsString.invoke() }}</p>
+  {% endif %}
+
+  {% if multiple %}
+    <input type="hidden" name="{{ name ends with '[]' ? name[:-2] : name }}" value="">
+  {% endif %}
+
+  <select name="{{ name }}" id="ctrl_{{ id }}" class="{{ class }}"{% if help %} aria-describedby="help_ctrl_{{ id }}"{% endif %}{{ getAttributes.invoke() }}>
+    {% for option in getOptions.invoke() %}
+      {% if option.type == 'group_start' %}
+        <optgroup label="{{ option.label }}">
+      {% endif %}
+
+      {% if option.type == 'option' %}
+        <option value="{{ option.value }}"{{ option.selected }}>{{ option.label }}</option>
+      {% endif %}
+
+      {% if option.type == 'group_end' %}
+        </optgroup>
+      {% endif %}
+    {% endfor %}
+  </select>
+
+  {% if help %}
+    <p class="help" id="help_ctrl_{{ id }}">{{ help }}</p>
+  {% endif %}
+{% endblock %}
