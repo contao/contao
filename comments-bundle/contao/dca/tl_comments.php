@@ -295,7 +295,7 @@ class tl_comments extends Backend
 	{
 		$router = System::getContainer()->get('router');
 		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
-		$onClick = ' onclick="Backend.openModalIframe({ title: \'&nbsp;\', url: this.href + \'&popup=1&nb=1\' }); return false;"';
+		$onClick = ' onclick="Backend.openModalIframe({ title: \'&nbsp;\', url: this.href + \'&amp;popup=1&amp;nb=1\' }); return false;"';
 
 		switch ($arrRow['source'])
 		{
