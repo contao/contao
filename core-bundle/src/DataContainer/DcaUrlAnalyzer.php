@@ -149,14 +149,8 @@ class DcaUrlAnalyzer
 
             $childTable = $trail[$index + 1][0] ?? null;
 
-            if ($index === \count($trail) - 1) {
-                if (\in_array($this->findGet('table'), $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
-                    $childTable = $this->findGet('table');
-                }
-
-                if ($this->findGet('act')) {
-                    $query['act'] = $this->findGet('act');
-                }
+            if ($index === \count($trail) - 1 && \in_array($this->findGet('table'), $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
+                $childTable = $this->findGet('table');
             }
 
             if ($childTable) {
@@ -168,6 +162,24 @@ class DcaUrlAnalyzer
             } else {
                 $query['table'] = $table;
                 $query['act'] ??= 'edit';
+            }
+
+            if ($index === \count($trail) - 1 && $this->findGet('act')) {
+                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll'], true)) {
+                    $links[] = [
+                        'url' => $this->router->generate('contao_backend', [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')]),
+                        'label' => $this->translator->trans(
+                            match ($this->findGet('act')) {
+                                'editAll' => 'MSC.all.0',
+                                'overrideAll' => 'MSC.all_override.0',
+                            },
+                            [],
+                            'contao_default',
+                        ),
+                    ];
+                } else {
+                    $query['act'] = $this->findGet('act');
+                }
             }
 
             $links[] = [
