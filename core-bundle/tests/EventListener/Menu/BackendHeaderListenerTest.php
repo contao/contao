@@ -144,7 +144,12 @@ class BackendHeaderListenerTest extends TestCase
         // Login
         $this->assertSame('MSC.profile', $grandChildren['login']->getLabel());
         $this->assertSame('/contao?do=login&act=edit&id=1&ref=bar', $grandChildren['login']->getUri());
-        $this->assertSame(['class' => 'icon-profile'], $grandChildren['login']->getLinkAttributes());
+        $this->assertSame(
+            [
+                'onclick' => "Backend.openModalIframe({'title':'MSC.profile','url':this.href+'&popup=1&nb=1'});return false",
+                'class' => 'icon-profile'],
+            $grandChildren['login']->getLinkAttributes(),
+        );
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['login']->getExtras());
 
         // Security

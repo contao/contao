@@ -161,7 +161,7 @@ class DcaUrlAnalyzer
                 }
             } else {
                 $query['table'] = $table;
-                $query['act'] ??= 'edit';
+                $query['act'] = 'edit';
             }
 
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
@@ -172,6 +172,7 @@ class DcaUrlAnalyzer
                             match ($this->findGet('act')) {
                                 'editAll' => 'MSC.all.0',
                                 'overrideAll' => 'MSC.all_override.0',
+                                default => throw new \LogicException(),
                             },
                             [],
                             'contao_default',

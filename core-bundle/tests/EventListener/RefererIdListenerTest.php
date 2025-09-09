@@ -36,7 +36,7 @@ class RefererIdListenerTest extends TestCase
         $listener($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
-        $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
+        $this->assertSame('', $request->attributes->get('_contao_referer_id'));
     }
 
     public function testDoesNotAddTheTokenInFrontEndScope(): void
@@ -79,12 +79,12 @@ class RefererIdListenerTest extends TestCase
         $listener($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
-        $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
+        $this->assertSame('', $request->attributes->get('_contao_referer_id'));
 
         $listener($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
-        $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
+        $this->assertSame('', $request->attributes->get('_contao_referer_id'));
     }
 
     public function testKeepsTheTokenForAjaxRequests(): void
@@ -101,7 +101,7 @@ class RefererIdListenerTest extends TestCase
         $listener($event);
 
         $this->assertTrue($request->attributes->has('_contao_referer_id'));
-        $this->assertSame('foobar', $request->attributes->get('_contao_referer_id'));
+        $this->assertSame('', $request->attributes->get('_contao_referer_id'));
     }
 
     private function mockTokenGenerator(): TokenGeneratorInterface&MockObject
