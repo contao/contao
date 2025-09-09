@@ -122,6 +122,16 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 continue;
             }
 
+            if ('edit' === $k) {
+                $v['attributes'] = (new HtmlAttributes($v['attributes'] ?? null))->set(
+                    'onclick',
+                    \sprintf(
+                        "Backend.openModalIframe({title:'%s', url:this.href+'&popup=1&nb=1'});return false",
+                        StringUtil::specialchars($v['title']),
+                    ),
+                );
+            }
+
             $v = \is_array($v) ? $v : [$v];
 
             // Add the parent table to the href
