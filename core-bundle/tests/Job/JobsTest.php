@@ -2,47 +2,32 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Job;
 
-use Contao\BackendUser;
-use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
-use Contao\CoreBundle\Filesystem\MountManager;
-use Contao\CoreBundle\Filesystem\VirtualFilesystem;
-use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Job\Job;
-use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Job\Status;
-use Contao\TestCase\ContaoTestCase;
-use Doctrine\DBAL\Configuration;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\DefaultSchemaManagerFactory;
-use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Tools\DsnParser;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Types\Types;
-use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\MockClock;
-use Symfony\Component\Clock\NativeClock;
-use Symfony\Component\Routing\RouterInterface;
 
-class JobsTest extends ContaoTestCase
+class JobsTest extends AbstractJobsTestCase
 {
-    private VirtualFilesystemInterface $vfs;
-
-    protected function setUp(): void
+    public function testCreateChildJob(): void
     {
-        parent::setUp();
+        $jobs = $this->getJobs($this->mockSecurity(42));
+        $parent = $jobs->createJob('job-type');
 
-        $this->vfs = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
-        );
+        $child = $jobs->createChildJob($parent);
+
+        $this->assertSame($parent, $child->getParent());
     }
 
     #[DataProvider('createJobProvider')]
@@ -76,7 +61,6 @@ class JobsTest extends ContaoTestCase
     public static function createJobProvider(): iterable
     {
         yield 'No logged in user' => [false];
-
         yield 'Logged in back end user' => [true];
     }
 
@@ -197,6 +181,14 @@ class JobsTest extends ContaoTestCase
         $this->assertSame(Status::completed, $jobs->getByUuid($childJob2->getUuid())->getStatus());
     }
 
+    public function testHasAccessWithNoLoggedInUser(): void
+    {
+        $jobs = $this->getJobs($this->mockSecurity());
+        $job = Job::new('type', new Owner(42));
+
+        $this->assertTrue($jobs->hasAccess($job));
+    }
+
     public function testHasAccessForSystemOwnerIsAlwaysTrue(): void
     {
         $jobs = $this->getJobs();
@@ -224,10 +216,13 @@ class JobsTest extends ContaoTestCase
     public function testAttachments(): void
     {
         $jobs = $this->getJobs();
-        $job = $jobs->createUserJob('type', 42);
+        $this->assertCount(0, $jobs->getAttachments('i-do-not-exist'));
 
+        $job = $jobs->createUserJob('type', 42);
         $jobs->addAttachment($job, 'my-attachment-key', 'foobar');
         $jobs->addAttachment($job, 'my-other-attachment-key', 'foobar');
+
+        $this->assertNull($jobs->getAttachment($job, 'i-do-not-exist'));
 
         $attachment = $jobs->getAttachment($job, 'my-attachment-key');
         $this->assertSame('my-attachment-key', $attachment->getFilesystemItem()->getName());
@@ -241,7 +236,11 @@ class JobsTest extends ContaoTestCase
         $jobs = $this->getJobs(null, new MockClock(new \DateTimeImmutable('-2 days')));
         $job1 = $jobs->createUserJob('type', 1);
         $jobs->addAttachment($job1, 'my-attachment-key', 'foobar');
-        $jobs->addAttachment($job1, 'my-other-attachment-key', 'foobar');
+
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, 'foobar');
+        rewind($stream);
+        $jobs->addAttachment($job1, 'my-other-attachment-key', $stream);
 
         $this->assertNotNull($jobs->getByUuid($job1->getUuid()));
         $this->assertCount(1, iterator_to_array($this->vfs->listContents('')));
@@ -267,32 +266,6 @@ class JobsTest extends ContaoTestCase
         $this->assertCount(1, iterator_to_array($this->vfs->listContents('')));
     }
 
-    private function mockSecurity(int|null $userId = null): Security
-    {
-        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->atLeastOnce())
-            ->method('getUser')
-            ->willReturn($userId ? $userMock : null)
-        ;
-
-        return $security;
-    }
-
-    private function mockFilesystem(int|null $userId = null): Security
-    {
-        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->atLeastOnce())
-            ->method('getUser')
-            ->willReturn($userId ? $userMock : null)
-        ;
-
-        return $security;
-    }
-
     /**
      * @param array<Job> $jobs
      *
@@ -301,56 +274,5 @@ class JobsTest extends ContaoTestCase
     private function jobsToUuids(array $jobs): array
     {
         return array_map(static fn (Job $job) => $job->getUuid(), $jobs);
-    }
-
-    private function getJobs(Security|null $security = null, ClockInterface $clock = new NativeClock()): Jobs
-    {
-        $connection = $this->createInMemorySQLiteConnection(
-            [
-                new Table('tl_job', [
-                    new Column('id', Type::getType(Types::INTEGER), ['autoIncrement' => true]),
-                    new Column('tstamp', Type::getType(Types::INTEGER)),
-                    new Column('pid', Type::getType(Types::INTEGER), ['default' => 0]),
-                    new Column('type', Type::getType(Types::STRING)),
-                    new Column('uuid', Type::getType(Types::STRING)),
-                    new Column('owner', Type::getType(Types::STRING)),
-                    new Column('status', Type::getType(Types::STRING)),
-                    new Column('public', Type::getType(Types::BOOLEAN)),
-                    new Column('jobData', Type::getType(Types::TEXT), ['notnull' => false]),
-                ]),
-            ],
-        );
-
-        return new Jobs(
-            $connection,
-            $security ?? $this->createMock(Security::class),
-            $this->vfs,
-            $this->createMock(RouterInterface::class),
-            $clock,
-        );
-    }
-
-    /**
-     * @param array<Table> $tables
-     */
-    private function createInMemorySQLiteConnection(array $tables): Connection
-    {
-        $dsnParser = new DsnParser();
-        $connectionParams = $dsnParser->parse('pdo-sqlite:///:memory:');
-
-        $configuration = new Configuration();
-        $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory());
-
-        try {
-            $connection = DriverManager::getConnection($connectionParams, $configuration);
-
-            foreach ($tables as $table) {
-                $connection->createSchemaManager()->createTable($table);
-            }
-        } catch (\Exception) {
-            $this->markTestSkipped('This test requires SQLite to be executed properly.');
-        }
-
-        return $connection;
     }
 }

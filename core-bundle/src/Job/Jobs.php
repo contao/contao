@@ -39,7 +39,7 @@ class Jobs
             return true;
         }
 
-        $userId ??= $this->getContaoBackendUserId();
+        $userId = $this->getContaoBackendUserId();
 
         if (0 === $userId) {
             return true;
