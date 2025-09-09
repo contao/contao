@@ -883,6 +883,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'method' => 'aMethod',
                     'renderer' => 'inline',
                     'priority' => 0,
+                    'shouldPreload' => false,
                 ],
             )
         ;
