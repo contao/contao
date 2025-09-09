@@ -77,7 +77,7 @@ class AbstractBackendControllerTest extends TestCase
             'version' => 'version',
             'dashboard' => 'dashboard',
             'home' => 'home',
-            'manual' => 'Open the manual',
+            'learnMore' => 'learn more',
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -96,7 +96,7 @@ class AbstractBackendControllerTest extends TestCase
             'charset' => 'UTF-8',
             'home' => 'home',
             'isPopup' => null,
-            'manual' => '<a href="https://to.contao.org/manual" target="_blank" rel="noreferrer noopener">Open the manual</a>',
+            'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',

@@ -91,8 +91,7 @@ $this->bodyAttributes = $this
             <?= $this->menu ?>
             <div class="version">
               <?php $this->block('version'); ?>
-                <?= $this->version ?>
-                <div class="open-manual"><?= $this->manual ?></div>
+                <?= $this->version ?><br><?= $this->learnMore ?>
               <?php $this->endblock(); ?>
             </div>
           </aside>
