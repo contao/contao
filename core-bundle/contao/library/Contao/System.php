@@ -310,66 +310,13 @@ abstract class System
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
 		$container = static::getContainer();
-		$objSession = $container->get('request_stack')->getSession();
-		$ref = Input::get('ref');
-		$key = Input::get('popup') ? 'popupReferer' : 'referer';
-		$session = $objSession->get($key);
 		$return = null;
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request);
 		$isFrontend = $request && $container->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
-		if (null !== $session)
-		{
-			// Unique referer ID
-			if ($ref && isset($session[$ref]))
-			{
-				$session = $session[$ref];
-			}
-			elseif ($isBackend && \is_array($session))
-			{
-				$session = end($session);
-			}
-
-			// Use a specific referer
-			if ($strTable && isset($session[$strTable]) && !isset($session['current']) && Input::get('act') != 'select')
-			{
-				$session['current'] = $session[$strTable];
-			}
-
-			// Remove parameters helper
-			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise')) {
-				if (!$url || !str_contains($url, '?'))
-				{
-					return $url;
-				}
-
-				list($path, $query) = explode('?', $url, 2);
-
-				parse_str($query, $pairs);
-
-				foreach ($params as $param)
-				{
-					unset($pairs[$param]);
-				}
-
-				if (empty($pairs))
-				{
-					return $path;
-				}
-
-				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
-			};
-
-			// Determine current or last
-			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl(Environment::get('requestUri'))) ? ($session['current'] ?? null) : ($session['last'] ?? null);
-
-			// Remove the "toggle" and "toggle all" parameters
-			$return = $cleanUrl($strUrl, array('tg', 'ptg'));
-		}
-
 		// Fallback to the generic referer in the front end
-		if (!$return && $isFrontend)
+		if ($isFrontend)
 		{
 			$return = Environment::get('httpReferer');
 		}

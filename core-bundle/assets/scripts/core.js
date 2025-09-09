@@ -120,11 +120,6 @@ window.AjaxRequest =
 					}
 				}
 
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
 
@@ -196,11 +191,6 @@ window.AjaxRequest =
 				}).inject(li, 'bottom');
 
 				li.inject($(el).getParent('li'), 'after');
-
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
 
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
@@ -281,11 +271,6 @@ window.AjaxRequest =
 
 				el.value = 1;
 				el.checked = 'checked';
-
-				// Update the referer ID
-				div.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
 
 				updateVersionNumber(txt);
 

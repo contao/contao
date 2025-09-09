@@ -148,6 +148,9 @@ sure to always submit at least an empty string in your widget:
 The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID`, `TL_SCRIPT`, `TL_MODE`
 and `REQUEST_TOKEN`  have been removed.
 
+`TL_REFERER_ID` was historically used for referrer management, it was previously replaced by the request attribute
+`_contao_referer_id` which was removed afterwards as well.
+
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
 ```php
@@ -172,12 +175,6 @@ Use the kernel start time instead of `TL_START`:
 
 ```php
 $startTime = System::getContainer()->get('kernel')->getStartTime();
-```
-
-Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
-
-```php
-$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 ```
 
 Use the request stack to get the route instead of using `TL_SCRIPT`:

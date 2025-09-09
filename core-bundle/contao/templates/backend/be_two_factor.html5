@@ -23,7 +23,7 @@
         </div>
         <div class="submit_container cf">
           <button type="submit" class="tl_submit"><?= $this->trans('MSC.enable') ?></button>
-          <a href="<?= $this->route('contao_backend', ['do' => 'security', 'ref' => $this->ref]) ?>" class="tl_submit"><?= $this->trans('MSC.cancelBT') ?></a>
+          <a href="<?= $this->route('contao_backend', ['do' => 'security']) ?>" class="tl_submit"><?= $this->trans('MSC.cancelBT') ?></a>
         </div>
       </div>
     </form>
@@ -36,7 +36,7 @@
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
         <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
         <div class="submit_container cf">
-          <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => $this->ref]) ?>" class="tl_submit"><?= $this->trans('MSC.edit') ?></a>
+          <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable']) ?>" class="tl_submit"><?= $this->trans('MSC.edit') ?></a>
           <button type="submit" class="tl_submit"><?= $this->trans('MSC.disable') ?></button>
         </div>
       </div>
@@ -109,7 +109,7 @@
   <?php else: ?>
     <p><?= $this->trans('MSC.twoFactorExplain') ?></p>
     <div class="tl_submit_container">
-      <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => $this->ref]) ?>" class="tl_submit"><?= $this->trans('MSC.enable') ?></a>
+      <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable']) ?>" class="tl_submit"><?= $this->trans('MSC.enable') ?></a>
     </div>
   <?php endif; ?>
 </div>
