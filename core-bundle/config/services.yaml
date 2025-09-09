@@ -709,6 +709,7 @@ services:
         public: true
         arguments:
             - '@request_stack'
+            - '%contao.pagination.default_range%'
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider

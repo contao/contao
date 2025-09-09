@@ -10,7 +10,7 @@ class PaginationFactory implements PaginationFactoryInterface
 {
     public function __construct(
         private readonly RequestStack $requestStack,
-        private readonly int|null $pageRange = 7,
+        private readonly int $defaultRange = 7,
     ) {
     }
 
@@ -21,7 +21,7 @@ class PaginationFactory implements PaginationFactoryInterface
             $param,
             $total,
             $perPage,
-            $pageRange ?? $this->pageRange,
+            $pageRange ?? $this->defaultRange,
             $throw,
         );
     }
