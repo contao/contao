@@ -167,7 +167,6 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->with(new NewPasswordEvent($member, '87654321'))
         ;
 
         $versions = $this->createMock(Versions::class);

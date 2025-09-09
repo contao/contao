@@ -20,6 +20,7 @@ class NewPasswordEvent extends Event
     public function __construct(
         private readonly MemberModel $member,
         private readonly string $password,
+        private readonly string $hashedPassword,
     ) {
     }
 
@@ -31,5 +32,10 @@ class NewPasswordEvent extends Event
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getHashedPassword(): string
+    {
+        return $this->hashedPassword;
     }
 }

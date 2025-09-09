@@ -81,8 +81,10 @@ class ChangePasswordController extends AbstractContentElementController
             $versions->setEditUrl($this->router->generate('contao_backend', ['do' => 'member', 'act' => 'edit', 'id' => $member->id]));
             $versions->initialize();
 
+            $hashedPassword = $passwordHasher->hash($request->request->get('password'));
+
             $member->tstamp = time();
-            $member->password = $passwordHasher->hash($request->request->get('password'));
+            $member->password = $hashedPassword;
             $member->save();
 
             // Delete unconfirmed "change password" tokens
@@ -96,7 +98,7 @@ class ChangePasswordController extends AbstractContentElementController
                 $versions->create();
             }
 
-            $this->eventDispatcher->dispatch(new NewPasswordEvent($member, $request->request->get('password')));
+            $this->eventDispatcher->dispatch(new NewPasswordEvent($member, $request->request->get('password'), $hashedPassword));
 
             $request->getSession()->migrate();
             $user->findBy('id', $member->id);
