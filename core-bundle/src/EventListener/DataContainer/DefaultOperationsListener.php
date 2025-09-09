@@ -114,7 +114,7 @@ class DefaultOperationsListener
                     'href' => 'act=edit',
                     'icon' => 'edit.svg',
                     'prefetch' => true,
-                    'attributes' => 'data-contao--deeplink-target="primary"',
+                    'attributes' => 'data-contao--deeplink-target="primary" onclick="Backend.openModalIframe({ title: \'&nbsp;\', url: this.href + \'&popup=1&nb=1\' }); return false;"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
                     'primary' => true,
                     'showInHeader' => true,

@@ -309,14 +309,15 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
-		$objSession = static::getContainer()->get('request_stack')->getSession();
+		$container = static::getContainer();
+		$objSession = $container->get('request_stack')->getSession();
 		$ref = Input::get('ref');
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
 		$return = null;
-		$request = static::getContainer()->get('request_stack')->getCurrentRequest();
-		$isBackend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
-		$isFrontend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request);
+		$isFrontend = $request && $container->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
 		if (null !== $session)
 		{
@@ -378,11 +379,31 @@ abstract class System
 		{
 			if ($isBackend)
 			{
-				$container = System::getContainer();
 
 				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail();
 
-				$return = $trail[\count($trail) - 2]['url'] ?? $container->get('router')->generate('contao_backend');
+				if ($trail[\count($trail) - 2]['url'] ?? null)
+				{
+					$return = $trail[\count($trail) - 2]['url'];
+				}
+				elseif (Input::get('do') && Input::get('act'))
+				{
+					$return = $container->get('router')->generate('contao_backend', ['do' => Input::get('do')]);
+				}
+				else
+				{
+					$return = $container->get('router')->generate('contao_backend');
+				}
+
+				if (Input::get('popup'))
+				{
+					$return .= (str_contains($return, '?') ? '&' : '?') . 'popup=1';
+				}
+
+				if (Input::get('picker'))
+				{
+					$return .= (str_contains($return, '?') ? '&' : '?') . 'picker='.rawurlencode(Input::get('picker'));
+				}
 			}
 			else
 			{

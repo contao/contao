@@ -60,7 +60,6 @@ class ModuleTwoFactor extends BackendModule
 		$uriSigner = $container->get('uri_signer');
 		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref, 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
 
-		$this->Template->href = $this->getReferer(true);
 		$this->Template->ref = $ref;
 		$this->Template->messages = Message::generateUnwrapped();
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();

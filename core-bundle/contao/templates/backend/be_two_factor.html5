@@ -1,8 +1,4 @@
 
-<div id="tl_buttons">
-  <a href="<?= $this->href ?>" class="header_back" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.backBTTitle')) ?>"><?= $this->trans('MSC.backBT') ?></a>
-</div>
-
 <div class="two-factor">
   <h2 class="sub_headline"><?= $this->trans('MSC.twoFactorAuthentication') ?></h2>
   <?= $this->messages ?>
