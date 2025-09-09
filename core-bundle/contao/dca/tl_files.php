@@ -104,6 +104,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'source' => array
 			(
 				'href'                => 'act=source',
+				'prefetch'            => true,
 				'icon'                => 'editor.svg',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editSource')
@@ -142,13 +143,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'icon'                => 'new.svg',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'uploadFile')
-			),
-			'drag' => array
-			(
-				'icon'                => 'drag.svg',
-				'attributes'          => 'class="drag-handle"',
-				'primary'             => true,
-				'button_callback'     => array('tl_files', 'dragFile')
 			)
 		)
 	),
@@ -176,6 +170,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'uuid' => array
 		(
+			'label'					  => &$GLOBALS['TL_LANG']['MSC']['fileUuid'],
 			'sql'                     => "binary(16) NULL"
 		),
 		'type' => array
@@ -739,23 +734,6 @@ class tl_files extends Backend
 	public function cutFile($row, $href, $label, $title, $icon, $attributes)
 	{
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the drag file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function dragFile($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<button type="button"' . $attributes . '>' . Image::getHtml($icon, $title) . '</button> ' : ' ';
 	}
 
 	/**

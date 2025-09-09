@@ -553,11 +553,6 @@ class Input
 	 */
 	public static function stripTags($varValue, $strAllowedTags='', $allowedAttributes='')
 	{
-		if ($strAllowedTags === '' || $allowedAttributes === '')
-		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() without setting allowed tags and allowed attributes is deprecated and will no longer work in Contao 6.', __METHOD__);
-		}
-
 		if (!$varValue)
 		{
 			return $varValue;
@@ -988,8 +983,8 @@ class Input
 
 		$varValue = str_replace
 		(
-			array('[&amp;]', '&amp;', '[&lt;]', '&lt;', '[&gt;]', '&gt;', '[&nbsp;]', '&nbsp;', '[&shy;]', '&shy;'),
-			array('[&]', '[&]', '[lt]', '[lt]', '[gt]', '[gt]', '[nbsp]', '[nbsp]', '[-]', '[-]'),
+			array('[&amp;]', '&amp;', '[&lt;]', '&lt;', '[&gt;]', '&gt;', '[&nbsp;]', '&nbsp;', '[&shy;]', '&shy;', '[&lsqb;]', '&lsqb;', '[&rsqb;]', '&rsqb;'),
+			array('[&]', '[&]', '[lt]', '[lt]', '[gt]', '[gt]', '[nbsp]', '[nbsp]', '[-]', '[-]', '[lsqb]', '[lsqb]', '[rsqb]', '[rsqb]'),
 			$varValue
 		);
 

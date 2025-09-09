@@ -108,17 +108,17 @@ class AbstractBackendControllerTest extends TestCase
         System::setContainer($container);
         $controller->setContainer($container);
 
-        $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
+        $this->assertSame('<result>', $controller->fooAction()->getContent());
     }
 
     #[DataProvider('provideRequests')]
-    public function testHandlesTurboRequests(Request $request, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html', int $expectedStatus = Response::HTTP_OK, Response|null $response = null): void
+    public function testHandlesTurboRequests(Request $request, string $view, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html', int $expectedStatus = Response::HTTP_OK, Response|null $response = null): void
     {
         $controller = new class() extends AbstractBackendController {
-            public function fooAction(bool|null $includeChromeContext, Response|null $response = null): Response
+            public function fooAction(string $view, bool|null $includeChromeContext, Response|null $response = null): Response
             {
                 return $this->render(
-                    'custom_be.html.twig',
+                    $view,
                     ['version' => 'my version'],
                     $response,
                     includeChromeContext: $includeChromeContext,
@@ -148,9 +148,9 @@ class AbstractBackendControllerTest extends TestCase
 
         System::setContainer($container);
         $controller->setContainer($container);
-        $response = $controller->fooAction($includeChromeContext, $response);
+        $response = $controller->fooAction($view, $includeChromeContext, $response);
 
-        $this->assertSame('<custom_be_main>', $response->getContent());
+        $this->assertSame('<result>', $response->getContent());
         $this->assertSame($expectedRequestFormat, $request->getRequestFormat());
         $this->assertSame($expectedStatus, $response->getStatusCode());
     }
@@ -176,73 +176,32 @@ class AbstractBackendControllerTest extends TestCase
             'version' => 'my version',
         ];
 
-        $turboFrameRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
-        $turboFrameRequest->headers->set('Turbo-Frame', 'id');
-
-        yield 'default turbo frame' => [
-            $turboFrameRequest,
-            null,
-            $customContext,
-        ];
-
-        yield 'turbo frame with chrome' => [
-            $turboFrameRequest,
-            true,
-            [...$customContext, ...$defaultContext],
-        ];
-
-        yield 'default turbo frame explicitly without chrome' => [
-            $turboFrameRequest,
-            false,
-            $customContext,
-        ];
-
-        $turboStreamRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
-        $turboStreamRequest->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
-
-        yield 'default turbo stream' => [
-            $turboStreamRequest,
-            null,
-            $customContext,
-            'turbo_stream',
-        ];
-
-        yield 'turbo stream with chrome' => [
-            $turboStreamRequest,
-            true,
-            [...$customContext, ...$defaultContext],
-            'turbo_stream',
-        ];
-
-        yield 'turbo stream explicitly without chrome' => [
-            $turboStreamRequest,
-            false,
-            $customContext,
-            'turbo_stream',
-        ];
-
         $plainRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
 
         yield 'plain request' => [
-            $plainRequest,
+            clone $plainRequest,
+            'custom_be.html.twig',
             null,
             [...$customContext, ...$defaultContext],
         ];
 
         yield 'plain request explicitly with chrome' => [
-            $plainRequest,
+            clone $plainRequest,
+            'custom_be.html.twig',
             true,
             [...$customContext, ...$defaultContext],
         ];
 
         yield 'plain request without chrome' => [
-            $plainRequest,
+            clone $plainRequest,
+            'custom_be.html.twig',
             false,
             $customContext,
         ];
 
         yield 'request with widget error' => [
             new Request(attributes: ['_contao_widget_error' => true], server: ['HTTP_HOST' => 'localhost']),
+            'custom_be.html.twig',
             false,
             $customContext,
             'html',
@@ -251,12 +210,62 @@ class AbstractBackendControllerTest extends TestCase
 
         yield 'request with widget error and 500 response' => [
             new Request(attributes: ['_contao_widget_error' => true], server: ['HTTP_HOST' => 'localhost']),
+            'custom_be.html.twig',
             false,
             $customContext,
             'html',
             Response::HTTP_INTERNAL_SERVER_ERROR,
             new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR),
         ];
+
+        $requestAcceptingTurboStreams = new Request(server: ['HTTP_HOST' => 'localhost']);
+        $requestAcceptingTurboStreams->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
+
+        yield 'regular request accepting turbo stream' => [
+            clone $requestAcceptingTurboStreams,
+            'custom_be.html.twig',
+            null,
+            [...$customContext, ...$defaultContext],
+        ];
+
+        yield 'turbo stream with chrome' => [
+            clone $requestAcceptingTurboStreams,
+            'update.stream.html.twig',
+            true,
+            [...$customContext, ...$defaultContext],
+            'turbo_stream',
+        ];
+
+        yield 'turbo stream explicitly without chrome' => [
+            clone $requestAcceptingTurboStreams,
+            'update.stream.html.twig',
+            false,
+            $customContext,
+            'turbo_stream',
+        ];
+    }
+
+    public function testThrowsAnExceptionWhenRenderingAStreamWithoutBeingAccepted(): void
+    {
+        $controller = new class() extends AbstractBackendController {
+            public function fooAction(string $view, bool|null $includeChromeContext, Response|null $response = null): Response
+            {
+                return $this->render(
+                    $view,
+                    ['version' => 'my version'],
+                    $response,
+                    includeChromeContext: $includeChromeContext,
+                );
+            }
+        };
+
+        $plainRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
+
+        $container = $this->getContainerWithDefaultConfiguration([], $plainRequest);
+        $controller->setContainer($container);
+
+        $this->expectException(\LogicException::class);
+        $controller->fooAction('update.stream.html.twig', null, null);
     }
 
     public function testGetSessionBag(): void
@@ -311,7 +320,8 @@ class AbstractBackendControllerTest extends TestCase
                     $map = [
                         '@Contao/backend/chrome/main_menu.html.twig' => '<menu>',
                         '@Contao/backend/chrome/header_menu.html.twig' => '<header_menu>',
-                        'custom_be.html.twig' => '<custom_be_main>',
+                        'custom_be.html.twig' => '<result>',
+                        'update.stream.html.twig' => '<result>',
                     ];
 
                     return $map[$template];

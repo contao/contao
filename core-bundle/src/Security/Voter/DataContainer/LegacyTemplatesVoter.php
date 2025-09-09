@@ -19,6 +19,6 @@ class LegacyTemplatesVoter extends AbstractDataContainerVoter
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return !(method_exists($action, 'getCurrentId') && str_ends_with($action->getCurrentId(), '.twig'));
+        return !(method_exists($action, 'getCurrentId') && str_ends_with((string) $action->getCurrentId(), '.twig'));
     }
 }
