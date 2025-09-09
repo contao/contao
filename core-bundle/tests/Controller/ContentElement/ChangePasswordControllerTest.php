@@ -30,6 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -199,7 +200,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
         $controller = new ChangePasswordController(
             $this->mockFrameworkWithTemplate($member, $this->createMock(PageModel::class), $optIn, $versions, false),
-            $this->mockPasswordHasherFactory(true),
+            $this->mockPasswordHasherFactory(true, true),
             $contentUrlGenerator,
             $eventDispatcher,
             $this->createMock(RouterInterface::class),
@@ -209,10 +210,13 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
         $model = $this->mockClassWithProperties(ContentModel::class);
         $model->jumpTo = 1;
+
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_change_password_');
         $request->request->set('oldpassword', '12345678');
         $request->request->set('password', '87654321');
+
+        $request->setSession($this->createMock(SessionInterface::class));
 
         $GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'] = true;
 
@@ -223,7 +227,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
-    private function mockPasswordHasherFactory(bool $willVerify): PasswordHasherFactoryInterface&MockObject
+    private function mockPasswordHasherFactory(bool $willVerify = false, bool $willHash = false): PasswordHasherFactoryInterface&MockObject
     {
         $passwordHasher = $this->createMock(PasswordHasherInterface::class);
         $passwordHasher
@@ -231,6 +235,13 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             ->method('verify')
             ->willReturn($willVerify)
         ;
+
+        if ($willHash) {
+            $passwordHasher
+                ->expects($this->atMost(1))
+                ->method('hash')
+            ;
+        }
 
         $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
         $passwordHasherFactory

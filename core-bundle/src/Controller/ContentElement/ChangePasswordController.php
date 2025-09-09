@@ -82,7 +82,7 @@ class ChangePasswordController extends AbstractContentElementController
             $versions->initialize();
 
             $member->tstamp = time();
-            $member->password = $request->request->get('password');
+            $member->password = $passwordHasher->hash($request->request->get('password'));
             $member->save();
 
             // Delete unconfirmed "change password" tokens
@@ -97,6 +97,9 @@ class ChangePasswordController extends AbstractContentElementController
             }
 
             $this->eventDispatcher->dispatch(new NewPasswordEvent($member, $request->request->get('password')));
+
+            $request->getSession()->migrate();
+            $user->findBy('id', $member->id);
 
             if ($model->jumpTo) {
                 $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
