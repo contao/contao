@@ -51,8 +51,8 @@ class CalendarFeedControllerTest extends ContaoTestCase
         $this->assertSame(['.xml', '.json'], $controller->getUrlSuffixes());
     }
 
-    #[DataProvider('getXMLFeedFormats')]
-    #[DataProvider('getJSONFeedFormats')]
+    #[DataProvider('getXMLFeedFormats', validateArgumentCount: false)]
+    #[DataProvider('getJSONFeedFormats', validateArgumentCount: false)]
     public function testConfiguresPageRoute(string $format, string $suffix): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -125,7 +125,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    #[DataProvider('getXMLFeedFormats')]
+    #[DataProvider('getXMLFeedFormats', validateArgumentCount: false)]
     public function testProperlyEncodesXMLEntities(string $format): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
