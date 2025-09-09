@@ -6,7 +6,6 @@
         .set('role', 'navigation')
         .set('aria-label', 'MSC.pagination'|trans)
     %}
-    <!-- indexer::stop -->
     <nav{{ pagination_attributes }}>
         {% block pagination_total %}
             {% if pagination|default %}
@@ -88,5 +87,4 @@
             {% endif %}
         </ul>
     </nav>
-    <!-- indexer::continue -->
 {% endblock %}
