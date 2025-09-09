@@ -121,22 +121,15 @@ class DcaUrlAnalyzer
     private function doGetTrail(string|null $table, int|null $id): array
     {
         $do = $this->findGet('do');
+        $trail = [];
 
-        if (!$table || !$id) {
-            if (!$do) {
-                return [];
-            }
-
-            return [
-                [
-                    'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
-                    'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
-                ],
-            ];
+        if ($table && $id) {
+            $trail = $this->findTrail($table, $id);
+        } elseif (!$do) {
+            return [];
         }
 
         $links = [];
-        $trail = $this->findTrail($table, $id);
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
             $this->framework->getAdapter(System::class)->loadLanguageFile($table);
@@ -183,13 +176,6 @@ class DcaUrlAnalyzer
                 }
             }
 
-            if ($index === \count($trail) - 1 && $this->findGet('clipboard')) {
-                $links[] = [
-                    'url' => $this->router->generate('contao_backend', [...$query, 'clipboard' => '1']),
-                    'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
-                ];
-            }
-
             $links[] = [
                 'url' => $this->router->generate('contao_backend', $query),
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
@@ -200,6 +186,13 @@ class DcaUrlAnalyzer
             'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
             'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
         ];
+
+        if ($this->findGet('clipboard')) {
+            array_unshift($links, [
+                'url' => $links[0]['url'].(str_contains($links[0]['url'], '?') ? '&' : '?').'clipboard=1',
+                'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
+            ]);
+        }
 
         return array_reverse($links);
     }
