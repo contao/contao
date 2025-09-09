@@ -165,12 +165,12 @@ class DcaUrlAnalyzer
             }
 
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
-                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll'], true)) {
+                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
                     $links[] = [
                         'url' => $this->router->generate('contao_backend', [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')]),
                         'label' => $this->translator->trans(
                             match ($this->findGet('act')) {
-                                'editAll' => 'MSC.all.0',
+                                'editAll', 'select' => 'MSC.all.0',
                                 'overrideAll' => 'MSC.all_override.0',
                                 default => throw new \LogicException(),
                             },
@@ -181,6 +181,13 @@ class DcaUrlAnalyzer
                 } else {
                     $query['act'] = $this->findGet('act');
                 }
+            }
+
+            if ($index === \count($trail) - 1 && $this->findGet('clipboard')) {
+                $links[] = [
+                    'url' => $this->router->generate('contao_backend', [...$query, 'clipboard' => '1']),
+                    'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
+                ];
             }
 
             $links[] = [
