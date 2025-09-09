@@ -16,7 +16,6 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\ChangePasswordController;
-use Contao\CoreBundle\Event\NewPasswordEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
