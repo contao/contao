@@ -71,10 +71,12 @@
         </{{ tag_name }}>
     {% endblock %}
 
-    {% set pagination_attributes = attrs(pagination_attributes|default).set('data-pagination', '', not pagination|default) %}
-    {% with {pagination: pagination|default, number_of_pages: number_of_pages|default} %}{{ block('pagination_component') }}{% endwith %}
+    {% if pagination|default or randomize_order or add_pagination or limit_elements %}
+        {% set pagination_attributes = attrs(pagination_attributes|default).set('data-pagination', '', not pagination|default) %}
+        {% with {pagination: pagination|default, number_of_pages: number_of_pages|default} %}{{ block('pagination_component') }}{% endwith %}
+    {% endif %}
 
-    {% if not pagination|default and (randomize_order|default or add_pagination|default or limit_elements|default) %}
+    {% if not pagination|default and (randomize_order or add_pagination or limit_elements) %}
         {% block list_script %}
             {% add "list_script" to body %}
                 {% set script_attributes = attrs()

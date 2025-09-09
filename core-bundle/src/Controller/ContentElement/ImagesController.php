@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\SortMode;
@@ -24,7 +25,6 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
-use Knp\Component\Pager\Exception\PageNumberOutOfRangeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,7 +93,7 @@ class ImagesController extends AbstractContentElementController
 
             try {
                 $pagination = $this->paginationFactory->create($param, \count($imageList), $model->perPage);
-            } catch (PageNumberOutOfRangeException $e) {
+            } catch (PageOutOfRangeException $e) {
                 throw new PageNotFoundException(\sprintf('Page not found: %s', $request->getUri()), previous: $e);
             }
 
