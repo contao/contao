@@ -126,6 +126,38 @@ class TableAccessVoterTest extends TestCase
         );
     }
 
+    public function testAllowsReadAccessIfTableIsInPtables(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['ptables'] = ['tl_foobar'];
+
+        $this->accessDecisionManager
+            ->expects($this->once())
+            ->method('decide')
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')
+            ->willReturn(true)
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $this->voter->vote($this->token, new ReadAction('tl_foobar', ['id' => 42]), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
+    public function testDeniesAccessIfTableIsOnlyInPtables(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['ptables'] = ['tl_foobar'];
+
+        $this->accessDecisionManager
+            ->expects($this->never())
+            ->method('decide')
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
     public function testAbstainsIfExcludedFieldAccessIsGranted(): void
     {
         $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
