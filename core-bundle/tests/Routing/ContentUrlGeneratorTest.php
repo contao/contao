@@ -37,6 +37,8 @@ class ContentUrlGeneratorTest extends TestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MIME']);
+
         $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
