@@ -256,9 +256,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
-	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null, bool $expandVirtualFields = true): array|null
 	{
-		if (!$currentRecord = parent::getCurrentRecord($id, $table))
+		if (!$expandVirtualFields || !($currentRecord = parent::getCurrentRecord($id, $table)))
 		{
 			return $currentRecord;
 		}
