@@ -189,6 +189,7 @@ class ModelTest extends TestCase
                 'saveTo' => 'jsonData',
             ],
         ];
+
         $fooModel = new class() extends Model {
             protected static $strTable = 'tl_foobar';
 
