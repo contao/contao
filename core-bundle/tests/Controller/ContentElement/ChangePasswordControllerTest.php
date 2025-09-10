@@ -218,8 +218,6 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_change_password_');
-        $request->request->set('oldpassword', '12345678');
-        $request->request->set('password', '87654321');
 
         $request->setSession($this->createMock(SessionInterface::class));
 
