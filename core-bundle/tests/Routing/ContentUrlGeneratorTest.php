@@ -89,6 +89,7 @@ class ContentUrlGeneratorTest extends TestCase
         $pageModel2 = $this->mockPageModel();
         $route = new PageRoute($pageModel2);
         $parameters = ['foo' => 'bar'];
+
         $urlGenerator = $this->mockUrlGenerator($route, $parameters);
         $pageRegistry = $this->mockPageRegistry($route);
         $entityManager = $this->createMock(EntityManagerInterface::class);
