@@ -45,5 +45,5 @@
             {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
         {%- endif -%}
     {%- endif -%}
-    {%- if required -%} *{%- endif -%}
+    {%- if required -%} <span class="mandatory">*</span>{%- endif -%}
 {%- endblock form_label_content -%}
