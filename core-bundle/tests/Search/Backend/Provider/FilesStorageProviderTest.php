@@ -25,6 +25,7 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -202,5 +203,51 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
         $this->assertTrue($provider->isDocumentGranted($token, $allowedDocument));
         $this->assertFalse($provider->isDocumentGranted($token, $disallowedDocument));
+    }
+
+    public function testConvertTypeToVisibleType(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('MSC.file', [], 'contao_default')
+            ->willReturn('foobar')
+        ;
+
+        $provider = new FilesStorageProvider(
+            $this->createMock(VirtualFilesystem::class),
+            $this->createMock(Security::class),
+            $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            $translator,
+            'files',
+        );
+
+        $this->assertSame('foobar', $provider->convertTypeToVisibleType('type'));
+    }
+
+    /**
+     * @return iterable<string, array<string, string>>
+     */
+    public static function getFacetLabelForTagProvider(): iterable
+    {
+        yield 'no prefix' => ['pdf', 'pdf'];
+        yield 'strip extension prefix' => ['extension:foobar', 'foobar'];
+    }
+
+    #[DataProvider('getFacetLabelForTagProvider')]
+    public function testGetFacetLabelForTag(string $tag, string $expected): void
+    {
+        $provider = new FilesStorageProvider(
+            $this->createMock(VirtualFilesystem::class),
+            $this->createMock(Security::class),
+            $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            $this->createMock(TranslatorInterface::class),
+            'files',
+        );
+
+        $this->assertSame($expected, $provider->getFacetLabelForTag($tag));
     }
 }
