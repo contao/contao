@@ -254,6 +254,12 @@ class Statement
 				continue;
 			}
 
+			// Native JSON support
+			if (\is_array($varParam) && 'json' === $arrTypes[$key])
+			{
+				continue;
+			}
+
 			$arrParams[$key] = serialize($varParam);
 		}
 

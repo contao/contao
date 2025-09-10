@@ -459,6 +459,34 @@ class Versions extends Controller
 				$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
 				$arrFields = $objDcaExtractor->getFields();
 
+				// Expand virtual fields
+				foreach (array_keys(array_merge($to, $from)) as $k)
+				{
+					if (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['virtualTarget'] ?? null))
+					{
+						continue;
+					}
+
+					try
+					{
+						foreach (json_decode($to[$k], true, flags: JSON_THROW_ON_ERROR) as $virtualField => $virtualValue)
+						{
+							$to[$virtualField] = $virtualValue;
+						}
+
+						foreach (json_decode($from[$k], true, flags: JSON_THROW_ON_ERROR) as $virtualField => $virtualValue)
+						{
+							$from[$virtualField] = $virtualValue;
+						}
+					}
+					catch (\JsonException)
+					{
+						// noop
+					}
+
+					unset($to[$k], $from[$k]);
+				}
+
 				// Find the changed fields and highlight the changes
 				foreach (array_keys(array_merge($to, $from)) as $k)
 				{

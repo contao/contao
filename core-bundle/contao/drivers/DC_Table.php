@@ -256,6 +256,38 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
+	{
+		if (!$currentRecord = parent::getCurrentRecord($id, $table))
+		{
+			return $currentRecord;
+		}
+
+		$table = $table ?: $this->strTable;
+
+		Controller::loadDataContainer($table);
+
+		// Expand virtual fields
+		foreach ($currentRecord as $field => $value)
+		{
+			$config = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? array();
+
+			if (($config['virtualTarget'] ?? null) && $value)
+			{
+				try
+				{
+					$currentRecord = array_merge($currentRecord, json_decode($value, true, flags: JSON_THROW_ON_ERROR));
+				}
+				catch (\JsonException)
+				{
+					// noop
+				}
+			}
+		}
+
+		return $currentRecord;
+	}
+
 	/**
 	 * Returns the database record merged with the submitted changes.
 	 *
@@ -501,7 +533,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Show all allowed fields
 		foreach ($fields as $i)
 		{
-			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'password' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['hideInput'] ?? null) || !\in_array($i, $allowedFields))
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'password' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['hideInput'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['virtualTarget'] ?? null) || !\in_array($i, $allowedFields))
 			{
 				continue;
 			}
@@ -3163,6 +3195,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		if (!$this->noReload && !empty($arrValues))
 		{
 			$arrTypes = array();
+			$arrVirtual = array();
 			$blnVersionize = false;
 
 			$db = Database::getInstance();
@@ -3191,7 +3224,16 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					}
 				}
 
-				$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null;
+				// Store virtual fields separately
+				if (($arrData['saveTo'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$arrData['saveTo']]['virtualTarget'] ?? null))
+				{
+					$arrVirtual[$arrData['saveTo']][$strField] = StringUtil::ensureStringUuids($varValue);
+					unset($arrValues[$strField]);
+				}
+				else
+				{
+					$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null;
+				}
 
 				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
 				{
@@ -3210,7 +3252,39 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 				->set($arrValues)
 				->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
 
-			if ($objUpdateStmt->affectedRows)
+			// Update virtual fields
+			if ($arrVirtual)
+			{
+				$arrVirtualTypes = array();
+
+				// Combine with previous values
+				array_walk($arrVirtual, function (array &$fieldData, string $virtualField) use ($currentRecord, &$arrVirtualTypes): void {
+					try
+					{
+						$fieldData = array_merge(json_decode($currentRecord[$virtualField], true, flags: JSON_THROW_ON_ERROR), $fieldData);
+					}
+					catch (\JsonException)
+					{
+						// noop
+					}
+
+					$type = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$virtualField]['sql']['type'] ?? null;
+
+					if ('json' !== $type)
+					{
+						$fieldData = json_encode($fieldData, JSON_THROW_ON_ERROR);
+					}
+
+					$arrVirtualTypes[] = $type;
+				});
+
+				$objVirtualUpdateStmt = $db
+					->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
+					->set($arrVirtual)
+					->query('', array_merge(array_values($arrVirtual), $this->values), $arrVirtualTypes);
+			}
+
+			if ($objUpdateStmt->affectedRows || $objVirtualUpdateStmt?->affectedRows)
 			{
 				// Empty cached data for this record
 				self::clearCurrentRecordCache($this->intId, $this->strTable);

@@ -684,4 +684,40 @@ class StringUtilTest extends TestCase
             ],
         ];
     }
+
+    #[DataProvider('ensureStringUuidsProvider')]
+    public function testEnsureStringUuids(mixed $input, mixed $expected): void
+    {
+        $this->assertSame($expected, StringUtil::ensureStringUuids($input));
+    }
+
+    public static function ensureStringUuidsProvider(): iterable
+    {
+        yield 'Single binary UUID' => [
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720'),
+            '0f075396-ed26-11ee-a657-14ac60298720',
+        ];
+
+        yield 'Serialized UUIDs' => [
+            serialize([StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')]),
+            'a:2:{i:0;s:36:"0f075374-ed26-11ee-a657-14ac60298720";i:1;s:36:"0f07538b-ed26-11ee-a657-14ac60298720";}',
+        ];
+
+        yield 'Ignores regular string' => [
+            'Lorem',
+            'Lorem',
+        ];
+
+        $object = (object) [StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')];
+
+        yield 'Ignores object' => [
+            $object,
+            $object,
+        ];
+
+        yield 'Ignores invalid UUID' => [
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720').'-foobar',
+            StringUtil::uuidToBin('0f075396-ed26-11ee-a657-14ac60298720').'-foobar',
+        ];
+    }
 }

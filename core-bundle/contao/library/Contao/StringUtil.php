@@ -534,6 +534,29 @@ class StringUtil
 	}
 
 	/**
+	 * Converts binary UUIDs to string if detected.
+	 * Also support comma separated values (e.g. from the fileTree widget).
+	 */
+	public static function ensureStringUuids(mixed $data): mixed
+	{
+		if (!\is_string($data))
+		{
+			return $data;
+		}
+
+		$deserialized = self::deserialize($data);
+
+		if (\is_array($deserialized))
+		{
+			$deserialized = array_map(static fn (mixed $v) => Validator::isBinaryUuid($v) ? self::binToUuid($v) : $v, $deserialized);
+
+			return serialize($deserialized);
+		}
+
+		return Validator::isBinaryUuid($data) ? self::binToUuid($data) : $data;
+	}
+
+	/**
 	 * Encode a string with Crockford’s Base32 (0123456789ABCDEFGHJKMNPQRSTVWXYZ)
 	 *
 	 * @see StringUtil::decodeBase32()

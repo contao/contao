@@ -614,6 +614,9 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
 
+    contao.listener.virtual_fields_mapping:
+        class: Contao\CoreBundle\EventListener\VirtualFieldsMappingListener
+
     contao.listener.webauthn_route_backend:
         class: Contao\CoreBundle\EventListener\WebauthnRouteListener
         arguments:
