@@ -535,7 +535,7 @@ class StringUtil
 
 	/**
 	 * Converts binary UUIDs to string if detected.
-	 * Also support comma separated values (e.g. from the fileTree widget).
+	 * Also supports serialized arrays (e.g. from the fileTree widget).
 	 */
 	public static function ensureStringUuids(mixed $data): mixed
 	{
