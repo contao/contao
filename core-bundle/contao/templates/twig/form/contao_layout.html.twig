@@ -19,6 +19,9 @@
 {%- endblock form_errors -%}
 
 {%- block form_label_content -%}
+    {%- if required -%}
+        <span class="invisible">{{ 'MSC.mandatory'|trans }} </span>
+    {%- endif -%}
     {%- if label is empty -%}
         {%- if label_format is not empty -%}
             {% set label = label_format|replace({
@@ -42,5 +45,5 @@
             {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
         {%- endif -%}
     {%- endif -%}
-    {% if required %} *{% endif %}
+    {%- if required -%} *{%- endif -%}
 {%- endblock form_label_content -%}
