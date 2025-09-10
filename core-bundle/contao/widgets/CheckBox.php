@@ -179,7 +179,7 @@ class CheckBox extends Widget
 				$display = 'block';
 			}
 
-			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" class="' . $class . '" data-action="contao--scroll-offset#store" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');return false">' . Image::getHtml('chevron-right.svg') . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '" data-controller="contao--check-all"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" data-contao--check-all-target="source" data-action="contao--check-all#toggleAll"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
+			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" class="' . $class . '" data-action="contao--scroll-offset#store" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');return false">' . Image::getHtml('chevron-right.svg') . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '" data-controller="contao--check-all"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
 
 			// Multidimensional array
 			foreach ($arrOption as $k=>$v)
@@ -210,7 +210,7 @@ class CheckBox extends Widget
 				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->xlabel,
 				$this->strName,
-				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" data-contao--check-all-target="source" data-action="focus->contao--scroll-offset#store contao--check-all#toggleAll"' . ($this->onclick ? ' onclick="' . $this->onclick . '"' : '') . '> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
+				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" data-action="focus->contao--scroll-offset#store contao--check-all#toggleAll"' . ($this->onclick ? ' onclick="' . $this->onclick . '"' : '') . '> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
 				implode(' ', $arrOptions),
 				$this->wizard
 			);

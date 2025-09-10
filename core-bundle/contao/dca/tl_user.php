@@ -591,7 +591,7 @@ class tl_user extends Backend
 <div class="widget">
   <fieldset class="tl_checkbox_container" data-controller="contao--check-all">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
-    <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" data-contao--check-all-target="source" data-action="contao--check-all#toggleAll"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>
+    <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>
     ' . implode("\n", $options) . '
   </fieldset>' . $dc->help() . '
 </div>';

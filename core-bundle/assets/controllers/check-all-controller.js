@@ -19,8 +19,8 @@ export default class extends Controller {
         this.#start = input;
     }
 
-    toggleAll() {
-        const checked = this.sourceTarget.checked;
+    toggleAll(event) {
+        const checked = event.target.checked;
 
         for (const el of this.inputTargets) {
             el.checked = checked;
