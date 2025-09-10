@@ -9,26 +9,6 @@ export default class extends Controller {
         this.#start = null;
     }
 
-    toggleRow(event) {
-        if (event.target.closest('input, label, button, a, .operations')) {
-            return;
-        }
-
-        const target = event.currentTarget.querySelector(`[data-${this.identifier}-target="input"]`);
-
-        if (target === null) {
-            return;
-        }
-
-        if (this.#start && event.shiftKey) {
-            this.#shiftToggle(target);
-            return;
-        }
-
-        target.checked ^= 1;
-        this.#start = target;
-    }
-
     toggleInput(event) {
         const input = event.target;
 
