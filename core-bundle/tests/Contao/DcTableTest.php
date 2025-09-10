@@ -25,7 +25,7 @@ class DcTableTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([System::class, DataContainer::class]);
 
