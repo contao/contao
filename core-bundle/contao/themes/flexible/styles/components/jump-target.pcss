@@ -3,10 +3,14 @@
     padding-top: 1px;
     background: var(--panel-bg);
     border-bottom: 1px solid var(--content-border);
-    border-top-left-radius: 5px;
+    border-radius: 5px 5px 0 0;
     position: sticky;
     top: 0;
     z-index: 3; /* Above TinyMCE */
+}
+
+.popup .jump-targets {
+    border-radius: 0;
 }
 
 .jump-targets .inner {
@@ -54,5 +58,6 @@
 
 .jump-targets:after {
     right: 0;
+    border-top-right-radius: 5px;
     background: linear-gradient(90deg, transparent 0, var(--panel-bg) 50%);
 }
