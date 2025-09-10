@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Event\NewPasswordEvent;
+use Contao\CoreBundle\Form\Type\ChangePasswordType;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -26,18 +26,11 @@ use Contao\OptInModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[AsContentElement(category: 'miscellaneous')]
@@ -45,8 +38,6 @@ class ChangePasswordController extends AbstractContentElementController
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly ContaoCsrfTokenManager $contaoCsrfTokenManager,
-        private readonly ParameterBagInterface $parameterBag,
         private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         private readonly ContentUrlGenerator $contentUrlGenerator,
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -77,7 +68,7 @@ class ChangePasswordController extends AbstractContentElementController
 
         $this->executeOnloadCallbacks();
 
-        $form = $this->getChangePasswordForm();
+        $form = $this->createForm(ChangePasswordType::class, []);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -87,7 +78,7 @@ class ChangePasswordController extends AbstractContentElementController
             $versions->initialize();
 
             $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(FrontendUser::class);
-            $hashedPassword = $passwordHasher->hash($request->request->get('password'));
+            $hashedPassword = $passwordHasher->hash($form->get('newpassword')->getData());
 
             $member->tstamp = time();
             $member->password = $hashedPassword;
@@ -104,7 +95,7 @@ class ChangePasswordController extends AbstractContentElementController
                 $versions->create();
             }
 
-            $this->eventDispatcher->dispatch(new NewPasswordEvent($member, $request->request->get('password'), $hashedPassword));
+            $this->eventDispatcher->dispatch(new NewPasswordEvent($member, $form->get('newpassword')->getData(), $hashedPassword));
 
             $request->getSession()->migrate();
             $user->findBy('id', $member->id);
@@ -137,60 +128,5 @@ class ChangePasswordController extends AbstractContentElementController
                 }
             }
         }
-    }
-
-    private function getChangePasswordForm(): FormInterface
-    {
-        return $this->createFormBuilder([], [
-            'csrf_field_name' => 'REQUEST_TOKEN',
-            'csrf_token_manager' => $this->contaoCsrfTokenManager,
-            'csrf_token_id' => $this->parameterBag->get('contao.csrf_token_name'),
-            'translation_domain' => 'contao_default',
-        ])
-            ->add(
-                'oldpassword',
-                PasswordType::class,
-                [
-                    'constraints' => [
-                        new UserPassword(message: 'MSC.oldPasswordWrong'),
-                    ],
-                    'label' => 'MSC.oldPassword',
-                    'required' => true,
-                    'attr' => [
-                        'mandatory' => true,
-                        'autocomplete' => 'current-password',
-                        'class' => 'text password mandatory',
-                    ],
-                ],
-            )
-            ->add(
-                'newpassword',
-                PasswordType::class,
-                [
-                    'constraints' => [
-                        new NotBlank(),
-                        new Length(min: 8),
-                    ],
-                    'label' => 'MSC.newPassword',
-                    'required' => true,
-                    'attr' => [
-                        'mandatory' => true,
-                        'autocomplete' => 'new-password',
-                        'class' => 'text password mandatory',
-                    ],
-                ],
-            )
-            ->add(
-                'submit',
-                SubmitType::class,
-                [
-                    'label' => 'MSC.changePassword',
-                    'attr' => [
-                        'class' => 'submit',
-                    ],
-                ],
-            )
-            ->getForm()
-        ;
     }
 }

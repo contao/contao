@@ -90,8 +90,6 @@ services:
     Contao\CoreBundle\Controller\ContentElement\ChangePasswordController:
         arguments:
             - '@contao.framework'
-            - '@contao.csrf.token_manager'
-            - '@parameter_bag'
             - '@security.password_hasher_factory'
             - '@contao.routing.content_url_generator'
             - '@event_dispatcher'
