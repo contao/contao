@@ -16,12 +16,17 @@
 }
 
 #main .content {
-    margin: 0 15px 15px;
+    height: 100%;
+    margin: 0 0 0 15px;
     background: var(--content-bg);
-    border: 1px solid var(--content-border);
+    border: solid var(--content-border);
+    border-width: 1px 0 0 1px;
+    border-top-left-radius: 5px;
 }
 
 .popup #main .content {
+    height: auto;
     margin: 0;
     border: 0;
+    border-radius: 0;
 }
