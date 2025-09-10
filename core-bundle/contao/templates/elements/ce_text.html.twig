@@ -3,7 +3,7 @@
 {% block content %}
 
   {% if not addBefore %}
-    {% do cspInlineStyles(text) %}
+    {{ text|default|csp_inline_styles|insert_tag_raw|raw }}
   {% endif %}
 
   {% if addImage %}
@@ -11,7 +11,7 @@
   {% endif %}
 
   {% if addBefore %}
-    {% do cspInlineStyles(text) %}
+    {{ text|default|csp_inline_styles|insert_tag_raw|raw }}
   {% endif %}
 
 {% endblock %}

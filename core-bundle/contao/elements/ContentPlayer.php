@@ -76,7 +76,7 @@ class ContentPlayer extends ContentElement
 
 			if ($this->headline)
 			{
-				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
+				$return = '<' . $this->hl . '>' . StringUtil::specialchars($this->headline) . '</' . $this->hl . '>' . $return;
 			}
 
 			return $return;

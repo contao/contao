@@ -1,6 +1,6 @@
 
 <script src="{{ asset('js/jquery-ui.min.js', 'contao-components/jquery-ui') }}"></script>
-<script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
   jQuery(function($) {
     $(document).accordion({
       // Put custom options here

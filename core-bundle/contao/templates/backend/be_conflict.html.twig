@@ -10,13 +10,13 @@
   <meta name="turbo-visit-control" content="reload">
 
   <link rel="stylesheet" href="{{ asset('conflict.css', 'system/themes/' ~ theme) }}">
-  {{ stylesheets }}
+  {{ stylesheets|default|raw }}
 
-  <script>{{ getLocaleString.invoke() }}</script>
+  <script>{{ getLocaleString.invoke()|raw }}</script>
   <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
   <script src="{{ asset('backend.js', 'contao_core') }}"></script>
-  <script>{{ getDateString.invoke() }}</script>
-  {{ javascripts }}
+  <script>{{ getDateString.invoke()|raw }}</script>
+  {{ javascripts|default|raw }}
 
 </head>
 <body>
@@ -26,7 +26,7 @@
       <h1>{{ h1 }}</h1>
       <p>{{ explain1 }}</p>
       <p>{{ explain2 }}</p>
-      <div id="diff">{{ diff }}</div>
+      <div id="diff">{{ diff|raw }}</div>
       <div class="submit_container">
         <a href="{{ href }}" class="tl_submit">{{ button }}</a>
       </div>

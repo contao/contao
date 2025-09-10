@@ -1,4 +1,4 @@
-{% if enable %}
+{% if enabled|default %}
 <script>
   {
     const config = (editor) => {
@@ -12,7 +12,7 @@
       editor.getSession().setUseWrapMode(true);
       editor.setAutoScrollEditorIntoView(true);
 
-      {% if readonly %}
+      {% if readonly|default %}
         editor.setReadOnly(true);
       {% endif %}
 
@@ -39,7 +39,7 @@
       });
     }
 
-    const target = document.getElementById('{{ selector }}');
+    const target = document.getElementById('{{ selector|e('js') }}');
     target.configCallback = config;
     target.setAttribute('data-controller', 'contao--ace');
     target.setAttribute('data-action', 'contao--color-scheme:change@window->contao--ace#colorChange');

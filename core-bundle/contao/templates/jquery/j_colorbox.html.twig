@@ -6,7 +6,7 @@
 {% endadd %}
 
 <script src="{{ asset('js/colorbox.min.js', 'contao-components/colorbox') }}"></script>
-<script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
   jQuery(function($) {
     $('a[data-lightbox]').map(function() {
       $(this).colorbox({

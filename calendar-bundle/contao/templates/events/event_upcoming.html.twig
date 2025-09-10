@@ -11,5 +11,5 @@
   JSON-LD data in case this is an event without a reader
 #}
 {% if not hasReader %}
-    {% do addSchemaOrg(getSchemaOrgData.invoke()) %}
+    {% do add_schema_org(getSchemaOrgData.invoke()) %}
 {% endif %}

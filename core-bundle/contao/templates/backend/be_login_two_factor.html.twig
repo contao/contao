@@ -1,3 +1,5 @@
+{% trans_default_domain "contao_default" -%}
+
 <!DOCTYPE html>
 <html lang="{{ language }}" data-turbo="false">
 <head>
@@ -15,17 +17,17 @@
     {% endblock %}
 
     <link rel="stylesheet" href="{{ asset('login.css', 'system/themes/' ~ theme) }}">
-    {{ stylesheets }}
+    {{ stylesheets|default|raw }}
 
-    <script>{{ getLocaleString.invoke() }}</script>
+    <script>{{ getLocaleString.invoke()|raw }}</script>
     <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
     <script src="{{ asset('backend.js', 'contao_core') }}"></script>
-    <script>{{ getDateString.invoke() }}</script>
-    {{ javascripts }}
+    <script>{{ getDateString.invoke()|raw }}</script>
+    {{ javascripts|default|raw }}
   {% endblock %}
 
 </head>
-<body class="be_login_two_factor"{{ attributes }}>
+<body{{ attrs(attributes|default).addClass('be_login_two_factor') }}>>
 
   {% block container %}
     <div id="container">
@@ -36,7 +38,7 @@
             <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
             <input type="hidden" name="_target_path" value="{{ targetPath }}">
             <input type="hidden" name="_always_use_target_path" value="1">
-            {% if badgeTitle %}
+            {% if badgeTitle|default %}
               <span class="badge-title">{{ badgeTitle }}</span>
             {% endif %}
             <h1>{{ headline }}</h1>
@@ -55,7 +57,7 @@
           </div>
         </form>
       </main>
-      {{ messages }}
+      {{ messages|raw }}
     </div>
   {% endblock %}
 

@@ -9,7 +9,7 @@
 
 {% block content %}
 
-  {{ text }}
+  {{ text|default|csp_inline_styles|encode_email|insert_tag_raw|raw }}
   <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }}<span class="invisible"> {{ headline }}</span></a></p>
 
 {% endblock %}

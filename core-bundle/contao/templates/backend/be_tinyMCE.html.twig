@@ -1,4 +1,4 @@
-{% if enable %}
+{% if enabled|default %}
 <script>
 {
   const config = {
@@ -29,14 +29,14 @@
         Backend.openModalSelector({
           'id': 'tl_listing',
           'title': document.getElement('.tox-dialog__title').get('text'),
-          'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]={{ source }}&amp;value=' + value + '&amp;popup=1',
+          'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]={{ source|e('js') }}&amp;value=' + value + '&amp;popup=1',
           'callback': function (table, val) {
             document.getElement('.tox-dialog input')?.focus();
             callback(val.join(','));
           }
         });
       },
-      file_picker_types: '{{ fileBrowserTypes }}',
+      file_picker_types: '{{ fileBrowserTypes|e('js') }}',
     {% endblock %}
 
     {% block content_css %}
@@ -74,7 +74,7 @@
     {% block custom %}
     {% endblock %}
 
-    {% if readonly %}
+    {% if readonly|default %}
       readonly: true,
     {% endif %}
 
@@ -83,7 +83,7 @@
   };
 
   // Add Stimulus data and controller reference
-  const target = document.querySelector('#{{ selector }}');
+  const target = document.querySelector('#{{ selector|e('js') }}');
   target.tinymceConfig = config;
   target.setAttribute('data-action', 'turbo:before-visit@window->contao--tinymce#leave');
   target.setAttribute('data-controller', 'contao--tinymce');

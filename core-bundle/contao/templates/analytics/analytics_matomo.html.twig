@@ -6,17 +6,17 @@
 
 {# DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING! #}
 {% if (MatomoSite > 0 and '//www.example.com/matomo/' != MatomoPath and not contao.has_backend_user()) %}
-    <script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+    <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
       var _paq = window._paq = window._paq || [];
       _paq.push(['trackPageView']);
       _paq.push(['enableLinkTracking']);
       (function() {
         var u='{{ MatomoPath }}';
         _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', {{ MatomoSite }}]);
+        _paq.push(['setSiteId', Number('{{ MatomoSite|e('js') }}')]);
         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
         g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
       })();
     </script>
-    {% do addCspSource('script-src', MatomoPath) %}
+    {% do csp_source('script-src', MatomoPath) %}
 {% endif %}

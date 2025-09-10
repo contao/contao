@@ -2,5 +2,5 @@
 <div class="widget widget-password wizard">
   <label for="password">{{ password }}</label>
   <input type="password" name="password" id="ctrl_password" class="tl_text" value="" autocomplete="new-password" placeholder="{{ password }}" required>
-  {{ wizard }}
+  {{ wizard|raw }}
 </div>

@@ -6,8 +6,8 @@
 
 <div{{ wrapperAttributes }}>
 
-  {% if headline %}
-    <{{ hl }}>{{ headline }}</{{ hl }}>
+  {% if headline|default %}
+    <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
   {% endif %}
 
   <div class="content-slider" data-config="{{ config }}">

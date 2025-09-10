@@ -6,7 +6,7 @@
 {% endadd %}
 
 <script src="{{ asset('js/tablesorter.min.js', 'contao-components/tablesorter') }}"></script>
-<script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
   jQuery(function($) {
     $('.ce_table .sortable').each(function(i, table) {
       var attr = $(table).attr('data-sort-default'),

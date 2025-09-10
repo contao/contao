@@ -8,7 +8,7 @@
     <div class="reply">
       <p class="info">{{ rby }} {{ author.name }}</p>
       <div class="comment">
-        {{ cspInlineStyles(reply) }}
+        {{ reply|csp_inline_styles }}
       </div>
     </div>
   {% endif %}

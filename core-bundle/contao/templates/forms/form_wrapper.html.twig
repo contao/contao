@@ -7,11 +7,11 @@
 <!-- indexer::stop -->
 <div{{ wrapperAttributes }}>
 
-  {% if headline %}
+  {% if headline|default %}
     <{{ hl }}>{{ headline }}</{{ hl }}>
   {% endif %}
 
-  {% if message %}
+  {% if message|default %}
     {% include "@Contao/form_message.html.twig" %}
   {% else %}
     {% include "@Contao/form_inline.html.twig" %}
@@ -20,8 +20,8 @@
 </div>
 <!-- indexer::continue -->
 
-{% if ajax %}
-  <script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+{% if ajax|default %}
+  <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
     window.addEventListener('DOMContentLoaded', () => {
       const el = document.querySelector('[data-ajax-form="{{ id|e('js') }}"]');
 
@@ -93,7 +93,7 @@
     });
   </script>
 {% else %}
-  <script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+  <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
     document.currentScript.previousElementSibling.querySelector('form')?.addEventListener('submit', e => {
       // Prevent double form submission
       if (e.submitter) {

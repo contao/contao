@@ -4,7 +4,7 @@
 
   <table id="{{ id }}"{% if sortable %} class="sortable" data-sort-default="{{ sortDefault }}"{% endif %}>
     {% if summary %}
-      <caption>{{ summary }}</caption>
+      <caption>{{ summary|insert_tag_raw }}</caption>
     {% endif %}
 
     {% if useHeader %}
@@ -12,9 +12,9 @@
         <tr>
           {% for col in header %}
             {% if loop.index0 == 0 and useLeftTh %}
-              <th class="unsortable">{{ col }}</th>
+              <th class="unsortable">{{ col|allow_html|insert_tag_raw }}</th>
             {% else %}
-              <th>{{ col }}</th>
+              <th>{{ col|allow_html|insert_tag_raw }}</th>
             {% endif %}
           {% endfor %}
         </tr>
@@ -25,7 +25,7 @@
       <tfoot>
         <tr>
           {% for col in footer %}
-            <td>{{ col }}</td>
+            <td>{{ col|allow_html|insert_tag_raw }}</td>
           {% endfor %}
         </tr>
       </tfoot>
@@ -36,9 +36,9 @@
         <tr>
           {% for col in row %}
             {% if loop.index0 == 0 and useLeftTh %}
-              <th scope="row">{{ col }}</th>
+              <th scope="row">{{ col|allow_html|insert_tag_raw }}</th>
             {% else %}
-              <td>{{ col }}</td>
+              <td>{{ col|allow_html|insert_tag_raw }}</td>
             {% endif %}
           {% endfor %}
         </tr>

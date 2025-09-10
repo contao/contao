@@ -4,9 +4,9 @@
 
   <h2 class="sub_headline">{{ 'tl_maintenance.backend_search.title'|trans }}</h2>
 
-  {% if message %}
+  {% if message|default %}
     <div class="tl_message">
-      {{ message }}
+      {{ message|raw }}
     </div>
   {% endif %}
 

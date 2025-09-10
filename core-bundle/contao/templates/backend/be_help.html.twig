@@ -9,31 +9,31 @@
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="{{ asset('help.css', 'system/themes/' ~ theme) }}">
-  {{ stylesheets }}
+  {{ stylesheets|default|raw }}
 
-  <script>{{ getLocaleString.invoke() }}</script>
+  <script>{{ getLocaleString.invoke()|raw }}</script>
   <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
   <script src="{{ asset('backend.js', 'contao_core') }}"></script>
-  <script>{{ getDateString.invoke() }}</script>
-  {{ javascripts }}
+  <script>{{ getDateString.invoke()|raw }}</script>
+  {{ javascripts|default|raw }}
 
 </head>
 <body>
 
   <div id="container">
     <main id="main">
-      {{ explanation }}
-      {% if rows|length %}
+      {{ explanation|default|raw }}
+      {% if rows|default %}
         <table class="tl_help_table">
           {% for row in rows %}
             <tr>
               {% if 'colspan' == row.0 %}
-                <td colspan="2">{{ row.1|default }}</td>
+                <td colspan="2">{{ row.1|default|raw }}</td>
               {% elseif 'headspan' == row.0 %}
-                <td colspan="2" class="headline">{{ row.1|default }}</td>
+                <td colspan="2" class="headline">{{ row.1|default|raw }}</td>
               {% else %}
-                <td class="tl_label">{{ row.0 }}</td>
-                <td>{{ row.1|default }}</td>
+                <td class="tl_label">{{ row.0|raw }}</td>
+                <td>{{ row.1|default|raw }}</td>
               {% endif %}
             </tr>
           {% endfor %}

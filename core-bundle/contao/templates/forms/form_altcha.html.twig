@@ -10,8 +10,8 @@
 {% endadd %}
 
 {% block label %}
-  {% if label %}
-    <label for="ctrl_{{ id }}"{% if class %} class="{{ class }}"{% endif %}>
+  {% if label|default %}
+    <label for="ctrl_{{ id }}"{% if class|default %} class="{{ class }}"{% endif %}>
       <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
     </label>
   {% endif %}
@@ -23,7 +23,7 @@
     <p class="error">{{ getErrorAsString.invoke() }}</p>
   {% endif %}
 
-  {% if not canUseAltcha %}
+  {% if not canUseAltcha|default %}
     <p class="error">{{ 'ERR.altchaInsecureConnection'|trans }}</p>
   {% else %}
     <altcha-widget{{ altchaAttributes.>set('workerurl', asset('js/worker.js', 'contao-components/altcha')) }}></altcha-widget>

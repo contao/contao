@@ -4,7 +4,7 @@
 
   <{{ tag }}>
     {% for item in items %}
-      <li>{{ item }}</li>
+      <li>{{ item|allow_html|insert_tag_raw }}</li>
     {% endfor %}
   </{{ tag }}>
 

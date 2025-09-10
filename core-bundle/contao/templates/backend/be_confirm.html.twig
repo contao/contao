@@ -9,13 +9,13 @@
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="{{ asset('confirm.css', 'system/themes/' ~ theme) }}">
-  {{ stylesheets }}
+  {{ stylesheets|default|raw }}
 
-  <script>{{ getLocaleString.invoke() }}</script>
+  <script>{{ getLocaleString.invoke()|raw }}</script>
   <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
   <script src="{{ asset('backend.js', 'contao_core') }}"></script>
-  <script>{{ getDateString.invoke() }}</script>
-  {{ javascripts }}
+  <script>{{ getDateString.invoke()|raw }}</script>
+  {{ javascripts|default|raw }}
 
 </head>
 <body>

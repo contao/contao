@@ -6,7 +6,7 @@
 {% endadd %}
 
 <script src="{{ asset('js/tablesort.min.js', 'contao-components/tablesort') }}"></script>
-<script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
   window.addEvent('domready', function() {
     $$('.ce_table .sortable').each(function(table) {
       new TableSort(table, '{{ 'MSC.thousandsSeparator'|trans|e('js') }}', '{{ 'MSC.decimalSeparator'|trans|e('js') }}');

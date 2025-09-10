@@ -3,9 +3,9 @@
 
   <h2 class="sub_headline sub_headline_purge">{{ headline }}</h2>
 
-  {% if message %}
+  {% if message|default %}
     <div class="tl_message">
-      {{ message }}
+      {{ message|raw }}
     </div>
   {% endif %}
 
@@ -27,14 +27,14 @@
             {% for value, job in jobs %}
               <tr class="hover-row toggle_select">
                 <td><input type="checkbox" name="purge[{{ job.group }}][]" id="{{ job.id }}" class="tl_checkbox" value="{{ value }}" data-action="focus->contao--scroll-offset#store"></td>
-                <td class="nw"><label for="{{ job.id }}">{{ job.title }}</label>{{ job.affected }}</td>
-                <td>{{ job.description }}</td>
+                <td class="nw"><label for="{{ job.id }}">{{ job.title }}</label>{{ job.affected|raw }}</td>
+                <td>{{ job.description|raw }}</td>
               </tr>
             {% endfor %}
           </tbody>
           </table>
         </fieldset>
-        {% if help %}
+        {% if help|default %}
           <p class="tl_help tl_tip">{{ help }}</p>
         {% endif %}
       </div>

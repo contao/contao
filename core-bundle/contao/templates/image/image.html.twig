@@ -1,12 +1,11 @@
 
-<figure class="image_container{{ floatClass }}">
+<figure class="image_container{{ floatClass|default }}">
     {% if imageHref|default or href|default %}
-        {% set anchor_attributes = attrs()
+        <a{{ attrs()
             .set('href', imageHref|default(href))
-            .setIfExists('linkTitle', linkTitle|default)
-            .mergeWith(attributes)
-        %}
-        <a{{ anchor_attributes }}>
+            .setIfExists('title', linkTitle|default|insert_tag)
+            .mergeWith(attributes|default)
+        }}>
     {% endif %}
 
     {% include "@Contao/picture_default.html.twig" with picture %}
@@ -15,11 +14,11 @@
         </a>
     {% endif %}
 
-    {% if caption %}
-        <figcaption class="caption">{{ caption }}</figcaption>
+    {% if caption|default %}
+        <figcaption class="caption">{{ caption|allow_html|insert_tag_raw }}</figcaption>
     {% endif %}
 </figure>
 
-{% if figure %}
-    {% do addSchemaOrg(figure.getSchemaOrgData()) %}
+{% if figure|default %}
+    {% do add_schema_org(figure.getSchemaOrgData()) %}
 {% endif %}

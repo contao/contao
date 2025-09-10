@@ -1,18 +1,20 @@
-{% set rootAttributes = attrs()
+{% trans_default_domain "contao_default" -%}
+
+{%- set rootAttributes = attrs()
     .set('lang', language)
     .set('data-controller', 'contao--scroll-offset')
     .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
-    .mergeWith(rootAttributes)
- %}
+    .mergeWith(rootAttributes|default)
+-%}
 
-{% set bodyAttributes = attrs(attributes|default)
+{%- set bodyAttributes = attrs(attributes|default)
     .set('id', 'top')
     .addClass('be_main')
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
     .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
- %}
+-%}
 
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
@@ -34,9 +36,9 @@
     <link rel="stylesheet" href="{{ asset('css/dropzone.min.css', 'contao-components/dropzone') }}" data-turbo-track="reload">
     <link rel="stylesheet" href="{{ asset('backend.css', 'system/themes/' ~ theme) }}" data-turbo-track="reload">
     <link rel="stylesheet" href="{{ asset('backend.css', 'contao_core') }}" data-turbo-track="reload">
-    {{ stylesheets }}
+    {{ stylesheets|default|raw }}
 
-    <script>{{ getLocaleString.invoke() }}</script>
+    <script>{{ getLocaleString.invoke()|raw }}</script>
     <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}" data-turbo-track="reload"></script>
     <script src="{{ asset('js/choices.min.js', 'contao-components/choices') }}" data-turbo-track="reload"></script>
     <script src="{{ asset('js/simplemodal.min.js', 'contao-components/simplemodal') }}" data-turbo-track="reload"></script>
@@ -47,8 +49,8 @@
     <script src="{{ asset('js/ext-whitespace.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
     <script src="{{ asset('js/dropzone.min.js', 'contao-components/dropzone') }}" data-turbo-track="reload"></script>
     <script src="{{ asset('backend.js', 'contao_core') }}" data-turbo-track="reload"></script>
-    <script>{{ getDateString.invoke() }}</script>
-    {{ javascripts }}
+    <script>{{ getDateString.invoke()|raw }}</script>
+    {{ javascripts|default|raw }}
   {% endblock %}
 </head>
 <body{{ bodyAttributes }}>
@@ -61,12 +63,12 @@
           <h1>
             <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
               <span class="app-title">Contao</span>
-              {% if badgeTitle %}
+              {% if badgeTitle|default %}
                 <span class="badge-title">{{ badgeTitle }}</span>
               {% endif %}
             </a>
           </h1>
-          {{ headerMenu }}
+          {{ headerMenu|raw }}
         </div>
       </header>
 
@@ -83,10 +85,10 @@
       {% block left %}
         {% if not isPopup %}
           <aside id="left">
-            {{ menu }}
+            {{ menu|raw }}
             <div class="version">
               {% block version %}
-                {{ version }}<br>{{ learnMore }}
+                {{ version }}<br>{{ learnMore|raw }}
               {% endblock %}
             </div>
           </aside>
@@ -95,18 +97,18 @@
 
       {% block main %}
         <main id="main" aria-labelledby="main_headline">
-          <h1 id="main_headline">{{ headline }}</h1>
+          <h1 id="main_headline">{{ headline|raw }}</h1>
           <div class="content">
-            {% if pickerMenu %}
+            {% if pickerMenu|default %}
               <div id="picker-menu">
-                {{ pickerMenu }}
+                {{ pickerMenu|raw }}
               </div>
             {% endif %}
-            {% if error %}
+            {% if error|default %}
               <p class="tl_gerror">{{ error }}</p>
             {% endif %}
             {% block main_content %}
-              {{ main }}
+              {{ main|raw }}
             {% endblock %}
           </div>
         </main>
@@ -125,7 +127,7 @@
     </script>
   {% endif %}
 
-  {{ mootools }}
+  {{ mootools|default|raw }}
 
 </body>
 </html>

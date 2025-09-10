@@ -6,7 +6,7 @@
 {% endadd %}
 
 <script src="{{ asset('js/handorgel.min.js', 'contao-components/handorgel') }}"></script>
-<script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
   (function () {
     // DO NOT CHANGE THIS FUNCTION!
     // Set the Handorgel.js options in the function call below.

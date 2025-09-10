@@ -8,8 +8,8 @@
   <div{{ wrapperAttributes }}>
 
     {% block headline %}
-      {% if headline %}
-        <{{ hl }}>{{ headline }}</{{ hl }}>
+      {% if headline|default %}
+        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
       {% endif %}
     {% endblock %}
 

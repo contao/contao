@@ -12,7 +12,7 @@
   <h2>{{ linkHeadline }}</h2>
 
   <div class="ce_text block">
-    {{ cspInlineStyles(teaser) }}
+    {{ teaser|csp_inline_styles }}
   </div>
 
   {% if hasText or hasTeaser %}
@@ -26,5 +26,5 @@
   JSON-LD data in case this is a news article without a reader
 #}
 {% if not hasReader %}
-    {% do addSchemaOrg(getSchemaOrgData.invoke()) %}
+    {% do add_schema_org(getSchemaOrgData.invoke()) %}
 {% endif %}

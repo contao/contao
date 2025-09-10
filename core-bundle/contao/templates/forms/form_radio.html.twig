@@ -1,11 +1,11 @@
 {% extends "@Contao/form_row.html.twig" %}
 
 {% block field %}
-  <fieldset id="ctrl_{{ id }}" class="radio_container{% if class %} {{ class }}{% endif %}"{% if help %} aria-describedby="help_ctrl_{{ id }}"{% endif %}>
+  <fieldset id="ctrl_{{ id }}" class="radio_container{% if class|default %} {{ class }}{% endif %}"{% if help|default %} aria-describedby="help_ctrl_{{ id }}"{% endif %}>
 
-    {% if label %}
+    {% if label|default %}
       <legend>
-        {% if mandatory %}
+        {% if mandatory|default %}
           <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
         {% else %}
           {{ label }}
@@ -32,7 +32,7 @@
       {% endif %}
     {% endfor %}
 
-    {% if help %}
+    {% if help|default %}
       <p class="help" id="help_ctrl_{{ id }}">{{ help }}</p>
     {% endif %}
 

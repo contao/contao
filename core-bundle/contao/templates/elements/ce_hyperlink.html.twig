@@ -4,19 +4,35 @@
 
   {% if useImage %}
     <figure class="image_container">
-      {{ embed_pre }}
-      <a href="{{ href }}"{% if linkTitle %} title="{{ linkTitle }}"{% endif %} class="hyperlink_img"{{ attribute }}{{ target }}{{ rel }}>
+      {{ embed_pre|insert_tag_raw }}
+      <a{{ attrs()
+          .addClass('hyperlink_img')
+          .set('href', href|insert_tag)
+          .setIfExists('title', linkTitle|default|insert_tag)
+          .mergeWith(attribute|default)
+          .mergeWith(target)
+          .mergeWith(rel)
+      }}>
           {% include "@Contao/picture_default" with picture %}
       </a>
-      {{ embed_post }}
-      {% if caption %}
-        <figcaption class="caption">{{ caption }}</figcaption>
+      {{ embed_post|insert_tag_raw }}
+      {% if caption|default %}
+        <figcaption class="caption">{{ caption|allow_html|insert_tag_raw }}</figcaption>
       {% endif %}
     </figure>
   {% else %}
-    {{ embed_pre }}
-    <a href="{{ href }}" class="hyperlink_txt" title="{{ linkTitle }}"{{ attribute }}{{ target }}{{ rel }}>{{ link }}</a>
-    {{ embed_post }}
+    {{ embed_pre|insert_tag_raw }}
+    <a{{ attrs()
+        .addClass('hyperlink_txt')
+        .set('href', href|insert_tag)
+        .setIfExists('title', linkTitle|default|insert_tag)
+        .mergeWith(attribute|default)
+        .mergeWith(target)
+        .mergeWith(rel)
+    }}>
+      {{ link|insert_tag }}
+    </a>
+    {{ embed_post|insert_tag_raw }}
   {% endif %}
 
 {% endblock %}

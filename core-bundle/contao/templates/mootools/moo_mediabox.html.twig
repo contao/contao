@@ -5,7 +5,7 @@
 {% endadd %}
 
 <script src="{{ asset('js/mediabox.min.js', 'contao-components/mediabox') }}"></script>
-<script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
   window.addEvent('domready', function() {
     var $ = document.id;
     $$('a[data-lightbox]').mediabox({

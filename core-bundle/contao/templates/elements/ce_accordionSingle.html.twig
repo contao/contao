@@ -6,14 +6,17 @@
 
 <section{{ wrapperAttributes }}>
 
-  <div class="{{ toggler }}"{% if headlineStyle %} style="{{ headlineStyle }}"{% endif %}>
-    {{ headline }}
+  <div{{ attrs()
+    .addClass(toggler)
+    .addStyle(headlineStyle|default)
+  }}>
+    {{ headline|allow_html|insert_tag_raw }}
   </div>
 
   <div class="{{ accordion }}">
     <div>
       {% if not addBefore %}
-        {{ text }}
+        {{ text|default|csp_inline_styles|insert_tag_raw|raw }}
       {% endif %}
 
       {% if addImage %}
@@ -21,7 +24,7 @@
       {% endif %}
 
       {% if addBefore %}
-        {{ text }}
+        {{ text|default|csp_inline_styles|insert_tag_raw|raw }}
       {% endif %}
     </div>
   </div>

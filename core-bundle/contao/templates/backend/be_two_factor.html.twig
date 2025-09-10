@@ -8,7 +8,7 @@
   <h2 class="sub_headline">{{ 'MSC.twoFactorAuthentication'|trans }}</h2>
   {{ messages }}
 
-  {% if enable %}
+  {% if enable|default %}
     <p>{{ 'MSC.twoFactorScan'|trans }}</p>
     <form class="tl_two_factor_form" method="post">
       <div class="formbody">
@@ -22,17 +22,17 @@
           <code style="word-break:break-all">{{ secret }}</code>
         </div>
         <div class="widget w50 clr">
-          <h3><label for="verify"{% if error %} class="error"{% endif %}>{{ 'MSC.twoFactorVerification'|trans }}</label></h3>
-          <input type="text" name="verify" id="verify" class="tl_text{% if error %} error{% endif %}" value="" autocapitalize="off" autocomplete="one-time-code" required>
-          <p class="{{ error ? 'tl_error' : 'tl_help' }} tl_tip">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
+          <h3><label for="verify"{% if error|default %} class="error"{% endif %}>{{ 'MSC.twoFactorVerification'|trans }}</label></h3>
+          <input type="text" name="verify" id="verify" class="tl_text{% if error|default %} error{% endif %}" value="" autocapitalize="off" autocomplete="one-time-code" required>
+          <p class="{{ error|default ? 'tl_error' : 'tl_help' }} tl_tip">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
         </div>
         <div class="submit_container cf">
           <button type="submit" class="tl_submit">{{ 'MSC.enable'|trans }}</button>
-          <a href="{{ path('contao_backend', ['do' => 'security', 'ref' => ref]) }}" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
+          <a href="{{ path('contao_backend', { do: 'security' }) }}" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
         </div>
       </div>
     </form>
-  {% elseif isEnabled %}
+  {% elseif isEnabled|default %}
     <div class="tl_message">
       <p class="tl_confirm">{{ 'MSC.twoFactorActive'|trans }}</p>
     </div>
@@ -41,7 +41,7 @@
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
         <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
         <div class="submit_container cf">
-          <a href="{{ path('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => ref]) }}" class="tl_submit">{{ 'MSC.edit'|trans }}</a>
+          <a href="{{ path('contao_backend', { do: 'security', act: 'enable' }) }}" class="tl_submit">{{ 'MSC.edit'|trans }}</a>
           <button type="submit" class="tl_submit">{{ 'MSC.disable'|trans }}</button>
         </div>
       </div>
@@ -49,7 +49,7 @@
     <div class="tl_backup_codes">
       <h2 class="sub_headline">{{ 'MSC.twoFactorBackupCodesLabel'|trans }}</h2>
       <p>{{ 'MSC.twoFactorBackupCodesExplain'|trans }}</p>
-      {% if showBackupCodes %}
+      {% if showBackupCodes|default %}
         <div class="tl_message">
           <p class="tl_info">{{ 'MSC.twoFactorBackupCodesInfo'|trans }}</p>
         </div>
@@ -75,7 +75,7 @@
     </div>
     <div class="tl_trusted_devices">
       <h2 class="sub_headline">{{ 'MSC.trustedDevices'|trans }}</h2>
-      {% if not trustedDevices %}
+      {% if not trustedDevices|default %}
         <p>{{ 'MSC.noTrustedDevices'|trans }}</p>
       {% else %}
         <div class="tl_listing_container">
@@ -114,7 +114,7 @@
   {% else %}
     <p>{{ 'MSC.twoFactorExplain'|trans }}</p>
     <div class="tl_submit_container">
-      <a href="{{ path('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => ref]) }}" class="tl_submit">{{ 'MSC.enable'|trans }}</a>
+      <a href="{{ path('contao_backend', { do: 'security', act: 'enable' }) }}" class="tl_submit">{{ 'MSC.enable'|trans }}</a>
     </div>
   {% endif %}
 </div>
@@ -124,7 +124,7 @@
   <p>{{ 'MSC.passkeysDescription'|trans }}</p>
   <div class="tl_listing_container">
     <turbo-frame id="passkeys" data-turbo-action="advance">
-      {% if credentials %}
+      {% if credentials|default %}
         <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">
           <thead>
             <tr>
@@ -137,7 +137,7 @@
             {% for credential in credentials %}
               <tr class="hover-row">
                 <td class="name">
-                  {% if editPassKeyId === credential.id %}
+                  {% if editPassKeyId == credential.id %}
                     <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ credential.id }}">
                       <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
                       <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
@@ -153,12 +153,12 @@
                   <form method="post">
                     <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
                     <input type="hidden" name="REQUEST_TOKEN" value="{{ request_id }}">
-                    {% if editPassKeyId === credential.id %}
+                    {% if editPassKeyId == credential.id %}
                         <button type="submit" name="save_passkey" form="form-edit-passkey-{{ credential.id }}" value="{{ credential.id }}">{{ backend_icon('save.svg', 'MSC.save'|trans) }}</button>
                     {% else %}
                         <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ backend_icon('edit.svg', 'MSC.edit'|trans) }}</button>
                     {% endif %}
-                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ trans('MSC.deleteConfirm', [credential.name ?: credential.id]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
+                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name ?: credential.id]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
                   </form>
                 </td>
               </tr>

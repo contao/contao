@@ -9,5 +9,5 @@
   JSON-LD data in case this is a news article without a reader
 #}
 {% if not hasReader %}
-    {% do addSchemaOrg(getSchemaOrgData.invoke()) %}
+    {% do add_schema_org(getSchemaOrgData.invoke()) %}
 {% endif %}

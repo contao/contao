@@ -2,12 +2,10 @@
     .addClass([class, 'block'])
     .addStyle(style|default)
     .mergeWith(wrapperAttributes|default)
- %}
-
-?>
+%}
 
 <!-- indexer::stop -->
 <div{{ wrapperAttributes }}>
-  <a href="{{ request }}#top" title="{{ title }}">{{ label }}</a>
+  <a href="{{ request }}#top" title="{{ title|insert_tag }}">{{ label|insert_tag }}</a>
 </div>
 <!-- indexer::continue -->

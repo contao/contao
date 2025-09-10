@@ -22,7 +22,7 @@
     {{ details }}
   {% else %}
     <div class="ce_text block">
-      {% do cspInlineStyles(teaser) %}
+      {{ teaser|csp_inline_styles }}
     </div>
   {% endif %}
 
@@ -33,5 +33,5 @@
   JSON-LD data in case this is an event without a reader
 #}
 {% if not hasReader %}
-    {% do addSchemaOrg(getSchemaOrgData.invoke()) %}
+    {% do add_schema_org(getSchemaOrgData.invoke()) %}
 {% endif %}

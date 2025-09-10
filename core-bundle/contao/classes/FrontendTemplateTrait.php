@@ -89,7 +89,6 @@ trait FrontendTemplateTrait
 				}
 
 				$section['content'] = $this->sections[$id];
-				$section['id_standardized'] = StringUtil::standardize($section['id'], true);
 				$matches[$id] = $section;
 			}
 		}

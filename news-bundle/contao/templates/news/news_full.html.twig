@@ -16,7 +16,7 @@
   {% else %}
     <div class="ce_text block">
       {% if not addBefore %}
-        {{ cspInlineStyles(teaser) }}
+        {{ teaser|csp_inline_styles }}
       {% endif %}
 
       {% if addImage %}
@@ -24,7 +24,7 @@
       {% endif %}
 
       {% if addBefore %}
-        {{ cspInlineStyles(teaser) }}
+        {{ teaser|csp_inline_styles }}
       {% endif %}
     </div>
   {% endif %}
@@ -47,8 +47,8 @@
     {% set schemaOrg = schemaOrg|merge({'text': rawHtmlToPlainText.invoke(text)}) %}
 {% endif %}
 
-{% do addSchemaOrg(schemaOrg) %}
+{% do add_schema_org(schemaOrg) %}
 
 {% if figure %}
-    {% do addSchemaOrg({'@type' => 'WebPage', 'primaryImageOfPage' => figure.getSchemaOrgData()}) %}
+    {% do add_schema_org({'@type' => 'WebPage', 'primaryImageOfPage' => figure.getSchemaOrgData()}) %}
 {% endif %}

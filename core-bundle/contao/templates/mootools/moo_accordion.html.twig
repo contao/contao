@@ -1,5 +1,5 @@
 
-<script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
   window.addEvent('domready', function() {
     new Fx.Accordion($$('.toggler'), $$('.accordion'), {
       opacity: false,

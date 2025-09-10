@@ -1,9 +1,9 @@
 {% extends "@Contao/form_row.html.twig" %}
 
 {% block field %}
-  {% if src %}
-    <input type="image" src="{{ src }}" id="ctrl_{{ id }}" class="submit{% if class %} {{ class }}{% endif %}" title="{{ slabel }}" alt="{{ slabel }}"{{ getAttributes.invoke() }}>
+  {% if src|default %}
+    <input type="image" src="{{ src }}" id="ctrl_{{ id }}" class="submit{% if class|default %} {{ class }}{% endif %}" title="{{ slabel }}" alt="{{ slabel }}"{{ getAttributes.invoke() }}>
   {% else %}
-    <button type="submit" id="ctrl_{{ id }}" class="submit{% if class %} {{ class }}{% endif %}"{{ getAttributes.invoke() }}>{{ slabel }}</button>
+    <button type="submit" id="ctrl_{{ id }}" class="submit{% if class|default %} {{ class }}{% endif %}"{{ getAttributes.invoke() }}>{{ slabel }}</button>
   {% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
-<form{% if action %} action="{{ action }}"{% endif %} method="{{ method }}" enctype="{{ enctype }}"{{ attributes }}{{ novalidate }}{% if ajax %} data-ajax-form="{{ id }}"{% endif %}>
+<form{% if action|default %} action="{{ action }}"{% endif %} method="{{ method }}" enctype="{{ enctype }}"{{ attributes }}{{ novalidate }}{% if ajax|default %} data-ajax-form="{{ id }}"{% endif %}>
   <div class="formbody">
-    {% if errors %}
+    {% if errors|default %}
       {% for error in errors %}
         <p class="error">{{ error }}</p>
       {% endfor %}
@@ -8,7 +8,7 @@
     {% if 'get' != method %}
       <input type="hidden" name="FORM_SUBMIT" value="{{ formSubmit }}">
       <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
-      {% if maxFileSize %}
+      {% if maxFileSize|default %}
         <input type="hidden" name="MAX_FILE_SIZE" value="{{ maxFileSize }}">
       {% endif %}
     {% endif %}

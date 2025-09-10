@@ -7,12 +7,12 @@
 {# DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING! #}
 {% if ('XXXXX' != GoogleAnalyticsId and not contao.has_backend_user()) %}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ GoogleAnalyticsId }}"></script>
-    <script{{ attrs().setIfExists('nonce', nonce('script-src')) }}>
+    <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', '{{ GoogleAnalyticsId }}', {'anonymize_ip': true});
+      gtag('config', '{{ GoogleAnalyticsId|e('js') }}', {'anonymize_ip': true});
     </script>
 
-    {% do addCspSource('script-src', 'www.googletagmanager.com') %}
+    {% do csp_source('script-src', 'www.googletagmanager.com') %}
 {% endif %}

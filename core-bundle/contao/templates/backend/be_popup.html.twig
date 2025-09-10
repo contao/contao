@@ -11,13 +11,13 @@
   <meta name="referrer" content="origin">
 
   <link rel="stylesheet" href="{{ asset('popup.css', 'system/themes/' ~ theme) }}">
-  {{ stylesheets }}
+  {{ stylesheets|default|raw }}
 
-  <script>{{ getLocaleString.invoke() }}</script>
+  <script>{{ getLocaleString.invoke()|raw }}</script>
   <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
   <script src="{{ asset('backend.js', 'contao_core') }}"></script>
-  <script>{{ getDateString.invoke() }}</script>
-  {{ javascripts }}
+  <script>{{ getDateString.invoke()|raw }}</script>
+  {{ javascripts|default|raw }}
 
 </head>
 <body>
@@ -41,19 +41,19 @@
           <td><span class="tl_label">{{ labels.filePath }}:</span></td>
           <td>{{ path }}</td>
         </tr>
-        {% if uuid %}
+        {% if uuid|default %}
           <tr>
             <td><span class="tl_label">{{ labels.fileUuid }}:</span></td>
             <td>{{ uuid }}</td>
           </tr>
         {% endif %}
-        {% if filesize %}
+        {% if filesize|default %}
           <tr>
             <td><span class="tl_label">{{ labels.fileSize }}:</span></td>
             <td>{{ filesize }}</td>
           </tr>
         {% endif %}
-        {% if src %}
+        {% if src|default %}
           <tr>
             <td><span class="tl_label">{{ labels.fileImageSize }}:</span></td>
             {% if width|default and height|default %}
@@ -63,14 +63,14 @@
             {% endif %}
           </tr>
         {% endif %}
-        {% if meta %}
+        {% if meta|default %}
           <tr class="meta">
             <td><span class="tl_label">{{ labels.fileMeta }}:</span></td>
             <td>
               {% for lang, data in meta %}
                 <p>{{ languages[lang] }}</p>
                 {% for field, value in data %}
-                  {% if value %}
+                  {% if value|default %}
                     {{ value }} ({{ labels['aw_' ~ field] }})<br>
                   {% endif %}
                 {% endfor %}
@@ -79,23 +79,30 @@
           </tr>
         {% endif %}
       </table>
-      {% if href %}
+      {% if href|default %}
         <div id="download">
           <a href="{{ href }}" class="tl_submit" download="{{ path|split('/')|last }}">{{ backend_icon(icon, '', attrs().addClass('mime_icon')) }} {{ download }}</a>
         </div>
       {% endif %}
-      {% if isImage %}
+      {% if isImage|default %}
         <div id="preview">
-          <div class="checkerbox"{% if width|default and height|default %} style="width:{{ width|e('css') }}px;height:{{ height|e('css') }}px"{% endif %}>
+
+          <div{{ attrs()
+            .addClass('checkerbox')
+            .addStyle(
+              { width: "#{width|default}px", height: "#{height|default}px" },
+              width|default and width|default
+            )
+          }}>
             <img src="{{ dataUri }}" alt="" style="image-orientation:from-image"{% if width|default and height|default %} width="{{ width }}" height="{{ height }}"{% endif %}>
           </div>
         </div>
       {% endif %}
-      {% if metadata %}
+      {% if metadata|default %}
         {% for format, table in metadata %}
           <table class="tl_show with-padding with-zebra">
             <caption>
-                {{- 'MSC.imageMetadata'|trans(['%s': ('iptc' === format ? 'IPTC IIM' : format)|upper]) -}}
+                {{- 'MSC.imageMetadata'|trans({ '%s': ('iptc' == format ? 'IPTC IIM' : format)|upper }) -}}
             </caption>
             {% for label, values in table %}
               {% if values|filter(v => v|length > 0) %}
@@ -108,17 +115,16 @@
           </table>
         {% endfor %}
       {% endif %}
-      {% if hasPreview %}
+      {% if hasPreview|default %}
         <div id="preview">
           {% for picture in previewPictures %}
-            {% set preview_attributes = attrs()
-                .addClass('checkerbox')
-                .addStyle(
-                    ['width: ' ~ picture.img.width|default ~ 'px', 'height: ' ~ picture.img.height|default ~ 'px'],
-                    picture.img.width|default and picture.img.height|default
-                )
-            %}
-            <div{{ preview_attributes }}>
+            <div{{ attrs()
+              .addClass('checkerbox')
+              .addStyle(
+                { width: "#{picture.img.width|default}px", height: "#{picture.img.height|default}px" },
+                picture.img.width|default and picture.img.height|default
+              )
+            }}>
               {% include "@Contao/picture_default.html.twig" with picture %}
             </div>
           {% endfor %}

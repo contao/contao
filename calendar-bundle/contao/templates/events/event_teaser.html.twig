@@ -21,7 +21,7 @@
 
   <div class="ce_text block">
     {% if not addBefore %}
-      {% do cspInlineStyles(teaser) %}
+      {{ teaser|csp_inline_styles }}
     {% endif %}
 
     {% if addImage %}
@@ -29,7 +29,7 @@
     {% endif %}
 
     {% if addBefore %}
-      {% do cspInlineStyles(teaser) %}
+      {{ teaser|csp_inline_styles }}
     {% endif %}
   </div>
 
@@ -44,5 +44,5 @@
   JSON-LD data in case this is an event without a reader
 #}
 {% if not hasReader %}
-    {% do addSchemaOrg(getSchemaOrgData.invoke()) %}
+    {% do add_schema_org(getSchemaOrgData.invoke()) %}
 {% endif %}

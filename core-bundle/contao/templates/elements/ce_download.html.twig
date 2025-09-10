@@ -9,7 +9,7 @@
   {% endif %}
 
   <p class="download-element ext-{{ extension }}">
-    <a href="{{ href }}" title="{{ title }}" type="{{ mime }}">{{ link }} <span class="size">({{ filesize }})</span></a>
+    <a href="{{ href }}" title="{{ title|insert_tag }}" type="{{ mime }}">{{ link|insert_tag }} <span class="size">({{ filesize }})</span></a>
   </p>
 
 {% endblock %}

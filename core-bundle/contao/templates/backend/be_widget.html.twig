@@ -1,6 +1,6 @@
 
   {% set label = generateLabel.invoke() %}
-  {% if label %}
-    <h3>{{ label.xlabel }}</h3>
+  {% if label|default %}
+    <h3>{{ label|raw }}{{ xlabel|default|raw }}</h3>
   {% endif %}
-  {{ generateWithError.invoke(true) }}
+  {{ generateWithError.invoke(true)|raw }}

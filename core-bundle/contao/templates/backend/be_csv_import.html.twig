@@ -25,9 +25,9 @@
 
       <div class="widget clr">
         <h3>{{ sourceLabel }}</h3>
-        {{ uploader }}
-        {% if isset(sourceHelp) %}
-          <p class="tl_help tl_tip">{{ sourceHelp }}</p>
+        {{ uploader|raw }}
+        {% if isset(sourceLabelHelp) %}
+          <p class="tl_help tl_tip">{{ sourceLabelHelp }}</p>
         {% endif %}
       </div>
     </fieldset>

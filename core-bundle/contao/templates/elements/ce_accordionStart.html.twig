@@ -6,8 +6,11 @@
 
 <section{{ wrapperAttributes }}>
 
-  <div class="{{ toggler }}"{% if headlineStyle %} style="{{ headlineStyle }}"{% endif %}>
-    {{ headline }}
+  <div{{ attrs()
+    .addClass(toggler)
+    .addStyle(headlineStyle|default)
+  }}>
+    {{ headline|allow_html|insert_tag_raw }}
   </div>
 
   <div class="{{ accordion }}">

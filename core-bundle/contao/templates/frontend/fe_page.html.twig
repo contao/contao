@@ -23,20 +23,20 @@
       <meta name="robots" content="{{ robots }}">
       <meta name="description" content="{{ description|u.truncate(320, '…') }}">
       <meta name="generator" content="Contao Open Source CMS">
-      {% for metaTag in metaTags|default([]) %}
-        <meta{{ metaTag }}>
+      {% for metaTag in metaTags|default %}
+        <meta{{ attrs(metaTag) }}>
       {% endfor %}
     {% endblock %}
 
-    {% if canonical %}
+    {% if canonical|default %}
       <link rel="canonical" href="{{ canonical }}">
     {% endif %}
 
-    {{ viewport }}
-    {{ framework }}
-    {{ stylesheets }}
-    {{ mooScripts }}
-    {{ head }}
+    {{ viewport|raw }}
+    {{ framework|raw }}
+    {{ stylesheets|raw }}
+    {{ mooScripts|raw }}
+    {{ head|raw }}
   {% endblock %}
 
 </head>
@@ -51,7 +51,7 @@
         {% if header %}
           <header id="header">
             <div class="inside">
-              {{ header }}
+              {{ header|raw }}
             </div>
           </header>
         {% endif %}
@@ -65,7 +65,7 @@
           {% block main %}
             <main id="main">
               <div class="inside">
-                {{ main }}
+                {{ main|raw }}
               </div>
               {{ contao_sections('main') }}
             </main>
@@ -75,7 +75,7 @@
             {% if left %}
               <aside id="left">
                 <div class="inside">
-                  {{ left }}
+                  {{ left|raw }}
                 </div>
               </aside>
             {% endif %}
@@ -85,7 +85,7 @@
             {% if right %}
               <aside id="right">
                 <div class="inside">
-                  {{ right }}
+                  {{ right|raw }}
                 </div>
               </aside>
             {% endif %}
@@ -100,7 +100,7 @@
         {% if footer %}
           <footer id="footer">
             <div class="inside">
-              {{ footer }}
+              {{ footer|raw }}
             </div>
           </footer>
         {% endif %}
@@ -111,7 +111,7 @@
     {{ contao_sections('bottom') }}
   {% endblock %}
 
-  {{ mootools }}
-  {{ jsonLdScripts }}
+  {{ mootools|raw }}
+  {{ jsonLdScripts|raw }}
 </body>
 </html>

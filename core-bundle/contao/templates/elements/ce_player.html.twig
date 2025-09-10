@@ -4,22 +4,29 @@
 
   <figure class="{{ containerClass }}">
     {% if isVideo %}
-      <video{{ size }}{% if poster %} poster="{{ poster }}"{% endif %}{% if preload %} preload="{{ preload }}"{% endif %} {{ attributes|join(' ') }}>
+      <video{{ attrs(size)
+        .setIfExists('poster', poster)
+        .setIfExists('preload', preload)
+        .mergeWith(attributes|join(' '))
+      }}>
         {% for file in files %}
-          {% do addCspSource('media-src', file.path) %}
+          {% do csp_source('media-src', file.path) %}
           <source type="{{ file.mime }}" src="{{ file.path ~ range }}">
         {% endfor %}
       </video>
     {% else %}
-      <audio{% if preload %} preload="{{ preload }}"{% endif %} {{ attributes|join(' ') }}>
+      <audio{{ attrs()
+          .setIfExists('preload', preload)
+          .mergeWith(attributes|join(' '))
+      }}>
         {% for file in files %}
-          {% do addCspSource('media-src', file.path) %}
+          {% do csp_source('media-src', file.path) %}
           <source type="{{ file.mime }}" src="{{ file.path }}">
         {% endfor %}
       </audio>
     {% endif %}
     {% if caption %}
-      <figcaption class="caption">{{ caption }}</figcaption>
+      <figcaption class="caption">{{ caption|insert_tag_raw }}</figcaption>
     {% endif %}
   </figure>
 

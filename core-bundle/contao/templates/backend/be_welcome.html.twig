@@ -4,13 +4,13 @@
 
   <div id="tl_messages">
     <h2>{{ systemMessages }}</h2>
-    <p>{{ loginMsg }}</p>
-    {{ messages }}
+    <p>{{ loginMsg|raw }}</p>
+    {{ messages|raw }}
   </div>
 
   <div id="tl_shortcuts">
     <h2>{{ shortcuts }}</h2>
-    <p>{{ shortcutsLink }}</p>
+    <p>{{ shortcutsLink|raw }}</p>
   </div>
 
   <div id="tl_versions">
@@ -36,13 +36,17 @@
             <td>{{ version.shortTable }}</td>
             <td>{{ version.pid }}</td>
             <td>{{ version.description ?: '-' }}</td>
-            <td>{{ version.active ? '<strong>' ~ version.version ~ '</strong>' : version.version }}</td>
+            <td>
+                {% if version.active %}<strong>{% endif %}
+                    {{ version.version }}
+                {% if version.active %}</strong>{% endif %}
+            </td>
             <td class="tl_right_nowrap">{{ version.operations }}</td>
           </tr>
         {% endfor %}
       </tbody>
       </table>
-      {{ pagination }}
+      {{ pagination|raw }}
     {% else %}
       <p>{{ 'MSC.noVersions'|trans }}</p>
     {% endif %}

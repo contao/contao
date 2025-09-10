@@ -1,14 +1,14 @@
 
-{% if title %}
+{% if title|default %}
   <h1>{{ title }}</h1>
 {% endif %}
 
-{% if wildcard %}
+{% if wildcard|default %}
   <div class="tl_gray">
     <span class="upper">{{ wildcard }}</span>
-    {% if link %}
+    {% if link|default %}
       <br>
-      {{ link }} (<a href="{{ href ~ '&amp;rt=' ~ request_token }}" class="tl_gray">ID: {{ id }}</a>)
+      {{ link }} (<a href="{{ href ~ '&rt=' ~ request_token }}" class="tl_gray">ID: {{ id }}</a>)
     {% endif %}
   </div>
 {% endif %}

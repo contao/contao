@@ -12,7 +12,7 @@
 
           <div class="ce_text block">
             {% if not faq.addBefore %}
-              {{ cspInlineStyles(faq.answer) }}
+              {{ faq.answer|csp_inline_styles }}
             {% endif %}
 
             {% if faq.addImage %}
@@ -20,7 +20,7 @@
             {% endif %}
 
             {% if faq.addBefore %}
-              {{ cspInlineStyles(faq.answer) }}
+              {{ faq.answer|csp_inline_styles }}
             {% endif %}
           </div>
 
@@ -44,4 +44,4 @@
 
 {% endblock %}
 
-{% do addSchemaOrg(getSchemaOrgData.invoke()) %}
+{% do add_schema_org(getSchemaOrgData.invoke()) %}
