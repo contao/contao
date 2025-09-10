@@ -5,6 +5,55 @@ export default class extends Controller {
 
     static targets = ['source', 'input'];
 
+    static afterLoad(identifier, application) {
+        const addAttribute = (el, attribute, value) => {
+            if (!el) {
+                return false;
+            }
+
+            const values = (el.getAttribute(attribute) || '').split(' ');
+
+            if (values.includes(value)) {
+                return false;
+            }
+
+            values.push(value);
+
+            el.setAttribute(attribute, values.join(' ').trim());
+
+            return true;
+        };
+
+        const setupController = () => {
+            if (!addAttribute(document.getElementById('tl_listing'), 'data-controller', identifier)) {
+                return;
+            }
+
+            addAttribute(document.getElementById('tl_select_trigger'), 'data-action', `${identifier}#toggleAll`);
+
+            for (const el of document.querySelectorAll('.tl_listing .tl_tree_checkbox')) {
+                addAttribute(el, `data-${identifier}-target`, 'input');
+                addAttribute(el, 'data-action', `click->${identifier}#toggleInput`);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', setupController);
+        document.addEventListener('ajax_change', setupController);
+        document.addEventListener('turbo:render', setupController);
+        document.addEventListener('turbo:frame-render', setupController);
+        setupController();
+
+        Backend.enableToggleSelect = () => {
+            if (window.console) {
+                console.warn(
+                    'Using Backend.enableToggleSelect() is deprecated and will be removed in Contao 6. Apply the Stimulus actions instead.',
+                );
+            }
+
+            setupController();
+        };
+    }
+
     initialize() {
         this.#start = null;
     }
@@ -12,7 +61,7 @@ export default class extends Controller {
     toggleInput(event) {
         const input = event.target;
 
-        if (event.shiftKey && null !== this.#start) {
+        if (event.shiftKey && this.#start) {
             this.#shiftToggle(input);
         }
 
