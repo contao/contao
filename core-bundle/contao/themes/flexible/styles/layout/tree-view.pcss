@@ -1,9 +1,9 @@
 /* Tree view */
 .tl_folder_top {
-    min-height: 16px;
+    min-height: 18px;
     padding: 6px;
     border-bottom: 1px solid var(--tree-header-border);
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
     background: var(--tree-header);
 }
 
@@ -16,10 +16,6 @@
     padding: calc(var(--row-padding) - 1px) 6px;
     border-bottom: 1px solid var(--border);
     background: var(--table-header);
-}
-
-.tl_tree_xtnd .tl_folder {
-    padding: 5px 6px;
 }
 
 .tl_folder.tl_folder_dropping, .tl_folder_top.tl_folder_dropping {
