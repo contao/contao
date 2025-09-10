@@ -29,8 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-// todo: should this be in a new 'user' or 'security' category?
-#[AsContentElement(category: 'miscellaneous')]
+#[AsContentElement(category: 'user')]
 class TwoFactorController extends AbstractContentElementController
 {
     public function __construct(
@@ -89,8 +88,7 @@ class TwoFactorController extends AbstractContentElementController
         $formId = $request->request->get('FORM_SUBMIT');
 
         // Disable 2FA if it was requested by a user
-        if ('tl_two_factor_disable' === $formId && $user->useTwoFactor) {
-            // todo: require !$pageModel->enforceTwoFactor?
+        if ('tl_two_factor_disable' === $formId && $user->useTwoFactor && !$pageModel->enforceTwoFactor) {
             $this->disable2FA($user);
 
             return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
@@ -125,7 +123,6 @@ class TwoFactorController extends AbstractContentElementController
     private function getTargetPage(ContentModel $model, PageModel $pageModel): PageModel
     {
         $adapter = $this->framework->getAdapter(PageModel::class);
-        // todo: there is no jumpTo on tl_content, yet
         $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
 
         return $redirectPage instanceof PageModel ? $redirectPage : $pageModel;
