@@ -16,6 +16,9 @@ use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Spatie\SchemaOrg\Graph;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Provides template methods.
@@ -35,6 +38,19 @@ trait TemplateTrait
 	public function route($strName, $arrParams=array())
 	{
 		return StringUtil::ampersand(System::getContainer()->get('router')->generate($strName, $arrParams));
+	}
+
+	protected function render(string|ControllerReference $uri, array $options = []): string
+	{
+		$strategy = $options['strategy'] ?? 'forward';
+		unset($options['strategy']);
+
+		if (!isset($options['ignore_errors']))
+		{
+			$options['ignore_errors'] = false;
+		}
+
+		return System::getContainer()->get('fragment.handler')->render($uri, $strategy, $options);
 	}
 
 	/**

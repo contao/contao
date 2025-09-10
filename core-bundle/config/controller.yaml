@@ -77,6 +77,12 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\Backend\FavoriteController:
+        arguments:
+            - '@database_connection'
+            - '@security.helper'
+            - '@contao.csrf.token_manager'
+
     Contao\CoreBundle\Controller\CaptchaController:
         arguments:
             - '@contao.framework'

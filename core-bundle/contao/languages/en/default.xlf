@@ -2108,6 +2108,12 @@
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
       </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you want to remove the current URL from favorites?</source>
+      </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
       </trans-unit>
