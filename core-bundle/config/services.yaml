@@ -1428,6 +1428,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\SanitizerRuntime
         arguments:
             - '@twig'
+            - '@contao.framework'
 
     contao.twig.schema_org_runtime:
         class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime
