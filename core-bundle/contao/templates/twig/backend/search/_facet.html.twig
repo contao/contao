@@ -16,6 +16,12 @@
                 </li>
             {% endfor %}
         </ul>
+        {% if resetAction %}
+            <button{{ attrs()
+                .addClass('reset')
+                .set('formaction', resetAction)
+            }}>{{ 'MSC.reset'|trans }}</button>
+        {% endif %}
     </form>
 </nav>
 {% endif %}

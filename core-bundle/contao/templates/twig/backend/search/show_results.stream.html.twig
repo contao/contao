@@ -13,6 +13,7 @@
                 facets: typeFacets,
                 filterName: 'type',
                 activeFilter: query.type(),
+                resetAction: path('_contao_backend_search.stream', query.withoutType.toUrlParams)
             } %}
         </template>
     {% endapply %}
@@ -29,6 +30,7 @@
                     facets: tagFacets,
                     filterName: 'tag',
                     activeFilter: query.tag(),
+                    resetAction: path('_contao_backend_search.stream', query.withoutTag.toUrlParams)
                 } %}
             </template>
         </turbo-stream>

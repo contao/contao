@@ -27,6 +27,16 @@ class QueryTest extends TestCase
         $this->assertSame('tag', $query->getTag());
     }
 
+    public function testWithoutTypeAndTag(): void
+    {
+        $query = (new Query(20, 'keywords', 'type', 'tag'))
+            ->withoutType()
+            ->withoutTag()
+        ;
+        $this->assertNull($query->getType());
+        $this->assertNull($query->getTag());
+    }
+
     public function testEquals(): void
     {
         $this->assertTrue((new Query(20, 'keywords', 'type', 'tag'))->equals(new Query(20, 'keywords', 'type', 'tag')));
