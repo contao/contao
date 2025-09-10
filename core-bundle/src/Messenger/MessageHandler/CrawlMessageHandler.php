@@ -156,9 +156,15 @@ class CrawlMessageHandler
      */
     private function finishJob(Job $job, array $activeSubscribers): void
     {
-        $this->jobs->addAttachment($job, 'debug_log.csv', fopen($this->getDebugLogPath($job), 'r'));
+        if (file_exists($this->getDebugLogPath($job))) {
+            $this->jobs->addAttachment($job, 'debug_log.csv', fopen($this->getDebugLogPath($job), 'r'));
+        }
 
         foreach ($this->factory->getSubscribers($activeSubscribers) as $subscriber) {
+            if (!file_exists($this->getSubscriberLogFilePath($job, $subscriber->getName()))) {
+                continue;
+            }
+
             $this->jobs->addAttachment($job, $subscriber->getName().'_log.csv', fopen(
                 $this->getSubscriberLogFilePath($job, $subscriber->getName()), 'r'),
             );
