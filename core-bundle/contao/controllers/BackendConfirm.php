@@ -153,7 +153,7 @@ class BackendConfirm extends Backend
 			$arrInfo['act'] = \sprintf($arrInfo['act'], $vars['id']);
 		}
 
-		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);
+		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['mode']);
 
 		// Template variables
 		$objTemplate->confirm = true;

@@ -123,6 +123,7 @@ $GLOBALS['BE_MOD'] = array
 		'article' => array
 		(
 			'tables'      => array('tl_article', 'tl_content'),
+			'ptables'     => array('tl_page'),
 			'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
 			'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
 		),
