@@ -117,7 +117,7 @@ class RowWizard extends Widget
 		{
 			foreach ($this->arrFields as $key => $options)
 			{
-				/** @var $widget Widget */
+				/** @var Widget $widget */
 				$widget = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
 
 				if (null === $widget)
