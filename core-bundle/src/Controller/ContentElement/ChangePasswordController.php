@@ -47,11 +47,9 @@ class ChangePasswordController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $formId = 'tl_change_password_'.$model->id;
         $user = $this->getUser();
 
         $template->set('has_member', $user instanceof FrontendUser);
-        $template->set('form_id', $formId);
 
         if (!$user instanceof FrontendUser) {
             return $template->getResponse();
@@ -68,7 +66,7 @@ class ChangePasswordController extends AbstractContentElementController
 
         $this->executeOnloadCallbacks();
 
-        $form = $this->createForm(ChangePasswordType::class, []);
+        $form = $this->createForm(ChangePasswordType::class, [], ['attr' => ['id' => 'tl_change_password_'.$model->id]]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
