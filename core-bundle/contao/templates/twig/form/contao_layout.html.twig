@@ -1,0 +1,46 @@
+{% trans_default_domain "contao_default" %}
+{% use "form_div_layout.html.twig" %}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        <p class="error">
+            {%- for error in errors -%}
+                {%- if translation_domain is same as(false) -%}
+                    {{ error.message }}
+                {% else %}
+                    {{ error.message|trans }}
+                {% endif %}
+                {% if not loop.last %}
+                    <br />
+                {% endif %}
+            {%- endfor -%}
+        </p>
+    {%- endif -%}
+{%- endblock form_errors -%}
+
+{%- block form_label_content -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {%- if translation_domain is same as(false) -%}
+        {%- if label_html is same as(false) -%}
+            {{- label -}}
+        {%- else -%}
+            {{- label|raw -}}
+        {%- endif -%}
+    {%- else -%}
+        {%- if label_html is same as(false) -%}
+            {{- label|trans(label_translation_parameters, translation_domain) -}}
+        {%- else -%}
+            {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
+        {%- endif -%}
+    {%- endif -%}
+    {% if required %} *{% endif %}
+{%- endblock form_label_content -%}
