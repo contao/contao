@@ -172,7 +172,7 @@ class TableDataContainerProvider implements ProviderInterface
     /**
      * @return array<int, string>
      */
-    private function getTables(ReindexConfig|null $config = null): array
+    private function getTables(ReindexConfig $config): array
     {
         $this->contaoFramework->initialize();
 
@@ -184,7 +184,7 @@ class TableDataContainerProvider implements ProviderInterface
         )));
 
         // No document ID limits, consider all tables
-        if (!$config || $config->getLimitedDocumentIds()->isEmpty()) {
+        if ($config->getLimitedDocumentIds()->isEmpty()) {
             return $tables;
         }
 
