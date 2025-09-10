@@ -44,6 +44,8 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 {
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         unset($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']);
     }
 
@@ -330,6 +332,10 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         return $tokenStorage;
     }
 
+    /**
+     * @template T
+     * @param FormInterface<T>|null $form
+     */
     private function mockFormFactory(FormInterface|null $form = null): FormFactoryInterface
     {
         $formFactory = $this->createMock(FormFactoryInterface::class);
