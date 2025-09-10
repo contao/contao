@@ -1,7 +1,10 @@
-.tl_search_hit:not(:last-of-type) {
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
+.tl_search_hit {
+    padding: 0.75rem 0;
     border-bottom: 1px solid var(--border);
+
+    &:last-of-type {
+        border-bottom: 0;
+    }
 }
 
 .hit_header {
@@ -31,8 +34,24 @@
 
 .hit_title {
     flex: 1;
-    font-size: 1rem;
+    font-size: 14px;
     font-weight: 500;
+    line-height: 1.4;
+
+    .type {
+        color: var(--text);
+        background: var(--nav-hover-bg);
+        padding: 0px 4px;
+        border-radius: 2px;
+        font-weight: normal;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+}
+
+.hit_edit {
+    width: 24px;
+    text-align: right;
 }
 
 .hit_context-container {
@@ -40,19 +59,17 @@
 
     .context {
         font-size: 14px;
-        color: var(--gray);
+        color: var(--text);
         margin: 0;
         line-height: normal;
+        opacity: .9;
 
         /* Prevent overflow for long serialized results (e. g. user-group settings) */
         text-overflow: ellipsis;
         overflow: hidden;
-    }
 
-    .type {
-        background: green;
-        border-radius: 4px;
-        padding: 5px;
-        display: inline-block;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
     }
 }

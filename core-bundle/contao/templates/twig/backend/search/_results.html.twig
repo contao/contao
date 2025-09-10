@@ -22,18 +22,22 @@
                     <div class="hit_actions">
                         {# Title #}
                         {% block hit_title %}
-                            {% set hit_title_attributes = attrs()
-                                .set('href', hit.viewUrl)
-                                .set('title', 'MSC.searchHitView'|trans([hit.title]))
-                                .addClass('hit_title')
-                                .mergeWith(hit_title_attributes|default)
-                            %}
-                            <a{{ hit_title_attributes }}>
-                                {% for item in hit.breadcrumbs %}
-                                    {{ item.label }} ›
-                                {% endfor %}
-                                {{ hit.title }}
-                            </a>
+                            {% apply spaceless %}
+                                {% set hit_title_attributes = attrs()
+                                    .set('href', hit.viewUrl)
+                                    .set('title', 'MSC.searchHitView'|trans([hit.title]))
+                                    .addClass('hit_title')
+                                    .mergeWith(hit_title_attributes|default)
+                                %}
+                                 <a{{ hit_title_attributes }}>
+                                     {% for item in hit.breadcrumbs %}
+                                        {{ item.label }} ›
+                                     {% endfor %}
+                                     {{ hit.title }}
+                                     <sup class="type">{{ hit.visibleType }}</sup>
+                                </a>
+                            {% endapply %}
+
                         {% endblock %}
 
                         {# Operations #}
@@ -51,7 +55,6 @@
                 {% block hit_context %}
                     <div class="hit_context-container">
                         <p class="context">{{ hit.context }}</p>
-                        <div class="type">{{ hit.visibleType }}</div>
                     </div>
                 {% endblock %}
             {% endif %}

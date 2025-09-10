@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 // Core bundle assets
@@ -24,6 +25,12 @@ Encore
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
     .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
     .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        },
         options.static = [
             {
                 directory: 'core-bundle/contao/themes/flexible/icons',
