@@ -151,6 +151,7 @@
         "symfony/twig-bridge": "^7.3",
         "symfony/twig-bundle": "^7.3",
         "symfony/uid": "^7.3",
+        "symfony/validator": "^7.3",
         "symfony/var-dumper": "^7.3",
         "symfony/yaml": "^7.3",
         "terminal42/escargot": "^1.6",
