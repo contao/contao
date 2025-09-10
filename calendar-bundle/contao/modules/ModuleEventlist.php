@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "event list".
@@ -468,5 +469,10 @@ class ModuleEventlist extends Events
 			Input::setGet('month', null);
 			Input::setGet('day', null);
 		}
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }
