@@ -125,7 +125,9 @@ services:
             - '@event_dispatcher'
             - '@contao.framework'
 
-    Contao\CoreBundle\Controller\ContentElement\LostPasswordController: ~
+    Contao\CoreBundle\Controller\ContentElement\LostPasswordController:
+        arguments:
+            - '@contao.framework'
 
     Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
         arguments:
