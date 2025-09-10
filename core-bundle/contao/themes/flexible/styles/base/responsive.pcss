@@ -359,7 +359,7 @@
         min-width: 100%;
         background: var(--form-bg);
         border: 1px solid var(--form-border);
-        border-radius: 2px;
+        border-radius: var(--border-radius);
         box-sizing: border-box;
         padding: 3px 0;
         margin-bottom: 1em;
@@ -410,7 +410,7 @@
 
     .split-button > button[type="submit"] {
         position: relative;
-        border-radius: 2px 0 0 2px;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
     }
 
     .split-button > button[type="button"] {
@@ -420,7 +420,7 @@
         background: var(--form-bg);
         border: 1px solid var(--form-border);
         border-left: 0;
-        border-radius: 0 2px 2px 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
         box-sizing: border-box;
         transition: background .2s ease;
     }
