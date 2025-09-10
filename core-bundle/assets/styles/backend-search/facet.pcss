@@ -1,0 +1,68 @@
+.facet-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+    h2 {
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+
+    .reset {
+        width: 24px;
+        justify-content: center;
+        margin-right: -6px;
+    }
+}
+
+.backend-search_facets {
+    display: flex;
+    flex-flow: column nowrap;
+
+    &:has(.backend-search_facet_types:empty) {
+        display: none;
+    }
+}
+
+.backend-search_facet_types,
+.backend-search_facet_tags {
+    padding: 10px 16px 10px 0;
+    border: 1px solid var(--border);
+    border-width: 0 1px 0 0;
+}
+
+.backend-search_facet_tags {
+    border-width: 1px 1px 0 0;
+    flex-grow: 1;
+
+    &:empty {
+        border-top: none;
+    }
+}
+
+.facet-type,
+.facet-tags {
+
+    button {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        margin: 2px 0;
+        border: none;
+        width: 100%;
+        background: transparent;
+
+        &.active {
+            background: var(--active-bg);
+            margin: 2px -8px;
+            width: calc(100% + 16px);
+            padding: 6px 8px;
+            border-radius: 2px;
+        }
+
+        sup {
+            opacity: .7;
+        }
+    }
+}
+

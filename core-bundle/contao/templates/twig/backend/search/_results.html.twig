@@ -23,19 +23,21 @@
                         {# Title #}
                         {% block hit_title %}
                             {% apply spaceless %}
-                                {% set hit_title_attributes = attrs()
-                                    .set('href', hit.viewUrl)
-                                    .set('title', 'MSC.searchHitView'|trans([hit.title]))
-                                    .addClass('hit_title')
-                                    .mergeWith(hit_title_attributes|default)
-                                %}
-                                 <a{{ hit_title_attributes }}>
-                                     {% for item in hit.breadcrumbs %}
-                                        {{ item.label }} ›
-                                     {% endfor %}
-                                     {{ hit.title }}
-                                     <sup class="type">{{ hit.visibleType }}</sup>
-                                </a>
+                                <div class="title">
+                                    <sub class="type">{{ hit.visibleType }}</sub>
+                                    {% set hit_title_attributes = attrs()
+                                        .set('href', hit.viewUrl)
+                                        .set('title', 'MSC.searchHitView'|trans([hit.title]))
+                                        .addClass('hit_title')
+                                        .mergeWith(hit_title_attributes|default)
+                                    %}
+                                    <a{{ hit_title_attributes }}>
+                                        {% for item in hit.breadcrumbs %}
+                                           {{ item.label }} ›
+                                        {% endfor %}
+                                        {{ hit.title }}
+                                    </a>
+                                </div>
                             {% endapply %}
 
                         {% endblock %}
