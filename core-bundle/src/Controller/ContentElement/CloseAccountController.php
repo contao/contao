@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
-#[AsContentElement(category: 'miscellaneous')]
+#[AsContentElement(category: 'user')]
 class CloseAccountController extends AbstractContentElementController
 {
     public function __construct(
