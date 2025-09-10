@@ -242,12 +242,12 @@ class Jobs
         foreach ($children as $childRow) {
             $childJob = $this->databaseRowToDto($childRow);
 
-            if (Status::pending === $childJob->getStatus()) {
+            if ($childJob->isPending()) {
                 $onePending = true;
                 break;
             }
 
-            if (Status::completed !== $childJob->getStatus()) {
+            if (!$childJob->isCompleted()) {
                 $allCompleted = false;
             }
         }
