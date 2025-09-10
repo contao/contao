@@ -11,5 +11,5 @@ services:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
                 - { name: container.service_subscriber, id: parameter_bag }
 
-    contao.form.type.change_password:
+    contao.form.change_password_type:
         class: Contao\CoreBundle\Form\Type\ChangePasswordType
