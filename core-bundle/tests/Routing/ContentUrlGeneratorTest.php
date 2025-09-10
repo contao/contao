@@ -20,6 +20,7 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Contao\System;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -27,6 +28,20 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContentUrlGeneratorTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testGeneratesPageUrlUsingUrlGenerator(): void
     {
         $content = $this->mockPageModel();
@@ -74,7 +89,6 @@ class ContentUrlGeneratorTest extends TestCase
         $pageModel2 = $this->mockPageModel();
         $route = new PageRoute($pageModel2);
         $parameters = ['foo' => 'bar'];
-
         $urlGenerator = $this->mockUrlGenerator($route, $parameters);
         $pageRegistry = $this->mockPageRegistry($route);
         $entityManager = $this->createMock(EntityManagerInterface::class);

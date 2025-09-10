@@ -179,6 +179,33 @@ class ModelTest extends TestCase
         yield [IntBackedEnum::class, 100, null];
     }
 
+    public function testReturnsVirtualStorageValue(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
+            'foo' => [
+                'saveTo' => 'jsonData',
+            ],
+            'empty' => [
+                'saveTo' => 'jsonData',
+            ],
+        ];
+        $fooModel = new class() extends Model {
+            protected static $strTable = 'tl_foobar';
+
+            public function __construct()
+            {
+                $this->arrData = [
+                    'lorem' => 'ipsum',
+                    'jsonData' => json_encode(['foo' => 'bar'], JSON_THROW_ON_ERROR),
+                ];
+            }
+        };
+
+        $this->assertSame('ipsum', $fooModel->lorem);
+        $this->assertSame('bar', $fooModel->foo);
+        $this->assertNull($fooModel->empty);
+    }
+
     private function createSchema(bool $fromDatabase): Schema
     {
         $schema = new Schema();
