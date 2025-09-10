@@ -18,8 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -112,12 +110,6 @@ class AdministratorEmailListenerTest extends TestCase
             ->willReturn('https://example.com')
         ;
 
-        $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->method('getCurrentRequest')
-            ->willReturn(new Request())
-        ;
-
         if (!$security) {
             $security = $this->createMock(Security::class);
             $security
@@ -127,6 +119,6 @@ class AdministratorEmailListenerTest extends TestCase
             ;
         }
 
-        return new AdministratorEmailListener($framework, $translator, $router, $requestStack, $security);
+        return new AdministratorEmailListener($framework, $translator, $router, $security);
     }
 }

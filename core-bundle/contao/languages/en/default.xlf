@@ -1362,7 +1362,7 @@
         <source>Go back</source>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
+        <source>Go up one level</source>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
