@@ -19,7 +19,7 @@ class RowWizard extends Widget
 {
 	protected $blnSubmitInput = true;
 
-	protected $strTemplate = 'be_widget_lbl';
+	protected $strTemplate = 'be_widget';
 
 	protected array $arrFields = array();
 
@@ -117,6 +117,7 @@ class RowWizard extends Widget
 		{
 			foreach ($this->arrFields as $key => $options)
 			{
+				/** @var $widget Widget */
 				$widget = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
 
 				if (null === $widget)
@@ -128,7 +129,7 @@ class RowWizard extends Widget
 
 				if ($widget->hasErrors())
 				{
-					$this->objDca->noReload = true;
+					$this->addError($GLOBALS['TL_LANG']['ERR']['general']);
 				}
 				else
 				{
@@ -240,11 +241,11 @@ class RowWizard extends Widget
 		return $attributes;
 	}
 
-	private function prepareWidget(string $type, mixed $value, array $options, int $increment): Widget|null
+	private function prepareWidget(string $key, mixed $value, array $options, int $increment): Widget|null
 	{
-		if (isset($this->widgets[$increment][$type]))
+		if (isset($this->widgets[$increment][$key]))
 		{
-			return $this->widgets[$increment][$type];
+			return $this->widgets[$increment][$key];
 		}
 
 		if (!isset($options['inputType']))
@@ -260,7 +261,7 @@ class RowWizard extends Widget
 			return null;
 		}
 
-		$data = $widgetClass::getAttributesFromDca($options, $type, $value, $this->strField, $this->strTable, $this->objDca);
+		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
 
@@ -273,6 +274,6 @@ class RowWizard extends Widget
 			$data['id'] .= '_' . $increment;
 		}
 
-		return $this->widgets[$increment][$type] = new $widgetClass($data);
+		return $this->widgets[$increment][$key] = new $widgetClass($data);
 	}
 }
