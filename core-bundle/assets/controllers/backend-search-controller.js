@@ -84,7 +84,7 @@ export default class BackendSearchController extends Controller {
         const target = event.target;
         const siblings = target.closest('ul').querySelectorAll('button');
 
-        for (let sibling of siblings) {
+        for (const sibling of siblings) {
             sibling.classList.toggle('active', false);
         }
 

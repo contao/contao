@@ -227,9 +227,6 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         $this->assertSame('foobar', $provider->convertTypeToVisibleType('type'));
     }
 
-    /**
-     * @return iterable<string, array<string, string>>
-     */
     public static function getFacetLabelForTagProvider(): iterable
     {
         yield 'no prefix' => ['pdf', 'pdf'];
