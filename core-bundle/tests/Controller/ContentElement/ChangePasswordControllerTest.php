@@ -334,6 +334,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
     /**
      * @template T
+     *
      * @param FormInterface<T>|null $form
      */
     private function mockFormFactory(FormInterface|null $form = null): FormFactoryInterface
