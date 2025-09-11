@@ -1051,7 +1051,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return \sprintf(
-			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>',
+			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" data-contao--check-all-target="input" %s%s%s>',
 			$this->strPickerFieldType,
 			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
 			$id,

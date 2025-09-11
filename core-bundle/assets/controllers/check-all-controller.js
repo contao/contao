@@ -59,13 +59,29 @@ export default class extends Controller {
     }
 
     toggleInput(event) {
-        const input = event.target;
+        let input = event.target;
+        let rowClick = false;
 
-        if (event.shiftKey && this.#start) {
-            this.#shiftToggle(input);
+        if (input.tagName !== 'INPUT') {
+            input = event.currentTarget.querySelector(`[data-${this.identifier}-target="input"]`);
+            rowClick = true;
         }
 
-        this.#start = input;
+        if (!input) {
+            return;
+        }
+
+        if (input.type === 'radio' && rowClick) {
+            input.checked = true;
+        } else if (input.type === 'checkbox') {
+            input.checked = !input.checked;
+
+            if (event.shiftKey && this.#start) {
+                this.#shiftToggle(input);
+            }
+
+            this.#start = input;
+        }
     }
 
     toggleAll(event) {
