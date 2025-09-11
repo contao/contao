@@ -157,7 +157,7 @@ abstract class ContentElementTestCase extends TestCase
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('contao.twig.filesystem_loader', $loader);
-        $container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $container->set('contao.twig.interop.context_factory', new ContextFactory($this->createMock(ScopeMatcher::class)));
         $container->set('twig', $environment);
         $container->set('contao.framework', $framework);
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));

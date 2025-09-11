@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fixtures\Controller\FragmentController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Model;
@@ -120,7 +121,7 @@ class AbstractFragmentControllerTest extends TestCase
 
         $container = new Container();
         $container->set('contao.twig.filesystem_loader', $loader);
-        $container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $container->set('contao.twig.interop.context_factory', new ContextFactory($this->createMock(ScopeMatcher::class)));
         $container->set('twig', $twig);
 
         $fragmentController = new FragmentController();

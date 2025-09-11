@@ -17,6 +17,7 @@ use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Environment;
@@ -340,7 +341,7 @@ class FeedReaderControllerTest extends TestCase
         }
 
         $this->container->set('contao.twig.filesystem_loader', $loader);
-        $this->container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $this->container->set('contao.twig.interop.context_factory', new ContextFactory($this->createMock(ScopeMatcher::class)));
         $this->container->set('twig', $twig);
 
         $configAdapter = $this->mockAdapter(['get']);

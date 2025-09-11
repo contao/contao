@@ -22,6 +22,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -121,7 +122,7 @@ class TwigIntegrationTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
         $container->set('contao.twig.filesystem_loader', $contaoFilesystemLoader);
-        $container->set(ContextFactory::class, new ContextFactory());
+        $container->set(ContextFactory::class, new ContextFactory($this->createMock(ScopeMatcher::class)));
         $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
@@ -199,7 +200,7 @@ class TwigIntegrationTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
         $container->set('contao.twig.filesystem_loader', $filesystemLoader);
-        $container->set(ContextFactory::class, new ContextFactory());
+        $container->set(ContextFactory::class, new ContextFactory($this->createMock(ScopeMatcher::class)));
 
         $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
