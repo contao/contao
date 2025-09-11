@@ -89,7 +89,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 				'icon'                => 'featured.svg',
 				'primary'             => true
 			),
-			'show'
+			'show',
+			'diff',
 		)
 	),
 
