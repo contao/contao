@@ -304,7 +304,7 @@ abstract class System
 	 *
 	 * @param boolean $blnEncodeAmpersands If true, ampersands will be encoded
 	 * @param string  $strTable            An optional table name
-	 * @param string  $intLevel            How many levels to go up the trail
+	 * @param int     $intLevel            How many levels to go up the trail
 	 *
 	 * @return string The referer URL
 	 */
