@@ -3258,14 +3258,11 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 				$arrVirtualTypes = array();
 
 				// Combine with previous values
-				array_walk($arrVirtual, function (array &$fieldData, string $virtualField) use ($currentRecord, &$arrVirtualTypes): void {
-					try
+				array_walk($arrVirtual, function (array &$fieldData, string $virtualField) use ($currentRecord, &$arrVirtualTypes): void
+				{
+					if ($currentRecord[$virtualField] ?? null)
 					{
 						$fieldData = array_merge(json_decode($currentRecord[$virtualField], true, flags: JSON_THROW_ON_ERROR), $fieldData);
-					}
-					catch (\JsonException)
-					{
-						// noop
 					}
 
 					$type = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$virtualField]['sql']['type'] ?? null;
