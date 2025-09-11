@@ -3637,7 +3637,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 </div>' : '') . '
 <div class="tl_listing_container tree_view" id="tl_listing" data-controller="contao--check-all"' . $this->getPickerValueAttribute() . '>' . $breadcrumb . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
+<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
 </div>' : '') . '
 <ul class="tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
   <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left"></div> <div class="tl_right">';
@@ -4236,7 +4236,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			if (Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox')
 			{
 				$return .= '
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">';
+<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">';
 			}
 			else
 			{
@@ -4854,7 +4854,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' : '') . '
 <div class="tl_listing_container list_view" id="tl_listing" data-controller="contao--check-all"' . $this->getPickerValueAttribute() . '>' . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
+<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
 </div>' : '') . '
 <table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 

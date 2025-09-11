@@ -579,7 +579,7 @@ class tl_user extends Backend
 		foreach ($allowedOptions as $i => $operation)
 		{
 			$options[] = sprintf(
-				'<span><input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store" data-contao--check-all-target="input"> <label for="opt_purge_%d">%s</label></span>',
+				'<span><input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store contao--check-all#toggleInput" data-contao--check-all-target="input"> <label for="opt_purge_%d">%s</label></span>',
 				$i,
 				$operation,
 				$i,
