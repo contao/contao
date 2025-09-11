@@ -99,17 +99,17 @@ export class TwigEditor {
                 this.$rules[rule].unshift(
                     {
                         token: 'variable.other.readwrite.local.twig',
-                        regex: '\\{\\{-?',
+                        regex: '\\{\\{[-~]?',
                         push: 'twig-start',
                     },
                     {
                         token: 'meta.tag.twig',
-                        regex: '\\{%-?',
+                        regex: '\\{%[-~]?',
                         push: 'twig-start',
                     },
                     {
                         token: 'comment.block.twig',
-                        regex: '\\{#-?',
+                        regex: '\\{#[-~]?',
                         push: 'twig-comment',
                     },
                 );
