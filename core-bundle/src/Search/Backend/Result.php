@@ -31,4 +31,9 @@ class Result
     {
         return $this->hits;
     }
+
+    public static function createEmpty(): self
+    {
+        return new self([]);
+    }
 }

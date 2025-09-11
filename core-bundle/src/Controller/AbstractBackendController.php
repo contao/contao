@@ -66,16 +66,16 @@ abstract class AbstractBackendController extends AbstractController
 
         $request = $this->getCurrentRequest();
 
-        if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
+        if (str_ends_with($view, '.stream.html.twig')) {
+            if (!\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
+                throw new \LogicException('The current route was not requested with "text/vnd.turbo-stream.html" in the "Accept" header but still tried to render a Turbo stream template. Protect the route with "condition: "\'text/vnd.turbo-stream.html\' in request.getAcceptableContentTypes()" or render a regular HTML response.');
+            }
+
+            $includeChromeContext ??= false;
+
             // Setting the request format will add the correct ContentType header and make
             // sure Symfony renders error pages correctly.
             $request->setRequestFormat('turbo_stream');
-
-            $includeChromeContext ??= false;
-        }
-
-        if ($request->headers->has('turbo-frame')) {
-            $includeChromeContext ??= false;
         }
 
         if ($includeChromeContext ?? true) {

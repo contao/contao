@@ -44,7 +44,7 @@ class TableAccessVoter implements CacheableVoterInterface
     }
 
     /**
-     * @param CreateAction|UpdateAction $subject
+     * @param CreateAction|ReadAction|UpdateAction|DeleteAction $subject
      */
     public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
     {
@@ -53,7 +53,7 @@ class TableAccessVoter implements CacheableVoterInterface
         }
 
         // Check access to a module with this DCA
-        if (!$this->hasAccessToModule($token, $subject->getDataSource())) {
+        if (!$this->hasAccessToModule($token, $subject)) {
             return self::ACCESS_DENIED;
         }
 
@@ -85,13 +85,24 @@ class TableAccessVoter implements CacheableVoterInterface
         return self::ACCESS_ABSTAIN;
     }
 
-    private function hasAccessToModule(TokenInterface $token, string $table): bool
+    private function hasAccessToModule(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $subject): bool
     {
+        $table = $subject->getDataSource();
+
         foreach ($GLOBALS['BE_MOD'] as $modules) {
             foreach ($modules as $name => $config) {
                 if (
                     \is_array($config['tables'] ?? null)
                     && \in_array($table, $config['tables'], true)
+                    && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
+                ) {
+                    return true;
+                }
+
+                if (
+                    $subject instanceof ReadAction
+                    && \is_array($config['ptables'] ?? null)
+                    && \in_array($table, $config['ptables'], true)
                     && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
                 ) {
                     return true;
