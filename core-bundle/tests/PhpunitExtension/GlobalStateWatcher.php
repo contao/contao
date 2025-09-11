@@ -193,9 +193,7 @@ final class GlobalStateWatcher implements Extension
             /** @noinspection ClassnameLiteralInspection */
             foreach ([
                 'Composer\InstalledVersions',
-                'Contao\Config',
                 'Contao\CoreBundle\Util\LocaleUtil',
-                'Contao\DcaLoader',
                 'Contao\TestCase\\',
                 'DASPRiD\Enum\AbstractEnum',
                 'Doctrine\Deprecations\\Deprecation',

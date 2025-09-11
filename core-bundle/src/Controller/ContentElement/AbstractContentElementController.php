@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Model;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +35,23 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             $this->isBackendScope($request),
             $request->attributes->get('nestedFragments', []),
         );
+
+        $modelAccess = new class ($model) {
+            public function __construct(private readonly Model $model)
+            {
+            }
+
+            public function __call($name, $arguments)
+            {
+                if ($arguments) {
+                    throw new \RuntimeException('Not implemented.');
+                }
+
+                return $this->model->{$name};
+            }
+        };
+
+        $template->set('data', $modelAccess);
 
         $this->tagResponse($model);
 

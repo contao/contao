@@ -13,12 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\ArticleModel;
+use Contao\Config;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaLoader;
 use Contao\PageModel;
 use Contao\System;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,7 +41,7 @@ class ContentUrlGeneratorTest extends TestCase
     {
         unset($GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, DcaLoader::class, Config::class]);
 
         parent::tearDown();
     }
