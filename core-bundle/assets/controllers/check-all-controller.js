@@ -2,6 +2,8 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     #start = null;
+    #shiftKey = false;
+    #keypress;
 
     static targets = ['source', 'input'];
 
@@ -56,6 +58,21 @@ export default class extends Controller {
 
     initialize() {
         this.#start = null;
+        this.#keypress = (event) => {
+            this.#shiftKey = event.shiftKey;
+            this.element.style['user-select'] = event.shiftKey ? 'none' : '';
+            this.element.style['-webkit-user-select'] = event.shiftKey ? 'none' : '';
+        }
+    }
+
+    connect () {
+        document.addEventListener('keydown', this.#keypress);
+        document.addEventListener('keyup', this.#keypress);
+    }
+
+    disconnect () {
+        document.removeEventListener('keydown', this.#keypress);
+        document.removeEventListener('keyup', this.#keypress);
     }
 
     toggleInput(event) {
@@ -72,13 +89,13 @@ export default class extends Controller {
         }
 
         if (input.type === 'radio' && rowClick) {
-            input.checked = true;
+            input.checked = 'checked';
         } else if (input.type === 'checkbox') {
             if (rowClick) {
-                input.checked = !input.checked;
+                input.checked = input.checked ? '' : 'checked';
             }
 
-            if (event.shiftKey && this.#start) {
+            if (this.#shiftKey && this.#start) {
                 this.#shiftToggle(input);
             }
 

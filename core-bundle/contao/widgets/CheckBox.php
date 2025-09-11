@@ -243,7 +243,7 @@ class CheckBox extends Widget
 			$this->multiple ? self::specialcharsValue($arrOption['value']) : 1,
 			$this->isChecked($arrOption),
 			$this->getAttributes(),
-			$this->multiple ? ' data-action="focus->contao--scroll-offset#store click->contao--check-all#toggleInput" data-contao--check-all-target="input"' : '',
+			$this->multiple ? ' data-action="focus->contao--scroll-offset#store contao--check-all#toggleInput" data-contao--check-all-target="input"' : '',
 			$this->strId . '_' . $i,
 			$this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 			$arrOption['label'] ?? null,
