@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
+use Contao\BackendTemplate;
 use Contao\Template;
 
 /**
@@ -30,6 +31,13 @@ final class ContextFactory
 
         if (!isset($context['Template'])) {
             $context['Template'] = $template;
+        }
+
+        if ($template instanceof BackendTemplate) {
+            $context['getLocaleString'] =
+                $this->getCallableWrapper($template->getLocaleString(...));
+            $context['getDateString'] =
+                $this->getCallableWrapper($template->getDateString(...));
         }
 
         return $context;

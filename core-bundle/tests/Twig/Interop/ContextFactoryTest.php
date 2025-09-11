@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\BackendTemplate;
 use Contao\CoreBundle\Tests\Fixtures\Twig\ChildClassWithMembersStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
@@ -88,6 +89,32 @@ class ContextFactoryTest extends TestCase
         ])))->render('test.html.twig', $context);
 
         $this->assertSame($expectedOutput, $output);
+    }
+
+    public function testDelegatesBackendTemplateTraitFunctions(): void
+    {
+        $template = $this->createMock(BackendTemplate::class);
+        $template
+            ->method('getData')
+            ->willReturn([])
+        ;
+
+        $template
+            ->expects($this->once())
+            ->method('getLocaleString')
+            ->willReturn('localeString')
+        ;
+
+        $template
+            ->expects($this->once())
+            ->method('getDateString')
+            ->willReturn('dateString')
+        ;
+
+        $context = (new ContextFactory())->fromContaoTemplate($template);
+
+        $this->assertSame('localeString', $context['getLocaleString']->invoke());
+        $this->assertSame('dateString', $context['getDateString']->invoke());
     }
 
     public function testCreatesContextFromData(): void
