@@ -80,9 +80,6 @@ export class TwigEditor {
 
             let tags = environment.tags.join('|');
             tags = `${tags}|end${tags.replace(/\|/g, '|end')}`;
-            const filters = environment.filters;
-            const functions = environment.functions.join('|');
-            const tests = environment.tests.join('|');
 
             const keywordMapper = this.createKeywordMapper(
                 {
