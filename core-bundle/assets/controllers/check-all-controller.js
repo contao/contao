@@ -74,7 +74,9 @@ export default class extends Controller {
         if (input.type === 'radio' && rowClick) {
             input.checked = true;
         } else if (input.type === 'checkbox') {
-            input.checked = !input.checked;
+            if (rowClick) {
+                input.checked = !input.checked;
+            }
 
             if (event.shiftKey && this.#start) {
                 this.#shiftToggle(input);
