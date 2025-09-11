@@ -304,10 +304,11 @@ abstract class System
 	 *
 	 * @param boolean $blnEncodeAmpersands If true, ampersands will be encoded
 	 * @param string  $strTable            An optional table name
+	 * @param string  $intLevel            How many levels to go up the trail
 	 *
 	 * @return string The referer URL
 	 */
-	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
+	public static function getReferer($blnEncodeAmpersands=false, $strTable=null, $intLevel=1)
 	{
 		$container = static::getContainer();
 		$return = null;
@@ -328,9 +329,9 @@ abstract class System
 			{
 				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail();
 
-				if ($trail[\count($trail) - 2]['url'] ?? null)
+				if ($trail[\count($trail) - $intLevel - 1]['url'] ?? null)
 				{
-					$return = $trail[\count($trail) - 2]['url'];
+					$return = $trail[\count($trail) - $intLevel - 1]['url'];
 				}
 				elseif (Input::get('do') && Input::get('act'))
 				{

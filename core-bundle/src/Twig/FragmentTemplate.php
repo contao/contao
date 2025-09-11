@@ -338,7 +338,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function getReferer($blnEncodeAmpersands = false, $strTable = null): never
+    public static function getReferer($blnEncodeAmpersands = false, $strTable = null, $intLevel=1): never
     {
         self::throwOnAccess();
     }
