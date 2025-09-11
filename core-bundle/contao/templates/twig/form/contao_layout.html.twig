@@ -1,6 +1,8 @@
 {% trans_default_domain "contao_default" %}
 {% use "form_div_layout.html.twig" %}
 
+{# Misc #}
+
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
         <p class="error">
@@ -18,32 +20,22 @@
     {%- endif -%}
 {%- endblock form_errors -%}
 
+{# Labels #}
+
+{%- block form_label -%}
+    {%- if required -%}
+        {% set label_attr = label_attr|merge({'class': 'mandatory'}) %}
+    {%- endif -%}
+
+    {{ parent() }}
+{%- endblock form_label -%}
+
 {%- block form_label_content -%}
     {%- if required -%}
         <span class="invisible">{{ 'MSC.mandatory'|trans }} </span>
     {%- endif -%}
-    {%- if label is empty -%}
-        {%- if label_format is not empty -%}
-            {% set label = label_format|replace({
-                '%name%': name,
-                '%id%': id,
-            }) %}
-        {%- else -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
-    {%- endif -%}
-    {%- if translation_domain is same as(false) -%}
-        {%- if label_html is same as(false) -%}
-            {{- label -}}
-        {%- else -%}
-            {{- label|raw -}}
-        {%- endif -%}
-    {%- else -%}
-        {%- if label_html is same as(false) -%}
-            {{- label|trans(label_translation_parameters, translation_domain) -}}
-        {%- else -%}
-            {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
-        {%- endif -%}
-    {%- endif -%}
+
+    {{ parent() }}
+
     {%- if required -%} <span class="mandatory">*</span>{%- endif -%}
 {%- endblock form_label_content -%}
