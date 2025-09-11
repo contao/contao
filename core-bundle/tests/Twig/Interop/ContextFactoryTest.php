@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\Fixtures\Twig\ChildClassWithMembersStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
@@ -79,7 +80,7 @@ class ContextFactoryTest extends TestCase
                 (other: x)
                 OUTPUT;
 
-        $context = (new ContextFactory())->fromContaoTemplate($template);
+        $context = $this->getContextFactory()->fromContaoTemplate($template);
 
         $this->assertSame($template, $context['Template']);
 
@@ -111,7 +112,7 @@ class ContextFactoryTest extends TestCase
             ->willReturn('dateString')
         ;
 
-        $context = (new ContextFactory())->fromContaoTemplate($template);
+        $context = $this->getContextFactory()->fromContaoTemplate($template);
 
         $this->assertSame('localeString', $context['getLocaleString']->invoke());
         $this->assertSame('dateString', $context['getDateString']->invoke());
@@ -127,7 +128,7 @@ class ContextFactoryTest extends TestCase
             ],
         ];
 
-        $context = (new ContextFactory())->fromData($data);
+        $context = $this->getContextFactory()->fromData($data);
 
         $this->assertSame('a', $context['foo']);
         $this->assertSame('b', $context['bar']());
@@ -137,7 +138,7 @@ class ContextFactoryTest extends TestCase
     public function testCreateContextFromClass(): void
     {
         $object = new ChildClassWithMembersStub();
-        $context = (new ContextFactory())->fromClass($object);
+        $context = $this->getContextFactory()->fromClass($object);
 
         $expectedFields = [
             'PROTECTED_CONSTANT' => 2,
@@ -196,7 +197,7 @@ class ContextFactoryTest extends TestCase
 
         $content = '{{ lazy }}';
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $content]));
-        $context = (new ContextFactory())->fromContaoTemplate($template);
+        $context = $this->getContextFactory()->fromContaoTemplate($template);
 
         $this->expectException(RuntimeError::class);
 
@@ -207,5 +208,59 @@ class ContextFactoryTest extends TestCase
         );
 
         $environment->render('test.html.twig', $context);
+    }
+
+    public function testAsEditorViewIsAvailableInContext(): void
+    {
+        $template = $this->createMock(Template::class);
+        $template
+            ->method('getData')
+            ->willReturn([])
+        ;
+
+        $this->assertTrue(
+            $this
+                ->getContextFactory($this->getScopeMatcher(true))
+                ->fromContaoTemplate($template)['as_editor_view'],
+            'editor view is true if in backend request',
+        );
+
+        $this->assertFalse(
+            $this
+                ->getContextFactory($this->getScopeMatcher(false))
+                ->fromContaoTemplate($template)['as_editor_view'],
+            'editor view is false if not in backend request',
+        );
+
+        $templateWithDefaultData = $this->createMock(Template::class);
+        $templateWithDefaultData
+            ->method('getData')
+            ->willReturn([
+                'as_editor_view' => false,
+            ])
+        ;
+
+        $this->assertFalse(
+            $this
+                ->getContextFactory($this->getScopeMatcher(true))
+                ->fromContaoTemplate($templateWithDefaultData)['as_editor_view'],
+            'editor view is explicitly defined (higher priority)',
+        );
+    }
+
+    private function getContextFactory(ScopeMatcher|null $scopeMatcher = null): ContextFactory
+    {
+        return new ContextFactory($scopeMatcher ?? $this->createMock(ScopeMatcher::class));
+    }
+
+    private function getScopeMatcher(bool $isBackendRequest): ScopeMatcher
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->method('isBackendRequest')
+            ->willReturn($isBackendRequest)
+        ;
+
+        return $scopeMatcher;
     }
 }

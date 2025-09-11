@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Interop;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Template;
 
 /**
@@ -20,6 +21,10 @@ use Contao\Template;
  */
 final class ContextFactory
 {
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
+    {
+    }
+
     /**
      * Creates a Twig template context from a Template object.
      *
@@ -28,6 +33,11 @@ final class ContextFactory
     public function fromContaoTemplate(Template $template): array
     {
         $context = $this->fromData($template->getData());
+
+        if (!isset($context['as_editor_view'])) {
+            $context['as_editor_view'] =
+                $this->scopeMatcher->isBackendRequest();
+        }
 
         if (!isset($context['Template'])) {
             $context['Template'] = $template;
