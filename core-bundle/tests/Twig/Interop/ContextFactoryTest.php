@@ -34,6 +34,7 @@ class ContextFactoryTest extends TestCase
             'foo' => 'bar',
             'a' => [1, 2],
             'o' => $object,
+            'iterable_data' => (object) ['data' => 'x'],
             'lazy1' => static fn (): string => 'evaluated',
             'lazy2' => static fn (int $n = 0): string => "evaluated: $n",
             'lazy3' => static fn (): array => [1, 2],
@@ -59,6 +60,7 @@ class ContextFactoryTest extends TestCase
                 lazy4: {{ lazy4 }}
                 value: {{ value }}
 
+                {% include "other.html.twig" with iterable_data %}
                 TEMPLATE;
 
         $expectedOutput =
@@ -73,13 +75,17 @@ class ContextFactoryTest extends TestCase
                 lazy4: evaluated Closure
                 value: strtolower
 
+                (other: x)
                 OUTPUT;
 
         $context = (new ContextFactory())->fromContaoTemplate($template);
 
         $this->assertSame($template, $context['Template']);
 
-        $output = (new Environment(new ArrayLoader(['test.html.twig' => $content])))->render('test.html.twig', $context);
+        $output = (new Environment(new ArrayLoader([
+            'test.html.twig' => $content,
+            'other.html.twig' => '(other: {{ data }})',
+        ])))->render('test.html.twig', $context);
 
         $this->assertSame($expectedOutput, $output);
     }
