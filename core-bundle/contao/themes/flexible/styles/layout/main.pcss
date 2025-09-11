@@ -20,7 +20,10 @@
     background: var(--content-bg);
     border: 1px solid var(--content-border);
     border-radius: var(--border-radius);
-    overflow: clip;
+}
+
+#main .content:has(.tl_formbody_submit) {
+  overflow: clip;
 }
 
 .popup #main .content {
