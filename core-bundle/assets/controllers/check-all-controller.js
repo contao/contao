@@ -62,15 +62,15 @@ export default class extends Controller {
             this.#shiftKey = event.shiftKey;
             this.element.style['user-select'] = event.shiftKey ? 'none' : '';
             this.element.style['-webkit-user-select'] = event.shiftKey ? 'none' : '';
-        }
+        };
     }
 
-    connect () {
+    connect() {
         document.addEventListener('keydown', this.#keypress);
         document.addEventListener('keyup', this.#keypress);
     }
 
-    disconnect () {
+    disconnect() {
         document.removeEventListener('keydown', this.#keypress);
         document.removeEventListener('keyup', this.#keypress);
     }
