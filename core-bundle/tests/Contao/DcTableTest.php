@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -27,7 +29,7 @@ class DcTableTest extends TestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([System::class, DataContainer::class]);
+        $this->resetStaticProperties([System::class, DataContainer::class, Config::class, DcaLoader::class]);
 
         parent::tearDown();
     }
