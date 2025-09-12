@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -217,5 +218,10 @@ class ModuleNewsReader extends ModuleNews
 		$objConfig->moderate = $objArchive->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

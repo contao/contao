@@ -129,7 +129,6 @@ class InputTest extends TestCase
 
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
         $this->assertSame($expected, Input::postHtml('key', true));
         $this->assertSame($expectedEncoded, Input::postHtml('key'));
     }
@@ -156,8 +155,6 @@ class InputTest extends TestCase
 
         $this->assertSame($expected, Input::post('decoded', true));
         $this->assertSame($expectedEncoded, Input::post('encoded'));
-
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
 
         $this->assertSame($expected, Input::postHtml('decoded', true));
         $this->assertSame($expectedEncoded, Input::postHtml('encoded'));
@@ -697,14 +694,10 @@ class InputTest extends TestCase
     }
 
     /**
-     * @group legacy
-     *
      * @dataProvider stripTagsNoTagsAllowedProvider
      */
     public function testStripTagsNoTagsAllowed(string $source, string $expected): void
     {
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
-
         $this->assertSame($expected, Input::stripTags($source));
     }
 
@@ -736,9 +729,6 @@ class InputTest extends TestCase
         $this->assertSame($html, Input::stripTags($html, '<span>', serialize([['key' => '*', 'value' => '*']])));
     }
 
-    /**
-     * @group legacy
-     */
     public function testStripTagsNoAttributesAllowed(): void
     {
         $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV><notallowed></notallowed>";
@@ -749,17 +739,11 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
 
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
         $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testStripTagsScriptAllowed(): void
     {
-        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
-
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
             Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>'),

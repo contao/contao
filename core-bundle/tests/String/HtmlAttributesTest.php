@@ -575,6 +575,48 @@ class HtmlAttributesTest extends TestCase
         $attributes->removeStyle(['d'], condition: '1');
 
         $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->addStyle('foo1:');
+        $attributes->addStyle('foo2:;');
+        $attributes->addStyle('foo3: ;');
+        $attributes->addStyle(['foo4' => null]);
+        $attributes->addStyle(['foo5' => false]);
+        $attributes->addStyle(['foo6' => '']);
+        $attributes->addStyle(['foo7' => ';']);
+
+        $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->addStyle('a: 0;');
+        $attributes->addStyle('b: "";');
+        $attributes->addStyle('c: false;');
+        $attributes->addStyle(['d' => true]);
+        $attributes->addStyle(['e' => 0]);
+        $attributes->addStyle(['f' => '""']);
+        $attributes->addStyle(['g' => '1']);
+        $attributes->addStyle(['g' => null]);
+
+        $this->assertSame(['style' => 'a: 0; b: ""; c: false; d: 1; e: 0; f: "";'], iterator_to_array($attributes));
+
+        $attributes->set('style', '--a:;');
+        $attributes->addStyle('--b:;');
+        $attributes->addStyle(['--c:']);
+        $attributes->addStyle(['--d' => ' ']);
+        $attributes->addStyle(['--e' => '']);
+        $attributes->addStyle(['--f' => null]);
+        $attributes->addStyle(['--g' => false]);
+
+        $this->assertSame(
+            ['style' => '--a: ; --b: ; --c: ; --d: ;'],
+            iterator_to_array($attributes),
+            'Custom properties with empty values should not get stripped',
+        );
+
+        $attributes->addStyle(['--a' => '']);
+        $attributes->addStyle(['--b' => null]);
+        $attributes->addStyle(['--c' => false]);
+        $attributes->addStyle(['--d' => '']);
+
+        $this->assertSame([], iterator_to_array($attributes));
     }
 
     public function testDoesNotOutputEmptyStyleAttribute(): void
@@ -598,9 +640,10 @@ class HtmlAttributesTest extends TestCase
             ->removeClass('foo')
             ->set('style', 'color: red;')
             ->setIfExists('data-foo', null)
+            ->addStyle('color: blue;')
         ;
 
-        $this->assertSame(' class="block headline" style="color: red;"', (string) $attributes);
+        $this->assertSame(' class="block headline" style="color: blue;"', (string) $attributes);
     }
 
     public function testEscapesAttributesWhenRenderingAsString(): void

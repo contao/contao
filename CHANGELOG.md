@@ -2,12 +2,24 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.39] (2025-09-04)
+
+**Fixed issues:**
+
+- [#8717] Only duplicate fragment services if needed ([Toflar])
+- [#8759] Restore the "empty event list" message ([fritzmg])
+- [#8754] Additionally check the `disablePermissionsChecks` flag for back end modules ([fritzmg])
+- [#8730] Ignore empty styles in `HtmlAttributes::addStyle()` ([ausi])
+- [#8755] Use a 16:9 aspect ratio in translations ([fritzmg])
+- [#8746] Fix the default size of video elements ([aschempp])
+- [#8752] Backup the response context ([aschempp])
+
 ## [5.3.38] (2025-08-28)
 
 **Security fixes:**
 
-- [CVE-2025-57759]: Improper privilege management for page and article fields
 - [CVE-2025-57758]: Improper access control in the back end voters
+- [CVE-2025-57759]: Improper privilege management for page and article fields
 - [CVE-2025-57757]: Information disclosure in the news module
 - [CVE-2025-57756]: Information disclosure in the front end search index
 
@@ -775,6 +787,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.39]: https://github.com/contao/contao/releases/tag/5.3.39
 [5.3.38]: https://github.com/contao/contao/releases/tag/5.3.38
 [5.3.37]: https://github.com/contao/contao/releases/tag/5.3.37
 [5.3.36]: https://github.com/contao/contao/releases/tag/5.3.36
@@ -818,8 +831,8 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
-[CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
+[CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
 [CVE-2025-57756]: https://github.com/contao/contao/security/advisories/GHSA-2xmj-8wmq-7475
 [CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
@@ -1379,7 +1392,14 @@ This project adheres to [Semantic Versioning].
 [#8698]: https://github.com/contao/contao/pull/8698
 [#8701]: https://github.com/contao/contao/pull/8701
 [#8708]: https://github.com/contao/contao/pull/8708
+[#8717]: https://github.com/contao/contao/pull/8717
 [#8726]: https://github.com/contao/contao/pull/8726
 [#8727]: https://github.com/contao/contao/pull/8727
 [#8729]: https://github.com/contao/contao/pull/8729
+[#8730]: https://github.com/contao/contao/pull/8730
 [#8741]: https://github.com/contao/contao/pull/8741
+[#8746]: https://github.com/contao/contao/pull/8746
+[#8752]: https://github.com/contao/contao/pull/8752
+[#8754]: https://github.com/contao/contao/pull/8754
+[#8755]: https://github.com/contao/contao/pull/8755
+[#8759]: https://github.com/contao/contao/pull/8759
