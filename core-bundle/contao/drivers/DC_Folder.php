@@ -2631,16 +2631,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		return '
     <div class="tl_search tl_subpanel">
-      <label for="panel_search">' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</label>
-      <div class="tl_search_inner">
-	      <div class="tl_select_wrapper" data-controller="contao--choices">
-	          <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-				' . implode("\n", $options) . '
-	          </select>
-	      </div>
-	      <span>=</span>
-	      <input id="panel_search" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
+      <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
+      <div class="tl_select_wrapper" data-controller="contao--choices">
+      	  <label for="search_type">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
+          <select id="search_type" name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+			' . implode("\n", $options) . '
+          </select>
       </div>
+      <label for="search_term">' . $GLOBALS['TL_LANG']['MSC']['term'] . '</label>
+      <input id="search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </div>';
 	}
 

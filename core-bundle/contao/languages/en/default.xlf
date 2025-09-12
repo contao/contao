@@ -2318,6 +2318,12 @@
       <trans-unit id="MSC.never_index">
         <source>Never index</source>
       </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+      </trans-unit>
+      <trans-unit id="MSC.term">
+        <source>Term</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
