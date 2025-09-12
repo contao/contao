@@ -3,7 +3,7 @@
 .tl_version_panel {
     padding: 10px 15px;
     background: var(--panel-bg);
-    border-bottom: 1px solid var(--content-border);
+    border-bottom: 1px solid var(--border);
     text-align: right;
     flex-wrap: wrap;
 }
@@ -17,7 +17,7 @@
 }
 
 .tl_panel:first-of-type {
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-radius: calc(var(--border-radius) * 3) calc(var(--border-radius) * 3) 0 0;
 }
 
 /* Limit, search and submit */
