@@ -78,119 +78,172 @@ export class TwigEditor {
         const ContaoTwigHighlightRules = function () {
             HtmlHighlightRules.call(this);
 
-            let tags = environment.tags.join('|');
-            tags = `${tags}|end${tags.replace(/\|/g, '|end')}`;
-
-            const keywordMapper = this.createKeywordMapper(
-                {
-                    'support.function.twig': [
-                        ...environment.filters,
-                        ...environment.functions,
-                        ...environment.tests,
-                    ].join('|'),
-                    'keyword.control.twig': tags,
-                    'keyword.operator.twig': 'b-and|b-xor|b-or|in|is|and|or|not',
-                    'constant.language.twig': 'null|none|true|false',
-                },
-                'identifier',
-            );
+            // add rules to enter Twig block delimiters to all existing HTML rules
+            let tag_token_index = 0;
 
             for (const rule in this.$rules) {
                 this.$rules[rule].unshift(
                     {
-                        token: 'variable.other.readwrite.local.twig',
-                        regex: '\\{\\{[-~]?',
-                        push: 'twig-start',
+                        token: 'meta.tag.twig-output-start',
+                        regex: /\{\{[-~]?/,
+                        push: 'twig-output',
                     },
                     {
-                        token: 'meta.tag.twig',
-                        regex: '\\{%[-~]?',
-                        push: 'twig-start',
+                        token: () => {
+                            tag_token_index = 0;
+                            return 'meta.tag.twig-tag-start';
+                        },
+                        regex: /\{%[-~]?/,
+                        push: 'twig-tag',
                     },
                     {
-                        token: 'comment.block.twig',
-                        regex: '\\{#[-~]?',
+                        token: 'comment.block.twig-comment-start',
+                        regex: /\{#/,
                         push: 'twig-comment',
                     },
                 );
             }
+
+            // {{ … }}
+            this.$rules['twig-output'] = [
+                {
+                    token: 'meta.tag.twig-output-end',
+                    regex: /[-~]?}}/,
+                    next: 'pop',
+                },
+            ];
+
+            // {% … %}
+            this.$rules['twig-tag'] = [
+                {
+                    token: () => {
+                        tag_token_index++;
+                        return tag_token_index === 1 ? 'constant.twig-tag-name' : 'text';
+                    },
+                    regex: `(${environment.tags.join('|')})`,
+                },
+                {
+                    token: 'meta.tag.twig-tag-end',
+                    regex: /[-~]?%}/,
+                    next: 'pop',
+                },
+                {
+                    token: ['variable', '', 'keyword.operator.assignment'],
+                    regex: /(\w+)(\s*)(=)/,
+                },
+                {
+                    token: 'string',
+                    regex: /'/,
+                    push: 'twig-qstring',
+                },
+                {
+                    token: 'string',
+                    regex: /"/,
+                    push: 'twig-qqstring',
+                },
+            ];
+
+            // {# … #}
             this.$rules['twig-comment'] = [
                 {
-                    token: 'comment.block.twig',
-                    regex: '.*-?#\\}',
+                    token: 'comment.block.twig-comment-end',
+                    regex: /.*#}/,
                     next: 'pop',
+                },
+                {
+                    defaultToken: 'comment.block',
                 },
             ];
-            this.$rules['twig-start'] = [
+
+            // common structures in {{ … }} and {% … %}
+            for (const rule of ['twig-output', 'twig-tag']) {
+                this.$rules[rule].push(
+                    {
+                        // <function>(
+                        token: ['support.function', '', 'paren.lparen'],
+                        regex: `(${environment.functions.join('|')})(\\s*)(\\()`,
+                    },
+                    {
+                        // |<filter>
+                        token: (operator, whitespace, filter) => {
+                            const isDangerous = ['raw', 'insert_tag_raw'].includes(filter);
+                            return [
+                                'keyword.operator.other',
+                                '',
+                                isDangerous ? 'support.function.dangerous' : 'support.function',
+                            ];
+                        },
+                        regex: `(\\|)(\\s*)(${environment.filters.join('|')})`,
+                    },
+                    {
+                        // is <test>
+                        token: ['keyword.operator.other', '', 'support.function'],
+                        regex: `(is)(\\s+)(${environment.tests.join('|')})`,
+                    },
+                    {
+                        token: 'string',
+                        regex: "'",
+                        push: 'twig-qstring',
+                    },
+                    {
+                        token: 'string',
+                        regex: '"',
+                        push: 'twig-qqstring',
+                    },
+                    {
+                        token: 'keyword.operator.assignment',
+                        regex: '=|~',
+                    },
+                    {
+                        token: 'keyword.operator.comparison',
+                        regex: '==|!=|<|>|>=|<=|===',
+                    },
+                    {
+                        token: 'keyword.operator.arithmetic',
+                        regex: '\\+|-|/|%|//|\\*|\\*\\*',
+                    },
+                    {
+                        token: 'keyword.operator.other',
+                        regex: '\\.\\.|\\|',
+                    },
+                    {
+                        token: 'punctuation.operator',
+                        regex: /[?:,;.]/,
+                    },
+                    {
+                        token: 'paren.lparen',
+                        regex: /[\[({]/,
+                    },
+                    {
+                        token: 'paren.rparen',
+                        regex: /[\])}]/,
+                    },
+                    {
+                        // hex number
+                        token: 'constant.numeric',
+                        regex: '0[xX][0-9a-fA-F]+\\b',
+                    },
+                    {
+                        // float number
+                        token: 'constant.numeric',
+                        regex: '[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b',
+                    },
+                    {
+                        token: 'constant.language.boolean',
+                        regex: '(?:true|false)\\b',
+                    },
+                );
+            }
+
+            // Anything else is a variable
+            this.$rules['twig-output'].push([
                 {
-                    token: 'variable.other.readwrite.local.twig',
-                    regex: '-?\\}\\}',
-                    next: 'pop',
+                    token: 'variable',
+                    regex: /\w+/,
                 },
-                {
-                    token: 'meta.tag.twig',
-                    regex: '-?%\\}',
-                    next: 'pop',
-                },
-                {
-                    token: 'string',
-                    regex: "'",
-                    next: 'twig-qstring',
-                },
-                {
-                    token: 'string',
-                    regex: '"',
-                    next: 'twig-qqstring',
-                },
-                {
-                    token: 'constant.numeric', // hex
-                    regex: '0[xX][0-9a-fA-F]+\\b',
-                },
-                {
-                    token: 'constant.numeric', // float
-                    regex: '[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b',
-                },
-                {
-                    token: 'constant.language.boolean',
-                    regex: '(?:true|false)\\b',
-                },
-                {
-                    token: keywordMapper,
-                    regex: '[a-zA-Z_$][a-zA-Z0-9_$]*\\b',
-                },
-                {
-                    token: 'keyword.operator.assignment',
-                    regex: '=|~',
-                },
-                {
-                    token: 'keyword.operator.comparison',
-                    regex: '==|!=|<|>|>=|<=|===',
-                },
-                {
-                    token: 'keyword.operator.arithmetic',
-                    regex: '\\+|-|/|%|//|\\*|\\*\\*',
-                },
-                {
-                    token: 'keyword.operator.other',
-                    regex: '\\.\\.|\\|',
-                },
-                {
-                    token: 'punctuation.operator',
-                    regex: /[?:,;.]/,
-                },
-                {
-                    token: 'paren.lparen',
-                    regex: /[\[({]/,
-                },
-                {
-                    token: 'paren.rparen',
-                    regex: /[\])}]/,
-                },
-                {
-                    token: 'text',
-                    regex: '\\s+',
-                },
-            ];
+            ]);
+
+            // "…"
             this.$rules['twig-qqstring'] = [
                 {
                     token: 'constant.language.escape',
@@ -198,13 +251,15 @@ export class TwigEditor {
                 },
                 {
                     token: 'string',
-                    regex: '"',
-                    next: 'twig-start',
+                    regex: /"/,
+                    next: 'pop',
                 },
                 {
                     defaultToken: 'string',
                 },
             ];
+
+            // '…'
             this.$rules['twig-qstring'] = [
                 {
                     token: 'constant.language.escape',
@@ -212,8 +267,8 @@ export class TwigEditor {
                 },
                 {
                     token: 'string',
-                    regex: "'",
-                    next: 'twig-start',
+                    regex: /'/,
+                    next: 'pop',
                 },
                 {
                     defaultToken: 'string',
@@ -278,21 +333,24 @@ export class TwigEditor {
         const references = [];
 
         for (let row = 0; row < this.editor.getSession().getLength(); row++) {
-            const tokens = this.editor.getSession().getTokens(row);
+            const tokens = this.editor
+                .getSession()
+                .getTokens(row)
+                .filter((token) => !(token.type === 'text' && /^\s*$/.test(token.value)));
 
             for (let i = 0; i < tokens.length; i++) {
                 if (
-                    tokens[i].type === 'meta.tag.twig' &&
-                    /^{%-?$/.test(tokens[i].value) &&
-                    tokens[i + 2]?.type === 'keyword.control.twig' &&
-                    ['extends', 'use'].includes(tokens[i + 2].value) &&
-                    tokens[i + 4]?.type === 'string'
+                    tokens[i]?.type.split('.').includes('twig-tag-name') &&
+                    ['extends', 'use'].includes(tokens[i].value) &&
+                    tokens[i + 1]?.type.split('.').includes('string')
                 ) {
-                    const name = tokens[i + 4].value.replace(/["']/g, '');
+                    const name = tokens[i + 1].value.replace(/["']/g, '');
 
                     if (/^@Contao(_.+)?\//.test(name)) {
                         references.push({ name, row, column: tokens[i].start });
                     }
+
+                    i += 1;
                 }
             }
         }
@@ -304,17 +362,20 @@ export class TwigEditor {
         const blocks = [];
 
         for (let row = 0; row < this.editor.getSession().getLength(); row++) {
-            const tokens = this.editor.getSession().getTokens(row);
+            const tokens = this.editor
+                .getSession()
+                .getTokens(row)
+                .filter((token) => !(token.type === 'text' && /^\s*$/.test(token.value)));
 
             for (let i = 0; i < tokens.length; i++) {
                 if (
-                    tokens[i].type === 'meta.tag.twig' &&
-                    /^{%-?$/.test(tokens[i].value) &&
-                    tokens[i + 2]?.type === 'keyword.control.twig' &&
-                    tokens[i + 2].value === 'block' &&
-                    tokens[i + 4]?.type === 'identifier'
+                    tokens[i]?.type.split('.').includes('twig-tag-name') &&
+                    tokens[i].value === 'block' &&
+                    tokens[i + 1]?.type.split('.').includes('text')
                 ) {
-                    blocks.push({ name: tokens[i + 4].value, row, column: tokens[i].start });
+                    blocks.push({ name: tokens[i + 1].value.trim(), row, column: tokens[i].start });
+
+                    i += 1;
                 }
             }
         }
