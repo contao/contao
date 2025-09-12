@@ -1,0 +1,32 @@
+.jobs-progress {
+    --value: 0;
+    width: min(100%, 200px);
+    height: 16px;
+    border-radius: 999px;
+    position: relative;
+    overflow: hidden;
+    background: var(--body-bg);
+}
+
+.jobs-progress::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: calc(var(--value) * 1%);
+    background: var(--progress-running);
+}
+
+.jobs-progress::after {
+    content: attr(data-label);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--black);
+    font-size: 0.7rem;
+}
+
+.jobs-progress[aria-valuenow="100"]::before {
+    background: var(--progress-finished);
+}
+

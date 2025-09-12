@@ -354,6 +354,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 ['is_safe' => ['html']],
             ),
             new TwigFilter(
+                'format_number',
+                [FormatterRuntime::class, 'formatNumber'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFilter(
                 'sanitize_html',
                 [SanitizerRuntime::class, 'sanitizeHtml'],
                 ['is_safe' => ['html']],
