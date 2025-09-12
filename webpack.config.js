@@ -11,7 +11,7 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader((options) => {
+    .enablePostCssLoader(options => {
         options.postcssOptions = {
             plugins: {
                 'postcss-preset-env': {
@@ -25,12 +25,22 @@ Encore
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
     .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
     .configureDevServerOptions(options => {
+        options.hot = true;
+        //options.liveReload = true;
+        options.allowedHosts = 'all';
+        options.client = {
+            overlay: false
+        };
+        options.watchFiles = [
+            'core-bundle/assets/styles/**/*',
+            'core-bundle/contao/**/*',
+        ];
         options.server = {
             type: 'https',
             options: {
                 pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
             }
-        },
+        };
         options.static = [
             {
                 directory: 'core-bundle/contao/themes/flexible/icons',
@@ -40,17 +50,7 @@ Encore
                 directory: 'core-bundle/contao/themes/flexible/fonts',
                 publicPath: '/fonts',
             },
-        ],
-        options.hot = true,
-        //options.liveReload = true,
-        options.allowedHosts = 'all',
-        options.watchFiles = [
-            'core-bundle/assets/styles/**/*',
-            'core-bundle/contao/**/*',
-        ],
-        options.client = {
-            overlay: false
-        }
+        ];
     })
 ;
 
