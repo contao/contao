@@ -16,22 +16,25 @@
     }
 
     .content-filter {
-        padding: 10px 15px;
+        padding: 10px 0;
         order: 1;
         border-bottom: 1px solid var(--content-border);
     }
 }
 
 @media (min-width: 768px) {
-    .content:has(>.content-filter),
-    .content > .tree-view {
-        display: grid;
-        grid-template-columns: auto var(--filter-width, 200px);
-    }
+    #main {
+        .content:has(>.content-filter),
+        .content > .tree-view {
+            display: grid;
+            grid-template-columns: auto var(--filter-width, 200px);
+        }
 
-    .content-filter {
-        border-bottom: 0;
-        border-left: 1px solid var(--content-border);
+        .content-filter {
+            padding: 10px 15px;
+            border-bottom: 0;
+            border-left: 1px solid var(--content-border);
+        }
     }
 }
 

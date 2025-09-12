@@ -1,8 +1,7 @@
 /* Filter */
 .tl_panel {
-    padding-bottom: 15px;
-
     &:not(:last-of-type) {
+        padding-bottom: 15px;
         margin-bottom: 15px;
         border-bottom: 1px solid var(--content-border);
     }
@@ -29,10 +28,12 @@
         margin-bottom: 10px;
     }
 
-    > strong {
+    > strong,
+    > label:first-child { /* If there is no strong, style the label */
         display: block;
         padding: 3px 0;
         margin-bottom: 10px;
+        font-weight: 600;
     }
 
     label {

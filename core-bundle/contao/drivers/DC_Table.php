@@ -5322,7 +5322,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		return '
 <div class="tl_sorting tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
+<label for="tl_sort">' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</label>
 <div class="tl_select_wrapper"" data-controller="contao--choices">
 <select name="tl_sort" id="tl_sort" class="tl_select">
 ' . implode("\n", $options_sorter) . '
