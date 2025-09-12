@@ -50,22 +50,6 @@
     box-sizing: border-box;
 }
 
-.tl_version_panel {
-    padding: 8px 12px;
-
-    .tl_select {
-        max-width: 280px;
-    }
-
-    .tl_submit {
-        vertical-align: middle;
-    }
-
-    .tl_formbody {
-        position: relative;
-    }
-}
-
 .tl_search {
     gap: 0;
 }
@@ -79,6 +63,8 @@
 }
 
 .tl_img_submit {
+    display: block;
+    width: 100%;
     white-space: nowrap;
     background-color: var(--form-bg);
     background-position: 6px 6px;
@@ -88,27 +74,15 @@
     border-radius: var(--border-radius);
     box-sizing: border-box;
     transition: background .2s ease;
-    width: 30px;
     padding-left: 20px;
-    text-indent: 20px;
-    overflow: hidden;
 
     &:hover {
         background-color: var(--form-bg-hover);
     }
 }
 
-.tl_submit_panel {
-    margin-top: 15px;
-    display: flex;
-    gap: 6px;
-}
-
 .filter_apply {
     background-image: url("icons/filter-apply.svg");
-    flex-grow: 1;
-    width: initial;
-    text-indent: initial;
 }
 
 .filter_reset {
