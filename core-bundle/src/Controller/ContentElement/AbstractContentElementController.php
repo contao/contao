@@ -43,7 +43,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 
             public function __call($name, $arguments)
             {
-                if ($arguments || method_exists($this->model, $name)) {
+                if ($arguments) {
                     throw new \RuntimeException('Not implemented.');
                 }
 
@@ -57,10 +57,6 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 
             public function offsetGet(mixed $offset): mixed
             {
-                if (method_exists($this->model, $offset)) {
-                    throw new \RuntimeException('Not implemented.');
-                }
-
                 return $this->model->{$offset};
             }
 
