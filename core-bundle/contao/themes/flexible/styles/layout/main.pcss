@@ -3,6 +3,29 @@
     width: calc(100% - 220px);
     display: flex;
     flex-direction: column;
+
+    .content {
+        margin: 0 15px 15px;
+        background: var(--content-bg);
+        border: 1px solid var(--content-border);
+        border-radius: var(--border-radius);
+    }
+
+    .content:has(.tl_formbody_submit) {
+        overflow: clip;
+    }
+
+    .content:has(>.content-filter),
+    .content > .tree-view {
+        display: grid;
+        grid-template-columns: auto 250px;
+    }
+
+    .content-filter {
+        padding: 10px 15px;
+        order: 1;
+        border-left: 1px solid var(--content-border);
+    }
 }
 
 .popup #main {
@@ -13,22 +36,11 @@
     padding: 0;
     border: 0;
     display: initial;
-}
 
-#main .content {
-    margin: 0 15px 15px;
-    background: var(--content-bg);
-    border: 1px solid var(--content-border);
-    border-radius: var(--border-radius);
-}
-
-#main .content:has(.tl_formbody_submit) {
-  overflow: clip;
-}
-
-.popup #main .content {
-    height: auto;
-    margin: 0;
-    border: 0;
-    border-radius: 0;
+    .content {
+        height: auto;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+    }
 }

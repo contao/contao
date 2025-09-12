@@ -451,7 +451,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($this->treeView)
 		{
 			$return .= $this->panel();
+			$return .= '<div class="content-inner">';
 			$return .= $this->treeView();
+			$return .= '</div>';
 		}
 		else
 		{
@@ -462,7 +464,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$return .= $this->panel();
+			$return .= '<div class="content-inner">';
 			$return .= ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->parentView() : $this->listView();
+			$return .= '</div>';
 		}
 
 		return $return;
@@ -3693,6 +3697,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		}
 
 		return '<div
+				class="tree-view"
 				data-controller="contao--toggle-nodes"
 				data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
 				data-contao--toggle-nodes-toggle-action-value="toggleStructure"
@@ -5179,14 +5184,16 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		return '
 <div class="tl_search tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
+<label for="panel_search">' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</label>
+<div class="tl_search_inner">
 <div class="tl_select_wrapper" data-controller="contao--choices">
 <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
 ' . implode("\n", $options_sorter) . '
 </select>
 </div>
 <span>=</span>
-<input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
+<input id="panel_search" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
+</div>
 </div>';
 	}
 
@@ -5461,7 +5468,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 			$fields = '
 <div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.requestSubmit()">
+<select id="panel_limit" name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.requestSubmit()">
   ' . $options . '
 </select>
 </div> ';
@@ -5469,7 +5476,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		return '
 <div class="tl_limit tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['showOnly'] . ':</strong> ' . $fields . '
+<label for="panel_limit">' . $GLOBALS['TL_LANG']['MSC']['showOnly'] . ':</label> ' . $fields . '
 </div>';
 	}
 
@@ -5705,8 +5712,9 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			// Begin select menu
 			$fields .= '
 <div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '">
-  <option value="tl_' . $field . '">---</option>';
+<label for="' . $field .'">'. (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) .'</label>
+<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '">
+  <option value="tl_' . $field . '">-</option>';
 
 			if ($objFields->numRows)
 			{

@@ -508,7 +508,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Build the tree
-		$return = $this->panel() . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
+		$return = $this->panel() . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
@@ -526,6 +526,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '') . '
+</div>
 </div>';
 
 		// Close the form
@@ -566,6 +567,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		;
 
 		return '<div
+				class="tree-view"
 				data-controller="contao--toggle-nodes"
 				data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 				data-contao--toggle-nodes-load-action-value="loadFileManager"
@@ -2629,14 +2631,16 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		return '
     <div class="tl_search tl_subpanel">
-      <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-			' . implode("\n", $options) . '
-          </select>
+      <label for="panel_search">' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</label>
+      <div class="tl_search_inner">
+	      <div class="tl_select_wrapper" data-controller="contao--choices">
+	          <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+				' . implode("\n", $options) . '
+	          </select>
+	      </div>
+	      <span>=</span>
+	      <input id="panel_search" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
       </div>
-      <span>=</span>
-      <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </div>';
 	}
 
