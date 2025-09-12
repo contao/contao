@@ -5712,7 +5712,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			// Begin select menu
 			$fields .= '
 <div class="tl_select_wrapper" data-controller="contao--choices">
-<label for="' . $field .'">'. (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) .'</label>
+<label for="' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</label>
 <select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '">
   <option value="tl_' . $field . '">-</option>';
 
