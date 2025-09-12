@@ -15,16 +15,29 @@
         overflow: clip;
     }
 
-    .content:has(>.content-filter),
-    .content > .tree-view {
-        display: grid;
-        grid-template-columns: auto 250px;
-    }
-
     .content-filter {
         padding: 10px 15px;
         order: 1;
+        border-bottom: 1px solid var(--content-border);
+    }
+}
+
+@media (min-width: 768px) {
+    .content:has(>.content-filter),
+    .content > .tree-view {
+        display: grid;
+        grid-template-columns: auto var(--filter-width, 200px);
+    }
+
+    .content-filter {
+        border-bottom: 0;
         border-left: 1px solid var(--content-border);
+    }
+}
+
+@media (min-width: 1280px) {
+    :root{
+        --filter-width: 250px;
     }
 }
 

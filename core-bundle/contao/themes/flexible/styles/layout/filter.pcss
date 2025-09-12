@@ -1,20 +1,4 @@
 /* Filter */
-.tl_panel,
-.tl_version_panel {
-    /*padding: 10px 15px;
-    background: var(--panel-bg);
-    border-bottom: 1px solid var(--content-border);
-    text-align: right;
-    flex-wrap: wrap;*/
-}
-
-.tl_panel,
-.tl_filter {
-    display: flex;
-    flex-flow: column;
-    gap: 10px;
-}
-
 .tl_panel {
     padding-bottom: 15px;
 
@@ -27,6 +11,12 @@
 .tl_subpanel {
     letter-spacing: -.31em;
 
+    &:not(:last-child) {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--content-border);
+    }
+
     * {
         letter-spacing: normal;
     }
@@ -35,12 +25,14 @@
         margin: 0;
     }
 
-    > :is(strong, label) {
-        padding: 3px 0;
+    > *:not(label, :last-child) {
+        margin-bottom: 10px;
     }
 
-    > label {
-        font-weight: 600;
+    > strong {
+        display: block;
+        padding: 3px 0;
+        margin-bottom: 10px;
     }
 
     label {
@@ -75,17 +67,6 @@
 
 .tl_search {
     gap: 0;
-}
-
-.tl_search_inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    > :is(div, input, select) {
-        width: 46%;
-        margin: 0;
-    }
 }
 
 .tl_select_wrapper {
@@ -140,4 +121,8 @@
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
     background-color: var(--active-bg);
+}
+
+@media (min-width: 768px) {
+
 }
