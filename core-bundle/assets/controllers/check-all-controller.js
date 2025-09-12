@@ -89,10 +89,10 @@ export default class extends Controller {
         }
 
         if (input.type === 'radio' && rowClick) {
-            input.checked = 'checked';
+            input.checked = true;
         } else if (input.type === 'checkbox') {
             if (rowClick) {
-                input.checked = input.checked ? '' : 'checked';
+                input.checked = !input.checked;
             }
 
             if (this.#shiftKey && this.#start) {
