@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Twig\Error\LoaderError;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
@@ -100,7 +101,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
                     // Allow missing templates if they are listed in an array like "{% include
                     // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
-                        throw $e;
+                        throw new LoaderError($e->getMessage().' Optional templates are only supported in array notation.', $node->getTemplateLine(), $node->getSourceContext(), $e);
                     }
                 }
             }
@@ -118,7 +119,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         try {
             $allFirstByThemeSlug = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
         } catch (\LogicException $e) {
-            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
+            throw new LoaderError($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', $node->getTemplateLine(), $node->getSourceContext(), $e);
         }
 
         return new RuntimeThemeDependentExpression($allFirstByThemeSlug);

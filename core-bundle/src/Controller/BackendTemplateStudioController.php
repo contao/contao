@@ -481,26 +481,28 @@ class BackendTemplateStudioController extends AbstractBackendController
         ];
 
         $getRootError = static function (\Throwable $e) use (&$getRootError): \Throwable {
-            return (!($previous = $e->getPrevious())) ? $e : $getRootError($previous);
+            $previous = $e->getPrevious();
+
+            return $previous instanceof Error ? $getRootError($previous) : $e;
         };
 
         if ($error instanceof SyntaxError) {
-            $rootError = $getRootError($error);
+            $error = $getRootError($error);
 
             $data['error'] = [
-                'line' => $rootError instanceof SyntaxError ? $rootError->getLine() : 1,
-                'message' => "Syntax Error\n\n{$rootError->getMessage()}",
+                'line' => $error->getLine() > 0 ? $error->getLine() : 1,
+                'message' => "Syntax Error\n\n{$error->getRawMessage()}",
             ];
         } elseif ($error instanceof LoaderError) {
             $data['error'] = [
-                'line' => 1,
-                'message' => "Loader Error\n\n{$error->getMessage()}",
+                'line' => $error->getLine() > 0 ? $error->getLine() : 1,
+                'message' => "Loader Error\n\n{$error->getRawMessage()}",
             ];
         } elseif ($error instanceof RuntimeError) {
             $data['error'] = [
                 'type' => 'warning',
-                'line' => $error->getLine(),
-                'message' => "Runtime Error\n\n{$error->getMessage()}",
+                'line' => $error->getLine() > 0 ? $error->getLine() : 1,
+                'message' => "Runtime Error\n\n{$error->getRawMessage()}",
             ];
         }
 
