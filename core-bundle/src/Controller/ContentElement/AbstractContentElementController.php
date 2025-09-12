@@ -36,18 +36,47 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             $request->attributes->get('nestedFragments', []),
         );
 
-        $modelAccess = new class ($model) {
+        $modelAccess = new class($model) implements \ArrayAccess, \JsonSerializable {
             public function __construct(private readonly Model $model)
             {
             }
 
             public function __call($name, $arguments)
             {
-                if ($arguments) {
+                if ($arguments || method_exists($this->model, $name)) {
                     throw new \RuntimeException('Not implemented.');
                 }
 
                 return $this->model->{$name};
+            }
+
+            public function offsetExists(mixed $offset): bool
+            {
+                return isset($this->model->{$offset});
+            }
+
+            public function offsetGet(mixed $offset): mixed
+            {
+                if (method_exists($this->model, $offset)) {
+                    throw new \RuntimeException('Not implemented.');
+                }
+
+                return $this->model->{$offset};
+            }
+
+            public function offsetSet(mixed $offset, mixed $value): void
+            {
+                // noop
+            }
+
+            public function offsetUnset(mixed $offset): void
+            {
+                // noop
+            }
+
+            public function jsonSerialize(): mixed
+            {
+                return $this->model->row();
             }
         };
 
