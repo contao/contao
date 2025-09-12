@@ -25,7 +25,7 @@
 @media (min-width: 768px) {
     #main {
         .content:has(>.content-filter),
-        .content > .tree-view {
+        .content > .tree-view:has(>.content-filter) {
             display: grid;
             grid-template-columns: auto var(--filter-width, 200px);
         }
