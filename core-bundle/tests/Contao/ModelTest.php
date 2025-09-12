@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaLoader;
 use Contao\Model;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -58,7 +60,7 @@ class ModelTest extends TestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([Model::class, System::class]);
+        $this->resetStaticProperties([Model::class, System::class, Config::class, DcaLoader::class]);
 
         parent::tearDown();
     }

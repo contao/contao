@@ -41,7 +41,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             {
             }
 
-            public function __call($name, $arguments)
+            public function __call($name, $arguments): mixed
             {
                 if ($arguments) {
                     throw new \RuntimeException('Not implemented.');
