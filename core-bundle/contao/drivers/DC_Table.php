@@ -5123,7 +5123,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		// Get search fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
-			if ($v['search'] ?? null)
+			if (($v['search'] ?? null) && !($v['saveTo'] ?? null))
 			{
 				$searchFields[] = $k;
 			}

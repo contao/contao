@@ -236,6 +236,24 @@ class TableDataContainerProvider implements ProviderInterface
         $searchableContent = [];
 
         foreach (array_keys($searchableFields) as $field) {
+            if ($targetField = ($fieldsConfig[$field]['saveTo'] ?? null)) {
+                // Do nothing if target field is empty
+                if (!($row[$targetField] ?? null)) {
+                    continue;
+                }
+
+                // Expand storage of virtual fields
+                if (\is_string($row[$targetField])) {
+                    try {
+                        $row[$targetField] = json_decode($row[$targetField], true, flags: JSON_THROW_ON_ERROR);
+                    } catch (\JsonException) {
+                        $row[$targetField] = [];
+                    }
+
+                    $row = array_merge($row, $row[$targetField]);
+                }
+            }
+
             if (isset($row[$field])) {
                 $event = new FormatTableDataContainerDocumentEvent($row[$field], $fieldsConfig[$field] ?? []);
                 $this->eventDispatcher->dispatch($event);
