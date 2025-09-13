@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
+use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -83,11 +84,15 @@ class BackendMenuListener
             ->setLabel('debug_mode')
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', $class)
+            ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
             ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
-        $tree->getChild('submenu')->addChild($debug);
+        $tree->addChild($debug);
+
+        // The last two items are "submenu" and "burger", so make this the third to last
+        (new MenuManipulator())->moveToPosition($debug, $tree->count() - 3);
     }
 
     /**

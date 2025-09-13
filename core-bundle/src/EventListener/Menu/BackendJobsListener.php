@@ -64,6 +64,6 @@ class BackendJobsListener
         $event->getTree()->addChild($tree);
 
         // Move the favorites menu behind "alerts"
-        (new MenuManipulator())->moveToPosition($tree, 2);
+        (new MenuManipulator())->moveToPosition($tree, 3);
     }
 }
