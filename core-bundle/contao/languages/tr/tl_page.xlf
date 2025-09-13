@@ -527,7 +527,6 @@
       </trans-unit>
       <trans-unit id="tl_page.feedDescription.1">
         <source>Here you can enter a short description of the feed.</source>
-        <target>Buraya akışın kısa açıklamasını yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -663,11 +662,9 @@
       </trans-unit>
       <trans-unit id="tl_page.copy.1">
         <source>Copy page ID %s</source>
-        <target>%s kimlikli sayfayı kopyala</target>
       </trans-unit>
       <trans-unit id="tl_page.copyChildren.1">
         <source>Copy page ID %s with its subpages</source>
-        <target>%s kimlikli sayfayı alt sayfaları ile kopyala</target>
       </trans-unit>
       <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
@@ -687,11 +684,9 @@
       </trans-unit>
       <trans-unit id="tl_page.toggle.3">
         <source>Unpublish</source>
-        <target>Yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_page.toggle.4">
         <source>Publish</source>
-        <target>Yayınla</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -703,15 +698,12 @@
       </trans-unit>
       <trans-unit id="tl_page.pastenewtop.1">
         <source>Add a new page at the top</source>
-        <target>Üste yeni bir sayfa ekle</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewafter.1">
         <source>Add a new page after page ID %s</source>
-        <target>%s kimlikli sayfadan sonra yeni bir sayfa ekle</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewinto.1">
         <source>Add a new page inside page ID %s</source>
-        <target>%s kimlikli sayfaya yeni bir sayfa ekle</target>
       </trans-unit>
       <trans-unit id="tl_page.articles.0">
         <source>Articles</source>

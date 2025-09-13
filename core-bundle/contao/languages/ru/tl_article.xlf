@@ -247,15 +247,12 @@
       </trans-unit>
       <trans-unit id="tl_article.pastenewafter.1">
         <source>Add a new article after article ID %s</source>
-        <target>Добавить новую статью после статьи ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.0">
         <source>New at the top</source>
-        <target>Новый вверху</target>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.1">
         <source>Add a new article in page ID %s</source>
-        <target>Добавить новую статью в страницу ID %s</target>
       </trans-unit>
     </body>
   </file>

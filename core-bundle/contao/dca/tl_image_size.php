@@ -16,9 +16,6 @@ use Contao\DC_Table;
 use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
-use Imagine\Gd\Imagine as GdImagine;
-use Imagine\Gmagick\Imagine as GmagickImagine;
-use Imagine\Imagick\Imagine as ImagickImagine;
 
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
@@ -433,28 +430,9 @@ class tl_image_size extends Backend
 
 		$imagine = System::getContainer()->get('contao.image.imagine');
 
-		if ($imagine instanceof ImagickImagine)
+		foreach (array_keys($supported) as $format)
 		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = in_array(strtoupper($format), Imagick::queryFormats(strtoupper($format)), true);
-			}
-		}
-
-		if ($imagine instanceof GmagickImagine)
-		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = in_array(strtoupper($format), (new Gmagick())->queryformats(strtoupper($format)), true);
-			}
-		}
-
-		if ($imagine instanceof GdImagine)
-		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = function_exists('image' . $format);
-			}
+			$supported[$format] = $imagine->getDriverInfo()->isFormatSupported($format);
 		}
 
 		return $supported;

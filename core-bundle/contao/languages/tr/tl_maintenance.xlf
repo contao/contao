@@ -199,7 +199,6 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.confirmation">
         <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
-        <target>Yeniden oluşturma işlemi sürüyor. İşlemin güncellemelerini görmek için görevler özetine bakın.</target>
       </trans-unit>
     </body>
   </file>

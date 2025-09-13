@@ -977,15 +977,19 @@
         <source>Unhide</source>
         <target>Anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_content.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Oben einfügen</target>
+      </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>Nach dem Inhaltselement ID %s einfügen</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenewtop.1">
+      <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
         <target>Neues Inhaltselement oben erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenewafter.1">
+      <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Neues Inhaltselement nach dem Inhaltselement ID %s erstellen</target>
       </trans-unit>

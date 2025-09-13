@@ -977,15 +977,19 @@
         <source>Unhide</source>
         <target>Visa upp</target>
       </trans-unit>
+      <trans-unit id="tl_content.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Klistra in efter rubriken</target>
+      </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>Klistra in efter innehållselement med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenewtop.1">
+      <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
         <target>Skapa ett nytt innehållselement högst upp</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenewafter.1">
+      <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Skapa ett nytt innehållselement efter innehållselement-ID %s</target>
       </trans-unit>

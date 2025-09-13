@@ -81,15 +81,19 @@
         <source>Activate</source>
         <target>Aktivovat</target>
       </trans-unit>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Vložit nahoru</target>
+      </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
         <target>Vložit za mediální query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenewtop.1">
+      <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
         <target>Vytvořit nové mediální query na prvním místě</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenewafter.1">
+      <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
         <target>Vytvořit nové mediální query za ID %s</target>
       </trans-unit>

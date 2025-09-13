@@ -1,7 +1,7 @@
 /* Filter */
 .tl_panel,
 .tl_version_panel {
-    padding: 8px 15px;
+    padding: 10px 15px;
     background: var(--panel-bg);
     border-bottom: 1px solid var(--content-border);
     text-align: right;
@@ -14,6 +14,10 @@
     justify-content: flex-end;
     align-items: center;
     gap: 3px;
+}
+
+.tl_panel:first-of-type {
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 /* Limit, search and submit */
@@ -93,7 +97,7 @@
     background-repeat: no-repeat;
     margin: 0;
     border: 1px solid var(--form-border);
-    border-radius: 2px;
+    border-radius: var(--border-radius);
     box-sizing: border-box;
     transition: background .2s ease;
     width: 30px;

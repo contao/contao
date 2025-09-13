@@ -6,17 +6,8 @@
     padding-top: 20px;
 }
 
-#tl_navigation .menu_level_0 > li:after {
-    content: "";
-    width: calc(100% - 30px);
-    height: 1px;
-    display: block;
-    margin: 15px auto;
-    background: var(--nav-separator);
-}
-
-#tl_navigation .menu_level_0 > li.last:after {
-    display: none;
+#tl_navigation .menu_level_0 > li:not(:first-of-type) {
+    margin: 25px 0;
 }
 
 #tl_navigation .menu_level_0 a[class^="group-"] {
@@ -36,23 +27,23 @@
 }
 
 #tl_navigation .group-favorites {
-    background: url("icons/favorites_group.svg") 3px 2px no-repeat;
+    background: var(--icon-favorites-group) 3px 2px no-repeat;
 }
 
 #tl_navigation .group-content {
-    background: url("icons/content.svg") 3px 2px no-repeat;
+    background: var(--icon-content) 3px 2px no-repeat;
 }
 
 #tl_navigation .group-design {
-    background: url("icons/monitor.svg") 3px 2px no-repeat;
+    background: var(--icon-monitor) 3px 2px no-repeat;
 }
 
 #tl_navigation .group-accounts {
-    background: url("icons/person.svg") 3px 2px no-repeat;
+    background: var(--icon-person) 3px 2px no-repeat;
 }
 
 #tl_navigation .group-system {
-    background: url("icons/wrench.svg") 3px 2px no-repeat;
+    background: var(--icon-wrench) 3px 2px no-repeat;
 }
 
 #tl_navigation .menu_level_1 {
@@ -61,9 +52,8 @@
 
 #tl_navigation [class^="menu_level_"] a {
     display: block;
-    padding: 5px 33px 5px 37px;
+    padding: 6px 33px 6px 37px;
     font-weight: 400;
-    color: var(--nav);
     transition: color .2s ease;
 }
 
@@ -127,8 +117,9 @@
 }
 
 #tl_navigation .menu_level_1 a:hover, #tl_navigation .menu_level_1 li.current > a {
-    color: var(--nav-hover);
+    color: var(--text);
     background-color: var(--nav-current);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
 }
 
 #tl_navigation .collapsed .menu_level_1 {

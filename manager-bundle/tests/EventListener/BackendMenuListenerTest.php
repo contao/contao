@@ -46,7 +46,6 @@ class BackendMenuListenerTest extends ContaoTestCase
     {
         $request = new Request();
         $request->server->set('QUERY_STRING', 'do=page');
-        $request->attributes->set('_contao_referer_id', 'foo');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -57,7 +56,6 @@ class BackendMenuListenerTest extends ContaoTestCase
             'do' => 'debug',
             'key' => 'enable',
             'referer' => base64_encode('do=page'),
-            'ref' => 'foo',
         ];
 
         $router = $this->createMock(RouterInterface::class);
@@ -65,7 +63,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend', $params)
-            ->willReturn('/contao?do=debug&key=enable&referer='.base64_encode('do=page').'&ref=foo')
+            ->willReturn('/contao?do=debug&key=enable&referer='.base64_encode('do=page'))
         ;
 
         $factory = new MenuFactory();

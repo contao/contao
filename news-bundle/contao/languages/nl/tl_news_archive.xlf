@@ -78,7 +78,6 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate</source>
-        <target>Kopie</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate news archive ID %s</source>

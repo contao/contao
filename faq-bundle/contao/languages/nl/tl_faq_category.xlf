@@ -59,7 +59,6 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.0">
         <source>Duplicate</source>
-        <target>Kopie</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy.1">
         <source>Duplicate category ID %s</source>

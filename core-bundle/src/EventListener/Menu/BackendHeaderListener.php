@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -34,7 +33,6 @@ class BackendHeaderListener
     public function __construct(
         private readonly Security $security,
         private readonly RouterInterface $router,
-        private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
     ) {
@@ -56,7 +54,6 @@ class BackendHeaderListener
 
         $factory = $event->getFactory();
         $tree = $event->getTree();
-        $ref = $this->getRefererId();
 
         $manualTitle = $this->translator->trans('MSC.manual', [], 'contao_default');
 
@@ -110,7 +107,7 @@ class BackendHeaderListener
             ->createItem('login')
             ->setAttribute('class', 'separator')
             ->setLabel('MSC.profile')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'ref' => $ref]))
+            ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'nb' => '1']))
             ->setLinkAttribute('class', 'icon-profile')
             ->setExtra('translation_domain', 'contao_default')
         ;
@@ -120,7 +117,7 @@ class BackendHeaderListener
         $security = $factory
             ->createItem('security')
             ->setLabel('MSC.security')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'security', 'ref' => $ref]))
+            ->setUri($this->router->generate('contao_backend', ['do' => 'security']))
             ->setLinkAttribute('class', 'icon-security')
             ->setExtra('translation_domain', 'contao_default')
         ;
@@ -130,7 +127,7 @@ class BackendHeaderListener
         $favorites = $factory
             ->createItem('favorites')
             ->setLabel('MSC.favorites')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites', 'ref' => $ref]))
+            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites']))
             ->setLinkAttribute('class', 'icon-favorites')
             ->setExtra('translation_domain', 'contao_default')
         ;
@@ -193,14 +190,5 @@ class BackendHeaderListener
         }
 
         return $label;
-    }
-
-    private function getRefererId(): string
-    {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        return $request->attributes->get('_contao_referer_id');
     }
 }

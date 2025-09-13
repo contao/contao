@@ -343,21 +343,37 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$db = Database::getInstance();
 
-			try
+			if (isset($session['search'][$this->strTable]['field']) && 'uuid' === $session['search'][$this->strTable]['field'] && Validator::isUuid($for))
 			{
-				$db->prepare("SELECT '' REGEXP ?")->execute($for);
+				$uuid = $for;
+
+				if (Validator::isStringUuid($uuid))
+				{
+					$uuid = StringUtil::uuidToBin($uuid);
+				}
+
+				$objRoot = $db
+					->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE uuid=?")
+					->execute($uuid);
 			}
-			catch (DriverException $exception)
+			else
 			{
-				// Quote search string if it is not a valid regular expression
-				$for = preg_quote($for, null);
+				try
+				{
+					$db->prepare("SELECT '' REGEXP ?")->execute($for);
+				}
+				catch (DriverException $exception)
+				{
+					// Quote search string if it is not a valid regular expression
+					$for = preg_quote($for, null);
+				}
+
+				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+
+				$objRoot = $db
+					->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+					->execute($for);
 			}
-
-			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-
-			$objRoot = $db
-				->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-				->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -452,7 +468,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		$security = System::getContainer()->get('security.helper');
 		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
@@ -555,7 +570,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 				data-contao--toggle-nodes-load-action-value="loadFileManager"
 				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
-				data-contao--toggle-nodes-referer-id-value="' . $strRefererId . '"
 				data-contao--toggle-nodes-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
 				data-contao--toggle-nodes-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
 				data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
@@ -2305,6 +2319,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$user = BackendUser::getInstance();
 		$security = System::getContainer()->get('security.helper');
+		$canRenameFiles = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
@@ -2367,7 +2382,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$dragHandle = '';
+
+			if ($canRenameFiles && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $currentFolder))))
+			{
+				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFolder'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
+			}
+
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
@@ -2481,7 +2503,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+
+			$dragHandle = '';
+
+			if ($canRenameFiles && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $currentFile))))
+			{
+				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFile'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
+			}
+
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
@@ -2555,15 +2585,42 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
+		$searchFields = array('name', 'uuid');
 
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
+			$strField = Input::post('tl_field', true);
 			$strKeyword = ltrim(Input::postRaw('tl_value'), '*');
 
+			if ($strField && !\in_array($strField, $searchFields, true))
+			{
+				$strField = '';
+				$strKeyword = '';
+			}
+
+			$session['search'][$this->strTable]['field'] = $strField;
 			$session['search'][$this->strTable]['value'] = $strKeyword;
 
 			$objSessionBag->replace($session);
+		}
+
+		$options = array();
+
+		foreach ($searchFields as $field)
+		{
+			$option_label = $field;
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']))
+			{
+				$option_label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'];
+			}
+			elseif (isset($GLOBALS['TL_LANG']['MSC'][$field]))
+			{
+				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
+			}
+
+			$options[] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((($session['search'][$this->strTable]['field'] ?? null) === $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
 		}
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
@@ -2575,7 +2632,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
       <div class="tl_select_wrapper" data-controller="contao--choices">
           <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-            <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
+			' . implode("\n", $options) . '
           </select>
       </div>
       <span>=</span>

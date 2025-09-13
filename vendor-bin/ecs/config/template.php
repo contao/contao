@@ -56,5 +56,5 @@ return ECSConfig::configure()
     ->withParallel()
     ->withSpacing(Option::INDENTATION_SPACES, "\n")
     ->withFileExtensions(['html5'])
-    ->withCache(sys_get_temp_dir().'/ecs/contao56-template')
+    ->withCache(sys_get_temp_dir().'/ecs/contao5x-template')
 ;

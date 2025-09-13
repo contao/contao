@@ -223,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_files.textTrackType.1">
         <source>Here you can select the type of text track.</source>
-        <target>Buradan yazı izinin türünü seçebilirsiniz.</target>
+        <target>Buradan metin izinin türünü seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_files.captions">
         <source>Closed captions</source>
@@ -255,7 +255,6 @@
       </trans-unit>
       <trans-unit id="tl_files.copy.1">
         <source>Copy file or folder &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosya ya da klasörünü kopyala</target>
       </trans-unit>
       <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder &quot;%s&quot;</source>
@@ -271,7 +270,7 @@
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosyasının kaynak yazısını düzenle</target>
+        <target>&quot;%s&quot; dosyasının kaynak metnini düzenle</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>
