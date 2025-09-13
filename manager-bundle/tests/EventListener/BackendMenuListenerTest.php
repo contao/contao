@@ -92,7 +92,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $debug->getExtras());
     }
 
-    public function testAddsTheEnabledClassIfTheDebugModeIsEnabled(): void
+    public function testAddsTheHoverClassIfTheDebugModeIsEnabled(): void
     {
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
@@ -112,7 +112,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $children = $event->getTree()->getChildren();
 
-        $this->assertSame(['class' => 'icon-debug enabled', 'title' => 'debug_mode', 'data-turbo-prefetch' => 'false'], $children['debug']->getLinkAttributes());
+        $this->assertSame(['class' => 'icon-debug hover', 'title' => 'debug_mode', 'data-turbo-prefetch' => 'false'], $children['debug']->getLinkAttributes());
     }
 
     public function testDoesNotAddTheDebugButtonIfTheJwtManagerIsNotSet(): void
