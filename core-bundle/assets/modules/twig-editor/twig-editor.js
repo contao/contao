@@ -1,0 +1,235 @@
+import * as ace from 'ace-builds/src-noconflict/ace';
+import * as extCodeLens from 'ace-builds/src-noconflict/ext-code_lens';
+import * as extLanguageTools from 'ace-builds/src-noconflict/ext-language_tools';
+import * as extWhitespace from 'ace-builds/src-noconflict/ext-whitespace';
+import 'ace-builds/src-noconflict/mode-twig';
+import themeDark from '!!css-loader!../../styles/twig-editor/contao-twig-dark.pcss';
+import themeLight from '!!css-loader!../../styles/twig-editor/contao-twig-light.pcss';
+import ContaoTwigMode from '../../modules/twig-editor/contao-twig-mode';
+
+export class TwigEditor {
+    constructor(element) {
+        const environment = JSON.parse(
+            element.closest('[data-twig-environment]').getAttribute('data-twig-environment'),
+        );
+
+        this._element = element;
+        this._element.classList.add('hidden');
+        this.name = this._element.dataset.name;
+
+        // Ace uses lots of HTML elements to display the highlighted source
+        // code. We're therefore running it in a shadow DOM, so that we do not
+        // trigger outside mutation observers.
+        const target = this.#initializeShadowRoot(element);
+
+        this.editor = ace.edit(target, {
+            mode: new ContaoTwigMode.Mode(target.dataset.type ?? 'html', environment),
+            maxLines: 100,
+            wrap: true,
+            useSoftTabs: false,
+            autoScrollEditorIntoView: true,
+            readOnly: target.hasAttribute('readonly'),
+            enableLiveAutocompletion: true,
+            enableKeyboardAccessibility: true,
+        });
+
+        this.editor.renderer.attachToShadowRoot();
+
+        this.setColorScheme(document.documentElement.dataset.colorScheme);
+        this.editor.container.style.lineHeight = '1.45';
+
+        extWhitespace.detectIndentation(this.editor.getSession());
+
+        // Register commands
+        this.editor.commands.addCommand({
+            name: 'lens:block-info',
+            readOnly: true,
+            exec: (editor, args) => {
+                this._element.dispatchEvent(
+                    new CustomEvent('twig-editor:lens:block-info', {
+                        bubbles: true,
+                        detail: {
+                            name: this.name,
+                            block: args[0],
+                        },
+                    }),
+                );
+            },
+        });
+
+        this.editor.commands.addCommand({
+            name: 'lens:follow',
+            readOnly: true,
+            exec: (editor, args) => {
+                this._element.dispatchEvent(
+                    new CustomEvent('twig-editor:lens:follow', {
+                        bubbles: true,
+                        detail: {
+                            name: args[0],
+                        },
+                    }),
+                );
+            },
+        });
+
+        // Setup code lenses
+        this.editor.getSession().once('tokenizerUpdate', () => {
+            this.#registerCodeLensProvider();
+        });
+    }
+
+    #initializeShadowRoot(element) {
+        this._host = document.createElement('div');
+
+        element.insertAdjacentElement('afterend', this._host);
+        element.classList.add('hidden');
+
+        const shadowRoot = this._host.attachShadow({ mode: 'open' });
+        const target = element.cloneNode();
+
+        shadowRoot.appendChild(target);
+
+        return target;
+    }
+
+    #registerCodeLensProvider() {
+        extCodeLens.registerCodeLensProvider(this.editor, {
+            provideCodeLenses: (session, callback) => {
+                if (session.destroyed) {
+                    return;
+                }
+
+                const payload = [];
+
+                for (const reference of this.#analyzeReferences()) {
+                    payload.push({
+                        start: { row: reference.row, column: reference.column },
+                        command: {
+                            id: 'lens:follow',
+                            title: reference.name,
+                            arguments: [reference.name],
+                        },
+                    });
+                }
+
+                for (const block of this.#analyzeBlocks()) {
+                    payload.push({
+                        start: { row: block.row, column: block.column },
+                        command: {
+                            id: 'lens:block-info',
+                            title: `Block "${block.name}"`,
+                            arguments: [block.name],
+                        },
+                    });
+                }
+
+                callback(null, payload);
+            },
+        });
+    }
+
+    #analyzeReferences() {
+        const references = [];
+
+        for (let row = 0; row < this.editor.getSession().getLength(); row++) {
+            const tokens = this.editor
+                .getSession()
+                .getTokens(row)
+                .filter((token) => !(token.type === 'text' && /^\s*$/.test(token.value)));
+
+            for (let i = 0; i < tokens.length; i++) {
+                if (
+                    tokens[i]?.type.split('.').includes('twig-tag-name') &&
+                    ['extends', 'use'].includes(tokens[i].value) &&
+                    tokens[i + 1]?.type.split('.').includes('string')
+                ) {
+                    const name = tokens[i + 1].value.replace(/["']/g, '');
+
+                    if (/^@Contao(_.+)?\//.test(name)) {
+                        references.push({ name, row, column: tokens[i].start });
+                    }
+
+                    i += 1;
+                }
+            }
+        }
+
+        return references;
+    }
+
+    #analyzeBlocks() {
+        const blocks = [];
+
+        for (let row = 0; row < this.editor.getSession().getLength(); row++) {
+            const tokens = this.editor
+                .getSession()
+                .getTokens(row)
+                .filter((token) => !(token.type === 'text' && /^\s*$/.test(token.value)));
+
+            for (let i = 0; i < tokens.length; i++) {
+                if (
+                    tokens[i]?.type.split('.').includes('twig-tag-name') &&
+                    tokens[i].value === 'block' &&
+                    tokens[i + 1]?.type.split('.').includes('text')
+                ) {
+                    blocks.push({ name: tokens[i + 1].value.trim(), row, column: tokens[i].start });
+
+                    i += 1;
+                }
+            }
+        }
+
+        return blocks;
+    }
+
+    setAnnotationsData(data) {
+        extLanguageTools.addCompleter({
+            id: 'contaoTwigCompleter',
+            getCompletions: (editor, session, pos, prefix, callback) => {
+                callback(null, data.autocomplete);
+            },
+        });
+
+        if ('error' in data) {
+            this.editor.getSession().setAnnotations([
+                {
+                    row: data.error.line - 1,
+                    column: 0,
+                    type: data.error.type || 'error',
+                    text: ` ${data.error.message}`,
+                },
+            ]);
+        }
+    }
+
+    setColorScheme(mode) {
+        const isDark = mode === 'dark';
+
+        this.editor.setTheme({
+            isDark,
+            cssClass: `contao-twig-${mode}`,
+            cssText: isDark ? themeDark : themeLight,
+        });
+    }
+
+    isEditable() {
+        return !this.editor.getReadOnly();
+    }
+
+    getContent() {
+        return this.editor.getValue();
+    }
+
+    focus() {
+        this.editor.focus();
+    }
+
+    destroy() {
+        this._element.textContent = this.getContent();
+
+        this.editor.destroy();
+
+        this._element.classList.remove('hidden');
+        this._host.remove();
+    }
+}

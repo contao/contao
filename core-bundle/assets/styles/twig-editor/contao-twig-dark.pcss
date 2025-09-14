@@ -1,0 +1,159 @@
+@import "common.pcss";
+
+.ace_editor.contao-twig-dark {
+    background-color: #2b2b2b;
+    color: #f8f8f8;
+
+    .ace_codeLens a::before {
+        background-image: url("../../../contao/themes/flexible/icons/search--dark.svg");
+    }
+
+    .ace_gutter {
+        background: #232323;
+        color: #e2e2e2;
+    }
+
+    .ace_print-margin {
+        width: 1px;
+        background: #232323;
+    }
+
+    .ace_cursor {
+        color: #a7a7a7;
+    }
+
+    .ace_marker-layer .ace_selection {
+        background: rgb(221 240 255 / 20%);
+    }
+
+    .ce_multiselect .ace_selection.ace_start {
+        box-shadow: 0 0 3px 0 #141414;
+    }
+
+    .ace_marker-layer .ace_step {
+        background: rgb(102 82 0);
+    }
+
+    .ace_marker-layer .ace_bracket {
+        margin: -1px 0 0 -1px;
+        border: 1px solid rgb(255 255 255 / 25%);
+    }
+
+    .ace_marker-layer .ace_active-line {
+        background: rgb(255 255 255 / 3.1%);
+    }
+
+    .ace_gutter-active-line {
+        background-color: rgb(255 255 255 / 3.1%);
+    }
+
+    .ace_marker-layer .ace_selected-word {
+        border: 1px solid rgb(221 240 255 / 20%);
+    }
+
+    .ace_invisible {
+        color: rgb(255 255 255 / 25%);
+    }
+
+    .ace_keyword,
+    .ace_meta {
+        color: #cda869;
+    }
+
+    .ace_constant,
+    .ace_constant.ace_character,
+    .ace_constant.ace_character.ace_escape,
+    .ace_constant.ace_other,
+    .ace_heading,
+    .ace_markup.ace_heading,
+    .ace_support.ace_constant {
+        color: #cc7832;
+    }
+
+    .ace_invalid.ace_illegal {
+        color: #f8f8f8;
+        background-color: rgb(86 45 86 / 75%);
+    }
+
+    .ace_invalid.ace_deprecated {
+        text-decoration: underline;
+        font-style: italic;
+        color: #d2a8a1;
+    }
+
+    .ace_support {
+        color: #9b859d;
+    }
+
+    .ace_fold {
+        background-color: #ac885b;
+        border-color: #f8f8f8;
+    }
+
+    .ace_support.ace_function {
+        color: #dad085;
+    }
+
+    .ace_list,
+    .ace_markup.ace_list,
+    .ace_storage {
+        color: #f9ee98;
+    }
+
+    .ace_entity.ace_name.ace_function,
+    .ace_meta.ace_tag {
+        color: #e8bf6a;
+    }
+
+    .ace_string {
+        color: #6a8759;
+    }
+
+    .ace_string.ace_regexp {
+        color: #e9c062;
+    }
+
+    .ace_comment {
+        font-style: italic;
+        color: #808080;
+    }
+
+    .ace_variable,
+ .ace_text {
+        color: #e3e3e3;
+    }
+
+    .ace_numeric,
+ .ace_reference {
+        color: #447cb8 !important;
+    }
+
+    .ace_xml-pe {
+        color: #494949;
+    }
+
+    .ace_indent-guide {
+        background: url("ace-builds/css/twilight-1.png") right repeat-y;
+    }
+
+    .ace_indent-guide-active {
+        background: url("ace-builds/css/twilight-2.png") right repeat-y;
+    }
+
+    .ace_twig-output-start,
+ .ace_twig-output-end,
+ .ace_twig-tag-start,
+ .ace_twig-tag-end {
+        color: #a7b5c5 !important;
+    }
+
+    .ace_twig-function {
+        color: #426da5 !important;
+
+        &.ace_dangerous {
+            background-color: #cc7832;
+            color: #2c2828 !important;
+            padding: 0 1px;
+        }
+    }
+}
