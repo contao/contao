@@ -29,8 +29,8 @@ class EnvironmentInformation
 
     public function dump(): array
     {
-        // We output the keywords sorted and organized by length and occurrence,
-        // so that they can be easily matched by a regular expression
+        // We output the keywords sorted and organized by length and occurrence, so that
+        // they can be easily matched by a regular expression
         $normalize = static function (array $array): array {
             rsort($array);
 
@@ -42,14 +42,14 @@ class EnvironmentInformation
         // Guess which tags have a corresponding end tag by method naming convention
         $tokenParsersWithEndTag = array_filter(
             $tokenParsers,
-            static fn(TokenParserInterface $tokenParser): bool => method_exists($tokenParser, sprintf('decide%sEnd', ucfirst($tokenParser->getTag())))
+            static fn (TokenParserInterface $tokenParser): bool => method_exists($tokenParser, \sprintf('decide%sEnd', ucfirst($tokenParser->getTag()))),
         );
 
         $tags = $normalize(
             array_map(
-                static fn(TokenParserInterface $tokenParser): string => $tokenParser->getTag(),
+                static fn (TokenParserInterface $tokenParser): string => $tokenParser->getTag(),
                 $tokenParsers,
-            )
+            ),
         );
 
         // Handle some special cases
@@ -59,29 +59,29 @@ class EnvironmentInformation
             ...$tags,
             ...$normalize(
                 array_map(
-                    static fn(TokenParserInterface $tokenParser): string => "end{$tokenParser->getTag()}",
+                    static fn (TokenParserInterface $tokenParser): string => "end{$tokenParser->getTag()}",
                     $tokenParsersWithEndTag,
-                )
-            )
+                ),
+            ),
         ];
 
         return [
             'tags' => $tags,
             'functions' => $normalize(
                 array_map(
-                    static fn(TwigFunction $function): string => $function->getName(),
+                    static fn (TwigFunction $function): string => $function->getName(),
                     $this->twig->getFunctions(),
                 ),
             ),
             'filters' => $normalize(
                 array_map(
-                    static fn(TwigFilter $filter): string => $filter->getName(),
+                    static fn (TwigFilter $filter): string => $filter->getName(),
                     $this->twig->getFilters(),
                 ),
             ),
             'tests' => $normalize(
                 array_map(
-                    static fn(TwigTest $test): string => $test->getName(),
+                    static fn (TwigTest $test): string => $test->getName(),
                     $this->twig->getTests(),
                 ),
             ),
