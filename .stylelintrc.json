@@ -11,9 +11,6 @@
         "no-descending-specificity": null,
         "selector-class-pattern": null,
         "selector-id-pattern": null,
-        "@stylistic/indentation": 4,
-        "@stylistic/value-list-comma-newline-after": "never-multi-line",
-        "@stylistic/max-line-length": 160,
-        "@stylistic/declaration-colon-newline-after": null
+        "@stylistic/indentation": 4
     }
 }
