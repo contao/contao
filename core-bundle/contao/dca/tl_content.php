@@ -1029,13 +1029,13 @@ class tl_content extends Backend
 		}
 
 		// Strip HTML comments to check if the preview is empty
-		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) != '')
+		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')
 		{
-			$preview = '<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
+			$preview = '';
 		}
 		else
 		{
-			$preview = '';
+			$preview = '<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
 		}
 
 		$dragHandle = '';
