@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Inspector\BlockInformation;
 use Contao\CoreBundle\Twig\Inspector\BlockType;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
+use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
@@ -87,7 +88,7 @@ class BackendTemplateStudioController extends AbstractBackendController
             'tree' => $this->generateTree(),
             'themes' => $availableThemes,
             'current_theme' => $themeContext,
-            'environment_information' => $this->environmentInformation->dump(),
+            'environment_information' => $this->environmentInformation->getData(),
         ]);
     }
 
@@ -189,7 +190,7 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'not_analyzable' => false,
                 ],
                 'annotations' => $canEdit && 0 === $i
-                    ? $this->getAnnotations($logicalName, $templateInformation->getError())
+                    ? $this->getAnnotations($logicalName, $templateInformation)
                     : [],
             ];
 
@@ -353,11 +354,11 @@ class BackendTemplateStudioController extends AbstractBackendController
         }
 
         $logicalName = $this->loader->getFirst($identifier);
-        $error = $this->inspector->inspectTemplate($logicalName)->getError();
+        $templateInformation = $this->inspector->inspectTemplate($logicalName);
 
         return $this->render('@Contao/backend/template_studio/editor/annotations.stream.html.twig', [
             'identifier' => $identifier,
-            'annotations' => $this->getAnnotations($logicalName, $error),
+            'annotations' => $this->getAnnotations($logicalName, $templateInformation),
         ]);
     }
 
@@ -474,11 +475,14 @@ class BackendTemplateStudioController extends AbstractBackendController
         ];
     }
 
-    private function getAnnotations(string $logicalName, Error|null $error): array
+    private function getAnnotations(string $logicalName, TemplateInformation $templateInformation): array
     {
         $data = [
             'autocomplete' => $this->autocomplete->getCompletions($logicalName),
+            'deprecations' => $templateInformation->getDeprecations(),
         ];
+
+        $error = $templateInformation->getError();
 
         $getRootError = static function (\Throwable $e) use (&$getRootError): \Throwable {
             $previous = $e->getPrevious();

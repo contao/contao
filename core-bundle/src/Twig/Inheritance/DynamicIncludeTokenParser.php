@@ -119,7 +119,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         try {
             $allFirstByThemeSlug = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
         } catch (\LogicException $e) {
-            throw new LoaderError($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', $node->getTemplateLine(), $node->getSourceContext(), $e);
+            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
 
         return new RuntimeThemeDependentExpression($allFirstByThemeSlug);

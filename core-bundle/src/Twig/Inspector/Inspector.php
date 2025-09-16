@@ -78,7 +78,7 @@ class Inspector
         sort($blockNames);
         sort($slots);
 
-        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses, $error);
+        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses, $error, $data['deprecations']);
     }
 
     /**

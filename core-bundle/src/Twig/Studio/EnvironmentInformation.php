@@ -21,13 +21,15 @@ use Twig\TwigTest;
 
 class EnvironmentInformation
 {
-    public const FILENAME = 'environment.json';
-
     public function __construct(private readonly Environment $twig)
     {
     }
 
-    public function dump(): array
+    /**
+     * Return a collection of available tags, functions, filters and tests in the
+     * current Twig environment.
+     */
+    public function getData(): array
     {
         // We output the keywords sorted and organized by length and occurrence, so that
         // they can be easily matched by a regular expression
