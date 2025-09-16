@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\Twig\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Twig\Environment;
+use Twig\Parser;
+use Twig\Token;
 use Twig\TokenParser\TokenParserInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -27,13 +29,33 @@ class EnvironmentInformationTest extends TestCase
         $tokenParser = $this->createMock(TokenParserInterface::class);
         $tokenParser
             ->method('getTag')
-            ->willReturn('tag')
+            ->willReturn('if')
         ;
+
+        $tokenParserWithEndTag = new class() implements TokenParserInterface {
+            public function setParser(Parser $parser): void
+            {
+            }
+
+            public function parse(Token $token): void
+            {
+            }
+
+            public function getTag()
+            {
+                return 'region';
+            }
+
+            public function decideRegionEnd(): void
+            {
+                // Marker function
+            }
+        };
 
         $environment = $this->createMock(Environment::class);
         $environment
             ->method('getTokenParsers')
-            ->willReturn([$tokenParser])
+            ->willReturn([$tokenParser, $tokenParserWithEndTag])
         ;
 
         $environment
@@ -53,12 +75,12 @@ class EnvironmentInformationTest extends TestCase
 
         $this->assertSame(
             [
-                'tags' => ['tag'],
-                'filters' => ['filter'],
+                'tags' => ['region', 'elseif', 'if', 'endregion'],
                 'functions' => ['function'],
+                'filters' => ['filter'],
                 'tests' => ['test'],
             ],
-            (new EnvironmentInformation($environment))->dump(),
+            (new EnvironmentInformation($environment))->getData(),
         );
     }
 }

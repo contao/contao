@@ -22,6 +22,7 @@ use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
@@ -158,7 +159,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(LoaderError::class);
         $this->expectExceptionMessage('<original message> Did you try to include a non-existent template or a template from a theme directory?');
 
         $parser->parse($tokenStream);
