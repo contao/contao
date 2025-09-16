@@ -30,10 +30,6 @@
         box-shadow: 0 0 3px 0 #fff;
     }
 
-    .ace_marker-layer .ace_step {
-        background: rgb(255 255 0);
-    }
-
     .ace_marker-layer .ace_bracket {
         margin: -1px 0 0 -1px;
         border: 1px solid #bfbfbf;
@@ -57,7 +53,7 @@
 
     .ace_keyword,
     .ace_meta {
-        color: #cda869;
+        color: #0c234b;
     }
 
     .ace_constant,
@@ -66,66 +62,41 @@
     .ace_constant.ace_other,
     .ace_heading,
     .ace_markup.ace_heading,
-    .ace_support.ace_constant {
-        color: #cc7832;
-    }
-
-    .ace_invalid.ace_illegal {
-        color: #f8f8f8;
-        background-color: rgb(86 45 86 / 75%);
-    }
-
-    .ace_invalid.ace_deprecated {
-        text-decoration: underline;
-        font-style: italic;
-        color: #d2a8a1;
+    .ace_support.ace_constant,
+    .ace_support.ace_function {
+        color: #cf7428;
     }
 
     .ace_support {
-        color: #9b859d;
-    }
-
-    .ace_fold {
-        background-color: #ac885b;
-        border-color: #f8f8f8;
-    }
-
-    .ace_support.ace_function {
-        color: #dad085;
+        color: #ac3bb2;
     }
 
     .ace_list,
     .ace_markup.ace_list,
-    .ace_storage {
-        color: #f9ee98;
-    }
-
+    .ace_storage,
     .ace_entity.ace_name.ace_function,
     .ace_meta.ace_tag {
-        color: #e8bf6a;
+        color: #0a2660;
     }
 
     .ace_string {
-        color: #6a8759;
-    }
-
-    .ace_string.ace_regexp {
-        color: #e9c062;
+        color: #5a7a49;
     }
 
     .ace_comment {
         font-style: italic;
-        color: #808080;
+        color: #777;
     }
 
     .ace_variable,
- .ace_text {
-        color: #e3e3e3;
+    .ace_text {
+        color: #1c1c1c;
     }
 
+    .ace_string.ace_regexp,
     .ace_numeric,
- .ace_reference {
-        color: #447cb8 !important;
+    .ace_reference {
+        color: #5f8c97 !important;
     }
 
     .ace_xml-pe {
@@ -133,27 +104,28 @@
     }
 
     .ace_indent-guide {
-        background: url("ace-builds/css/twilight-1.png") right repeat-y;
+        background: url("ace-builds/css/clouds-1.png") right repeat-y;
     }
 
     .ace_indent-guide-active {
-        background: url("ace-builds/css/twilight-2.png") right repeat-y;
+        background: url("ace-builds/css/clouds-2.png") right repeat-y;
     }
 
     .ace_twig-output-start,
- .ace_twig-output-end,
- .ace_twig-tag-start,
- .ace_twig-tag-end {
-        color: #a7b5c5 !important;
+    .ace_twig-output-end,
+    .ace_twig-tag-start,
+    .ace_twig-tag-end {
+        color: #466589 !important;
     }
 
+    .ace_twig-test,
     .ace_twig-function {
-        color: #426da5 !important;
+        color: #1783ff !important;
+    }
 
-        &.ace_dangerous {
-            background-color: #cc7832;
-            color: #2c2828 !important;
-            padding: 0 1px;
-        }
+    .ace_twig-function.ace_dangerous {
+        background-color: rgb(255 178 178);
+        color: #094da7 !important;
+        padding: 0 2px 0 1px;
     }
 }
