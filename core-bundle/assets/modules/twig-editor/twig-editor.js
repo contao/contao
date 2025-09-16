@@ -29,7 +29,9 @@ export class TwigEditor {
             useSoftTabs: false,
             autoScrollEditorIntoView: true,
             readOnly: target.hasAttribute('readonly'),
+            enableBasicAutocompletion: true,
             enableLiveAutocompletion: true,
+            liveAutocompletionDelay: 300,
             enableKeyboardAccessibility: true,
         });
 
@@ -101,26 +103,41 @@ export class TwigEditor {
 
                 const payload = [];
 
+                // We currently only support one code lens per line
+                const affectedLines = [];
+
                 for (const reference of this.#analyzeReferences()) {
+                    if (affectedLines.includes(reference.row)) {
+                        continue;
+                    }
+
                     payload.push({
-                        start: { row: reference.row, column: reference.column },
+                        start: { row: reference.row },
                         command: {
                             id: 'lens:follow',
                             title: reference.name,
                             arguments: [reference.name],
                         },
                     });
+
+                    affectedLines.push(reference.row);
                 }
 
                 for (const block of this.#analyzeBlocks()) {
+                    if (affectedLines.includes(block.row)) {
+                        continue;
+                    }
+
                     payload.push({
-                        start: { row: block.row, column: block.column },
+                        start: { row: block.row },
                         command: {
                             id: 'lens:block-info',
                             title: `Block "${block.name}"`,
                             arguments: [block.name],
                         },
                     });
+
+                    affectedLines.push(block.row);
                 }
 
                 callback(null, payload);
@@ -146,7 +163,7 @@ export class TwigEditor {
                     const name = tokens[i + 1].value.replace(/["']/g, '');
 
                     if (/^@Contao(_.+)?\//.test(name)) {
-                        references.push({ name, row, column: tokens[i].start });
+                        references.push({ name, row });
                     }
 
                     i += 1;
@@ -172,7 +189,7 @@ export class TwigEditor {
                     tokens[i].value === 'block' &&
                     tokens[i + 1]?.type.split('.').includes('text')
                 ) {
-                    blocks.push({ name: tokens[i + 1].value.trim(), row, column: tokens[i].start });
+                    blocks.push({ name: tokens[i + 1].value.trim(), row });
 
                     i += 1;
                 }
@@ -199,6 +216,19 @@ export class TwigEditor {
                     text: ` ${data.error.message}`,
                 },
             ]);
+        }
+
+        if ('deprecations' in data) {
+            for (const { line, message } of data.deprecations) {
+                this.editor.getSession().setAnnotations([
+                    {
+                        row: line - 1,
+                        column: 0,
+                        type: 'warning',
+                        text: ` ${message}`,
+                    },
+                ]);
+            }
         }
     }
 

@@ -13,7 +13,7 @@ function createContaoTwigHighlightRules(type, environment) {
         }
 
         // Add rules to enter Twig block delimiters to all existing rules
-        let tag_token_index = 0;
+        let tagTokenIndex = 0;
 
         for (const rule in this.$rules) {
             this.$rules[rule].unshift(
@@ -24,7 +24,7 @@ function createContaoTwigHighlightRules(type, environment) {
                 },
                 {
                     token: () => {
-                        tag_token_index = 0;
+                        tagTokenIndex = 0;
                         return 'meta.tag.twig-tag-start';
                     },
                     regex: /\{%[-~]?/,
@@ -51,8 +51,8 @@ function createContaoTwigHighlightRules(type, environment) {
         this.$rules['twig-tag'] = [
             {
                 token: () => {
-                    tag_token_index++;
-                    return tag_token_index === 1 ? 'constant.twig-tag-name' : 'text';
+                    tagTokenIndex++;
+                    return tagTokenIndex === 1 ? 'constant.twig-tag-name' : 'text';
                 },
                 regex: `(${environment.tags.join('|')})`,
             },
@@ -100,7 +100,7 @@ function createContaoTwigHighlightRules(type, environment) {
                 {
                     // |<filter>
                     token: (operator, whitespace, filter) => {
-                        const isDangerous = ['raw', 'insert_tag_raw'].includes(filter);
+                        const isDangerous = filter === 'raw';
                         return [
                             'keyword.operator.other',
                             '',
@@ -111,7 +111,7 @@ function createContaoTwigHighlightRules(type, environment) {
                 },
                 {
                     // is <test>
-                    token: ['keyword.operator.other', '', 'support.function'],
+                    token: ['support.function.twig-test', '', 'support.function'],
                     regex: `(is)(\\s+)(${environment.tests.join('|')})`,
                 },
                 {
