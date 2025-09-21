@@ -55,7 +55,7 @@ class EnvironmentInformation
         );
 
         // Handle some special cases
-        ArrayUtil::arrayInsert($tags, array_search('if', $tags, true), 'elseif');
+        ArrayUtil::arrayInsert($tags, array_search('if', $tags, true), ['elseif', 'else']);
 
         $tags = [
             ...$tags,

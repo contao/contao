@@ -75,7 +75,7 @@ class EnvironmentInformationTest extends TestCase
 
         $this->assertSame(
             [
-                'tags' => ['region', 'elseif', 'if', 'endregion'],
+                'tags' => ['region', 'elseif', 'else', 'if', 'endregion'],
                 'functions' => ['function'],
                 'filters' => ['filter'],
                 'tests' => ['test'],
