@@ -5,6 +5,7 @@ import * as extWhitespace from 'ace-builds/src-noconflict/ext-whitespace';
 import 'ace-builds/src-noconflict/mode-twig';
 import themeDark from '!!css-loader!../../styles/twig-editor/contao-twig-dark.pcss';
 import themeLight from '!!css-loader!../../styles/twig-editor/contao-twig-light.pcss';
+import PhpMode from 'ace-builds/src-noconflict/mode-php';
 import ContaoTwigMode from '../../modules/twig-editor/contao-twig-mode';
 
 export class TwigEditor {
@@ -22,8 +23,10 @@ export class TwigEditor {
         // trigger outside mutation observers.
         const target = this.#initializeShadowRoot(element);
 
+        const type = target.dataset.type ?? 'html.twig';
+
         this.editor = ace.edit(target, {
-            mode: new ContaoTwigMode.Mode(target.dataset.type ?? 'html', environment),
+            mode: type === 'php' ? new PhpMode.Mode() : new ContaoTwigMode.Mode(type.slice(0, -5), environment),
             maxLines: 100,
             wrap: true,
             useSoftTabs: false,

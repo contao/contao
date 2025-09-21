@@ -43,7 +43,7 @@
                     {% set template_editor_attributes = attrs()
                         .set('id', template_editor_id)
                         .set('data-name', template.name)
-                        .set('data-type', template.extension[:-5])
+                        .set('data-type', template.type)
                         .set('readonly', not (can_edit and loop.first)) %}
                     <textarea{{ template_editor_attributes }}>{{ template.code }}</textarea>
 
