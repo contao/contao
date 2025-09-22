@@ -39,13 +39,13 @@ oop.inherits(TwigFoldMode, BaseFoldMode);
         let endColumn = 0;
 
         while ((token = stream.stepForward())) {
-            if (token.type === 'meta.tag.twig-tag-start') {
+            if (token.type.split('.').includes('twig-tag-start')) {
                 endColumn = stream.getCurrentTokenColumn();
 
                 continue;
             }
 
-            if (token.type !== 'constant.twig-tag-name') {
+            if (!token.type.split('.').includes('twig-tag-name')) {
                 continue;
             }
 
