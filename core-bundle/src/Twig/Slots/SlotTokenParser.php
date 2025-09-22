@@ -50,7 +50,7 @@ final class SlotTokenParser extends AbstractTokenParser
         // Parse optional {% else %} tag with fallback content
         if ('else' === $stream->next()->getValue()) {
             $stream->expect(Token::BLOCK_END_TYPE);
-            $fallback = $this->parser->subparse($this->decideAddEnd(...), true);
+            $fallback = $this->parser->subparse($this->decideSlotEnd(...), true);
         } else {
             $fallback = null;
         }
@@ -65,7 +65,13 @@ final class SlotTokenParser extends AbstractTokenParser
         return $token->test(['else', 'endslot']);
     }
 
-    public function decideAddEnd(Token $token): bool
+    /**
+     * Keep the name of this function consistent - we use it to guess which token
+     * parsers have corresponding end tags.
+     *
+     * @see \Contao\CoreBundle\Twig\EnvironmentInformation
+     */
+    public function decideSlotEnd(Token $token): bool
     {
         return $token->test('endslot');
     }
