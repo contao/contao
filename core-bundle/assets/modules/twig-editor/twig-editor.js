@@ -7,6 +7,7 @@ import themeDark from '!!css-loader!../../styles/twig-editor/contao-twig-dark.pc
 import themeLight from '!!css-loader!../../styles/twig-editor/contao-twig-light.pcss';
 import PhpMode from 'ace-builds/src-noconflict/mode-php';
 import ContaoTwigMode from '../../modules/twig-editor/contao-twig-mode';
+import ContaoTwigMode from './contao-twig-mode';
 
 export class TwigEditor {
     constructor(element) {
@@ -109,7 +110,7 @@ export class TwigEditor {
                 // We currently only support one code lens per line
                 const affectedLines = [];
 
-                for (const reference of this.#analyzeReferences()) {
+                for (const reference of analyzeReferences(session)) {
                     if (affectedLines.includes(reference.row)) {
                         continue;
                     }
@@ -126,7 +127,7 @@ export class TwigEditor {
                     affectedLines.push(reference.row);
                 }
 
-                for (const block of this.#analyzeBlocks()) {
+                for (const block of analyzeBlocks(session)) {
                     if (affectedLines.includes(block.row)) {
                         continue;
                     }
@@ -146,60 +147,6 @@ export class TwigEditor {
                 callback(null, payload);
             },
         });
-    }
-
-    #analyzeReferences() {
-        const references = [];
-
-        for (let row = 0; row < this.editor.getSession().getLength(); row++) {
-            const tokens = this.editor
-                .getSession()
-                .getTokens(row)
-                .filter((token) => !(token.type === 'text' && /^\s*$/.test(token.value)));
-
-            for (let i = 0; i < tokens.length; i++) {
-                if (
-                    tokens[i]?.type.split('.').includes('twig-tag-name') &&
-                    ['extends', 'use'].includes(tokens[i].value) &&
-                    tokens[i + 1]?.type.split('.').includes('string')
-                ) {
-                    const name = tokens[i + 1].value.replace(/["']/g, '');
-
-                    if (/^@Contao(_.+)?\//.test(name)) {
-                        references.push({ name, row });
-                    }
-
-                    i += 1;
-                }
-            }
-        }
-
-        return references;
-    }
-
-    #analyzeBlocks() {
-        const blocks = [];
-
-        for (let row = 0; row < this.editor.getSession().getLength(); row++) {
-            const tokens = this.editor
-                .getSession()
-                .getTokens(row)
-                .filter((token) => !(token.type === 'text' && /^\s*$/.test(token.value)));
-
-            for (let i = 0; i < tokens.length; i++) {
-                if (
-                    tokens[i]?.type.split('.').includes('twig-tag-name') &&
-                    tokens[i].value === 'block' &&
-                    tokens[i + 1]?.type.split('.').includes('text')
-                ) {
-                    blocks.push({ name: tokens[i + 1].value.trim(), row });
-
-                    i += 1;
-                }
-            }
-        }
-
-        return blocks;
     }
 
     setAnnotationsData(data) {

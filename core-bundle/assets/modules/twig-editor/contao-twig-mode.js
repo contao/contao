@@ -3,6 +3,7 @@ const TwigMode = ace.require('ace/mode/twig').Mode;
 const TextHighlightRules = ace.require('ace/mode/text_highlight_rules').TextHighlightRules;
 const HtmlHighlightRules = ace.require('ace/mode/html_highlight_rules').HtmlHighlightRules;
 const MatchingBraceOutdent = ace.require('ace/mode/matching_brace_outdent').MatchingBraceOutdent;
+import TwigFolding from './twig-folding';
 
 function createContaoTwigHighlightRules(type, environment) {
     const ContaoTwigHighlightRules = function () {
@@ -219,6 +220,7 @@ const ContaoTwigMode = function (type, environment) {
     TwigMode.call(this);
     this.HighlightRules = createContaoTwigHighlightRules(type, environment);
     this.$outdent = new MatchingBraceOutdent();
+    this.foldingRules = new TwigFolding.Mode();
 };
 
 oop.inherits(ContaoTwigMode, TwigMode);
