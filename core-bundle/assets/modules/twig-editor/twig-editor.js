@@ -6,8 +6,8 @@ import 'ace-builds/src-noconflict/mode-twig';
 import themeDark from '!!css-loader!../../styles/twig-editor/contao-twig-dark.pcss';
 import themeLight from '!!css-loader!../../styles/twig-editor/contao-twig-light.pcss';
 import PhpMode from 'ace-builds/src-noconflict/mode-php';
-import ContaoTwigMode from '../../modules/twig-editor/contao-twig-mode';
 import ContaoTwigMode from './contao-twig-mode';
+import { analyzeBlocks, analyzeReferences } from './token-analyzer';
 
 export class TwigEditor {
     constructor(element) {
