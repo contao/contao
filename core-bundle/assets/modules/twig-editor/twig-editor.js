@@ -10,6 +10,8 @@ import ContaoTwigMode from './contao-twig-mode';
 import { analyzeBlocks, analyzeReferences } from './token-analyzer';
 
 export class TwigEditor {
+    static autocompleteDataByEditorId = new Map();
+
     constructor(element) {
         const environment = JSON.parse(
             element.closest('[data-twig-environment]').getAttribute('data-twig-environment'),
@@ -150,12 +152,23 @@ export class TwigEditor {
     }
 
     setAnnotationsData(data) {
-        extLanguageTools.addCompleter({
-            id: 'contaoTwigCompleter',
-            getCompletions: (editor, session, pos, prefix, callback) => {
-                callback(null, data.autocomplete);
+        // The language tool extension has a global list of completers. We,
+        // however, want completions that vary between files and thus also
+        // between editor instances. When completions are requested, we
+        // therefore resolve them from a static map based on the editor id.
+        TwigEditor.autocompleteDataByEditorId.set(this.editor.id, data.autocomplete);
+
+        extLanguageTools.setCompleters([
+            extLanguageTools.textCompleter,
+            extLanguageTools.keyWordCompleter,
+            extLanguageTools.snippetCompleter,
+            {
+                id: 'contaoTwigCompleter',
+                getCompletions: (editor, session, pos, prefix, callback) => {
+                    callback(null, TwigEditor.autocompleteDataByEditorId.get(editor.id));
+                },
             },
-        });
+        ]);
 
         if ('error' in data) {
             this.editor.getSession().setAnnotations([
