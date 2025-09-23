@@ -101,6 +101,8 @@ export class TwigEditor {
     }
 
     #registerCodeLensProvider() {
+        const shortName = this.#getShortName(this.name);
+
         extCodeLens.registerCodeLensProvider(this.editor, {
             provideCodeLenses: (session, callback) => {
                 if (session.destroyed) {
@@ -114,6 +116,11 @@ export class TwigEditor {
 
                 for (const reference of analyzeReferences(session)) {
                     if (affectedLines.includes(reference.row)) {
+                        continue;
+                    }
+
+                    // Ignore references to the same group
+                    if (this.#getShortName(reference.name) === shortName) {
                         continue;
                     }
 
@@ -149,6 +156,12 @@ export class TwigEditor {
                 callback(null, payload);
             },
         });
+    }
+
+    #getShortName(fullyQualifiedName) {
+        const matches = /^@Contao(?:_[a-zA-Z0-9_-]+)?(?:\/(.*))?$/.exec(fullyQualifiedName);
+
+        return matches[1] ?? false;
     }
 
     setAnnotationsData(data) {
