@@ -160,7 +160,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $parser = new Parser($environment);
 
         $this->expectException(LoaderError::class);
-        $this->expectExceptionMessage('<original message> Did you try to include a non-existent template or a template from a theme directory?');
+        $this->expectExceptionMessage('Optional templates are only supported in array notation at line 1.');
 
         $parser->parse($tokenStream);
     }
