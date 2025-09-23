@@ -36,7 +36,11 @@ class FileImagePreviewListener
 
     public function __invoke(DataContainer $dc): string
     {
-        $objFile = new File($dc->id);
+        try {
+            $objFile = new File($dc->id);
+        } catch (\Exception) {
+            return '';
+        }
 
         if (!$objFile->isImage || ($objFile->isSvgImage && (!$objFile->viewWidth || !$objFile->viewHeight))) {
             return '';
