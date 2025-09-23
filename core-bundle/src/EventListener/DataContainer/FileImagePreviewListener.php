@@ -22,7 +22,6 @@ use Contao\File;
 use Contao\Image\ResizeConfiguration;
 use Contao\Message;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCallback(table: 'tl_files', target: 'fields.preview.input_field')]
 class FileImagePreviewListener
