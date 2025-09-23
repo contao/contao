@@ -22,6 +22,7 @@ use Contao\File;
 use Contao\Image\ResizeConfiguration;
 use Contao\Message;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCallback(table: 'tl_files', target: 'fields.preview.input_field')]
 class FileImagePreviewListener
@@ -36,7 +37,11 @@ class FileImagePreviewListener
 
     public function __invoke(DataContainer $dc): string
     {
-        $objFile = new File($dc->id);
+        try {
+            $objFile = new File($dc->id);
+        } catch (\Exception) {
+            return '';
+        }
 
         if (!$objFile->isImage || ($objFile->isSvgImage && (!$objFile->viewWidth || !$objFile->viewHeight))) {
             return '';
