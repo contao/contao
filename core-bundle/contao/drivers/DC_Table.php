@@ -2442,7 +2442,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ((string) $currentRecord['tstamp'] === '0')
 		{
-			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
+			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', (str_contains($strBackUrl, '?') ? '&amp;' : '?') . 'revise=' . $this->strTable . '.' . ((int)$this->intId), $strBackUrl, 1);
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
