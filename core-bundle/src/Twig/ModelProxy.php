@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Twig;
 use Contao\Model;
 
 /**
- * Simple proxy class to provide access to model data in Twig templates.
- * We also implement JsonSerializable for the ContentElementTestCase.
+ * Simple proxy class to provide access to model data in Twig templates. We also
+ * implement JsonSerializable for the ContentElementTestCase.
  */
 class ModelProxy implements \JsonSerializable
 {
