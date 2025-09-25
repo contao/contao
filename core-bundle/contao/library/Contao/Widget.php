@@ -468,7 +468,13 @@ abstract class Widget extends Controller
 				return isset($this->objDca->activeRecord);
 
 			default:
-				return isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]);
+				if (isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]))
+				{
+					return true;
+				}
+
+				// If the magic getter returns a value it "is set" by definition
+				return $this->__get($strKey) !== null;
 		}
 	}
 
