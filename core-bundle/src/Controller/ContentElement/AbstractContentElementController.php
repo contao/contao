@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\CoreBundle\Twig\FragmentTemplate;
-use Contao\Model;
+use Contao\CoreBundle\Twig\ModelProxy;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,47 +36,8 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             $request->attributes->get('nestedFragments', []),
         );
 
-        $modelAccess = new class($model) implements \ArrayAccess, \JsonSerializable {
-            public function __construct(private readonly Model $model)
-            {
-            }
-
-            public function __call(string $name, array $arguments): mixed
-            {
-                if ($arguments) {
-                    throw new \RuntimeException('Not implemented.');
-                }
-
-                return $this->model->{$name};
-            }
-
-            public function offsetExists(mixed $offset): bool
-            {
-                return isset($this->model->{$offset});
-            }
-
-            public function offsetGet(mixed $offset): mixed
-            {
-                return $this->model->{$offset};
-            }
-
-            public function offsetSet(mixed $offset, mixed $value): void
-            {
-                // noop
-            }
-
-            public function offsetUnset(mixed $offset): void
-            {
-                // noop
-            }
-
-            public function jsonSerialize(): mixed
-            {
-                return $this->model->row();
-            }
-        };
-
-        $template->set('data', $modelAccess);
+        // Overwrite model data with model proxy to automatically expand virtual fields
+        $template->set('data', new ModelProxy($model));
 
         $this->tagResponse($model);
 
