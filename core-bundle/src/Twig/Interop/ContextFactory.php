@@ -113,6 +113,10 @@ final class ContextFactory
             $context['this'] = $object;
         }
 
+        if (!isset($context['as_editor_view'])) {
+            $context['as_editor_view'] = $this->scopeMatcher->isBackendRequest();
+        }
+
         return $context;
     }
 

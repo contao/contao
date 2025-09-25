@@ -1,14 +1,14 @@
 {% extends "@Contao/form_row.html.twig" %}
 
 {% block field %}
-  <fieldset id="ctrl_{{ id }}" class="checkbox_container{% if class|default %} {{ class }}{% endif %}"{% if help|default %} aria-describedby="help_ctrl_{{ id }}"{% endif %}>
+  <fieldset id="ctrl_{{ this.id }}" class="checkbox_container{% if this.class|default %} {{ this.class|default }}{% endif %}"{% if this.help %} aria-describedby="help_ctrl_{{ this.id }}"{% endif %}>
 
-    {% if label|default %}
+    {% if this.label %}
       <legend>
-        {% if mandatory|default %}
-          <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
+        {% if this.mandatory %}
+          <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
         {% else %}
-          {{ label }}
+          {{ this.label }}
         {% endif %}
       </legend>
     {% endif %}
@@ -17,7 +17,7 @@
       <p class="error">{{ getErrorAsString.invoke() }}</p>
     {% endif %}
 
-    <input type="hidden" name="{{ name }}" value="">
+    <input type="hidden" name="{{ this.name }}" value="">
 
     {% for option in getOptions.invoke() %}
       {% if option.type == 'group_start' %}
@@ -29,11 +29,11 @@
         {% set input_attributes = attrs()
             .set('type', 'checkbox')
             .set('name', option.name)
-            .set(id, 'opt_' ~ option.id)
+            .set('id', 'opt_' ~ option.id)
             .addClass('checkbox')
             .set('value', option.value)
             .set('checked', option.checked, option.checked)
-            ,mergeWith(option.attributes)
+            .mergeWith(option.attributes)
         %}
         <span><input{{ input_attributes }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label }}</label></span>
       {% endif %}
@@ -43,8 +43,8 @@
       {% endif %}
     {% endfor %}
 
-    {% if help|default %}
-      <p class="help" id="help_ctrl_{{ id }}">{{ help }}</p>
+    {% if this.help %}
+      <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
     {% endif %}
 
   </fieldset>

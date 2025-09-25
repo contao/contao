@@ -1,12 +1,12 @@
 {% extends "@Contao/form_row.html.twig" %}
 
 {% block label %}
-  {% if label|default %}
-    <label for="ctrl_{{ id }}"{% if class|default %} class="{{ class }}"{% endif %}>
-      {% if mandatory|default %}
-        <span class="invisible">{{ mandatoryField }} </span>{{ label }}<span class="mandatory">*</span>
+  {% if this.label %}
+    <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
+      {% if this.mandatory %}
+        <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
       {% else %}
-        {{ label }}
+        {{ this.label }}
       {% endif %}
     </label>
   {% endif %}
@@ -17,9 +17,9 @@
     <p class="error">{{ getErrorAsString.invoke() }}</p>
   {% endif %}
 
-  <input type="{{ type }}" name="{{ name }}" id="ctrl_{{ id }}" class="range{% if class|default %} {{ class }}{% endif %}"{% if value|default %} value="{{ value }}"{% endif %}{% if help|default %} aria-describedby="help_ctrl_{{ id }}"{% endif %}{{ getAttributes.invoke() }}>
+  <input type="{{ this.type }}" name="{{ this.name }}" id="ctrl_{{ this.id }}" class="range{% if this.class|default %} {{ this.class|default }}{% endif %}"{% if this.value %} value="{{ this.value }}"{% endif %}{% if this.help %} aria-describedby="help_ctrl_{{ this.id }}"{% endif %}{{ attrs(getAttributes.invoke()) }}>
 
-  {% if help|default %}
-    <p class="help" id="help_ctrl_{{ id }}">{{ help }}</p>
+  {% if this.help %}
+    <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
   {% endif %}
 {% endblock %}

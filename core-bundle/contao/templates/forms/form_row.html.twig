@@ -1,5 +1,5 @@
 {% set wrapperAttributes = attrs()
-    .addClass([prefix, class])
+    .addClass([this.prefix, this.class|default])
     .mergeWith(wrapperAttributes|default)
  %}
 

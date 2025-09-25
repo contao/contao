@@ -1,8 +1,8 @@
 {% set wrapperAttributes = attrs()
-    .addClass([prefix, 'explanation', class])
+    .addClass([this.prefix, 'explanation', this.class|default])
     .mergeWith(wrapperAttributes|default)
  %}
 
 <div{{ wrapperAttributes }}>
-  {{ generate.invoke()|csp_inline_styles }}
+  {{ this.text|encode_email|csp_inline_styles|allow_html }}
 </div>
