@@ -34,16 +34,21 @@ class Altcha
     #[Column(type: 'string', length: 64, nullable: false)]
     protected string $challenge;
 
-    #[Column(type: 'datetime')]
-    protected \DateTimeInterface $created;
+    #[Column(type: 'datetime_immutable')]
+    protected \DateTimeImmutable $created;
 
-    #[Column(type: 'datetime')]
-    protected \DateTimeInterface $expires;
+    #[Column(type: 'datetime_immutable')]
+    protected \DateTimeImmutable $expires;
 
     public function __construct(string $challenge, \DateTimeInterface $expires)
     {
         $this->challenge = $challenge;
-        $this->created = new \DateTime();
+        $this->created = new \DateTimeImmutable();
+
+        if (!$expires instanceof \DateTimeImmutable) {
+            $expires = \DateTimeImmutable::createFromInterface($expires);
+        }
+
         $this->expires = $expires;
     }
 
@@ -90,6 +95,10 @@ class Altcha
 
     public function setExpires(\DateTimeInterface $expires): self
     {
+        if (!$expires instanceof \DateTimeImmutable) {
+            $expires = \DateTimeImmutable::createFromInterface($expires);
+        }
+
         $this->created = $expires;
 
         return $this;
