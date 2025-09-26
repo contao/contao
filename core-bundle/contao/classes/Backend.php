@@ -349,6 +349,7 @@ abstract class Backend extends Controller
 					->execute(Input::get('id'));
 
 				$url = System::getContainer()->get('router')->generate('contao_backend', array('do'=>$module, 'table'=>$strTable, 'id'=>Input::get('id')));
+
 				if ($objRow->title)
 				{
 					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($objRow->title));
