@@ -337,6 +337,9 @@ abstract class Backend extends Controller
 
 			$this->Template->main .= $response;
 
+			$url = System::getContainer()->get('router')->generate('contao_backend', array('do'=>$module));
+			$this->Template->headline = \sprintf('<span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$module][0]));
+
 			// Add the name of the parent element
 			if (Input::get('table') !== null && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
@@ -345,13 +348,15 @@ abstract class Backend extends Controller
 					->limit(1)
 					->execute(Input::get('id'));
 
+				$url = System::getContainer()->get('router')->generate('contao_backend', array('do'=>$module, 'table'=>$strTable, 'id'=>Input::get('id')));
+
 				if ($objRow->title)
 				{
-					$this->Template->headline .= ' <span>' . $objRow->title . '</span>';
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($objRow->title));
 				}
 				elseif ($objRow->name)
 				{
-					$this->Template->headline .= ' <span>' . $objRow->name . '</span>';
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($objRow->name));
 				}
 			}
 

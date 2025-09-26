@@ -2,7 +2,7 @@
     padding-top: 12px;
 }
 
-.maintenance_active, .maintenance_inactive {
+:is(.maintenance_active, .maintenance_inactive):not(:first-of-type) {
     border-top: 1px solid var(--border);
 }
 
@@ -13,6 +13,10 @@
 
 .maintenance_inactive .tl_message {
     margin: 0 15px 3px;
+}
+
+.maintenance_inactive .tl_message :is(.tl_error, .tl_confirm, .tl_info, .tl_new) {
+    border-radius: var(--border-radius);
 }
 
 .maintenance_inactive h2.sub_headline {
