@@ -16,7 +16,7 @@ export default class extends Controller {
     }
 
     toggle() {
-        const isOpen = this.controllerTarget.ariaExpanded === 'true';
+        const isOpen = 'true' === this.controllerTarget.ariaExpanded;
 
         this.#toggleState(!isOpen);
     }
