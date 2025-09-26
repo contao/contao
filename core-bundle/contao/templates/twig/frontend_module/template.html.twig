@@ -1,1 +1,12 @@
-{% extends "@Contao/content_element/template.html.twig" %}
+{% extends "@Contao/frontend_module/_base.html.twig" %}
+
+{% block content %}
+    {% if keys|default %}
+        <dl>
+            {% for key, value in keys %}
+                <dt>{{ key }}</dt>
+                <dd>{{ value }}</dd>
+            {% endfor %}
+        </dl>
+    {% endif %}
+{% endblock %}
