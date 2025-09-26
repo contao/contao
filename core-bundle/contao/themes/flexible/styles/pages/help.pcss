@@ -31,7 +31,7 @@ body {
 
 .tl_help_table td code {
 	background: var(--code-bg);
-	border-radius: 2px;
+	border-radius: var(--border-radius);
 	padding: 0 1px;
 }
 
@@ -55,7 +55,7 @@ tr:first-child td.headline {
 	padding-top: 12px;
 }
 
-@media (max-width: 459px) {
+@media (width < 460px) {
 	.tl_help_table {
 		margin-left: 0;
 		margin-right: 0;

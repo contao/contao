@@ -19,8 +19,6 @@ use Contao\CoreBundle\Job\Jobs;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 
@@ -28,16 +26,8 @@ class BackendJobsListenerTest extends ContaoTestCase
 {
     public function testAddsTheJobsButton(): void
     {
-        $request = new Request();
-        $request->server->set('QUERY_STRING', 'do=page');
-        $request->attributes->set('_contao_referer_id', 'foo');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $params = [
             'do' => 'jobs',
-            'ref' => 'foo',
         ];
 
         $router = $this->createMock(RouterInterface::class);
@@ -45,7 +35,7 @@ class BackendJobsListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend', $params)
-            ->willReturn('/contao?do=jobs&ref=foo')
+            ->willReturn('/contao?do=jobs')
         ;
 
         $factory = new MenuFactory();
@@ -69,7 +59,7 @@ class BackendJobsListenerTest extends ContaoTestCase
             ->with(
                 '@Contao/backend/jobs/_menu_item.html.twig',
                 [
-                    'jobs_link' => '/contao?do=jobs&ref=foo',
+                    'jobs_link' => '/contao?do=jobs',
                     'has_pending_jobs' => false,
                 ],
             )
@@ -78,7 +68,7 @@ class BackendJobsListenerTest extends ContaoTestCase
 
         $jobs = $this->createMock(Jobs::class);
 
-        $listener = new BackendJobsListener($security, $twig, $router, $requestStack, $jobs);
+        $listener = new BackendJobsListener($security, $twig, $router, $jobs);
         $listener($event);
 
         $children = $event->getTree()->getChildren();

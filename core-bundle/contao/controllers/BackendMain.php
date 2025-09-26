@@ -74,7 +74,6 @@ class BackendMain extends Backend
 				'do' => 'login',
 				'act' => 'edit',
 				'id' => $user->id,
-				'ref' => Input::get('ref') ?: $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
 			));
 
 			$this->redirect($strUrl);

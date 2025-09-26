@@ -121,22 +121,15 @@ class DcaUrlAnalyzer
     private function doGetTrail(string|null $table, int|null $id): array
     {
         $do = $this->findGet('do');
+        $trail = [];
 
-        if (!$table || !$id) {
-            if (!$do) {
-                return [];
-            }
-
-            return [
-                [
-                    'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
-                    'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
-                ],
-            ];
+        if ($table && $id) {
+            $trail = $this->findTrail($table, $id);
+        } elseif (!$do) {
+            return [];
         }
 
         $links = [];
-        $trail = $this->findTrail($table, $id);
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
             $this->framework->getAdapter(System::class)->loadLanguageFile($table);
@@ -149,14 +142,8 @@ class DcaUrlAnalyzer
 
             $childTable = $trail[$index + 1][0] ?? null;
 
-            if ($index === \count($trail) - 1) {
-                if (\in_array($this->findGet('table'), $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
-                    $childTable = $this->findGet('table');
-                }
-
-                if ($this->findGet('act')) {
-                    $query['act'] = $this->findGet('act');
-                }
+            if ($index === \count($trail) - 1 && \in_array($this->findGet('table'), $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
+                $childTable = $this->findGet('table');
             }
 
             if ($childTable) {
@@ -167,7 +154,26 @@ class DcaUrlAnalyzer
                 }
             } else {
                 $query['table'] = $table;
-                $query['act'] ??= 'edit';
+                $query['act'] = 'edit';
+            }
+
+            if ($index === \count($trail) - 1 && $this->findGet('act')) {
+                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
+                    $links[] = [
+                        'url' => $this->router->generate('contao_backend', [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')]),
+                        'label' => $this->translator->trans(
+                            match ($this->findGet('act')) {
+                                'editAll', 'select' => 'MSC.all.0',
+                                'overrideAll' => 'MSC.all_override.0',
+                                default => throw new \LogicException(),
+                            },
+                            [],
+                            'contao_default',
+                        ),
+                    ];
+                } else {
+                    $query['act'] = $this->findGet('act');
+                }
             }
 
             $links[] = [
@@ -180,6 +186,13 @@ class DcaUrlAnalyzer
             'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
             'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
         ];
+
+        if ($this->findGet('clipboard')) {
+            array_unshift($links, [
+                'url' => $links[0]['url'].(str_contains($links[0]['url'], '?') ? '&' : '?').'clipboard=1',
+                'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
+            ]);
+        }
 
         return array_reverse($links);
     }
@@ -232,7 +245,7 @@ class DcaUrlAnalyzer
             return [null, null];
         }
 
-        if (isset($module['callback']) || isset($module[(string) $this->findGet('key')])) {
+        if (isset($module['callback'])) {
             return [$table, null];
         }
 
@@ -240,6 +253,10 @@ class DcaUrlAnalyzer
         $pid = (int) $this->findGet('pid') ?: null;
         $act = $this->findGet('act');
         $mode = $this->findGet('mode');
+
+        if (isset($module[(string) $this->findGet('key')])) {
+            return [$table, $id];
+        }
 
         // For these actions the id parameter refers to the parent record
         if (

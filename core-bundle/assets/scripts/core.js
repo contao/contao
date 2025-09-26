@@ -18,7 +18,7 @@ window.AjaxRequest =
 	 */
 	toggleNavigation: function(el, id, url) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id),
@@ -54,7 +54,7 @@ window.AjaxRequest =
 	 */
 	toggleStructure: function(el, id, level, mode) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id);
@@ -120,11 +120,6 @@ window.AjaxRequest =
 					}
 				}
 
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
 
@@ -151,7 +146,7 @@ window.AjaxRequest =
 	 */
 	toggleFileManager: function(el, id, folder, level) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id);
@@ -196,11 +191,6 @@ window.AjaxRequest =
 				}).inject(li, 'bottom');
 
 				li.inject($(el).getParent('li'), 'after');
-
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
 
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
@@ -281,11 +271,6 @@ window.AjaxRequest =
 
 				el.value = 1;
 				el.checked = 'checked';
-
-				// Update the referer ID
-				div.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
 
 				updateVersionNumber(txt);
 
@@ -803,7 +788,7 @@ window.Backend =
 	 * @author Martin Auswöger
 	 */
 	makeParentViewSortable: function(ul) {
-		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the stimulus controllers instead.');
+		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the Stimulus controllers instead.');
 
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
@@ -899,7 +884,7 @@ window.Backend =
 	 * @param {string} val The value field
 	 */
 	makeMultiSrcSortable: function(id, oid, val) {
-		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the stimulus controllers instead.');
+		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the Stimulus controllers instead.');
 
 		var list = new Sortables($(id), {
 			constrain: true,
@@ -1091,7 +1076,7 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	listWizard: function(id) {
-		console.warn('Backend.listWizard() is deprecated. Please use the stimulus controller instead.');
+		console.warn('Backend.listWizard() is deprecated. Please use the Stimulus controller instead.');
 
 		var ul = $(id),
 			makeSortable = function(ul) {
@@ -1395,7 +1380,7 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	optionsWizard: function(id) {
-		console.warn('Backend.optionsWizard() is deprecated. Please use the stimulus controller instead.');
+		console.warn('Backend.optionsWizard() is deprecated. Please use the Stimulus controller instead.');
 
 		var table = $(id),
 			tbody = table.getElement('tbody'),
@@ -1501,7 +1486,7 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	keyValueWizard: function(id) {
-		console.warn('Backend.keyValueWizard() is deprecated. Please use the stimulus controller instead.');
+		console.warn('Backend.keyValueWizard() is deprecated. Please use the Stimulus controller instead.');
 
 		var table = $(id),
 			tbody = table.getElement('tbody'),
@@ -2160,6 +2145,10 @@ window.Theme =
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupMenuToggle() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		var burger = $('burger');
 		if (!burger) return;
 
@@ -2196,7 +2185,7 @@ window.Theme =
 	 */
 	setupProfileToggle: function() {
 		if (window.console) {
-			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
+			console.warn('Theme.setupProfileToggle() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var tmenu = $('tmenu');
@@ -2234,8 +2223,11 @@ window.Theme =
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupSplitButtonToggle() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		var toggle = $('sbtog');
-		if (!toggle) return;
 
 		var ul = toggle.getParent('.split-button').getElement('ul'),
 			tab, timer;
@@ -2292,8 +2284,10 @@ window.addEvent('domready', function() {
 
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
-	Theme.setupMenuToggle();
-	Theme.setupSplitButtonToggle();
+
+	if ($('sbtog')) {
+		Theme.setupSplitButtonToggle();
+	}
 });
 
 // Resize the table wizard

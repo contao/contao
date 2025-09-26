@@ -259,6 +259,7 @@
       </trans-unit>
       <trans-unit id="tl_member.copy.0">
         <source>Duplicate</source>
+        <target>Duplikovat</target>
       </trans-unit>
       <trans-unit id="tl_member.copy.1">
         <source>Duplicate member ID %s</source>
@@ -286,9 +287,11 @@
       </trans-unit>
       <trans-unit id="tl_member.toggle.4">
         <source>Activate</source>
+        <target>Aktivovat</target>
       </trans-unit>
       <trans-unit id="tl_member.su.0">
         <source>Preview front end</source>
+        <target>Náhled frontendu</target>
       </trans-unit>
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>
