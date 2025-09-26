@@ -17,7 +17,16 @@
     <p class="error">{{ getErrorAsString.invoke() }}</p>
   {% endif %}
 
-  <input type="{{ this.type }}" name="{{ this.name }}" id="ctrl_{{ this.id }}" class="range{% if this.class|default %} {{ this.class|default }}{% endif %}"{% if this.value %} value="{{ this.value }}"{% endif %}{% if this.help %} aria-describedby="help_ctrl_{{ this.id }}"{% endif %}{{ attrs(getAttributes.invoke()) }}>
+  <input{{ attr()
+    .set('type', this.type)
+    .set('name', this.name)
+    .set('id', "ctrl_#{this.id}")
+    .addClass('range')
+    .addClass(this.class|default)
+    .set('value', this.value, "#{this.value}" != '')
+    .set('aria-describedby', "help_ctrl_#{this.id}", this.help)
+    .mergeWith(getAttributes.invoke())
+  }}>
 
   {% if this.help %}
     <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>

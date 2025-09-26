@@ -1,4 +1,11 @@
-<form{% if action|default %} action="{{ action }}"{% endif %} method="{{ method }}" enctype="{{ enctype }}"{{ attributes }}{{ novalidate }}{% if ajax %} data-ajax-form="{{ id }}"{% endif %}>
+<form{{ attrs()
+  .setIfExists('action', action|default)
+  .set('method', method)
+  .set('enctype', enctype)
+  .set('data-ajax-form', id, ajax)
+  .mergeWith(attributes)
+  .mergeWith(novalidate)
+}}>
   <div class="formbody">
     {% if errors %}
       {% for error in errors %}

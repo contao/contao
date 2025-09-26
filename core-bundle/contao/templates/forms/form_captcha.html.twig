@@ -13,12 +13,21 @@
     <p class="error">{{ getErrorAsString.invoke() }}</p>
   {% endif %}
 
-  <input type="text" name="{{ this.name }}" id="ctrl_{{ this.id }}" class="captcha mandatory{% if this.class|default %} {{ this.class|default }}{% endif %}" value="" aria-describedby="captcha_text_{{ this.id }}"{{ attrs(getAttributes.invoke()) }}>
+  <input{{ attrs()
+      .set('type', 'text')
+      .set('name', this.name)
+      .set('id', "ctrl_#{this.id}")
+      .addClass('captcha mandatory')
+      .addClass(this.class|default)
+      .set('aria-describedby', "captcha_text_#{this.id}")
+      .set('value', '')
+      .mergeWith(getAttributes.invoke())
+  }}>
   <span id="captcha_text_{{ this.id }}" class="captcha_text{% if this.class|default %} {{ this.class|default }}{% endif %}">{{ getQuestion.invoke() }}</span>
   <input type="hidden" name="{{ this.name }}_hash{{ hasErrors.invoke() ? 1 + sum ** 2 : '' }}" value="{{ hasErrors.invoke() ? getHash.invoke() : '' }}">
 
   {% if not hasErrors.invoke() %}
-    <div style="{{ 'display:none'|csp_inline_styles }}">
+    <div style="{{ 'display:none'|csp_unsafe_inline_style }}">
       <label for="ctrl_{{ this.id }}_hp">Do not fill in this field</label>
       <input type="text" name="{{ this.name }}_name" id="ctrl_{{ this.id }}_hp" value="">
     </div>

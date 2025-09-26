@@ -21,7 +21,13 @@
     <input type="hidden" name="{{ name ends with '[]' ? name[:-2] : name }}" value="">
   {% endif %}
 
-  <select name="{{ this.name }}" id="ctrl_{{ this.id }}" class="{{ this.class|default }}"{% if this.help %} aria-describedby="help_ctrl_{{ this.id }}"{% endif %}{{ attrs(getAttributes.invoke()) }}>
+  <select{{ attrs()
+    .set('name', this.name)
+    .set('id', "ctrl_#{this.id}")
+    .addClass(this.class|default)
+    .set('aria-describedby', "help_ctrl_#{this.id}", this.help)
+    .mergeWith(getAttributes.invoke())
+  }}>
     {% for option in getOptions.invoke() %}
       {% if option.type == 'group_start' %}
         <optgroup label="{{ option.label }}">
