@@ -42,6 +42,7 @@ class QueryTest extends TestCase
             ->withoutType()
             ->withoutTag()
         ;
+
         $this->assertNull($query->getType());
         $this->assertNull($query->getTag());
     }

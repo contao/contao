@@ -218,6 +218,7 @@ class BackendSearch
 
         foreach ($facetCounts['type'] ?? [] as $type => $count) {
             $provider = $this->getProviderForType($type);
+
             if (!$provider) {
                 continue;
             }
@@ -227,6 +228,7 @@ class BackendSearch
 
         if ($query->getType()) {
             $provider = $this->getProviderForType($query->getType());
+
             if ($provider instanceof TagProvidingProviderInterface) {
                 foreach ($facetCounts['tags'] ?? [] as $tag => $count) {
                     $tagsFacets[] = new BackendSearchFacet($tag, $provider->getFacetLabelForTag($tag), $count);
