@@ -150,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => 'name,protected,syncExclude,importantPartX,importantPartY,importantPartWidth,importantPartHeight;meta'
+		'default'                     => 'preview,name,protected,syncExclude,importantPartX,importantPartY,importantPartWidth,importantPartHeight;meta'
 	),
 
 	// Fields
@@ -197,6 +197,10 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'found' => array
 		(
 			'sql'                     => array('type' => 'boolean', 'default' => true)
+		),
+		'preview' => array(
+			// input_field_callback
+			'exclude' => false,
 		),
 		'name' => array
 		(

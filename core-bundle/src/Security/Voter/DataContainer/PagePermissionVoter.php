@@ -119,7 +119,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             if (
                 $this->canEdit($action, $token, $pageId)
                 && $this->canChangeHierarchy($action, $token, $pageId)
-                && $this->canAccessPage($token, $pageId)
+                && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource())
             ) {
                 return true;
             }
