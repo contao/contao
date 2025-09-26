@@ -744,7 +744,7 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	toggleCheckboxGroup: function(el, id) {
-		console.warn('Backend.toggleCheckboxGroup() is deprecated. Please use the stimulus controllers instead.');
+		console.warn('Backend.toggleCheckboxGroup() is deprecated. Please use the Stimulus controllers instead.');
 
 		var cls = $(el).className,
 			status = $(el).checked ? 'checked' : '';
