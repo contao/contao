@@ -83,6 +83,10 @@ class Altcha
 
     public function setCreated(\DateTimeInterface $created): self
     {
+        if (!$created instanceof \DateTimeImmutable) {
+            $created = \DateTimeImmutable::createFromInterface($created);
+        }
+
         $this->created = $created;
 
         return $this;
