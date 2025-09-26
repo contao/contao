@@ -50,7 +50,7 @@
     color: var(--header-bg);
     background: var(--header-text);
     padding: 2px;
-    border-radius: 2px;
+    border-radius: var(--border-radius);
     text-indent: 0;
     font-weight: 400;
 }
@@ -109,11 +109,11 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity .3s ease, visibility .3s ease;
-}
 
-#tmenu .active ul.menu_level_1 {
-    opacity: 1;
-    visibility: visible;
+    &.active {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
 #tmenu ul.menu_level_1 li a {

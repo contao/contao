@@ -174,12 +174,6 @@ Use the kernel start time instead of `TL_START`:
 $startTime = System::getContainer()->get('kernel')->getStartTime();
 ```
 
-Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
-
-```php
-$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-```
-
 Use the request stack to get the route instead of using `TL_SCRIPT`:
 
 ```php
@@ -520,5 +514,11 @@ converted when a record is saved in the back end.
 
 Calendar feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
 module. The `{{calendar_feed:id}}` insert tag is deprecated. You can use `{{link_url::id}}` instead.
+
+## Version 5.6 to 5.7
+
+### Referer ID
+
+The request attribute `_contao_referer_id` was removed.
 
 [1]: https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities
