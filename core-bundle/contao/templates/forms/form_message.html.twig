@@ -1,3 +1,3 @@
 <div class="form-confirmation">
-  {{ message|csp_inline_styles }}
+  {{ message|encode_email|allow_html|csp_inline_styles|insert_tag_raw }}
 </div>

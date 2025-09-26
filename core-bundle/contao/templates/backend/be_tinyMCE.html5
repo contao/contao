@@ -2,7 +2,7 @@
 
 namespace Contao;
 
-if ($GLOBALS['TL_CONFIG']['useRTE']):
+if ($this->enabled):
 
 ?>
 <script>

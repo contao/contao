@@ -24,7 +24,7 @@
       .mergeWith(getAttributes.invoke())
   }}>
   <span id="captcha_text_{{ this.id }}" class="captcha_text{% if this.class|default %} {{ this.class|default }}{% endif %}">{{ getQuestion.invoke() }}</span>
-  <input type="hidden" name="{{ this.name }}_hash{{ hasErrors.invoke() ? 1 + sum ** 2 : '' }}" value="{{ hasErrors.invoke() ? getHash.invoke() : '' }}">
+  <input type="hidden" name="{{ this.name }}_hash{{ hasErrors.invoke() ? 1 + this.sum ** 2 : '' }}" value="{{ hasErrors.invoke() ? getHash.invoke() : '' }}">
 
   {% if not hasErrors.invoke() %}
     <div style="{{ 'display:none'|csp_unsafe_inline_style }}">

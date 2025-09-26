@@ -1,6 +1,6 @@
 <?php
 
-if ($this->enable):
+if ($this->enabled):
 
 ?>
 <script>

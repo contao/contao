@@ -27,7 +27,7 @@
         <span><input{{ attrs()
           .set('type', 'radio')
           .set('name', option.name)
-          .set('id', "opt_{{ option.id }}")
+          .set('id', "opt_#{option.id}")
           .addClass('radio')
           .set('value', option.value)
           .mergeWith(option.checked)

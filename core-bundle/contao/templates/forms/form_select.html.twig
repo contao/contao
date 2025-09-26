@@ -18,7 +18,7 @@
   {% endif %}
 
   {% if this.multiple|default %}
-    <input type="hidden" name="{{ name ends with '[]' ? name[:-2] : name }}" value="">
+    <input type="hidden" name="{{ this.name ends with '[]' ? this.name[:-2] : this.name }}" value="">
   {% endif %}
 
   <select{{ attrs()
