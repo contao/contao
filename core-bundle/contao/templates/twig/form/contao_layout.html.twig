@@ -2,7 +2,6 @@
 {% use "form_div_layout.html.twig" %}
 
 {# Misc #}
-
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
         <p class="error">
@@ -21,7 +20,6 @@
 {%- endblock form_errors -%}
 
 {# Labels #}
-
 {%- block form_label -%}
     {%- if required -%}
         {% set label_attr = label_attr|merge({'class': 'mandatory'}) %}

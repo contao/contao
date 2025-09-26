@@ -78,6 +78,7 @@ class BackendCacheResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
+
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
@@ -98,6 +99,7 @@ class BackendCacheResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
+
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
@@ -118,6 +120,7 @@ class BackendCacheResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
+
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
