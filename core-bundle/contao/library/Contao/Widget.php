@@ -102,8 +102,12 @@ use Doctrine\DBAL\Types\Types;
  */
 abstract class Widget extends Controller
 {
-	use TemplateInheritance;
+	use TemplateInheritance {
+		TemplateInheritance::renderTwigSurrogateIfExists as baseRenderTwigSurrogateIfExists;
+	}
 	use TemplateTrait;
+
+	private bool $enableSurrogateRendering = true;
 
 	/**
 	 * Id
@@ -1572,5 +1576,25 @@ abstract class Widget extends Controller
 			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
 			StringUtil::specialchars((string) $strString, false, true),
 		);
+	}
+
+	protected function renderTwigSurrogateIfExists(): string|null
+	{
+		return $this->enableSurrogateRendering ? $this->baseRenderTwigSurrogateIfExists() : null;
+	}
+
+	/**
+	 * @interal
+	 */
+	public function renderLegacyFromTwig(array $blocks): string
+	{
+		$this->arrBlocks = $blocks;
+		$this->enableSurrogateRendering = false;
+
+		$return = $this->inherit();
+
+		$this->enableSurrogateRendering = true;
+
+		return $return;
 	}
 }
