@@ -8,21 +8,21 @@
 
 {% block content %}
 
-  {% if message %}
+  {% if message|default %}
     <p class="tl_confirm">{{ message }}</p>
   {% endif %}
 
   <form id="{{ formId }}" method="post" enctype="{{ enctype }}">
     <div class="formbody">
       <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
-      <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+      <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
 
       {% for legend, category in categories %}
         <fieldset>
           {% if legend %}
             <legend>{{ legend }}</legend>
           {% endif %}
-            {{ category|join }}
+          {{ category|join|raw }}
         </fieldset>
       {% endfor %}
 

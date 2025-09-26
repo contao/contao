@@ -14,7 +14,7 @@
         <p class="error">{{ message }}</p>
       {% endif %}
       <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
-      <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+      <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
       <input type="hidden" name="_target_path" value="{{ targetPath }}">
       <input type="hidden" name="_always_use_target_path" value="{{ forceTargetPath }}">
       {% if remembered %}

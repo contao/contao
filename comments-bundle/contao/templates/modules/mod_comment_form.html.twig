@@ -10,7 +10,7 @@
       <form id="{{ formId }}" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
-          <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
           {% for field in fields %}
             {{ field.parse() }}
           {% endfor %}

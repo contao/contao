@@ -9,7 +9,7 @@
       if ('formbody' !== c.className) return;
       t = document.createElement('p');
       t.className = 'error nocookie';
-      t.innerHTML = '{{ 'ERR.formCookieWarning'|trans|replace({"'": '\\' })|e('js') }}';
+      t.innerHTML = '{{ 'ERR.formCookieWarning'|trans|e('js') }}';
       c.insertBefore(t, c.firstChild);
     }
   })();

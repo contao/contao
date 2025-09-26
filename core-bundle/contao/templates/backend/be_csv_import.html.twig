@@ -7,7 +7,7 @@
 <form id="{{ formId }}" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
   <div class="tl_formbody_edit">
     <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
-    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
     <input type="hidden" name="MAX_FILE_SIZE" value="{{ fileMaxSize }}">
 
     <fieldset class="tl_tbox nolegend">

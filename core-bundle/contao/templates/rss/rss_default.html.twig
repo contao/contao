@@ -4,7 +4,7 @@
 
   <div class="rss_default_header">
     <h1><a href="{{ link }}" target="_blank" rel="noreferrer noopener">{{ title }}</a></h1>
-    {% if image %}
+    {% if image|default %}
       <a href="{{ href }}" title="{{ alt }}"><img src="{{ src }}" alt="{{ alt }}"></a>
     {% endif %}
     {% if description %}
@@ -15,10 +15,10 @@
   {% for item in items %}
     <div class="rss_default">
       <h2><a href="{{ item.link }}" target="_blank" rel="noreferrer noopener">{{ item.title }}</a></h2>
-      <div class="description">{{ item.description }}</div>
+      <div class="description">{{ item.description|sanitize_html }}</div>
     </div>
   {% endfor %}
 
-  {{ pagination }}
+  {{ pagination|default|raw }}
 
 {% endblock %}

@@ -51,7 +51,7 @@
         <form class="tl_login_form" method="post">
           <div class="formbody">
             <input type="hidden" name="FORM_SUBMIT" value="tl_login">
-            <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
             <input type="hidden" name="_target_path" value="{{ targetPath }}">
             <input type="hidden" name="_always_use_target_path" value="1">
             {% if badgeTitle|default %}

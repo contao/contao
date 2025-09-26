@@ -3,7 +3,7 @@
 {% block label %}
   {% if this.label %}
     <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
-      {% if this.mandatory %}
+      {% if this.mandatory|default %}
         <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
       {% else %}
         {{ this.label }}
@@ -25,7 +25,7 @@
     .set('name', this.name)
     .set('id', "ctrl_#{this.id}")
     .addClass(this.class|default)
-    .set('aria-describedby', "help_ctrl_#{this.id}", this.help)
+    .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
     .mergeWith(getAttributes.invoke())
   }}>
     {% for option in getOptions.invoke() %}
@@ -43,7 +43,7 @@
     {% endfor %}
   </select>
 
-  {% if this.help %}
+  {% if this.help|default %}
     <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
   {% endif %}
 {% endblock %}

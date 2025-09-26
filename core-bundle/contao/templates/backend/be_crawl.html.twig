@@ -32,7 +32,7 @@
       <div class="tl_formbody_edit">
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">
-        <input type="hidden" name="rt" value="{{ request_token }}">
+        <input type="hidden" name="rt" value="{{ contao.request_token }}">
         <fieldset class="tl_tbox">
           <div class="widget">
             {{ subscribersWidget.parse()|raw }}

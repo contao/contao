@@ -23,7 +23,7 @@
     <main id="main">
       <form method="post" data-turbo="false">
         <div class="formbody">
-          <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+          <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
           <select name="from" id="ctrl_from" class="tl_select">
             {% for k, v in versions %}
               <option value="{{ k }}"{% if v.version == from %} selected{% endif %}>{{ v.info }}</option>

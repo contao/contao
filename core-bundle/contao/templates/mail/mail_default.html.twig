@@ -4,9 +4,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset={{ charset }}">
   <meta name="Generator" content="Contao Open Source CMS">
   <title>{{ title }}</title>
-  {{ css }}
+  {{ css|default|raw }}
 </head>
 <body>
-  {{ body }}
+  {{ body|allow_html|insert_tag_raw }}
 </body>
 </html>

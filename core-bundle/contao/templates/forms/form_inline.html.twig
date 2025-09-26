@@ -14,7 +14,7 @@
     {% endif %}
     {% if 'get' != method %}
       <input type="hidden" name="FORM_SUBMIT" value="{{ formSubmit }}">
-      <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+      <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
       {% if maxFileSize %}
         <input type="hidden" name="MAX_FILE_SIZE" value="{{ maxFileSize }}">
       {% endif %}
