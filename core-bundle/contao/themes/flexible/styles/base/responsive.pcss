@@ -13,10 +13,6 @@
         will-change: transform;
     }
 
-    .show-navigation #main {
-        transform: translateX(240px);
-    }
-
     #left {
         visibility: hidden;
         width: 240px;
@@ -26,9 +22,13 @@
         will-change: transform, visibility;
     }
 
-    .show-navigation #left {
+    #left.active {
         visibility: visible;
         transform: translateX(240px);
+
+        + #main {
+            transform: translateX(240px);
+        }
     }
 
     #tmenu .burger {
@@ -426,5 +426,11 @@
 
     .split-button > button[type="button"]:focus {
         outline: none;
+    }
+}
+
+@media (width >= 1280px) {
+    .d-xl-none {
+        display: none;
     }
 }
