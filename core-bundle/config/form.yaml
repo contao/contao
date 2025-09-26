@@ -1,0 +1,12 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Contao\CoreBundle\Form\Type\AbstractContaoFormType:
+            calls:
+                - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
+
+            tags:
+                - { name: container.service_subscriber, id: contao.csrf.token_manager }
+                - { name: container.service_subscriber, id: parameter_bag }
