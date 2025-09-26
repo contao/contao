@@ -200,7 +200,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'preview' => array
 		(
-			// input_field_callback
+			// input_field_callback from FileImagePreviewListener
 			'exclude' => false,
 		),
 		'name' => array
