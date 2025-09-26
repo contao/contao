@@ -1,13 +1,6 @@
 {% extends "@Contao/form_row.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
-
-{% add "altcha" to stylesheets %}
-    {% with {file: asset('css/altcha.min.css', 'contao-components/altcha') } %}{{ block('stylesheet_component') }}{% endwith %}
-{% endadd %}
-
-{% add "altcha" to body %}
-    <script src="{{ asset('js/altcha.min.js', 'contao-components/altcha') }}" type="module"></script>
-{% endadd %}
+{% trans_default_domain "contao_default" %}
 
 {% block label %}
   {% if this.label %}
@@ -23,9 +16,20 @@
     <p class="error">{{ getErrorAsString.invoke() }}</p>
   {% endif %}
 
-  {% if not canUseAltcha %}
+  {% if not this.canUseAltcha %}
     <p class="error">{{ 'ERR.altchaInsecureConnection'|trans }}</p>
   {% else %}
-    <altcha-widget{{ altchaAttributes.>set('workerurl', asset('js/worker.js', 'contao-components/altcha')) }}></altcha-widget>
+      {% add "altcha" to stylesheets %}
+          {% with {file: asset('css/altcha.min.css', 'contao-components/altcha') } %}{{ block('stylesheet_component') }}{% endwith %}
+      {% endadd %}
+
+      {% add "altcha" to body %}
+          <script src="{{ asset('js/altcha.min.js', 'contao-components/altcha') }}" type="module"></script>
+      {% endadd %}
+
+    <altcha-widget{{ attrs()
+        .set('workerurl', asset('js/worker.js', 'contao-components/altcha'))
+        .mergeWith(this.altchaAttributes)
+    }}></altcha-widget>
   {% endif %}
 {% endblock %}
