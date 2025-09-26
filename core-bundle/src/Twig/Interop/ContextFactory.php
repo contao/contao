@@ -35,8 +35,7 @@ final class ContextFactory
         $context = $this->fromData($template->getData());
 
         if (!isset($context['as_editor_view'])) {
-            $context['as_editor_view'] =
-                $this->scopeMatcher->isBackendRequest();
+            $context['as_editor_view'] = $this->scopeMatcher->isBackendRequest();
         }
 
         if (!isset($context['Template'])) {
@@ -44,10 +43,8 @@ final class ContextFactory
         }
 
         if ($template instanceof BackendTemplate) {
-            $context['getLocaleString'] =
-                $this->getCallableWrapper($template->getLocaleString(...));
-            $context['getDateString'] =
-                $this->getCallableWrapper($template->getDateString(...));
+            $context['getLocaleString'] = $this->getCallableWrapper($template->getLocaleString(...));
+            $context['getDateString'] = $this->getCallableWrapper($template->getDateString(...));
         }
 
         return $context;

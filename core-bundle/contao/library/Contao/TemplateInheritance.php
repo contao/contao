@@ -380,7 +380,7 @@ trait TemplateInheritance
 		$loader = $container->get('contao.twig.filesystem_loader');
 		$templateCandidate = "@Contao/$this->strTemplate.html.twig";
 
-		if (!$loader->exists($templateCandidate) || ContaoTwigUtil::getExtension($loader->getFirst($this->strTemplate)) === 'html5')
+		if (!$loader->exists($templateCandidate) || 'html5' === ContaoTwigUtil::getExtension($loader->getFirst($this->strTemplate)))
 		{
 			return null;
 		}
