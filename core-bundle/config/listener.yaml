@@ -147,6 +147,14 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.file_image_preview:
+        class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+            - '@contao.image.factory'
+            - '%kernel.project_dir%'
+
     contao.listener.data_container.frontend_module_permissions:
         class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
         arguments:
