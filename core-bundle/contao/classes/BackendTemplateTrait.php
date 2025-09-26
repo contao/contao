@@ -44,7 +44,7 @@ trait BackendTemplateTrait
 					. 'backend_picker:"' . $container->get('router')->generate('contao_backend_picker') . '"'
 				. '},'
 				. 'request_token:"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '",'
-				. 'referer_id:"' . $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
+				. 'referer_id:""' // Backwards compatibility
 			. '}};';
 	}
 

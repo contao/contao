@@ -200,8 +200,11 @@
       <trans-unit id="tl_files.delete.1">
         <source>Delete file or folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.drag.1">
-        <source>Drag file or folder "%s"</source>
+      <trans-unit id="tl_files.dragFolder.1">
+        <source>Drag folder "%s"</source>
+      </trans-unit>
+      <trans-unit id="tl_files.dragFile.1">
+        <source>Drag file "%s"</source>
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file "%s"</source>

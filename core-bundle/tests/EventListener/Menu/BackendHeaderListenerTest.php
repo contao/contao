@@ -20,8 +20,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -56,12 +54,6 @@ class BackendHeaderListenerTest extends TestCase
             )
         ;
 
-        $request = Request::create('https://localhost/contao?do=pages&ref=123456');
-        $request->attributes->set('_contao_referer_id', 'bar');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $systemMessages = $this->mockAdapter(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())
@@ -75,7 +67,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $requestStack,
             $this->getTranslator(),
             $this->mockContaoFramework([Backend::class => $systemMessages]),
         );
@@ -144,19 +135,19 @@ class BackendHeaderListenerTest extends TestCase
 
         // Login
         $this->assertSame('MSC.profile', $grandChildren['login']->getLabel());
-        $this->assertSame('/contao?do=login&act=edit&id=1&ref=bar', $grandChildren['login']->getUri());
+        $this->assertSame('/contao?do=login&act=edit&id=1&nb=1', $grandChildren['login']->getUri());
         $this->assertSame(['class' => 'icon-profile'], $grandChildren['login']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['login']->getExtras());
 
         // Security
         $this->assertSame('MSC.security', $grandChildren['security']->getLabel());
-        $this->assertSame('/contao?do=security&ref=bar', $grandChildren['security']->getUri());
+        $this->assertSame('/contao?do=security', $grandChildren['security']->getUri());
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
 
         // Favorites
         $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());
-        $this->assertSame('/contao?do=favorites&ref=bar', $grandChildren['favorites']->getUri());
+        $this->assertSame('/contao?do=favorites', $grandChildren['favorites']->getUri());
         $this->assertSame(['class' => 'icon-favorites'], $grandChildren['favorites']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
@@ -186,7 +177,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
         );
@@ -218,7 +208,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
         );

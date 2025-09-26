@@ -623,18 +623,18 @@ class StringUtilTest extends TestCase
     public static function basicEntitiesProvider(): iterable
     {
         yield 'String value' => [
-            'foo&amp;bar',
-            'foo[&]bar',
+            'foo&amp;bar&ZeroWidthSpace;baz',
+            'foo[&]bar[zwsp]baz',
         ];
 
         yield 'InputUnit field' => [
             [
                 'unit' => 'h2',
-                'value' => '&lt;strong&gt;',
+                'value' => '&lt;strong&gt; and &lsqb;-&rsqb;',
             ],
             [
                 'unit' => 'h2',
-                'value' => '[lt]strong[gt]',
+                'value' => '[lt]strong[gt] and [lsqb]-[rsqb]',
             ],
         ];
 
