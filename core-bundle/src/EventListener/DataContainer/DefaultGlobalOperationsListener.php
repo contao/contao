@@ -113,6 +113,7 @@ class DefaultGlobalOperationsListener
             $operations += [
                 'toggleNodes' => [
                     'button_callback' => static fn (DataContainerOperation $operation) => $operation->setHtml('<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button>'),
+                    'listAttributes' => ' style="display:none"',
                     'showOnSelect' => true,
                     'primary' => true,
                 ],

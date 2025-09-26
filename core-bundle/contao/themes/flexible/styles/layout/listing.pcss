@@ -30,8 +30,12 @@ table.tl_listing {
     }
 }
 
-.tl_folder_tlist {
-    border-top: 1px solid var(--border);
+.tl_folder_tlist:first-child {
+    border-top-left-radius: var(--border-radius);
+}
+
+.tl_folder_tlist:last-child {
+    border-top-right-radius: var(--border-radius);
 }
 
 .tl_file, .tl_file_list {
