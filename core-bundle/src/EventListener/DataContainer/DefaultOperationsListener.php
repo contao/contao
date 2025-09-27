@@ -208,7 +208,6 @@ class DefaultOperationsListener
 
         if ($canEdit && ($GLOBALS['TL_DCA'][$table]['config']['enableVersioning'] ?? false)) {
             $operations['diff'] = [
-                'label' => &$GLOBALS['TL_LANG']['MSC']['showDifferences'],
                 'href' => 'act=edit&versions=1',
                 'icon' => 'diff.svg',
                 'method' => 'GET',
