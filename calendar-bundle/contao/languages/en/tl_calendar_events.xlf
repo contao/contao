@@ -324,7 +324,7 @@
         <source>Paste into this calendar</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tableLabel">
-        <source>Calendar event</source>
+        <source>Event</source>
       </trans-unit>
     </body>
   </file>

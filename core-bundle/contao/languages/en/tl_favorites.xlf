@@ -30,7 +30,7 @@
         <source>Delete favorite ID %s</source>
       </trans-unit>
       <trans-unit id="tl_favorites.tableLabel">
-        <source>Favorites</source>
+        <source>Favorite</source>
       </trans-unit>
     </body>
   </file>

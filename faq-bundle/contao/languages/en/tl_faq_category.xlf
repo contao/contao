@@ -54,7 +54,7 @@
         <source>Delete category ID %s</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.tableLabel">
-        <source>Question category</source>
+        <source>FAQ category</source>
       </trans-unit>
     </body>
   </file>
