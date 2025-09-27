@@ -206,7 +206,7 @@ class DefaultOperationsListener
             'prefetch' => false,
         ];
 
-        if ($canEdit && $GLOBALS['TL_DCA'][$table]['config']['enableVersioning'] ?? false) {
+        if ($canEdit && ($GLOBALS['TL_DCA'][$table]['config']['enableVersioning'] ?? false)) {
             $operations['diff'] = [
                 'label' => &$GLOBALS['TL_LANG']['MSC']['showDifferences'],
                 'href' => 'act=edit&versions=1',
