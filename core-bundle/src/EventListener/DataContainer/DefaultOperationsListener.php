@@ -313,11 +313,11 @@ class DefaultOperationsListener
     {
         $versionIds = $this->connection->fetchFirstColumn(
             'SELECT pid, COUNT(*) AS total FROM tl_version WHERE fromTable=? GROUP BY pid HAVING total > 1',
-            [$table]
+            [$table],
         );
 
-        return function (DataContainerOperation $operation) use ($table, $versionIds) {
-            $operation['attributes'] = 'onclick="Backend.openModalIframe({title:\''.StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $operation->getRecord()['id'], $table)).'\', url:this.href+\'&popup=1&nb=1\'});return false"';
+        return function (DataContainerOperation $operation) use ($table, $versionIds): void {
+            $operation['attributes'] = 'onclick="Backend.openModalIframe({title:\''.StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $operation->getRecord()['id'], $table)).'\', url:this.href+\'&popup=1&nb=1\'});return false"';
 
             if (
                 !\in_array($operation->getRecord()['id'], $versionIds, false)
