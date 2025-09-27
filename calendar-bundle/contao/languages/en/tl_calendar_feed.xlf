@@ -89,9 +89,6 @@
       <trans-unit id="tl_calendar_feed.delete.1">
         <source>Delete feed ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.tableLabel">
-        <source>Calendar feed</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>
