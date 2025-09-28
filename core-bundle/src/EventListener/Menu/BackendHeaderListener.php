@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -34,7 +33,6 @@ class BackendHeaderListener
     public function __construct(
         private readonly Security $security,
         private readonly RouterInterface $router,
-        private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
     ) {
@@ -56,7 +54,6 @@ class BackendHeaderListener
 
         $factory = $event->getFactory();
         $tree = $event->getTree();
-        $ref = $this->getRefererId();
 
         $manualTitle = $this->translator->trans('MSC.manual', [], 'contao_default');
 
@@ -109,14 +106,15 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
-            ->setAttribute('data-controller', 'contao--profile')
-            ->setAttribute('data-contao--profile-target', 'menu')
-            ->setAttribute('data-action', 'click@document->contao--profile#documentClick')
+            ->setAttribute('data-controller', 'contao--toggle-state')
+            ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+            ->setAttribute('data-contao--toggle-state-active-class', 'active')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
+            ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
         ;
 
         $tree->addChild($submenu);
@@ -134,7 +132,7 @@ class BackendHeaderListener
         $login = $factory
             ->createItem('login')
             ->setLabel('MSC.profile')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'ref' => $ref]))
+            ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'nb' => '1']))
             ->setLinkAttribute('class', 'icon-profile')
             ->setExtra('translation_domain', 'contao_default')
         ;
@@ -144,7 +142,7 @@ class BackendHeaderListener
         $security = $factory
             ->createItem('security')
             ->setLabel('MSC.security')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'security', 'ref' => $ref]))
+            ->setUri($this->router->generate('contao_backend', ['do' => 'security']))
             ->setLinkAttribute('class', 'icon-security')
             ->setExtra('translation_domain', 'contao_default')
         ;
@@ -154,7 +152,7 @@ class BackendHeaderListener
         $favorites = $factory
             ->createItem('favorites')
             ->setLabel('MSC.favorites')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites', 'ref' => $ref]))
+            ->setUri($this->router->generate('contao_backend', ['do' => 'favorites']))
             ->setLinkAttribute('class', 'icon-favorites')
             ->setExtra('translation_domain', 'contao_default')
         ;
@@ -163,7 +161,7 @@ class BackendHeaderListener
 
         $burger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
@@ -192,14 +190,5 @@ class BackendHeaderListener
         }
 
         return $label;
-    }
-
-    private function getRefererId(): string
-    {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        return $request->attributes->get('_contao_referer_id');
     }
 }

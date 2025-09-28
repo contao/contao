@@ -20,8 +20,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -56,12 +54,6 @@ class BackendHeaderListenerTest extends TestCase
             )
         ;
 
-        $request = Request::create('https://localhost/contao?do=pages&ref=123456');
-        $request->attributes->set('_contao_referer_id', 'bar');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $systemMessages = $this->mockAdapter(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())
@@ -75,7 +67,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $requestStack,
             $this->getTranslator(),
             $this->mockContaoFramework([Backend::class => $systemMessages]),
         );
@@ -126,10 +117,11 @@ class BackendHeaderListenerTest extends TestCase
         );
 
         // Submenu
-        $this->assertSame('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
-        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--profile', 'data-contao--profile-target' => 'menu', 'data-action' => 'click@document->contao--profile#documentClick'], $children['submenu']->getAttributes());
+        $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
+        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--toggle-state', 'data-action' => 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close', 'data-contao--toggle-state-active-class' => 'active'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
+        $this->assertSame(['data-contao--toggle-state-target' => 'controls'], $children['submenu']->getChildrenAttributes());
 
         $grandChildren = $children['submenu']->getChildren();
 
@@ -143,24 +135,24 @@ class BackendHeaderListenerTest extends TestCase
 
         // Login
         $this->assertSame('MSC.profile', $grandChildren['login']->getLabel());
-        $this->assertSame('/contao?do=login&act=edit&id=1&ref=bar', $grandChildren['login']->getUri());
+        $this->assertSame('/contao?do=login&act=edit&id=1&nb=1', $grandChildren['login']->getUri());
         $this->assertSame(['class' => 'icon-profile'], $grandChildren['login']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['login']->getExtras());
 
         // Security
         $this->assertSame('MSC.security', $grandChildren['security']->getLabel());
-        $this->assertSame('/contao?do=security&ref=bar', $grandChildren['security']->getUri());
+        $this->assertSame('/contao?do=security', $grandChildren['security']->getUri());
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
 
         // Favorites
         $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());
-        $this->assertSame('/contao?do=favorites&ref=bar', $grandChildren['favorites']->getUri());
+        $this->assertSame('/contao?do=favorites', $grandChildren['favorites']->getUri());
         $this->assertSame(['class' => 'icon-favorites'], $grandChildren['favorites']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
         // Burger
-        $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
+        $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
         $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }
@@ -185,7 +177,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
         );
@@ -217,7 +208,6 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
         );

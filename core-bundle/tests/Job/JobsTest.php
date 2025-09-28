@@ -33,6 +33,25 @@ class JobsTest extends ContaoTestCase
         $this->assertSame($userLoggedIn ? 42 : Owner::SYSTEM, $job->getOwner()->getId());
     }
 
+    #[DataProvider('twithProgressFromAmountsProvider')]
+    public function testWithProgressFromAmounts(int $total, int $amount, float $expectedProgress): void
+    {
+        $jobs = $this->getJobs($this->mockSecurity());
+        $job = $jobs->createJob('job-type');
+        $job = $job->withProgressFromAmounts($total, $amount);
+        $this->assertSame($expectedProgress, $job->getProgress());
+    }
+
+    public static function twithProgressFromAmountsProvider(): iterable
+    {
+        yield 'basic 25%' => [200, 50, 25.0];
+        yield 'zero total returns same' => [0, 50, 0.0];
+        yield 'cap to 100%' => [100, 200, 100.0];
+        yield 'not negative' => [100, -50, 0.0];
+        yield 'exact 100%' => [100, 100, 100.0];
+        yield 'fractional percentage' => [3, 1, 100 / 3];
+    }
+
     public static function createJobProvider(): iterable
     {
         yield 'No logged in user' => [false];

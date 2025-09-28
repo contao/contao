@@ -93,6 +93,7 @@
     margin-bottom: 18px;
     padding: 10px;
     background: var(--table-header);
+    border-radius: var(--border-radius);
 }
 
 .tl_header_table {
@@ -107,7 +108,7 @@
 }
 
 .tl_header + .tl_content_header {
-    border-top: 1px solid var(--border);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -146,11 +147,13 @@
     padding: 0;
     border: 1px solid var(--border);
     background-color: var(--content-bg);
+    border-radius: var(--border-radius);
 }
 
 .as-grid .tl_content .inside {
     display: grid;
     grid-template-columns: 1fr auto;
+    border-radius: var(--border-radius);
 }
 
 .as-grid .tl_content_header + .tl_content {
@@ -256,6 +259,7 @@
     padding: 8px 10px;
     border-left: 1px solid var(--border);
     background: var(--table-header);
+    border-top-right-radius: var(--border-radius);
 }
 
 .tl_right button, .tl_right_nowrap button, .tl_content_right button {
@@ -324,9 +328,11 @@
     text-align: left;
     background: var(--content-bg) !important;
     border: 1px solid var(--content-border);
+    border-radius: var(--border-radius);
     list-style: none;
     visibility: hidden;
     pointer-events: none;
+    box-shadow: 0 3px 6px 0 rgb(0 0 0 / 10%);
 
     &.show {
         position: absolute;
@@ -387,6 +393,7 @@
     font-size: .815rem;
     display: flex;
     align-items: center;
+    border-top-left-radius: var(--border-radius);
 }
 
 .cte_type.published, .cte_type.published a {
@@ -548,10 +555,6 @@
     vertical-align: middle;
 }
 
-.cte_preview.empty {
-    display: none;
-}
-
 .as-grid .cte_preview {
     padding: 10px 10px 6px;
 }
@@ -565,6 +568,7 @@
     order: 3;
     grid-column: 1 / span 2;
     border-top: 1px solid var(--border);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
 
 /* Backwards compatibility */
@@ -578,6 +582,10 @@
 
 [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
     background: linear-gradient(transparent, var(--content-bg) 60%);
+}
+
+:is(.hover-div:hover, .hover-row:hover) [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
+    background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
 .limit_toggler {

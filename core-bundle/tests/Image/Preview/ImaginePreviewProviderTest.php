@@ -19,7 +19,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
-use Imagine\Image\ImagineInterface;
 use Imagine\Image\LayersInterface;
 use Symfony\Component\Filesystem\Path;
 
@@ -91,7 +90,7 @@ class ImaginePreviewProviderTest extends TestCase
             ->willReturnMap([[0, $image], [1, $image]])
         ;
 
-        $imagine = $this->createMock(ImagineInterface::class);
+        $imagine = $this->createMock(Imagine::class);
         $imagine
             ->expects($this->once())
             ->method('open')
@@ -111,7 +110,7 @@ class ImaginePreviewProviderTest extends TestCase
     {
         $sourcePath = Path::join($this->getTempDir(), 'foo/bar.txt');
 
-        $imagine = $this->createMock(ImagineInterface::class);
+        $imagine = $this->createMock(Imagine::class);
         $imagine
             ->expects($this->once())
             ->method('open')
@@ -126,7 +125,7 @@ class ImaginePreviewProviderTest extends TestCase
         $provider->generatePreviews($sourcePath, 512, static fn (int $_) => '');
     }
 
-    private function createProvider(ImagineInterface|null $imagine = null): ImaginePreviewProvider
+    private function createProvider(Imagine|null $imagine = null): ImaginePreviewProvider
     {
         return new ImaginePreviewProvider($imagine ?? new Imagine());
     }

@@ -138,7 +138,7 @@ class AuthenticatorTest extends TestCase
         $authenticator = new Authenticator($clock);
         $svg = $authenticator->getQrCode($user, $request);
 
-        $this->assertSame(5897, \strlen($svg));
+        $this->assertSame(5905, \strlen($svg));
         $this->assertSame(0, strpos($svg, $beginSvg));
     }
 
