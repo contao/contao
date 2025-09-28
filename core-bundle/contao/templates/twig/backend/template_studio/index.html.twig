@@ -13,6 +13,7 @@
         .set('data-contao--template-studio-follow-url-value', path('_contao_template_studio_follow.stream'))
         .set('data-contao--template-studio-block-info-url-value', path('_contao_template_studio_block_info.stream'))
         .set('data-twig-environment', environment_information|json_encode)
+        .mergeWith(template_studio_attrs|default)
     %}
     <main{{ template_studio_attrs }}>
         {# Headline #}
