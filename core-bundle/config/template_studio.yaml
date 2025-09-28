@@ -26,11 +26,6 @@ services:
             - '@contao.twig.finder_factory'
             - '@twig'
 
-    contao.twig.studio.environment_information:
-        class: Contao\CoreBundle\Twig\Studio\EnvironmentInformation
-        arguments:
-            - '@twig'
-
     contao.twig.studio.create_content_element_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateContentElementVariantOperation
 
@@ -42,6 +37,11 @@ services:
 
     contao.twig.studio.delete_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
+
+    contao.twig.studio.environment_information:
+        class: Contao\CoreBundle\Twig\Studio\EnvironmentInformation
+        arguments:
+            - '@twig'
 
     contao.twig.studio.operation_context_factory:
         class: Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory
