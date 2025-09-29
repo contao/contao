@@ -5,15 +5,15 @@
         "/bundles/contaocore/backend.363c53c4.css"
       ],
       "js": [
-        "/bundles/contaocore/backend.62f4a1fe.js"
+        "/bundles/contaocore/backend.6a35877c.js"
       ]
     },
     "navigation": {
       "css": [
-        "/bundles/contaocore/navigation.fb29ed99.css"
+        "/bundles/contaocore/navigation.bbf12939.css"
       ],
       "js": [
-        "/bundles/contaocore/navigation.8e9846cd.js"
+        "/bundles/contaocore/navigation.742f2632.js"
       ]
     },
     "passkey_login": {

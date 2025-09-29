@@ -136,6 +136,12 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);
                 }
 
+                if (!empty($attributes['shouldPreload'])) {
+                    trigger_deprecation('contao/core-bundle', '5.3', 'Using the fragment attribute "shouldPreload" is deprecated and will no longer work in Contao 6. Use a page type controller instead.');
+
+                    $compositor->addMethodCall('addPreload', [$identifier]);
+                }
+
                 if ($this->globalsKey && $this->proxyClass) {
                     if (!isset($attributes['category'])) {
                         throw new InvalidConfigurationException(\sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
