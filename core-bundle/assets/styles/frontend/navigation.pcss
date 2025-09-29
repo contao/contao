@@ -3,6 +3,10 @@
     --nav-color: #25455F;
     --nav-active-color: #f47c00;
     --nav-item-line-height: 1.5;
+    --nav-font-size: 20px;
+    --nav-font-weight: 600;
+    --nav-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 18l6-6-6-6"/></svg>');
+    --nav-icon-background: transparent;
     --nav-mobile-background: #172b3b;
     --nav-mobile-color: #d3d6da;
     --nav-mobile-active-background: #172b3b;
@@ -13,8 +17,8 @@
     --nav-mobile-padding: 120px 20px 20px;
     --nav-mobile-font-size: 18px;
     --nav-mobile-backdrop-height: 80px;
+    --nav-mobile-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>');
     --nav-submenu-background: #fff;
-    --nav-burger-color: #fff;
     --nav-burger-line-color: hsl(30deg 100% 48%);
     --skip-background: #172b3b;
     --skip-color: #d3d6da;
@@ -23,10 +27,6 @@
 
 body.navigation-open {
     overflow: hidden;
-
-    .nav-burger {
-        color: var(--nav-burger-color);
-    }
 
     header .logo {
         position: relative;
@@ -58,8 +58,7 @@ body.navigation-open {
     width: 44px;
     height: 44px;
     border: none;
-    background: none !important;
-    color: currentcolor !important;
+    background: var(--nav-icon-background) !important;
     cursor: pointer;
     z-index: 1;
 
@@ -69,7 +68,7 @@ body.navigation-open {
         justify-content: center;
         align-items: center;
         height: 100%;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>') no-repeat center;
+        background: var(--nav-mobile-icon) no-repeat center;
         transition: transform 0.3s cubic-bezier(0.2, 0.6, 0.3, 1.1);
     }
 }
@@ -185,7 +184,7 @@ body.nav-is-mobile {
         :is(a, strong) {
             display: inline-block;
             color: var(--nav-mobile-color) !important;
-            text-decoration: unset !important;
+            text-decoration: unset;
             padding: 12px 10px;
             width: calc(100% - 44px);
 
@@ -268,8 +267,8 @@ body.nav-is-desktop {
             display: block;
             position: relative;
             color: var(--nav-color);
-            font-size: 20px;
-            font-weight: 600;
+            font-size: var(--nav-font-size);
+            font-weight: var(--nav-font-weight);
         }
 
         :is(a:hover, a:focus-visible, a.trail, strong) {
@@ -456,7 +455,7 @@ body.nav-is-desktop {
         right: -6px;
 
         &::after {
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 18l6-6-6-6"/></svg>') no-repeat center;
+            background: var(--nav-icon) no-repeat center;
         }
     }
 
