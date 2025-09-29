@@ -464,7 +464,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
 		{
-			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX.$this->strTable, new CreateAction($this->strTable, ['type' => 'folder'])))
+			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
 			{
 				$operations->append(array(
 					'href' => $this->addToUrl($hrfNew),
@@ -475,7 +475,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				));
 			}
 
-			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX.$this->strTable, new CreateAction($this->strTable, ['type' => 'file'])))
+			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'file'))))
 			{
 				$operations->append(array(
 					'href' => $this->addToUrl('&amp;act=paste&amp;mode=move'),
@@ -2297,7 +2297,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					try
 					{
 						$this->denyAccessUnlessGranted(
-							ContaoCorePermissions::DC_PREFIX.$this->strTable,
+							ContaoCorePermissions::DC_PREFIX . $this->strTable,
 							new DeleteAction($this->strTable, array('id' => $path . '/' . $v, 'type' => 'folder')),
 						);
 
@@ -2440,16 +2440,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					// Only show the upload button for mounted folders
 					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
 					{
-						if ($security->isGranted(ContaoCorePermissions::DC_PREFIX.$this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
+						if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
 						{
 							$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-							$operations->append([
+
+							$operations->append(array(
 								'label' => $GLOBALS['TL_LANG']['tl_files']['upload'][0],
 								'title' => \sprintf($GLOBALS['TL_LANG']['tl_files']['upload'][1], $currentEncoded),
 								'href' => $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded),
 								'icon' => 'new.svg',
 								'primary' => true,
-							]);
+							));
 
 							$return .= $operations;
 						}
