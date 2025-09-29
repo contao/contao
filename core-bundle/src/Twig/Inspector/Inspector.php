@@ -83,6 +83,15 @@ class Inspector
      */
     public function getBlockHierarchy(string $baseTemplate, string $blockName): array
     {
+        if (null === ContaoTwigUtil::parseContaoName($baseTemplate)) {
+            return [];
+        }
+
+        // Resolve the managed namespace to a specific one
+        if (str_starts_with($baseTemplate, '@Contao/')) {
+            $baseTemplate = $this->filesystemLoader->getFirst($baseTemplate);
+        }
+
         $data = $this->getData($baseTemplate);
 
         /** @var list<BlockInformation> $hierarchy */
@@ -173,10 +182,23 @@ class Inspector
         } catch (LoaderError|RuntimeError|SyntaxError) {
         }
 
-        $data = $this->storage->get($this->getPathByTemplateName($templateName)) ??
+        $baseData = [
+            'name' => $templateName,
+            'slots' => [],
+            'blocks' => [],
+            'nesting' => [],
+            'parent' => null,
+            'uses' => [],
+        ];
+
+        if (null === ($path = $this->getPathByTemplateName($templateName))) {
+            return $baseData;
+        }
+
+        $data = $this->storage->get($path) ??
             throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
 
-        return ['name' => $templateName, ...$data];
+        return [...$baseData, ...$data];
     }
 
     private function getPathByTemplateName(string $templateName): string|null

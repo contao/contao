@@ -35,13 +35,13 @@ class InspectorTest extends TestCase
     public function testAnalyzesBlocks(): void
     {
         $templates = [
-            'foo.html.twig' => '{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}',
-            'bar.html.twig' => '',
+            '@Contao_specific/foo.html.twig' => '{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}',
+            '@Contao_specific/bar.html.twig' => '',
         ];
 
-        $information = $this->getInspector($templates)->inspectTemplate('foo.html.twig');
+        $information = $this->getInspector($templates)->inspectTemplate('@Contao/foo.html.twig');
 
-        $this->assertSame('foo.html.twig', $information->getName());
+        $this->assertSame('@Contao_specific/foo.html.twig', $information->getName());
         $this->assertSame(['bar', 'foo'], $information->getBlockNames());
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
     }
@@ -50,16 +50,18 @@ class InspectorTest extends TestCase
     {
         $inspector = $this->getInspector([
             '@Contao_specific/parent.twig' => <<<'SOURCE'
-                {% block foo %}
-                    {% block foo_inner %}
-                        {% slot B %}{% endslot %}
+                {% block all %}
+                    {% block foo %}
+                        {% block foo_inner %}
+                            {% slot B %}{% endslot %}
+                        {% endblock %}
                     {% endblock %}
+                    {% block bar %}
+                        {% slot C %}{% endslot %}
+                        {% slot C %}{% endslot %}
+                    {% endblock %}
+                    {% slot A %}…{% endslot %}
                 {% endblock %}
-                {% block bar %}
-                    {% slot C %}{% endslot %}
-                    {% slot C %}{% endslot %}
-                {% endblock %}
-                {% slot A %}…{% endslot %}
 
                 SOURCE,
             '@Contao_specific/child1.twig' => <<<'SOURCE'
@@ -81,6 +83,12 @@ class InspectorTest extends TestCase
                     {{ parent() }}
                     {% slot E %}{% endslot %}
                 {% endblock %}
+
+                SOURCE,
+            '@Contao_specific/override.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/parent.twig" %}
+
+                {% block all %}{% endblock %}
 
                 SOURCE,
         ]);
@@ -138,9 +146,9 @@ class InspectorTest extends TestCase
     public function testAnalyzeBlockHierarchy(): void
     {
         $templates = [
-            'leaf.twig' => <<<'SOURCE'
-                {% extends "branch.twig" %}
-                {% use "component.twig" with foo as other %}
+            '@Contao_specific/leaf.twig' => <<<'SOURCE'
+                {% extends "@Contao/branch.twig" %}
+                {% use "@Contao/component.twig" with foo as other %}
 
                 {# Overwriting implicit parent block: #}
                 {% block baz %}
@@ -149,8 +157,8 @@ class InspectorTest extends TestCase
 
                 SOURCE,
 
-            'branch.twig' => <<<'SOURCE'
-                {% extends "root.twig" %}
+            '@Contao_specific/branch.twig' => <<<'SOURCE'
+                {% extends "@Contao/root.twig" %}
 
                 {# Enhancing parent block: #}
                 {% block foo %}
@@ -164,7 +172,7 @@ class InspectorTest extends TestCase
                 {% endblock %}
                 SOURCE,
 
-            'root.twig' => <<<'SOURCE'
+            '@Contao_specific/root.twig' => <<<'SOURCE'
                 Prototype block:
                 {% block foo %}{% endblock %}
 
@@ -173,7 +181,7 @@ class InspectorTest extends TestCase
                 {% block baz %}baz{% endblock %}
                 SOURCE,
 
-            'component.twig' => <<<'SOURCE'
+            '@Contao_specific/component.twig' => <<<'SOURCE'
                 {% block component %}
                     {% block foo %}{% endblock %}
                     {% block boo %}{% endblock %}
@@ -184,72 +192,72 @@ class InspectorTest extends TestCase
         $inspector = $this->getInspector($templates);
 
         // Test getting hierarchy of block "foo"
-        $fooHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'foo');
+        $fooHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'foo');
         $this->assertCount(3, $fooHierarchy);
 
-        $this->assertSame('leaf.twig', $fooHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $fooHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::transparent, $fooHierarchy[0]->getType());
         $this->assertSame('foo', $fooHierarchy[0]->getBlockName());
         $this->assertFalse($fooHierarchy[0]->isPrototype());
 
-        $this->assertSame('branch.twig', $fooHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/branch.twig', $fooHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::enhance, $fooHierarchy[1]->getType());
         $this->assertSame('foo', $fooHierarchy[1]->getBlockName());
         $this->assertFalse($fooHierarchy[1]->isPrototype());
 
-        $this->assertSame('root.twig', $fooHierarchy[2]->getTemplateName());
+        $this->assertSame('@Contao_specific/root.twig', $fooHierarchy[2]->getTemplateName());
         $this->assertSame(BlockType::origin, $fooHierarchy[2]->getType());
         $this->assertSame('foo', $fooHierarchy[2]->getBlockName());
         $this->assertTrue($fooHierarchy[2]->isPrototype());
 
         // Test getting hierarchy of block "bar"
-        $barHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'bar');
+        $barHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'bar');
         $this->assertCount(3, $barHierarchy);
 
-        $this->assertSame('leaf.twig', $barHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $barHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::transparent, $barHierarchy[0]->getType());
         $this->assertSame('bar', $barHierarchy[0]->getBlockName());
         $this->assertFalse($barHierarchy[0]->isPrototype());
 
-        $this->assertSame('branch.twig', $barHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/branch.twig', $barHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::overwrite, $barHierarchy[1]->getType());
         $this->assertSame('bar', $barHierarchy[1]->getBlockName());
         $this->assertFalse($barHierarchy[1]->isPrototype());
 
-        $this->assertSame('root.twig', $barHierarchy[2]->getTemplateName());
+        $this->assertSame('@Contao_specific/root.twig', $barHierarchy[2]->getTemplateName());
         $this->assertSame(BlockType::origin, $barHierarchy[2]->getType());
         $this->assertSame('bar', $barHierarchy[2]->getBlockName());
         $this->assertFalse($barHierarchy[2]->isPrototype());
 
         // Test getting hierarchy of block "baz"
-        $bazHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'baz');
+        $bazHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'baz');
         $this->assertCount(3, $bazHierarchy);
 
-        $this->assertSame('leaf.twig', $bazHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $bazHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::overwrite, $bazHierarchy[0]->getType());
         $this->assertSame('baz', $bazHierarchy[0]->getBlockName());
         $this->assertFalse($bazHierarchy[0]->isPrototype());
 
-        $this->assertSame('branch.twig', $bazHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/branch.twig', $bazHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::transparent, $bazHierarchy[1]->getType());
         $this->assertSame('baz', $bazHierarchy[1]->getBlockName());
         $this->assertFalse($bazHierarchy[1]->isPrototype());
 
-        $this->assertSame('root.twig', $bazHierarchy[2]->getTemplateName());
+        $this->assertSame('@Contao_specific/root.twig', $bazHierarchy[2]->getTemplateName());
         $this->assertSame(BlockType::origin, $bazHierarchy[2]->getType());
         $this->assertSame('baz', $bazHierarchy[2]->getBlockName());
         $this->assertFalse($bazHierarchy[2]->isPrototype());
 
         // Test getting hierarchy of block "foo" imported as "other"
-        $otherHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'other');
+        $otherHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'other');
         $this->assertCount(2, $otherHierarchy);
 
-        $this->assertSame('leaf.twig', $otherHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $otherHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::transparent, $otherHierarchy[0]->getType());
         $this->assertSame('other', $otherHierarchy[0]->getBlockName());
         $this->assertFalse($otherHierarchy[0]->isPrototype());
 
-        $this->assertSame('component.twig', $otherHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/component.twig', $otherHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::origin, $otherHierarchy[1]->getType());
         $this->assertSame('foo', $otherHierarchy[1]->getBlockName());
         $this->assertTrue($otherHierarchy[1]->isPrototype());
@@ -432,6 +440,13 @@ class InspectorTest extends TestCase
             ->method('getFirst')
             ->willReturnCallback(
                 static fn (string $name): string => str_replace('@Contao/', '@Contao_specific/', $name),
+            )
+        ;
+
+        $filesystemLoader
+            ->method('getAllDynamicParentsByThemeSlug')
+            ->willReturnCallback(
+                static fn (string $name): array => ['' => "@Contao_specific/$name"],
             )
         ;
 
