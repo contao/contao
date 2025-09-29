@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command\Backup;
 
+use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -52,10 +53,15 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $backups = $this->backupManager->listBackups();
 
         if ([] !== $backups) {
-            $question = new ChoiceQuestion('Select a backup (press <return> to use the latest one)', array_values($backups), 0);
+            $choices = array_map(
+                static fn (Backup $option) => $option->getFilename(),
+                $backups,
+            );
+
+            $question = new ChoiceQuestion('Select a backup (press <return> to use the latest one)', array_values($choices), 0);
             $option = $this->io->askQuestion($question);
 
-            $this->backupName = $option->getFilename();
+            $this->backupName = $option;
         }
     }
 
