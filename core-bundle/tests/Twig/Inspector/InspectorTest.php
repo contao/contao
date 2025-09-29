@@ -342,7 +342,7 @@ class InspectorTest extends TestCase
         $this->assertSame('@SymfonyBundle/foo.twig', $templateBInformation->getExtends());
     }
 
-    public function testCapturesErrorsWhenFailingToInspect(): void
+    public function testCapturesErrorsWhenTemplateDoesNotExist(): void
     {
         $inspector = $this->getInspector();
 
@@ -364,7 +364,10 @@ class InspectorTest extends TestCase
 
     public function testResolvesManagedNamespace(): void
     {
-        $information = $this->getInspector(['@Contao_specific/foo.html.twig' => '…'])->inspectTemplate('@Contao/foo.html.twig');
+        $information = $this
+            ->getInspector(['@Contao_specific/foo.html.twig' => '…', '@Contao/foo.html.twig' => '…'])
+            ->inspectTemplate('@Contao/foo.html.twig')
+        ;
 
         $this->assertSame('@Contao_specific/foo.html.twig', $information->getName());
     }

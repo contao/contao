@@ -5,6 +5,20 @@ ul.sortable li,
     cursor: move;
 }
 
+[data-contao--input-map-target="source"] {
+    &:has(.gimage) {
+        display: inline-flex;
+    }
+
+    &:has([data-action="contao--input-map#removeElement"]) {
+        padding: 0;
+    }
+}
+
+ul:not(.sgallery):has([data-action="contao--input-map#removeElement"]) {
+    padding: 3px 0 0;
+}
+
 ul.sortable button,
 [data-action="contao--input-map#removeElement"] {
     position: absolute;

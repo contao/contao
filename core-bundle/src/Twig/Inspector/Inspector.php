@@ -38,18 +38,16 @@ class Inspector
 
     public function inspectTemplate(string $name): TemplateInformation
     {
+        if (!$this->filesystemLoader->exists($name)) {
+            throw new InspectionException($name, reason: 'The template does not exist.');
+        }
+
         // Resolve the managed namespace to a specific one
         if (str_starts_with($name, '@Contao/')) {
             $name = $this->filesystemLoader->getFirst($name);
         }
 
-        $loader = $this->twig->getLoader();
-
-        try {
-            $source = $loader->getSourceContext($name);
-        } catch (LoaderError) {
-            throw new InspectionException($name, reason: 'The template does not exist.');
-        }
+        $source = $this->twig->getLoader()->getSourceContext($name);
 
         $error = null;
 

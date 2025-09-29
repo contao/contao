@@ -170,6 +170,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
             return [
                 'html' => $html,
+                'listAttributes' => $config['listAttributes'],
                 'primary' => $config['primary'] ?? ('all' === $name ? true : null),
             ];
         }
@@ -188,7 +189,9 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
+            'listAttributes' => $config['listAttributes'],
             'icon' => $config['icon'] ?? null,
+            'iconAttributes' => $config['iconAttributes'],
             'primary' => $config['primary'] ?? ('all' === $name ? true : null),
         ];
     }
