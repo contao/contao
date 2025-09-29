@@ -236,6 +236,12 @@
       <trans-unit id="tl_form_field.doNotOverwrite.1">
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
       </trans-unit>
