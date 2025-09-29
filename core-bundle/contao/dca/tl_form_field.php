@@ -13,10 +13,8 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FormHidden;
@@ -64,42 +62,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'renderAsGrid'            => true,
 			'limitHeight'             => 104
 		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'prefetch'            => true,
-				'icon'                => 'edit.svg',
-				'attributes'          => 'data-contao--deeplink-target="primary"',
-				'primary'             => true,
-				'button_callback'     => array('tl_form_field', 'disableButton')
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store"',
-				'button_callback'     => array('tl_form_field', 'disableButton')
-			),
-			'cut',
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
-				'button_callback'     => array('tl_form_field', 'disableButton')
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=invisible',
-				'icon'                => 'visible.svg',
-				'reverse'             => true,
-				'primary'             => true,
-				'button_callback'     => array('tl_form_field', 'toggleIcon')
-			),
-			'show'
-		)
 	),
 
 	// Palettes
@@ -458,70 +420,6 @@ class tl_form_field extends Backend
 		{
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $user->fields[0];
 		}
-
-		$db = Database::getInstance();
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Prevent editing form fields with not allowed types
-		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
-		{
-			$objField = $db
-				->prepare("SELECT type FROM tl_form_field WHERE id=?")
-				->execute(Input::get('id'));
-
-			if ($objField->numRows && !in_array($objField->type, $user->fields))
-			{
-				throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objField->type . '".');
-			}
-		}
-
-		// Prevent editing content elements with not allowed types
-		if (Input::get('act') == 'editAll' || Input::get('act') == 'overrideAll' || Input::get('act') == 'deleteAll')
-		{
-			$session = $objSession->all();
-
-			if (!empty($session['CURRENT']['IDS']) && is_array($session['CURRENT']['IDS']))
-			{
-				if (empty($user->fields))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$objFields = $db
-						->prepare("SELECT id FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CURRENT']['IDS'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
-						->execute(...$user->fields);
-
-					$session['CURRENT']['IDS'] = $objFields->fetchEach('id');
-				}
-
-				$objSession->replace($session);
-			}
-		}
-
-		// Prevent copying content elements with not allowed types
-		if (Input::get('act') == 'copyAll')
-		{
-			$session = $objSession->all();
-
-			if (!empty($session['CLIPBOARD']['tl_form_field']['id']) && is_array($session['CLIPBOARD']['tl_form_field']['id']))
-			{
-				if (empty($user->fields))
-				{
-					$session['CLIPBOARD']['tl_form_field']['id'] = array();
-				}
-				else
-				{
-					$objFields = $db
-						->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ") ORDER BY sorting")
-						->execute(...$user->fields);
-
-					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
-				}
-
-				$objSession->replace($session);
-			}
-		}
 	}
 
 	/**
@@ -550,7 +448,7 @@ class tl_form_field extends Backend
 		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_form_field', new UpdateAction('tl_form_field', $arrRow)))
 		{
 			$labelCut = $GLOBALS['TL_LANG']['tl_form_field']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-			$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+			$dragHandle = '<button type="button" class="drag-handle">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
 		}
 
 		$strType = '
@@ -623,62 +521,5 @@ class tl_form_field extends Backend
 		}
 
 		return $fields;
-	}
-
-	/**
-	 * Disable the button if the element type is not allowed
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function disableButton($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: 'act=edit' !== $href) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the "toggle visibility" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_form_field::invisible'))
-		{
-			return '';
-		}
-
-		// Disable the button if the element type is not allowed
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']))
-		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-		}
-
-		$href .= '&amp;id=' . $row['id'];
-
-		if ($row['invisible'])
-		{
-			$icon = 'invisible.svg';
-		}
-
-		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
-
-		return '<a href="' . $this->addToUrl($href) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, !$row['invisible'] ? $title : $titleDisabled, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '" data-alt="' . StringUtil::specialchars($title) . '" data-alt-disabled="' . StringUtil::specialchars($titleDisabled) . '"') . '</a> ';
 	}
 }

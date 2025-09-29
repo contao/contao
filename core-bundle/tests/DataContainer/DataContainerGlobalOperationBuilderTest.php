@@ -197,7 +197,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->mockContaoFramework([Backend::class => $backendAdapter]),
+            $this->mockContaoFramework([Backend::class => $backendAdapter, Input::class => $this->mockAdapter(['get'])]),
             $twig,
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),

@@ -46,12 +46,6 @@ class BackendSearchTest extends TestCase
 {
     public function testIAvailable(): void
     {
-        $webWorker = $this->createMock(WebWorker::class);
-        $webWorker
-            ->method('hasCliWorkersRunning')
-            ->willReturn(true)
-        ;
-
         $backendSearch = new BackendSearch(
             [],
             $this->createMock(Security::class),
@@ -59,7 +53,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
             $this->createMock(Jobs::class),
-            $webWorker,
+            $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
 
@@ -127,7 +121,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
             $jobs,
-            $this->createMock(WebWorker::class),
+            $this->createWebworkerWithCliRunning(),
             $reindexProvider,
         );
 
@@ -137,6 +131,7 @@ class BackendSearchTest extends TestCase
     public function testReindexAsync(): void
     {
         $reindexConfig = (new ReindexConfig())
+            ->withRequireJob(true)
             ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
         ;
@@ -164,7 +159,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
             $jobs,
-            $this->createMock(WebWorker::class),
+            $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
 
@@ -226,7 +221,7 @@ class BackendSearchTest extends TestCase
             $eventDispatcher,
             $this->createMock(MessageBusInterface::class),
             $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
+            $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
         $result = $backendSearch->search(new Query(20, 'search me'));
@@ -300,7 +295,7 @@ class BackendSearchTest extends TestCase
             $eventDispatcher,
             $messageBus,
             $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
+            $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
 
@@ -333,7 +328,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
             $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
+            $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
 
@@ -362,10 +357,21 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
             $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
+            $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
 
         $backendSearch->deleteDocuments($documentTypesAndIds);
+    }
+
+    private function createWebworkerWithCliRunning(): WebWorker
+    {
+        $webWorker = $this->createMock(WebWorker::class);
+        $webWorker
+            ->method('hasCliWorkersRunning')
+            ->willReturn(true)
+        ;
+
+        return $webWorker;
     }
 }

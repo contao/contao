@@ -365,7 +365,7 @@ class tl_faq extends Backend
 		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_faq', new UpdateAction('tl_faq', $arrRow)))
 		{
 			$labelCut = $GLOBALS['TL_LANG']['tl_faq']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-			$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+			$dragHandle = '<button type="button" class="drag-handle">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
 		}
 
 		return '

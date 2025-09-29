@@ -11,11 +11,9 @@
       </trans-unit>
       <trans-unit id="tl_layout.type.0">
         <source>Layout type</source>
-        <target>Yerleşim türü</target>
       </trans-unit>
       <trans-unit id="tl_layout.type.1">
         <source>Here you can select the layout type.</source>
-        <target>Buradan yerleşim türünü seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_layout.fallback.0">
         <source>Default layout</source>
@@ -235,11 +233,9 @@
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included elements</source>
-        <target>Katılan bileşenler</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>Here you can assign front end modules and content elements to the layout.</source>
-        <target>Buradan yerleşime ön yüz modülleri ve içerik bileşenleri ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -439,11 +435,9 @@
       </trans-unit>
       <trans-unit id="tl_layout.modern">
         <source>Twig layout with slots</source>
-        <target>Yerleşim aralıklarla dallandırılsın</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
         <source>Legacy HTML5 layout</source>
-        <target>Eski HTML5 yerleşimi</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
@@ -475,7 +469,6 @@
       </trans-unit>
       <trans-unit id="tl_layout.copy.1">
         <source>Copy page layout ID %s</source>
-        <target>%s kimlikli sayfa yerleşimini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>

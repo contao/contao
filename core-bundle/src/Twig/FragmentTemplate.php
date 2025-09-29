@@ -178,7 +178,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function getFrontendModule($intId, $strColumn = 'main'): never
+    public static function getFrontendModule($intId, $strColumn = 'main', array $arrPreloadedContentElements = []): never
     {
         self::throwOnAccess();
     }
@@ -186,7 +186,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function getArticle($varId, $blnMultiMode = false, $blnIsInsertTag = false, $strColumn = 'main'): never
+    public static function getArticle($varId, $blnMultiMode = false, $blnIsInsertTag = false, $strColumn = 'main', array $arrPreloadedContentElements = []): never
     {
         self::throwOnAccess();
     }
@@ -578,7 +578,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function generateStyleTag($href, $media = null, $mtime = false): never
+    public static function generateStyleTag($href, $media = null, $mtime = false, $track = null): never
     {
         self::throwOnAccess();
     }
@@ -594,7 +594,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function generateScriptTag($src, $async = false, $mtime = false, $hash = null, $crossorigin = null, $referrerpolicy = null, $defer = false): never
+    public static function generateScriptTag($src, $async = false, $mtime = false, $hash = null, $crossorigin = null, $referrerpolicy = null, $defer = false, $track = null): never
     {
         self::throwOnAccess();
     }

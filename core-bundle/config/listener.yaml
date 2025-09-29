@@ -8,8 +8,12 @@ services:
             - '@contao.framework'
             - '@translator'
             - '@router'
-            - '@request_stack'
             - '@security.helper'
+
+    contao.listener.backend_cache_response:
+        class: Contao\CoreBundle\EventListener\BackendCacheResponseListener
+        arguments:
+            - '@contao.routing.scope_matcher'
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
@@ -142,6 +146,14 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
             - '@translator'
+
+    contao.listener.data_container.file_image_preview:
+        class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+            - '@contao.image.factory'
+            - '%kernel.project_dir%'
 
     contao.listener.data_container.frontend_module_permissions:
         class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
@@ -406,11 +418,6 @@ services:
             - '@monolog.logger.contao.email'
             - '@monolog.logger.contao.error'
 
-    contao.listener.make_backend_response_uncacheable:
-        class: Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener
-        arguments:
-            - '@contao.routing.scope_matcher'
-
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
         arguments:
@@ -431,7 +438,6 @@ services:
         arguments:
             - '@security.helper'
             - '@router'
-            - '@request_stack'
             - '@translator'
             - '@contao.framework'
 
@@ -441,7 +447,6 @@ services:
             - '@security.helper'
             - '@twig'
             - '@router'
-            - '@request_stack'
             - '@contao.job.jobs'
 
     contao.listener.menu.backend_login:
@@ -542,12 +547,6 @@ services:
             - '@contao.data_container.dca_url_analyzer'
             - '@database_connection'
 
-    contao.listener.referer_id:
-        class: Contao\CoreBundle\EventListener\RefererIdListener
-        arguments:
-            - '@contao.token_generator'
-            - '@contao.routing.scope_matcher'
-
     contao.listener.request_token:
         class: Contao\CoreBundle\EventListener\RequestTokenListener
         arguments:
@@ -602,12 +601,6 @@ services:
     contao.listener.service_unavailable:
         class: Contao\CoreBundle\EventListener\ServiceUnavailableListener
         arguments:
-            - '@contao.routing.scope_matcher'
-
-    contao.listener.store_referer:
-        class: Contao\CoreBundle\EventListener\StoreRefererListener
-        arguments:
-            - '@security.helper'
             - '@contao.routing.scope_matcher'
 
     contao.listener.subrequest_cache:

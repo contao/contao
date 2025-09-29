@@ -27,11 +27,9 @@
       </trans-unit>
       <trans-unit id="tl_page.feedRecurrenceLimit.0">
         <source>Maximum number of recurrences</source>
-        <target>En fazla yinelenme sayısı</target>
       </trans-unit>
       <trans-unit id="tl_page.feedRecurrenceLimit.1">
         <source>Define the maximum number of recurrences for repeated events.</source>
-        <target>Yinelenen etkinlikler için en fazla yinelenme sayısını yazın.</target>
       </trans-unit>
       <trans-unit id="tl_page.archives_legend">
         <source>Calendars</source>
@@ -39,7 +37,6 @@
       </trans-unit>
       <trans-unit id="tl_page.source_teaser">
         <source>Teasers only</source>
-        <target>Yalnızca tanıtımlar</target>
       </trans-unit>
       <trans-unit id="tl_page.source_text">
         <source>Full stories</source>

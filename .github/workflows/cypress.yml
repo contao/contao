@@ -1,0 +1,66 @@
+name: Cypress
+
+on:
+    workflow_dispatch: ~
+    schedule:
+        - cron: 0 13 * * 1-5
+
+permissions: read-all
+
+jobs:
+    cypress:
+        name: Contao ${{ matrix.contao }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                contao: [5.3, 5.6, 5.x]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.3 # highest version supported by all Contao versions in the matrix
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+
+            - name: Install Symfony CLI
+              run: |
+                  wget https://get.symfony.com/cli/installer -O - | bash
+                  mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
+                  symfony server:ca:install
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ matrix.contao }}
+                  show-progress: false
+
+            - name: Install Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+
+            - name: Install the dependencies
+              run: |
+                  npm ci
+                  npm install contao-e2e-tests --save-dev
+
+            - name: Run the Cypress tests
+              id: cypress
+              run: npx contao-e2e-tests
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
+            - name: Upload videos
+              uses: actions/upload-artifact@v4
+              if: ${{ failure() && steps.cypress.conclusion == 'failure' }}
+              with:
+                  name: Cypress videos ${{ matrix.contao }}
+                  path: cypress/videos
+                  retention-days: 14

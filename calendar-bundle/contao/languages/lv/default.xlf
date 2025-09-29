@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="PTY.calendar_feed.0">
         <source>Calendar feed</source>
+        <target>Kalendāra plūsma</target>
       </trans-unit>
       <trans-unit id="PTY.calendar_feed.1">
         <source>Create an RSS, Atom or JSON feed from your calendars.</source>
+        <target>Izveidojiet RSS, Atom vai JSON plūsmu no saviem kalendāriem.</target>
       </trans-unit>
     </body>
   </file>

@@ -73,6 +73,21 @@ final class Job
         return $this->uuid;
     }
 
+    public function withProgressFromAmounts(int $total, int $amount): self
+    {
+        // Prevent division by 0
+        if (0 === $total) {
+            return $this;
+        }
+
+        $progress = 100 / $total * $amount;
+
+        // Ensure valid percentage
+        $progress = max(0, min($progress, 100));
+
+        return $this->withProgress($progress);
+    }
+
     public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
@@ -105,6 +120,7 @@ final class Job
     {
         $clone = clone $this;
         $clone->status = Status::completed;
+        $clone->progress = 100.0;
 
         return $clone;
     }

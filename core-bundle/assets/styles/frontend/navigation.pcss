@@ -1,5 +1,5 @@
 :root {
-    --nav-color: #25455F;
+    --nav-color: #25455f;
     --nav-active-color: #f47c00;
     --nav-item-line-height: 1.5;
     --nav-mobile-background: #172b3b;
@@ -13,6 +13,8 @@
     --nav-mobile-font-size: 18px;
     --nav-mobile-backdrop-height: 80px;
     --nav-submenu-background: #fff;
+    --nav-burger-color: #fff;
+    --nav-burger-line-color: hsl(30deg 100% 48%);
     --skip-background: #172b3b;
     --skip-color: #d3d6da;
     --skip-focus-border-color: #f47c00;
@@ -22,7 +24,7 @@ body.navigation-open {
     overflow: hidden;
 
     .nav-burger {
-        color: #fff;
+        color: var(--nav-burger-color);
     }
 
     header .logo {
@@ -61,7 +63,7 @@ body.navigation-open {
     z-index: 1;
 
     &::after {
-        content: '';
+        content: "";
         display: flex;
         justify-content: center;
         align-items: center;
@@ -104,7 +106,7 @@ body.navigation-open {
         left: 50%;
         height: 0.25rem;
         width: 2.25rem;
-        background: hsl(30deg 100% 48%);
+        background: var(--nav-burger-line-color);
         border-radius: 3rem;
         transform: translateX(-50%);
     }
@@ -164,7 +166,7 @@ body.navigation-open {
         &.is-active {
             &::before {
                 display: block;
-                content: '';
+                content: "";
                 position: fixed;
                 inset: 0 0 auto;
                 height: var(--nav-mobile-backdrop-height);
@@ -358,7 +360,7 @@ body.navigation-open {
                 :is(a, strong) {
                     font-size: 1rem;
                     line-height: 1.2;
-                    padding: .75rem 1rem;
+                    padding: 0.75rem 1rem;
                     text-decoration: none;
                     width: 100%;
                 }
@@ -386,7 +388,7 @@ body.navigation-open {
         .level_2 {
             &::before {
                 display: block;
-                content: '';
+                content: "";
                 position: absolute;
                 bottom: 100%;
                 left: 16px;

@@ -70,6 +70,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
 				'href'                => 'act=source',
+				'prefetch'            => true,
 				'icon'                => 'editor.svg',
 				'primary'             => true,
 				'button_callback'     => array('tl_templates', 'editSource')
@@ -98,14 +99,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'key=compare',
 				'icon'                => 'diffTemplate.svg',
 				'button_callback'     => array('tl_templates', 'compareButton')
-			),
-			'drag' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
-				'icon'                => 'drag.svg',
-				'attributes'          => 'class="drag-handle" aria-hidden="true"',
-				'primary'             => true,
-				'button_callback'     => array('tl_templates', 'dragFile')
 			)
 		)
 	),
@@ -515,28 +508,6 @@ class tl_templates extends Backend
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
 		return str_ends_with($row['id'], '.html5') && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the drag file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function dragFile($row, $href, $label, $title, $icon, $attributes)
-	{
-		if ($this->isTwigFile($row))
-		{
-			return Image::getHtml($icon) . ' ';
-		}
-
-		return '<button type="button" ' . $attributes . '>' . Image::getHtml($icon, $title) . '</button> ';
 	}
 
 	/**

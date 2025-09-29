@@ -46,6 +46,7 @@ class BackendUser extends User
 	/**
 	 * Name of the current cookie
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strCookie = 'BE_USER_AUTH';
 
@@ -337,7 +338,6 @@ class BackendUser extends User
 	{
 		$arrModules = array();
 		$arrStatus = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend')->get('backend_modules');
-		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$router = System::getContainer()->get('router');
 		$security = System::getContainer()->get('security.helper');
 
@@ -348,7 +348,7 @@ class BackendUser extends User
 				$arrModules[$strGroupName]['class'] = 'group-' . $strGroupName . ' node-expanded';
 				$arrModules[$strGroupName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['collapseNode']);
 				$arrModules[$strGroupName]['label'] = ($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null) ? ($GLOBALS['TL_LANG']['MOD'][$strGroupName][0] ?? null) : ($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null)) ? $label : $strGroupName;
-				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
+				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
 
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
@@ -363,7 +363,7 @@ class BackendUser extends User
 						$arrModules[$strGroupName]['modules'][$strModuleName]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$strModuleName][1] ?? '');
 						$arrModules[$strGroupName]['modules'][$strModuleName]['label'] = ($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strModuleName] ?? null) ? ($GLOBALS['TL_LANG']['MOD'][$strModuleName][0] ?? null) : ($GLOBALS['TL_LANG']['MOD'][$strModuleName] ?? null)) ? $label : $strModuleName;
 						$arrModules[$strGroupName]['modules'][$strModuleName]['class'] = 'navigation ' . $strModuleName;
-						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName, 'ref'=>$strRefererId));
+						$arrModules[$strGroupName]['modules'][$strModuleName]['href'] = $router->generate('contao_backend', array('do'=>$strModuleName));
 						$arrModules[$strGroupName]['modules'][$strModuleName]['isActive'] = false;
 					}
 				}

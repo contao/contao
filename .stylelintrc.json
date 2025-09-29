@@ -1,9 +1,16 @@
 {
-    "extends": ["stylelint-config-standard"],
+    "plugins": [
+        "@stylistic/stylelint-plugin"
+    ],
+    "extends": [
+        "stylelint-config-standard",
+        "@stylistic/stylelint-config"
+    ],
     "rules": {
         "import-notation": null,
         "no-descending-specificity": null,
         "selector-class-pattern": null,
-        "selector-id-pattern": null
+        "selector-id-pattern": null,
+        "@stylistic/indentation": 4
     }
 }
