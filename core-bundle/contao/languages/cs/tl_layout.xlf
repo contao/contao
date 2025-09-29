@@ -11,9 +11,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.type.0">
         <source>Layout type</source>
+        <target>Druh vzhledu</target>
       </trans-unit>
       <trans-unit id="tl_layout.type.1">
         <source>Here you can select the layout type.</source>
+        <target>Zde můžete zvolit druh vzhledu.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -225,9 +227,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included elements</source>
+        <target>Začleněné elementy</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>Here you can assign front end modules and content elements to the layout.</source>
+        <target>Zde můžete ke vzhledu připojit frontendové moduly a obsahové elementy</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -427,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.modern">
         <source>Twig layout with slots</source>
+        <target>Vzhled s twigem se sloty</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
         <source>Default layout</source>
@@ -462,6 +467,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.copy.1">
         <source>Copy page layout ID %s</source>
+        <target>Zkopírovat vzhled stránky ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
