@@ -102,6 +102,12 @@ class InspectorTest extends TestCase
             $inspector->inspectTemplate('@Contao_specific/child2.twig')->getSlots(),
             'overwritten parent slots are not present while additional ones are',
         );
+
+        $this->assertSame(
+            [],
+            $inspector->inspectTemplate('@Contao_specific/override.twig')->getSlots(),
+            'overwritten parent blocks remove slots',
+        );
     }
 
     public function testAnalyzesUses(): void
