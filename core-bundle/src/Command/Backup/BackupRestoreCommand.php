@@ -54,8 +54,8 @@ class BackupRestoreCommand extends AbstractBackupCommand
 
         if ([] !== $backups) {
             $choices = array_map(
-                fn(Backup $option) => $option->getFilename(),
-                $backups
+                static fn (Backup $option) => $option->getFilename(),
+                $backups,
             );
 
             $question = new ChoiceQuestion('Select a backup (press <return> to use the latest one)', array_values($choices), 0);
