@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_image_size_item.media.0">
         <source>Media query</source>
-        <target>Druh médii</target>
+        <target>Mediální query</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.media.1">
         <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.1">
         <source>Copy media query ID %s</source>
+        <target>Zkopírovat mediální query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.4">
         <source>Activate</source>
+        <target>Aktivovat</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>

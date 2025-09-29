@@ -17,6 +17,8 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -96,5 +98,18 @@ class ScopeMatcherTest extends TestCase
             false,
             false,
         ];
+    }
+
+    public function testReturnsFalseIfThereIsNoRequest(): void
+    {
+        $scopeMatcher = new ScopeMatcher(
+            $this->createMock(RequestMatcherInterface::class),
+            $this->createMock(RequestMatcherInterface::class),
+            new RequestStack(),
+        );
+
+        $this->assertFalse($scopeMatcher->isFrontendRequest());
+        $this->assertFalse($scopeMatcher->isBackendRequest());
+        $this->assertFalse($scopeMatcher->isContaoRequest());
     }
 }

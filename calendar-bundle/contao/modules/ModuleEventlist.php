@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "event list".
@@ -447,14 +448,18 @@ class ModuleEventlist extends Events
 		}
 
 		// No events found
-		if (!$strEvents)
+		if (!$templates)
 		{
 			$strEvents = "\n" . '<div class="empty">' . $strEmpty . '</div>' . "\n";
+		}
+		else
+		{
+			$strEvents = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
 		}
 
 		// See #3672
 		$this->Template->headline = $this->headline;
-		$this->Template->events = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
+		$this->Template->events = $strEvents;
 		$this->Template->eventCount = $eventCount;
 
 		// Clear the $_GET array (see #2445)
@@ -464,5 +469,10 @@ class ModuleEventlist extends Events
 			Input::setGet('month', null);
 			Input::setGet('day', null);
 		}
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

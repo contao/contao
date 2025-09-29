@@ -553,11 +553,6 @@ class Input
 	 */
 	public static function stripTags($varValue, $strAllowedTags='', $allowedAttributes='')
 	{
-		if ($strAllowedTags === '' || $allowedAttributes === '')
-		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() without setting allowed tags and allowed attributes is deprecated and will no longer work in Contao 6.', __METHOD__);
-		}
-
 		if (!$varValue)
 		{
 			return $varValue;

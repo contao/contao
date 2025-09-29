@@ -319,9 +319,11 @@
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
         <source>Publish</source>
+        <target>Zveřejnit</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.4">
         <source>Unpublish</source>
+        <target>Nezveřejnit</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -337,9 +339,11 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.3">
         <source>Unfeature</source>
+        <target>Nezvýraznit</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.4">
         <source>Feature</source>
+        <target>Zvýraznit</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
