@@ -1,6 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    #sourceElements = new Map();
+
     static values = {
         id: String,
         trail: String,
@@ -9,8 +11,6 @@ export default class extends Controller {
     };
 
     static targets = ['url', 'title', 'description'];
-
-    #sourceElements = new Map();
 
     connect() {
         // Install event listeners on the source fields

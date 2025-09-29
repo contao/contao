@@ -1,6 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class TooltipsController extends Controller {
+    #tooltip = null;
+    #timer = null;
+    #activeTargets = new Set();
+    #removeClickTargetHandlerDelegates = new Map();
+
     static defaultOptionsMap = {
         'a img[alt]': { x: -9, y: 30 },
         '.sgallery img[alt]': { x: 0, y: 75 },
@@ -22,19 +27,16 @@ export default class TooltipsController extends Controller {
         'span[title]': { x: -9, y: 26 },
     };
 
-    #activeTargets = new Set();
-    #removeClickTargetHandlerDelegates = new Map();
-
     /**
      * There is one controller handling multiple tooltip targets. The tooltip
      * DOM element is shared across targets.
      */
     connect() {
-        this.tooltip = document.body.querySelector('body > div[role="tooltip"]') ?? this.#createTipContainer();
+        this.#tooltip = document.body.querySelector('body > div[role="tooltip"]') ?? this.#createTipContainer();
     }
 
     disconnect() {
-        this.tooltip.remove();
+        this.#tooltip.remove();
     }
 
     tooltipTargetConnected(el) {
@@ -101,10 +103,10 @@ export default class TooltipsController extends Controller {
             return;
         }
 
-        clearTimeout(this.timer);
-        this.tooltip.style.willChange = 'display,contents';
+        clearTimeout(this.#timer);
+        this.#tooltip.style.willChange = 'display,contents';
 
-        this.timer = setTimeout(() => {
+        this.#timer = setTimeout(() => {
             this.#activeTargets.add(el);
 
             const position = el.getBoundingClientRect();
@@ -112,19 +114,19 @@ export default class TooltipsController extends Controller {
             const clientWidth = document.documentElement.clientWidth;
 
             if ((rtl && position.x < 200) || (!rtl && position.x < clientWidth - 200)) {
-                this.tooltip.style.left = `${window.scrollX + position.left + options.x}px`;
-                this.tooltip.style.right = 'auto';
-                this.tooltip.classList.remove('tip--rtl');
+                this.#tooltip.style.left = `${window.scrollX + position.left + options.x}px`;
+                this.#tooltip.style.right = 'auto';
+                this.#tooltip.classList.remove('tip--rtl');
             } else {
-                this.tooltip.style.left = 'auto';
-                this.tooltip.style.right = `${clientWidth - window.scrollX - position.right + options.x}px`;
-                this.tooltip.classList.add('tip--rtl');
+                this.#tooltip.style.left = 'auto';
+                this.#tooltip.style.right = `${clientWidth - window.scrollX - position.right + options.x}px`;
+                this.#tooltip.classList.add('tip--rtl');
             }
 
-            this.tooltip.innerHTML = `<div>${text}</div>`;
-            this.tooltip.style.top = `${window.scrollY + position.top + options.y}px`;
-            this.tooltip.style.display = 'block';
-            this.tooltip.style.willChange = 'auto';
+            this.#tooltip.innerHTML = `<div>${text}</div>`;
+            this.#tooltip.style.top = `${window.scrollY + position.top + options.y}px`;
+            this.#tooltip.style.display = 'block';
+            this.#tooltip.style.willChange = 'auto';
         }, delay);
     }
 
@@ -137,16 +139,16 @@ export default class TooltipsController extends Controller {
             el.removeAttribute('data-original-title');
         }
 
-        clearTimeout(this.timer);
-        this.tooltip.style.willChange = 'auto';
+        clearTimeout(this.#timer);
+        this.#tooltip.style.willChange = 'auto';
 
-        if (this.tooltip.style.display === 'block') {
+        if (this.#tooltip.style.display === 'block') {
             this.#activeTargets.delete(el);
 
-            this.tooltip.style.willChange = 'display';
-            this.timer = setTimeout(() => {
-                this.tooltip.style.display = 'none';
-                this.tooltip.style.willChange = 'auto';
+            this.#tooltip.style.willChange = 'display';
+            this.#timer = setTimeout(() => {
+                this.#tooltip.style.display = 'none';
+                this.#tooltip.style.willChange = 'auto';
             }, delay);
         }
     }
