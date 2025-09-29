@@ -436,12 +436,15 @@ class tl_form_field extends Backend
 		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['TL_FFL'][$arrRow['type']] ?? null;
 
-		if (!class_exists($strClass))
+		if (class_exists($strClass))
 		{
-			return '';
+			$objWidget = new $strClass($arrRow);
+		}
+		else
+		{
+			$objWidget = null;
 		}
 
-		$objWidget = new $strClass($arrRow);
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 		$dragHandle = '';
 
@@ -451,21 +454,25 @@ class tl_form_field extends Backend
 			$dragHandle = '<button type="button" class="drag-handle">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
 		}
 
-		$strType = '
-<div class="cte_type ' . $key . '">' . $dragHandle . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
-<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview">';
+		$strType = '<div class="cte_type ' . $key . '">' . $dragHandle . ($GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] ?? $arrRow['type']) . ($objWidget?->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>';
 
-		$strWidget = $objWidget->parse();
-		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);
-		$strWidget = str_replace(array(' type="submit"', ' autofocus', ' required'), array(' type="button"', '', ''), $strWidget);
-
-		if ($objWidget instanceof FormHidden)
+		if ($objWidget)
 		{
-			return $strType . "\n" . $objWidget->value . "\n</div>\n";
+			$strType .= '<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview">';
+
+			$strWidget = $objWidget->parse();
+			$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);
+			$strWidget = str_replace(array(' type="submit"', ' autofocus', ' required'), array(' type="button"', '', ''), $strWidget);
+
+			if ($objWidget instanceof FormHidden)
+			{
+				return $strType . "\n" . $objWidget->value . "\n</div>\n";
+			}
+
+			$strType .= StringUtil::insertTagToSrc($strWidget) . '</div></div>';
 		}
 
-		return $strType . StringUtil::insertTagToSrc($strWidget) . '
-</div></div>' . "\n";
+		return $strType;
 	}
 
 	/**
