@@ -39,10 +39,15 @@
 </div>
 
 {% macro operation(operation, menu = false, showLabels = false, addSeparator = false) %}
+    {% set list_attributes = attrs(menu ? null : operation.listAttributes|default)
+        .addClass('separator', addSeparator)
+    %}
     {% if operation.html is defined and (not menu or '<a ' in operation.html or '<button ' in operation.html) %}
-        <li{% if addSeparator %} class="separator"{% endif %}{% if menu and not showLabels %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>
+        {% set list_attributes = list_attributes.set('data-contao--operations-menu-target', 'title', menu and not showLabels) %}
+        <li{{ list_attributes }}>{{ operation.html|raw }}</li>
     {% elseif operation.href|default %}
-        <li{% if addSeparator %} class="separator"{% endif %}{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
+        {% set list_attributes = list_attributes.set('data-contao--operations-menu-target', 'title', menu and not operation.title|default) %}
+        <li{{ list_attributes }}>
             {% set operation_attributes = attrs(operation.attributes|default)
                 .set('title', operation.title|default, ((menu or showLabels) and operation.title|default != operation.label|default))
                 .addClass('has-icon', operation.icon|default)
@@ -67,7 +72,7 @@
             {% endif %}
         </li>
     {% elseif operation.icon|default and not menu %}
-        <li{% if addSeparator %} class="separator"{% endif %}>
+        <li{{ list_attributes }}>
             {{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default(operation.label|default), operation.iconAttributes|default(null)) }}
             {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
         </li>

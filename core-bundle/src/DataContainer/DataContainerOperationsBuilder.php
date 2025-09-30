@@ -232,7 +232,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 'onclick',
                 \sprintf(
                     "Backend.openModalIframe({title:'%s', url:'%s'});return false",
-                    StringUtil::specialchars($config['title']),
+                    $config['title'],
                     $href.(str_contains($href, '?') ? '&' : '?').'popup=1',
                 ),
             );
@@ -253,7 +253,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
+            'listAttributes' => $config['listAttributes'],
             'icon' => $config['icon'],
+            'iconAttributes' => $config['iconAttributes'],
             'href' => $href,
             'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,

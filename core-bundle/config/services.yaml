@@ -1281,6 +1281,12 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    contao.translation.legacy_locale_switcher:
+        class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
         decorates: translator
