@@ -287,7 +287,8 @@ class PageRegular extends Frontend
 			}
 		}
 
-		if (empty($arrArticleColumns)) {
+		if (empty($arrArticleColumns))
+		{
 			return $arrPreloaded;
 		}
 
