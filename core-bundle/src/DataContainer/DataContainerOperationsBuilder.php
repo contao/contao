@@ -225,7 +225,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 'onclick',
                 \sprintf(
                     "Backend.openModalIframe({title:'%s', url:'%s'});return false",
-                    StringUtil::specialchars($config['title']),
+                    $config['title'],
                     $href.(str_contains($href, '?') ? '&' : '?').'popup=1',
                 ),
             );
