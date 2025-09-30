@@ -289,10 +289,9 @@ class PageRegular extends Frontend
 
 		foreach ($arrModules as $arrModule)
 		{
-			/** @var class-string<Module> $strClass */
 			$strClass = Module::findClass($arrMapper[$arrModule['mod']]->type ?? '');
 
-			if (!$strClass || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
 			{
 				continue;
 			}
@@ -320,10 +319,9 @@ class PageRegular extends Frontend
 
 		foreach ($objResult->fetchAllAssoc() as list('id' => $intId, 'type' => $strType, 'column' => $strColumn))
 		{
-			/** @var class-string<Module> $strClass */
 			$strClass = Module::findClass($strType);
 
-			if (!$strClass || !$strClass::shouldPreload($strType, $objPage, $request))
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($strType, $objPage, $request))
 			{
 				continue;
 			}

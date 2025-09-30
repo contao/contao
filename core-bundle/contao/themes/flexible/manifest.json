@@ -1,11 +1,11 @@
 {
-  "backend.css": "/system/themes/flexible/backend.82b0f632.css",
-  "confirm.css": "/system/themes/flexible/confirm.b60014bc.css",
-  "conflict.css": "/system/themes/flexible/conflict.b53df1f2.css",
-  "diff.css": "/system/themes/flexible/diff.eab2168c.css",
-  "help.css": "/system/themes/flexible/help.404828c4.css",
-  "login.css": "/system/themes/flexible/login.6bfad2ce.css",
-  "popup.css": "/system/themes/flexible/popup.dba1c06b.css",
-  "tinymce.css": "/system/themes/flexible/tinymce.808c0ed4.css",
-  "tinymce-dark.css": "/system/themes/flexible/tinymce-dark.b8510851.css"
+  "backend.css": "/system/themes/flexible/backend.60401cc4.css",
+  "confirm.css": "/system/themes/flexible/confirm.7a60b7ee.css",
+  "conflict.css": "/system/themes/flexible/conflict.fb88cdcc.css",
+  "diff.css": "/system/themes/flexible/diff.c9815d54.css",
+  "help.css": "/system/themes/flexible/help.419bdaba.css",
+  "login.css": "/system/themes/flexible/login.ddaff059.css",
+  "popup.css": "/system/themes/flexible/popup.a9500ae5.css",
+  "tinymce.css": "/system/themes/flexible/tinymce.106caa58.css",
+  "tinymce-dark.css": "/system/themes/flexible/tinymce-dark.233f94a8.css"
 }
