@@ -2,6 +2,24 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.40] (2025-09-30)
+
+**Fixed issues:**
+
+- [#8853] Use a pointer cursor for the preview toolbar toggle ([fritzmg])
+- [#8879] Update `paragonie/constant_time_encoding` ([paragonie-security])
+- [#8881] Handle directories in the file image preview ([aschempp])
+- [#8859] Fix the `undefined method named "shouldPreload"` error ([ausi])
+- [#8819] Do not hardcode the file preview ([aschempp])
+- [#8751] Fix the template module class ([aschempp])
+- [#8814] Do not check the page type when adding child pages ([aschempp])
+- [#8805] Fix the permission check on pages in article view ([aschempp])
+- [#8085] Preload the reader modules ([ausi])
+- [#8795] Remove the deprecation from `Input::stripTags()` ([ausi])
+- [#8780] Move the preview toolbar into the shadow DOM ([zoglo])
+- [#8787] Handle infinite recursion in the insert tag parser ([ausi])
+- [#8779] Check if the `Content-Type` header exists before using it in the `PreviewToolbarListener` ([lukasbableck])
+
 ## [5.3.39] (2025-09-04)
 
 **Fixed issues:**
@@ -787,6 +805,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.40]: https://github.com/contao/contao/releases/tag/5.3.40
 [5.3.39]: https://github.com/contao/contao/releases/tag/5.3.39
 [5.3.38]: https://github.com/contao/contao/releases/tag/5.3.38
 [5.3.37]: https://github.com/contao/contao/releases/tag/5.3.37
@@ -860,6 +879,7 @@ This project adheres to [Semantic Versioning].
 [markocupic]: https://github.com/markocupic
 [md-netdesign]: https://github.com/md-netdesign
 [mpitz]: https://github.com/mpitz
+[paragonie-security]: https://github.com/paragonie-security
 [patrickjDE]: https://github.com/patrickjDE
 [pressi]: https://github.com/pressi
 [qzminski]: https://github.com/qzminski
@@ -1277,6 +1297,7 @@ This project adheres to [Semantic Versioning].
 [#8053]: https://github.com/contao/contao/pull/8053
 [#8068]: https://github.com/contao/contao/pull/8068
 [#8078]: https://github.com/contao/contao/pull/8078
+[#8085]: https://github.com/contao/contao/pull/8085
 [#8086]: https://github.com/contao/contao/pull/8086
 [#8087]: https://github.com/contao/contao/pull/8087
 [#8088]: https://github.com/contao/contao/pull/8088
@@ -1399,7 +1420,19 @@ This project adheres to [Semantic Versioning].
 [#8730]: https://github.com/contao/contao/pull/8730
 [#8741]: https://github.com/contao/contao/pull/8741
 [#8746]: https://github.com/contao/contao/pull/8746
+[#8751]: https://github.com/contao/contao/pull/8751
 [#8752]: https://github.com/contao/contao/pull/8752
 [#8754]: https://github.com/contao/contao/pull/8754
 [#8755]: https://github.com/contao/contao/pull/8755
 [#8759]: https://github.com/contao/contao/pull/8759
+[#8779]: https://github.com/contao/contao/pull/8779
+[#8780]: https://github.com/contao/contao/pull/8780
+[#8787]: https://github.com/contao/contao/pull/8787
+[#8795]: https://github.com/contao/contao/pull/8795
+[#8805]: https://github.com/contao/contao/pull/8805
+[#8814]: https://github.com/contao/contao/pull/8814
+[#8819]: https://github.com/contao/contao/pull/8819
+[#8853]: https://github.com/contao/contao/pull/8853
+[#8859]: https://github.com/contao/contao/pull/8859
+[#8879]: https://github.com/contao/contao/pull/8879
+[#8881]: https://github.com/contao/contao/pull/8881

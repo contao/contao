@@ -1,6 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="fa">
     <body>
+      <trans-unit id="tl_files.preview.0">
+        <source>Image preview</source>
+      </trans-unit>
+      <trans-unit id="tl_files.preview.1">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>قسمت مهم تصویر را با نشانگر ماوس مشخص نمایید.</target>
+      </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
         <target>نام</target>
@@ -120,10 +127,6 @@
       <trans-unit id="tl_files.editFile">
         <source>Edit file &quot;%s&quot;</source>
         <target>ویرایش پرونده &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>قسمت مهم تصویر را با نشانگر ماوس مشخص نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
