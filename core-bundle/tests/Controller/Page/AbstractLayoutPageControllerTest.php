@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
+use Contao\CoreBundle\Cache\CacheTagManager;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fixtures\Controller\Page\LayoutPageController;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -26,6 +28,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Spatie\SchemaOrg\Graph;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -132,7 +135,40 @@ class AbstractLayoutPageControllerTest extends TestCase
         $layoutPageController(new Request());
     }
 
-    private function getContainerWithDefaultConfiguration(bool $existingResponseContext = false): ContainerInterface
+    #[DataProvider('providePageCacheSettings')]
+    public function testCacheHeadersAreApplied(array $pageAttributes, string $expectedCacheControl): void
+    {
+        $container = $this->getContainerWithDefaultConfiguration(true, $pageAttributes);
+        System::setContainer($container);
+
+        $layoutPageController = new LayoutPageController();
+        $layoutPageController->setContainer($container);
+
+        $response = $layoutPageController(new Request());
+
+        $this->assertSame($expectedCacheControl, $response->headers->get('Cache-Control'));
+        $this->assertTrue($response->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
+    }
+
+    public static function providePageCacheSettings(): iterable
+    {
+        yield 'disabled' => [
+            ['cache' => 0],
+            'no-cache, no-store, private',
+        ];
+
+        yield 'shared' => [
+            ['cache' => 60],
+            'public, s-maxage=60',
+        ];
+
+        yield 'private' => [
+            ['clientCache' => 10],
+            'max-age=10, private',
+        ];
+    }
+
+    private function getContainerWithDefaultConfiguration(bool $existingResponseContext = false, array $pageModelAttributes = []): ContainerInterface
     {
         $twig = $this->createMock(Environment::class);
         $twig
@@ -169,6 +205,10 @@ class AbstractLayoutPageControllerTest extends TestCase
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->layout = 42;
         $page->language = 'en';
+
+        foreach ($pageModelAttributes as $key => $value) {
+            $page->{$key} = $value;
+        }
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $page);
@@ -235,6 +275,8 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn(false)
         ;
 
+        $tagManager = $this->createMock(CacheTagManager::class);
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('twig', $twig);
         $container->set('contao.routing.page_finder', $pageFinder);
@@ -243,6 +285,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $container->set('contao.image.picture_factory', $pictureFactory);
         $container->set('contao.image.preview_factory', $previewFactory);
         $container->set('contao.security.token_checker', $tokenChecker);
+        $container->set('contao.cache.tag_manager', $tagManager);
         $container->set('contao.framework', $framework);
 
         return $container;

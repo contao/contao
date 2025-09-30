@@ -2,12 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.2] (2025-09-05)
+
+**Fixed issues:**
+
+- [#8722] Show the remove button for all file selections ([zoglo])
+- [#8769] Adjust the widget grid alignment ([zoglo])
+- [#8766] Make a job optional for the back end search reindex ([Toflar])
+- [#8764] Fix the `var/logs` symlink under Symfony 7.3+ ([fritzmg])
+
 ## [5.6.1] (2025-08-28)
 
 **Security fixes:**
 
-- [CVE-2025-57759]: Improper privilege management for page and article fields
 - [CVE-2025-57758]: Improper access control in the back end voters
+- [CVE-2025-57759]: Improper privilege management for page and article fields
 - [CVE-2025-57757]: Information disclosure in the news module
 - [CVE-2025-57756]: Information disclosure in the front end search index
 
@@ -181,13 +190,14 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.2]: https://github.com/contao/contao/releases/tag/5.6.2
 [5.6.1]: https://github.com/contao/contao/releases/tag/5.6.1
 [5.6.0]: https://github.com/contao/contao/releases/tag/5.6.0
 [5.6.0-RC3]: https://github.com/contao/contao/releases/tag/5.6.0-RC3
 [5.6.0-RC2]: https://github.com/contao/contao/releases/tag/5.6.0-RC2
 [5.6.0-RC1]: https://github.com/contao/contao/releases/tag/5.6.0-RC1
-[CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
+[CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
 [CVE-2025-57756]: https://github.com/contao/contao/security/advisories/GHSA-2xmj-8wmq-7475
 [aschempp]: https://github.com/aschempp
@@ -342,6 +352,10 @@ This project adheres to [Semantic Versioning].
 [#8710]: https://github.com/contao/contao/pull/8710
 [#8715]: https://github.com/contao/contao/pull/8715
 [#8720]: https://github.com/contao/contao/pull/8720
+[#8722]: https://github.com/contao/contao/pull/8722
 [#8736]: https://github.com/contao/contao/pull/8736
 [#8743]: https://github.com/contao/contao/pull/8743
 [#8747]: https://github.com/contao/contao/pull/8747
+[#8764]: https://github.com/contao/contao/pull/8764
+[#8766]: https://github.com/contao/contao/pull/8766
+[#8769]: https://github.com/contao/contao/pull/8769
