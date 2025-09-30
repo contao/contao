@@ -355,6 +355,14 @@ class PageModel extends Model
 		return parent::__get($strKey);
 	}
 
+	public function setRow(array $arrData)
+	{
+		// Reset $blnDetailsLoaded (#8516)
+		$this->blnDetailsLoaded = false;
+
+		return parent::setRow($arrData);
+	}
+
 	/**
 	 * Find a published page by its ID
 	 *
@@ -1073,7 +1081,7 @@ class PageModel extends Model
 			{
 				System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
-				throw new NoRootPageFoundException('No root page found');
+				throw new NoRootPageFoundException('Page ID "' . $this->id . '" does not belong to a root page');
 			}
 		}
 

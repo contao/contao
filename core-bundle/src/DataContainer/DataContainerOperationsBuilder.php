@@ -78,6 +78,10 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('new' === $k) {
+                continue;
+            }
+
             if ('-' === $v) {
                 $builder->addSeparator();
                 continue;
@@ -105,6 +109,10 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         $inputAdapter = $this->framework->getAdapter(Input::class);
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('new' === $k) {
+                continue;
+            }
+
             // Show edit operation in the header by default (backwards compatibility)
             if ('edit' === $k && !isset($v['showInHeader'])) {
                 $v['showInHeader'] = true;
@@ -112,6 +120,13 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
             if (empty($v['showInHeader']) || ('select' === $inputAdapter->get('act') && !($v['showOnSelect'] ?? null))) {
                 continue;
+            }
+
+            if ('edit' === $k) {
+                $v['attributes'] = (new HtmlAttributes($v['attributes'] ?? null))->set(
+                    'onclick',
+                    "Backend.openModalIframe({title:'".str_replace("'", "\\'", \sprintf($v['label'][1] ?? '%s', $record['id']))."', url:this.href+'&popup=1&nb=1'});return false",
+                );
             }
 
             $v = \is_array($v) ? $v : [$v];
@@ -134,18 +149,17 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     }
 
     /**
-     * @param "pasteinto"|"pasteafter"|"pastetop"|"pasteroot"|"pastenewtop"|"pastenewafter" $type
+     * @param "pasteinto"|"pasteafter"|"pastetop"|"pasteroot" $type
      */
-    public function addPasteButton(string $type, string|null $href): self
+    public function addPasteButton(string $type, string $table, string|null $href): self
     {
         $icon = match ($type) {
             'pastetop' => 'pasteafter',
             'pasteroot' => 'pasteinto',
-            'pastenewtop', 'pastenewafter' => 'new',
             default => $type,
         };
 
-        [$label, $title] = $this->getLabelAndTitle($this->table, $type, $this->id);
+        [$label, $title] = $this->getLabelAndTitle($table, $type, $this->id);
 
         if (null === $href) {
             $this->append([
@@ -163,6 +177,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'attributes' => new HtmlAttributes('data-action="contao--scroll-offset#store"'),
             'icon' => $icon.'.svg',
             'href' => $href,
+            'method' => 'POST',
             'primary' => !str_starts_with($type, 'pastenew'),
         ]);
 
@@ -170,23 +185,20 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     }
 
     /**
-     * @param "pastenewinto"|"pastenewafter" $type
+     * @param self::CREATE_* $mode
      */
-    public function addNewButton(string $type, string $href): self
+    public function addNewButton(string $mode, string $table, int $pid, int|null $id = null): self
     {
-        if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been initialized yet.');
-        }
-
-        [$label, $title] = $this->getLabelAndTitle($this->table, $type, $this->id);
+        [$label, $title] = $this->getLabelAndTitle($table, 'pastenew'.$mode, $pid);
 
         $this->append([
-            'href' => $href,
             'label' => $label,
             'title' => $title,
-            'attributes' => (new HtmlAttributes())->set('data-action', 'contao--scroll-offset#discard'),
-            'icon' => 'new.svg',
-            'primary' => false,
+            'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null))->set('data-action', 'contao--scroll-offset#store'),
+            'icon' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['icon'] ?? 'new.svg',
+            'href' => $this->getNewHref($mode, $pid, $id),
+            'method' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['method'] ?? 'POST',
+            'primary' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['primary'] ?? false,
         ]);
 
         return $this;
@@ -220,21 +232,30 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 'onclick',
                 \sprintf(
                     "Backend.openModalIframe({title:'%s', url:'%s'});return false",
-                    StringUtil::specialchars($config['title']),
+                    $config['title'],
                     $href.(str_contains($href, '?') ? '&' : '?').'popup=1',
                 ),
             );
         }
 
         if (null !== ($config['prefetch'] ?? null)) {
-            $config['attributes'] = (new HtmlAttributes($config['attributes']))->set('data-turbo-prefetch', $config['prefetch'] ? 'true' : 'false');
+            $config['attributes']->set('data-turbo-prefetch', $config['prefetch'] ? 'true' : 'false');
         }
+
+        if ($config['class'] ?? null) {
+            $config['attributes']->addClass($config['class']);
+        }
+
+        // Add the key as CSS class
+        $config['attributes']->addClass($name);
 
         return [
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
+            'listAttributes' => $config['listAttributes'],
             'icon' => $config['icon'],
+            'iconAttributes' => $config['iconAttributes'],
             'href' => $href,
             'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,

@@ -11,6 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate</source>
+        <target>Aktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -46,11 +47,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.confirm">
         <source>%s new recipients have been imported.</source>
-        <target>% s jauni saņēmēji ir importēti.</target>
+        <target>%s jauni saņēmēji ir importēti.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.invalid">
         <source>%s invalid entries have been skipped.</source>
-        <target>% s nederīgi ieraksti ir izlaisti.</target>
+        <target>%s nederīgi ieraksti ir izlaisti.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.subscribed">
         <source>subscribed on %s</source>
@@ -110,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.4">
         <source>Activate</source>
+        <target>Aktivizēt</target>
       </trans-unit>
     </body>
   </file>

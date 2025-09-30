@@ -53,15 +53,12 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		$request = $container->get('request_stack')->getCurrentRequest();
-		$ref = $request->attributes->get('_contao_referer_id');
-		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
+		$return = $container->get('router')->generate('contao_backend', array('do'=>'security'));
 
 		/** @var UriSigner $uriSigner */
 		$uriSigner = $container->get('uri_signer');
-		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref, 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
+		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
 
-		$this->Template->href = $this->getReferer(true);
-		$this->Template->ref = $ref;
 		$this->Template->messages = Message::generateUnwrapped();
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 

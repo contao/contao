@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import AccessibleMenu from 'accessible-menu';
 
-const menus = [];
+let menus = [];
 
 export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
@@ -37,7 +37,7 @@ export default class OperationsMenuController extends Controller {
             }
         }
 
-        delete menus[menus.findIndex((menu) => menu === this.$menu)];
+        menus = menus.filter((menu) => menu !== this.$menu);
     }
 
     titleTargetConnected(el) {
@@ -66,6 +66,9 @@ export default class OperationsMenuController extends Controller {
         }
 
         event.preventDefault();
+
+        // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065, #8567)
+        this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
         this.$menu.elements.submenuToggles[0].open();
         this.setPosition(event);

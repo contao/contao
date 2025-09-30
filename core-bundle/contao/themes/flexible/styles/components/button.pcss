@@ -1,4 +1,5 @@
-#tl_buttons {
+/* Backwards compatibility */
+#tl_buttons:not(.operations) {
     display: flex;
     justify-content: flex-end;
     flex-wrap: wrap;
@@ -8,8 +9,18 @@
     list-style: none;
 }
 
-#tl_buttons li {
-    margin: 0;
+#tl_buttons > ul {
+    flex-wrap: wrap;
+    gap: 10px 15px;
+    padding: 10px 15px;
+
+    .is--hidden {
+        margin-left: -15px;
+    }
+}
+
+/* Backwards compatibility */
+#tl_buttons #tl_buttons.operations > ul {
     padding: 0;
 }
 

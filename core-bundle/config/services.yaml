@@ -577,6 +577,7 @@ services:
         arguments:
             - '@request_stack'
             - '@fragment.handler'
+            - '@contao.routing.page_finder'
 
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
@@ -608,17 +609,14 @@ services:
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - '%contao.intl.countries%'
-            - '%kernel.default_locale%'
 
     contao.intl.locales:
         class: Contao\CoreBundle\Intl\Locales
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - []
             - '%contao.intl.locales%'
@@ -1111,6 +1109,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.page_type_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
@@ -1193,6 +1192,8 @@ services:
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
         public: true
+        arguments:
+            - '@clock'
 
     contao.security.two_factor.backup_code_manager:
         class: Contao\CoreBundle\Security\TwoFactor\BackupCodeManager
@@ -1279,6 +1280,12 @@ services:
             - '@contao.translation.data_collector_translator.inner'
         tags:
             - { name: kernel.reset, method: reset }
+
+    contao.translation.legacy_locale_switcher:
+        class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
+        arguments:
+            - '@contao.framework'
+            - '@translator'
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
@@ -1457,6 +1464,7 @@ services:
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\DataContainer\DcaUrlAnalyzer: '@contao.data_container.dca_url_analyzer'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
+    Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'

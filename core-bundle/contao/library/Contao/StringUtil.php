@@ -244,7 +244,7 @@ class StringUtil
 		$replace = static function (&$value) {
 			if (\is_string($value))
 			{
-				$value = str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $value);
+				$value = str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;', '&lsqb;', '&rsqb;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]', '[lsqb]', '[rsqb]'), $value);
 			}
 		};
 
@@ -272,7 +272,7 @@ class StringUtil
 		$replace = static function (&$value) {
 			if (\is_string($value))
 			{
-				$value = str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $value);
+				$value = str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]', '[lsqb]', '[rsqb]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;', '&lsqb;', '&rsqb;'), $value);
 			}
 		};
 
@@ -1009,7 +1009,7 @@ class StringUtil
 	 * @param mixed   $varValue      The serialized string
 	 * @param boolean $blnForceArray True to always return an array
 	 *
-	 * @return mixed The unserialized array or the unprocessed input value
+	 * @return ($blnForceArray is true ? array : mixed) The unserialized array or the unprocessed input value
 	 */
 	public static function deserialize($varValue, $blnForceArray=false)
 	{

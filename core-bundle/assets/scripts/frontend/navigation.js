@@ -38,8 +38,10 @@ export class Navigation {
         }
 
         new ResizeObserver(() => {
+            const isDesktop = this._isDesktop();
+
             for (const dropdown of this.dropdowns) {
-                this._isDesktop() ? this._registerDropdownEvents(dropdown) : this._unregisterDropdownEvents(dropdown);
+                isDesktop ? this._registerDropdownEvents(dropdown) : this._unregisterDropdownEvents(dropdown);
             }
         }).observe(document.body);
     }
@@ -212,7 +214,7 @@ export class Navigation {
 
         // Case 3: Down the drain with everything that ain't a parent node :)
         else {
-            this.active.filter(node => {
+            this.active = this.active.filter(node => {
                 if (node.contains(dropdown)) {
                     return true;
                 }

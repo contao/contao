@@ -29,6 +29,8 @@ use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Model\Collection;
+use Contao\ModuleEventlist;
+use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
@@ -70,7 +72,16 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(new Collection([$normalCalendar, $protectedCalendar], 'tl_calendar'))
         ;
 
-        $framework = $this->mockContaoFramework([CalendarModel::class => $calendarAdapter]);
+        $framework = $this->mockContaoFramework(
+            [
+                CalendarModel::class => $calendarAdapter,
+            ],
+            [
+                ModuleModel::class => $this->createMock(ModuleModel::class),
+                ModuleEventlist::class => $this->createMock(ModuleEventlist::class),
+            ],
+        );
+
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -252,6 +263,8 @@ class CalendarFeedListenerTest extends ContaoTestCase
         $eventData = $eventModel->row();
         $eventData['model'] = $eventModel;
         $eventData['begin'] = $eventModel->startTime;
+        $eventData['date'] = date('Y-m-d', $eventModel->startTime);
+        $eventData['time'] = '';
 
         $event = new TransformEventForFeedEvent($eventData, $feed, $pageModel, $request, $baseUrl);
 
@@ -266,7 +279,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
 
         $item = $event->getItem();
 
-        $this->assertSame($title[1], $item->getTitle());
+        $this->assertSame(date('Y-m-d', $eventModel->startTime).' '.$title[1], $item->getTitle());
         $this->assertSame(1656578758, $item->getLastModified()->getTimestamp());
         $this->assertSame('https://example.org/news/example-title', $item->getLink());
         $this->assertSame('1cfcaaf3-79b2-515d-89aa-819773585f11', $item->getPublicId());

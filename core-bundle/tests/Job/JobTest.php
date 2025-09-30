@@ -72,6 +72,9 @@ class JobTest extends TestCase
     {
         $job = $this->getJob()->withProgress(42.0);
         $this->assertSame(42.0, $job->getProgress());
+
+        $job = $job->markCompleted();
+        $this->assertSame(100.0, $job->getProgress());
     }
 
     public function testWithMetadataStoresData(): void

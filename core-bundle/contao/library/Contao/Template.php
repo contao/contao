@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\String\HtmlAttributes;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
@@ -442,13 +443,14 @@ abstract class Template extends Controller
 	/**
 	 * Generate the markup for a style sheet tag
 	 *
-	 * @param string $href  The script path
-	 * @param string $media The media type string
-	 * @param mixed  $mtime The file mtime
+	 * @param string      $href  The script path
+	 * @param string|null $media The media type string
+	 * @param mixed       $mtime The file mtime
+	 * @param string|null $track The data-turbo-track attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateStyleTag($href, $media=null, $mtime=false)
+	public static function generateStyleTag($href, $media=null, $mtime=false, $track=null)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $href))
@@ -477,7 +479,14 @@ abstract class Template extends Controller
 			$href .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<link rel="stylesheet" href="' . $href . '"' . (($media && $media != 'all') ? ' media="' . $media . '"' : '') . '>';
+		$attributes = (new HtmlAttributes())
+			->set('rel', 'stylesheet')
+			->set('href', $href)
+			->set('media', $media, $media && $media != 'all')
+			->setIfExists('data-turbo-track', $track)
+		;
+
+		return "<link$attributes>";
 	}
 
 	/**
@@ -511,10 +520,11 @@ abstract class Template extends Controller
 	 * @param string|null $crossorigin    An optional crossorigin attribute
 	 * @param string|null $referrerpolicy An optional referrerpolicy attribute
 	 * @param boolean     $defer          True to add the defer attribute
+	 * @param string|null $track          The data-turbo-track attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null, $defer=false)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null, $defer=false, $track=null)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))
@@ -543,7 +553,17 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . ($defer ? ' defer' : '') . '></script>';
+		$attributes = (new HtmlAttributes())
+			->set('src', $src)
+			->set('async', '', $async)
+			->setIfExists('integrity', $hash)
+			->setIfExists('crossorigin', $crossorigin)
+			->setIfExists('referrerpolicy', $referrerpolicy)
+			->set('defer', '', $defer)
+			->setIfExists('data-turbo-track', $track)
+		;
+
+		return "<script$attributes></script>";
 	}
 
 	/**

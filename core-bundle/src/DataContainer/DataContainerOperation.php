@@ -52,20 +52,13 @@ class DataContainerOperation implements \ArrayAccess
             $operation['label'] = $operation['title'] = $name;
         }
 
-        $attributes = $operation['attributes'] ?? new HtmlAttributes();
+        foreach (['attributes', 'listAttributes', 'iconAttributes'] as $key) {
+            $operation[$key] ??= new HtmlAttributes();
 
-        if (\is_string($attributes)) {
-            $attributes = new HtmlAttributes(null !== $id ? \sprintf($attributes, $id, $id) : $attributes);
+            if (\is_string($operation[$key])) {
+                $operation[$key] = new HtmlAttributes(null !== $id ? \sprintf($operation[$key], $id, $id) : $operation[$key]);
+            }
         }
-
-        if (isset($operation['class'])) {
-            $attributes->addClass($operation['class']);
-        }
-
-        // Add the key as CSS class
-        $attributes->addClass($name);
-
-        $operation['attributes'] = $attributes;
 
         $this->operation = $operation;
     }
@@ -80,7 +73,7 @@ class DataContainerOperation implements \ArrayAccess
      *
      * @param T $offset
      *
-     * @return (T is "attributes" ? HtmlAttributes : mixed)
+     * @return (T is "attributes"|"listAttributes"|"iconAttributes" ? HtmlAttributes : mixed)
      */
     public function offsetGet(mixed $offset): mixed
     {
@@ -89,7 +82,7 @@ class DataContainerOperation implements \ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if ('attributes' === $offset && \is_string($value)) {
+        if (!$value instanceof HtmlAttributes && \in_array($offset, ['attributes', 'listAttributes', 'iconAttributes'], true)) {
             $value = new HtmlAttributes($value);
         }
 

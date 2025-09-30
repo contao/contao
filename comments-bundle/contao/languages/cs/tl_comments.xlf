@@ -191,9 +191,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.3">
         <source>Unpublish</source>
+        <target>Nezveřejnit</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.4">
         <source>Publish</source>
+        <target>Zveřejnit</target>
       </trans-unit>
     </body>
   </file>
