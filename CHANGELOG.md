@@ -2,6 +2,38 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.3] (2025-09-30)
+
+**Fixed issues:**
+
+- [#8691] Use the locale switcher to set the user language ([fritzmg])
+- [#8894] Do not double-encode the operation title ([aschempp])
+- [#8758] Add more custom properties for the accessible navigation ([zoglo])
+- [#8823] Improve the `DC_Folder` permission checks and use the operation builder ([aschempp])
+- [#8773] Fix the legacy header buttons layout ([aschempp])
+- [#8760] Make the accessible navigation breakpoint adjustable ([zoglo])
+- [#8878] Show the titles in the fragment list view ([fritzmg])
+- [#8892] Map the backup object to file names ([zoglo])
+- [#8855] Display the form field label if the widget is missing ([fritzmg])
+- [#8886] Fix the `datetime` types in the Doctrine entities ([fritzmg])
+- [#8777] Harden against deleted templates when analyzing slots ([m-vo])
+- [#8858] Fix the main headline styling in regular back end controllers ([fritzmg])
+- [#8854] Use a pointer cursor for the preview toolbar toggle ([fritzmg])
+- [#8866] Hide the content element preview if it's empty ([fritzmg])
+- [#8841] Handle having no request in the scope matcher ([m-vo])
+- [#8843] Make the "share preview link" operation primary ([Toflar])
+- [#8824] Reduce the jobs polling interval to 5 seconds ([Toflar])
+- [#8822] Fix a regression with the limit height toggle not being colored on hover ([zoglo])
+- [#8820] Add operation list attributes to hide the limit height toggle by default ([aschempp])
+- [#8812] Move the preview toolbar into the shadow DOM ([zoglo])
+- [#8810] Preload the reader modules ([ausi])
+- [#8768] Fix the Stimulus color picker preview ([zoglo])
+- [#8788] Ensure no-op when the back end search is not available ([Toflar])
+- [#8790] Prefetch the source editor links ([aschempp])
+- [#8793] Use the media range query in the flexible theme ([zoglo])
+- [#8784] Only set the request format when rendering a Turbo stream template ([m-vo])
+- [#8775] Also apply cache headers in Twig layouts ([m-vo])
+
 ## [5.6.2] (2025-09-05)
 
 **Fixed issues:**
@@ -190,6 +222,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.3]: https://github.com/contao/contao/releases/tag/5.6.3
 [5.6.2]: https://github.com/contao/contao/releases/tag/5.6.2
 [5.6.1]: https://github.com/contao/contao/releases/tag/5.6.1
 [5.6.0]: https://github.com/contao/contao/releases/tag/5.6.0
@@ -344,6 +377,7 @@ This project adheres to [Semantic Versioning].
 [#8682]: https://github.com/contao/contao/pull/8682
 [#8684]: https://github.com/contao/contao/pull/8684
 [#8689]: https://github.com/contao/contao/pull/8689
+[#8691]: https://github.com/contao/contao/pull/8691
 [#8695]: https://github.com/contao/contao/pull/8695
 [#8696]: https://github.com/contao/contao/pull/8696
 [#8697]: https://github.com/contao/contao/pull/8697
@@ -356,6 +390,32 @@ This project adheres to [Semantic Versioning].
 [#8736]: https://github.com/contao/contao/pull/8736
 [#8743]: https://github.com/contao/contao/pull/8743
 [#8747]: https://github.com/contao/contao/pull/8747
+[#8758]: https://github.com/contao/contao/pull/8758
+[#8760]: https://github.com/contao/contao/pull/8760
 [#8764]: https://github.com/contao/contao/pull/8764
 [#8766]: https://github.com/contao/contao/pull/8766
+[#8768]: https://github.com/contao/contao/pull/8768
 [#8769]: https://github.com/contao/contao/pull/8769
+[#8773]: https://github.com/contao/contao/pull/8773
+[#8775]: https://github.com/contao/contao/pull/8775
+[#8777]: https://github.com/contao/contao/pull/8777
+[#8784]: https://github.com/contao/contao/pull/8784
+[#8788]: https://github.com/contao/contao/pull/8788
+[#8790]: https://github.com/contao/contao/pull/8790
+[#8793]: https://github.com/contao/contao/pull/8793
+[#8810]: https://github.com/contao/contao/pull/8810
+[#8812]: https://github.com/contao/contao/pull/8812
+[#8820]: https://github.com/contao/contao/pull/8820
+[#8822]: https://github.com/contao/contao/pull/8822
+[#8823]: https://github.com/contao/contao/pull/8823
+[#8824]: https://github.com/contao/contao/pull/8824
+[#8841]: https://github.com/contao/contao/pull/8841
+[#8843]: https://github.com/contao/contao/pull/8843
+[#8854]: https://github.com/contao/contao/pull/8854
+[#8855]: https://github.com/contao/contao/pull/8855
+[#8858]: https://github.com/contao/contao/pull/8858
+[#8866]: https://github.com/contao/contao/pull/8866
+[#8878]: https://github.com/contao/contao/pull/8878
+[#8886]: https://github.com/contao/contao/pull/8886
+[#8892]: https://github.com/contao/contao/pull/8892
+[#8894]: https://github.com/contao/contao/pull/8894

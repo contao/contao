@@ -103,6 +103,7 @@
  * Marcel Pitz ([mpitz](https://github.com/mpitz))
  * Mathis Völkert ([falkgeist](https://github.com/falkgeist))
  * Niels ([Niels](https://github.com/Niels))
+ * P.I.E. Security Team
  * Physiklehrer ([Physiklehrer](https://github.com/Physiklehrer))
  * René Lücking ([ReneLuecking](https://github.com/ReneLuecking))
  * Rory Zünd ([rorych](https://github.com/rorych))
