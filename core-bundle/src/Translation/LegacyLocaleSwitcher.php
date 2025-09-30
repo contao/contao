@@ -18,7 +18,7 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Updates the TL_LANGUAGE superglobal, whenever the locale is set or switched.
+ * Updates the TL_LANGUAGE superglobal whenever the locale is set or switched.
  *
  * @internal
  *

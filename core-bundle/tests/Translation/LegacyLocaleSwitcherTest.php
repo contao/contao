@@ -26,7 +26,7 @@ class LegacyLocaleSwitcherTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSetsSuperGlobal(): void
+    public function testSetsTheSuperGlobal(): void
     {
         $framework = $this->createMock(ContaoFramework::class);
         $framework
@@ -48,7 +48,7 @@ class LegacyLocaleSwitcherTest extends TestCase
         $this->assertSame('de_AT', $legacyLocaleSwitcher->getLocale());
     }
 
-    public function testDoesNotSetSuperGlobalIfFrameworkIsNotInit(): void
+    public function testDoesNotSetTheSuperGlobalIfTheFrameworkIsNotInitialized(): void
     {
         $framework = $this->createMock(ContaoFramework::class);
         $framework
