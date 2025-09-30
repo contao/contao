@@ -113,6 +113,7 @@ class ContaoExtensionTest extends TestCase
             'content_url' => [],
             'slot' => [],
             'backend_icon' => ['html'],
+            'file_icon' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
