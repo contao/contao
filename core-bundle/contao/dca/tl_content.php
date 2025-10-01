@@ -957,6 +957,12 @@ class tl_content extends Backend
 			}
 		}
 
+		// Show the title
+		elseif ($arrRow['title'] ?? null)
+		{
+			$type = $arrRow['title'] . ' <span class="type">[' . $type . ']</span>';
+		}
+
 		// Add the ID of the aliased element
 		if ($arrRow['type'] == 'alias')
 		{
@@ -1047,7 +1053,7 @@ class tl_content extends Backend
 			$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
 		}
 
-		return '<div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>' . $preview;
+		return '<div class="cte_type ' . $key . '">' . $dragHandle . '<span>' . $type . '</span></div>' . $preview;
 	}
 
 	/**
