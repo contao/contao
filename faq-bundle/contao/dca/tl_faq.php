@@ -60,10 +60,14 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp'),
-			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('question', 'answer'),
+			'format'                  => '<h2>%s</h2> %s',
+		),
 	),
 
 	// Palettes
@@ -347,32 +351,5 @@ class tl_faq extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Add the type of input field
-	 *
-	 * @param array $arrRow
-	 *
-	 * @return string
-	 */
-	public function listQuestions($arrRow)
-	{
-		$key = $arrRow['published'] ? 'published' : 'unpublished';
-		$date = Date::parse(Config::get('datimFormat'), $arrRow['tstamp']);
-		$dragHandle = '';
-
-		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_faq', new UpdateAction('tl_faq', $arrRow)))
-		{
-			$labelCut = $GLOBALS['TL_LANG']['tl_faq']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-			$dragHandle = '<button type="button" class="drag-handle">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
-		}
-
-		return '
-<div class="cte_type ' . $key . '">' . $dragHandle . $date . '</div>
-<div class="cte_preview">
-<h2>' . $arrRow['question'] . '</h2>
-' . StringUtil::insertTagToSrc($arrRow['answer']) . '
-</div>' . "\n";
 	}
 }
