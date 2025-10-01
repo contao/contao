@@ -1424,9 +1424,6 @@
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
       </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
-      </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
       </trans-unit>

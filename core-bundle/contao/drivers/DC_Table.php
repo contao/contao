@@ -2155,24 +2155,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['children']['href'] ?? '', false, array('s2e', 'act', 'mode', 'pid')));
 			}
-			elseif (Input::post('saveNback') !== null)
-			{
-				Message::reset();
-
-				if (!$this->ptable)
-				{
-					$this->redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do'));
-				}
-				// TODO: try to abstract this
-				elseif ($this->ptable == 'tl_page' && $this->strTable == 'tl_article')
-				{
-					$this->redirect($this->getReferer(false, $this->strTable));
-				}
-				else
-				{
-					$this->redirect($this->getReferer(false, $this->ptable));
-				}
-			}
 			elseif (Input::post('saveNcreate') !== null)
 			{
 				Message::reset();
@@ -6273,7 +6255,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		return $attributes;
 	}
 
-	private function addDynamicPtable(array $data): array
+	protected function addDynamicPtable(array $data): array
 	{
 		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) && !isset($data['ptable']))
 		{
@@ -6329,7 +6311,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
 	}
 
-	private function configurePidAndSortingFields()
+	protected function configurePidAndSortingFields()
 	{
 		foreach (array('pid', 'sorting') as $f)
 		{
