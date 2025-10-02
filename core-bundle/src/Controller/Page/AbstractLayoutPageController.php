@@ -101,7 +101,6 @@ abstract class AbstractLayoutPageController extends AbstractController
         $template->set('page', $page->row());
         $template->set('layout', $layout->row());
 
-        $template->set('head', $responseContext->get(HtmlHeadBag::class));
         $template->set('preview_mode', $this->container->get('contao.security.token_checker')->isPreviewMode());
 
         $locale = LocaleUtil::formatAsLocale($page->language);

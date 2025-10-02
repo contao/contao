@@ -16,13 +16,15 @@
 {% block head %}
     <meta charset="UTF-8">
     <meta name="generator" content="Contao Open Source CMS">
-    {%- block title %}
-        {% set title = head.title|default %}
-        {% if title and contao.page.rootPageTitle|default %}
-            {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
-        {% endif %}
-         <title>{{ title }}</title>
-    {%- endblock -%}
+    {# Defer accessing the response context, so that elements coming after it can still affect it. #}
+    {% defer %}
+        {%- block title %}
+            {% set title = response_context.head.title|default %}
+            {% if title and contao.page.rootPageTitle|default %}
+                {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
+            {% endif %}
+             <title>{{ title }}</title>
+        {%- endblock -%}
 
     {# Access the response context inside a "defer" block, so that elements coming after it can still affect it. #}
     {% defer %}
