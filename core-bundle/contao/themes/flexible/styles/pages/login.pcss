@@ -111,7 +111,6 @@ body {
 
 .tl_text {
 	margin: 2px 0;
-	padding-right: 24px;
 }
 
 .widget-checkbox {
@@ -141,47 +140,17 @@ body {
 	text-align: center;
 }
 
-label[for="username"] {
-	position: absolute;
-	top: 9px;
-	right: 6px;
-	background: url("icons/person.svg") left top no-repeat;
-	background-size: 16px;
-	width: 16px;
-	height: 16px;
-	text-indent: -999em;
-	z-index: 1;
-}
-
-label[for="password"] {
-	border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-}
-
-.wizard {
-    position: relative;
-
-    label[for="password"] {
-        right: 31px;
-    }
-}
-
+label[for="username"],
+label[for="password"],
 label[for="verify"] {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
 	position: absolute;
-	top: 9px;
-	right: 6px;
-	background: url("icons/shield.svg") left top no-repeat;
-	background-size: 16px;
-	width: 16px;
-	height: 16px;
-	text-indent: -999em;
-	z-index: 1;
+	width: 1px;
 }
 
 .qr_code {
