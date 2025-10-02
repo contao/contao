@@ -7,32 +7,32 @@
     },
     "confirm": {
       "css": [
-        "/system/themes/flexible/confirm.0b99ab8a.css"
+        "/system/themes/flexible/confirm.dffe0565.css"
       ]
     },
     "conflict": {
       "css": [
-        "/system/themes/flexible/conflict.44372b98.css"
+        "/system/themes/flexible/conflict.78a09a39.css"
       ]
     },
     "diff": {
       "css": [
-        "/system/themes/flexible/diff.d9a212d5.css"
+        "/system/themes/flexible/diff.10e1bd04.css"
       ]
     },
     "help": {
       "css": [
-        "/system/themes/flexible/help.bc5a7cfb.css"
+        "/system/themes/flexible/help.fac48cdc.css"
       ]
     },
     "login": {
       "css": [
-        "/system/themes/flexible/login.97be6263.css"
+        "/system/themes/flexible/login.cfb5413f.css"
       ]
     },
     "popup": {
       "css": [
-        "/system/themes/flexible/popup.865bd83f.css"
+        "/system/themes/flexible/popup.d501f406.css"
       ]
     },
     "tinymce": {
