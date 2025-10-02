@@ -52,9 +52,16 @@
 }
 
 .tl_textarea {
-    height: 240px;
     padding: 4px 6px;
     line-height: 1.45;
+
+    &:not([data-controller="contao--textarea-autogrow"]) {
+        height: 240px;
+    }
+}
+
+[data-controller="contao--textarea-autogrow"] {
+    min-height: 30px;
 }
 
 .tl_text_2, .tl_text_3, .tl_text_4, .tl_text_unit, .tl_text_trbl, .tl_text_interval {
