@@ -333,16 +333,15 @@
 }
 
 .operations-menu {
-    min-width: 120px;
     position: fixed;
     top: 100%;
     right: 0;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 0;
     margin: 0;
-    padding: 10px !important;
+    padding: 10px 15px !important;
     text-align: left;
     background: var(--content-bg) !important;
     border: 1px solid var(--content-border);
@@ -368,18 +367,19 @@
 
 .operations-menu li.separator {
     margin-top: 4px;
-    padding-top: 8px;
+    padding-top: 4px;
     border-top: 1px solid var(--border);
 }
 
-.operations-menu hr {
-    margin: 5px 0;
+.operations-menu form {
+    width: 100%;
 }
 
 .operations-menu a,
 .operations-menu button {
-    padding-top: 1px;
-    padding-bottom: 1px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 1px;
     width: 100%;
     box-sizing: border-box;
 }
