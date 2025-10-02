@@ -272,7 +272,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             ),
             new TwigFunction(
                 'file_icon',
-                [BackendHelperRuntime::class, 'file_icon'],
+                [BackendHelperRuntime::class, 'fileIcon'],
                 ['is_safe' => ['html']],
             ),
         ];

@@ -26,7 +26,7 @@ class BackendHelperRuntime implements RuntimeExtensionInterface
     /**
      * Returns a file icon based on the mapping in the TL_MIME superglobal.
      */
-    public function file_icon(FilesystemItem $item, string $alt = '', HtmlAttributes|null $attributes = null): string
+    public function fileIcon(FilesystemItem $item, string $alt = '', HtmlAttributes|null $attributes = null): string
     {
         if (!$mimeType = $item->getMimeType()) {
             return $this->icon('plain.svg', $alt, $attributes);
