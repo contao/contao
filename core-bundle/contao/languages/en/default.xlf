@@ -1356,7 +1356,7 @@
         <source>Go back</source>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
+        <source>Go up one level</source>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
@@ -1417,9 +1417,6 @@
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
-      </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>

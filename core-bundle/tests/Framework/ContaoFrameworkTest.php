@@ -67,7 +67,6 @@ class ContaoFrameworkTest extends TestCase
 
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
-        $request->attributes->set('_contao_referer_id', 'foobar');
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -130,7 +129,6 @@ class ContaoFrameworkTest extends TestCase
     {
         $request = Request::create('/contao/login');
         $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_contao_referer_id', 'foobar');
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -196,7 +194,6 @@ class ContaoFrameworkTest extends TestCase
 
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
-        $request->attributes->set('_contao_referer_id', 'foobar');
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('test.listener', new \stdClass());
