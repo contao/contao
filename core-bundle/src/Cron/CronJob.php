@@ -46,16 +46,12 @@ class CronJob
         } else {
             $result = $this->service->{$this->method}($scope);
         }
-    
-        if ($result === null || $result instanceof PromiseInterface) {
+
+        if (null === $result || $result instanceof PromiseInterface) {
             return $result;
         }
-    
-        throw new \UnexpectedValueException(sprintf(
-            'Invalid return value from "%s": expected null or PromiseInterface, got %s',
-            $this->name,
-            get_debug_type($result)
-        ));
+
+        throw new \UnexpectedValueException(\sprintf('Invalid return value from "%s": expected null or PromiseInterface, got %s', $this->name, get_debug_type($result)));
     }
 
     public function getService(): object
