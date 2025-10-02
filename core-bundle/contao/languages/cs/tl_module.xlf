@@ -670,6 +670,7 @@ Pokud jste o nic takového nepožádali, kontaktujte prosím správce webu.
       </trans-unit>
       <trans-unit id="tl_module.copy.1">
         <source>Copy module ID %s</source>
+        <target>Zkopírovat modul ID %s</target>
       </trans-unit>
       <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
