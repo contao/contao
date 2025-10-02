@@ -89,7 +89,6 @@ class AbstractLayoutPageControllerTest extends TestCase
                     'defaultImageDensities' => 'foo_densities',
                     'template' => 'foo_template',
                 ],
-                'head' => [],
                 'preview_mode' => false,
                 'locale' => 'en',
                 'rtl' => false,
