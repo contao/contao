@@ -397,7 +397,7 @@ class InspectorTest extends TestCase
         $filesystemLoader
             ->method('exists')
             ->willReturnCallback(
-                static fn (string $name): bool => \array_key_exists($name, $templates),
+                static fn (string $name): bool => \array_key_exists(str_replace('@Contao/', '@Contao_specific/', $name), $templates),
             )
         ;
 
