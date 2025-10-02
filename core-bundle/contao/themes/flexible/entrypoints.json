@@ -37,12 +37,12 @@
     },
     "tinymce": {
       "css": [
-        "/system/themes/flexible/tinymce.106caa58.css"
+        "/system/themes/flexible/tinymce.808c0ed4.css"
       ]
     },
     "tinymce-dark": {
       "css": [
-        "/system/themes/flexible/tinymce-dark.233f94a8.css"
+        "/system/themes/flexible/tinymce-dark.b8510851.css"
       ]
     }
   }
