@@ -6,7 +6,9 @@
         "@hotwired/turbo": "^8.0",
         "@simplewebauthn/browser": "^13.1",
         "@stimulus-components/color-picker": "^2.0",
-        "@stimulus-components/password-visibility": "^3.0.0",
+        "@stimulus-components/password-visibility": "^3.0",
+        "@stylistic/stylelint-config": "^3.0",
+        "@stylistic/stylelint-plugin": "^4.0",
         "@symfony/webpack-encore": "^5.1",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
         "accessible-menu": "^4.2",
@@ -36,5 +38,5 @@
         "lint": "run-s lint:js lint:css"
     },
     "private": true,
-    "packageManager": "npm@11.1.0"
+    "packageManager": "npm@11.6.0"
 }
