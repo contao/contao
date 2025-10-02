@@ -19,7 +19,7 @@ final class DeleteOperation extends AbstractOperation
         return $this->userTemplateExists($context);
     }
 
-    public function execute(Request $request, OperationContext $context): Response|null
+    public function execute(Request $request, OperationContext $context): Response
     {
         $storage = $this->getUserTemplatesStorage();
 
