@@ -11,12 +11,17 @@
 
 #tl_buttons > ul {
     flex-wrap: wrap;
-    gap: 8px 15px;
-    padding: 8px 15px;
+    gap: 10px 15px;
+    padding: 10px 15px;
 
     .is--hidden {
         margin-left: -15px;
     }
+}
+
+/* Backwards compatibility */
+#tl_buttons #tl_buttons.operations > ul {
+    padding: 0;
 }
 
 #tl_buttons li.invisible {

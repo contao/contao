@@ -45,6 +45,9 @@
             .mergeWith(download_link_attributes|default)
         %}
         <a{% block download_link_attributes %}{{ download_link_attributes }}{% endblock %}>
+            {%- if as_editor_view|default -%}
+                {{ file_icon(download.file, '', attrs().addClass('backend-icon')) }}
+            {%- endif -%}
             {%- block download_link_inner %}{{ text }}{% endblock -%}
         </a>
     {% endblock %}
