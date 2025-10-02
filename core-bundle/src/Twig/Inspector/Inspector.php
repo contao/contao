@@ -254,7 +254,7 @@ class Inspector
 
             foreach (array_keys($currentData['blocks']) as $block) {
                 do {
-                    if (null !== $block && BlockType::overwrite === $this->getBlockHierarchy($currentData['name'], $block)[0]->getType()) {
+                    if (BlockType::overwrite === $this->getBlockHierarchy($currentData['name'], $block)[0]->getType()) {
                         // This block overwrites the previous one
                         $blocksToIgnore[] = $block;
                         break;
