@@ -64,8 +64,8 @@
               <label for="password"><?= $this->password ?></label>
               <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" data-contao--password-visibility-target="input" required>
               <button type="button" class="password-button" data-action="contao--password-visibility#toggle">
-                <span data-contao--password-visibility-target="icon"><?= Contao\Image::getHtml('password--hidden.svg', $this->trans('MSC.showPassword')) ?></span>
-                <span class="hidden" data-contao--password-visibility-target="icon"><?= Contao\Image::getHtml('password--visible.svg', $this->trans('MSC.hidePassword')) ?></span>
+                <span data-contao--password-visibility-target="icon"><?= Contao\Image::getHtml('password-show.svg', $this->trans('MSC.showPassword')) ?></span>
+                <span class="hidden" data-contao--password-visibility-target="icon"><?= Contao\Image::getHtml('password-hide.svg', $this->trans('MSC.hidePassword')) ?></span>
               </button>
             </div>
             <div class="submit_container">
