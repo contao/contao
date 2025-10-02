@@ -4,12 +4,6 @@
     .mergeWith(html_attributes|default)
 -%}
 
-{%- set body_attributes = attrs()
-    .set('id', 'top')
-    .addClass(contao.page.cssClass)
-    .mergeWith(body_attributes|default)
--%}
-
 <!DOCTYPE html>
 <html{{ html_attributes|default }}>
 <head>
@@ -26,8 +20,6 @@
              <title>{{ title }}</title>
         {%- endblock -%}
 
-    {# Access the response context inside a "defer" block, so that elements coming after it can still affect it. #}
-    {% defer %}
         <meta name="robots" content="{{ response_context.head.metaRobots }}">
         <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
         {% if page['enableCanonical'] -%}
@@ -42,7 +34,16 @@
     {% enddefer %}
 {%- endblock -%}
 </head>
-<body{{ body_attributes|default }}>
+
+{%- defer %}
+    {# Defer outputting the body tag so that extensions can still adjust the page's cssClass #}
+    {%- set body_attributes = attrs()
+        .set('id', 'top')
+        .addClass(contao.page.cssClass)
+        .mergeWith(body_attributes|default)
+    -%}
+    <body{{ body_attributes|default }}>
+{% enddefer -%}
 {% block body %}
     {% block body_content %}
         {% slot header %}
