@@ -195,6 +195,7 @@
     padding: 15px 15px 0;
     border-width: 0 1px;
     background: var(--nested-bg);
+    border-radius: 0;
 }
 
 .as-grid .tl_content.indent_2 {
@@ -225,8 +226,25 @@
     border: 1px solid var(--border);
 }
 
+.as-grid .tl_content.wrapper_start {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
 .as-grid .tl_content.wrapper_stop {
     margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    .cte_type {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: var(--border-radius);
+    }
+
+    .tl_content_right {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: var(--border-radius);
+    }
 }
 
 .as-grid .tl_content.indent.wrapper_stop {
