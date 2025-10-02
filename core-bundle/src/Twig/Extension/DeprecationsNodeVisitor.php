@@ -23,7 +23,7 @@ use Twig\NodeVisitor\NodeVisitorInterface;
 /**
  * @internal
  */
-class DeprecationsNodeVisitor implements NodeVisitorInterface
+final class DeprecationsNodeVisitor implements NodeVisitorInterface
 {
     public function getPriority(): int
     {

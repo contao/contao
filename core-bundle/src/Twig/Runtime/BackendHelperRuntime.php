@@ -10,8 +10,11 @@ use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image;
 use Twig\Extension\RuntimeExtensionInterface;
 
-class BackendHelperRuntime implements RuntimeExtensionInterface
+final class BackendHelperRuntime implements RuntimeExtensionInterface
 {
+    /**
+     * @internal
+     */
     public function __construct(private readonly ContaoFramework $framework)
     {
     }

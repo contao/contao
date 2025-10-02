@@ -10,10 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @experimental
+ * @internal
  */
 #[AsOperationForTemplateStudioElement]
-class SaveOperation extends AbstractOperation
+final class SaveOperation extends AbstractOperation
 {
     public function __construct(private readonly Inspector $inspector)
     {

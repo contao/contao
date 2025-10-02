@@ -9,10 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @experimental
+ * @internal
  */
 #[AsOperationForTemplateStudioElement]
-class DeleteOperation extends AbstractOperation
+final class DeleteOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {
