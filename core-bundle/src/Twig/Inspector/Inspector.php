@@ -185,6 +185,7 @@ class Inspector
             'slots' => [],
             'blocks' => [],
             'nesting' => [],
+            'calls' => [],
             'parent' => null,
             'uses' => [],
         ];

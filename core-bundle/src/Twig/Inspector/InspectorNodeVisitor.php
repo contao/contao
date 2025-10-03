@@ -9,6 +9,7 @@ use Contao\CoreBundle\Twig\Slots\SlotNode;
 use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\BlockReferenceNode;
+use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\ModuleNode;
@@ -29,9 +30,19 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
     private array $slots = [];
 
     /**
+     * Mapping of found block names (keys) to their usage properties (values) in the
+     * form of [0 => <uses parent function>, 1 => <is a prototype block>].
+     *
      * @var array<string, array{0: bool, 1: bool}>
      */
     private array $blocks = [];
+
+    /**
+     * List of found blocks, that are output via a block reference expressions.
+     *
+     * @var list<string>
+     */
+    private array $calledBlocks = [];
 
     /**
      * @var \WeakMap<Source, list<string>>
@@ -62,8 +73,14 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             $this->blocks[$name] = [false, $this->isPrototype($node)];
         } elseif ($node instanceof BlockReferenceNode) {
             $this->blockNesting[$node->getAttribute('name')] = $this->currentBlock;
-        } elseif ($node instanceof PrintNode && $node->getNode('expr') instanceof ParentExpression) {
-            $this->blocks[array_key_last($this->blocks)][0] = true;
+        } elseif ($node instanceof PrintNode) {
+            $expression = $node->getNode('expr');
+
+            if ($expression instanceof ParentExpression) {
+                $this->blocks[array_key_last($this->blocks)][0] = true;
+            } elseif ($expression instanceof BlockReferenceExpression && null !== ($name = $this->getValue($expression->getNode('name')))) {
+                $this->calledBlocks[] = $name;
+            }
         }
 
         return $node;
@@ -115,6 +132,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             'slots' => $this->slots,
             'blocks' => $this->blocks,
             'nesting' => $this->blockNesting,
+            'calls' => $this->calledBlocks,
             'parent' => $getParent($node),
             'uses' => $getUses($node),
         ]);
@@ -122,6 +140,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         $this->slots = [];
         $this->blocks = [];
         $this->blockNesting = [];
+        $this->calledBlocks = [];
 
         return $node;
     }
