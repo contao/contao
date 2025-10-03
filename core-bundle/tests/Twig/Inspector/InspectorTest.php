@@ -22,6 +22,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
@@ -46,10 +47,44 @@ class InspectorTest extends TestCase
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
     }
 
-    public function testAnalyzesSlots(): void
+    #[DataProvider('provideSlotScenarios')]
+    public function testAnalyzesSlots(array $templates, array $expectedSlots): void
     {
-        $inspector = $this->getInspector([
-            '@Contao_specific/parent.twig' => <<<'SOURCE'
+        $inspector = $this->getInspector($templates);
+
+        foreach ($expectedSlots as $template => $expectedSlotsOfTemplate) {
+            $templateInformation = $inspector->inspectTemplate($template);
+            $this->assertSame(
+                $expectedSlotsOfTemplate,
+                $templateInformation->getSlots(),
+                \sprintf('Template "%s" has slots "%s".', $template, implode(', ', $expectedSlotsOfTemplate)),
+            );
+        }
+    }
+
+    public static function provideSlotScenarios(): iterable
+    {
+        yield 'simple' => [
+            [
+                '@Contao_specific/simple.twig' => <<<'SOURCE'
+                    {# Canonical slot #}
+                    {% slot C %}{% endslot %}
+
+                    {# Duplicate definition #}
+                    {% slot A %}{% endslot %}
+                    {% slot A %}{% endslot %}
+
+                    {# Slot with content #}
+                    {% slot B %}…{% endslot %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/simple.twig' => ['A', 'B', 'C'],
+            ],
+        ];
+
+        yield 'inheritance' => [[
+            '@Contao_specific/base.twig' => <<<'SOURCE'
                 {% block all %}
                     {% block foo %}
                         {% block foo_inner %}
@@ -58,64 +93,169 @@ class InspectorTest extends TestCase
                     {% endblock %}
                     {% block bar %}
                         {% slot C %}{% endslot %}
-                        {% slot C %}{% endslot %}
                     {% endblock %}
-                    {% slot A %}…{% endslot %}
+                    {% slot A %}{% endslot %}
                 {% endblock %}
-
                 SOURCE,
+
+            '@Contao_specific/canonical_child.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/base.twig" %}
+                SOURCE,
+
             '@Contao_specific/child1.twig' => <<<'SOURCE'
-                {% extends "@Contao_specific/parent.twig" %}
-
-                SOURCE,
-            '@Contao_specific/child2.twig' => <<<'SOURCE'
-                {% extends "@Contao_specific/parent.twig" %}
-
+                {% extends "@Contao_specific/base.twig" %}
                 {% block foo %}
                     {# removing slot B by overriding foo while adding slot D #}
                     {% block baz %}
                         {% slot D %}{% endslot %}
                     {% endblock %}
                 {% endblock %}
-
                 {% block bar %}
                     {# adding slot E #}
                     {{ parent() }}
                     {% slot E %}{% endslot %}
                 {% endblock %}
-
                 SOURCE,
-            '@Contao_specific/override.twig' => <<<'SOURCE'
-                {% extends "@Contao_specific/parent.twig" %}
 
-                {% block all %}{% endblock %}
-
+            '@Contao_specific/child2.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/child1.twig" %}
+                {% block foo %}
+                    {{ parent() }}
+                {% endblock %}
+                {% block bar %}
+                    {{ parent() }}
+                    {% slot F %}{% endslot %}
+                {% endblock %}
                 SOURCE,
-        ]);
+        ],
+            [
+                '@Contao_specific/base.twig' => ['A', 'B', 'C'],
+                '@Contao_specific/canonical_child.twig' => ['A', 'B', 'C'],
+                '@Contao_specific/child1.twig' => ['A', 'C', 'D', 'E'],
+                '@Contao_specific/child2.twig' => ['A', 'C', 'D', 'E', 'F'],
+            ],
+        ];
 
-        $this->assertSame(
-            ['A', 'B', 'C'],
-            $inspector->inspectTemplate('@Contao_specific/parent.twig')->getSlots(),
-            'slots appear in alphabetical order',
-        );
+        yield 'complex nesting chain' => [
+            [
+                '@Contao_specific/a.twig' => <<<'SOURCE'
+                    {% block outer1 %}
+                        {% slot X %}{% endslot %}
+                    {% endblock %}
+                    {% block outer2 %}
+                        {% slot Y %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
 
-        $this->assertSame(
-            ['A', 'B', 'C'],
-            $inspector->inspectTemplate('@Contao_specific/child1.twig')->getSlots(),
-            'parent slots are inherited',
-        );
+                '@Contao_specific/b.twig' => <<<'SOURCE'
+                    {% extends "@Contao/a.twig" %}
+                    {% block outer1 %}{% endblock %}
+                    SOURCE,
 
-        $this->assertSame(
-            ['A', 'C', 'D', 'E'],
-            $inspector->inspectTemplate('@Contao_specific/child2.twig')->getSlots(),
-            'overwritten parent slots are not present while additional ones are',
-        );
+                '@Contao_specific/c.twig' => <<<'SOURCE'
+                    {% extends "@Contao/b.twig" %}
+                    {% block outer1 %}
+                        {{ parent() }}
+                    {% endblock %}
+                    {% block outer2 %}
+                        {% block inner %}{% endblock %}
+                    {% endblock %}
+                    SOURCE,
 
-        $this->assertSame(
-            [],
-            $inspector->inspectTemplate('@Contao_specific/override.twig')->getSlots(),
-            'overwritten parent blocks remove slots',
-        );
+                '@Contao_specific/d.twig' => <<<'SOURCE'
+                    {% extends "@Contao/c.twig" %}
+                    {% block outer2 %}
+                        {{ parent() }}
+                        {% slot Z %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao/a.twig' => ['X', 'Y'],
+                '@Contao/b.twig' => ['Y'],
+                '@Contao/c.twig' => [],
+                '@Contao/d.twig' => ['Z'],
+            ],
+        ];
+
+        yield 'block function' => [
+            [
+                '@Contao_specific/base.twig' => <<<'SOURCE'
+                    {% block outer %}
+                        {% block inner %}
+                            {% slot A %}{% endslot %}
+                        {% endblock %}
+                        {% slot B %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/child.twig' => <<<'SOURCE'
+                    {% extends "@Contao/base.twig" %}
+                    {% block outer %}
+                        {{ block('inner') }}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/child.twig' => ['A'],
+            ],
+        ];
+
+        yield 'block function with intermediate block' => [
+            [
+                '@Contao_specific/base.twig' => <<<'SOURCE'
+                    {% block outer %}
+                        {% block middle %}
+                            {% block inner %}
+                                {% slot A %}{% endslot %}
+                            {% endblock %}
+                        {% endblock %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/child.twig' => <<<'SOURCE'
+                    {% extends "@Contao/base.twig" %}
+                    {% block outer %}
+                        {{ block('middle') }}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/child.twig' => ['A'],
+            ],
+        ];
+
+        yield 'block function referencing different templates' => [
+            [
+                '@Contao_specific/base.twig' => <<<'SOURCE'
+                    {% block outer %}
+                        {% block middle %}
+                            {% block inner %}
+                                {% slot A %}{% endslot %}
+                            {% endblock %}
+                        {% endblock %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/child.twig' => <<<'SOURCE'
+                    {% extends "@Contao/base.twig" %}
+                    {# Removing middle/inner block #}
+                    {% block middle %}{% endblock %}
+
+                    {% block outer %}
+                        {# Referencing block inner from current template #}
+                        {{ block('inner') }}
+                    {% endblock %}
+
+                    {% block inner %}
+                        {% slot B %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/child.twig' => ['B'],
+            ],
+        ];
     }
 
     public function testAnalyzesUses(): void
