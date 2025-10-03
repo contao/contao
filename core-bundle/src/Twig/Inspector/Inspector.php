@@ -227,26 +227,43 @@ class Inspector
         /** @var list<string> $blocksToIgnore */
         $blocksToIgnore = [];
 
+        /** @var array<string, list<string>> $blocksToKeep */
+        $blocksToKeep = [];
+
         /** @var list<string> $slots */
         $slots = [];
 
-        $isIgnoredBlock = static function (string $block, array $nesting) use (&$blocksToIgnore): bool {
-            $currentBlock = $block;
+        $isIgnoredBlock = static function (string $block, array $data) use (&$blocksToIgnore, &$blocksToKeep): bool {
+            $iterateNesting = static function (callable $test) use ($block, $data) {
+                $currentBlock = $block;
 
-            do {
-                if (\in_array($currentBlock, $blocksToIgnore, true)) {
-                    return true;
-                }
-            } while ($currentBlock = $nesting[$currentBlock] ?? false);
+                do {
+                    if ($test($currentBlock)) {
+                        return true;
+                    }
+                } while ($currentBlock = $data['nesting'][$currentBlock] ?? false);
 
-            return false;
+                return false;
+            };
+
+            // A block is not ignored if itself or any of its ancestors is explicitly marked
+            // to be kept for the current template.
+            if (
+                null !== ($currentBlocksToKeep = ($blocksToKeep[$data['name']] ?? null))
+                && $iterateNesting(static fn (string $currentBlock) => \in_array($currentBlock, $currentBlocksToKeep, true))
+            ) {
+                return false;
+            }
+
+            // A block is ignored if itself or any of its ancestors is marked to be ignored.
+            return $iterateNesting(static fn (string $currentBlock) => \in_array($currentBlock, $blocksToIgnore, true));
         };
 
         // Accumulate slots data for the template as well as all statically set parents
         foreach ($this->getDataFromAll($data) as $currentData) {
             foreach ($currentData['slots'] as $slot => $block) {
                 // Check if slot is in an ignored block
-                if (null !== $block && $isIgnoredBlock($block, $currentData['nesting'])) {
+                if (null !== $block && $isIgnoredBlock($block, $currentData)) {
                     continue;
                 }
 
@@ -261,6 +278,16 @@ class Inspector
                         break;
                     }
                 } while ($block = $currentData['nesting'][$block] ?? false);
+            }
+
+            foreach ($currentData['calls'] as $block) {
+                foreach ($this->getBlockHierarchy($currentData['name'], $block) as $blockInformation) {
+                    if (\in_array($blockInformation->getType(), [BlockType::origin, BlockType::overwrite], true)) {
+                        $template = $blockInformation->getTemplateName();
+                        $blocksToKeep[$template] = [...($blocksToKeep[$template] ?? []), $block];
+                        break;
+                    }
+                }
             }
         }
 
