@@ -195,6 +195,8 @@ class BackendTemplateStudioController extends AbstractBackendController
 
             $templateNameInformation = $this->getTemplateNameInformation($logicalName);
 
+            $templateNameInformation = $this->getTemplateNameInformation($logicalName);
+
             $template = [
                 ...$templateNameInformation,
                 'path' => $source->getPath(),
@@ -206,6 +208,7 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'shadowed' => $shadowed,
                     'warning' => false,
                     'not_analyzable' => false,
+                    'legacy_pair' => $this->isLegacyIdentifier($templateNameInformation['identifier']) && 'Contao_Global' !== $templateNameInformation['namespace'],
                 ],
                 'annotations' => $canEdit && 0 === $i
                     ? $this->getAnnotations($logicalName, $templateInformation)
@@ -489,7 +492,7 @@ class BackendTemplateStudioController extends AbstractBackendController
             'component' => [],
             ...$prefixTree,
             // Append legacy nodes to the end under a virtual "legacy" key
-            '(legacy)' => $legacyNodes,
+            '' => $legacyNodes,
         ]);
     }
 
