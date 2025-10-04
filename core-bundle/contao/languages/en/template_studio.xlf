@@ -101,6 +101,9 @@
       <trans-unit id="dialog.rename_variant">
         <source>Please define a new unique name for the variant template %s.</source>
       </trans-unit>
+      <trans-unit id="editor_tab.relation.legacy_pair">
+        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig variant to stay compatible with Contao 6.</source>
+      </trans-unit>
       <trans-unit id="editor_tab.relation.not_analyzable">
         <source>The template's relation cannot be analyzed because it contains errors.</source>
       </trans-unit>

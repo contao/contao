@@ -174,8 +174,10 @@ class BackendTemplateStudioController extends AbstractBackendController
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
             $isComponent = $templateInformation->isComponent();
 
+            $templateNameInformation = $this->getTemplateNameInformation($logicalName);
+
             $template = [
-                ...$this->getTemplateNameInformation($logicalName),
+                ...$templateNameInformation,
                 'path' => $source->getPath(),
                 'code' => $source->getCode(),
                 'is_origin' => $i === $numTemplates - 1,
@@ -184,6 +186,7 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'shadowed' => $shadowed,
                     'warning' => false,
                     'not_analyzable' => false,
+                    'legacy_pair' => $this->isLegacyIdentifier($templateNameInformation['identifier']),
                 ],
                 'annotations' => $canEdit && 0 === $i
                     ? $this->getAnnotations($logicalName, $templateInformation->getError())
