@@ -432,6 +432,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         }
 
         $prefixTree = [];
+        $legacyNodes = [];
 
         foreach ($this->getFinder() as $identifier => $extension) {
             $parts = explode('/', $identifier);
@@ -456,6 +457,12 @@ class BackendTemplateStudioController extends AbstractBackendController
                 }
             };
 
+            // Group legacy templates under their own key
+            if ($this->isLegacyIdentifier($identifier)) {
+                $legacyNodes[$identifier] = [$leaf];
+                continue;
+            }
+
             $node = [...$node, $leaf];
         }
 
@@ -472,9 +479,23 @@ class BackendTemplateStudioController extends AbstractBackendController
         };
 
         $sortRecursive($prefixTree);
+        ksort($legacyNodes);
 
-        // Apply opinionated ordering
-        return ['content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
+        return array_filter([
+            // Apply opinionated ordering by explicitly placing keys of the prefix tree
+            // before merging it
+            'content_element' => [],
+            'frontend_module' => [],
+            'component' => [],
+            ...$prefixTree,
+            // Append legacy nodes to the end under a virtual "legacy" key
+            '(legacy)' => $legacyNodes,
+        ]);
+    }
+
+    private function isLegacyIdentifier(string $identifier): bool
+    {
+        return !str_contains($identifier, '/') && $this->loader->exists("@Contao/$identifier.html5");
     }
 
     /**
