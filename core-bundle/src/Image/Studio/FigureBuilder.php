@@ -296,13 +296,8 @@ class FigureBuilder
     public function fromImage(ImageInterface $image): self
     {
         $this->image = $image;
-        $this->filePath = $image->getPath();
 
-        if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $this->filePath));
-        }
-
-        return $this;
+        return $this->fromPath($image->getPath());
     }
 
     /**
