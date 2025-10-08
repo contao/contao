@@ -57,6 +57,11 @@ class FigureBuilder
     private FilesModel|null $filesModel = null;
 
     /**
+     * The image resource, if given.
+     */
+    private ImageInterface|null $image = null;
+
+    /**
      * User defined size configuration.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
@@ -290,7 +295,14 @@ class FigureBuilder
      */
     public function fromImage(ImageInterface $image): self
     {
-        return $this->fromPath($image->getPath());
+        $this->image = $image;
+        $this->filePath = $image->getPath();
+
+        if (!$this->filesystem->exists($this->filePath)) {
+            $this->lastException = new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $this->filePath));
+        }
+
+        return $this;
     }
 
     /**
@@ -643,7 +655,7 @@ class FigureBuilder
 
         $imageResult = $this->locator
             ->get('contao.image.studio')
-            ->createImage($settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
+            ->createImage($settings->image ?? $settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
         ;
 
         // Define the values via closure to make their evaluation lazy
