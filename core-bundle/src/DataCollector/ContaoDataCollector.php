@@ -50,8 +50,8 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         private readonly RouterInterface $router,
         private readonly PageFinder $pageFinder,
         private readonly Cron $cron,
-        private readonly BackendSearch|null $backendSearch,
-        private readonly WebWorker|null $webWorker,
+        private readonly BackendSearch|null $backendSearch = null,
+        private readonly WebWorker|null $webWorker = null,
     ) {
     }
 
@@ -64,7 +64,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         if ($this->requestStack->getMainRequest() === $request) {
             $this->addImageChecks();
 
-            if (null !== $this->backendSearch) {
+            if ($this->backendSearch) {
                 $this->addBackendSearchChecks();
             }
         }
