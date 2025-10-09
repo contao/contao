@@ -14,9 +14,12 @@ namespace Contao\CoreBundle\DataCollector;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\LayoutModel;
 use Contao\StringUtil;
@@ -31,6 +34,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\Routing\RouterInterface;
+use Toflar\CronjobSupervisor\Supervisor;
 
 /**
  * @internal
@@ -45,6 +49,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         private readonly ImagineInterface&InfoProvider $imagine,
         private readonly RouterInterface $router,
         private readonly PageFinder $pageFinder,
+        private readonly Cron $cron,
+        private readonly BackendSearch|null $backendSearch,
+        private readonly WebWorker|null $webWorker,
     ) {
     }
 
@@ -56,6 +63,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
         if ($this->requestStack->getMainRequest() === $request) {
             $this->addImageChecks();
+            $this->addBackendSearchChecks();
         }
     }
 
@@ -80,6 +88,14 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $this->getData('image_checks');
     }
 
+    /**
+     * @return array<string, string|bool|array>
+     */
+    public function getBackendSearchChecks(): array
+    {
+        return $this->getData('backend_search_checks');
+    }
+
     public function getAdditionalData(): array
     {
         $data = $this->data;
@@ -88,6 +104,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             $data['summary'],
             $data['image_checks'],
             $data['contao_version'],
+            $data['backend_search_checks'],
         );
 
         return $data;
@@ -206,6 +223,17 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
 
         return $info;
+    }
+
+    private function addBackendSearchChecks(): void
+    {
+        $this->data['backend_search_checks'] = [
+            'available' => $this->backendSearch?->isAvailable() ?? false,
+            'sqlite_supported' => array_intersect(['pdo_sqlite', 'sqlite3'], array_merge(get_loaded_extensions(true), get_loaded_extensions())),
+            'supervisor_supported' => Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders()),
+            'cron_running' => $this->cron->hasMinutelyCliCron(),
+            'cli_workers_running' => $this->webWorker?->hasCliWorkersRunning() ?? false,
+        ];
     }
 
     private function getPageName(): string
