@@ -142,7 +142,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>{% if collector.backendSearchChecks.supervisor_supported %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}⚠️{% else %}✅{% endif %}{% endif %}
+                    <td>{% if collector.backendSearchChecks.supervisor_supported %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}⚠️{% else %}🚨{% endif %}{% endif %}
                     <td>
                         {% if collector.backendSearchChecks.supervisor_supported %}
                             The <code>SuperVisor</code> is supported.
@@ -152,7 +152,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>{% if collector.backendSearchChecks.cron_running %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}⚠️{% else %}✅{% endif %}{% endif %}
+                    <td>{% if collector.backendSearchChecks.cron_running %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}⚠️{% else %}🚨{% endif %}{% endif %}
                     <td>
                         {% if collector.backendSearchChecks.cron_running %}
                             The <code>contao:cron</code> cronjob is executed minutely on the command line.
