@@ -63,7 +63,10 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
         if ($this->requestStack->getMainRequest() === $request) {
             $this->addImageChecks();
-            $this->addBackendSearchChecks();
+
+            if (null !== $this->backendSearch) {
+                $this->addBackendSearchChecks();
+            }
         }
     }
 
@@ -89,9 +92,9 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     }
 
     /**
-     * @return array<string, string|bool|array>
+     * @return array<string, string|bool|array>|null
      */
-    public function getBackendSearchChecks(): array
+    public function getBackendSearchChecks(): array|null
     {
         return $this->getData('backend_search_checks');
     }
