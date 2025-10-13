@@ -25,7 +25,7 @@ class SaveOperationTest extends AbstractOperationTestCase
         );
     }
 
-    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate', validateArgumentCount: false)]
     public function testFailToSaveUserTemplateBecauseItDoesNotExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();

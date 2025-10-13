@@ -21,6 +21,7 @@ use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -113,7 +114,7 @@ class PreviewLinkControllerTest extends TestCase
             ->method('fetchAssociative')
             ->with(
                 'SELECT * FROM tl_preview_link WHERE id = ? AND published = 1 AND expiresAt > UNIX_TIMESTAMP()',
-                new IsType('array'),
+                new IsType(NativeType::Array),
             )
             ->willReturn($link ?? false)
         ;
