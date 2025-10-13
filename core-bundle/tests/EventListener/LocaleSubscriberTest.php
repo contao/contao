@@ -163,14 +163,14 @@ class LocaleSubscriberTest extends TestCase
             HttpKernelInterface::MAIN_REQUEST,
         );
 
-        $translator = $this->createMock(LocaleAwareInterface::class);
-        $translator
+        $localeSwitcher = $this->createMock(LocaleAwareInterface::class);
+        $localeSwitcher
             ->expects($this->once())
             ->method('setLocale')
             ->with('de')
         ;
 
-        $listener = new LocaleSubscriber($translator, $this->mockScopeMatcher(), $this->mockLocales(['en', 'de']));
+        $listener = new LocaleSubscriber($localeSwitcher, $this->mockScopeMatcher(), $this->mockLocales(['en', 'de']));
         $listener->setTranslatorLocale($event);
     }
 

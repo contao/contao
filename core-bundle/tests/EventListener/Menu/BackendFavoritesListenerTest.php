@@ -73,7 +73,7 @@ class BackendFavoritesListenerTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->willReturn('/contao?do=pages&mtg=favorites&ref=foobar')
+            ->willReturn('/contao?do=pages&mtg=favorites')
         ;
 
         $session = $this->mockSession();
@@ -84,7 +84,6 @@ class BackendFavoritesListenerTest extends TestCase
         $bag->set('backend_modules', ['favorites' => $collapsed ? 0 : null]);
 
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
-        $request->attributes->set('_contao_referer_id', 'foobar');
         $request->setSession($session);
 
         $requestStack = new RequestStack();
@@ -147,7 +146,7 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame('favorites', $children[0]->getName());
         $this->assertSame('Favorites', $children[0]->getLabel());
         $this->assertSame(['id' => 'favorites'], $children[0]->getChildrenAttributes());
-        $this->assertSame('/contao?do=pages&mtg=favorites&ref=foobar', $children[0]->getUri());
+        $this->assertSame('/contao?do=pages&mtg=favorites', $children[0]->getUri());
 
         $linkAttributes = [
             'class' => 'group-favorites',
@@ -169,7 +168,7 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertCount(2, $grandChildren);
         $this->assertSame('favorite_7', $grandChildren[0]->getName());
         $this->assertSame('Edit page 3', $grandChildren[0]->getLabel());
-        $this->assertSame('/contao?do=pages&act=edit&id=3&ref=foobar', $grandChildren[0]->getUri());
+        $this->assertSame('/contao?do=pages&act=edit&id=3', $grandChildren[0]->getUri());
 
         $this->assertSame(
             [
@@ -181,7 +180,7 @@ class BackendFavoritesListenerTest extends TestCase
 
         $this->assertSame('favorite_8', $grandChildren[1]->getName());
         $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
-        $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5&ref=foobar', $grandChildren[1]->getUri());
+        $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5', $grandChildren[1]->getUri());
 
         $this->assertSame(
             [
@@ -252,13 +251,12 @@ class BackendFavoritesListenerTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->willReturn('/contao?do=pages&mtg=favorites&ref=foobar')
+            ->willReturn('/contao?do=pages&mtg=favorites')
         ;
 
         $session = $this->mockSession();
 
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
-        $request->attributes->set('_contao_referer_id', 'foobar');
         $request->setSession($session);
 
         $requestStack = new RequestStack();
@@ -317,11 +315,10 @@ class BackendFavoritesListenerTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->willReturn('/contao?do=favorites&act=paste&mode=create&data=&rt=foo&ref=bar')
+            ->willReturn('/contao?do=favorites&act=paste&mode=create&data=&rt=foo')
         ;
 
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
-        $request->attributes->set('_contao_referer_id', 'foobar');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -374,7 +371,7 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame('favorite', $children['favorite']->getName());
         $this->assertSame('Save URL as favorite', $children['favorite']->getLabel());
         $this->assertTrue($children['favorite']->getExtra('safe_label'));
-        $this->assertSame('/contao?do=favorites&act=paste&mode=create&data=&rt=foo&ref=bar', $children['favorite']->getUri());
+        $this->assertSame('/contao?do=favorites&act=paste&mode=create&data=&rt=foo', $children['favorite']->getUri());
 
         $linkAttributes = [
             'class' => 'icon-favorite',
@@ -399,11 +396,10 @@ class BackendFavoritesListenerTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
-            ->willReturn('/contao?do=favorites&ref=bar')
+            ->willReturn('/contao?do=favorites')
         ;
 
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
-        $request->attributes->set('_contao_referer_id', 'foobar');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -448,7 +444,7 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertSame('favorite', $children['favorite']->getName());
         $this->assertSame('Edit favorites', $children['favorite']->getLabel());
         $this->assertTrue($children['favorite']->getExtra('safe_label'));
-        $this->assertSame('/contao?do=favorites&ref=bar', $children['favorite']->getUri());
+        $this->assertSame('/contao?do=favorites', $children['favorite']->getUri());
 
         $linkAttributes = [
             'class' => 'icon-favorite icon-favorite--active',
