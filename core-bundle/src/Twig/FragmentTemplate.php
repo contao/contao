@@ -663,6 +663,9 @@ final class FragmentTemplate extends Template
         self::throwOnAccess();
     }
 
+    /**
+     * @throws \Exception
+     */
     private static function throwOnAccess(): never
     {
         $function = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
