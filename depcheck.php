@@ -88,10 +88,10 @@ return (new Configuration())
     // managed edition.
     ->ignoreErrorsOnPackage('symfony/web-profiler-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
+    // This package provides more Twig filters such as "format_number" and "country_name".
+    ->ignoreErrorsOnPackage('twig/intl-extra', [ErrorType::UNUSED_DEPENDENCY])
+
     // This package provides the "u" Twig filter which is e.g. used in the
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
-
-    // This package provides more Twig filters such as "format_number" and "country_name".
-    ->ignoreErrorsOnPackage('twig/intl-extra', [ErrorType::UNUSED_DEPENDENCY])
 ;
