@@ -341,6 +341,10 @@ abstract class DataContainer extends Backend
 				$this->strInputName = $varValue;
 				break;
 
+			case 'table':
+				$this->strTable = $varValue;
+				break;
+
 			default:
 				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones has been deprecated and will no longer work in Contao 6.');
 				$this->$strKey = $varValue;
