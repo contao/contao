@@ -132,14 +132,14 @@
         will-change: transform, visibility;
     }
 
-    // ToDo: add toggle-state-controller
+    /* ToDo: add toggle-state-controller */
     #main.filter-active {
         .content-filter {
             visibility: visible;
             transform: translateX(0);
         }
 
-        &:after {
+        &::after {
             content: '';
             display: block;
             position: absolute;
