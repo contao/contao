@@ -62,13 +62,13 @@ use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-/**
- * @experimental
- */
 final class ContaoExtension extends AbstractExtension implements GlobalsInterface
 {
     private array $contaoEscaperFilterRules = [];
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly Environment $environment,
         private readonly ContaoFilesystemLoader $filesystemLoader,
@@ -268,6 +268,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'backend_icon',
                 [BackendHelperRuntime::class, 'icon'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFunction(
+                'file_icon',
+                [BackendHelperRuntime::class, 'fileIcon'],
                 ['is_safe' => ['html']],
             ),
         ];

@@ -20,8 +20,6 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @experimental
- *
  * @implements \IteratorAggregate<string, string>
  */
 final class Finder implements \IteratorAggregate, \Countable

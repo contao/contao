@@ -16,7 +16,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Twig\Environment;
 
 /**
- * @experimental
+ * @internal
  */
 class TemplateSkeleton
 {
