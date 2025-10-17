@@ -3,6 +3,7 @@
     width: calc(100% - 220px);
     display: flex;
     flex-direction: column;
+    position: relative;
 
     .content {
         margin: 0 15px 15px;
@@ -14,12 +15,6 @@
     .content:has(.tl_formbody_submit) {
         overflow: clip;
     }
-
-    .content-filter {
-        padding: 10px 0;
-        order: 1;
-        border-bottom: 1px solid var(--content-border);
-    }
 }
 
 @media (min-width: 768px) {
@@ -27,20 +22,8 @@
         .content:has(>.content-filter),
         .content > .tree-view:has(>.content-filter) {
             display: grid;
-            grid-template-columns: auto var(--filter-width, 200px);
+            grid-template-columns: auto var(--filter-width, 240px);
         }
-
-        .content-filter {
-            padding: 10px 15px 15px;
-            border-bottom: 0;
-            border-left: 1px solid var(--content-border);
-        }
-    }
-}
-
-@media (min-width: 1280px) {
-    :root {
-        --filter-width: 250px;
     }
 }
 
