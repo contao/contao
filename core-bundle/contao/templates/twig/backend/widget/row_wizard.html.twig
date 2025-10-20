@@ -5,6 +5,7 @@
     .addClass(['row_wizard'])
     .set('data-controller', 'contao--row-wizard')
     .addStyle(style|default)
+    .set('data-contao--row-wizard-name-value', id)
     .setIfExists('data-contao--row-wizard-min-value', min_rows|default)
     .setIfExists('data-contao--row-wizard-max-value', max_rows|default)
 %}
@@ -55,6 +56,7 @@
 
                 {# Controls #}
                 <td class="tl_right">
+                    <input type="hidden" name="{{ id }}[_rows][]" value="1"/>
                     {# Copy row #}
                     {% if 'copy' in actions %}
                         {% set copy_button_attributes = attrs()

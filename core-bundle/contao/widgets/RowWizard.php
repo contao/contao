@@ -111,7 +111,7 @@ class RowWizard extends Widget
 	public function validate(): void
 	{
 		$varValue = array();
-		$varPost = $this->getPost($this->strName);
+		$varPost = $this->getPost($this->strId.'[_rows]') ?? [];
 
 		for ($i = 0, $c = \count($varPost); $i < $c; ++$i)
 		{
