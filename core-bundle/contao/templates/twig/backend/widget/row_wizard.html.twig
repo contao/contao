@@ -10,17 +10,20 @@
 %}
 
 <table{{ table_attributes }}>
-    <thead>
-    <tr>
-        {% if sortable %}
+    {% if showHeader %}
+        <thead>
+        <tr>
+            {% if sortable %}
+                <th></th>
+            {% endif %}
+            {% for cell in header %}
+                <th>{{ cell.label|default }}{% if cell.mandatory|default %}<span class="mandatory">*</span>{% endif %}</th>
+            {% endfor %}
             <th></th>
-        {% endif %}
-        {% for cell in header %}
-            <th>{{ cell.label|default }}{% if cell.mandatory|default %}<span class="mandatory">*</span>{% endif %}</th>
-        {% endfor %}
-        <th></th>
-    </tr>
-    </thead>
+        </tr>
+        </thead>
+    {% endif %}
+
     {% set table_body_attributes = attrs()
         .addClass('sortable', sortable)
         .set('data-controller', 'contao--sortable', sortable)
@@ -28,7 +31,6 @@
         .set('data-action', 'contao--sortable:update->contao--row-wizard#updateSorting', sortable)
         .set('data-contao--row-wizard-target', 'body')
     %}
-
     <tbody{{ table_body_attributes }}>
         {% for row in rows %}
             <tr data-contao--row-wizard-target="row">
@@ -95,4 +97,18 @@
             </tr>
         {% endfor %}
     </tbody>
+
+    {% if showFooter %}
+        <tfoot>
+        <tr>
+            {% if sortable %}
+                <td></td>
+            {% endif %}
+            {% for cell in footer %}
+                <td><p class="tl_help tl_tip">{{ cell.description|default }}</td>
+            {% endfor %}
+            <td></td>
+        </tr>
+        </tfoot>
+    {% endif %}
 </table>

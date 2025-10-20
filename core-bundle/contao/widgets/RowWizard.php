@@ -172,12 +172,14 @@ class RowWizard extends Widget
 		{
 			$columns = array();
 			$header = array();
+			$footer = array();
 
 			foreach ($this->arrFields as $key => $options)
 			{
 				if (\is_array($options['input_field_callback'] ?? null))
 				{
 					$header[] = array();
+					$footer[] = array('description' => $widget->description ?? '');
 					$columns[] = System::importStatic($options['input_field_callback'][0])->{$options['input_field_callback'][1]}($this->objDca);
 					continue;
 				}
@@ -185,6 +187,7 @@ class RowWizard extends Widget
 				if (\is_callable($options['input_field_callback'] ?? null))
 				{
 					$header[] = array();
+					$footer[] = array('description' => $widget->description ?? '');
 					$columns[] = $options['input_field_callback']($this->objDca);
 					continue;
 				}
@@ -204,6 +207,7 @@ class RowWizard extends Widget
 						$header[] = array();
 					}
 
+					$footer[] = array('description' => $widget->description ?? '');
 					$columns[] = $widget->generateWithError(true);
 				}
 			}
@@ -221,6 +225,9 @@ class RowWizard extends Widget
 			'id' => $this->strId,
 			'style' => $this->style,
 			'header' => $header,
+			'showHeader' => !$this->allEmpty($header, 'label'),
+			'footer' => $footer,
+			'showFooter' => !$this->allEmpty($footer, 'description'),
 			'rows' => $rows,
 			'min_rows' => $this->min,
 			'max_rows' => $this->max,
@@ -275,5 +282,16 @@ class RowWizard extends Widget
 		}
 
 		return $this->widgets[$increment][$key] = new $widgetClass($data);
+	}
+
+	private function allEmpty(array $values, string $key): bool
+	{
+		foreach ($values as $value) {
+			if (!empty($value[$key])) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
