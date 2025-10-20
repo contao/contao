@@ -118,7 +118,7 @@ class RowWizard extends Widget
 			foreach ($this->arrFields as $key => $options)
 			{
 				/** @var Widget $widget */
-				$widget = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
+				[$widget] = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
 
 				if (null === $widget)
 				{
@@ -178,21 +178,25 @@ class RowWizard extends Widget
 			{
 				if (\is_array($options['input_field_callback'] ?? null))
 				{
+					$widget = System::importStatic($options['input_field_callback'][0])->{$options['input_field_callback'][1]}($this->objDca);
+
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = System::importStatic($options['input_field_callback'][0])->{$options['input_field_callback'][1]}($this->objDca);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
 					continue;
 				}
 
 				if (\is_callable($options['input_field_callback'] ?? null))
 				{
+					$widget = $options['input_field_callback']($this->objDca);
+
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = $options['input_field_callback']($this->objDca);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
 					continue;
 				}
 
-				$widget = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
+				[$widget, $data] = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
 
 				if (null !== $widget)
 				{
@@ -208,7 +212,7 @@ class RowWizard extends Widget
 					}
 
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = $widget->generateWithError(true);
+					$columns[] = array(...$data, 'widget' => $widget->generateWithError(true));
 				}
 			}
 
@@ -248,7 +252,10 @@ class RowWizard extends Widget
 		return $attributes;
 	}
 
-	private function prepareWidget(string $key, mixed $value, array $options, int $increment): Widget|null
+	/**
+	 * @return array{0: Widget|null, 1: array<mixed>}
+	 */
+	private function prepareWidget(string $key, mixed $value, array $options, int $increment): array
 	{
 		if (isset($this->widgets[$increment][$key]))
 		{
@@ -257,7 +264,7 @@ class RowWizard extends Widget
 
 		if (!isset($options['inputType']))
 		{
-			return null;
+			return [null, []];
 		}
 
 		/** @var class-string<Widget> $widgetClass */
@@ -265,7 +272,7 @@ class RowWizard extends Widget
 
 		if (!class_exists($widgetClass))
 		{
-			return null;
+			return [null, []];
 		}
 
 		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
@@ -281,7 +288,7 @@ class RowWizard extends Widget
 			$data['id'] .= '_' . $increment;
 		}
 
-		return $this->widgets[$increment][$key] = new $widgetClass($data);
+		return $this->widgets[$increment][$key] = [new $widgetClass($data), $data];
 	}
 
 	private function allEmpty(array $values, string $key): bool

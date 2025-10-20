@@ -45,8 +45,12 @@
                     </td>
                 {% endif %}
 
-                {% for widget in row.columns %}
-                    <td>{{ widget|raw }}</td>
+                {% for cell in row.columns %}
+                    {% set cell_attributes = attrs()
+                        .addClass(cell.cell_class|default)
+                        .addStyle(cell.cell_style|default)
+                    %}
+                    <td{{ cell_attributes }}>{{ cell.widget|raw }}</td>
                 {% endfor %}
 
                 {# Controls #}
