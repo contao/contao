@@ -190,8 +190,16 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn($layoutModel)
         ;
 
+        $systemAdapter = $this->mockAdapter(['loadLanguageFile']);
+        $systemAdapter
+            ->expects($this->once())
+            ->method('loadLanguageFile')
+            ->with('default')
+        ;
+
         $framework = $this->mockContaoFramework([
             LayoutModel::class => $layoutAdapter,
+            System::class => $systemAdapter,
         ]);
 
         $page = $this->mockClassWithProperties(PageModel::class);

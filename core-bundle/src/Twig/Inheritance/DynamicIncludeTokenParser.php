@@ -28,7 +28,7 @@ use Twig\TokenParser\IncludeTokenParser;
  *
  * @see IncludeTokenParser
  *
- * @experimental
+ * @internal
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {

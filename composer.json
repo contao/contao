@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-dom": "*",
         "ext-filter": "*",
         "ext-hash": "*",
@@ -67,7 +67,7 @@
         "contao/imagine-svg": "^1.0.2",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/collections": "^2.1",
-        "doctrine/dbal": "^3.6.2 || ^4.3",
+        "doctrine/dbal": "^3.7 || ^4.3",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/orm": "^2.17 || ^3.0",
         "doctrine/persistence": "^3.2",
@@ -94,7 +94,7 @@
         "paragonie/constant_time_encoding": "^2.8 || ^3.1",
         "php-feed-io/feed-io": "^6.0",
         "phpspec/php-diff": "^1.0",
-        "phpunit/phpunit": "^11.5.16",
+        "phpunit/phpunit": "^12.4",
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
         "psr/http-message": "^1.0 || ^2.0",
@@ -187,7 +187,7 @@
         "composer/composer": "^2.0",
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
-        "sebastian/diff": "^6.0",
+        "sebastian/diff": "^7.0",
         "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^7.3"
     },
