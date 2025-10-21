@@ -39,10 +39,10 @@ class NewsResolverTest extends ContaoTestCase
         $jumpTo = $this->mockClassWithProperties(PageModel::class);
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'internal', 'jumpTo' => 42]);
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(42)
             ->willReturn($jumpTo)
         ;
@@ -61,10 +61,10 @@ class NewsResolverTest extends ContaoTestCase
         $article = $this->mockClassWithProperties(ArticleModel::class);
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'article', 'articleId' => 42]);
 
-        $articleAdapter = $this->mockAdapter(['findPublishedById']);
+        $articleAdapter = $this->mockAdapter(['findById']);
         $articleAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(42)
             ->willReturn($article)
         ;
@@ -85,10 +85,10 @@ class NewsResolverTest extends ContaoTestCase
 
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => '']);
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(42)
             ->willReturn($target)
         ;
