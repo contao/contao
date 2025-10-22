@@ -34,6 +34,11 @@ class SerpPreview extends Widget
 	 */
 	public function generate()
 	{
+		if (Input::isPost())
+		{
+			return '<div class="serp-preview"><p class="tl_gerror">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreviewPost'] . '</p></div>';
+		}
+
 		/** @var class-string<Model> $class */
 		$class = Model::getClassFromTable($this->strTable);
 		$model = $class::findById($this->activeRecord->id);
