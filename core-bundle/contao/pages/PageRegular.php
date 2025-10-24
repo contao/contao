@@ -315,6 +315,11 @@ class PageRegular extends Frontend
 			}
 		}
 
+		if (empty($arrArticleColumns))
+		{
+			return $arrPreloaded;
+		}
+
 		$objResult = ContentModel::findModulesByArticleByPublishedPidAndColumns($objPage->id, $arrArticleColumns);
 
 		foreach ($objResult->fetchAllAssoc() as list('id' => $intId, 'type' => $strType, 'column' => $strColumn))
