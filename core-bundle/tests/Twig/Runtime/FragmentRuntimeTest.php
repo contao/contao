@@ -190,4 +190,33 @@ class FragmentRuntimeTest extends TestCase
 
         $this->assertSame('runtime-result', $result);
     }
+
+    public function testRenderContentFromUnavailableId(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('getContentElement')
+            ->with(null)
+            ->willReturn('')
+        ;
+
+        $contentAdapter = $this->mockAdapter(['findById']);
+        $contentAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(42)
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            Controller::class => $controllerAdapter,
+            ContentModel::class => $contentAdapter,
+        ]);
+
+        $runtime = new FragmentRuntime($framework);
+        $result = $runtime->renderContent(42, ['foo' => 'bar']);
+
+        $this->assertSame('', $result);
+    }
 }
