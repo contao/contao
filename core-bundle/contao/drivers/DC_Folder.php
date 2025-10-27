@@ -2445,7 +2445,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 							$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 
 							$operations->append(array(
-								'label' => $GLOBALS['TL_LANG']['tl_files']['upload'][0],
+								'label' => $GLOBALS['TL_LANG']['tl_files']['upload'][0] ?? '',
 								'title' => \sprintf($GLOBALS['TL_LANG']['tl_files']['upload'][1], $currentEncoded),
 								'href' => $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded),
 								'icon' => 'new.svg',
