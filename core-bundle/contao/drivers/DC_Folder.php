@@ -585,14 +585,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			>' . $return . '</div>';
 	}
 
-	/**
-	 * Automatically switch to showAll
-	 *
-	 * @return string
-	 */
 	public function show()
 	{
-		return $this->showAll();
+		throw new \RuntimeException('"show" action is not supported by ' . self::class);
 	}
 
 	/**

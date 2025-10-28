@@ -257,6 +257,10 @@ services:
         arguments:
             - '@event_dispatcher'
 
+    contao.data_container.show_action:
+        class: Contao\CoreBundle\DataContainer\Action\ShowAction
+        public: true
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 
