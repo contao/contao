@@ -153,7 +153,7 @@ export default class TooltipsController extends Controller {
 
     _getOptionsForElement(el) {
         for (const [criteria, defaultOptions] of Object.entries(TooltipsController.defaultOptionsMap)) {
-            if (el.match(criteria)) {
+            if (el.matches(criteria)) {
                 return defaultOptions;
             }
         }
@@ -169,7 +169,7 @@ export default class TooltipsController extends Controller {
 
         const migrateTarget = (el) => {
             for (const target of targetSelectors) {
-                if (!el.hasAttribute(`data-${identifier}-target`) && el.match(target)) {
+                if (!el.hasAttribute(`data-${identifier}-target`) && el.matches(target)) {
                     el.setAttribute(`data-${identifier}-target`, 'tooltip');
                 }
 
