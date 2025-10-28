@@ -159,7 +159,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         if ($changePid) {
             $newPid = (int) $action->getNewPid();
 
-            if (!$this->canAccessPage($token, $newPid) || !$this->canChangeHierarchy($action, $token, $newPid)) {
+            if (!$this->canAccessPage($token, $newPid, false) || !$this->canChangeHierarchy($action, $token, $newPid)) {
                 return false;
             }
         }
