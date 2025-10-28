@@ -7,7 +7,7 @@
             .set('aria-current', 'page')
             .set('aria-haspopup', true, item.subitems|default)
         }}>{{ item.link }}</strong>
-        {{- item.subitems|default -}}
+        {{- item.subitems|default|raw -}}
         </li>
     {% else %}
         <li{{ attrs().addClass(item.class) }}>
@@ -19,7 +19,7 @@
                 .mergeWith(item.target|default)
                 .mergeWith(item.rel|default)
             }}>{{ item.link }}</a>
-            {{- item.subitems|default -}}
+            {{- item.subitems|default|raw -}}
         </li>
     {% endif %}
 {% endfor %}
