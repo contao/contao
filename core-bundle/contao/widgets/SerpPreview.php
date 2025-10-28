@@ -36,7 +36,7 @@ class SerpPreview extends Widget
 	{
 		if (Input::isPost())
 		{
-			return '<div class="serp-preview"><p class="tl_gerror">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreviewPost'] . '</p></div>';
+			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreviewPost'] . '</p></div>';
 		}
 
 		/** @var class-string<Model> $class */
