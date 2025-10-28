@@ -1857,19 +1857,19 @@ label.tl_change_selected {
 
 /* Picker */
 .selector_container {
-	margin-top: 1px;
+	margin: 3px 0;
 	position: relative;
 }
 
 .selector_container > ul {
-	margin: 0 0 1px;
+	margin: 0 0 3px;
 	padding: 0;
 	list-style-type: none;
 }
 
 .selector_container > ul > li {
 	margin: 0 9px 0 0;
-	padding: 2px 0;
+	padding: 1px 0;
 }
 
 .selector_container p {
