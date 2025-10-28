@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  <form{% if action %} action="{{ action }}"{% endif %} method="get">
+  <form{% if action|default %} action="{{ action }}"{% endif %} method="get">
     <div class="formbody">
       <div class="widget widget-text">
         <label for="ctrl_keywords_{{ uniqueId }}" class="invisible">{{ keywordLabel }}</label>
@@ -23,13 +23,14 @@
     </div>
   </form>
 
-  {% if header %}
+  {% if header|default %}
     <p class="header">{{ header }}</p>
-    {% if keywordHint %}
+    {% if keywordHint|default %}
       <p class="info">{{ keywordHint }}</p>
     {% endif %}
   {% endif %}
 
-  {{ results.pagination }}
+  {{ results|raw }}
+  {{ pagination|raw }}
 
 {% endblock %}
