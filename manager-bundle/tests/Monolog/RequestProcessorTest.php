@@ -56,7 +56,7 @@ class RequestProcessorTest extends ContaoTestCase
         $this->assertArrayNotHasKey('request_method', $record->extra);
     }
 
-    #[DataProvider('logExtrasProvider')]
+    #[DataProvider('logExtrasProvider', validateArgumentCount: false)]
     public function testIgnoresIfRequestIsNotSet(): void
     {
         $processor = new RequestProcessor();

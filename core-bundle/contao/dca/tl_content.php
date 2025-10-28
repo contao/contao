@@ -970,6 +970,12 @@ class tl_content extends Backend
 			}
 		}
 
+		// Show the title
+		elseif ($arrRow['title'] ?? null)
+		{
+			$type = $arrRow['title'] . ' <span class="type">[' . $type . ']</span>';
+		}
+
 		// Add the ID of the aliased element
 		if ($arrRow['type'] == 'alias')
 		{
@@ -995,7 +1001,7 @@ class tl_content extends Backend
 				}
 			}
 
-			$key .= ' icon-protected';
+			$type = Image::getHtml('protected.svg') . $type;
 			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 
@@ -1045,7 +1051,11 @@ class tl_content extends Backend
 		// Strip HTML comments to check if the preview is empty
 		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')
 		{
-			$class .= ' empty';
+			$preview = '';
+		}
+		else
+		{
+			$preview = '<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
 		}
 
 		$dragHandle = '';
@@ -1056,9 +1066,7 @@ class tl_content extends Backend
 			$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
 		}
 
-		return '
-<div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>
-<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
+		return '<div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>' . $preview;
 	}
 
 	/**

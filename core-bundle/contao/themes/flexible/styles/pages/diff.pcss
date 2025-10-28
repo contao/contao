@@ -11,8 +11,8 @@ body {
 h2 {
 	margin: 0;
 	padding: 4px 6px;
-	background: var(--tree-header);
-	border-bottom: 1px solid var(--tree-header-border);
+	background: var(--table-header);
+	border-bottom: 1px solid var(--table-border);
 	font-size: .875rem;
 }
 
@@ -42,7 +42,7 @@ h2 {
 /* Messages */
 .tl_info {
 	padding: 6px 6px 6px 28px;
-	border-radius: 2px;
+	border-radius: var(--border-radius);
 	background: url("icons/show.svg") no-repeat left center;
 	color: var(--blue);
 	line-height: 1.2;
@@ -53,7 +53,8 @@ h2 {
 	margin-bottom: 1em;
 	border: 1px solid var(--border);
 	background: var(--table-odd);
-	border-radius: 2px;
+	border-radius: var(--border-radius);
+    overflow: clip;
 }
 
 #diff .replace.left, #diff .delete.left {

@@ -23,7 +23,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
         );
     }
 
-    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate', validateArgumentCount: false)]
     public function testFailToDeleteUserTemplateBecauseItDoesNotExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -53,7 +53,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
         $this->assertSame('error.stream', $response->getContent());
     }
 
-    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate', validateArgumentCount: false)]
     public function testStreamConfirmDialogWhenDeletingUserTemplate(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
