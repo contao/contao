@@ -28,6 +28,7 @@ services:
                 - { name: container.service_subscriber, id: contao.security.token_checker }
                 - { name: container.service_subscriber, id: contao.image.picture_factory }
                 - { name: container.service_subscriber, id: contao.image.preview_factory }
+                - { name: container.service_subscriber, id: contao.assets.assets_context }
                 - { name: container.service_subscriber, id: contao.twig.defer.renderer }
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
