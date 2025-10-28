@@ -4,5 +4,5 @@
  %}
 
 <div{{ wrapperAttributes }}>
-  {{ this.text|encode_email|sanitize_html('contao')|csp_inline_styles }}
+  {{ this.text|sanitize_html('contao')|encode_email|csp_inline_styles }}
 </div>

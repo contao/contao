@@ -1,2 +1,2 @@
 
-{{ html|insert_tag_raw|raw }}
+{{ html|sanitize_html('contao')|insert_tag_raw }}

@@ -16,7 +16,7 @@
   <div class="{{ accordion }}">
     <div>
       {% if not addBefore %}
-        {{ text|default|csp_inline_styles|insert_tag_raw|raw }}
+        {{ text|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
 
       {% if addImage %}
@@ -24,7 +24,7 @@
       {% endif %}
 
       {% if addBefore %}
-        {{ text|default|csp_inline_styles|insert_tag_raw|raw }}
+        {{ text|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
     </div>
   </div>
