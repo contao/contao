@@ -12,9 +12,9 @@
         <tr>
           {% for col in header %}
             {% if loop.index0 == 0 and useLeftTh %}
-              <th class="unsortable">{{ col|allow_html|insert_tag_raw }}</th>
+              <th class="unsortable">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
             {% else %}
-              <th>{{ col|allow_html|insert_tag_raw }}</th>
+              <th>{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
             {% endif %}
           {% endfor %}
         </tr>
@@ -25,7 +25,7 @@
       <tfoot>
         <tr>
           {% for col in footer %}
-            <td>{{ col|allow_html|insert_tag_raw }}</td>
+            <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
           {% endfor %}
         </tr>
       </tfoot>
@@ -36,9 +36,9 @@
         <tr>
           {% for col in row %}
             {% if loop.index0 == 0 and useLeftTh %}
-              <th scope="row">{{ col|allow_html|insert_tag_raw }}</th>
+              <th scope="row">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
             {% else %}
-              <td>{{ col|allow_html|insert_tag_raw }}</td>
+              <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
             {% endif %}
           {% endfor %}
         </tr>

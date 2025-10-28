@@ -7,7 +7,7 @@
     attestationFailure: 'ERR.passkeyAttestationFailure'|trans,
     requestUrl: path('webauthn.controller.creation.request.contao_frontend_add_authenticator'),
     responseUrl: path('webauthn.controller.creation.response.contao_frontend_add_authenticator'),
-    redirect: redirect|default|raw,
+    redirect: redirect|default,
 } %}
 
 {% set attributes = attrs()

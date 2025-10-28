@@ -17,7 +17,7 @@
       </a>
       {{ embed_post|insert_tag_raw }}
       {% if caption|default %}
-        <figcaption class="caption">{{ caption|allow_html|insert_tag_raw }}</figcaption>
+        <figcaption class="caption">{{ caption|sanitize_html('contao')|insert_tag_raw }}</figcaption>
       {% endif %}
     </figure>
   {% else %}

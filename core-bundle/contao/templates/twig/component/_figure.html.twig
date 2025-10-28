@@ -61,7 +61,7 @@
                 %}
                 <figcaption{{ caption_attributes }}>
                     {%- block caption_inner -%}
-                        {{- figure.metadata.caption|raw -}}
+                        {{- figure.metadata.caption|sanitize_html('contao') -}}
                     {%- endblock -%}
                 </figcaption>
             {% endif %}

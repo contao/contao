@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Input;
 use Contao\InputEncodingMode;
 use Symfony\Bridge\Twig\Extension\HtmlSanitizerExtension;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
+// Backwards compatibility: To be removed in Contao 6
 final class SanitizerRuntime implements RuntimeExtensionInterface
 {
     /**
@@ -26,7 +26,6 @@ final class SanitizerRuntime implements RuntimeExtensionInterface
      */
     public function __construct(
         private readonly Environment $twig,
-        private readonly ContaoFramework $framework,
     ) {
     }
 
@@ -34,14 +33,11 @@ final class SanitizerRuntime implements RuntimeExtensionInterface
     {
         $html = $this->twig->getExtension(HtmlSanitizerExtension::class)->sanitize($html, $sanitizer);
 
+        if ('contao' === $sanitizer) {
+            return $html;
+        }
+
         // Encode Contao-specific special characters like insert tags
         return Input::encodeInput($html, InputEncodingMode::encodeNone);
-    }
-
-    public function allowHtml(string $html): string
-    {
-        $this->framework->initialize();
-
-        return Input::encodeInput($html, InputEncodingMode::sanitizeHtml, false);
     }
 }
