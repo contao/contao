@@ -48,14 +48,15 @@ class ArticleContentVoterTest extends TestCase
 
         $accessDecisionMap = [[$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true]];
 
-        foreach ($articleParents as $pageId) {
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], (int) $pageId, true];
-            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], (int) $pageId, true];
+        foreach ($articleParents as $page) {
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], (int) $page['id'], true];
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $page['type'], true];
+            $accessDecisionMap[] = [$token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], (int) $page['id'], true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
-            ->expects($this->exactly(max(\count($parentRecords), \count($articleParents)) * 3))
+            ->expects($this->exactly(max(\count($parentRecords), \count($articleParents)) * 4))
             ->method('decide')
             ->willReturnMap($accessDecisionMap)
         ;
@@ -83,14 +84,12 @@ class ArticleContentVoterTest extends TestCase
             ];
         }
 
-        $fetchOneMap = [];
-
-        foreach ($articleParents as $id => $pid) {
-            $fetchOneMap[] = [
-                'SELECT pid FROM tl_article WHERE id=?',
+        foreach ($articleParents as $id => $page) {
+            $fetchAssociativeMap[] = [
+                'SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)',
                 [$id],
                 [],
-                $pid,
+                $page,
             ];
         }
 
@@ -107,12 +106,6 @@ class ArticleContentVoterTest extends TestCase
             ->willReturnMap($fetchAssociativeMap)
         ;
 
-        $connection
-            ->expects($this->exactly(\count($articleParents)))
-            ->method('fetchOne')
-            ->willReturnMap($fetchOneMap)
-        ;
-
         $voter = new ArticleContentVoter($accessDecisionManager, $connection);
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
@@ -124,85 +117,85 @@ class ArticleContentVoterTest extends TestCase
         yield 'Check access to page when creating element in article' => [
             new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to page when creating nested element' => [
             new CreateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
-            [2 => 1],
+            [2 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to page when creating deep nested element' => [
             new CreateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
-            [1 => 1],
+            [1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to page when reading element in article' => [
             new ReadAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to page when reading nested element' => [
             new ReadAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
-            [2 => 1],
+            [2 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to page when reading deep nested element' => [
             new ReadAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
-            [1 => 1],
+            [1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to current page when updating element in article' => [
             new UpdateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to current and new page when updating element in article' => [
             new UpdateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1], ['pid' => 2]),
             [],
-            [1 => 1, 2 => 2],
+            [1 => ['id' => 1, 'type' => 'regular'], 2 => ['id' => 2, 'type' => 'regular']],
         ];
 
         yield 'Check access to page when moving nested element to article' => [
             new UpdateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3], ['ptable' => 'tl_article', 'pid' => 1]),
             [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
-            [2 => 2, 1 => 1],
+            [2 => ['id' => 2, 'type' => 'regular'], 1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access to page when moving nested element to other element' => [
             new UpdateAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3], ['ptable' => 'tl_content', 'pid' => 4]),
             [3 => [['ptable' => 'tl_article', 'pid' => 2]], 4 => [['ptable' => 'tl_article', 'pid' => 1]]],
-            [2 => 2, 1 => 1],
+            [2 => ['id' => 2, 'type' => 'regular'], 1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access when deleting element in article' => [
             new DeleteAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access when deleting nested element' => [
             new DeleteAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_article', 'pid' => 2]]],
-            [2 => 1],
+            [2 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check access when deleting deep nested element' => [
             new DeleteAction('tl_content', ['ptable' => 'tl_content', 'pid' => 3]),
             [3 => [['ptable' => 'tl_content', 'pid' => 2], ['ptable' => 'tl_article', 'pid' => 1]]],
-            [1 => 1],
+            [1 => ['id' => 1, 'type' => 'regular']],
         ];
 
         yield 'Check argument handling if database returns a string instead of int' => [
             new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]),
             [],
-            ['1' => '1'],
+            ['1' => ['id' => '1', 'type' => 'regular']],
         ];
     }
 

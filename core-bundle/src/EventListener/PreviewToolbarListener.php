@@ -49,6 +49,10 @@ class PreviewToolbarListener
 
     public function __invoke(ResponseEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         $request = $event->getRequest();
         $response = $event->getResponse();
 
@@ -69,7 +73,7 @@ class PreviewToolbarListener
         // Only inject the toolbar into HTML responses
         if (
             'html' !== $request->getRequestFormat()
-            || !str_contains((string) $response->headers->get('Content-Type'), 'text/html')
+            || ($response->headers->has('Content-Type') && !str_contains((string) $response->headers->get('Content-Type'), 'text/html'))
             || false !== stripos((string) $response->headers->get('Content-Disposition'), 'attachment;')
         ) {
             return;

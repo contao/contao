@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorTest extends TestCase
@@ -36,13 +37,14 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCode(): void
     {
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(1);
-        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
+        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
-        $authenticator = new Authenticator();
+        $authenticator = new Authenticator($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->now()));
         $this->assertFalse($authenticator->validateCode($user, 'foobar'));
@@ -50,24 +52,28 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCodeOfPreviousWindow(): void
     {
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(2);
-        $now = 1586161036;
-        $fourtySecondsAgo = $now - 40;
+        $now = $clock->now()->getTimestamp();
+        $beforeNow = $clock->now()->modify('-30 seconds')->getTimestamp();
+        $afterNow = $clock->now()->modify('+29 seconds')->getTimestamp();
 
-        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
+        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
-        $authenticator = new Authenticator();
+        $authenticator = new Authenticator($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->at($now), $now));
-        $this->assertTrue($authenticator->validateCode($user, $totp->at($fourtySecondsAgo), $now));
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($beforeNow), $now));
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($afterNow), $now));
         $this->assertFalse($authenticator->validateCode($user, 'foobar', $now));
     }
 
     public function testGeneratesTheProvisionUri(): void
     {
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(3);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -86,7 +92,7 @@ class AuthenticatorTest extends TestCase
             ->willReturn('example.com')
         ;
 
-        $authenticator = new Authenticator();
+        $authenticator = new Authenticator($clock);
 
         $this->assertSame(
             \sprintf(
@@ -112,6 +118,7 @@ class AuthenticatorTest extends TestCase
             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="180" height="180" viewBox="0 0 180 180"><rect x="0" y="0" width="180" height="180" fill="#fefefe"/>
             SVG;
 
+        $clock = new MockClock('2025-08-12 08:24:00');
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = 'foobar';
 
@@ -128,7 +135,7 @@ class AuthenticatorTest extends TestCase
             ->willReturn('example.com')
         ;
 
-        $authenticator = new Authenticator();
+        $authenticator = new Authenticator($clock);
         $svg = $authenticator->getQrCode($user, $request);
 
         $this->assertSame(5897, \strlen($svg));

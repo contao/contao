@@ -178,7 +178,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function getFrontendModule($intId, $strColumn = 'main'): never
+    public static function getFrontendModule($intId, $strColumn = 'main', array $arrPreloadedContentElements = []): never
     {
         self::throwOnAccess();
     }
@@ -186,7 +186,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function getArticle($varId, $blnMultiMode = false, $blnIsInsertTag = false, $strColumn = 'main'): never
+    public static function getArticle($varId, $blnMultiMode = false, $blnIsInsertTag = false, $strColumn = 'main', array $arrPreloadedContentElements = []): never
     {
         self::throwOnAccess();
     }

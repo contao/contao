@@ -1,6 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="tr">
     <body>
+      <trans-unit id="tl_files.preview.0">
+        <source>Image preview</source>
+      </trans-unit>
+      <trans-unit id="tl_files.preview.1">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Fare imleciyle görselin önemli bölümünü işaretleyin.</target>
+      </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
         <target>Ad</target>
@@ -121,10 +128,6 @@
         <source>Edit file &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosyasını düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Fare imleciyle görselin önemli bölümünü işaretleyin.</target>
-      </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
         <target>Dosyalara göz at</target>
@@ -235,7 +238,7 @@
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit the source text of file &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosyasının kaynak metnini düzenle</target>
+        <target>&quot;%s&quot; dosyasının kaynak yazısını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files to folder &quot;%s&quot;</source>
