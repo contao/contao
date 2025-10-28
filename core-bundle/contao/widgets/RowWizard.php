@@ -111,14 +111,14 @@ class RowWizard extends Widget
 	public function validate(): void
 	{
 		$varValue = array();
-		$varPost = $this->getPost($this->strId.'[_rows]') ?? [];
+		$varPost = $this->getPost($this->strId . '[_rows]') ?? array();
 
 		for ($i = 0, $c = \count($varPost); $i < $c; ++$i)
 		{
 			foreach ($this->arrFields as $key => $options)
 			{
 				/** @var Widget $widget */
-				[$widget] = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
+				list($widget) = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
 
 				if (null === $widget)
 				{
@@ -196,7 +196,7 @@ class RowWizard extends Widget
 					continue;
 				}
 
-				[$widget, $data] = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
+				list($widget, $data) = $this->prepareWidget($key, $this->varValue[$i][$key] ?? null, $options, $i);
 
 				if (null !== $widget)
 				{
@@ -264,7 +264,7 @@ class RowWizard extends Widget
 
 		if (!isset($options['inputType']))
 		{
-			return [null, []];
+			return array(null, array());
 		}
 
 		/** @var class-string<Widget> $widgetClass */
@@ -272,7 +272,7 @@ class RowWizard extends Widget
 
 		if (!class_exists($widgetClass))
 		{
-			return [null, []];
+			return array(null, array());
 		}
 
 		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
@@ -288,13 +288,15 @@ class RowWizard extends Widget
 			$data['id'] .= '_' . $increment;
 		}
 
-		return $this->widgets[$increment][$key] = [new $widgetClass($data), $data];
+		return $this->widgets[$increment][$key] = array(new $widgetClass($data), $data);
 	}
 
 	private function allEmpty(array $values, string $key): bool
 	{
-		foreach ($values as $value) {
-			if (!empty($value[$key])) {
+		foreach ($values as $value)
+		{
+			if (!empty($value[$key]))
+			{
 				return false;
 			}
 		}
