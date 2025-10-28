@@ -34,7 +34,7 @@ class NewsletterResolver implements ContentUrlResolverInterface
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $channelAdapter = $this->framework->getAdapter(NewsletterChannelModel::class);
 
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $channelAdapter->findById($content->pid)?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findById((int) $channelAdapter->findById($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

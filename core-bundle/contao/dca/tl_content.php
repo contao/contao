@@ -956,6 +956,12 @@ class tl_content extends Backend
 			}
 		}
 
+		// Show the title
+		elseif ($arrRow['title'] ?? null)
+		{
+			$type = $arrRow['title'] . ' <span class="type">[' . $type . ']</span>';
+		}
+
 		// Add the ID of the aliased element
 		if ($arrRow['type'] == 'alias')
 		{
@@ -981,7 +987,7 @@ class tl_content extends Backend
 				}
 			}
 
-			$key .= ' icon-protected';
+			$type = Image::getHtml('protected.svg') . $type;
 			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 

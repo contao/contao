@@ -17,6 +17,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -101,6 +102,12 @@ class BackendPreviewSwitchController
             ? '@ContaoCore/Frontend/preview_toolbar_base.html.twig'
             : '@Contao/frontend_preview/toolbar.html.twig';
 
+        $attributes = new HtmlAttributes();
+
+        foreach ($this->backendAttributes as $k => $v) {
+            $attributes->set('data-'.$k, $v);
+        }
+
         try {
             return $this->twig->render($template, [
                 'request_token' => $this->tokenManager->getDefaultTokenValue(),
@@ -108,7 +115,7 @@ class BackendPreviewSwitchController
                 'canSwitchUser' => $canSwitchUser,
                 'user' => $frontendUsername,
                 'show' => $showUnpublished,
-                'attributes' => $this->backendAttributes,
+                'attributes' => $attributes,
                 'badgeTitle' => $this->backendBadgeTitle,
                 'share' => $shareLink,
             ]);

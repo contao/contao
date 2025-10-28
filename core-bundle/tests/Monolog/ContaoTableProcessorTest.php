@@ -56,7 +56,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * @phpstan-param Level::Alert|Level::Critical|Level::Debug|Level::Emergency|Level::Error|Level::Info|Level::Notice|Level::Warning $logLevel
      */
-    #[DataProvider('actionLevelProvider')]
+    #[DataProvider('actionLevelProvider', validateArgumentCount: false)]
     public function testDoesNotChangeAnExistingAction(Level $logLevel): void
     {
         $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)], $logLevel);

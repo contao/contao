@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-json": "*",
         "cmsig/seal-loupe-adapter": "^0.12",
         "contao/core-bundle": "self.version",
@@ -71,7 +71,7 @@
         "composer/composer": "^2.0",
         "contao/test-case": "self.version",
         "contao/news-bundle": "self.version",
-        "phpunit/phpunit": "^11.5"
+        "phpunit/phpunit": "^12.4"
     },
     "autoload": {
         "psr-4": {

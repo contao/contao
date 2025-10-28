@@ -8,6 +8,7 @@ use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
+use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\DataContainer;
 use Contao\Input;
@@ -48,7 +49,14 @@ class ThemeLayoutListener
             return $value;
         }
 
-        $slots = $this->inspector->inspectTemplate("@Contao/$identifier.html.twig")->getSlots();
+        try {
+            $slots = $this->inspector
+                ->inspectTemplate("@Contao/$identifier.html.twig")
+                ->getSlots()
+            ;
+        } catch (InspectionException) {
+            $slots = [];
+        }
 
         $GLOBALS['TL_DCA']['tl_layout']['fields']['modules']['eval']['slots'] = $slots;
 

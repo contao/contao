@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Twig\Interop;
 
 use Contao\Template;
 
-/**
- * @experimental
- */
 final class ContextFactory
 {
     /**
