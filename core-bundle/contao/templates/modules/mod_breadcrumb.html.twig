@@ -3,7 +3,7 @@
 {% set wrapperAttributes = attrs(cssID)
     .addClass([class, 'block'])
     .addStyle(style|default)
-    ->set('aria-label', 'MSC.breadcrumbMenu'|trans)
+    .set('aria-label', 'MSC.breadcrumbMenu'|trans)
     .mergeWith(wrapperAttributes|default)
  %}
 
@@ -20,7 +20,7 @@
     <ul>
       {% for item in items %}
         {% if item.isActive %}
-          <li class="active" aria-current="page">{{ item.link }}</li>
+          <li class="active" aria-current="page">{{ item.link|insert_tag }}</li>
         {% else %}
           <li><a href="{{ item.href }}">{{ item.link }}</a></li>
         {% endif %}

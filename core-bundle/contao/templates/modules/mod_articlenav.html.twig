@@ -8,11 +8,11 @@
 {% block content %}
 
   <ul>
-    {% if first %}
+    {% if first|default %}
       <li class="first"><a href="{{ first.href }}" class="first" title="{{ first.title }}">{{ first.link }}</a></li>
     {% endif %}
 
-    {% if previous %}
+    {% if previous|default %}
       <li class="previous"><a href="{{ previous.href }}" class="previous" title="{{ previous.title }}">{{ previous.link }}</a></li>
     {% endif %}
 
@@ -24,11 +24,11 @@
       {% endif %}
     {% endfor %}
 
-    {% if next %}
+    {% if next|default %}
       <li class="next"><a href="{{ next.href }}" class="next" title="{{ next.title }}">{{ next.link }}</a></li>
     {% endif %}
 
-    {% if last %}
+    {% if last|default %}
       <li class="last"><a href="{{ last.href }}" class="last" title="{{ last.title }}">{{ last.link }}</a></li>
     {% endif %}
   </ul>
