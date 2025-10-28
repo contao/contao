@@ -103,19 +103,26 @@ export default class extends Controller {
     updateNesting(i) {
         const name = this.nameValue.replace(/\d+$/, i);
 
-        this.bodyTarget.querySelectorAll(`label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`).forEach((el, i) => {
-            if (el.name) {
-                el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
-            }
+        this.bodyTarget
+            .querySelectorAll(
+                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+            )
+            .forEach((el, i) => {
+                if (el.name) {
+                    el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
+                }
 
-            if (el.id) {
-                el.id = el.id.replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`);
-            }
+                if (el.id) {
+                    el.id = el.id.replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`);
+                }
 
-            if (el.getAttribute('for')) {
-                el.setAttribute('for', el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`));
-            }
-        });
+                if (el.getAttribute('for')) {
+                    el.setAttribute(
+                        'for',
+                        el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`),
+                    );
+                }
+            });
 
         this.element.setAttribute(`data-${this.identifier}-name-value`, name);
         this.updateSorting();
@@ -123,17 +130,30 @@ export default class extends Controller {
 
     updateSorting() {
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            for (const el of tr.querySelectorAll(`label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`)) {
+            for (const el of tr.querySelectorAll(
+                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+            )) {
                 if (el.name) {
-                    el.name = el.name.replace(new RegExp(`^${this.nameValue}\[[0-9]+]`, 'g'), `${this.nameValue}[${i}]`);
+                    el.name = el.name.replace(
+                        new RegExp(`^${this.nameValue}\[[0-9]+]`, 'g'),
+                        `${this.nameValue}[${i}]`,
+                    );
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`);
+                    el.id = el.id.replace(
+                        new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'),
+                        `${this.nameValue}_${i}$1`,
+                    );
                 }
 
                 if (el.getAttribute('for')) {
-                    el.setAttribute('for', el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`));
+                    el.setAttribute(
+                        'for',
+                        el
+                            .getAttribute('for')
+                            .replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`),
+                    );
                 }
             }
 
