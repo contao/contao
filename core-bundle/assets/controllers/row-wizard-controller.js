@@ -157,9 +157,9 @@ export default class extends Controller {
                 }
             }
 
-            tr.querySelectorAll(`[data-controller="${this.identifier}"]`).forEach((el) => {
+            for (const el of tr.querySelectorAll(`[data-controller="${this.identifier}"]`)) {
                 this.application.getControllerForElementAndIdentifier(el, this.identifier)?.updateNesting(i);
-            });
+            }
         });
     }
 
