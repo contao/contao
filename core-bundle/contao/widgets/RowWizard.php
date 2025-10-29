@@ -242,14 +242,12 @@ class RowWizard extends Widget
 
 	public static function getAttributesFromDca($arrData, $strName, $varValue = null, $strField = '', $strTable = '', $objDca = null): array
 	{
-		$attributes = parent::getAttributesFromDca($arrData, $strName, $varValue, $strField, $strTable, $objDca);
-
 		if (isset($arrData['fields']) && !isset($attributes['fields']))
 		{
-			$attributes['fields'] = $arrData['fields'];
+			$arrData['eval']['fields'] = $arrData['fields'];
 		}
 
-		return $attributes;
+		return parent::getAttributesFromDca($arrData, $strName, $varValue, $strField, $strTable, $objDca);
 	}
 
 	/**
