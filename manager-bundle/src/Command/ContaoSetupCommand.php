@@ -119,6 +119,7 @@ class ContaoSetupCommand extends Command
             ['cache:clear', '--no-warmup', '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=dev'],
             ['cache:warmup', '--env=prod'],
+            ['cmsig:seal:index-create', '--env=prod'],
         ];
 
         $commandFlags = array_filter([
