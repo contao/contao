@@ -992,6 +992,7 @@ class tl_content extends Backend
 				}
 			}
 
+			$type = Image::getHtml('protected.svg') . $type;
 			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 

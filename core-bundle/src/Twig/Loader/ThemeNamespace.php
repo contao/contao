@@ -18,6 +18,13 @@ use Symfony\Component\Filesystem\Path;
 class ThemeNamespace
 {
     /**
+     * @internal
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * Generates a theme slug from a relative path.
      *
      * @throws InvalidThemePathException if the path contains invalid characters

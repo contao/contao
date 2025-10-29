@@ -10,8 +10,11 @@ use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image;
 use Twig\Extension\RuntimeExtensionInterface;
 
-class BackendHelperRuntime implements RuntimeExtensionInterface
+final class BackendHelperRuntime implements RuntimeExtensionInterface
 {
+    /**
+     * @internal
+     */
     public function __construct(private readonly ContaoFramework $framework)
     {
     }
@@ -26,7 +29,7 @@ class BackendHelperRuntime implements RuntimeExtensionInterface
     /**
      * Returns a file icon based on the mapping in the TL_MIME superglobal.
      */
-    public function file_icon(FilesystemItem $item, string $alt = '', HtmlAttributes|null $attributes = null): string
+    public function fileIcon(FilesystemItem $item, string $alt = '', HtmlAttributes|null $attributes = null): string
     {
         if (!$mimeType = $item->getMimeType()) {
             return $this->icon('plain.svg', $alt, $attributes);

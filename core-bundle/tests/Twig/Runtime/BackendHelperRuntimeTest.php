@@ -49,7 +49,7 @@ class BackendHelperRuntimeTest extends TestCase
 
         $framework = $this->mockContaoFramework([Image::class => $imageAdapter]);
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->file_icon(
+        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
             $this->createMock(FilesystemItem::class), 'alt', (new HtmlAttributes())->set('foo', 'bar'),
         ));
     }
@@ -75,7 +75,7 @@ class BackendHelperRuntimeTest extends TestCase
 
         $GLOBALS['TL_MIME'] = ['jpg' => ['image/jpeg', 'image.svg']];
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->file_icon(
+        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
             $fileitem, 'alt', (new HtmlAttributes())->set('foo', 'bar'),
         ));
 
@@ -101,7 +101,7 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('image/jpeg')
         ;
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->file_icon(
+        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
             $fileitem, 'alt', (new HtmlAttributes())->set('foo', 'bar'),
         ));
     }

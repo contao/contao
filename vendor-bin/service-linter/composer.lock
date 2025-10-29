@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ce8cbabfb63d432ebd5c806ef38917f",
+    "content-hash": "6231d6cd960f7cfc89ad492041943ebf",
     "packages": [
         {
             "name": "phpspec/php-diff",
@@ -1165,7 +1165,7 @@
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.2"
+        "php": "8.3"
     },
     "plugin-api-version": "2.6.0"
 }

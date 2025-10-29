@@ -6284,7 +6284,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		return $attributes;
 	}
 
-	private function addDynamicPtable(array $data): array
+	protected function addDynamicPtable(array $data): array
 	{
 		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) && !isset($data['ptable']))
 		{
@@ -6340,7 +6340,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
 	}
 
-	private function configurePidAndSortingFields()
+	protected function configurePidAndSortingFields()
 	{
 		foreach (array('pid', 'sorting') as $f)
 		{

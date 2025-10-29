@@ -22,7 +22,7 @@ use Twig\Error\RuntimeError;
  *
  * This strategy will get dropped once we move to output encoding.
  *
- * @experimental
+ * @internal
  */
 final class ContaoEscaper
 {
