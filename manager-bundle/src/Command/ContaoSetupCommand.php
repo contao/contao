@@ -66,22 +66,35 @@ class ContaoSetupCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $filesystem = new Filesystem();
+
+        // Generate a default .env file
+        if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
+            $filesystem->dumpFile($envPath, "#COOKIE_ALLOW_LIST=PHPSESSID,csrf_https-contao_csrf_token,csrf_contao_csrf_token,trusted_device,REMEMBERME\n");
+
+            $io->writeln('An empty <comment>.env</comment> file was created.');
+        }
+
+        // Generate a default .env.local file
+        if (!$filesystem->exists($envLocalPath = Path::join($this->projectDir, '.env.local'))) {
+            $filesystem->dumpFile(
+                $envLocalPath,
+                <<<'EOT'
+                    #DATABASE_URL=mysql://username:password@localhost/database_name
+                    #MAILER_DSN=smtp://username:password@smtp.example.com:587
+                    EOT,
+            );
+
+            $io->writeln('An empty <comment>.env.local</comment> file was created.');
+        }
 
         // Auto-generate a kernel secret if none was set
         if (!$this->kernelSecret || 'ThisTokenIsNotSoSecretChangeIt' === $this->kernelSecret) {
-            $filesystem = new Filesystem();
-
-            $dotenv = new DotenvDumper(Path::join($this->projectDir, '.env.local'), $filesystem);
+            $dotenv = new DotenvDumper($envLocalPath, $filesystem);
             $dotenv->setParameter('APP_SECRET', bin2hex(random_bytes(32)));
             $dotenv->dump();
 
             $io->info('An APP_SECRET was generated and written to your .env.local file.');
-
-            if (!$filesystem->exists($envPath = Path::join($this->projectDir, '.env'))) {
-                $filesystem->dumpFile($envPath, "#DATABASE_URL='mysql://username:password@localhost/database_name'\n#MAILER_DSN=");
-
-                $io->info('An empty .env file was created.');
-            }
         }
 
         if (false === $this->phpPath) {
@@ -106,7 +119,6 @@ class ContaoSetupCommand extends Command
             ['cache:clear', '--no-warmup', '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=dev'],
             ['cache:warmup', '--env=prod'],
-            ['cmsig:seal:index-create', '--env=prod'],
         ];
 
         $commandFlags = array_filter([
