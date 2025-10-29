@@ -25,12 +25,20 @@
     --skip-focus-border-color: #f47c00;
 }
 
-body.navigation-open {
-    overflow: hidden;
+body {
+    &:not(.navigation-open):not(.nav-is-desktop) .navigation-main {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+    }
 
-    header .logo {
-        position: relative;
-        z-index: 7;
+    &.navigation-open {
+        overflow: hidden;
+    
+        header .logo {
+            position: relative;
+            z-index: 7;
+        }
     }
 }
 
@@ -173,12 +181,6 @@ body.nav-is-mobile {
                 backdrop-filter: blur(1px);
                 z-index: 1;
             }
-        }
-
-        &:not(.is-active) {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
         }
 
         :is(a, strong) {
