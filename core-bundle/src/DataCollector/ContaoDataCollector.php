@@ -236,7 +236,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         $this->data['backend_search_checks'] = [
             'available' => $this->backendSearch?->isAvailable() ?? false,
             'requires_sqlite' => $this->backendSearchAdapter instanceof LoupeAdapter,
-            'sqlite_supported' => array_intersect(['pdo_sqlite', 'sqlite3'], array_merge(get_loaded_extensions(true), get_loaded_extensions())),
+            'sqlite_supported' => array_intersect(['pdo_sqlite', 'sqlite3'], [...get_loaded_extensions(true), ...get_loaded_extensions()]),
             'supervisor_supported' => Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders()),
             'pnctl_disabled' => array_filter(explode(',', (string) \ini_get('disable_functions')), static fn (string $f) => str_starts_with($f, 'pnctl_')),
             'cron_running' => $this->cron->hasMinutelyCliCron(),
