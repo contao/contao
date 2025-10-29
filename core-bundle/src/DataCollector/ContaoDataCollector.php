@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataCollector;
 
+use CmsIg\Seal\Adapter\AdapterInterface;
+use CmsIg\Seal\Adapter\Loupe\LoupeAdapter;
 use Contao\ArticleModel;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Cron\Cron;
@@ -52,6 +54,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         private readonly Cron $cron,
         private readonly BackendSearch|null $backendSearch = null,
         private readonly WebWorker|null $webWorker = null,
+        private readonly AdapterInterface|null $backendSearchAdapter = null,
     ) {
     }
 
@@ -232,8 +235,10 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
         $this->data['backend_search_checks'] = [
             'available' => $this->backendSearch?->isAvailable() ?? false,
+            'requires_sqlite' => $this->backendSearchAdapter instanceof LoupeAdapter,
             'sqlite_supported' => array_intersect(['pdo_sqlite', 'sqlite3'], array_merge(get_loaded_extensions(true), get_loaded_extensions())),
             'supervisor_supported' => Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders()),
+            'pnctl_disabled' => array_filter(explode(',', (string) \ini_get('disable_functions')), static fn (string $f) => str_starts_with($f, 'pnctl_')),
             'cron_running' => $this->cron->hasMinutelyCliCron(),
             'cli_workers_running' => $this->webWorker?->hasCliWorkersRunning() ?? false,
         ];

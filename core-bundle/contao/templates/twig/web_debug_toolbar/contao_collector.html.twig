@@ -131,18 +131,20 @@
             </tr>
             </thead>
             <tbody>
+                {% if collector.backendSearchChecks.requires_sqlite %}
+                    <tr>
+                        <td>{% if collector.backendSearchChecks.sqlite_supported %}✅{% else %}🚨{% endif %}</td>
+                        <td>
+                            {% if collector.backendSearchChecks.sqlite_supported %}
+                                The following PHP extensions are enabled: <code>{{ collector.backendSearchChecks.sqlite_supported|join('</code>, <code>') }}</code>.
+                            {% else %}
+                                One of the following PHP extensions need to be enabled: <code>pdo_sqlite</code>, <code>sqlite3</code>.
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
                 <tr>
-                    <td>{% if collector.backendSearchChecks.sqlite_supported %}✅{% else %}🚨{% endif %}
-                    <td>
-                        {% if collector.backendSearchChecks.sqlite_supported %}
-                            The following PHP extensions are enabled: <code>{{ collector.backendSearchChecks.sqlite_supported|join('</code>, <code>') }}</code>.
-                        {% else %}
-                            One of the following PHP extensions need to be enabled: <code>pdo_sqlite</code>, <code>sqlite3</code>.
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td>{% if collector.backendSearchChecks.supervisor_supported %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}
+                    <td>{% if collector.backendSearchChecks.supervisor_supported %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
                     <td>
                         {% if collector.backendSearchChecks.supervisor_supported %}
                             The <code>SuperVisor</code> is supported.
@@ -152,7 +154,17 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>{% if collector.backendSearchChecks.cron_running %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}
+                    <td>{% if not collector.backendSearchChecks.pnctl_disabled %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if not collector.backendSearchChecks.pnctl_disabled %}
+                            The <code>pnctl_*</code> functions are not disabled.
+                        {% else %}
+                            Some <code>pnctl_*</code> functions are disabled in PHP's <code>disable_functions</code> setting.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if collector.backendSearchChecks.cron_running %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
                     <td>
                         {% if collector.backendSearchChecks.cron_running %}
                             The <code>contao:cron</code> cronjob is executed minutely on the command line.
@@ -162,7 +174,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>{% if collector.backendSearchChecks.cli_workers_running %}✅{% else %}🚨{% endif %}
+                    <td>{% if collector.backendSearchChecks.cli_workers_running %}✅{% else %}🚨{% endif %}</td>
                     <td>
                         {% if collector.backendSearchChecks.cli_workers_running %}
                             The messenger queues are processed on the command line.
