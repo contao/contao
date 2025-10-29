@@ -238,7 +238,7 @@ class Picker extends Widget
 
 		if ($GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['renderAsGrid'] ?? null)
 		{
-			$label = \is_array($label) ? $label : ['', $label];
+			$label = \is_array($label) ? $label : array('', $label);
 			$label = '<div class="cte_type ' . ($label[2] ?? '') . '">' . $label[0] . '</div><div class="cte_content"><div class="cte_preview">' . ($label[1] ?? '') . '</div></div>';
 		}
 

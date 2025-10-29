@@ -14,12 +14,10 @@ use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FormHidden;
 use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Widget;
@@ -450,11 +448,11 @@ class tl_form_field extends Backend
 			$objWidget = null;
 		}
 
-		$label = [
+		$label = array(
 			($GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] ?? $arrRow['type']) . ($objWidget?->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : ''),
 			'',
 			$arrRow['invisible'] ? 'unpublished' : 'published',
-		];
+		);
 
 		if ($objWidget)
 		{

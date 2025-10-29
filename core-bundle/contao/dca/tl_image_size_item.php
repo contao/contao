@@ -9,12 +9,8 @@
  */
 
 use Contao\Backend;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
-use Contao\Input;
 use Contao\System;
 
 System::loadLanguageFile('tl_image_size');

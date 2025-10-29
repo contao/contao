@@ -12,16 +12,10 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\DC_Table;
 use Contao\FaqCategoryModel;
-use Contao\Image;
-use Contao\Input;
-use Contao\StringUtil;
 use Contao\System;
 
 System::loadLanguageFile('tl_content');

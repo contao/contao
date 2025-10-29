@@ -251,13 +251,13 @@ class tl_newsletter extends Backend
 	 */
 	public function listNewsletters($arrRow)
 	{
-		return [
+		return array(
 			'<strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']),
 			(!$arrRow['sendText'] ? '
 ' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>',
 			($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished',
-		];
+		);
 	}
 
 	/**
