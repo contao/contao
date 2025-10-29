@@ -24,6 +24,8 @@ class ActiveMemberGroupsListenerTest extends TestCase
 {
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         unset($GLOBALS['TL_DCA']);
     }
 
@@ -40,7 +42,7 @@ class ActiveMemberGroupsListenerTest extends TestCase
         $this->assertSame($expected, \is_callable($GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] ?? null));
     }
 
-    public static function registerCallbackProvider(): \Generator
+    public static function registerCallbackProvider(): iterable
     {
         yield [
             false,
