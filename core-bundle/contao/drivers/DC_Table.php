@@ -4605,12 +4605,12 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					if ($blnIsSortable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
 					{
 						$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-						$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>';
+						$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', \sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>';
 					}
 
 					if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? null)
 					{
-						$label = \is_array($label) ? $label : ['', $label];
+						$label = \is_array($label) ? $label : array('', $label);
 
 						$return .= '<div class="cte_type ' . ($label[2] ?? '') . '">' . $dragHandle . $label[0] . '</div>';
 
