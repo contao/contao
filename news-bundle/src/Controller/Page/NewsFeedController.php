@@ -47,6 +47,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         private readonly ContaoContext $contaoContext,
         private readonly Specification $specification,
         private readonly string $charset,
+        private readonly bool $isDebug = false,
     ) {
     }
 
@@ -79,10 +80,17 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
             $this->tagResponse($article);
         }
 
+        $contentType = self::$contentTypes[$pageModel->feedFormat];
+
+        // Use a more generic Content-Type for the response header in debug mode (see #8589)
+        if ($this->isDebug) {
+            $contentType = preg_replace('~/[a-z]+\+~', '/', $contentType);
+        }
+
         $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
 
         $response = new Response($formatter->toString($feed));
-        $response->headers->set('Content-Type', self::$contentTypes[$pageModel->feedFormat]);
+        $response->headers->set('Content-Type', $contentType);
 
         $this->setCacheHeaders($response, $pageModel);
 
