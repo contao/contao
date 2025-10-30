@@ -564,10 +564,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         ");
 
         return array_combine(
-            array_map(
-                fn (string $path): string => $this->themeNamespace->generateSlug($path),
-                array_keys($themes),
-            ),
+            array_map($this->themeNamespace->generateSlug(...), array_keys($themes)),
             array_values($themes),
         );
     }
