@@ -43,7 +43,7 @@ class JobsListener
     {
         $job = $this->jobs->getByUuid($row['uuid']);
 
-        if (null === $job) {
+        if (!$job) {
             return $columns;
         }
 

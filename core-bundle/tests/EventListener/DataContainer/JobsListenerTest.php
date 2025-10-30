@@ -184,6 +184,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         $jobs = $this->getJobs();
         $job = $jobs->createJob('job-type');
         $job = $job->withProgress(37.0);
+
         $jobs->persist($job);
 
         $twig = $this->createMock(Environment::class);
