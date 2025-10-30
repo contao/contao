@@ -8,25 +8,32 @@ export default class extends Controller {
     };
 
     connect() {
-        this._updateWizard();
-        this._updateInputs();
+        this.#updateWizard();
+        this.#updateInputs();
     }
 
     widthTargetDisconnected(input) {
-        this._resetInput(input);
+        this.#resetInput(input);
     }
 
     heightTargetDisconnected(input) {
-        this._resetInput(input);
+        this.#resetInput(input);
     }
 
     update() {
-        this._updateWizard();
-        this._updateInputs();
+        this.#updateWizard();
+        this.#updateInputs();
     }
 
-    _updateWizard() {
-        if (this.canEdit()) {
+    openModal() {
+        Backend.openModalIframe({
+            title: this.configValue.title,
+            url: `${this.configValue.href}&id=${this.selectTarget.value}`,
+        });
+    }
+
+    #updateWizard() {
+        if (this.#canEdit()) {
             this.buttonTarget.title = this.configValue.title;
             this.buttonTarget.disabled = false;
 
@@ -43,7 +50,7 @@ export default class extends Controller {
         }
     }
 
-    _updateInputs() {
+    #updateInputs() {
         const select = this.selectTarget;
         const value = select.value;
 
@@ -66,20 +73,13 @@ export default class extends Controller {
         }
     }
 
-    _resetInput(input) {
+    #resetInput(input) {
         input.value = '';
         input.removeAttribute('placeholder');
         input.readOnly = false;
     }
 
-    openModal() {
-        Backend.openModalIframe({
-            title: this.configValue.title,
-            url: `${this.configValue.href}&id=${this.selectTarget.value}`,
-        });
-    }
-
-    canEdit() {
+    #canEdit() {
         return this.configValue.ids.includes(Number(this.selectTarget.value));
     }
 }

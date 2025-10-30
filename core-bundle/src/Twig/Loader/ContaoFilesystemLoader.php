@@ -32,8 +32,6 @@ use Twig\Source;
  * directories. This allows us to group multiple representations of the same
  * template (identifier) from different namespaces in a single data structure: the
  * Contao template hierarchy.
- *
- * @experimental
  */
 class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 {
@@ -56,6 +54,9 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private array $lookupCache = [];
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly CacheItemPoolInterface $cachePool,
         private readonly TemplateLocator $templateLocator,

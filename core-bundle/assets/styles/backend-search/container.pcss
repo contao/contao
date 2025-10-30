@@ -53,10 +53,7 @@
         left: 0;
         height: 0;
         width: 0;
-        transition:
-            width 0ms 0.25s,
-            height 0ms 0.25s,
-            opacity 0.25s;
+        transition: width 0ms 0.25s, height 0ms 0.25s, opacity 0.25s;
         opacity: 0;
         z-index: 5;
         pointer-events: none;
@@ -65,9 +62,7 @@
     .backend-search_inner {
         position: absolute;
         width: max(30%, 280px);
-        transition:
-            width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1),
-            max-width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1);
+        transition: width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1), max-width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1);
     }
 
     #backend-search {
@@ -75,6 +70,13 @@
         padding-left: 30px;
         outline: none;
         border: 0 none;
+    }
+
+    .search--initial {
+        #backend-search {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
     }
 
     .search--hidden {
@@ -111,10 +113,7 @@
         .backend-search_overlay {
             height: 200vh;
             opacity: 1;
-            transition:
-                width 0ms,
-                height 0ms,
-                opacity 0.25s;
+            transition: width 0ms, height 0ms, opacity 0.25s;
             width: 100%;
         }
 

@@ -12,7 +12,7 @@ export default class extends Controller {
     }
 
     copy(event) {
-        const row = this._getRow(event);
+        const row = this.#getRow(event);
         const previous = row.previousElementSibling;
 
         // Cause Choices and similar controllers to be disconnected
@@ -29,22 +29,22 @@ export default class extends Controller {
                 this.bodyTarget.prepend(row, newRow);
             }
 
-            this._focus(newRow);
+            this.#focus(newRow);
         });
     }
 
     delete(event) {
-        const row = this._getRow(event);
+        const row = this.#getRow(event);
 
         if (this.bodyTarget.children.length > 1) {
-            this._focus(row.nextElementSibling) ||
-                this._focus(row.previousElementSibling) ||
-                this._focus(this.bodyTarget);
+            this.#focus(row.nextElementSibling) ||
+                this.#focus(row.previousElementSibling) ||
+                this.#focus(this.bodyTarget);
 
             row.remove();
         } else {
-            this._resetInputs(row);
-            this._focus(row);
+            this.#resetInputs(row);
+            this.#focus(row);
         }
     }
 
@@ -52,7 +52,7 @@ export default class extends Controller {
      * This method is specific to the row wizard being a "module wizard".
      */
     updateModuleWizardLink(event) {
-        const row = this._getRow(event);
+        const row = this.#getRow(event);
         const link = row.querySelector('.module_link');
         const images = row.querySelectorAll('img.module_image');
         const select = event.target;
@@ -98,11 +98,11 @@ export default class extends Controller {
         });
     }
 
-    _getRow(event) {
+    #getRow(event) {
         return event.target.closest('*[data-contao--row-wizard-target="row"]');
     }
 
-    _resetInputs(row) {
+    #resetInputs(row) {
         for (const input of row.querySelectorAll('input')) {
             input.value = '';
         }
@@ -112,7 +112,7 @@ export default class extends Controller {
         }
     }
 
-    _focus(el) {
+    #focus(el) {
         if (!el) {
             return false;
         }

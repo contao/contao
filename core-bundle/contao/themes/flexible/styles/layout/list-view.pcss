@@ -195,6 +195,7 @@
     padding: 15px 15px 0;
     border-width: 0 1px;
     background: var(--nested-bg);
+    border-radius: 0;
 }
 
 .as-grid .tl_content.indent_2 {
@@ -225,8 +226,25 @@
     border: 1px solid var(--border);
 }
 
+.as-grid .tl_content.wrapper_start {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
 .as-grid .tl_content.wrapper_stop {
     margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    .cte_type {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: var(--border-radius);
+    }
+
+    .tl_content_right {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: var(--border-radius);
+    }
 }
 
 .as-grid .tl_content.indent.wrapper_stop {
@@ -286,6 +304,7 @@
     gap: 3px;
     list-style: none;
     margin: 0;
+    padding: 0;
 }
 
 .operations a,
@@ -315,22 +334,23 @@
 }
 
 .operations-menu {
-    min-width: 120px;
     position: fixed;
     top: 100%;
     right: 0;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 0;
     margin: 0;
-    padding: 10px !important;
+    padding: 10px 15px !important;
     text-align: left;
     background: var(--content-bg) !important;
     border: 1px solid var(--content-border);
+    border-radius: var(--border-radius);
     list-style: none;
     visibility: hidden;
     pointer-events: none;
+    box-shadow: 0 3px 6px 0 rgb(0 0 0 / 10%);
 
     &.show {
         position: absolute;
@@ -348,18 +368,19 @@
 
 .operations-menu li.separator {
     margin-top: 4px;
-    padding-top: 8px;
+    padding-top: 4px;
     border-top: 1px solid var(--border);
 }
 
-.operations-menu hr {
-    margin: 5px 0;
+.operations-menu form {
+    width: 100%;
 }
 
 .operations-menu a,
 .operations-menu button {
-    padding-top: 1px;
-    padding-bottom: 1px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 1px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -391,6 +412,7 @@
     font-size: .815rem;
     display: flex;
     align-items: center;
+    gap: 3px;
     border-top-left-radius: var(--border-radius);
 }
 
@@ -402,12 +424,14 @@
     color: var(--red);
 }
 
+/** Deprecated in Contao 5.6, to be removed in Contao 6 */
 .cte_type.icon-protected {
     padding-left: 27px;
     background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
 }
 
-.cte_type .visibility {
+.cte_type .visibility,
+.cte_type .type {
     color: var(--gray);
 }
 
@@ -417,7 +441,11 @@
     margin-left: -10px;
     background: none;
     border: none;
-    padding-right: 3px;
+    padding-right: 4px;
+}
+
+.cte_type .drag-handle {
+    padding-right: 1px;
 }
 
 .cte_preview {
@@ -553,8 +581,24 @@
     vertical-align: middle;
 }
 
-.cte_preview.empty {
-    display: none;
+.cte_preview .content-download {
+    margin-bottom: 6px;
+}
+
+.cte_preview .content-downloads ul {
+    margin: 0 0 6px;
+    padding: 0;
+    list-style: none;
+}
+
+.cte_preview .download-element img.backend-icon {
+    vertical-align: text-bottom;
+    margin-right: 3px;
+    padding: 0;
+}
+
+.cte_preview li.download-element {
+    margin-bottom: 1px;
 }
 
 .as-grid .cte_preview {

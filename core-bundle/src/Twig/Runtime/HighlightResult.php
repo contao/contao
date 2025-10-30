@@ -20,7 +20,7 @@ use Highlight\HighlightResult as BaseHighlightResult;
  *
  * @see BaseHighlightResult
  */
-class HighlightResult extends BaseHighlightResult implements \Stringable
+final class HighlightResult extends BaseHighlightResult implements \Stringable
 {
     /**
      * @internal

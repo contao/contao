@@ -16,6 +16,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\TransportConfig;
 use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\NativeType;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -188,7 +189,7 @@ class AddAvailableTransportsPassTest extends TestCase
 
             $this->assertSame(TransportConfig::class, $definition->getClass());
             $this->assertIsString($definition->getArgument(0));
-            $this->assertThat($definition->getArgument(1), $this->logicalOr(new IsType('string'), $this->isNull()));
+            $this->assertThat($definition->getArgument(1), $this->logicalOr(new IsType(NativeType::String), $this->isNull()));
 
             $transports[] = $methodCall[1];
         }

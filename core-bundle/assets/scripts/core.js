@@ -18,7 +18,7 @@ window.AjaxRequest =
 	 */
 	toggleNavigation: function(el, id, url) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id),
@@ -54,7 +54,7 @@ window.AjaxRequest =
 	 */
 	toggleStructure: function(el, id, level, mode) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id);
@@ -146,7 +146,7 @@ window.AjaxRequest =
 	 */
 	toggleFileManager: function(el, id, folder, level) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id);
@@ -744,6 +744,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	toggleCheckboxGroup: function(el, id) {
+		console.warn('Backend.toggleCheckboxGroup() is deprecated. Please use the Stimulus controllers instead.');
+
 		var cls = $(el).className,
 			status = $(el).checked ? 'checked' : '';
 
@@ -788,7 +790,7 @@ window.Backend =
 	 * @author Martin Auswöger
 	 */
 	makeParentViewSortable: function(ul) {
-		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the stimulus controllers instead.');
+		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the Stimulus controllers instead.');
 
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
@@ -884,7 +886,7 @@ window.Backend =
 	 * @param {string} val The value field
 	 */
 	makeMultiSrcSortable: function(id, oid, val) {
-		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the stimulus controllers instead.');
+		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the Stimulus controllers instead.');
 
 		var list = new Sortables($(id), {
 			constrain: true,
@@ -1076,7 +1078,7 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	listWizard: function(id) {
-		console.warn('Backend.listWizard() is deprecated. Please use the stimulus controller instead.');
+		console.warn('Backend.listWizard() is deprecated. Please use the Stimulus controller instead.');
 
 		var ul = $(id),
 			makeSortable = function(ul) {
@@ -1380,7 +1382,7 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	optionsWizard: function(id) {
-		console.warn('Backend.optionsWizard() is deprecated. Please use the stimulus controller instead.');
+		console.warn('Backend.optionsWizard() is deprecated. Please use the Stimulus controller instead.');
 
 		var table = $(id),
 			tbody = table.getElement('tbody'),
@@ -1486,7 +1488,7 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	keyValueWizard: function(id) {
-		console.warn('Backend.keyValueWizard() is deprecated. Please use the stimulus controller instead.');
+		console.warn('Backend.keyValueWizard() is deprecated. Please use the Stimulus controller instead.');
 
 		var table = $(id),
 			tbody = table.getElement('tbody'),
@@ -1658,97 +1660,6 @@ window.Backend =
 			update();
 			select.addEvent('change', update);
 			select.addEvent('keyup', update);
-		});
-	},
-
-	/**
-	 * Allow toggling checkboxes or radio buttons by clicking a row
-	 *
-	 * @author Kamil Kuzminski
-	 */
-	enableToggleSelect: function() {
-		var container = $('tl_listing'),
-			shiftToggle = function(el) {
-				thisIndex = checkboxes.indexOf(el);
-				startIndex = checkboxes.indexOf(start);
-				from = Math.min(thisIndex, startIndex);
-				to = Math.max(thisIndex, startIndex);
-				status = !!checkboxes[startIndex].checked;
-
-				for (from; from<=to; from++) {
-					checkboxes[from].checked = status;
-				}
-			},
-			clickEvent = function(e) {
-				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
-					return;
-				}
-
-				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
-					limitToggler = $(e.target).getParent('.limit_toggler');
-
-				if (!input || input.get('disabled') || limitToggler !== null) {
-					return;
-				}
-
-				// Radio buttons
-				if (input.type == 'radio') {
-					if (!input.checked) {
-						input.checked = 'checked';
-					}
-
-					return;
-				}
-
-				// Checkboxes
-				if (e.shift && start) {
-					shiftToggle(input);
-				} else {
-					input.checked = input.checked ? '' : 'checked';
-
-					if (input.get('onclick') == 'Backend.toggleCheckboxes(this)') {
-						Backend.toggleCheckboxes(input); // see #6399
-					}
-				}
-
-				start = input;
-			},
-			checkboxes = [], start, thisIndex, startIndex, status, from, to;
-
-		if (container) {
-			checkboxes = container.getElements('input[type="checkbox"]');
-		}
-
-		// Row click
-		$$('.toggle_select').each(function(el) {
-			var boundEvent = el.retrieve('boundEvent');
-
-			if (boundEvent) {
-				el.removeEvent('click', boundEvent);
-			}
-
-			// Do not propagate the form field click events
-			el.getElements('label,input[type="checkbox"],input[type="radio"]').each(function(i) {
-				i.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-
-			boundEvent = clickEvent.bind(el);
-
-			el.addEvent('click', boundEvent);
-			el.store('boundEvent', boundEvent);
-		});
-
-		// Checkbox click
-		checkboxes.each(function(el) {
-			el.addEvent('click', function(e) {
-				if (e.shift && start) {
-					shiftToggle(this);
-				}
-
-				start = this;
-			});
 		});
 	},
 
@@ -2145,6 +2056,10 @@ window.Theme =
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupMenuToggle() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		var burger = $('burger');
 		if (!burger) return;
 
@@ -2181,7 +2096,7 @@ window.Theme =
 	 */
 	setupProfileToggle: function() {
 		if (window.console) {
-			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
+			console.warn('Theme.setupProfileToggle() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var tmenu = $('tmenu');
@@ -2219,8 +2134,11 @@ window.Theme =
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupSplitButtonToggle() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		var toggle = $('sbtog');
-		if (!toggle) return;
 
 		var ul = toggle.getParent('.split-button').getElement('ul'),
 			tab, timer;
@@ -2273,12 +2191,13 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
-	Theme.setupMenuToggle();
-	Theme.setupSplitButtonToggle();
+
+	if ($('sbtog')) {
+		Theme.setupSplitButtonToggle();
+	}
 });
 
 // Resize the table wizard
@@ -2288,8 +2207,5 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.enableToggleSelect();
-
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 });
