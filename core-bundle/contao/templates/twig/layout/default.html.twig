@@ -24,9 +24,9 @@
          <title>{{ title }}</title>
     {%- endblock -%}
 
-    {%- block viewport %}
+    {% block viewport %}
         <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
-    {%- endblock -%}
+    {% endblock %}
 
     {# @var \Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag head_bag #}
     {% set head_bag = response_context.head %}
