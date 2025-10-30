@@ -93,6 +93,21 @@ final class Job
         return $this->createdAt;
     }
 
+    public function isCompleted(): bool
+    {
+        return Status::completed === $this->getStatus();
+    }
+
+    public function isPending(): bool
+    {
+        return Status::pending === $this->getStatus();
+    }
+
+    public function isNew(): bool
+    {
+        return Status::new === $this->getStatus();
+    }
+
     public function getStatus(): Status
     {
         return $this->status;
