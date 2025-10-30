@@ -29,6 +29,7 @@ class JobsListenerTest extends AbstractJobsTestCase
     public function testAttachmentsCallback(): void
     {
         $security = $this->mockSecurity(42);
+
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->exactly(2))

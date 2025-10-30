@@ -42,9 +42,9 @@ class BackendJobsController extends AbstractBackendController
     #[Route(
         '%contao.backend.route_prefix%/jobs/download/{jobUuid}/{identifier}',
         name: '_contao_jobs.download',
+        requirements: ['identifier' => '.+'],
         defaults: ['_scope' => 'backend'],
         methods: ['GET'],
-        requirements: ['identifier' => '.+'],
     )]
     public function downloadJobAttachment(string $jobUuid, string $identifier): Response
     {

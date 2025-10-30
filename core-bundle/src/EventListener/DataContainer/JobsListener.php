@@ -56,7 +56,7 @@ class JobsListener
             return;
         }
 
-        // TODO: we need a template and stimulus logic to have an operation with sub
+        // TODO: we need a template and Stimulus logic to have an operation with sub
         // operations just like the [...] in the current context menu to be able to
         // display more than just one download
         $attachment = $attachments[0];
