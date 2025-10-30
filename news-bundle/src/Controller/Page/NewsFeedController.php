@@ -80,10 +80,6 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
             $this->tagResponse($article);
         }
 
-        $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
-
-        $response = new Response($formatter->toString($feed));
-
         $contentType = self::$contentTypes[$pageModel->feedFormat];
 
         // Use a more generic Content-Type for the response header in debug mode (see #8589)
@@ -91,6 +87,9 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
             $contentType = preg_replace('~/[a-z]+\+~', '/', $contentType);
         }
 
+        $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
+
+        $response = new Response($formatter->toString($feed));
         $response->headers->set('Content-Type', $contentType);
 
         $this->setCacheHeaders($response, $pageModel);
