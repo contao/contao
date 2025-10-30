@@ -83,6 +83,35 @@ class FragmentRuntimeTest extends TestCase
         $this->assertSame('runtime-result', $result);
     }
 
+    public function testRenderModuleFromUnavailableId(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('getFrontendModule')
+            ->with(null)
+            ->willReturn('')
+        ;
+
+        $moduleAdapter = $this->mockAdapter(['findById']);
+        $moduleAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(42)
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            Controller::class => $controllerAdapter,
+            ModuleModel::class => $moduleAdapter,
+        ]);
+
+        $runtime = new FragmentRuntime($framework);
+        $result = $runtime->renderModule(42, ['foo' => 'bar']);
+
+        $this->assertSame('', $result);
+    }
+
     public function testRenderContentFromType(): void
     {
         $controllerAdapter = $this->mockAdapter(['getContentElement']);
@@ -189,5 +218,34 @@ class FragmentRuntimeTest extends TestCase
         $result = $runtime->renderContent(42, ['foo' => 'bar']);
 
         $this->assertSame('runtime-result', $result);
+    }
+
+    public function testRenderContentFromUnavailableId(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('getContentElement')
+            ->with(null)
+            ->willReturn('')
+        ;
+
+        $contentAdapter = $this->mockAdapter(['findById']);
+        $contentAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(42)
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            Controller::class => $controllerAdapter,
+            ContentModel::class => $contentAdapter,
+        ]);
+
+        $runtime = new FragmentRuntime($framework);
+        $result = $runtime->renderContent(42, ['foo' => 'bar']);
+
+        $this->assertSame('', $result);
     }
 }
