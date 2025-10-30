@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = ['body', 'row', 'copy', 'delete'];
+
     static values = {
         name: String,
         min: Number,
