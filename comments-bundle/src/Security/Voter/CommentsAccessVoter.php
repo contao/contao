@@ -52,7 +52,7 @@ class CommentsAccessVoter implements VoterInterface, CacheableVoterInterface
 
             $isGranted = match (true) {
                 $subject instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject->getNew()),
-                $subject instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], array_merge($subject->getCurrent() ?? [], $subject->getNew() ?? [])),
+                $subject instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], [...$subject->getCurrent() ?? [], ...$subject->getNew() ?? []]),
                 $subject instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject->getCurrent()),
                 default => null,
             };
