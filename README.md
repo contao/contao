@@ -54,7 +54,7 @@ bundles:
 
 ```json
 "require": {
-    "php": "^8.2",
+    "php": "^8.3",
     "contao/contao": "5.x-dev"
 },
 ```

@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
@@ -9,17 +17,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @experimental
+ * @internal
  */
 #[AsOperationForTemplateStudioElement]
-class CreateOperation extends AbstractOperation
+final class CreateOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {
         return !$this->userTemplateExists($context);
     }
 
-    public function execute(Request $request, OperationContext $context): Response|null
+    public function execute(Request $request, OperationContext $context): Response
     {
         $storage = $this->getUserTemplatesStorage();
 

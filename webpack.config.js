@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 // Core bundle assets
@@ -10,7 +11,7 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader((options) => {
+    .enablePostCssLoader(options => {
         options.postcssOptions = {
             plugins: {
                 'postcss-preset-env': {
@@ -24,26 +25,13 @@ Encore
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
     .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
     .configureDevServerOptions(options => {
-        options.static = [
-            {
-                directory: 'core-bundle/contao/themes/flexible/icons',
-                publicPath: '/icons',
-            },
-            {
-                directory: 'core-bundle/contao/themes/flexible/fonts',
-                publicPath: '/fonts',
-            },
-        ],
-        options.hot = true,
-        //options.liveReload = true,
-        options.allowedHosts = 'all',
-        options.watchFiles = [
-            'core-bundle/assets/styles/**/*',
-            'core-bundle/contao/**/*',
-        ],
-        options.client = {
-            overlay: false
-        }
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
     })
 ;
 
@@ -59,7 +47,7 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader((options) => {
+    .enablePostCssLoader(options => {
         options.postcssOptions = {
             plugins: {
                 'postcss-preset-env': {
@@ -68,11 +56,11 @@ Encore
             }
         };
     })
-    .configureCssLoader(config => {
-        config.url = false;
+    .configureCssLoader(options => {
+        options.url = false;
     })
-    .cleanupOutputBeforeBuild(config => {
-        config.keep = /(fonts|icons|styles)\//;
+    .cleanupOutputBeforeBuild(options => {
+        options.keep = /(fonts|icons|styles)\//;
     })
     .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.pcss')
     .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/pages/confirm.pcss')
@@ -83,6 +71,15 @@ Encore
     .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/pages/popup.pcss')
     .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/light.pcss')
     .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/dark.pcss')
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
+    })
 ;
 
 const themeConfig = Encore.getWebpackConfig();
@@ -123,9 +120,18 @@ Encore
         to: '[name].[ext]',
         pattern: /\.svg$/,
     })
-    .configureWatchOptions(watchOptions => {
+    .configureWatchOptions(options => {
         // Since we overwrite the sources, we need to prevent an endless loop.
-        watchOptions.ignored = ['**/core-bundle/contao/themes/flexible/icons'];
+        options.ignored = ['**/core-bundle/contao/themes/flexible/icons'];
+    })
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
     })
 ;
 

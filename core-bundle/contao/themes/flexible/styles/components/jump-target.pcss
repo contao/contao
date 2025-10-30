@@ -1,11 +1,12 @@
 .jump-targets {
-    min-height: 30px;
+    min-height: 32px;
     padding-top: 1px;
     background: var(--panel-bg);
     border-bottom: 1px solid var(--content-border);
     position: sticky;
     top: 0;
     z-index: 3; /* Above TinyMCE */
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 .jump-targets .inner {
@@ -26,7 +27,7 @@
 
 .jump-targets li {
     display: inline-block;
-    padding: 9px 10px;
+    padding: 10px;
     white-space: nowrap;
     font-size: .75rem;
 }
@@ -47,10 +48,12 @@
 }
 
 .jump-targets:before {
+    border-top-left-radius: var(--border-radius);
     background: linear-gradient(-90deg, transparent 0, var(--panel-bg) 50%);
 }
 
 .jump-targets:after {
     right: 0;
+    border-top-right-radius: var(--border-radius);
     background: linear-gradient(90deg, transparent 0, var(--panel-bg) 50%);
 }
