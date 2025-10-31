@@ -31,6 +31,7 @@ use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
+use Contao\CoreBundle\Search\Backend\Provider\TagProvidingProviderInterface;
 use Contao\CoreBundle\Search\Backend\Query;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
@@ -170,12 +171,19 @@ class BackendSearchTest extends TestCase
     {
         $indexName = 'contao_backend_search';
 
-        $provider = $this->createMock(ProviderInterface::class);
+        $provider = $this->createMock(DocumentProvider::class);
         $provider
             ->expects($this->atLeastOnce())
             ->method('supportsType')
             ->with('type')
             ->willReturn(true)
+        ;
+
+        $provider
+            ->expects($this->atLeastOnce())
+            ->method('convertTypeToVisibleType')
+            ->with('type')
+            ->willReturn('visible-type')
         ;
 
         $provider
@@ -228,6 +236,8 @@ class BackendSearchTest extends TestCase
 
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
         $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
+        $this->assertSame('type', $result->getTypeFacets()[0]->key);
+        $this->assertSame('visible-type', $result->getTypeFacets()[0]->label);
 
         // Cleanup memory
         MemoryStorage::dropIndex(new Index($indexName, []));
@@ -374,4 +384,8 @@ class BackendSearchTest extends TestCase
 
         return $webWorker;
     }
+}
+
+abstract class DocumentProvider implements ProviderInterface, TagProvidingProviderInterface
+{
 }
