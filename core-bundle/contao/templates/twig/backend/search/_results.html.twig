@@ -10,7 +10,7 @@
                     {% if hit.imageFigureBuilder %}
                         {% block hit_preview %}
                             <div class="hit_preview">
-                                {% set figure = hit.imageFigureBuilder.setSize([preview_width|default(200), preview_height|default(200)]).buildIfResourceExists %}
+                                {% set figure = hit.imageFigureBuilder.setSize([preview_width|default(200), preview_height|default(200)]).buildIfResourceExists() %}
                                 {% if figure %}
                                     {{ block('figure_component') }}
                                 {% endif %}
@@ -22,7 +22,6 @@
                         <div class="hit_actions">
                             {# Title #}
                             {% block hit_title %}
-                                {% apply spaceless %}
                                     <div class="title">
                                         <sub class="type">{{ hit.visibleType }}</sub>
                                         {% set hit_title_attributes = attrs()
@@ -38,8 +37,7 @@
                                             {{ hit.title }}
                                         </a>
                                     </div>
-                                {% endapply %}
-
+                                    </div>
                             {% endblock %}
 
                             {# Operations #}
