@@ -53,12 +53,6 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ];
         }
 
-        $expectedStatements[] = [
-            'DELETE FROM tl_job WHERE tstamp < :tstamp',
-            ['tstamp' => $mockedTime - 86400],
-            ['tstamp' => Types::INTEGER],
-        ];
-
         $config = $this->mockAdapter(['get']);
         $config
             ->expects($this->exactly(3))
