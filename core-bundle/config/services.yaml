@@ -195,6 +195,11 @@ services:
             - '@contao.image.imagine'
             - '@router'
             - '@contao.routing.page_finder'
+            - '@contao.cron'
+            - '@?contao.search.backend'
+            - '@?contao.messenger.web_worker'
+            - '@?contao.search_backend.adapter'
+
         tags:
             - { name: data_collector, template: '@Contao/web_debug_toolbar/contao_collector.html.twig', id: contao }
 
