@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.4] (2025-10-31)
+
+**Fixed issues:**
+
+- [#8958] Change the variable name for the active mobile navigation color ([Werbeagentur-Kopfnuss])
+- [#8956] Do not swallow DCA exceptions ([aschempp])
+- [#8953] Add a viewport tag to the new default layout template ([leofeyer])
+- [#8954] Define a minimum height for `.tl_content .inside` ([leofeyer])
+- [#8952] Use `deprecation_info` instead of `deprecated_info` ([leofeyer])
+- [#8951] Replace a leftover MooTools function call in the tooltips controller ([leofeyer])
+- [#8905] Fix the protected icon in the content element preview ([aschempp])
+- [#8944] Cast the slug to string when getting the theme path ([Tastaturberuf])
+- [#8921] Allow disabling the back end search ([fritzmg])
+- [#8919] Remove the `.operations > ul` padding caused by user-agent styles ([lukasbableck])
+- [#8913] Prevent the mobile navigation from flashing on page load ([heimseiten])
+
 ## [5.6.3] (2025-09-30)
 
 **Fixed issues:**
@@ -222,6 +238,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.4]: https://github.com/contao/contao/releases/tag/5.6.4
 [5.6.3]: https://github.com/contao/contao/releases/tag/5.6.3
 [5.6.2]: https://github.com/contao/contao/releases/tag/5.6.2
 [5.6.1]: https://github.com/contao/contao/releases/tag/5.6.1
@@ -239,11 +256,13 @@ This project adheres to [Semantic Versioning].
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [fritzmg]: https://github.com/fritzmg
+[heimseiten]: https://github.com/heimseiten
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
+[Werbeagentur-Kopfnuss]: https://github.com/Werbeagentur-Kopfnuss
 [zoglo]: https://github.com/zoglo
 [#6859]: https://github.com/contao/contao/pull/6859
 [#6955]: https://github.com/contao/contao/pull/6955
@@ -419,3 +438,14 @@ This project adheres to [Semantic Versioning].
 [#8886]: https://github.com/contao/contao/pull/8886
 [#8892]: https://github.com/contao/contao/pull/8892
 [#8894]: https://github.com/contao/contao/pull/8894
+[#8905]: https://github.com/contao/contao/pull/8905
+[#8913]: https://github.com/contao/contao/pull/8913
+[#8919]: https://github.com/contao/contao/pull/8919
+[#8921]: https://github.com/contao/contao/pull/8921
+[#8944]: https://github.com/contao/contao/pull/8944
+[#8951]: https://github.com/contao/contao/pull/8951
+[#8952]: https://github.com/contao/contao/pull/8952
+[#8953]: https://github.com/contao/contao/pull/8953
+[#8954]: https://github.com/contao/contao/pull/8954
+[#8956]: https://github.com/contao/contao/pull/8956
+[#8958]: https://github.com/contao/contao/pull/8958
