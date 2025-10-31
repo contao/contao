@@ -30,6 +30,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -55,6 +56,7 @@ use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\DcaExtractor;
@@ -69,12 +71,15 @@ use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
+use Symfony\Bridge\Twig\Extension\HtmlSanitizerExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -157,7 +162,7 @@ abstract class ContentElementTestCase extends TestCase
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('contao.twig.filesystem_loader', $loader);
-        $container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $container->set('contao.twig.interop.context_factory', new ContextFactory($scopeMatcher));
         $container->set('twig', $environment);
         $container->set('contao.framework', $framework);
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
@@ -178,6 +183,8 @@ abstract class ContentElementTestCase extends TestCase
 
         $controller->setContainer($container);
         System::setContainer($container);
+
+        $this->setDefaultSanitizerConfig();
 
         // Render template with model data
         $model = $this->mockClassWithProperties(ContentModel::class);
@@ -333,6 +340,12 @@ abstract class ContentElementTestCase extends TestCase
             ),
         );
 
+        $sanitizers = new ContainerBuilder();
+        $sanitizers->set('html', new HtmlSanitizer(new HtmlSanitizerConfig()));
+        $sanitizers->set('contao', new ContaoHtmlSanitizer($framework));
+
+        $environment->addExtension(new HtmlSanitizerExtension($sanitizers));
+
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -346,6 +359,7 @@ abstract class ContentElementTestCase extends TestCase
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
                 CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([])),
                 StringRuntime::class => static fn () => new StringRuntime($framework),
+                SanitizerRuntime::class => static fn () => new SanitizerRuntime($environment),
             ]),
         );
 
@@ -595,6 +609,51 @@ abstract class ContentElementTestCase extends TestCase
             ArticleModel::class => $articleAdapter,
             Controller::class => $controllerAdapter,
             StringUtil::class => $stringUtil,
+        ]);
+    }
+
+    private function setDefaultSanitizerConfig(): void
+    {
+        $GLOBALS['TL_CONFIG']['allowedTags']
+            = '<a><abbr><acronym><address><area><article><aside><audio>'
+            .'<b><bdi><bdo><big><blockquote><br><button>'
+            .'<caption><cite><code><col><colgroup>'
+            .'<data><datalist><dd><del><details><dfn><div><dl><dt>'
+            .'<em>'
+            .'<fieldset><figcaption><figure><footer><form>'
+            .'<h1><h2><h3><h4><h5><h6><header><hgroup><hr>'
+            .'<i><img><input><ins>'
+            .'<kbd>'
+            .'<label><legend><li>'
+            .'<map><mark><menu>'
+            .'<nav>'
+            .'<ol><optgroup><option><output>'
+            .'<p><picture><pre>'
+            .'<q>'
+            .'<s><samp><section><select><small><source><span><strong><style><sub><summary><sup>'
+            .'<table><tbody><td><textarea><tfoot><th><thead><time><tr><tt>'
+            .'<u><ul>'
+            .'<var><video>'
+            .'<wbr>';
+
+        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize([
+            ['key' => '*', 'value' => 'data-*,id,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'],
+            ['key' => 'a', 'value' => 'href,hreflang,rel,target,download,referrerpolicy'],
+            ['key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap,referrerpolicy'],
+            ['key' => 'map', 'value' => 'name'],
+            ['key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target,download'],
+            ['key' => 'video', 'value' => 'src,crossorigin,width,height,autoplay,controls,controlslist,loop,muted,poster,preload,playsinline'],
+            ['key' => 'audio', 'value' => 'src,crossorigin,autoplay,controls,loop,muted,preload'],
+            ['key' => 'source', 'value' => 'src,srcset,media,sizes,type'],
+            ['key' => 'ol', 'value' => 'reversed,start,type'],
+            ['key' => 'table', 'value' => 'border,cellspacing,cellpadding,width,height'],
+            ['key' => 'col', 'value' => 'span'],
+            ['key' => 'colgroup', 'value' => 'span'],
+            ['key' => 'td', 'value' => 'rowspan,colspan,width,height'],
+            ['key' => 'th', 'value' => 'rowspan,colspan,width,height'],
+            ['key' => 'style', 'value' => 'media'],
+            ['key' => 'time', 'value' => 'datetime'],
+            ['key' => 'details', 'value' => 'open,name'],
         ]);
     }
 }
