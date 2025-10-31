@@ -185,20 +185,6 @@ class BackendSearch
                 $hit = $this->convertSearchDocumentToProviderHit($document);
 
                 if (!$hit) {
-                    // User is e.g. not allowed to see this document -> we have to update the facet stats
-                    foreach (['type', 'tags'] as $facet) {
-                        if (isset($document[$facet])) {
-                            foreach ((array) $document[$facet] as $facetValue) {
-                                if (isset($facetCounts[$facet][$facetValue])) {
-                                    --$facetCounts[$facet][$facetValue];
-
-                                    if ($facetCounts[$facet][$facetValue] <= 0) {
-                                        unset($facetCounts[$facet][$facetValue]);
-                                    }
-                                }
-                            }
-                        }
-                    }
                     continue;
                 }
 
