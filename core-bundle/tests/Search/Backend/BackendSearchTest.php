@@ -180,7 +180,7 @@ class BackendSearchTest extends TestCase
         ;
 
         $provider
-            ->expects($this->atLeastOnce())
+            ->expects($this->exactly(3))
             ->method('convertTypeToVisibleType')
             ->with('type')
             ->willReturn('visible-type')
@@ -188,6 +188,13 @@ class BackendSearchTest extends TestCase
 
         $provider
             ->expects($this->once())
+            ->method('getFacetLabelForTag')
+            ->with('tag-1')
+            ->willReturn('tag-1-label')
+        ;
+
+        $provider
+            ->expects($this->exactly(2))
             ->method('convertDocumentToHit')
             ->with($this->callback(static fn (Document $document): bool => '42' === $document->getId()))
             ->willReturnCallback(static fn (Document $document): Hit => new Hit($document, 'human readable hit title', 'https://whatever.com'))
@@ -195,7 +202,7 @@ class BackendSearchTest extends TestCase
 
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('isGranted')
             ->with(
                 ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
@@ -211,13 +218,13 @@ class BackendSearchTest extends TestCase
             'id' => 'type_42',
             'type' => 'type',
             'searchableContent' => 'search me',
-            'tags' => [],
+            'tags' => ['tag-1'],
             'document' => '{"id":"42","type":"type","searchableContent":"search me","tags":[],"metadata":[]}',
         ]);
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('dispatch')
             ->with($this->callback(static fn (EnhanceHitEvent $event): bool => '42' === $event->getHit()->getDocument()->getId()))
         ;
@@ -232,12 +239,22 @@ class BackendSearchTest extends TestCase
             $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
-        $result = $backendSearch->search(new Query(20, 'search me'));
 
+        // Test search without "type" -> should return type facets
+        $result = $backendSearch->search(new Query(20, 'search me'));
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
         $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
         $this->assertSame('type', $result->getTypeFacets()[0]->key);
         $this->assertSame('visible-type', $result->getTypeFacets()[0]->label);
+        $this->assertCount(0, $result->getTagFacets());
+
+        // Test search with "type" -> should return tag facets
+        $result = $backendSearch->search(new Query(20, 'search me', 'type'));
+        $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
+        $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
+        $this->assertSame('tag-1', $result->getTagFacets()[0]->key);
+        $this->assertSame('tag-1-label', $result->getTagFacets()[0]->label);
+        $this->assertCount(0, $result->getTypeFacets());
 
         // Cleanup memory
         MemoryStorage::dropIndex(new Index($indexName, []));
