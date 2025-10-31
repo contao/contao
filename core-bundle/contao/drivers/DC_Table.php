@@ -4584,7 +4584,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
 				{
-					trigger_deprecation('contao/core-bundle', '5.7', 'child_record_callback is deprecated and will no longer work in Contao 6. Use the label_callback instead.');
+					trigger_deprecation('contao/core-bundle', '5.7', 'Using the child_record_callback is deprecated and will no longer work in Contao 6. Use the label_callback instead.');
 
 					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
 					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
@@ -4593,7 +4593,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 				}
 				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
 				{
-					trigger_deprecation('contao/core-bundle', '5.7', 'child_record_callback is deprecated and will no longer work in Contao 6. Use the label_callback instead.');
+					trigger_deprecation('contao/core-bundle', '5.7', 'Using the child_record_callback is deprecated and will no longer work in Contao 6. Use the label_callback instead.');
 
 					$return .= $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]);
 				}
@@ -4611,7 +4611,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? null)
 					{
 						$label = \is_array($label) ? $label : array('', $label);
-
 						$return .= '<div class="cte_type ' . ($label[2] ?? '') . '">' . $dragHandle . $label[0] . '</div>';
 
 						if ($label[1] ?? null)
