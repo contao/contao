@@ -35,8 +35,8 @@ class ActiveMemberGroupsListenerTest extends TestCase
         $this->assertFalse(isset($GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback']));
 
         $scopeMatcher = $this->mockLocalScopeMatcher($backend);
-        $listener = new ActiveMemberGroupsListener($this->mockContaoFramework(), $scopeMatcher);
 
+        $listener = new ActiveMemberGroupsListener($this->mockContaoFramework(), $scopeMatcher);
         $listener($table);
 
         $this->assertSame($expected, \is_callable($GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] ?? null));
