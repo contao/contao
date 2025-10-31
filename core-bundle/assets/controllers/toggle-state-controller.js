@@ -1,10 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    #closeDelay = null;
+
     static targets = ['controller', 'controls'];
     static classes = ['active', 'inactive'];
-
-    #closeDelay = null;
 
     connect() {
         if (!this.controlsTarget.id) {
