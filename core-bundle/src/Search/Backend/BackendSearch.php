@@ -277,7 +277,7 @@ class BackendSearch
 
         if ($query->getTag()) {
             if (!$query->getType()) {
-                throw new \RuntimeException('Cannot search by tag alone; combine it with a type to ensure accurate tag labels.');
+                throw new \InvalidArgumentException('Cannot search by tag alone; combine it with a type to ensure accurate tag labels.');
             }
 
             $sb->addFilter(Condition::equal('tags', $query->getTag()));
