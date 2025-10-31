@@ -19,7 +19,7 @@ use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
 
 /**
- * @experimental
+ * @internal
  */
 #[YieldReady]
 final class PhpTemplateParentReferenceNode extends Node implements NodeOutputInterface

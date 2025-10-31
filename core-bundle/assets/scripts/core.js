@@ -2208,5 +2208,4 @@ window.addEvent('resize', function() {
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 });

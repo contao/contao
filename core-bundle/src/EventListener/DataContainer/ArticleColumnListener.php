@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\ArticleModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\DataContainer;
 use Contao\LayoutModel;
@@ -49,10 +50,14 @@ class ArticleColumnListener
             return $value;
         }
 
-        $slots = $this->inspector
-            ->inspectTemplate("@Contao/$layout->template.html.twig")
-            ->getSlots()
-        ;
+        try {
+            $slots = $this->inspector
+                ->inspectTemplate("@Contao/$layout->template.html.twig")
+                ->getSlots()
+            ;
+        } catch (InspectionException) {
+            $slots = [];
+        }
 
         $options = [];
 
