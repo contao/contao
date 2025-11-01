@@ -134,7 +134,7 @@
                         <td>{% if collector.backendSearchChecks.sqlite_supported %}✅{% else %}🚨{% endif %}</td>
                         <td>
                             {% if collector.backendSearchChecks.sqlite_supported %}
-                                The following PHP extensions are enabled: <code>{{ collector.backendSearchChecks.sqlite_supported|join('</code>, <code>') }}</code>.
+                                The following PHP extensions are enabled: <code>{{ collector.backendSearchChecks.sqlite_supported|join('</code>, <code>')|raw }}</code>.
                             {% else %}
                                 One of the following PHP extensions need to be enabled: <code>pdo_sqlite</code>, <code>sqlite3</code>.
                             {% endif %}
