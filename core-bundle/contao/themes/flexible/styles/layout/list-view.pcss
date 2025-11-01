@@ -131,11 +131,8 @@
 }
 
 .tl_content .inside {
-    padding: var(--row-padding) 6px;
-}
-
-.tl_content.draft .inside {
     min-height: 16px;
+    padding: var(--row-padding) 6px;
 }
 
 .tl_content.draft .inside > :not(.tl_content_right, .cte_type) {
@@ -367,8 +364,8 @@
 }
 
 .operations-menu li.separator {
-    margin-top: 4px;
-    padding-top: 4px;
+    margin-top: 6px;
+    padding-top: 6px;
     border-top: 1px solid var(--border);
 }
 
@@ -446,6 +443,10 @@
 
 .cte_type .drag-handle {
     padding-right: 1px;
+}
+
+.tl_content_left .drag-handle img {
+    vertical-align: bottom;
 }
 
 .cte_preview {

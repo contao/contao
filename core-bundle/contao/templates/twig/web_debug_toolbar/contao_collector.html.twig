@@ -115,6 +115,76 @@
         </tbody>
     </table>
 
+    {% if collector.backendSearchChecks|default %}
+        <h2>Back End Search</h2>
+        {% if collector.backendSearchChecks.available %}
+            <p>✅ The back end search is currently available.</p>
+        {% else %}
+            <p>🚨 The back end search is currently not available.</p>
+        {% endif %}
+        <table>
+            <thead>
+            <tr>
+                <th colspan="2">Requirements</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% if collector.backendSearchChecks.requires_sqlite %}
+                    <tr>
+                        <td>{% if collector.backendSearchChecks.sqlite_supported %}✅{% else %}🚨{% endif %}</td>
+                        <td>
+                            {% if collector.backendSearchChecks.sqlite_supported %}
+                                The following PHP extensions are enabled: <code>{{ collector.backendSearchChecks.sqlite_supported|join('</code>, <code>')|raw }}</code>.
+                            {% else %}
+                                One of the following PHP extensions need to be enabled: <code>pdo_sqlite</code>, <code>sqlite3</code>.
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{% if collector.backendSearchChecks.supervisor_supported %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.supervisor_supported %}
+                            The <code>SuperVisor</code> is supported.
+                        {% else %}
+                            Using the <code>SuperVisor</code> is currently not supported and thus Contao's default messenger queues are not processed automatically.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if not collector.backendSearchChecks.pnctl_disabled %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if not collector.backendSearchChecks.pnctl_disabled %}
+                            The <code>pnctl_*</code> functions are not disabled.
+                        {% else %}
+                            Some <code>pnctl_*</code> functions are disabled in PHP's <code>disable_functions</code> setting.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if collector.backendSearchChecks.cron_running %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.cron_running %}
+                            The <code>contao:cron</code> cronjob is executed minutely on the command line.
+                        {% else %}
+                            The <code>contao:cron</code> cronjob is currently not executed minutely on the command line and thus Contao's default messenger queues are not processed automatically.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if collector.backendSearchChecks.cli_workers_running %}✅{% else %}🚨{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.cli_workers_running %}
+                            The messenger queues are processed on the command line.
+                        {% else %}
+                            The messenger queues are currently not processed on the command line.
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+
     {% if collector.additionaldata %}
         <h2>Other</h2>
         <pre>
