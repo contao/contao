@@ -84,7 +84,7 @@ $this->bodyAttributes = $this
   <?php $this->endblock(); ?>
 
   <?php $this->block('container'); ?>
-    <div id="container">
+    <div id="container" class="<?= $this->containerClass ?>">
 
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>
