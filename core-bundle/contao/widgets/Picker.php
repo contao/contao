@@ -203,7 +203,7 @@ class Picker extends Widget
 				$dataContainer = DataContainer::getDriverForTable($strRelatedTable);
 
 				$dc = (new \ReflectionClass($dataContainer))->newInstanceWithoutConstructor();
-				$dc->table = $strRelatedTable;
+				$dc->strTable = $strRelatedTable;
 
 				while ($objRows->next())
 				{
