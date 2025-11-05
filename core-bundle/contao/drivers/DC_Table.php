@@ -111,7 +111,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param string $strTable
 	 * @param array  $arrModule
 	 */
-	public function __construct($strTable, $arrModule=array())
+	public function __construct($strTable, $arrModule=array(), private readonly bool $readonlyMode = false)
 	{
 		parent::__construct();
 
@@ -126,21 +126,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect($container->get('router')->generate('contao_backend_confirm'));
 		}
 
+		// Check whether the table is defined
+		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
+		{
+			$container->get('monolog.logger.contao.error')->error('Could not load the data container configuration for "' . $strTable . '"');
+			trigger_error('Could not load the data container configuration', E_USER_ERROR);
+		}
+
 		$this->intId = Input::get('id');
 		$this->strTable = $strTable;
+		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $this->findPtable();
+		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
+		$this->rootPaste = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] ?? false;
+		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
+		$this->arrModule = $arrModule;
+		$this->intCurrentPid = $this->findCurrentPid();
+
+		if ($readonlyMode)
+		{
+			return;
+		}
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
 		{
 			System::getContainer()->get('contao.data_container.clipboard_manager')->clearAll();
 			$this->redirect($this->getReferer());
-		}
-
-		// Check whether the table is defined
-		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
-		{
-			$container->get('monolog.logger.contao.error')->error('Could not load the data container configuration for "' . $strTable . '"');
-			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
 		$ids = null;
@@ -204,12 +215,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->redirect($this->getReferer());
 			}
 		}
-
-		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $this->findPtable();
-		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
-		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
-		$this->arrModule = $arrModule;
-		$this->intCurrentPid = $this->findCurrentPid();
 
 		// Call onload_callback (e.g. to check permissions)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] ?? null))
@@ -399,6 +404,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function showAll()
 	{
+		$this->checkReadonlyMode();
+
 		$return = '';
 		$this->limit = '';
 
@@ -475,6 +482,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function show()
 	{
+		$this->checkReadonlyMode();
+
 		$currentRecord = $this->getCurrentRecord();
 
 		if (null === $currentRecord)
@@ -708,6 +717,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function create($set=array())
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
@@ -812,6 +823,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function cut($blnDoNotRedirect=false)
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
@@ -908,6 +921,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function cutAll()
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
@@ -944,6 +959,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function copy($blnDoNotRedirect=false)
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
@@ -1139,6 +1156,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function copyChildren($table, $insertID, $id, $parentId)
 	{
+		$this->checkReadonlyMode();
+
 		$time = time();
 		$copy = array();
 		$cctable = array();
@@ -1245,6 +1264,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if (!empty($v))
 			{
+				$dataContainer = DataContainer::getDriverForTable($k);
+				$dc = new $dataContainer($k, [], true);
+
 				foreach ($v as $kk=>$vv)
 				{
 					$objInsertStmt = $db->prepare("INSERT INTO " . $k . " %s")->set($vv)->execute();
@@ -1262,8 +1284,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							foreach ($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] as $callback)
 							{
-								$dc = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
-								$dc->table = $k;
 								$dc->id = $kk;
 
 								if (\is_array($callback))
@@ -1289,6 +1309,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function copyAll()
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
@@ -1615,6 +1637,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function delete($blnDoNotRedirect=false)
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
@@ -1767,6 +1791,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function deleteAll()
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
@@ -1816,6 +1842,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function deleteChildren($table, $id, &$delete)
 	{
+		$this->checkReadonlyMode();
+
 		$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
 
 		if (empty($ctable) || !\is_array($ctable))
@@ -1860,6 +1888,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function undo()
 	{
+		$this->checkReadonlyMode();
+
 		$currentRecord = $this->getCurrentRecord();
 
 		// Check whether there is a record
@@ -1954,6 +1984,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function edit($intId=null, $ajaxId=null)
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
@@ -2304,6 +2336,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function editAll($intId=null, $ajaxId=null)
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
@@ -2653,6 +2687,8 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 	 */
 	public function toggle($intId=null, $strSelectorField=null, $blnDoNotRedirect=false)
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
@@ -2727,6 +2763,8 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 	 */
 	public function overrideAll()
 	{
+		$this->checkReadonlyMode();
+
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
@@ -3699,6 +3737,8 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 	 */
 	public function ajaxTreeView($id, $level)
 	{
+		$this->checkReadonlyMode();
+
 		if (!Environment::get('isAjaxRequest'))
 		{
 			return '';
@@ -6156,8 +6196,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 	 */
 	protected function initRoots()
 	{
-		$this->rootPaste = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] ?? false;
-
 		// Get the IDs of all root records (tree view)
 		if ($this->treeView)
 		{
@@ -6250,6 +6288,8 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 	 */
 	public function initPicker(PickerInterface $picker)
 	{
+		$this->checkReadonlyMode();
+
 		$attributes = parent::initPicker($picker);
 
 		if (null === $attributes)
@@ -6362,6 +6402,14 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			{
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp'] = 'natural';
 			}
+		}
+	}
+
+	protected function checkReadonlyMode(): void
+	{
+		if ($this->readonlyMode)
+		{
+			throw new \RuntimeException(__CLASS__.' is in readonly mode.');
 		}
 	}
 }
