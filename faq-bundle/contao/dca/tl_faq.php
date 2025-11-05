@@ -351,7 +351,7 @@ class tl_faq extends Backend
 	/**
 	 * Add the question as element metadata
 	 *
-	 * @param array $arrRow
+	 * @param array  $arrRow
 	 * @param string $label
 	 *
 	 * @return array
@@ -360,6 +360,6 @@ class tl_faq extends Backend
 	{
 		$key = $arrRow['published'] ? 'published' : 'unpublished';
 
-		return [$arrRow['question'], $label, $key];
+		return array($arrRow['question'], $label, $key);
 	}
 }
