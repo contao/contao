@@ -61,6 +61,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'fields'                  => array('question', 'answer'),
 			'format'                  => '<h2>%s</h2> %s',
+			'label_callback'          => array('tl_faq', 'listQuestions'),
 		),
 	),
 
@@ -345,5 +346,20 @@ class tl_faq extends Backend
 		}
 
 		return $varValue;
+	}
+
+	/**
+	 * Add the question as element metadata
+	 *
+	 * @param array $arrRow
+	 * @param string $label
+	 *
+	 * @return array
+	 */
+	public function listQuestions($arrRow, $label): array
+	{
+		$key = $arrRow['published'] ? 'published' : 'unpublished';
+
+		return [$arrRow['question'], $label, $key];
 	}
 }
