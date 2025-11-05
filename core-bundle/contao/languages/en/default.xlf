@@ -2295,7 +2295,7 @@
         <source>Tags</source>
       </trans-unit>
       <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
-        <source>No results found or not enough permissions to see the corresponding results.</source>
+        <source>No results found or not enough permissions to view the corresponding results.</source>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
