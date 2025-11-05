@@ -10,12 +10,12 @@ services:
             - '@router'
             - '@security.helper'
 
-    contao.listener.data_container.add_permissions:
-        class: Contao\CoreBundle\EventListener\DataContainer\AddPermissionsListener
+    contao.listener.data_container.permissions:
+        class: Contao\CoreBundle\EventListener\DataContainer\PermissionsListener
         arguments:
-            - '@database_connection'
-            - '@translator'
+            - '@security.helper'
             - '@request_stack'
+            - '@database_connection'
 
     contao.listener.backend_cache_response:
         class: Contao\CoreBundle\EventListener\BackendCacheResponseListener

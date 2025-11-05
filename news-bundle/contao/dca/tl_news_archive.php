@@ -28,18 +28,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_news_archive', 'adjustDca')
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_news_archive', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_news_archive', 'adjustPermissions')
-		),
+		'permissions'                 => ['news', 'newsp'],
 		'oninvalidate_cache_tags_callback' => array
 		(
 			array('tl_news_archive', 'addSitemapCacheInvalidationTag'),
@@ -77,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected'),
-		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected;{permissions_legend:hide},permissions'
+		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected'
 	),
 
 	// Sub-palettes
@@ -126,12 +115,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-		),
-		'permissions' => array
-		(
-			// input_field_callback from AddPermissionsListener
-			'eval' => array('target' => 'news'),
-		),
+		)
 	)
 );
 
@@ -144,118 +128,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
  */
 class tl_news_archive extends Backend
 {
-	/**
-	 * Set the root IDs.
-	 */
-	public function adjustDca()
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->news) || !is_array($user->news))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->news;
-		}
-
-		$GLOBALS['TL_DCA']['tl_news_archive']['list']['sorting']['root'] = $root;
-	}
-
-	/**
-	 * Add the new archive to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->news) || !is_array($user->news))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->news;
-		}
-
-		// The archive is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$db = Database::getInstance();
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_news_archive']) && in_array($insertId, $arrNew['tl_news_archive']))
-		{
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, news, newp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrNewp = StringUtil::deserialize($objGroup->newp);
-
-					if (is_array($arrNewp) && in_array('create', $arrNewp))
-					{
-						$arrNews = StringUtil::deserialize($objGroup->news, true);
-						$arrNews[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET news=? WHERE id=?")->execute(serialize($arrNews), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT news, newp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrNewp = StringUtil::deserialize($objUser->newp);
-
-				if (is_array($arrNewp) && in_array('create', $arrNewp))
-				{
-					$arrNews = StringUtil::deserialize($objUser->news, true);
-					$arrNews[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET news=? WHERE id=?")->execute(serialize($arrNews), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->news = $root;
-		}
-	}
-
 	/**
 	 * @param DataContainer $dc
 	 *
