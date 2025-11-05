@@ -221,13 +221,20 @@ abstract class Template extends Controller
 	 */
 	public static function once(callable $callback)
 	{
-		return static function () use (&$callback) {
-			if (\is_callable($callback))
+		return new class($callback) {
+			public function __construct(private $callback)
 			{
-				$callback = $callback();
 			}
 
-			return $callback;
+			public function __invoke()
+			{
+				if (\is_callable($this->callback))
+				{
+					$this->callback = ($this->callback)();
+				}
+
+				return $this->callback;
+			}
 		};
 	}
 
