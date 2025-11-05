@@ -31,12 +31,12 @@ use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
-use Contao\CoreBundle\Search\Backend\Provider\TagProvidingProviderInterface;
 use Contao\CoreBundle\Search\Backend\Query;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
 use Contao\CoreBundle\Search\Backend\Seal\SealUtil;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Tests\Fixtures\Search\DocumentProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -401,8 +401,4 @@ class BackendSearchTest extends TestCase
 
         return $webWorker;
     }
-}
-
-abstract class DocumentProvider implements ProviderInterface, TagProvidingProviderInterface
-{
 }
