@@ -20,9 +20,7 @@
                             .set('disabled', null, activeFilter == facet.key)
                             .set('data-action', 'contao--backend-search#setButtonActive')
                             .set('formaction', path('_contao_backend_search.stream', query.toUrlParams|merge({(filterName): facet.key})))
-                        }}>
-                            {{ facet.label }} <sup>({{ facet.count }})</sup>
-                        </button>
+                        }}>{{ facet.label }} <sup>({{ facet.count }})</sup></button>
                     </li>
                 {% endfor %}
             </ul>

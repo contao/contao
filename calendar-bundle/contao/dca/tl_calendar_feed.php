@@ -26,7 +26,6 @@ use Contao\StringUtil;
 use Contao\System;
 
 // Backwards compatibility
-// TODO: To be removed with Contao 6
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
 	// Config
@@ -35,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'backendSearchIgnore'         => true, // Only here for BC anyway
+		'backendSearchIgnore'         => true,
 		'onload_callback' => array
 		(
 			array('tl_calendar_feed', 'checkPermission'),
