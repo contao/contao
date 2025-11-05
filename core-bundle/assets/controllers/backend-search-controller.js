@@ -24,18 +24,18 @@ export default class BackendSearchController extends Controller {
     }
 
     disconnect() {
-        this._stopPendingSearch();
+        this.#stopPendingSearch();
     }
 
     async search() {
-        this._stopPendingSearch();
+        this.#stopPendingSearch();
 
         // Require a minimum number of characters
         if (this.inputTarget.value.length < this.minCharactersValue) {
-            return this._setState('invalid');
+            return this.#setState('invalid');
         }
 
-        this._setState('loading');
+        this.#setState('loading');
 
         // Debounce to avoid too many requests
         await new Promise((resolve) => (this.debounceTimeout = setTimeout(resolve, this.debounceDelayValue)));
@@ -44,10 +44,10 @@ export default class BackendSearchController extends Controller {
         const result = await this.searchResultConnection.get(this.urlValue, { keywords: this.inputTarget.value });
 
         if (result.ok) {
-            this._setState('results');
+            this.#setState('results');
             this.focusTrap.activate();
         } else if (result.error) {
-            this._setState('error');
+            this.#setState('error');
         }
     }
 
@@ -57,7 +57,7 @@ export default class BackendSearchController extends Controller {
             return;
         }
 
-        this._setState('initial');
+        this.#setState('initial');
     }
 
     close(event) {
@@ -71,13 +71,13 @@ export default class BackendSearchController extends Controller {
             return;
         }
 
-        this._stopPendingSearch();
+        this.#stopPendingSearch();
         this.resultsTarget.innerText = '';
 
         this.inputTarget.blur();
         this.inputTarget.value = '';
 
-        this._setState('hidden');
+        this.#setState('hidden');
     }
 
     setButtonActive(event) {
@@ -91,13 +91,13 @@ export default class BackendSearchController extends Controller {
         target.addClass('active');
     }
 
-    _stopPendingSearch() {
+    #stopPendingSearch() {
         clearTimeout(this.debounceTimeout);
         this.searchResultConnection.abortPending();
         this.focusTrap.deactivate();
     }
 
-    _setState(state) {
+    #setState(state) {
         for (const className of BackendSearchController.classes) {
             this.element.classList.toggle(this[`${className}Class`], className === state);
         }
