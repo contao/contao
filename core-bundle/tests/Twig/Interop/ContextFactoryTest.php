@@ -40,7 +40,7 @@ class ContextFactoryTest extends TestCase
             'lazy3' => static fn (): array => [1, 2],
             'lazy4' => $closure(...),
             'value' => 'strtolower', // do not confuse with callable,
-            'has_foo' => Template::once(static fn () => static fn (): bool => false),
+            'has_foo' => Template::once(static fn (): bool => false),
         ];
 
         $template = $this->createMock(Template::class);
