@@ -368,6 +368,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 	}
 
+	private function render(string $component, array $parameters): string
+	{
+		return System::getContainer()
+			->get('twig')
+			->render(
+				"@Contao/backend/data_container/$component.html.twig",
+				array(
+					'table' => $this->table,
+					...$parameters,
+				)
+			)
+		;
+	}
+
 	/**
 	 * Return an object property
 	 *
