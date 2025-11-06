@@ -4,12 +4,6 @@
     .mergeWith(html_attributes|default)
 -%}
 
-{%- set body_attributes = attrs()
-    .set('id', 'top')
-    .addClass(contao.page.cssClass)
-    .mergeWith(body_attributes|default)
--%}
-
 <!DOCTYPE html>
 <html{{ html_attributes|default }}>
 <head>
