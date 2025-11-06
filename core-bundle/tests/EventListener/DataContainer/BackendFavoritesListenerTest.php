@@ -66,7 +66,6 @@ class BackendFavoritesListenerTest extends TestCase
         $request = new Request();
         $request->query->set('act', 'create');
         $request->query->set('data', base64_encode($url));
-        $request->query->set('ref', 'foobar');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -106,7 +105,6 @@ class BackendFavoritesListenerTest extends TestCase
 
         $request = new Request();
         $request->query->set('act', 'create');
-        $request->query->set('ref', 'foobar');
 
         $requestStack = new RequestStack();
         $requestStack->push($request);

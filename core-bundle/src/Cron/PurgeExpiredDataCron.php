@@ -39,7 +39,6 @@ class PurgeExpiredDataCron
         $this->cleanTable('tl_undo', (int) $config->get('undoPeriod'));
         $this->cleanTable('tl_log', (int) $config->get('logPeriod'));
         $this->cleanTable('tl_version', (int) $config->get('versionPeriod'));
-        $this->cleanTable('tl_job', 86400); // 1 day
     }
 
     private function cleanTable(string $table, int $period): void

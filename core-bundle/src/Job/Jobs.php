@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Job;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -12,6 +14,11 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatableMessage;
 
 /**
  * @experimental
@@ -21,7 +28,25 @@ class Jobs
     public function __construct(
         private readonly Connection $connection,
         private readonly Security $security,
+        private readonly VirtualFilesystemInterface $jobAttachmentsStorage,
+        private readonly RouterInterface $router,
+        private readonly ClockInterface $clock = new NativeClock(),
     ) {
+    }
+
+    public function hasAccess(Job $job): bool
+    {
+        if ($job->getOwner()->isSystem()) {
+            return true;
+        }
+
+        $userId = $this->getContaoBackendUserId();
+
+        if (0 === $userId) {
+            return true;
+        }
+
+        return $job->getOwner()->getId() === $userId;
     }
 
     public function createJob(string $type): Job
@@ -77,6 +102,59 @@ class Jobs
         }
 
         return $this->databaseRowToDto($jobData);
+    }
+
+    /**
+     * @return array<Attachment>
+     */
+    public function getAttachments(Job|string $jobOrUuid): array
+    {
+        $job = $jobOrUuid instanceof Job ? $jobOrUuid : $this->getByUuid($jobOrUuid);
+
+        if (!$job) {
+            return [];
+        }
+
+        $attachments = [];
+
+        foreach ($this->jobAttachmentsStorage->listContents($job->getUuid())->files() as $fileItem) {
+            $attachments[] = $this->convertFilesystemItemToAttachment($job, $fileItem);
+        }
+
+        return $attachments;
+    }
+
+    public function getAttachment(Job|string $jobOrUuid, string $identifier): Attachment|null
+    {
+        $job = $jobOrUuid instanceof Job ? $jobOrUuid : $this->getByUuid($jobOrUuid);
+
+        if (!$job) {
+            return null;
+        }
+
+        $fileItem = $this->jobAttachmentsStorage->get($this->getAttachmentIdentifier($job, $identifier));
+
+        if (!$fileItem) {
+            return null;
+        }
+
+        return $this->convertFilesystemItemToAttachment($job, $fileItem);
+    }
+
+    /**
+     * @param string|resource $contents
+     */
+    public function addAttachment(Job $job, string $identifier, mixed $contents): void
+    {
+        $location = $this->getAttachmentIdentifier($job, $identifier);
+
+        if (\is_string($contents)) {
+            $this->jobAttachmentsStorage->write($location, $contents);
+
+            return;
+        }
+
+        $this->jobAttachmentsStorage->writeStream($location, $contents);
     }
 
     public function persist(Job $job, bool $applyRecursive = true): void
@@ -147,10 +225,52 @@ class Jobs
 
     public function createChildJob(Job $parent): Job
     {
-        $child = Job::new($parent->getType(), $parent->getOwner())->withParent($parent);
+        $child = Job::new($parent->getType(), $parent->getOwner(), $this->clock->now())->withParent($parent);
         $this->persist($child);
 
         return $child;
+    }
+
+    public function prune(int $period): void
+    {
+        if ($period <= 0) {
+            return;
+        }
+
+        $this->connection->executeStatement(
+            'DELETE FROM tl_job WHERE tstamp < :tstamp',
+            ['tstamp' => $this->clock->now()->getTimestamp() - $period],
+            ['tstamp' => Types::INTEGER],
+        );
+
+        // Cleanup all directories in attachment storage that are not used anymore (also
+        // cleans up orphans in case, e.g., jobs were deleted in the database manually)
+        foreach ($this->jobAttachmentsStorage->listContents('')->directories() as $jobDirectory) {
+            $jobUuid = $jobDirectory->getName();
+            $id = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$jobUuid]);
+
+            if (false === $id) {
+                $this->jobAttachmentsStorage->deleteDirectory($jobDirectory->getPath());
+            }
+        }
+    }
+
+    private function getAttachmentIdentifier(Job $job, string $identifier): string
+    {
+        return $job->getUuid().'/'.$identifier;
+    }
+
+    private function convertFilesystemItemToAttachment(Job $job, FilesystemItem $filesystemItem): Attachment
+    {
+        return new Attachment(
+            $filesystemItem,
+            new TranslatableMessage('file_label.'.$filesystemItem->getName(), [], 'contao_jobs'),
+            $this->router->generate(
+                '_contao_jobs.download',
+                ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],
+                UrlGeneratorInterface::ABSOLUTE_URL,
+            ),
+        );
     }
 
     /**
@@ -169,7 +289,7 @@ class Jobs
 
     private function doCreateJob(string $type, Owner $owner, bool $public = true): Job
     {
-        $job = Job::new($type, $owner);
+        $job = Job::new($type, $owner, $this->clock->now());
 
         if ($job->getOwner()->isSystem()) {
             $job = $job->withIsPublic($public);
@@ -242,12 +362,12 @@ class Jobs
         foreach ($children as $childRow) {
             $childJob = $this->databaseRowToDto($childRow);
 
-            if (Status::pending === $childJob->getStatus()) {
+            if ($childJob->isPending()) {
                 $onePending = true;
                 break;
             }
 
-            if (Status::completed !== $childJob->getStatus()) {
+            if (!$childJob->isCompleted()) {
                 $allCompleted = false;
             }
         }

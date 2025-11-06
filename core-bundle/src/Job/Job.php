@@ -73,9 +73,39 @@ final class Job
         return $this->uuid;
     }
 
+    public function withProgressFromAmounts(int $total, int $amount): self
+    {
+        // Prevent division by 0
+        if (0 === $total) {
+            return $this;
+        }
+
+        $progress = 100 / $total * $amount;
+
+        // Ensure valid percentage
+        $progress = max(0, min($progress, 100));
+
+        return $this->withProgress($progress);
+    }
+
     public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function isCompleted(): bool
+    {
+        return Status::completed === $this->getStatus();
+    }
+
+    public function isPending(): bool
+    {
+        return Status::pending === $this->getStatus();
+    }
+
+    public function isNew(): bool
+    {
+        return Status::new === $this->getStatus();
     }
 
     public function getStatus(): Status
@@ -278,9 +308,9 @@ final class Job
         return $clone;
     }
 
-    public static function new(string $type, Owner $owner): self
+    public static function new(string $type, Owner $owner, \DateTimeInterface|null $createdAt = null): self
     {
-        return new self(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::new, $type, $owner);
+        return new self(Uuid::v4()->toRfc4122(), $createdAt ?? new \DateTimeImmutable(), Status::new, $type, $owner);
     }
 
     public function toArray(bool $withParent = true): array

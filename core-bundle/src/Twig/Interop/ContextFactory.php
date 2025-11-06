@@ -16,9 +16,6 @@ use Contao\BackendTemplate;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Template;
 
-/**
- * @experimental
- */
 final class ContextFactory
 {
     public function __construct(

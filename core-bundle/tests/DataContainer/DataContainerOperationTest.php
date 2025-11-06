@@ -71,6 +71,7 @@ class DataContainerOperationTest extends TestCase
 
         $operation['attributes'] .= ' foo="bar"';
 
+        /** @phpstan-ignore offsetAccess.notFound */
         $this->assertSame('bar', $operation['attributes']['foo']);
     }
 }

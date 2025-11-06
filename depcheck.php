@@ -17,6 +17,7 @@ use App\FrontendModule\LegacyModule;
 use App\Messenger\UnionTypeMessage;
 use App\Model\FooModel;
 use AppBundle\AppBundle;
+use CmsIg\Seal\Adapter\Loupe\LoupeAdapter;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
@@ -33,6 +34,7 @@ return (new Configuration())
         'Imagick',
         InvalidListener::class,
         LegacyModule::class,
+        LoupeAdapter::class,
         MySQL57Platform::class,
         SchemaAlterTableRenameColumnEventArgs::class,
         'SensitiveParameter',

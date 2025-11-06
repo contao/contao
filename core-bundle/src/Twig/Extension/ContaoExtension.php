@@ -64,13 +64,13 @@ use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-/**
- * @experimental
- */
 final class ContaoExtension extends AbstractExtension implements GlobalsInterface
 {
     private array $contaoEscaperFilterRules = [];
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly Environment $environment,
         private readonly ContaoFilesystemLoader $filesystemLoader,
@@ -203,11 +203,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [FigureRuntime::class, 'renderFigure'],
                 [
                     'is_safe' => ['html'],
-                    'deprecated_info' => new DeprecatedCallableInfo(
-                        'contao/core-bundle',
-                        '5.0',
-                        'The "contao_figure" function is deprecated, use the "figure" function together with the "component/_figure.html.twig" component instead.',
-                    ),
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'),
                 ],
             ),
             new TwigFunction(
@@ -271,6 +267,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'backend_icon',
                 [BackendHelperRuntime::class, 'icon'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFunction(
+                'file_icon',
+                [BackendHelperRuntime::class, 'fileIcon'],
                 ['is_safe' => ['html']],
             ),
         ];

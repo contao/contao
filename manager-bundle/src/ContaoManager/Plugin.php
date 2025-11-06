@@ -492,6 +492,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function addDefaultBackendSearchProvider(array $extensionConfigs): array
     {
         foreach ($extensionConfigs as $config) {
+            // Back end search has been disabled
+            if (false === ($config['backend_search'] ?? null) || false === ($config['backend_search']['enabled'] ?? null)) {
+                return $extensionConfigs;
+            }
+
             // Configured a custom adapter (e.g. MeiliSearch or whatever)
             if (isset($config['backend_search']['dsn'])) {
                 return $extensionConfigs;

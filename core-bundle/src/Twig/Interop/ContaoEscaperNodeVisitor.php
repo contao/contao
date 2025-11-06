@@ -27,7 +27,7 @@ use Twig\NodeVisitor\NodeVisitorInterface;
  * filter expressions if the template they belong to is amongst the configured
  * affected templates.
  *
- * @experimental
+ * @internal
  */
 final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
 {
