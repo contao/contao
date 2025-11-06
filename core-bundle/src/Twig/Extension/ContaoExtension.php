@@ -382,8 +382,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [StringRuntime::class, 'inputEncodedToPlainText'],
             ),
             new TwigFilter(
-                'raw_html_to_plain_text',
-                [StringRuntime::class, 'rawHtmlToPlainText'],
+                'html_to_plain_text',
+                [StringRuntime::class, 'htmlToPlainText'],
             ),
             new TwigFilter(
                 'deserialize',

@@ -2,9 +2,9 @@
 
 {% block content %}
 
-  {{ event }}
+  {{ event|raw }}
 
-  {% if referer %}
+  {% if referer|default %}
     <!-- indexer::stop -->
     <p class="back"><a href="{{ referer }}" title="{{ back }}">{{ back }}</a></p>
     <!-- indexer::continue -->
@@ -13,8 +13,8 @@
   {% if allowComments %}
     <div class="ce_comments block">
       <{{ hlc }}>{{ hlcText }}</{{ hlc }}>
-      {{ comments|join }}
-      {{ pagination }}
+      {{ comments|join|raw }}
+      {{ pagination|default|raw }}
       <{{ hlc }}>{{ addComment }}</{{ hlc }}>
       {% include "@Contao/mod_comment_form.html.twig" %}
     </div>

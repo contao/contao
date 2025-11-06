@@ -13,20 +13,20 @@
     <p class="location">{{ location }}{% if address %} ({{ address }}){% endif %}</p>
   {% endif %}
 
-  {% if details %}
-    {{ details }}
+  {% if details.invoke() %}
+    {{ details.invoke()|raw }}
   {% else %}
     <div class="ce_text block">
       {% if not addBefore %}
-        {{ teaser|csp_inline_styles }}
+        {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
 
       {% if addImage %}
-        {% include "@Contao/image.html.twig "%}
+        {% include "@Contao/image.html.twig" %}
       {% endif %}
 
       {% if addBefore %}
-        {{ teaser|csp_inline_styles }}
+        {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
     </div>
   {% endif %}
@@ -45,12 +45,12 @@
 
 {% set schemaOrg = getSchemaOrgData.invoke() %}
 
-{% if hasText %}
-    {% set schemaOrg = schemaOrg|merge({'description': rawHtmlToPlainText.invoke(details)}) %}
+{% if hasDetails.invoke() %}
+    {% set schemaOrg = schemaOrg|merge({description: details.invoke()|html_to_plain_text}) %}
 {% endif %}
 
 {% do add_schema_org(schemaOrg) %}
 
-{% if figure %}
-    {% do add_schema_org({'@type' => 'WebPage', 'primaryImageOfPage' => figure.getSchemaOrgData()}) %}
+{% if figure|default %}
+    {% do add_schema_org({'@type': 'WebPage', primaryImageOfPage: figure.getSchemaOrgData()}) %}
 {% endif %}

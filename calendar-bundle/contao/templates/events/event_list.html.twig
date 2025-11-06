@@ -1,13 +1,13 @@
 
-{% if header %}
+{% if header|default %}
   <div class="header">
-    {% if firstDay %}<span class="day">{{ firstDay }}, </span>{% endif %}<span class="date">{{ firstDate }}</span>
+    {% if firstDay|default %}<span class="day">{{ firstDay }}, </span>{% endif %}<span class="date">{{ firstDate|default }}</span>
   </div>
 {% endif %}
 
-<div class="event layout_list{{ classList }}">
+<div class="event layout_list{{ classList|default }}">
 
-  <h2><a href="{{ href }}" title="{{ title }} ({% if day %}{{ day }}, {% endif %}{{ date }}{% if time %} {{ time }}{% endif %})"{{ target }}>{{ link }}</a></h2>
+  <h2><a href="{{ href|default }}" title="{{ title|insert_tag }} ({% if day|default %}{{ day }}, {% endif %}{{ date }}{% if time %} {{ time }}{% endif %})"{{ target }}>{{ link }}</a></h2>
   <p class="time"><time datetime="{{ datetime }}">{{ date }}{% if time %} {{ time }}{% endif %}</time></p>
 
   {% if location %}
@@ -18,11 +18,11 @@
     {% include "@Contao/image.html.twig" %}
   {% endif %}
 
-  {% if details %}
-    {{ details }}
+  {% if details.invoke() %}
+    {{ details.invoke()|raw }}
   {% else %}
     <div class="ce_text block">
-      {{ teaser|csp_inline_styles }}
+      {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
     </div>
   {% endif %}
 

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  {% if yearly %}
+  {% if yearly|default %}
     <ul class="level_1">
       {% for year, month in items %}
         {% if month.isActive %}

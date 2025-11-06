@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  {{ events }}
-  {{ pagination }}
+  {{ events|raw }}
+  {{ pagination|default|raw }}
 
 {% endblock %}

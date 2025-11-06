@@ -40,7 +40,7 @@ final class StringRuntime implements RuntimeExtensionInterface
         return $this->htmlDecoder->inputEncodedToPlainText($value, $removeInsertTags);
     }
 
-    public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
+    public function htmlToPlainText(string $value, bool $removeInsertTags = false): string
     {
         return $this->htmlDecoder->htmlToPlainText($value, $removeInsertTags);
     }
