@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{cud_legend},cud;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -204,6 +204,13 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+		),
+		'cud' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
+			'inputType'               => 'cud',
+			'options_callback'        => array('tl_user_group', 'getEditableDcas'),
+			'sql'                     => "blob NULL"
 		),
 		'alexf' => array
 		(
@@ -399,6 +406,73 @@ class tl_user_group extends Backend
 					{
 						$arrReturn[$k][StringUtil::specialchars($k . '::' . $kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span class="label-info">[' . $kk . ']</span>' : $kk;
 					}
+				}
+			}
+		}
+
+		ksort($arrReturn);
+
+		return $arrReturn;
+	}
+
+	/**
+	 * Return all editable DCAs
+	 *
+	 * @return array
+	 */
+	public function getEditableDcas()
+	{
+		$processed = array();
+		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
+
+		foreach ($files as $file)
+		{
+			if (in_array($file->getBasename(), $processed))
+			{
+				continue;
+			}
+
+			$processed[] = $file->getBasename();
+
+			$strTable = $file->getBasename('.php');
+
+			System::loadLanguageFile($strTable);
+			$this->loadDataContainer($strTable);
+		}
+
+		$arrReturn = array();
+
+		foreach ($GLOBALS['TL_DCA'] as $k=>$v)
+		{
+			// FIXME: make this configurable
+			if ($k == 'tl_favorites')
+			{
+				continue;
+			}
+
+			// Only handle DC_Table
+			if (!is_a($v['config']['dataContainer'] ?? null, DC_Table::class, true))
+			{
+				continue;
+			}
+
+			// Only add DCAs with at least one editable field
+			if (is_array($v['fields']))
+			{
+				$add = false;
+
+				foreach ($v['fields'] as $kk=>$vv)
+				{
+					if (isset($vv['inputType']))
+					{
+						$add = true;
+						break;
+					}
+				}
+
+				if ($add)
+				{
+					$arrReturn[] = $k;
 				}
 			}
 		}
