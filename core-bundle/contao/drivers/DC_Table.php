@@ -413,7 +413,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function showAll()
 	{
-		$return = '';
 		$this->limit = '';
 
 		$this->reviseTable();
@@ -461,11 +460,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$parameters = array();
+
 		// Render view
 		if ($this->treeView)
 		{
-			$return .= $this->panel();
-			$return .= $this->treeView();
+			$parameters['view'] = $this->treeView();
 		}
 		else
 		{
@@ -475,11 +475,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->values[] = $this->currentPid;
 			}
 
-			$return .= $this->panel();
-			$return .= ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->parentView() : $this->listView();
+			$parameters['view'] = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->parentView() : $this->listView();
 		}
 
-		return $return;
+		$parameters['panel'] = $this->panel();
+
+		return $this->render('show_all', $parameters);
 	}
 
 	/**
@@ -673,44 +674,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$separate = false;
-		$return = '';
-
-		// Generate table
-		foreach ($data as $table=>$rows)
-		{
-			foreach ($rows as $entries)
-			{
-				if ($separate)
-				{
-					$return .= '</tbody></table>';
-				}
-
-				$separate = true;
-
-				$return .= '
-<table class="tl_show with-padding with-zebra">
-  <thead>
-    <tr>
-      <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
-      <th>' . $table . '</th>
-    </tr>
-  </thead>
-  <tbody>';
-
-				foreach ($entries as $lbl=>$val)
-				{
-					// Always encode special characters (thanks to Oliver Klee)
-					$return .= '
-	  <tr>
-		<td class="tl_label">' . $lbl . '</td>
-		<td>' . StringUtil::specialchars($val) . '</td>
-	  </tr>';
-				}
-			}
-		}
-
-		return $return . '</tbody></table>';
+		return $this->render('show', array('data' => $data));
 	}
 
 	/**
