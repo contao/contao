@@ -378,6 +378,14 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 ['preserves_safety' => ['contao_html', 'html']],
             ),
             new TwigFilter(
+                'input_encoded_to_plain_text',
+                [StringRuntime::class, 'inputEncodedToPlainText'],
+            ),
+            new TwigFilter(
+                'raw_html_to_plain_text',
+                [StringRuntime::class, 'rawHtmlToPlainText'],
+            ),
+            new TwigFilter(
                 'deserialize',
                 static fn (mixed $value): array => StringUtil::deserialize($value, true),
             ),

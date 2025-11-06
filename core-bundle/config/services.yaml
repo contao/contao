@@ -1465,6 +1465,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\StringRuntime
         arguments:
             - '@contao.framework'
+            - '@contao.string.html_decoder'
 
     contao.twig.url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
