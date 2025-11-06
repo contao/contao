@@ -222,6 +222,7 @@ abstract class Template extends Controller
 	public static function once(callable $callback)
 	{
 		$result = null;
+
 		return static function () use (&$callback, &$result) {
 			if ($callback !== null)
 			{

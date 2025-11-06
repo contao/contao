@@ -18,7 +18,7 @@
             <option value="{{ separator.value }}">{{ separator.label }}</option>
           {% endfor %}
         </select>
-        {% if isset(separatorHelp) %}
+        {% if separatorHelp|default %}
           <p class="tl_help tl_tip">{{ separatorHelp }}</p>
         {% endif %}
       </div>
@@ -26,7 +26,7 @@
       <div class="widget clr">
         <h3>{{ sourceLabel }}</h3>
         {{ uploader|raw }}
-        {% if isset(sourceLabelHelp) %}
+        {% if sourceLabelHelp|default %}
           <p class="tl_help tl_tip">{{ sourceLabelHelp }}</p>
         {% endif %}
       </div>

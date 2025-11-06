@@ -438,35 +438,19 @@ abstract class Widget extends Controller
 	{
 		switch ($strKey)
 		{
-			case 'id':
-				return isset($this->strId);
-
-			case 'name':
-				return isset($this->strName);
-
-			case 'label':
-				return isset($this->strLabel);
-
-			case 'value':
-				return isset($this->varValue);
-
-			case 'class':
-				return isset($this->strClass);
-
-			case 'template':
-				return isset($this->strTemplate);
-
-			case 'wizard':
-				return isset($this->strWizard);
-
 			case 'required':
 				return isset($this->arrConfiguration[$strKey]);
 
+			case 'id':
+			case 'name':
+			case 'label':
+			case 'value':
+			case 'class':
+			case 'template':
+			case 'wizard':
 			case 'forAttribute':
-				return isset($this->blnForAttribute);
-
 			case 'dataContainer':
-				return isset($this->objDca);
+				return true;
 
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
