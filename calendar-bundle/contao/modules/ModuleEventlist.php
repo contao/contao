@@ -351,12 +351,6 @@ class ModuleEventlist extends Events
 				return $groupCounts[$groupIndex];
 			};
 
-			// Show the teaser text of redirect events (see #6315)
-			if (\is_bool($event['details']) && $event['source'] == 'default')
-			{
-				$objTemplate->hasDetails = false;
-			}
-
 			$objTemplate->hasReader = $event['source'] == 'default';
 
 			// Add the template variables

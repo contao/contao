@@ -110,6 +110,19 @@ class CalendarEventsGenerator
             }
         }
 
+        foreach ($events as $keyPerDay => $eventsPerDay) {
+            foreach ($eventsPerDay as $keyPerTime => $eventsPerTime) {
+                foreach ($eventsPerTime as $key => $event) {
+                    if (!($event['details'] ?? null) instanceof \Closure) {
+                        $events[$keyPerDay][$keyPerTime][$key]['details'] = static fn () => $event['details'];
+                    }
+                    if (!($event['hasDetails'] ?? null) instanceof \Closure) {
+                        $events[$keyPerDay][$keyPerTime][$key]['hasDetails'] = static fn () => $event['hasDetails'];
+                    }
+                }
+            }
+        }
+
         return $events;
     }
 
@@ -203,7 +216,7 @@ class CalendarEventsGenerator
         $event['begin'] = $start;
         $event['end'] = $end;
         $event['effectiveEndTime'] = $end;
-        $event['details'] = '';
+        $event['details'] = Template::once(static fn () => '');
         $event['hasTeaser'] = false;
 
         // Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
@@ -224,7 +237,7 @@ class CalendarEventsGenerator
 
         // Display the "read more" button for external/article links
         if ('default' !== $eventModel->source) {
-            $event['hasDetails'] = null !== $url;
+            $event['hasDetails'] = Template::once(static fn () => null !== $url);
         }
 
         // Compile the event text
@@ -247,7 +260,7 @@ class CalendarEventsGenerator
                 },
             );
 
-            $event['hasDetails'] = null === $url ? false : $template->once(static fn (): bool => $contentModel->countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
+            $event['hasDetails'] = $template->once(static fn (): bool => null === $url ? false : $contentModel->countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
         }
 
         // Get today's start and end timestamp
