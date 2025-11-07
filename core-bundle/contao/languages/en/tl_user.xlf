@@ -176,12 +176,6 @@
       <trans-unit id="tl_user.forms.1">
         <source>Here you can grant access to one or more forms.</source>
       </trans-unit>
-      <trans-unit id="tl_user.formp.0">
-        <source>Form permissions</source>
-      </trans-unit>
-      <trans-unit id="tl_user.formp.1">
-        <source>Here you can define the form permissions.</source>
-      </trans-unit>
       <trans-unit id="tl_user.amg.0">
         <source>Allowed member groups</source>
       </trans-unit>

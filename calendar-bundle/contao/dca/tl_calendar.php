@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'permissions'                 => ['calendars', 'calendarp'],
+		'permissions'                 => ['calendars'],
 		'oninvalidate_cache_tags_callback' => array
 		(
 			array('tl_calendar', 'addSitemapCacheInvalidationTag'),

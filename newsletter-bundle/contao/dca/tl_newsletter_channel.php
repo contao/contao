@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'permissions'                 => ['newsletters', 'newsletterp'],
+		'permissions'                 => ['newsletters'],
 		'sql' => array
 		(
 			'keys' => array

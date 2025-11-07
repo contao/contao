@@ -95,6 +95,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_news.migration.field_permission:
+        class: Contao\NewsBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
+
     contao_news.migration.overwrite_meta:
         class: Contao\NewsBundle\Migration\OverwriteMetaMigration
         arguments:

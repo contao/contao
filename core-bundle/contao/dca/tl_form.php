@@ -28,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'enableVersioning'            => true,
 		'ctable'                      => array('tl_form_field'),
 		'markAsCopy'                  => 'title',
-		'permissions'                 => ['forms', 'formp'],
+		'permissions'                 => ['forms'],
 		'sql' => array
 		(
 			'keys' => array

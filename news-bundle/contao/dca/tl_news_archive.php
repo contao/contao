@@ -28,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'permissions'                 => ['news', 'newsp'],
+		'permissions'                 => ['news'],
 		'oninvalidate_cache_tags_callback' => array
 		(
 			array('tl_news_archive', 'addSitemapCacheInvalidationTag'),

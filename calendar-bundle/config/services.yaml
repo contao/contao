@@ -105,6 +105,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_calendar.migration.field_permission:
+        class: Contao\CalendarBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
+
     contao_calendar.migration.overwrite_meta:
         class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
         arguments:
