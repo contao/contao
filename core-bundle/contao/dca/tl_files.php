@@ -154,6 +154,12 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		)
 	),
 
+	// Callbacks for ButtonsBuilder
+	'select' => array
+	(
+		'buttons_callback' => array(array('tl_files', 'hideOverrideAllButton'))
+	),
+
 	// Palettes
 	'palettes' => array
 	(
@@ -1029,5 +1035,12 @@ class tl_files extends Backend
   </div>' . (Config::get('showHelp') ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['syncExclude'][1] . '</p>' : '') . '
 </div>';
+	}
+
+	public function hideOverrideAllButton($buttons, DataContainer $dc)
+	{
+		unset($buttons['override']);
+
+		return $buttons;
 	}
 }
