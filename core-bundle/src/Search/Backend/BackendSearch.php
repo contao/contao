@@ -56,6 +56,10 @@ class BackendSearch
 
     public function deleteDocuments(GroupedDocumentIds $groupedDocumentIds, bool $async = true): self
     {
+        if (!$this->isAvailable()) {
+            return $this;
+        }
+
         if ($groupedDocumentIds->isEmpty()) {
             return $this;
         }
@@ -88,6 +92,10 @@ class BackendSearch
      */
     public function reindex(ReindexConfig $config, bool $async = true): string|null
     {
+        if (!$this->isAvailable()) {
+            return null;
+        }
+
         $job = $config->getJobId() ? $this->jobs->getByUuid($config->getJobId()) : null;
 
         // Create the job if required
@@ -154,6 +162,10 @@ class BackendSearch
      */
     public function search(Query $query): Result
     {
+        if (!$this->isAvailable()) {
+            return Result::createEmpty();
+        }
+
         $sb = $this->createSearchBuilder($query);
 
         $hits = [];
@@ -200,6 +212,10 @@ class BackendSearch
 
     public function clear(): void
     {
+        if (!$this->isAvailable()) {
+            return;
+        }
+
         // TODO: We need an API for that in SEAL
         $this->engine->dropIndex(self::SEAL_INTERNAL_INDEX_NAME);
         $this->engine->createIndex(self::SEAL_INTERNAL_INDEX_NAME);

@@ -22,7 +22,6 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
 
 /**
@@ -729,59 +728,7 @@ abstract class DataContainer extends Backend
   </fieldset>';
 		}
 
-		$strPreview = '';
-
-		// Show a preview image (see #4948)
-		if ($this->strTable == 'tl_files' && $this->strField == 'name' && $this->objActiveRecord !== null && $this->objActiveRecord->type == 'file')
-		{
-			$objFile = new File($this->objActiveRecord->path);
-
-			if ($objFile->isImage)
-			{
-				if (!$objFile->isSvgImage || ($objFile->viewWidth && $objFile->viewHeight))
-				{
-					$container = System::getContainer();
-					$projectDir = $container->getParameter('kernel.project_dir');
-
-					try
-					{
-						$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
-					}
-					catch (\Exception $e)
-					{
-						Message::addError($e->getMessage());
-						$image = Image::getPath('placeholder.svg');
-					}
-				}
-				else
-				{
-					$image = Image::getPath('placeholder.svg');
-				}
-
-				$objImage = new File($image);
-				$ctrl = 'ctrl_preview_' . substr(md5($image), 0, 8);
-
-				$strPreview = '
-<div id="' . $ctrl . '" class="tl_edit_preview">
-  <img src="' . $objImage->dataUri . '" width="' . $objImage->width . '" height="' . $objImage->height . '" alt="">
-</div>';
-
-				// Add the script to mark the important part
-				if (basename($image) !== 'placeholder.svg')
-				{
-					$strPreview .= '<script>Backend.editPreviewWizard($(\'' . $ctrl . '\'));</script>';
-
-					if (Config::get('showHelp'))
-					{
-						$strPreview .= '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG'][$this->strTable]['edit_preview_help'] . '</p>';
-					}
-
-					$strPreview = '<div class="widget">' . $strPreview . '</div>';
-				}
-			}
-		}
-
-		return $strPreview . '
+		return '
 <div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . ($objWidget->hasErrors() ? ' data-contao--scroll-offset-target="widgetError"' : '') . ($blnColorPicker ? ' data-controller="contao--color-picker" data-contao--color-picker-theme-value="monolith"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
 </div>';
 	}

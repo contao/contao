@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -20,6 +21,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +46,9 @@ abstract class AbstractLayoutPageController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        // Load contao_default translations (#8690)
+        $this->getContaoAdapter(System::class)->loadLanguageFile('default');
+
         // Set the context
         $this->container->get('contao.image.picture_factory')->setDefaultDensities($layout->defaultImageDensities);
         $this->container->get('contao.image.preview_factory')->setDefaultDensities($layout->defaultImageDensities);
@@ -54,6 +59,10 @@ abstract class AbstractLayoutPageController extends AbstractController
 
         $response = $this->getResponse($template, $layout, $request);
         $this->container->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
+
+        // Set cache headers
+        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+        $this->setCacheHeaders($response, $page);
 
         return $response;
     }

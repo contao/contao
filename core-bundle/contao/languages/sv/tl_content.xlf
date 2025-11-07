@@ -494,8 +494,8 @@
         <target>Spelarstorlek</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Mediaspelarens bredd och höjd i pixlar (t.ex. 640x480).</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>Mediaspelarens bredd och höjd i pixlar (t.ex. 640x360).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>

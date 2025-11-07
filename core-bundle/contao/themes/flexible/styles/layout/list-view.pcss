@@ -130,11 +130,8 @@
 }
 
 .tl_content .inside {
-    padding: var(--row-padding) 6px;
-}
-
-.tl_content.draft .inside {
     min-height: 16px;
+    padding: var(--row-padding) 6px;
 }
 
 .tl_content.draft .inside > :not(.tl_content_right, .cte_type) {
@@ -282,6 +279,7 @@
     gap: 3px;
     list-style: none;
     margin: 0;
+    padding: 0;
 }
 
 .operations a,
@@ -387,6 +385,7 @@
     font-size: .815rem;
     display: flex;
     align-items: center;
+    gap: 3px;
 }
 
 .cte_type.published, .cte_type.published a {
@@ -397,12 +396,14 @@
     color: var(--red);
 }
 
+/** Deprecated in Contao 5.6, to be removed in Contao 6 */
 .cte_type.icon-protected {
     padding-left: 27px;
     background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
 }
 
-.cte_type .visibility {
+.cte_type .visibility,
+.cte_type .type {
     color: var(--gray);
 }
 
@@ -412,7 +413,11 @@
     margin-left: -10px;
     background: none;
     border: none;
-    padding-right: 3px;
+    padding-right: 4px;
+}
+
+.cte_type .drag-handle {
+    padding-right: 1px;
 }
 
 .cte_preview {
@@ -548,10 +553,6 @@
     vertical-align: middle;
 }
 
-.cte_preview.empty {
-    display: none;
-}
-
 .as-grid .cte_preview {
     padding: 10px 10px 6px;
 }
@@ -578,6 +579,10 @@
 
 [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
     background: linear-gradient(transparent, var(--content-bg) 60%);
+}
+
+:is(.hover-div:hover, .hover-row:hover) [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
+    background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
 .limit_toggler {

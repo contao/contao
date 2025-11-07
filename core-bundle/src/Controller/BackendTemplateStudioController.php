@@ -522,7 +522,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         // TODO: In Contao 6, do not add theme paths in the ContaoFilesystemLoader to
         // begin with and remove this logic to suppress them (see #7027).
         foreach (array_keys($this->getAvailableThemes()) as $slug) {
-            $suppressedPrefixes[] = $this->themeNamespace->getPath($slug);
+            $suppressedPrefixes[] = $this->themeNamespace->getPath((string) $slug);
         }
 
         $regex = \sprintf('#^(%s)/#', implode('|', array_map(
@@ -564,10 +564,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         ");
 
         return array_combine(
-            array_map(
-                fn (string $path): string => $this->themeNamespace->generateSlug($path),
-                array_keys($themes),
-            ),
+            array_map($this->themeNamespace->generateSlug(...), array_keys($themes)),
             array_values($themes),
         );
     }
