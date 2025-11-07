@@ -113,6 +113,12 @@ services:
         arguments:
             - '@contao.csp.parser'
 
+    contao.listener.data_container.cud_permission:
+        class: Contao\CoreBundle\EventListener\DataContainer\CudPermissionListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.resource_finder'
+
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
