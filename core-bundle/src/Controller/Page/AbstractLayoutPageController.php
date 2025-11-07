@@ -161,6 +161,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
             if ($definition['enable'] ?? false) {
                 $isContentElement = str_starts_with($definition['mod'], 'content-');
+
                 $elementReferencesBySlot[$definition['col']][] = [
                     'type' => $isContentElement ? 'content_element' : 'frontend_module',
                     'id' => (int) ($isContentElement ? substr($definition['mod'], 8) : $definition['mod']),
