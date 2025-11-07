@@ -12,11 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataCollector;
 
+use CmsIg\Seal\Adapter\AdapterInterface;
+use CmsIg\Seal\Adapter\Loupe\LoupeAdapter;
 use Contao\ArticleModel;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\LayoutModel;
 use Contao\StringUtil;
@@ -31,6 +36,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\Routing\RouterInterface;
+use Toflar\CronjobSupervisor\Supervisor;
 
 /**
  * @internal
@@ -42,9 +48,13 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     public function __construct(
         private readonly TokenChecker $tokenChecker,
         private readonly RequestStack $requestStack,
-        private readonly ImagineInterface $imagine,
+        private readonly ImagineInterface&InfoProvider $imagine,
         private readonly RouterInterface $router,
         private readonly PageFinder $pageFinder,
+        private readonly Cron $cron,
+        private readonly BackendSearch|null $backendSearch = null,
+        private readonly WebWorker|null $webWorker = null,
+        private readonly AdapterInterface|null $backendSearchAdapter = null,
     ) {
     }
 
@@ -56,6 +66,10 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
         if ($this->requestStack->getMainRequest() === $request) {
             $this->addImageChecks();
+
+            if ($this->backendSearch) {
+                $this->addBackendSearchChecks();
+            }
         }
     }
 
@@ -80,6 +94,14 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $this->getData('image_checks');
     }
 
+    /**
+     * @return array<string, string|bool|array>|null
+     */
+    public function getBackendSearchChecks(): array|null
+    {
+        return $this->getData('backend_search_checks');
+    }
+
     public function getAdditionalData(): array
     {
         $data = $this->data;
@@ -88,6 +110,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             $data['summary'],
             $data['image_checks'],
             $data['contao_version'],
+            $data['backend_search_checks'],
         );
 
         return $data;
@@ -171,16 +194,12 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     {
         $info = [
             'label' => $format,
-            'supported' => false,
+            'supported' => $this->imagine->getDriverInfo()->isFormatSupported($format),
             'error' => '',
         ];
 
-        if ($this->imagine instanceof InfoProvider) {
-            $info['supported'] = $this->imagine->getDriverInfo()->isFormatSupported($format);
-        }
-
         if ($this->imagine instanceof ImagickImagine) {
-            $info['supported'] = \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
+            $info['supported'] = $info['supported'] || \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
 
             if ('pdf' === $format) {
                 try {
@@ -198,11 +217,11 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
 
         if ($this->imagine instanceof GmagickImagine) {
-            $info['supported'] = \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
+            $info['supported'] = $info['supported'] || \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
         }
 
         if ($this->imagine instanceof GdImagine) {
-            $info['supported'] = \function_exists('image'.$format);
+            $info['supported'] = $info['supported'] || \function_exists('image'.$format);
         }
 
         if (!$info['supported'] && !$info['error']) {
@@ -210,6 +229,19 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         }
 
         return $info;
+    }
+
+    private function addBackendSearchChecks(): void
+    {
+        $this->data['backend_search_checks'] = [
+            'available' => $this->backendSearch?->isAvailable() ?? false,
+            'requires_sqlite' => $this->backendSearchAdapter instanceof LoupeAdapter,
+            'sqlite_supported' => array_intersect(['pdo_sqlite', 'sqlite3'], [...get_loaded_extensions(true), ...get_loaded_extensions()]),
+            'supervisor_supported' => Supervisor::canSuperviseWithProviders(Supervisor::getDefaultProviders()),
+            'pnctl_disabled' => array_filter(explode(',', (string) \ini_get('disable_functions')), static fn (string $f) => str_starts_with($f, 'pnctl_')),
+            'cron_running' => $this->cron->hasMinutelyCliCron(),
+            'cli_workers_running' => $this->webWorker?->hasCliWorkersRunning() ?? false,
+        ];
     }
 
     private function getPageName(): string

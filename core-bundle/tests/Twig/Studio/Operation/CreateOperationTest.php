@@ -23,7 +23,7 @@ class CreateOperationTest extends AbstractOperationTestCase
         );
     }
 
-    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate', validateArgumentCount: false)]
     public function testFailToCreateUserTemplateBecauseItAlreadyExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();

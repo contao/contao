@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="XPL.insertTags.0.0">
         <source>Rich text editor</source>
-        <target>Zengin yazı düzenleyici</target>
+        <target>Zengin metin düzenleyici</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
         <source>For more information about TinyMCE, see &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>

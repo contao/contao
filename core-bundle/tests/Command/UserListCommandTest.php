@@ -52,7 +52,7 @@ class UserListCommandTest extends TestCase
         $this->executeCommand($command, ['--format' => 'foo'], 1);
     }
 
-    #[DataProvider('listsUsersProvider')]
+    #[DataProvider('listsUsersProvider', validateArgumentCount: false)]
     public function testListsUsers(array $input, array $data, string $expected): void
     {
         $command = $this->getCommand($this->mockQueryBuilder($data));

@@ -55,7 +55,6 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.1">
         <source>Copy media query ID %s</source>
-        <target>%s kimlikli ortam kuyruğunu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
@@ -73,23 +72,19 @@
         <source>Activate media query ID %s</source>
         <target>%s kimlikli ortam kuyruğunu etkinleştir</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.3">
-        <source>Deactivate</source>
-        <target>Etkisizleştir</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.4">
-        <source>Activate</source>
-        <target>Etkinleştir</target>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Üste yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
         <target>%s kimlikli ortam kuyruğundan sonra yapıştır</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenewtop.1">
+      <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
         <target>En üste yeni bir ortam kuyruğu ekle</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenewafter.1">
+      <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
         <target>%s kimlikli ortam kuyruğundan sonra yeni bir ortam kuyruğu ekle</target>
       </trans-unit>

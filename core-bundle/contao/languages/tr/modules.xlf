@@ -163,11 +163,9 @@
       </trans-unit>
       <trans-unit id="MOD.jobs.0">
         <source>Jobs</source>
-        <target>Görevler</target>
       </trans-unit>
       <trans-unit id="MOD.jobs.1">
         <source>Overview of the system jobs</source>
-        <target>Sistem görevleri özeti</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>

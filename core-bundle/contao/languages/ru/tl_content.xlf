@@ -494,8 +494,8 @@
         <target>Размер проигрывателя</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Ширина и высота проигрывателя в пикселах (напр. 640x480).</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>Ширина и высота проигрывателя в пикселах (напр. 640x360).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
@@ -977,15 +977,19 @@
         <source>Unhide</source>
         <target>Отменить скрытие</target>
       </trans-unit>
+      <trans-unit id="tl_content.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>Вставить после элемента контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenewtop.1">
+      <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
         <target>Создать новый элемент контента вверху</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenewafter.1">
+      <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Создать новый элемент контента после элемента ID %s</target>
       </trans-unit>

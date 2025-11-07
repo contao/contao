@@ -38,6 +38,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     label: string,
      *     title?: string,
      *     attributes?: HtmlAttributes,
+     *     listAttributes?: HtmlAttributes,
      *     icon?: string,
      *     iconAttributes?: HtmlAttributes,
      *     href?: string,
@@ -56,6 +57,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     label: string,
      *     title?: string,
      *     attributes?: HtmlAttributes,
+     *     listAttributes?: HtmlAttributes,
      *     icon?: string,
      *     iconAttributes?: HtmlAttributes,
      *     href?: string,
@@ -81,6 +83,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     label: string,
      *     title?: string,
      *     attributes?: HtmlAttributes,
+     *     listAttributes?: HtmlAttributes,
      *     icon?: string,
      *     iconAttributes?: HtmlAttributes,
      *     href?: string,
@@ -253,7 +256,11 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
         }
 
         if (!isset($label[0])) {
-            $label[0] = $GLOBALS['TL_LANG']['DCA'][$key][0] ?? $label[1];
+            if (\is_array($GLOBALS['TL_LANG']['DCA'][$key] ?? null) && isset($GLOBALS['TL_LANG']['DCA'][$key][0])) {
+                $label[0] = $GLOBALS['TL_LANG']['DCA'][$key][0];
+            } else {
+                $label[0] = $label[1];
+            }
         }
 
         return $label;

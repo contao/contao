@@ -19,7 +19,7 @@
     <input type="hidden" name="{{ name }}" value="">
     {% if options is not empty %}
         <span class="fixed">
-            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-contao--check-all-target="source" data-action="contao--check-all#update contao--scroll-offset#store">
+            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
             <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
         </span>
         {% for option in options %}
@@ -32,7 +32,7 @@
                     .set('value', option.value|default)
                     .set('checked', true, option.checked|default)
                     .set('data-contao--check-all-target', 'input')
-                    .set('data-action', 'focus->contao--scroll-offset#store')
+                    .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
                     .mergeWith(attributes)
                 %}
                 <input{{ input_attributes }}>

@@ -423,7 +423,7 @@
       </trans-unit>
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
-        <target>Yazı bileşenleri</target>
+        <target>Metin bileşenleri</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -439,11 +439,11 @@
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
-        <target>Yazı</target>
+        <target>Metin</target>
       </trans-unit>
       <trans-unit id="CTE.text.1">
         <source>Generates a rich text element.</source>
-        <target>Bir zengin yazı ögesi oluşturur.</target>
+        <target>Bir zengin metin ögesi oluşturur.</target>
       </trans-unit>
       <trans-unit id="CTE.html.0">
         <source>HTML</source>
@@ -539,7 +539,7 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a Markdown text.</source>
-        <target>Bir markdown yazısından HTML kodu oluşturur.</target>
+        <target>Bir Markdown metninden HTML kodu oluşturur.</target>
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
@@ -703,7 +703,7 @@
       </trans-unit>
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
-        <target>Bir makalenin tanıtım yazısını görüntüler.</target>
+        <target>Bir makalenin tanıtım metnini görüntüler.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -715,11 +715,9 @@
       </trans-unit>
       <trans-unit id="CTE.manage_passkeys.0">
         <source>Manage passkeys</source>
-        <target>Geçiş anahtarları yönetimi</target>
       </trans-unit>
       <trans-unit id="CTE.manage_passkeys.1">
         <source>Allows to manage the passkeys of a member.</source>
-        <target>Bir üyenin geçiş anahtarlarının yönetilmesini sağlar.</target>
       </trans-unit>
       <trans-unit id="CTE.login.0">
         <source>Login form</source>
@@ -727,7 +725,6 @@
       </trans-unit>
       <trans-unit id="CTE.login.1">
         <source>Generates a login form.</source>
-        <target>Bir oturum açma formu oluşturur.</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -735,7 +732,7 @@
       </trans-unit>
       <trans-unit id="FFL.explanation.1">
         <source>A custom field to insert an explanation text.</source>
-        <target>Bir açıklama yazısı eklemek için özel bir alan.</target>
+        <target>Bir açıklama metni eklemek için özel bir alan.</target>
       </trans-unit>
       <trans-unit id="FFL.html.0">
         <source>HTML code</source>
@@ -763,11 +760,11 @@
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>
-        <target>Yazı alanı</target>
+        <target>Metin alanı</target>
       </trans-unit>
       <trans-unit id="FFL.text.1">
         <source>A single-line input field for a short or medium text.</source>
-        <target>Kısa ya da orta boyda bir yazı için tek satırlı bir giriş alanı.</target>
+        <target>Kısa ya da orta boyda bir metin için tek satırlı bir giriş alanı.</target>
       </trans-unit>
       <trans-unit id="FFL.password.0">
         <source>Password field</source>
@@ -783,7 +780,7 @@
       </trans-unit>
       <trans-unit id="FFL.textarea.1">
         <source>A multi-line input field for a medium or long text.</source>
-        <target>Orta ya da uzun boyda bir yazı için çok satırlı bir giriş alanı.</target>
+        <target>Orta ya da uzun boyda bir metin için çok satırlı bir giriş alanı.</target>
       </trans-unit>
       <trans-unit id="FFL.select.0">
         <source>Select menu</source>
@@ -1423,7 +1420,6 @@
       </trans-unit>
       <trans-unit id="MSC.mw_module">
         <source>Module or content element</source>
-        <target>Modül ya da içerik bileşeni</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
@@ -1431,7 +1427,6 @@
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module or content element</source>
-        <target>Modülü ya da içerik bileşenini etkinleştir/etkisizleştir</target>
       </trans-unit>
       <trans-unit id="MSC.mw_modules">
         <source>Front end modules</source>
@@ -1447,7 +1442,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
-        <target>Alternatif yazı</target>
+        <target>Alternatif metin</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -2859,7 +2854,7 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>Buradan, Google arama sonuçlarındaki üst verileri ön izleyebilirsiniz. Diğer arama motorları üst verileri daha uzun yazılar olarak görüntüleyebilir ya da farklı bir konumdan kırpabilir.</target>
+        <target>Buradan, Google arama sonuçlarındaki üst verileri ön izleyebilirsiniz. Diğer arama motorları üst verileri daha uzun metinler olarak görüntüleyebilir ya da farklı bir konumdan kırpabilir.</target>
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.0">
         <source>Number of items</source>
@@ -2927,7 +2922,6 @@
       </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
-        <target>Görev özeti</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -3015,15 +3009,12 @@
       </trans-unit>
       <trans-unit id="MSC.editPasskey">
         <source>Edit passkey &quot;%s&quot;</source>
-        <target>&quot;%s&quot; geçiş anahtarını düzenle</target>
       </trans-unit>
       <trans-unit id="MSC.savePasskey">
         <source>Save passkey &quot;%s&quot;</source>
-        <target>&quot;%s&quot; geçiş anahtarını kaydet</target>
       </trans-unit>
       <trans-unit id="MSC.deletePasskey">
         <source>Delete passkey &quot;%s&quot;</source>
-        <target>&quot;%s&quot; geçiş anahtarını sil</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
@@ -3059,35 +3050,27 @@
       </trans-unit>
       <trans-unit id="MSC.ariaMenuExpand">
         <source>Expand menu: </source>
-        <target>Menüyü genişlet:</target>
       </trans-unit>
       <trans-unit id="MSC.ariaMenuCollapse">
         <source>Collapse menu: </source>
-        <target>Menüyü daralt:</target>
       </trans-unit>
       <trans-unit id="MSC.skipToContent">
         <source>Skip to content</source>
-        <target>İçeriğe geç</target>
       </trans-unit>
       <trans-unit id="MSC.clipboardCopy">
         <source>Copied to clipboard.</source>
-        <target>Panoya kopyalandı.</target>
       </trans-unit>
       <trans-unit id="MSC.searchIndexer.0">
         <source>Search indexer</source>
-        <target>Arama dizinine ekleyici</target>
       </trans-unit>
       <trans-unit id="MSC.searchIndexer.1">
         <source>Here you can override the robots meta tag setting for the internal search index.</source>
-        <target>Buradan iç arama dizini için robots üst veri kod imi ayarını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="MSC.always_index">
         <source>Always index</source>
-        <target>Her zaman dizine eklensin</target>
       </trans-unit>
       <trans-unit id="MSC.never_index">
         <source>Never index</source>
-        <target>Asla dizine eklenmesin</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3279,15 +3262,12 @@
       </trans-unit>
       <trans-unit id="DCA.copy.1">
         <source>Copy element ID %s</source>
-        <target>%s kimlikli bileşeni kopyala</target>
       </trans-unit>
       <trans-unit id="DCA.copyChildren.0">
         <source>Copy recursively</source>
-        <target>Alta doğru kopyala</target>
       </trans-unit>
       <trans-unit id="DCA.copyChildren.1">
         <source>Copy element ID %s with child nodes</source>
-        <target>%s kimlikli bileşeni alt düğümleri ile kopyala</target>
       </trans-unit>
       <trans-unit id="DCA.delete.0">
         <source>Delete</source>
@@ -3303,7 +3283,6 @@
       </trans-unit>
       <trans-unit id="DCA.global_operations">
         <source>Show all global operations</source>
-        <target>Tüm genel işlemleri görüntüle</target>
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
@@ -3311,7 +3290,6 @@
       </trans-unit>
       <trans-unit id="DCA.children.0">
         <source>Child elements</source>
-        <target>Alt bileşenler</target>
       </trans-unit>
       <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
@@ -3331,11 +3309,9 @@
       </trans-unit>
       <trans-unit id="DCA.toggle.3">
         <source>Unpublish</source>
-        <target>Yayından kaldır</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.4">
         <source>Publish</source>
-        <target>Yayınla</target>
       </trans-unit>
       <trans-unit id="DCA.pastetop">
         <source>Paste at the top</source>
@@ -3363,7 +3339,6 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.0">
         <source>New at the top</source>
-        <target>Yeni üstte görüntülensin</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
@@ -3371,7 +3346,6 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.0">
         <source>New after</source>
-        <target>Sonrasına yeni</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
@@ -3379,11 +3353,9 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.0">
         <source>New inside</source>
-        <target>İçine yeni</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
-        <target>%s kimlikli bileşene yeni bir bileşen ekle</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

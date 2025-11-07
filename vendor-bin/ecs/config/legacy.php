@@ -119,5 +119,5 @@ return ECSConfig::configure()
     ->withConfiguredRule(HeaderCommentFixer::class, ['header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later"])
     ->withConfiguredRule(ListSyntaxFixer::class, ['syntax' => 'long'])
     ->withConfiguredRule(NoExtraBlankLinesFixer::class, ['tokens' => ['curly_brace_block', 'extra', 'parenthesis_brace_block', 'square_brace_block', 'use']])
-    ->withCache(sys_get_temp_dir().'/ecs/contao56-legacy')
+    ->withCache(sys_get_temp_dir().'/ecs/contao5x-legacy')
 ;

@@ -146,7 +146,7 @@ class PaletteBuilder
      * @return array<int, array{
      *     key: string,
      *     class: string,
-     *     fields: array<int,string>
+     *     fields: array<int, string>
      * }>
      */
     public function getBoxes(string $palette, string $table, bool $addMetaFields = false): array

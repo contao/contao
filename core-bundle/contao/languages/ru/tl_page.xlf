@@ -703,15 +703,12 @@
       </trans-unit>
       <trans-unit id="tl_page.pastenewtop.1">
         <source>Add a new page at the top</source>
-        <target>Добавить новую страницу вверху</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewafter.1">
         <source>Add a new page after page ID %s</source>
-        <target>Добавить новую страницу после страницы ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewinto.1">
         <source>Add a new page inside page ID %s</source>
-        <target>Добавить новую страницу в страницу ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.articles.0">
         <source>Articles</source>

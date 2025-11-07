@@ -17,6 +17,14 @@
         <source>Here you can select the layout type.</source>
         <target>Aquí puede seleccionar el tipo de diseño.</target>
       </trans-unit>
+      <trans-unit id="tl_layout.fallback.0">
+        <source>Default layout</source>
+        <target>Diseño por defecto</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.fallback.1">
+        <source>Make the layout the default layout.</source>
+        <target>Si seleccionas esta opción, el diseño será utilizado por defecto.</target>
+      </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
         <target>Encabezado y pie</target>
@@ -434,8 +442,8 @@
         <target>Estructura de twig con espacios para contenido</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
-        <source>Default layout</source>
-        <target>Diseño por defecto</target>
+        <source>Legacy HTML5 layout</source>
+        <target>Diseño HTML5 antiguo</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -20,6 +21,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +46,9 @@ abstract class AbstractLayoutPageController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        // Load contao_default translations (#8690)
+        $this->getContaoAdapter(System::class)->loadLanguageFile('default');
+
         // Set the context
         $this->container->get('contao.image.picture_factory')->setDefaultDensities($layout->defaultImageDensities);
         $this->container->get('contao.image.preview_factory')->setDefaultDensities($layout->defaultImageDensities);
@@ -54,6 +59,10 @@ abstract class AbstractLayoutPageController extends AbstractController
 
         $response = $this->getResponse($template, $layout, $request);
         $this->container->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
+
+        // Set cache headers
+        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+        $this->setCacheHeaders($response, $page);
 
         return $response;
     }
@@ -75,6 +84,10 @@ abstract class AbstractLayoutPageController extends AbstractController
 
     protected function getResponseContext(PageModel $page): ResponseContext
     {
+        if ($responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext()) {
+            return $responseContext;
+        }
+
         return $this->container
             ->get('contao.routing.response_context_factory')
             ->createContaoWebpageResponseContext($page)
@@ -143,20 +156,25 @@ abstract class AbstractLayoutPageController extends AbstractController
         });
 
         // Content composition
-        $moduleIdsBySlot = [];
+        $elementReferencesBySlot = [];
 
         foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
             if ($definition['enable'] ?? false) {
-                $moduleIdsBySlot[$definition['col']][] = (int) $definition['mod'];
+                $isContentElement = str_starts_with($definition['mod'], 'content-');
+
+                $elementReferencesBySlot[$definition['col']][] = [
+                    'type' => $isContentElement ? 'content_element' : 'frontend_module',
+                    'id' => (int) ($isContentElement ? substr($definition['mod'], 8) : $definition['mod']),
+                ];
             }
         }
 
-        $template->set('modules', $moduleIdsBySlot);
+        $template->set('element_references', $elementReferencesBySlot);
 
-        foreach ($moduleIdsBySlot as $slot => $moduleIds) {
+        foreach ($elementReferencesBySlot as $slot => $elementIds) {
             // We use a lazy value here, so that modules won't get rendered if not requested.
             // This is for instance the case if the slot's content was defined explicitly.
-            $lazyValue = new class(fn () => $this->renderSlot($slot, $moduleIds)) {
+            $lazyValue = new class(fn () => $this->renderSlot($slot, $elementIds)) {
                 public function __construct(private \Closure|string $value)
                 {
                 }
@@ -219,13 +237,13 @@ abstract class AbstractLayoutPageController extends AbstractController
     }
 
     /**
-     * @param list<int> $moduleIds
+     * @param list<array{type: string, id: int}> $elementReferences
      */
-    protected function renderSlot(string $slot, array $moduleIds, string $identifier = 'frontend_module/module_group'): string
+    protected function renderSlot(string $slot, array $elementReferences, string $identifier = 'layout/_element_group'): string
     {
         $result = $this->renderView("@Contao/$identifier.html.twig", [
             '_slot_name' => $slot,
-            'modules' => $moduleIds,
+            'references' => $elementReferences,
         ]);
 
         // If there is no non-whitespace character, do not output the slot at all

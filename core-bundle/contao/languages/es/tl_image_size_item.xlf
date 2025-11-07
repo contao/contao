@@ -73,23 +73,19 @@
         <source>Activate media query ID %s</source>
         <target>Activar ID de media query%s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.3">
-        <source>Deactivate</source>
-        <target>Desactivar</target>
-      </trans-unit>
-      <trans-unit id="tl_image_size_item.toggle.4">
-        <source>Activate</source>
-        <target>Activar</target>
+      <trans-unit id="tl_image_size_item.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Pegar al inicio</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
         <target>Pegar después de la ID del media query %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenewtop.1">
+      <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
         <target>Crear una nueva consulta de medios en la parte superior</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenewafter.1">
+      <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
         <target>Crear una nueva consulta de medios después del ID de la consulta de medios %s</target>
       </trans-unit>
