@@ -374,10 +374,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->get('twig')
 			->render(
 				"@Contao/backend/data_container/table/$component.html.twig",
-				array(
-					'table' => $this->table,
-					...$parameters,
-				)
+				array('table' => $this->table, ...$parameters)
 			)
 		;
 	}
