@@ -19,9 +19,16 @@
     margin: 0 15px 15px;
     background: var(--content-bg);
     border: 1px solid var(--content-border);
+    border-radius: var(--border-radius);
+}
+
+#main .content:has(.tl_formbody_submit) {
+  overflow: clip;
 }
 
 .popup #main .content {
+    height: auto;
     margin: 0;
     border: 0;
+    border-radius: 0;
 }

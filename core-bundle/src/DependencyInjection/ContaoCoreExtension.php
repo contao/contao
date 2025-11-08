@@ -111,6 +111,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('commands.yaml');
         $loader->load('controller.yaml');
+        $loader->load('form.yaml');
         $loader->load('listener.yaml');
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
@@ -251,6 +252,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config
             ->mountLocalAdapter('var/backups', 'backups', 'backups')
             ->addVirtualFilesystem('backups', 'backups')
+        ;
+
+        // Job attachments
+        $config
+            ->mountLocalAdapter('var/job-attachments', 'job-attachments', 'job-attachments')
+            ->addVirtualFilesystem('job-attachments', 'job-attachments')
         ;
 
         // User templates

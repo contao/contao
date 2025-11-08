@@ -7,7 +7,7 @@ dialog[data-controller="contao--dialog"] {
         background: var(--content-bg);
         border: 1px solid var(--border);
         box-shadow: 0 0 1em rgb(0 0 0 / 30%);
-        border-radius: 2px;
+        border-radius: var(--border-radius);
         max-width: 60ch;
     }
 
@@ -59,6 +59,7 @@ dialog[data-controller="contao--dialog"] {
     }
 
     .header_wrapper h3 {
+        margin-top: 5px;
         font-size: larger;
     }
 
@@ -74,7 +75,7 @@ dialog[data-controller="contao--dialog"] {
         button {
             padding: 0.5rem 1.25rem;
             border: 1px solid var(--form-border);
-            border-radius: 2px;
+            border-radius: var(--border-radius);
             box-sizing: border-box;
             background: var(--form-bg);
             transition: background 0.2s ease;

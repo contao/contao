@@ -72,7 +72,6 @@ class BackendFavoritesListener
         $params = [
             'do' => $request->query->get('do'),
             'mtg' => 'favorites',
-            'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
         $bag = $this->requestStack->getSession()->getBag('contao_backend');
@@ -104,9 +103,8 @@ class BackendFavoritesListener
         }
 
         $requestUri = $this->getRequestUri($request);
-        $ref = $request->attributes->get('_contao_referer_id');
 
-        $this->buildTree($tree, $factory, $requestUri, $ref, $user->id);
+        $this->buildTree($tree, $factory, $requestUri, $user->id);
 
         if (!$tree->hasChildren()) {
             return;
@@ -143,9 +141,9 @@ class BackendFavoritesListener
         $factory = $event->getFactory();
 
         if ($exists) {
-            $tree = $this->addEditFavoritesLink($factory, $request);
+            $tree = $this->addEditFavoritesLink($factory);
         } else {
-            $tree = $this->addSaveAsFavoriteLink($factory, $request, $url);
+            $tree = $this->addSaveAsFavoriteLink($factory, $url);
         }
 
         $event->getTree()->addChild($tree);
@@ -154,7 +152,7 @@ class BackendFavoritesListener
         (new MenuManipulator())->moveToPosition($tree, 1);
     }
 
-    private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, string $ref, int $user, int $pid = 0): void
+    private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, int $user, int $pid = 0): void
     {
         $nodes = $this->connection->fetchAllAssociative(
             'SELECT * FROM tl_favorites WHERE pid = :pid AND user = :user ORDER BY sorting',
@@ -173,7 +171,7 @@ class BackendFavoritesListener
             $item = $factory
                 ->createItem('favorite_'.$node['id'])
                 ->setLabel(StringUtil::decodeEntities($node['title']))
-                ->setUri($node['url'].(str_contains((string) $node['url'], '?') ? '&' : '?').'ref='.$ref)
+                ->setUri($node['url'])
                 ->setLinkAttribute('class', 'navigation')
                 ->setLinkAttribute('title', StringUtil::decodeEntities($node['title']))
                 ->setCurrent($node['url'] === $requestUri)
@@ -182,11 +180,11 @@ class BackendFavoritesListener
 
             $tree->addChild($item);
 
-            $this->buildTree($item, $factory, $requestUri, $ref, $user, (int) $node['id']);
+            $this->buildTree($item, $factory, $requestUri, $user, (int) $node['id']);
         }
     }
 
-    private function addSaveAsFavoriteLink(FactoryInterface $factory, Request $request, string $url): ItemInterface
+    private function addSaveAsFavoriteLink(FactoryInterface $factory, string $url): ItemInterface
     {
         $favoriteTitle = $this->translator->trans('MSC.favorite', [], 'contao_default');
 
@@ -196,7 +194,6 @@ class BackendFavoritesListener
             'mode' => 'create',
             'data' => base64_encode($url),
             'rt' => $this->tokenManager->getDefaultTokenValue(),
-            'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
         return $factory
@@ -210,13 +207,12 @@ class BackendFavoritesListener
         ;
     }
 
-    private function addEditFavoritesLink(FactoryInterface $factory, Request $request): ItemInterface
+    private function addEditFavoritesLink(FactoryInterface $factory): ItemInterface
     {
         $favoriteTitle = $this->translator->trans('MSC.editFavorites', [], 'contao_default');
 
         $favoriteData = [
             'do' => 'favorites',
-            'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
         return $factory
@@ -236,7 +232,7 @@ class BackendFavoritesListener
             parse_str($qs, $pairs);
             ksort($pairs);
 
-            unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+            unset($pairs['rt'], $pairs['revise']);
 
             if ([] !== $pairs) {
                 $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);

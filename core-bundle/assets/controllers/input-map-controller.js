@@ -18,7 +18,7 @@ export default class extends Controller {
     }
 
     removeElement(event) {
-        const el = this._getElement(event);
+        const el = this.#getElement(event);
 
         if (!el) {
             return;
@@ -29,7 +29,7 @@ export default class extends Controller {
         this.update();
     }
 
-    _getElement(event) {
+    #getElement(event) {
         if (event.params.closest) {
             return event.target.closest(event.params.closest);
         }

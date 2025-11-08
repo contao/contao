@@ -125,6 +125,11 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_jobs:
+        class: Contao\CoreBundle\Cron\PurgeJobsCron
+        arguments:
+            - '@contao.job.jobs'
+
     contao.cron.purge_opt_in_tokens:
         class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
         arguments:
@@ -190,6 +195,11 @@ services:
             - '@contao.image.imagine'
             - '@router'
             - '@contao.routing.page_finder'
+            - '@contao.cron'
+            - '@?contao.search.backend'
+            - '@?contao.messenger.web_worker'
+            - '@?contao.search_backend.adapter'
+
         tags:
             - { name: data_collector, template: '@Contao/web_debug_toolbar/contao_collector.html.twig', id: contao }
 
@@ -629,6 +639,8 @@ services:
         arguments:
             - '@database_connection'
             - '@security.helper'
+            - '@contao.filesystem.virtual.job-attachments'
+            - '@router'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -1287,6 +1299,12 @@ services:
             - '@contao.translation.data_collector_translator.inner'
         tags:
             - { name: kernel.reset, method: reset }
+
+    contao.translation.legacy_locale_switcher:
+        class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
+        arguments:
+            - '@contao.framework'
+            - '@translator'
 
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator

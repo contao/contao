@@ -75,6 +75,7 @@ class InsertTagsController
         $response = new Response();
         $response->headers->set('Content-Type', 'text/html');
         $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+
         $response->setPublic();
         $response->setContent($this->insertTagParser->replaceInline($insertTag));
 

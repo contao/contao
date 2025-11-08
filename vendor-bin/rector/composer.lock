@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "21ee6dd96d75724df7a95671531287a6",
+    "content-hash": "1c42bdc5f1e9e0fddf55e2e67a242c8b",
     "packages": [
         {
             "name": "contao/rector",
@@ -58,16 +58,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.22",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "41600c8379eb5aee63e9413fe9e97273e25d57e4"
-            },
+            "version": "2.1.31",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/41600c8379eb5aee63e9413fe9e97273e25d57e4",
-                "reference": "41600c8379eb5aee63e9413fe9e97273e25d57e4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ead89849d879fe203ce9292c6ef5e7e76f867b96",
+                "reference": "ead89849d879fe203ce9292c6ef5e7e76f867b96",
                 "shasum": ""
             },
             "require": {
@@ -112,25 +107,25 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-04T19:17:37+00:00"
+            "time": "2025-10-10T14:14:11+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "2.1.4",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "fe613c528819222f8686a9a037a315ef9d4915b3"
+                "reference": "d27f976a332a87b5d03553c2e6f04adbe5da034f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/fe613c528819222f8686a9a037a315ef9d4915b3",
-                "reference": "fe613c528819222f8686a9a037a315ef9d4915b3",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d27f976a332a87b5d03553c2e6f04adbe5da034f",
+                "reference": "d27f976a332a87b5d03553c2e6f04adbe5da034f",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.1.18"
+                "phpstan/phpstan": "^2.1.26"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -164,7 +159,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.1.4"
+                "source": "https://github.com/rectorphp/rector/tree/2.2.3"
             },
             "funding": [
                 {
@@ -172,7 +167,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-15T14:41:36+00:00"
+            "time": "2025-10-11T21:50:23+00:00"
         }
     ],
     "packages-dev": [],
@@ -184,7 +179,7 @@
     "platform": {},
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.2"
+        "php": "8.3"
     },
     "plugin-api-version": "2.6.0"
 }

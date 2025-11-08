@@ -2,6 +2,12 @@
 <xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en">
     <body>
+      <trans-unit id="tl_files.preview.0">
+        <source>Image preview</source>
+      </trans-unit>
+      <trans-unit id="tl_files.preview.1">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+      </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
       </trans-unit>
@@ -91,9 +97,6 @@
       </trans-unit>
       <trans-unit id="tl_files.editFile">
         <source>Edit file "%s"</source>
-      </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
@@ -208,6 +211,9 @@
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file "%s"</source>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder "%s"</source>

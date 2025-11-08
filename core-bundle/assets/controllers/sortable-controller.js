@@ -16,7 +16,7 @@ export default class extends Controller {
         const options = {
             animation: 100,
             onSort: (event) => {
-                this._onSorted(event.item);
+                this.#onSorted(event.item);
             },
         };
 
@@ -53,7 +53,7 @@ export default class extends Controller {
     }
 
     move(event) {
-        const item = this._getItem(event.target);
+        const item = this.#getItem(event.target);
 
         if (event.code === 'ArrowUp' || event.keyCode === 38) {
             event.preventDefault();
@@ -64,7 +64,7 @@ export default class extends Controller {
                 this.element.append(item);
             }
 
-            this._onSorted(item);
+            this.#onSorted(item);
             event.target.focus();
         } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
             event.preventDefault();
@@ -75,12 +75,12 @@ export default class extends Controller {
                 this.element.prepend(item);
             }
 
-            this._onSorted(item);
+            this.#onSorted(item);
             event.target.focus();
         }
     }
 
-    _updateWrapperLevel() {
+    #updateWrapperLevel() {
         const divs = this.element.querySelectorAll('li > div:first-child');
 
         if (!divs) {
@@ -118,7 +118,7 @@ export default class extends Controller {
         }
     }
 
-    _updateParentSorting(el) {
+    #updateParentSorting(el) {
         const url = new URL(window.location.href);
 
         url.searchParams.set('rt', this.requestTokenValue);
@@ -138,20 +138,20 @@ export default class extends Controller {
         });
     }
 
-    _getItem(el) {
+    #getItem(el) {
         if (!el.parentNode || el.parentNode === this.element) {
             return el;
         }
 
-        return this._getItem(el.parentNode);
+        return this.#getItem(el.parentNode);
     }
 
-    _onSorted(item) {
+    #onSorted(item) {
         this.dispatch('update', { target: item });
 
         if (this.parentModeValue) {
-            this._updateWrapperLevel(item);
-            this._updateParentSorting(item);
+            this.#updateWrapperLevel(item);
+            this.#updateParentSorting(item);
         }
     }
 }

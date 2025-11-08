@@ -337,6 +337,9 @@ abstract class Backend extends Controller
 
 			$this->Template->main .= $response;
 
+			$url = System::getContainer()->get('router')->generate('contao_backend', array('do'=>$module));
+			$this->Template->headline = \sprintf('<span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($GLOBALS['TL_LANG']['MOD'][$module][0]));
+
 			// Add the name of the parent element
 			if (Input::get('table') !== null && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
@@ -345,13 +348,15 @@ abstract class Backend extends Controller
 					->limit(1)
 					->execute(Input::get('id'));
 
+				$url = System::getContainer()->get('router')->generate('contao_backend', array('do'=>$module, 'table'=>$strTable, 'id'=>Input::get('id')));
+
 				if ($objRow->title)
 				{
-					$this->Template->headline .= ' <span>' . $objRow->title . '</span>';
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($objRow->title));
 				}
 				elseif ($objRow->name)
 				{
-					$this->Template->headline .= ' <span>' . $objRow->name . '</span>';
+					$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($url), StringUtil::specialchars($objRow->name));
 				}
 			}
 
@@ -418,21 +423,7 @@ abstract class Backend extends Controller
 			$do = Input::get('do');
 
 			// Add the current action
-			if ($act == 'editAll')
-			{
-				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
-				{
-					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
-				}
-			}
-			elseif ($act == 'overrideAll')
-			{
-				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
-				{
-					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
-				}
-			}
-			elseif (Input::get('id'))
+			if (Input::get('id'))
 			{
 				if ($do == 'files' || $do == 'tpl_editor')
 				{
@@ -839,9 +830,14 @@ abstract class Backend extends Controller
 	 * @param string $inputName
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+	 *             use the Stimulus controller instead.
 	 */
 	public static function getTogglePasswordWizard($inputName)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the Stimulus controller instead.', __METHOD__);
+
 		return ' <button type="button" class="image-button" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg', $GLOBALS['TL_LANG']['MSC']['showPassword']) . '</button>
   <script>
     $("pw_' . $inputName . '").addEvent("click", function(e) {

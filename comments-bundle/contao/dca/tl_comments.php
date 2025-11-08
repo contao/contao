@@ -295,6 +295,7 @@ class tl_comments extends Backend
 	{
 		$router = System::getContainer()->get('router');
 		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
+		$onClick = ' onclick="Backend.openModalIframe({ title: \'&nbsp;\', url: this.href + \'&amp;popup=1&amp;nb=1\' }); return false;"';
 
 		switch ($arrRow['source'])
 		{
@@ -305,7 +306,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -316,7 +317,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -327,7 +328,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->headline . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->headline . '</a>';
 				}
 				break;
 
@@ -338,7 +339,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->question . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->question . '</a>';
 				}
 				break;
 
@@ -349,7 +350,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . $objParent->title . '</a>';
 				}
 				break;
 
