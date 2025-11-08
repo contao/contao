@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Pagination\PaginationInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\String\HtmlAttributes;
@@ -680,7 +681,9 @@ class Versions extends Controller
 								->execute(...$params);
 
 		/** @var PaginationInterface $pagination */
-		$pagination = System::getContainer()->get('contao.pagination.factory')->create('vp', $objTotal->count, 15, 7, false);
+		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
+			(new PaginationConfig('vp', $objTotal->count, 15))->withIgnoreOutOfBounds()
+		);
 		$intOffset = ($pagination->getCurrent() - 1) * 15;
 
 		// Create the pagination menu

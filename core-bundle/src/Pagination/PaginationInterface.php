@@ -29,7 +29,7 @@ interface PaginationInterface
 
     public function getUrlForPage(int $page): string;
 
-    public function getParam(): string;
+    public function getQueryParameterName(): string;
 
     public function getItemsForPage(array $items, int|null $page = null): array;
 }

@@ -22,6 +22,7 @@ use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
@@ -92,7 +93,7 @@ class ImagesController extends AbstractContentElementController
             $param = 'page_g'.$model->id;
 
             try {
-                $pagination = $this->paginationFactory->create($param, \count($imageList), $model->perPage);
+                $pagination = $this->paginationFactory->create(new PaginationConfig($param, \count($imageList), $model->perPage));
             } catch (PageOutOfRangeException $e) {
                 throw new PageNotFoundException(\sprintf('Page not found: %s', $request->getUri()), previous: $e);
             }

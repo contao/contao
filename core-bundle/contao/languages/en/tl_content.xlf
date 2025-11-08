@@ -797,6 +797,12 @@
       <trans-unit id="tl_content.pwResetPage.1">
         <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Enables server-side pagination, rather than client side.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

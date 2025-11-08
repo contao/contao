@@ -2,9 +2,17 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Pagination;
 
 interface PaginationFactoryInterface
 {
-    public function create(string $param, int $total, int $perPage, int|null $pageRange = null, bool $throw = true): PaginationInterface;
+    public function create(PaginationConfig $config): PaginationInterface;
 }

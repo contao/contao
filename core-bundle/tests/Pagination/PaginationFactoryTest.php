@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\OptIn;
 
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Pagination\PaginationFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,7 +33,7 @@ class PaginationFactoryTest extends TestCase
 
         $factory = new PaginationFactory($requestStack);
 
-        $pagination = $factory->create('page', 10, 5);
+        $pagination = $factory->create(new PaginationConfig('page', 10, 5));
 
         $this->assertSame(2, $pagination->getCurrent());
         $this->assertSame(2, $pagination->getPageCount());

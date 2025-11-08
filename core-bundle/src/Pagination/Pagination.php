@@ -17,30 +17,30 @@ class Pagination implements PaginationInterface
 
     private readonly int $pageCount;
 
+    private readonly int $pageRange;
+
     private int $currentPage;
 
     public function __construct(
         private readonly Request $request,
-        private readonly string $param,
-        private readonly int $total,
-        private readonly int $perPage,
-        private int|null $pageRange = null,
-        bool $throw = true,
+        private readonly PaginationConfig $config,
     ) {
-        $this->pageCount = (int) ceil($total / $perPage);
+        $this->pageCount = $config->getPerPage() > 0 ? (int) ceil($config->getTotal() / $config->getPerPage()) : 0;
 
-        $this->currentPage = $this->request->query->getInt($this->getParam(), 1);
+        $this->currentPage = $this->request->query->getInt($this->getQueryParameterName(), 1);
 
         if ($this->currentPage < 1 || $this->currentPage > $this->pageCount) {
-            if ($throw) {
+            if (!$config->getIgnoreOutOfBounds()) {
                 throw new PageOutOfRangeException(\sprintf('Page %s is out of range.', $this->currentPage));
             }
 
             $this->currentPage = max(1, min($this->currentPage, $this->pageCount));
         }
 
-        if (null === $pageRange || $pageRange > $this->pageCount) {
+        if (!$config->getPageRange() || $config->getPageRange() > $this->pageCount) {
             $this->pageRange = $this->pageCount;
+        } else {
+            $this->pageRange = (int) $config->getPageRange();
         }
 
         $delta = ceil($this->pageRange / 2);
@@ -64,7 +64,7 @@ class Pagination implements PaginationInterface
 
     public function getPerPage(): int
     {
-        return $this->perPage;
+        return $this->config->getPerPage();
     }
 
     public function getCurrent(): int
@@ -74,7 +74,7 @@ class Pagination implements PaginationInterface
 
     public function getTotal(): int
     {
-        return $this->total;
+        return $this->config->getTotal();
     }
 
     public function getPageCount(): int
@@ -115,20 +115,20 @@ class Pagination implements PaginationInterface
     public function getUrlForPage(int $page): string
     {
         $params = $this->request->query->all();
-        $params[$this->getParam()] = $page;
+        $params[$this->getQueryParameterName()] = $page;
 
         return (string) (new Uri($this->request->getRequestUri()))->withQuery(http_build_query($params));
     }
 
-    public function getParam(): string
+    public function getQueryParameterName(): string
     {
-        return $this->param;
+        return $this->config->getQueryParameterName();
     }
 
     public function getItemsForPage(array $items, int|null $page = null): array
     {
         $offset = (($page ?? $this->getCurrent()) - 1) * $this->getPerPage();
 
-        return \array_slice($items, $offset, $this->perPage);
+        return \array_slice($items, $offset, $this->getPerPage());
     }
 }

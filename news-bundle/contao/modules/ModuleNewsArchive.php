@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Pagination\PaginationInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -174,7 +175,7 @@ class ModuleNewsArchive extends ModuleNews
 				try
 				{
 					/** @var PaginationInterface $pagination */
-					$pagination = System::getContainer()->get('contao.pagination.factory')->create($param, $total, $this->perPage);
+					$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $total, $this->perPage));
 				}
 				catch (PageOutOfRangeException $e)
 				{

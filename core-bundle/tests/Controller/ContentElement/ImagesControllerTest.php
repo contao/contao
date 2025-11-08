@@ -242,6 +242,12 @@ class ImagesControllerTest extends ContentElementTestCase
         ;
 
         $pagination
+            ->expects($this->exactly(2))
+            ->method('getPageCount')
+            ->willReturn(2)
+        ;
+
+        $pagination
             ->method('getCurrent')
             ->willReturn(1)
         ;
@@ -305,7 +311,7 @@ class ImagesControllerTest extends ContentElementTestCase
                 </ul>
                 <!-- indexer::stop -->
                 <nav class="pagination" role="navigation" aria-label="translated(contao_default:MSC.pagination)">
-                    <p>translated(contao_default:MSC.totalPages[1, 0])</p>
+                    <p>translated(contao_default:MSC.totalPages[1, 2])</p>
                     <ul>
                         <li>
                             <a href="/foobar?page=1" aria-label="translated(contao_default:MSC.goToPage[1])" aria-current="page" class="link active">1</a>
