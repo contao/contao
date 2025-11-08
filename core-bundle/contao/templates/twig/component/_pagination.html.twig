@@ -2,7 +2,6 @@
 
 {% block pagination_component %}
     {% if pagination.pages > 1 %}
-        Pages: {{ pagination.pages }}
         {% set pagination_attributes = attrs(pagination_attributes|default)
             .addClass('pagination')
             .set('role', 'navigation')
