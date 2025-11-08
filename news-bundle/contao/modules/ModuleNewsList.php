@@ -141,7 +141,7 @@ class ModuleNewsList extends ModuleNews
 
 			// Set limit and offset
 			$limit = $pagination->getPerPage();
-			$offset += ($pagination->getCurrent() - 1) * $pagination->getPerPage();
+			$offset += $pagination->getOffset();
 			$skip = $this->skipFirst;
 
 			// Overall limit

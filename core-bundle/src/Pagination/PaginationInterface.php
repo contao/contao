@@ -40,4 +40,8 @@ interface PaginationInterface
     public function getQueryParameterName(): string;
 
     public function getItemsForPage(array $items, int|null $page = null): array;
+
+    public function getOffset(): int;
+
+    public function getIndexRange(): array;
 }

@@ -184,7 +184,7 @@ class ModuleNewsArchive extends ModuleNews
 
 				// Set limit and offset
 				$limit = $pagination->getPerPage();
-				$offset = ($pagination->getCurrent() - 1) * $pagination->getPerPage();
+				$offset = $pagination->getOffset();
 
 				// Add the pagination menu
 				$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));

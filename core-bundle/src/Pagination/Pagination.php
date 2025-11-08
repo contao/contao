@@ -139,4 +139,17 @@ class Pagination implements PaginationInterface
 
         return \array_slice($items, $offset, $this->getPerPage());
     }
+
+    public function getOffset(): int
+    {
+        return ($this->getCurrent() - 1) * $this->getPerPage();
+    }
+
+    public function getIndexRange(): array
+    {
+        $start = $this->getOffset();
+        $end = min($this->getPerPage() + $start, $this->getTotal());
+
+        return [$start, $end];
+    }
 }

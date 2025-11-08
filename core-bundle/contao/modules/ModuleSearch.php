@@ -186,8 +186,8 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$from = 1;
-			$to = $count;
+			$from = 0;
+			$to = $count + 1;
 
 			// Pagination
 			if ($this->perPage > 0)
@@ -205,11 +205,10 @@ class ModuleSearch extends Module
 					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 				}
 
-				$from = (($pagination->getCurrent() - 1) * $per_page) + 1;
-				$to = (($from + $per_page) > $count) ? $count : ($from + $per_page - 1);
+				list($from, $to) = $pagination->getIndexRange();
 
 				// Pagination menu
-				if ($to < $count || $from > 1)
+				if ($pagination->getPageCount() > 1)
 				{
 					$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 				}
@@ -232,7 +231,7 @@ class ModuleSearch extends Module
 				$totalLength = $lengths[1];
 			}
 
-			$arrResult = $objResult->getResults($to-$from+1, $from-1);
+			$arrResult = $objResult->getResults($to-$from, $from);
 
 			// Get the results
 			foreach (array_keys($arrResult) as $i)
@@ -273,7 +272,7 @@ class ModuleSearch extends Module
 				$this->Template->results .= $objTemplate->parse();
 			}
 
-			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));
+			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from + 1, $to - 1, $count, $strKeywords));
 			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 		}
 	}

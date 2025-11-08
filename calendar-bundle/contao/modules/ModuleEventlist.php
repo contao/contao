@@ -290,8 +290,7 @@ class ModuleEventlist extends Events
 				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 			}
 
-			$offset = ($pagination->getCurrent() - 1) * $pagination->getPerPage();
-			$limit = min($pagination->getPerPage() + $offset, $total);
+			list($offset, $limit) = $pagination->getIndexRange();
 
 			$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 		}

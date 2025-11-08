@@ -684,7 +684,7 @@ class Versions extends Controller
 		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
 			(new PaginationConfig('vp', $objTotal->count, 15))->withIgnoreOutOfBounds()
 		);
-		$intOffset = ($pagination->getCurrent() - 1) * 15;
+		$intOffset = $pagination->getOffset();
 
 		// Create the pagination menu
 		$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));

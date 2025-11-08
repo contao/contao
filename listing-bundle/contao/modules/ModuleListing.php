@@ -227,11 +227,7 @@ class ModuleListing extends Module
 		// Limit
 		if ($per_page)
 		{
-			$objDataStmt->limit($per_page, ($pagination->getCurrent() - 1) * $per_page);
-		}
-		elseif ($this->perPage)
-		{
-			$objDataStmt->limit($this->perPage, ($pagination->getCurrent() - 1) * $per_page);
+			$objDataStmt->limit($per_page, $pagination->getOffset());
 		}
 
 		$objData = $objDataStmt->execute(...$varKeyword);

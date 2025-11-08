@@ -76,7 +76,7 @@ class Comments extends Frontend
 
 			// Set limit and offset
 			$limit = $pagination->getPerPage();
-			$offset = ($pagination->getCurrent() - 1) * $pagination->getPerPage();
+			$offset = $pagination->getOffset();
 
 			// Initialize the pagination menu
 			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
