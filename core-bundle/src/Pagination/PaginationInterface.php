@@ -43,5 +43,8 @@ interface PaginationInterface
 
     public function getOffset(): int;
 
+    /**
+     * @return list<int>
+     */
     public function getIndexRange(): array;
 }
