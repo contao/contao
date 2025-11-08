@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
 use Contao\CoreBundle\Pagination\PaginationInterface;
 use Contao\CoreBundle\Tests\TestCase;
@@ -238,7 +239,7 @@ class FeedReaderControllerTest extends TestCase
         $paginationFactory
             ->expects($this->once())
             ->method('create')
-            ->with('page_r42', 2, 1)
+            ->with(new PaginationConfig('page_r42', 2, 1))
             ->willReturn($pagination)
         ;
 

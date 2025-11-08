@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
@@ -94,7 +95,7 @@ class FeedReaderController extends AbstractFrontendModuleController
             $param = 'page_r'.$model->id;
 
             try {
-                $pagination = $this->paginationFactory->create($param, \count($elements), $model->perPage);
+                $pagination = $this->paginationFactory->create(new PaginationConfig($param, \count($elements), $model->perPage));
             } catch (PageOutOfRangeException $e) {
                 throw new PageNotFoundException(\sprintf('Page not found: %s', $request->getUri()), previous: $e);
             }
