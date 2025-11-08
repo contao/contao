@@ -272,7 +272,7 @@ class ModuleSearch extends Module
 				$this->Template->results .= $objTemplate->parse();
 			}
 
-			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from + 1, $to - 1, $count, $strKeywords));
+			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from + 1, $to, $count, $strKeywords));
 			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 		}
 	}
