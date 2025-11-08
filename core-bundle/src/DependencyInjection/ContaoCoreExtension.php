@@ -149,7 +149,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
         $container->setParameter('contao.registration.expiration', $config['registration']['expiration']);
-        $container->setParameter('contao.pagination.default_range', $config['pagination']['default_range']);
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);

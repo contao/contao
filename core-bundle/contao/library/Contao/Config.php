@@ -71,11 +71,11 @@ class Config
 
 	private static $arrDeprecatedMap = array
 	(
-		'maxPaginationLinks' => 'contao.pagination.default_range'
 	);
 
 	private static $arrDeprecated = array
 	(
+		'maxPaginationLinks',
 	);
 
 	private static $arrToBeRemoved = array
