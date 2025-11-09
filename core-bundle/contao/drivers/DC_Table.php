@@ -2202,6 +2202,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$parameters['version_dropdown'] = '';
 		}
 
+		// Form buttons
+		$security = System::getContainer()->get('security.helper');
+
+		$parameters['buttons'] = System::getContainer()
+			->get('contao.data_container.buttons_builder')
+			->generateEditButtons(
+				$this->strTable,
+				(bool) $this->ptable,
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
+				$this
+			);
+
 		// Messages
 		$parameters['message'] = Message::generate();
 		$parameters['error'] = $this->noReload;
@@ -2220,21 +2233,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton($strBackUrl))
-				->__toString()
+			->__toString()
 		;
-
-		// Save buttons
-		$security = System::getContainer()->get('security.helper');
-
-		$parameters['buttons'] = System::getContainer()
-			->get('contao.data_container.buttons_builder')
-			->generateEditButtons(
-				$this->strTable,
-				(bool) $this->ptable,
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
-				$this
-			);
 
 		// Form settings
 		$parameters['form'] = array(
