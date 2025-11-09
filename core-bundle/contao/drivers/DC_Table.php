@@ -2233,7 +2233,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton($strBackUrl))
-			->__toString()
+				->__toString()
 		;
 
 		// Messages
