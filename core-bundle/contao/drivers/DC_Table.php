@@ -2202,22 +2202,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$parameters['version_dropdown'] = '';
 		}
 
-		// Form buttons
+		// Form settings and buttons
 		$security = System::getContainer()->get('security.helper');
 
-		$parameters['buttons'] = System::getContainer()
-			->get('contao.data_container.buttons_builder')
-			->generateEditButtons(
-				$this->strTable,
-				(bool) $this->ptable,
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
-				$this
-			);
-
-		// Messages
-		$parameters['message'] = Message::generate();
-		$parameters['error'] = $this->noReload;
+		$parameters['form'] = array(
+			'multipart' => $this->blnUploadable,
+			'onsubmit' => $this->onsubmit,
+			'buttons' => System::getContainer()
+				->get('contao.data_container.buttons_builder')
+				->generateEditButtons(
+					$this->strTable,
+					(bool) $this->ptable,
+					$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
+					$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
+					$this
+				),
+		);
 
 		// Back button
 		$strBackUrl = $this->getReferer(true);
@@ -2236,11 +2236,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->__toString()
 		;
 
-		// Form settings
-		$parameters['form'] = array(
-			'multipart' => $this->blnUploadable,
-			'onsubmit' => $this->onsubmit,
-		);
+		// Messages
+		$parameters['message'] = Message::generate();
+		$parameters['error'] = $this->noReload;
 
 		return $this->render('edit', $parameters);
 	}
