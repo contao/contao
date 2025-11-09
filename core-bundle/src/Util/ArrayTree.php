@@ -6,6 +6,8 @@ namespace Contao\CoreBundle\Util;
 
 /**
  * @internal
+ *
+ * @implements \IteratorAggregate<string, mixed>
  */
 final class ArrayTree implements \IteratorAggregate
 {
