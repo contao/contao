@@ -19,9 +19,9 @@ use Twig\Node\Expression\AbstractExpression;
  * This expression evaluates the theme slug at runtime and resolves to a matching
  * value of the given value mapping.
  *
- * @experimental
+ * @internal
  */
-class RuntimeThemeDependentExpression extends AbstractExpression
+final class RuntimeThemeDependentExpression extends AbstractExpression
 {
     /**
      * @param array<string|int, string> $valuesByThemeSlug

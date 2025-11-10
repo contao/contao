@@ -16,7 +16,6 @@ namespace Contao;
  * @property integer $maxlength
  * @property boolean $mandatory
  * @property string  $placeholder
- * @property string  $description
  */
 class Password extends Widget
 {
@@ -145,15 +144,14 @@ class Password extends Widget
 	 */
 	public function generate()
 	{
-		return \sprintf(
-			'<input type="password" name="%s" id="ctrl_%s" class="tl_text tl_password%s" value="" placeholder="%s" autocomplete="new-password"%s data-action="focus->contao--scroll-offset#store">%s%s',
-			$this->strName,
-			$this->strId,
-			$this->strClass ? ' ' . $this->strClass : '',
-			$this->varValue ? '*****' : '',
-			$this->getAttributes(),
-			$this->wizard,
-			($this->description && Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">' . $this->description . '</p>' : ''
-		);
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/password.html.twig', array(
+			'id' => $this->strId,
+			'class' => $this->strClass,
+			'label' => $this->strLabel,
+			'value' => $this->varValue ? '*****' : '',
+			'name' => $this->strName,
+			'attributes' => $this->getAttributes(),
+			'prependLabel' => $this->prependLabel ?? false
+		));
 	}
 }

@@ -30,7 +30,7 @@ use Twig\TokenParser\UseTokenParser;
  *
  * @see UseTokenParser
  *
- * @experimental
+ * @internal
  */
 final class DynamicUseTokenParser extends AbstractTokenParser
 {

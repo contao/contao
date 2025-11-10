@@ -236,7 +236,7 @@ class MessageCatalogueTest extends TestCase
     #[DataProvider('getCompletelyForwardedMethods')]
     public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, array|string|null $returnMockClassOrClasses = null): void
     {
-        $params = array_map(fn (string $class) => $this->createMock($class), $paramMockClasses);
+        $params = array_map($this->createMock(...), $paramMockClasses);
         $return = null;
 
         if (\is_string($returnMockClassOrClasses)) {
@@ -244,7 +244,7 @@ class MessageCatalogueTest extends TestCase
         }
 
         if (\is_array($returnMockClassOrClasses)) {
-            $return = array_map(fn (string $class) => $this->createMock($class), $returnMockClassOrClasses);
+            $return = array_map($this->createMock(...), $returnMockClassOrClasses);
         }
 
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);

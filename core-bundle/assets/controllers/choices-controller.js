@@ -35,17 +35,17 @@ export default class ChoicesController extends Controller {
     }
 
     disconnect() {
-        this._removeChoices();
+        this.#removeChoices();
     }
 
     beforeCache() {
         // Let choices unwrap the element container before Turbo caches the
         // page. It will be recreated, when the connect() call happens on the
         // restored page.
-        this._removeChoices();
+        this.#removeChoices();
     }
 
-    _removeChoices() {
+    #removeChoices() {
         this.choices?.destroy();
         this.choices = null;
     }

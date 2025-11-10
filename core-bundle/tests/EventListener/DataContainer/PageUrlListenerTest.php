@@ -27,6 +27,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -58,7 +59,7 @@ class PageUrlListenerTest extends TestCase
         $slug
             ->expects($this->once())
             ->method('generate')
-            ->with($expectedTitle, $page->id, new IsType('callable'))
+            ->with($expectedTitle, $page->id, new IsType(NativeType::Callable))
             ->willReturn($slugResult)
         ;
 
@@ -274,7 +275,7 @@ class PageUrlListenerTest extends TestCase
         $listener->generateAlias($value, $dc);
     }
 
-    #[DataProvider('duplicateAliasProvider')]
+    #[DataProvider('duplicateAliasProvider', validateArgumentCount: false)]
     public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -322,7 +323,7 @@ class PageUrlListenerTest extends TestCase
         $this->assertSame($value, $listener->generateAlias($value, $dc));
     }
 
-    #[DataProvider('duplicateAliasProvider')]
+    #[DataProvider('duplicateAliasProvider', validateArgumentCount: false)]
     public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -1831,7 +1832,7 @@ class PageUrlListenerTest extends TestCase
                 ->method('generate')
                 ->with(
                     PageRoute::PAGE_BASED_ROUTE_NAME,
-                    new IsType('array'),
+                    new IsType(NativeType::Array),
                     UrlGeneratorInterface::ABSOLUTE_URL,
                 )
                 ->willReturnCallback(

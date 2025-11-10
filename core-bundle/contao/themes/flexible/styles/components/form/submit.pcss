@@ -3,7 +3,7 @@
     height: 30px;
     padding: 7px 12px;
     border: 1px solid var(--form-border);
-    border-radius: 2px;
+    border-radius: var(--border-radius);
     box-sizing: border-box;
     cursor: pointer;
     background: var(--form-button);
@@ -22,6 +22,7 @@
 .tl_submit:disabled {
     color: var(--gray);
     background: var(--form-button-disabled) !important;
+    border-color: var(--form-border-disabled);
     cursor: not-allowed;
 }
 

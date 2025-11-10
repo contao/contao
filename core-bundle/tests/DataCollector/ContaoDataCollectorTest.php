@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DataCollector;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -46,6 +47,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $this->createMock(PageFinder::class),
+            $this->createMock(Cron::class),
         );
 
         $collector->setFramework($this->createMock(ContaoFramework::class));
@@ -102,6 +104,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $pageFinder,
+            $this->createMock(Cron::class),
         );
 
         $collector->setFramework($framework);
@@ -163,6 +166,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $pageFinder,
+            $this->createMock(Cron::class),
         );
 
         $collector->setFramework($framework);
@@ -195,6 +199,7 @@ class ContaoDataCollectorTest extends TestCase
             $this->createMock(Imagine::class),
             $this->createMock(RouterInterface::class),
             $this->createMock(PageFinder::class),
+            $this->createMock(Cron::class),
         );
 
         $method = new \ReflectionMethod($collector, 'getData');

@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
 use Contao\DataContainer;
 use Contao\System;
@@ -26,11 +27,44 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class JobsListener
 {
     public function __construct(
+        private readonly Jobs $jobs,
         private readonly Security $security,
         private readonly Connection $connection,
         private readonly RequestStack $requestStack,
         private readonly ContaoFramework $contaoFramework,
     ) {
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'list.operations.attachments.button')]
+    public function onAttachmentsCallback(DataContainerOperation $operation): void
+    {
+        $uuid = $operation->getRecord()['uuid'];
+        $job = $this->jobs->getByUuid($uuid);
+
+        if (!$job) {
+            $operation->hide();
+
+            return;
+        }
+
+        $attachments = $this->jobs->getAttachments($job);
+        $numberOfAttachments = \count($attachments);
+
+        if (0 === $numberOfAttachments) {
+            $operation->hide();
+
+            return;
+        }
+
+        // TODO: we need a template and Stimulus logic to have an operation with sub
+        // operations just like the [...] in the current context menu to be able to
+        // display more than just one download
+        $attachment = $attachments[0];
+
+        $operation['icon'] = 'theme_import.svg';
+        $operation['title'] = $attachment->getFileLabel();
+
+        $operation->setUrl($attachment->getDownloadUrl());
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]

@@ -6,6 +6,9 @@
         "@hotwired/turbo": "^8.0",
         "@simplewebauthn/browser": "^13.1",
         "@stimulus-components/color-picker": "^2.0",
+        "@stimulus-components/password-visibility": "^3.0",
+        "@stylistic/stylelint-config": "^3.0",
+        "@stylistic/stylelint-plugin": "^4.0",
         "@symfony/webpack-encore": "^5.1",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
         "accessible-menu": "^4.2",
@@ -17,7 +20,8 @@
         "postcss-loader": "^8.1",
         "postcss-preset-env": "^10.1",
         "sortablejs": "^1.15",
-        "stylelint": "^16.20",
+        "stimulus-textarea-autogrow": "^4.1",
+        "stylelint": "^16.24",
         "stylelint-config-standard": "^38.0",
         "svgo": "^3.3.2",
         "webpack-dev-server": "^5.2"
@@ -35,5 +39,5 @@
         "lint": "run-s lint:js lint:css"
     },
     "private": true,
-    "packageManager": "npm@11.1.0"
+    "packageManager": "npm@11.6.0"
 }

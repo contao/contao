@@ -17,7 +17,7 @@ use Twig\Compiler;
 use Twig\Node\Node;
 
 /**
- * @experimental
+ * @internal
  */
 #[YieldReady]
 final class PhpTemplateProxyNode extends Node
