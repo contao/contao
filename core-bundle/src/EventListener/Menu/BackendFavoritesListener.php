@@ -120,7 +120,7 @@ class BackendFavoritesListener
         (new MenuManipulator())->moveToFirstPosition($tree);
     }
 
-    private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, string $ref, int $user, int $pid = 0): void
+    private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, int $user, int $pid = 0): void
     {
         $nodes = $this->connection->fetchAllAssociative(
             'SELECT * FROM tl_favorites WHERE pid = :pid AND user = :user ORDER BY sorting',
