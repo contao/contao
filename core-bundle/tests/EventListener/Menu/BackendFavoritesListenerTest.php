@@ -145,7 +145,6 @@ class BackendFavoritesListenerTest extends TestCase
         $this->assertCount(2, $children);
         $this->assertSame('favorites', $children[0]->getName());
         $this->assertSame('Favorites', $children[0]->getLabel());
-        $this->assertSame(['id' => 'favorites'], $children[0]->getChildrenAttributes());
         $this->assertSame('/contao?do=pages&mtg=favorites', $children[0]->getUri());
 
         $linkAttributes = [

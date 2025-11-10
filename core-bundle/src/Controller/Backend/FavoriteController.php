@@ -59,12 +59,16 @@ class FavoriteController extends AbstractController
             if ('turbo_stream' === $request->getPreferredFormat()) {
                 $request->setRequestFormat('turbo_stream');
 
-                return $this->renderBlock('@Contao/backend/chrome/favorite.html.twig', 'success_stream', [
-                    'id' => $id,
-                    'active' => false,
-                    'action' => $this->saveAsFavoriteLink($url),
-                    'empty' => !$this->connection->fetchOne('SELECT COUNT(*) FROM tl_favorites WHERE user=?', [$user->id]),
-                ]);
+                return $this->renderBlock(
+                    '@Contao/backend/chrome/favorite.html.twig',
+                    'success_stream',
+                    [
+                        'id' => $id,
+                        'active' => false,
+                        'action' => $this->saveAsFavoriteLink($url),
+                        'empty' => !$this->connection->fetchOne('SELECT COUNT(*) FROM tl_favorites WHERE user=?', [$user->id]),
+                    ],
+                );
             }
 
             return $this->redirect($url);
@@ -78,11 +82,15 @@ class FavoriteController extends AbstractController
         $id = $this->getCurrentId($url, $user);
         $active = null !== $id;
 
-        return $this->renderBlock('@Contao/backend/chrome/favorite.html.twig', 'form', [
-            'action' => $active ? $this->urlGenerator->generate(self::class) : $this->saveAsFavoriteLink($url),
-            'target_path' => $url,
-            'active' => $active,
-        ]);
+        return $this->renderBlock(
+            '@Contao/backend/chrome/favorite.html.twig',
+            'form',
+            [
+                'action' => $active ? $this->urlGenerator->generate(self::class) : $this->saveAsFavoriteLink($url),
+                'target_path' => $url,
+                'active' => $active,
+            ],
+        );
     }
 
     private function getCurrentId(string $url, BackendUser $user): int|null

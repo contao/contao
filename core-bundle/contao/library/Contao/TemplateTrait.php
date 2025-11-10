@@ -16,9 +16,6 @@ use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Spatie\SchemaOrg\Graph;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Provides template methods.

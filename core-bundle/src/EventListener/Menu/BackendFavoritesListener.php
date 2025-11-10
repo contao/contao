@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Controller\Backend\FavoriteController;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\StringUtil;
@@ -24,7 +22,6 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;

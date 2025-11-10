@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Main back end controller.
@@ -106,7 +105,7 @@ class BackendMain extends Backend
 		$this->Template->main = '';
 
 		$request = System::getContainer()->get('request_stack')->getMainRequest();
-		$this->Template->toggleFavorites = System::getContainer()->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, ['target_path' => $request->getRequestUri()]));
+		$this->Template->toggleFavorites = System::getContainer()->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, array('target_path' => $request->getRequestUri())));
 
 		// Ajax request
 		if (Input::post('action') && Environment::get('isAjaxRequest'))
