@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
@@ -51,7 +50,6 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -135,7 +133,6 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -229,7 +226,6 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -288,7 +284,6 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
