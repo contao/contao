@@ -40,19 +40,6 @@ trait TemplateTrait
 		return StringUtil::ampersand(System::getContainer()->get('router')->generate($strName, $arrParams));
 	}
 
-	protected function render(string|ControllerReference $uri, array $options = []): string
-	{
-		$strategy = $options['strategy'] ?? 'forward';
-		unset($options['strategy']);
-
-		if (!isset($options['ignore_errors']))
-		{
-			$options['ignore_errors'] = false;
-		}
-
-		return System::getContainer()->get('fragment.handler')->render($uri, $strategy, $options);
-	}
-
 	/**
 	 * Return the preview route
 	 *

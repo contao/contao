@@ -104,7 +104,7 @@ $this->bodyAttributes = $this
           <?php $this->block('main_headline'); ?>
             <h1 id="main_headline">
               <?= $this->headline ?>
-              <?= $this->render(new \Symfony\Component\HttpKernel\Controller\ControllerReference(\Contao\CoreBundle\Controller\Backend\FavoriteController::class)) ?>
+              <?= $this->toggleFavorites ?>
             </h1>
           <?php $this->endblock(); ?>
           <div class="content">

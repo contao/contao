@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Controller\Backend\FavoriteController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
@@ -100,7 +101,7 @@ class BackendFavoritesListener
             $tree->setLinkAttribute('aria-expanded', 'true');
         }
 
-        $requestUri = FavoriteController::getRequestUri($request);
+        $requestUri = UrlUtil::getNormalizePathAndQuery($request->getRequestUri());
 
         $this->buildTree($tree, $factory, $requestUri, $user->id);
 

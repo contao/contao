@@ -14,45 +14,41 @@ namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Exception\BadRequestException;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\DC_Table;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsController]
+#[Route('%contao.backend.route_prefix%/_favorites', 'contao_backend_favorites', defaults: ['_scope' => 'backend'])]
 class FavoriteController extends AbstractController
 {
     public function __construct(
         private readonly Connection $connection,
-        private readonly Security $security,
-        private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
     public function __invoke(Request $request): Response
     {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
 
         if (!$user instanceof BackendUser) {
             return new Response();
         }
 
-        $url = self::getRequestUri($request);
-        $id = $this->getCurrentId($url, $user);
-        $active = null !== $id;
-        $empty = false;
-        $stream = false;
+        if ($request->isMethod(Request::METHOD_POST) && 'remove-favorite' === $request->request->get('FORM_SUBMIT')) {
+            $url = UrlUtil::getNormalizePathAndQuery($request->request->get('target_path'));
+            $id = $this->getCurrentId($url, $user);
 
-        if ($request->isMethod(Request::METHOD_POST) && 'toggle-favorite' === $request->request->get('FORM_SUBMIT')) {
-            if (!$active) {
-                throw new RedirectResponseException($this->saveAsFavoriteLink($url));
+            if (!$id) {
+                throw new BadRequestException();
             }
 
             Controller::loadDataContainer('tl_favorites');
@@ -60,45 +56,33 @@ class FavoriteController extends AbstractController
             $dc->id = $id;
             $dc->delete(true);
 
-            $active = false;
-            $empty = !$this->connection->fetchOne('SELECT COUNT(*) FROM tl_favorites WHERE user=?', [$user->id]);
+            if ('turbo_stream' === $request->getPreferredFormat()) {
+                $request->setRequestFormat('turbo_stream');
 
-            if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
-                $stream = true;
-            } else {
-                throw new RedirectResponseException($request->getUri());
+                return $this->renderBlock('@Contao/backend/chrome/favorite.html.twig', 'success_stream', [
+                    'id' => $id,
+                    'active' => false,
+                    'action' => $this->saveAsFavoriteLink($url),
+                    'empty' => !$this->connection->fetchOne('SELECT COUNT(*) FROM tl_favorites WHERE user=?', [$user->id]),
+                ]);
             }
+
+            return $this->redirect($url);
         }
 
-        $response = $this->render('@Contao/backend/chrome/favorite.html.twig', [
+        if (!($targetPath = $request->get('target_path'))) {
+            throw new BadRequestException();
+        }
+
+        $url = UrlUtil::getNormalizePathAndQuery($targetPath);
+        $id = $this->getCurrentId($url, $user);
+        $active = null !== $id;
+
+        return $this->renderBlock('@Contao/backend/chrome/favorite.html.twig', 'form', [
+            'action' => $active ? $this->urlGenerator->generate(self::class) : $this->saveAsFavoriteLink($url),
+            'target_path' => $url,
             'active' => $active,
-            'empty' => $empty,
-            'stream' => $stream,
-            'id' => $id,
         ]);
-
-        if ($stream) {
-            $response->headers->set('Content-Type', 'text/vnd.turbo-stream.html');
-            throw new ResponseException($response);
-        }
-
-        return $response;
-    }
-
-    public static function getRequestUri(Request $request): string
-    {
-        if (null !== $qs = $request->getQueryString()) {
-            parse_str($qs, $pairs);
-            ksort($pairs);
-
-            unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
-
-            if ([] !== $pairs) {
-                $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
-            }
-        }
-
-        return $request->getBaseUrl().$request->getPathInfo().$qs;
     }
 
     private function getCurrentId(string $url, BackendUser $user): int|null
@@ -118,28 +102,14 @@ class FavoriteController extends AbstractController
         return (int) $id;
     }
 
-    private function remove(int $id): void
-    {
-
-    }
-
     private function saveAsFavoriteLink(string $url): string
     {
-        return System::getContainer()->get('router')->generate('contao_backend', [
+        return $this->generateUrl('contao_backend', [
             'do' => 'favorites',
             'act' => 'paste',
             'mode' => 'create',
             'data' => base64_encode($url),
-            'rt' => $this->tokenManager->getDefaultTokenValue(),
-        ]);
-    }
-
-    private function removeFavoritesLink(int|string $id): string
-    {
-        return System::getContainer()->get('router')->generate('contao_backend', [
-            'do' => 'favorites',
-            'act' => 'delete',
-            'id' => $id,
+            'return' => '1',
         ]);
     }
 }

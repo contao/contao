@@ -14,7 +14,11 @@
           data-contao--template-studio-follow-url-value="{{ path('_contao_template_studio_follow.stream') }}"
           data-contao--template-studio-block-info-url-value="{{ path('_contao_template_studio_block_info.stream') }}"
     >
-        {{ block('main_headline') }}
+        {# Headline #}
+        <h1 id="main_headline">
+            {{ headline }}
+            {{ render(path('contao_backend_favorites', { target_path: app.request.requestUri })) }}
+        </h1>
 
         <section id="template-studio" class="content chrome">
             <div id="template-studio--nav">
