@@ -2227,12 +2227,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
 		}
 
-		$parameters['back_button'] = (Input::get('nb') ?
+		$parameters['back_button'] = Input::get('nb') ?
 			'' :
 			System::getContainer()
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
-				->addBackButton($strBackUrl))
+				->addBackButton($strBackUrl)
 				->__toString()
 		;
 
