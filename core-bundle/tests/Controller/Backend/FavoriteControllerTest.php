@@ -198,7 +198,7 @@ class FavoriteControllerTest extends TestCase
             ->willReturn(new TemplateWrapper($twig, $template))
         ;
 
-        if (null === $urlGenerator) {
+        if (!$urlGenerator) {
             $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
             $urlGenerator
                 ->expects($this->never())
