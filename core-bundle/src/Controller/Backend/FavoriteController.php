@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\BadRequestException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\DC_Table;
 use Doctrine\DBAL\Connection;
@@ -23,15 +24,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsController]
 #[Route('%contao.backend.route_prefix%/_favorites', 'contao_backend_favorites', defaults: ['_scope' => 'backend'])]
 class FavoriteController extends AbstractController
 {
     public function __construct(
+        private readonly ContaoFramework $framework,
         private readonly Connection $connection,
-        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -51,8 +51,8 @@ class FavoriteController extends AbstractController
                 throw new BadRequestException();
             }
 
-            Controller::loadDataContainer('tl_favorites');
-            $dc = new DC_Table('tl_favorites');
+            $this->framework->getAdapter(Controller::class)->loadDataContainer('tl_favorites');
+            $dc = $this->framework->createInstance(DC_Table::class, ['tl_favorites']);
             $dc->id = $id;
             $dc->delete(true);
 
@@ -75,7 +75,7 @@ class FavoriteController extends AbstractController
         }
 
         if (!($targetPath = $request->get('target_path'))) {
-            throw new BadRequestException();
+            throw new BadRequestException('Missing target_path in request.');
         }
 
         $url = UrlUtil::getNormalizePathAndQuery($targetPath);
@@ -86,7 +86,7 @@ class FavoriteController extends AbstractController
             '@Contao/backend/chrome/favorite.html.twig',
             'form',
             [
-                'action' => $active ? $this->urlGenerator->generate(self::class) : $this->saveAsFavoriteLink($url),
+                'action' => $active ? $this->generateUrl(self::class) : $this->saveAsFavoriteLink($url),
                 'target_path' => $url,
                 'active' => $active,
             ],

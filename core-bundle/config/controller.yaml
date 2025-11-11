@@ -79,8 +79,8 @@ services:
 
     Contao\CoreBundle\Controller\Backend\FavoriteController:
         arguments:
+            - '@contao.framework'
             - '@database_connection'
-            - '@router'
 
     Contao\CoreBundle\Controller\CaptchaController:
         arguments:
