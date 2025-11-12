@@ -176,7 +176,9 @@
                         script.addEventListener('load', () => {
                             new MutationObserver(function (mutations) {
                                 mutations.forEach(function (mutation) {
-                                    initTree(mutation.target)
+                                    if (mutation.target instanceof HTMLElement) {
+                                        initTree(mutation.target)
+                                    }
                                 });
                             }).observe(document, {
                                 childList: true,
