@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Pagination;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class PaginationConfig
 {
+    private Request|null $request = null;
+
     private int|null $pageRange = null;
 
     private bool $ignoreOutOfBounds = false;
@@ -23,6 +27,17 @@ class PaginationConfig
         private int $total,
         private int $perPage,
     ) {
+    }
+
+    /**
+     * The request object the pagination should use to get the query parameter values from.
+     */
+    public function withRequest(Request $request): self
+    {
+        $clone = clone $this;
+        $clone->request = $request;
+
+        return $clone;
     }
 
     /**
@@ -62,6 +77,11 @@ class PaginationConfig
     public function getPerPage(): int
     {
         return $this->perPage;
+    }
+
+    public function getRequest(): Request|null
+    {
+        return $this->request;
     }
 
     public function getPageRange(): int|null

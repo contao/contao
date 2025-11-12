@@ -14,36 +14,35 @@ namespace Contao\CoreBundle\Pagination;
 
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Nyholm\Psr7\Uri;
-use Symfony\Component\HttpFoundation\Request;
 
 class Pagination implements PaginationInterface
 {
+    private readonly int $pageCount;
+
+    private readonly int $currentPage;
+
+    private readonly int $pageRange;
+
     /**
      * @var list<int>
      */
     private readonly array $pages;
 
-    private readonly int $pageCount;
-
-    private readonly int $pageRange;
-
-    private int $currentPage;
-
-    public function __construct(
-        private readonly Request $request,
-        private readonly PaginationConfig $config,
-    ) {
+    public function __construct(private readonly PaginationConfig $config)
+    {
         $this->pageCount = $config->getPerPage() > 0 ? (int) ceil($config->getTotal() / $config->getPerPage()) : 0;
 
-        $this->currentPage = $this->request->query->getInt($this->getQueryParameterName(), 1);
+        $currentPage = $this->config->getRequest()?->query->getInt($this->getQueryParameterName(), 1) ?? 1;
 
-        if ($this->currentPage < 1 || $this->currentPage > $this->pageCount) {
+        if ($currentPage < 1 || $currentPage > $this->pageCount) {
             if (!$config->getIgnoreOutOfBounds()) {
-                throw new PageOutOfRangeException(\sprintf('Page %s is out of range.', $this->currentPage));
+                throw new PageOutOfRangeException(\sprintf('Page %s is out of range.', $currentPage));
             }
 
-            $this->currentPage = max(1, min($this->currentPage, $this->pageCount));
+            $currentPage = max(1, min($currentPage, $this->pageCount));
         }
+
+        $this->currentPage = $currentPage;
 
         if (!$config->getPageRange() || $config->getPageRange() > $this->pageCount) {
             $this->pageRange = $this->pageCount;
@@ -65,6 +64,16 @@ class Pagination implements PaginationInterface
         }
     }
 
+    public function getPageCount(): int
+    {
+        return $this->pageCount;
+    }
+
+    public function getCurrent(): int
+    {
+        return $this->currentPage;
+    }
+
     public function getPages(): array
     {
         return $this->pages;
@@ -75,19 +84,9 @@ class Pagination implements PaginationInterface
         return $this->config->getPerPage();
     }
 
-    public function getCurrent(): int
-    {
-        return $this->currentPage;
-    }
-
     public function getTotal(): int
     {
         return $this->config->getTotal();
-    }
-
-    public function getPageCount(): int
-    {
-        return $this->pageCount;
     }
 
     public function getFirst(): int|null
@@ -122,10 +121,10 @@ class Pagination implements PaginationInterface
 
     public function getUrlForPage(int $page): string
     {
-        $params = $this->request->query->all();
+        $params = $this->config->getRequest()?->query->all() ?? [];
         $params[$this->getQueryParameterName()] = $page;
 
-        return (string) (new Uri($this->request->getRequestUri()))->withQuery(http_build_query($params));
+        return (string) (new Uri($this->config->getRequest()?->getRequestUri() ?? ''))->withQuery(http_build_query($params));
     }
 
     public function getQueryParameterName(): string

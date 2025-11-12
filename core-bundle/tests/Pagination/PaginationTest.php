@@ -24,7 +24,7 @@ class PaginationTest extends TestCase
     {
         $request = Request::create('/foobar?page=2');
 
-        $pagination = new Pagination($request, (new PaginationConfig('page', 100, 5))->withPageRange(10));
+        $pagination = new Pagination((new PaginationConfig('page', 100, 5))->withRequest($request)->withPageRange(10));
 
         $this->assertSame(2, $pagination->getCurrent());
         $this->assertSame(20, $pagination->getPageCount());
@@ -46,26 +46,28 @@ class PaginationTest extends TestCase
 
         $request = Request::create('/foobar?page=20');
 
-        new Pagination($request, new PaginationConfig('page', 10, 5));
+        new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request));
     }
 
     public function testDoesNotThrowOutOfRangeException(): void
     {
         $request = Request::create('/foobar?page=20');
 
-        $pagination = new Pagination($request, (new PaginationConfig('page', 10, 5))->withIgnoreOutOfBounds());
+        $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request)->withIgnoreOutOfBounds());
 
         $this->assertSame(2, $pagination->getCurrent());
     }
 
     public function testDoesNotShowFirstLastPrevNext(): void
     {
-        $pagination = new Pagination(new Request(), (new PaginationConfig('page', 10, 5))->withPageRange(10));
+        $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withPageRange(10));
 
         $this->assertNull($pagination->getFirst());
         $this->assertNull($pagination->getPrevious());
 
-        $pagination = new Pagination(Request::create('/foobar?page=2'), (new PaginationConfig('page', 10, 5))->withPageRange(10));
+        $request = Request::create('/foobar?page=2');
+
+        $pagination = new Pagination((new PaginationConfig('page', 10, 5))->withRequest($request)->withPageRange(10));
 
         $this->assertNull($pagination->getNext());
         $this->assertNull($pagination->getLast());
