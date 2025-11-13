@@ -80,6 +80,9 @@
       <trans-unit id="tl_member_group.toggle.4">
         <source>Activate</source>
       </trans-unit>
+      <trans-unit id="tl_member_group.tableLabel">
+        <source>Member group</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

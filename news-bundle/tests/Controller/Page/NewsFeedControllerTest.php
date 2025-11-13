@@ -167,7 +167,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     #[DataProvider('getXMLFeedFormats')]
     #[DataProvider('getJSONFeedFormats')]
-    public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType): void
+    public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType, bool $isDebug = false): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,
@@ -204,7 +204,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
         $container->set('event_dispatcher', $dispatcher);
 
-        $controller = $this->getController();
+        $controller = $this->getController($isDebug);
         $controller->setContainer($container);
 
         $response = $controller(Request::create($url), $pageModel);
@@ -217,19 +217,22 @@ class NewsFeedControllerTest extends ContaoTestCase
     {
         yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml'];
         yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml'];
+        yield 'RSS (debug)' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/xml', true];
+        yield 'Atom (debug)' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/xml', true];
     }
 
     public static function getJSONFeedFormats(): iterable
     {
         yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json'];
+        yield 'JSON (debug)' => ['json', '.json', 'https://example.org/latest-news.json', 'application/json', true];
     }
 
-    private function getController(): NewsFeedController
+    private function getController(bool $isDebug = false): NewsFeedController
     {
         $contaoContext = $this->createMock(ContaoContext::class);
         $specification = new Specification(new NullLogger());
 
-        return new NewsFeedController($contaoContext, $specification, 'UTF-8');
+        return new NewsFeedController($contaoContext, $specification, 'UTF-8', $isDebug);
     }
 
     private function getArticlesAsArray(int $count = 1): array

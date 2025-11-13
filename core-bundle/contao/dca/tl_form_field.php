@@ -14,12 +14,10 @@ use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FormHidden;
 use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Widget;
@@ -58,9 +56,14 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
-			'child_record_callback'   => array('tl_form_field', 'listFormFields'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 104
+		),
+		'label' => array
+		(
+			'fields'                  => array('type', 'name'),
+			'format'                  => '%s (%s)',
+			'label_callback'          => array('tl_form_field', 'listFormFields'),
 		),
 	),
 
@@ -427,7 +430,7 @@ class tl_form_field extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function listFormFields($arrRow)
 	{
@@ -445,34 +448,29 @@ class tl_form_field extends Backend
 			$objWidget = null;
 		}
 
-		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
-		$dragHandle = '';
-
-		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_form_field', new UpdateAction('tl_form_field', $arrRow)))
-		{
-			$labelCut = $GLOBALS['TL_LANG']['tl_form_field']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-			$dragHandle = '<button type="button" class="drag-handle">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
-		}
-
-		$strType = '<div class="cte_type ' . $key . '">' . $dragHandle . ($GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] ?? $arrRow['type']) . ($objWidget?->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>';
+		$label = array(
+			($GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] ?? $arrRow['type']) . ($objWidget?->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : ''),
+			'',
+			$arrRow['invisible'] ? 'unpublished' : 'published',
+		);
 
 		if ($objWidget)
 		{
-			$strType .= '<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview">';
-
 			$strWidget = $objWidget->parse();
 			$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);
 			$strWidget = str_replace(array(' type="submit"', ' autofocus', ' required'), array(' type="button"', '', ''), $strWidget);
 
 			if ($objWidget instanceof FormHidden)
 			{
-				return $strType . "\n" . $objWidget->value . "\n</div>\n";
+				$label[1] = $objWidget->value;
 			}
-
-			$strType .= StringUtil::insertTagToSrc($strWidget) . '</div></div>';
+			else
+			{
+				$label[1] = StringUtil::insertTagToSrc($strWidget);
+			}
 		}
 
-		return $strType;
+		return $label;
 	}
 
 	/**

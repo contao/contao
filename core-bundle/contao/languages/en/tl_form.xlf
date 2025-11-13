@@ -212,6 +212,9 @@
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
       </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
