@@ -12,7 +12,7 @@
     {% for col in record %}
       <tr>
         <td class="label">{{ col.label }}</td>
-        <td class="value">{{ col.content }}</td>
+        <td class="value">{{ col.content|sanitize_html }}</td>
       </tr>
     {% endfor %}
   </tbody>

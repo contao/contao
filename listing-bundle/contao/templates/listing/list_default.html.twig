@@ -17,7 +17,7 @@
           <div class="widget widget-select">
             <label for="ctrl_search" class="invisible">{{ fields_label }}</label>
             <select name="search" id="ctrl_search" class="select">
-              {{ search_fields }}
+              {{ search_fields|raw }}
             </select>
           </div>
           <div class="widget widget-text">
@@ -78,10 +78,11 @@
       {% for row in tbody %}
         <tr>
           {% for col in row %}
-            <td class="body">{{ col.content }}</td>
+            <td class="body">{{ col.content|sanitize_html }}</td>
           {% endfor %}
-          {% if details and col|default) %}
-            {% if col.details|default %}
+          {% set col = row|last %}
+          {% if details and col %}
+            {% if col.details %}
               <td class="body"><a href="{{ col.url }}">{{ backend_icon('assets/contao/images/info.svg') }}</a></td>
             {% else %}
               <td class="body">&nbsp;</td>
@@ -93,6 +94,6 @@
     </table>
   {% endif %}
 
-  {{ pagination }}
+  {{ pagination|default|raw }}
 
 {% endblock %}
