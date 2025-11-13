@@ -111,6 +111,7 @@ class InspectorNodeVisitorTest extends TestCase
     public function testAnalyzesBlockNesting(): void
     {
         $storage = new Storage(new ArrayAdapter());
+
         $environment = $this->createMock(Environment::class);
         $environment
             ->method('tokenize')
@@ -157,6 +158,7 @@ class InspectorNodeVisitorTest extends TestCase
         $nodeTraverser->traverse($moduleNode);
 
         $data = $storage->get('path/to/template.html.twig');
+
         $this->assertSame(
             [
                 'foo' => null,

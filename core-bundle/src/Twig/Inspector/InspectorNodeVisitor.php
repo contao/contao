@@ -38,7 +38,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
     private array $blocks = [];
 
     /**
-     * List of found blocks, that are output via a block reference expressions.
+     * List of found blocks that are output via a block reference expressions.
      *
      * @var list<string>
      */
