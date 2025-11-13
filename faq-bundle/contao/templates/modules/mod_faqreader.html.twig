@@ -2,22 +2,22 @@
 
 {% block content %}
 
-  {% if error %}
+  {% if error|default %}
     {{ error }}
   {% else %}
     <h1>{{ question }}</h1>
 
     <div class="ce_text block">
-      {% if not addBefore %}
-        {{ answer|csp_inline_styles }}
+      {% if not addBefore|default %}
+        {{ answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
 
       {% if addImage %}
         {% include "@Contao/image.html.twig" %}
       {% endif %}
 
-      {% if addBefore %}
-        {{ answer|csp_inline_styles }}
+      {% if addBefore|default %}
+        {{ answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
     </div>
 
@@ -33,18 +33,18 @@
 
     <p class="info">{{ info }}</p>
 
-    {% if referer %}
+    {% if referer|default %}
       <!-- indexer::stop -->
       <p class="back"><a href="{{ referer }}" title="{{ back }}">{{ back }}</a></p>
       <!-- indexer::continue -->
     {% endif %}
   {% endif %}
 
-  {% if allowComments %}
+  {% if allowComments|default %}
     <div class="ce_comments block">
       <{{ hlc }}>{{ hlcText }}</{{ hlc }}>
-      {{ comments|join }}
-      {{ pagination }}
+      {{ comments|join|raw }}
+      {{ pagination|default|raw }}
       <{{ hlc }}>{{ addComment }}</{{ hlc }}>
       {% include "@Contao/mod_comment_form.html.twig" %}
     </div>

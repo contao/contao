@@ -12,7 +12,7 @@
 
           <div class="ce_text block">
             {% if not faq.addBefore %}
-              {{ faq.answer|csp_inline_styles }}
+              {{ faq.answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
             {% endif %}
 
             {% if faq.addImage %}
@@ -20,7 +20,7 @@
             {% endif %}
 
             {% if faq.addBefore %}
-              {{ faq.answer|csp_inline_styles }}
+              {{ faq.answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
             {% endif %}
           </div>
 
@@ -34,7 +34,7 @@
             </ul>
           {% endif %}
 
-          <p class="info"><?= $faq->info ?></p>
+          <p class="info">{{ faq.info }}</p>
         </section>
       {% endfor %}
 
@@ -44,4 +44,4 @@
 
 {% endblock %}
 
-{% do add_schema_org(getSchemaOrgData.invoke()) %}
+{% do add_schema_org(getSchemaOrgData.invoke()|default(null)) %}
