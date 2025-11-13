@@ -32,7 +32,7 @@
           <span class="arrow">→</span>
           <select name="to" id="ctrl_to" class="tl_select">
             {% for k, v in versions %}
-              <option value="{{ k }}"{% v.version == to %} selected{% endif %}>{{ v.info }}</option>
+              <option value="{{ k }}"{% if v.version == to|default %} selected{% endif %}>{{ v.info }}</option>
             {% endfor %}
           </select>
           <input type="submit" class="tl_submit" value="{{ showLabel }}">

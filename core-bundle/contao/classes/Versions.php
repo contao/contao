@@ -613,6 +613,7 @@ class Versions extends Controller
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());
