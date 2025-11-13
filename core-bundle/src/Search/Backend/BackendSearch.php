@@ -9,15 +9,17 @@ use CmsIg\Seal\Schema\Field\IdentifierField;
 use CmsIg\Seal\Schema\Field\TextField;
 use CmsIg\Seal\Schema\Index;
 use CmsIg\Seal\Schema\Schema;
-use CmsIg\Seal\Search\Condition\EqualCondition;
-use CmsIg\Seal\Search\Condition\SearchCondition;
+use CmsIg\Seal\Search\Condition\Condition;
+use CmsIg\Seal\Search\Facet\Facet;
 use CmsIg\Seal\Search\SearchBuilder;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
+use Contao\CoreBundle\Search\Backend\Facet as BackendSearchFacet;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
+use Contao\CoreBundle\Search\Backend\Provider\TagProvidingProviderInterface;
 use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
 use Contao\CoreBundle\Search\Backend\Seal\SealUtil;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -155,14 +157,9 @@ class BackendSearch
         return $config->getJobId();
     }
 
-    /**
-     * TODO: This Query API object will change for sure because we might want to
-     * introduce searching for multiple tags. It's a matter of putting in some work
-     * there but it will affect the signature of this object.
-     */
     public function search(Query $query): Result
     {
-        if (!$this->isAvailable()) {
+        if (!$query->getKeywords() || !$this->isAvailable()) {
             return Result::createEmpty();
         }
 
@@ -176,6 +173,14 @@ class BackendSearch
         // Stop after 10 iterations
         for ($i = 0; $i <= 10; ++$i) {
             /** @var array $document */
+            $result = $sb->offset($offset)->limit($limit)->getResult();
+
+            // Fetch facets for first iteration only (facets do not care about pagination)
+            if (0 === $i) {
+                $facetCounts['type'] = $result->facets()['type']['count'] ?? [];
+                $facetCounts['tags'] = $result->facets()['tags']['count'] ?? [];
+            }
+
             foreach ($sb->offset($offset)->limit($limit)->getResult() as $document) {
                 $hit = $this->convertSearchDocumentToProviderHit($document);
 
@@ -194,7 +199,30 @@ class BackendSearch
             $offset += $limit;
         }
 
-        return new Result($hits);
+        $typeFacets = [];
+        $tagsFacets = [];
+
+        foreach ($facetCounts['type'] ?? [] as $type => $count) {
+            $provider = $this->getProviderForType($type);
+
+            if (!$provider) {
+                continue;
+            }
+
+            $typeFacets[] = new BackendSearchFacet($type, $provider->convertTypeToVisibleType($type), $count);
+        }
+
+        if ($query->getType()) {
+            $provider = $this->getProviderForType($query->getType());
+
+            if ($provider instanceof TagProvidingProviderInterface) {
+                foreach ($facetCounts['tags'] ?? [] as $tag => $count) {
+                    $tagsFacets[] = new BackendSearchFacet($tag, $provider->getFacetLabelForTag($tag), $count);
+                }
+            }
+        }
+
+        return new Result($hits, $typeFacets, $tagsFacets);
     }
 
     public static function getSearchEngineSchema(string $indexName): Schema
@@ -226,15 +254,32 @@ class BackendSearch
         $sb = $this->engine->createSearchBuilder(self::SEAL_INTERNAL_INDEX_NAME);
 
         if ($query->getKeywords()) {
-            $sb->addFilter(new SearchCondition($query->getKeywords()));
+            $sb->addFilter(Condition::search($query->getKeywords()));
         }
 
         if ($query->getType()) {
-            $sb->addFilter(new EqualCondition('type', $query->getType()));
+            $sb->addFilter(Condition::equal('type', $query->getType()));
         }
 
         if ($query->getTag()) {
-            $sb->addFilter(new EqualCondition('tags', $query->getTag()));
+            if (!$query->getType()) {
+                throw new \InvalidArgumentException('Cannot search by tag alone; combine it with a type to ensure accurate tag labels.');
+            }
+
+            $sb->addFilter(Condition::equal('tags', $query->getTag()));
+        }
+
+        // Only add the "type" facet if not already filtered for it (in which case
+        // it is pointless)
+        if (!$query->getType()) {
+            $sb->addFacet(Facet::count('type'));
+        }
+
+        // Only add the "tags" facet if not already filtered for it (in which case it is
+        // pointless) plus only if there's a type present as we want it to work sort of
+        // like a sub filter.
+        if ($query->getType() && !$query->getTag()) {
+            $sb->addFacet(Facet::count('tags'));
         }
 
         return $sb;
@@ -242,9 +287,9 @@ class BackendSearch
 
     private function convertSearchDocumentToProviderHit(array $document): Hit|null
     {
-        $fileProvider = $this->getProviderForType($document['type'] ?? '');
+        $provider = $this->getProviderForType($document['type'] ?? '');
 
-        if (!$fileProvider) {
+        if (!$provider) {
             return null;
         }
 
@@ -258,7 +303,7 @@ class BackendSearch
             return null;
         }
 
-        $hit = $fileProvider->convertDocumentToHit($document);
+        $hit = $provider->convertDocumentToHit($document);
 
         // The provider did not find any hit for it anymore, so it must have been removed
         // or expired. Remove from the index.
@@ -267,6 +312,8 @@ class BackendSearch
 
             return null;
         }
+
+        $hit = $hit->withVisibleType($provider->convertTypeToVisibleType($document->getType()));
 
         $event = new EnhanceHitEvent($hit);
         $this->eventDispatcher->dispatch($event);

@@ -36,6 +36,7 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
 use Contao\CoreBundle\Search\Backend\Seal\SealUtil;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Tests\Fixtures\Search\DocumentProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -170,16 +171,30 @@ class BackendSearchTest extends TestCase
     {
         $indexName = 'contao_backend_search';
 
-        $provider = $this->createMock(ProviderInterface::class);
+        $provider = $this->createMock(DocumentProvider::class);
         $provider
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('supportsType')
             ->with('type')
             ->willReturn(true)
         ;
 
         $provider
+            ->expects($this->exactly(3))
+            ->method('convertTypeToVisibleType')
+            ->with('type')
+            ->willReturn('visible-type')
+        ;
+
+        $provider
             ->expects($this->once())
+            ->method('getFacetLabelForTag')
+            ->with('tag-1')
+            ->willReturn('tag-1-label')
+        ;
+
+        $provider
+            ->expects($this->exactly(2))
             ->method('convertDocumentToHit')
             ->with($this->callback(static fn (Document $document): bool => '42' === $document->getId()))
             ->willReturnCallback(static fn (Document $document): Hit => new Hit($document, 'human readable hit title', 'https://whatever.com'))
@@ -187,7 +202,7 @@ class BackendSearchTest extends TestCase
 
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('isGranted')
             ->with(
                 ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
@@ -203,13 +218,13 @@ class BackendSearchTest extends TestCase
             'id' => 'type_42',
             'type' => 'type',
             'searchableContent' => 'search me',
-            'tags' => [],
+            'tags' => ['tag-1'],
             'document' => '{"id":"42","type":"type","searchableContent":"search me","tags":[],"metadata":[]}',
         ]);
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('dispatch')
             ->with($this->callback(static fn (EnhanceHitEvent $event): bool => '42' === $event->getHit()->getDocument()->getId()))
         ;
@@ -224,10 +239,22 @@ class BackendSearchTest extends TestCase
             $this->createWebworkerWithCliRunning(),
             $this->createMock(SealReindexProvider::class),
         );
-        $result = $backendSearch->search(new Query(20, 'search me'));
 
+        // Test search without "type" -> should return type facets
+        $result = $backendSearch->search(new Query(20, 'search me'));
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
         $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
+        $this->assertSame('type', $result->getTypeFacets()[0]->key);
+        $this->assertSame('visible-type', $result->getTypeFacets()[0]->label);
+        $this->assertCount(0, $result->getTagFacets());
+
+        // Test search with "type" -> should return tag facets
+        $result = $backendSearch->search(new Query(20, 'search me', 'type'));
+        $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
+        $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
+        $this->assertSame('tag-1', $result->getTagFacets()[0]->key);
+        $this->assertSame('tag-1-label', $result->getTagFacets()[0]->label);
+        $this->assertCount(0, $result->getTypeFacets());
 
         // Cleanup memory
         MemoryStorage::dropIndex(new Index($indexName, []));
@@ -239,7 +266,7 @@ class BackendSearchTest extends TestCase
 
         $provider = $this->createMock(ProviderInterface::class);
         $provider
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('supportsType')
             ->with('type')
             ->willReturn(true)

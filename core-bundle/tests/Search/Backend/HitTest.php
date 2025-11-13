@@ -36,5 +36,9 @@ class HitTest extends TestCase
         $this->assertSame($figureBuilder, $hit->getImageFigureBuilder());
         $this->assertSame('https://example.com?edit=true', $hit->getEditUrl());
         $this->assertSame(['foo' => 'bar'], $hit->getMetadata());
+        $this->assertSame('type', $hit->getVisibleType());
+
+        $hit = $hit->withVisibleType('visible-type');
+        $this->assertSame('visible-type', $hit->getVisibleType());
     }
 }
