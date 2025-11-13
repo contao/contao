@@ -2825,6 +2825,10 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>ルートに必須のパラメーターがあるため、プレビューのURLを生成できません。</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>フォームにエラーがあるため、プレビューのURLを生成できません。</target>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>不明なオプション: %s</target>
