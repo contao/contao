@@ -2,8 +2,8 @@
 
 {% block content %}
 
-  {{ comments|join }}
-  {{ pagination }}
+  {{ comments|join|raw }}
+  {{ pagination|default|raw }}
   {% include "@Contao/mod_comment_form" %}
 
 {% endblock %}
