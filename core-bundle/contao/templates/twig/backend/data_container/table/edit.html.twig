@@ -12,7 +12,7 @@
         <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
     {% endif %}
 
-    {{ back_button|raw }}
+    {{ back_button|default|raw }}
 
     {% set form_attributes = attrs()
         .set('id', table)

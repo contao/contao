@@ -2228,12 +2228,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$parameters['back_button'] = Input::get('nb') ?
-			'' :
+			null :
 			System::getContainer()
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton($strBackUrl)
-				->__toString()
 		;
 
 		// Messages
