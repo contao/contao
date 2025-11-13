@@ -537,7 +537,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 					'inputType'       => 'text'
 				)
 			),
-			'eval'                    => array('style'=>'max-width:628px'),
+			'eval'                    => array('tl_class'=>'row-wizard-max-w-628'),
 			'sql'                     => "text NULL"
 		),
 		'protected' => array
