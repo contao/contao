@@ -39,6 +39,7 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\Image\Studio\FigureBuilderStub;
 use Contao\CoreBundle\Tests\Image\Studio\ImageResultStub;
 use Contao\CoreBundle\Tests\TestCase;
@@ -358,7 +359,7 @@ abstract class ContentElementTestCase extends TestCase
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
                 CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([])),
-                StringRuntime::class => static fn () => new StringRuntime($framework),
+                StringRuntime::class => static fn () => new StringRuntime($framework, new HtmlDecoder($insertTagParser)),
                 SanitizerRuntime::class => static fn () => new SanitizerRuntime($environment),
             ]),
         );
