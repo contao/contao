@@ -2801,6 +2801,9 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Naslov URL za predogled ne more biti ustvarjen, ker ima pot (route) obvezne parametre.</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>Neznana možnost: %s</target>
