@@ -198,6 +198,59 @@ class HtmlAttributesTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider provideAttributeValues
+     */
+    public function testSerializesAttributeValues(mixed $value, string|null $expected): void
+    {
+        $attributes = new HtmlAttributes();
+        $attributes->set('foo', $value);
+
+        $this->assertSame($expected, $attributes['foo'] ?? null);
+
+        $attributes = new HtmlAttributes();
+        $attributes->mergeWith(['foo' => $value]);
+
+        $this->assertSame($expected, $attributes['foo'] ?? null);
+    }
+
+    public static function provideAttributeValues(): iterable
+    {
+        yield ['string', 'string'];
+
+        yield ['', ''];
+
+        yield [
+            new class() implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'stringable';
+                }
+            },
+            'stringable',
+        ];
+
+        yield [null, ''];
+
+        yield [true, ''];
+
+        yield [false, null];
+
+        yield [123, '123'];
+
+        yield [0, '0'];
+
+        yield [123.4, '123.4'];
+
+        yield [0.0000000001, '0.0000000001'];
+
+        yield [-0.0, '0'];
+
+        yield [INF, null];
+
+        yield [NAN, null];
+    }
+
     public function testCreatesAttributesFromIterable(): void
     {
         $properties = [
