@@ -7,7 +7,7 @@
       <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
       <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
 
-      {% if message %}
+      {% if message|default %}
         <p class="{{ mclass }}">{{ message }}</p>
       {% endif %}
 
@@ -27,17 +27,17 @@
           <fieldset id="ctrl_channels_{{ id }}" class="checkbox_container">
             <legend class="invisible">{{ channelsLabel }}</legend>
             {% for id, title in channels %}
-              <span><input type="checkbox" name="channels[]" id="opt_{{ id }}_{{ id }}" value="{{ id }}" class="checkbox"{% if selectedChannels is iterable and id in selectedChannels %} checked{% endif %}> <label for="opt_{{ id }}_{{ id }}">{{ title }}</label></span>
+              <span><input type="checkbox" name="channels[]" id="opt_{{ id }}_{{ id }}" value="{{ id }}" class="checkbox"{% if id in selectedChannels|default([]) %} checked{% endif %}> <label for="opt_{{ id }}_{{ id }}">{{ title }}</label></span>
             {% endfor %}
           </fieldset>
         </div>
       {% endif %}
 
-      {{ captcha }}
+      {{ captcha|raw }}
 
-      {% if text %}
+      {% if text|default %}
         <div class="widget widget-explanation">
-          {{ text }}
+          {{ text|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
         </div>
       {% endif %}
 

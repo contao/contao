@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  {% if newsletters|length %}
+  {% if newsletters %}
     <ul>
       {% for newsletter in newsletters %}
         <li>{{ newsletter.datim }}: <a href="{{ newsletter.href }}" title="{{ newsletter.title }}">{{ newsletter.subject }}</a></li>
