@@ -1,4 +1,4 @@
-.jobs-progress {
+.job-progress {
     --value: 0;
     width: min(100%, 200px);
     height: 16px;
@@ -8,7 +8,7 @@
     background: var(--body-bg);
 }
 
-.jobs-progress::before {
+.job-progress::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -16,7 +16,7 @@
     background: var(--progress-running);
 }
 
-.jobs-progress::after {
+.job-progress::after {
     content: attr(data-label);
     position: absolute;
     inset: 0;
@@ -26,7 +26,51 @@
     font-size: 0.7rem;
 }
 
-.jobs-progress[aria-valuenow="100"]::before {
+.job-progress[aria-valuenow="100"]::before {
     background: var(--progress-finished);
 }
 
+.jobs-progress {
+    position: relative;
+    overflow: hidden;
+}
+
+.jobs-progress-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--black);
+    font-size: 0.7rem;
+}
+
+.jobs-progress-bar {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    position: relative;
+    background: var(--body-bg);
+    width: min(100%, 200px);
+    height: 16px;
+    border-radius: 50px;
+}
+
+/** Webkit / Chromium */
+.jobs-progress-bar::-webkit-progress-bar {
+    background-color: var(--body-bg);
+    border-radius: 50px;
+}
+
+/** Chromium */
+.jobs-progress-bar::-webkit-progress-value {
+    background-color: var(--progress-running);
+    color: var(--body-bg);
+    border-radius: 50px;
+}
+
+/** Gecko engine */
+.jobs-progress-bar::-moz-progress-bar {
+    background-color: var(--progress-running);
+    color: var(--body-bg);
+    border-radius: 50px;
+}

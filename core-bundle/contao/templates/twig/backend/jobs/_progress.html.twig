@@ -1,3 +1,5 @@
-<progress class="job-progress" value="{{ progress|round }}" max="100" data-label="{{ progress|format_number(2) }}%"></progress>
-<div class="jobs-progress" style="--value:{{ progress|round }}" aria-valuemin="0" aria-valuemax="100"
-     aria-valuenow="{{ progress|round }}" data-label="{{ progress|format_number(2) }}%"></div>
+<label class="jobs-progress">
+    <progress class="jobs-progress-bar" value="{{ progress|round }}" max="100"></progress>
+    <span class="jobs-progress-label">{{ progress|format_number(2) }}%</span>
+</label>
+<div class="job-progress" style="--value:{{ progress|round }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress|round }}" data-label="{{ progress|format_number(2) }}%"></div>
