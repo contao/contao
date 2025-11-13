@@ -1087,6 +1087,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			unset($this->set['id']);
 
 			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
+			$objInsertStmt = null;
 
 			try
 			{
@@ -1100,7 +1101,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
 			}
 
-			if ($objInsertStmt->affectedRows)
+			if ($objInsertStmt && $objInsertStmt->affectedRows)
 			{
 				$insertID = $objInsertStmt->insertId;
 
