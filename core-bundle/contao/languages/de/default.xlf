@@ -2825,6 +2825,10 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route ein Element erfordert.</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Die Vorschau-URL kann nicht erstellt werden, weil das Formular Fehler enthält.</target>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>Unbekannte Option: %s</target>
