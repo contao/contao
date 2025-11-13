@@ -5,14 +5,14 @@
     <p class="info"><time datetime="{{ datetime }}">{{ date }}</time> {{ author }}</p>
   {% endblock %}
 
-  <h2>{{ linkHeadline }}</h2>
+  <h2>{{ linkHeadline|sanitize_html('contao') }}</h2>
 
   <div class="ce_text block">
-    {{ teaser|csp_inline_styles }}
+    {{ teaser|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
   </div>
 
-  {% if hasText or hasTeaser %}
-    <p class="more">{{ more }}</p>
+  {% if hasText.invoke() or hasTeaser %}
+    <p class="more">{{ more|default|sanitize_html('contao') }}</p>
   {% endif %}
 
 </div>

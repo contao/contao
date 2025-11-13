@@ -1,7 +1,7 @@
 
-<div class="layout_simple arc_<?= archive->id ?> block{{ class }}">
+<div class="layout_simple arc_{{ archive.id }} block{{ class }}">
   {% if date %}<time datetime="{{ datetime }}">{{ date }}</time>{% endif %}
-  {{ linkHeadline }}
+  {{ linkHeadline|sanitize_html('contao') }}
 </div>
 
 {#

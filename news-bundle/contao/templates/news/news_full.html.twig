@@ -11,12 +11,12 @@
     <h2>{{ subHeadline }}</h2>
   {% endif %}
 
-  {% if hasText %}
-    {{ text }}
+  {% if hasText.invoke() %}
+    {{ text.invoke()|raw }}
   {% else %}
     <div class="ce_text block">
       {% if not addBefore %}
-        {{ teaser|csp_inline_styles }}
+        {{ teaser|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
 
       {% if addImage %}
@@ -24,7 +24,7 @@
       {% endif %}
 
       {% if addBefore %}
-        {{ teaser|csp_inline_styles }}
+        {{ teaser|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
       {% endif %}
     </div>
   {% endif %}
@@ -43,12 +43,12 @@
 
 {% set schemaOrg = getSchemaOrgData.invoke() %}
 
-{% if hasText %}
-    {% set schemaOrg = schemaOrg|merge({'text': rawHtmlToPlainText.invoke(text)}) %}
+{% if hasText.invoke() %}
+    {% set schemaOrg = schemaOrg|merge({text: text.invoke()|html_to_plain_text}) %}
 {% endif %}
 
 {% do add_schema_org(schemaOrg) %}
 
-{% if figure %}
-    {% do add_schema_org({'@type' => 'WebPage', 'primaryImageOfPage' => figure.getSchemaOrgData()}) %}
+{% if figure|default %}
+    {% do add_schema_org({'@type': 'WebPage', primaryImageOfPage: figure.getSchemaOrgData()}) %}
 {% endif %}

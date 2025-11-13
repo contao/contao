@@ -2,12 +2,12 @@
 
 {% block content %}
 
-  {% if not items|length and not days|length %}
+  {% if not items|default and not days|default %}
     <p class="empty">{{ empty }}</p>
   {% else %}
-    {% if yearly %}
+    {% if yearly|default %}
       <ul class="level_1">
-        {% year, month in items %}
+        {% for year, month in items %}
           {% if month.isActive %}
             <li class="active"><strong class="active">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</strong></li>
           {% else %}
@@ -15,7 +15,7 @@
           {% endif %}
         {% endfor %}
       </ul>
-    {% elseif daily %}
+    {% elseif daily|default %}
       <table class="minicalendar">
       <thead>
         <tr>
