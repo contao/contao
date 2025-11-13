@@ -70,7 +70,7 @@ export default class extends Controller {
             }
 
             const value =
-                el.classList.contains('tl_textarea') && el.classList.contains('noresize')
+                el.classList.contains('tl_textarea')
                     ? this.#html2string(el.value)
                     : el.value;
 
