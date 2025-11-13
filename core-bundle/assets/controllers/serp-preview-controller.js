@@ -69,10 +69,7 @@ export default class extends Controller {
                 continue;
             }
 
-            const value =
-                el.classList.contains('tl_textarea')
-                    ? this.#html2string(el.value)
-                    : el.value;
+            const value = el.classList.contains('tl_textarea') ? this.#html2string(el.value) : el.value;
 
             if (value) {
                 return value;
