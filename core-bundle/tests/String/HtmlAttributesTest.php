@@ -198,9 +198,7 @@ class HtmlAttributesTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideAttributeValues
-     */
+    #[DataProvider('provideAttributeValues')]
     public function testSerializesAttributeValues(mixed $value, string|null $expected): void
     {
         $attributes = new HtmlAttributes();
