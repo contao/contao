@@ -26,7 +26,7 @@
 }
 
 body {
-    &:not(.navigation-open):not(.nav-is-desktop) .navigation-main {
+    &:not(.navigation-open, .nav-is-desktop) .navigation-main {
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
