@@ -50,6 +50,14 @@ class ContentProxy extends ContentElement
 		}
 
 		$this->strColumn = $strColumn;
+		$this->objModel = $this->reference->attributes['contentModel'] ?? null;
+
+		if (\is_int($this->objModel))
+		{
+			$this->objModel = ContentModel::findById($this->objModel);
+		}
+
+		$this->arrData = $this->objModel?->row() ?? array();
 
 		// Do not call parent constructor
 	}
@@ -76,17 +84,17 @@ class ContentProxy extends ContentElement
 
 	public function __set($strKey, $varValue)
 	{
-		$this->reference->attributes['templateProperties'][$strKey] = $varValue;
+		$this->reference->attributes['templateProperties'][$strKey] = $this->arrData[$strKey] = $varValue;
 	}
 
 	public function __get($strKey)
 	{
-		return $this->reference->attributes['templateProperties'][$strKey] ?? null;
+		return $this->reference->attributes['templateProperties'][$strKey] ?? $this->arrData[$strKey] ?? null;
 	}
 
 	public function __isset($strKey)
 	{
-		return isset($this->reference->attributes['templateProperties'][$strKey]);
+		return isset($this->reference->attributes['templateProperties'][$strKey]) || isset($this->arrData[$strKey]);
 	}
 
 	/**
