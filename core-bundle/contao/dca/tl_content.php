@@ -16,7 +16,6 @@ use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -65,9 +64,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'type', 'author', 'tstamp', 'start', 'stop'),
-			'child_record_callback'   => array('tl_content', 'addCteType'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
+		),
+		'label' => array
+		(
+			'fields'                  => array('type'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_content', 'addCteType')
 		),
 	),
 
@@ -945,7 +949,7 @@ class tl_content extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function addCteType($arrRow)
 	{
@@ -1027,8 +1031,6 @@ class tl_content extends Backend
 		$objModel = new ContentModel();
 		$objModel->setRow($arrRow);
 
-		$class = 'cte_preview';
-
 		try
 		{
 			$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
@@ -1053,20 +1055,8 @@ class tl_content extends Backend
 		{
 			$preview = '';
 		}
-		else
-		{
-			$preview = '<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
-		}
 
-		$dragHandle = '';
-
-		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_content', new UpdateAction('tl_content', $arrRow)))
-		{
-			$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-			$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
-		}
-
-		return '<div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>' . $preview;
+		return array($type, $preview, $key);
 	}
 
 	/**

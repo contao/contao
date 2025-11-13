@@ -155,6 +155,9 @@
       <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

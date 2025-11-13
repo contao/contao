@@ -17,6 +17,8 @@ final class Hit
 
     private string|null $context = null;
 
+    private string|null $visibleType = null;
+
     private FigureBuilder|null $imageFigureBuilder = null;
 
     private array $metadata = [];
@@ -31,6 +33,11 @@ final class Hit
     public function getDocument(): Document
     {
         return $this->document;
+    }
+
+    public function getVisibleType(): string
+    {
+        return $this->visibleType ?? $this->getDocument()->getType();
     }
 
     public function getTitle(): string
@@ -104,6 +111,14 @@ final class Hit
     {
         $clone = clone $this;
         $clone->metadata = $metadata;
+
+        return $clone;
+    }
+
+    public function withVisibleType(string $visibleType): self
+    {
+        $clone = clone $this;
+        $clone->visibleType = $visibleType;
 
         return $clone;
     }
