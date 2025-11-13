@@ -2,4 +2,3 @@
     <progress class="jobs-progress-bar" value="{{ progress|round }}" max="100"></progress>
     <span class="jobs-progress-label">{{ progress|format_number(2) }}%</span>
 </label>
-<div class="job-progress" style="--value:{{ progress|round }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress|round }}" data-label="{{ progress|format_number(2) }}%"></div>
