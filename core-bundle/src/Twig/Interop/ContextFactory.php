@@ -185,11 +185,15 @@ final class ContextFactory
         return new class($value) extends \stdClass implements \IteratorAggregate {
             public function __construct(\stdClass $data)
             {
+                /** @phpstan-ignore foreach.nonIterable */
                 foreach ($data as $key => $value) {
                     $this->$key = $value;
                 }
             }
 
+            /**
+             * @return \ArrayIterator<array-key, mixed>
+             */
             public function getIterator(): \ArrayIterator
             {
                 return new \ArrayIterator((array) $this);
