@@ -71,6 +71,9 @@
       <trans-unit id="tl_image_size_item.pastenewafter.1">
         <source>Create a new media query after media query ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_image_size_item.tableLabel">
+        <source>Image size item</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
