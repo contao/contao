@@ -70,6 +70,6 @@ class ScopeMatcher
             return false;
         }
 
-        return $this->frontendMatcher->matches($request ?? $this->requestStack->getCurrentRequest());
+        return $this->frontendMatcher->matches($request);
     }
 }
