@@ -371,6 +371,11 @@
     align-items: start;
 }
 
+.tl_right_nowrap:has(.operations + :is(.tl_tree_checkbox, .tl_tree_radio)) > span {
+    display: flex;
+    justify-content: end;
+}
+
 .cte_type {
     margin: 0 0 4px;
     font-size: .75rem;
