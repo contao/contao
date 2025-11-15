@@ -515,7 +515,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             :                                       # Colon
         /ixs';
 
-        preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+        $stylesDecoded = $styles;
+
+        if (false === $this->doubleEncoding) {
+            $stylesDecoded = html_entity_decode($stylesDecoded, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+        }
+
+        preg_match_all($declarationRegex, $stylesDecoded, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         $result = [];
 
@@ -531,6 +537,15 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                     default => "$property: $value;",
                 };
             }
+        }
+
+        if (false === $this->doubleEncoding && $stylesDecoded !== $styles) {
+            array_walk_recursive(
+                $result,
+                static function (&$value): void {
+                    $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+                },
+            );
         }
 
         return $result;
