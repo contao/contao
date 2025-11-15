@@ -37,7 +37,7 @@ class DebugDcaCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('table', InputArgument::REQUIRED, 'The table name');
-        $this->addArgument('path', InputArgument::OPTIONAL, 'Dot-notation for a portion of the DCA to dump');
+        $this->addArgument('path', InputArgument::OPTIONAL, 'Reference a DCA subsection using dot notation');
         $this->addUsage('tl_member fields.username');
     }
 
