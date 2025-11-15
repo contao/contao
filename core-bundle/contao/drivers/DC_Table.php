@@ -1087,6 +1087,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			unset($this->set['id']);
 
 			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
+
 			$objInsertStmt = null;
 
 			try
