@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\Util\ArrayTree;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -1955,7 +1956,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Store the active record (backwards compatibility)
 		$this->objActiveRecord = (object) $currentRecord;
 
-		$return = '';
 		$this->values[] = $this->intId;
 		$this->procedure[] = 'id=?';
 		$this->arrSubmit = array();
@@ -1987,59 +1987,35 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->strPalette = $this->getPalette();
 		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
+		$parameters = array(
+			'version_number' => $intLatestVersion,
+			'boxes' => array(),
+		);
+
 		if (!empty($boxes))
 		{
-			$class = 'tl_tbox';
-
-			// Render boxes
 			foreach ($boxes as $box)
 			{
-				$arrAjax = array();
-				$blnAjax = false;
-				$key = $box['key'];
-				$legend = '';
-
-				if ($key)
-				{
-					$legend = "\n" . '<legend><button type="button" data-action="contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</button></legend>';
-
-					if ($box['class'])
-					{
-						$class .= ' ' . $box['class'];
-					}
-				}
-
-				$return .= "\n\n" . '<fieldset id="pal_' . $key . '" class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
 				$thisId = '';
 
-				// Build rows of the current box
+				// Generate the box's tree of widget groups. When edit() was called in
+				// AJAX mode, we return early and only render the matching subtree.
+				$widgetGroupTree = new ArrayTree();
+				$ajaxWidgetGroupTree = null;
+
 				foreach ($box['fields'] as $vv)
 				{
 					if ($vv == '[EOF]')
 					{
-						if ($blnAjax && Environment::get('isAjaxRequest'))
+						if ($ajaxWidgetGroupTree && $ajaxId == $thisId)
 						{
-							if ($ajaxId == $thisId)
-							{
-								if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-								{
-									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
-								}
-
-								return $arrAjax[$thisId];
-							}
-
-							if (\count($arrAjax) > 1)
-							{
-								$current = "\n" . '<div id="' . $thisId . '" class="subpal widget-group">' . $arrAjax[$thisId] . '</div>';
-								unset($arrAjax[$thisId]);
-								end($arrAjax);
-								$thisId = key($arrAjax);
-								$arrAjax[$thisId] .= $current;
-							}
+							return $this->render('edit_ajax', array(
+								'version_number' => $intLatestVersion,
+								'widget_groups_tree' => $ajaxWidgetGroupTree,
+							));
 						}
 
-						$return .= "\n" . '</div>';
+						$widgetGroupTree->up();
 
 						continue;
 					}
@@ -2047,9 +2023,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if (preg_match('/^\[.*]$/', $vv))
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
-						$arrAjax[$thisId] = '';
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="' . $thisId . '" class="subpal widget-group">';
+
+						$widgetGroupTree->enterChildNode($thisId);
+
+						if ($ajaxId == $thisId && Environment::get('isAjaxRequest'))
+						{
+							// We only need to output the current subtree in AJAX mode, so we store a reference here
+							$ajaxWidgetGroupTree = $widgetGroupTree->current();
+						}
 
 						continue;
 					}
@@ -2083,12 +2064,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Re-set the current value
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
-					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $arrAjax[$thisId] .= $this->row() : $return .= $this->row();
+					$widgetGroupTree->addContentNode($this->row());
 				}
 
-				$class = 'tl_box';
-				$return .= "\n</div>\n</fieldset>";
+				$key = $box['key'];
+
+				$parameters['boxes'][] = array(
+					'key' => $key,
+					'class' => $box['class'],
+					'label' => $GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key,
+					'widget_groups_tree' => $widgetGroupTree,
+				);
 			}
 
 			$this->submit();
@@ -2211,40 +2197,31 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Versions overview
 		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] ?? null))
 		{
-			$version = $objVersions->renderDropdown();
+			$parameters['version_dropdown'] = $objVersions->renderDropdown();
 		}
 		else
 		{
-			$version = '';
+			$parameters['version_dropdown'] = '';
 		}
 
 		$security = System::getContainer()->get('security.helper');
 
-		$strButtons = System::getContainer()
-			->get('contao.data_container.buttons_builder')
-			->generateEditButtons(
-				$this->strTable,
-				(bool) $this->ptable,
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
-				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
-				$this
-			);
+		// Form settings and buttons
+		$parameters['form'] = array(
+			'multipart' => $this->blnUploadable,
+			'onsubmit' => $this->onsubmit,
+			'buttons' => System::getContainer()
+				->get('contao.data_container.buttons_builder')
+				->generateEditButtons(
+					$this->strTable,
+					(bool) $this->ptable,
+					$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
+					$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
+					$this
+				),
+		);
 
-		// Add the buttons and end the form
-		$return .= '
-</div>
-  ' . $strButtons . '
-</form>';
-
-		$strVersionField = '';
-
-		// Store the current version number (see #8412)
-		if ($intLatestVersion !== null)
-		{
-			$strVersionField = '
-<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
-		}
-
+		// Back button
 		$strBackUrl = $this->getReferer(true);
 
 		if ((string) $currentRecord['tstamp'] === '0')
@@ -2252,21 +2229,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
 		}
 
-		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . (Input::get('nb') ? '' : System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton($strBackUrl)) . '
-<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $strVersionField . $return;
+		$parameters['back_button'] = Input::get('nb')
+			? null
+			: System::getContainer()
+				->get('contao.data_container.global_operations_builder')
+				->initialize($this->strTable)
+				->addBackButton($strBackUrl)
+		;
 
-		$return = '
-<div data-controller="contao--jump-targets">
-	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
-	' . $return . '
-</div>';
+		// Messages
+		$parameters['message'] = Message::generate();
+		$parameters['error'] = $this->noReload;
 
-		return $return;
+		return $this->render('edit', $parameters);
 	}
 
 	/**
