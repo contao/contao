@@ -34,11 +34,11 @@ class ThemeLayoutListener
 
         return $this->finderFactory
             ->create()
-            ->identifierRegex('%^layout/%')
+            ->identifier('page/layout')
             ->extension('html.twig')
             ->withVariants()
             ->excludePartials()
-            ->asTemplateOptions()
+            ->asTemplateOptions(false)
         ;
     }
 
