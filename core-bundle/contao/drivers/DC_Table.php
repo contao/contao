@@ -2204,9 +2204,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$parameters['version_dropdown'] = '';
 		}
 
-		// Form settings and buttons
 		$security = System::getContainer()->get('security.helper');
 
+		// Form settings and buttons
 		$parameters['form'] = array(
 			'multipart' => $this->blnUploadable,
 			'onsubmit' => $this->onsubmit,
@@ -2229,9 +2229,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
 		}
 
-		$parameters['back_button'] = Input::get('nb') ?
-			null :
-			System::getContainer()
+		$parameters['back_button'] = Input::get('nb')
+			? null
+			: System::getContainer()
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton($strBackUrl)

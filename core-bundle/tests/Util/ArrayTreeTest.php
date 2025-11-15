@@ -41,9 +41,7 @@ class ArrayTreeTest extends TestCase
                     'B2',
                 ],
                 1 => [
-                    0 => [
-                        'C',
-                    ],
+                    ['C'],
                 ],
                 2 => 'D',
             ],
@@ -65,11 +63,7 @@ class ArrayTreeTest extends TestCase
             return substr($return, 1);
         };
 
-        $this->assertSame(
-            'A,B:{B1,B2},1:{0:{C}},D',
-            $dumpTreeAsString($tree),
-            'use as iterable',
-        );
+        $this->assertSame('A,B:{B1,B2},1:{0:{C}},D', $dumpTreeAsString($tree), 'use as iterable');
     }
 
     public function testReturnsReferenceToSubTree(): void
