@@ -16,7 +16,7 @@ export default class extends Controller {
 
     #handleIntersect(entries) {
         for (const entry of entries) {
-            this.element.classList.toggle('is-stuck', !entry.isIntersecting);
+            this.element.classList.toggle('is-sticky', !entry.isIntersecting);
         }
     }
 }
