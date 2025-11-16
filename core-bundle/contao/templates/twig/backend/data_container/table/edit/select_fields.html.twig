@@ -1,0 +1,66 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/backend/data_container/table/edit/_edit.html.twig" %}
+
+{% set form_attributes = attrs()
+    .set('action', "#{app.request.requestUri}&fields=1")
+    .set('id', "#{table}_all")
+    .set('data-turbo', 'false')
+%}
+
+{% block form_body %}
+    <input type="hidden" name="FORM_SUBMIT" value="{{ "#{table}_all" }}">
+    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+    {% for id in ids %}
+        <input type="hidden" name="IDS[]" value="{{ id }}">
+    {% endfor %}
+
+    {# todo: check if this is a bug, because the same message is already output in the header
+             and does not make a whole lot sense with this condition #}
+    {% if error_no_fields %}
+        <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
+    {% endif %}
+
+    <div class="tl_tbox">
+        <div class="widget">
+            <fieldset class="tl_checkbox_container">
+                <legend{{ attrs().addClass('error', error_no_fields) }}>
+                    {{ 'MSC.all_fields.0'|trans }}<span class="mandatory">*</span>
+                </legend>
+                <input type="checkbox" id="check_all" class="tl_checkbox" data-action="contao--check-all#toggleAll">
+                <label for="check_all" class="check-all">
+                    <em>{{ 'MSC.selectAll'|trans }}</em>
+                </label>
+                <br>
+                {% for field, label in fields %}
+                    {% set input_attributes = attrs()
+                        .set('type', 'checkbox')
+                        .set('name', 'all_fields[]')
+                        .set('id', "all_#{field}")
+                        .addClass('tl_checkbox')
+                        .set('value', field)
+                    %}
+                    <input{{ input_attributes }}>
+                    <label for="{{ "all_#{field}" }}" class="tl_checkbox_label">
+                        {{ label }}<span class="label-info">[{{ field }}]</span>
+                    </label>
+                    <br>
+                {% endfor %}
+            </fieldset>
+
+            {% if error_no_fields %}
+                <p class="tl_error">{{ 'ERR.all_fields'|trans }}</p>
+            {% endif %}
+
+            {% if show_help %}
+                <p class="tl_help tl_tip">{{ 'MSC.all_fields.1'|trans }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block form_buttons %}
+    {% set submit_button %}
+        <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">{{ 'MSC.continue'|trans }}</button>
+    {% endset %}
+    {% include "@Contao/backend/data_container/buttons.html.twig" with { buttons: [submit_button] } %}
+{% endblock %}
