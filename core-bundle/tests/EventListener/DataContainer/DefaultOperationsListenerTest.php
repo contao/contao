@@ -70,12 +70,12 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
-        $this->assertOperation($operations['diff'], 'act=edit&versions=1', 'diff.svg', true);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsChildrenOperationsWithChildTable(): void
@@ -98,13 +98,13 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'children', 'copy', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'children', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['children'], 'table=tl_bar', 'children.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
-        $this->assertOperation($operations['diff'], 'act=edit&versions=1', 'diff.svg', true);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsOperationsWithParentTable(): void
@@ -127,13 +127,13 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
-        $this->assertOperation($operations['diff'], 'act=edit&versions=1', 'diff.svg', true);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsOperationsInTreeMode(): void
@@ -153,14 +153,14 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
         $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;children=1', 'copychildren.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
-        $this->assertOperation($operations['diff'], 'act=edit&versions=1', 'diff.svg', true);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsToggleOperationIfThereIsOneToggleField(): void
@@ -189,13 +189,13 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['toggle'], 'act=toggle&amp;field=published', 'visible.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
-        $this->assertOperation($operations['diff'], 'act=edit&versions=1', 'diff.svg', true);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsToggleOperationIfThereIsOneReverseToggleField(): void
@@ -224,13 +224,13 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['toggle'], 'act=toggle&amp;field=featured', 'visible.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
-        $this->assertOperation($operations['diff'], 'act=edit&versions=1', 'diff.svg', true);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testDoesNotAddToggleOperationIfThereAreMultipleToggleField(): void
@@ -260,12 +260,12 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
-        $this->assertOperation($operations['diff'], 'act=edit&versions=1', 'diff.svg', true);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testExpandsNamedOperations(): void
@@ -342,7 +342,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show', 'diff', 'foo'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions', 'foo'], array_keys($operations));
     }
 
     public function testKeepsPositionForNamedOperations(): void
@@ -506,7 +506,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'delete', 'show', 'versions'], array_keys($operations));
     }
 
     public function testDoesNotAddCopyOperationIfTableIsClosed(): void
@@ -529,7 +529,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'delete', 'show', 'versions'], array_keys($operations));
     }
 
     public function testDoesNotAddCutOperationIfTableIsNotSortable(): void
@@ -553,7 +553,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
     }
 
     public function testDoesNotAddDeleteOperationIfTableIsNotDeletable(): void
@@ -576,7 +576,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'show', 'diff'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'show', 'versions'], array_keys($operations));
     }
 
     public function testAlwaysAddsChildrenAndShowOperation(): void

@@ -207,7 +207,7 @@ class DefaultOperationsListener
         ];
 
         if ($canEdit && ($GLOBALS['TL_DCA'][$table]['config']['enableVersioning'] ?? false)) {
-            $operations['diff'] = [
+            $operations['versions'] = [
                 'href' => 'act=edit&versions=1',
                 'icon' => 'diff.svg',
                 'method' => 'GET',

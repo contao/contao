@@ -652,7 +652,7 @@ class Versions extends Controller
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
-<a href="' . Backend::addToUrl('versions=1&amp;popup=1') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
+<a href="' . Backend::addToUrl('versions=1&amp;popup=1') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['DCA']['versions'][0]) . '</a>
 </div>
 </form>
 

@@ -2474,11 +2474,11 @@
       <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.diff.0">
-        <source>Show differences</source>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
       </trans-unit>
-      <trans-unit id="DCA.diff.1">
-        <source>Show differences of element ID %s</source>
+      <trans-unit id="DCA.versions.1">
+        <source>Show version of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
