@@ -1,0 +1,63 @@
+{% trans_default_domain "contao_default" %}
+
+<div data-controller="contao--jump-targets">
+    <div class="jump-targets">
+        <div class="inner" data-contao--jump-targets-target="navigation"></div>
+    </div>
+
+    {{ version_dropdown|raw }}
+    {{ message|raw }}
+
+    {% if error %}
+        <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
+    {% endif %}
+
+    {{ back_button|default|raw }}
+
+    {% set form_attributes = attrs()
+        .set('id', table)
+        .addClass('tl_form tl_edit_form')
+        .set('method', 'post')
+        .set('enctype', form.multipart ? 'multipart/form-data' : 'application/x-www-form-urlencoded')
+        .set('onsubmit', form.onsubmit|join(' '), form.onsubmit|length > 0)
+    %}
+    <form{{ form_attributes }}>
+        <div class="tl_formbody_edit">
+            <input type="hidden" name="FORM_SUBMIT" value="{{ table }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            {% if version_number is not null %}
+                <input type="hidden" name="VERSION_NUMBER" value="{{ version_number }}">
+            {% endif %}
+
+            {% for box in boxes %}
+                {% set fieldset_attributes = attrs()
+                    .set('id', "pal_#{box.key}")
+                    .addClass('tl_tbox', loop.first)
+                    .addClass('tl_box', not loop.first)
+                    .addClass(box.class, box.class)
+                    .addclass('nolegend', not box.key)
+                    .set('data-controller', 'contao--toggle-fieldset')
+                    .set('data-contao--toggle-fieldset-id-value', box.key)
+                    .set('data-contao--toggle-fieldset-table-value', table)
+                    .set('data-contao--toggle-fieldset-collapsed-class', 'collapsed')
+                    .set('data-contao--jump-targets-target', 'section')
+                    .set('data-contao--jump-targets-label-value', box.label)
+                    .set('data-action', 'contao--jump-targets:scrollto->contao--toggle-fieldset#open')
+                %}
+                <fieldset{{ fieldset_attributes }}>
+                    {% if box.key %}
+                        <legend>
+                            <button type="button" data-action="contao--toggle-fieldset#toggle">{{ box.label }}</button>
+                        </legend>
+                    {% endif %}
+
+                    <div class="widget-group">
+                        {% include "@Contao/backend/data_container/table/_widget_groups.html.twig" with {root: box.widget_groups_tree} %}
+                    </div>
+                </fieldset>
+            {% endfor %}
+        </div>
+
+        {{ form.buttons|raw }}
+    </form>
+</div>
