@@ -4570,9 +4570,13 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 							$return .= '<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview">' . ($label[1] ?? '') . '</div></div>';
 						}
 					}
+					elseif ($dragHandle)
+					{
+						$return .= '<div class="tl_content_left draggable">' . $dragHandle . '<div>' . $label . '</div></div>';
+					}
 					else
 					{
-						$return .= '<div class="tl_content_left">' . $dragHandle . $label . '</div>';
+						$return .= '<div class="tl_content_left'.($dragHandle ? 'draggable' : '').'">' . $dragHandle . $label . '</div>';
 					}
 				}
 
