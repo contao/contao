@@ -15,7 +15,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\Pagination\PaginationConfig;
-use Contao\CoreBundle\Pagination\PaginationInterface;
 use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
 
@@ -66,7 +65,6 @@ class Comments extends Frontend
 
 			try
 			{
-				/** @var PaginationInterface $pagination */
 				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $total, $objConfig->perPage));
 			}
 			catch (PageOutOfRangeException $e)

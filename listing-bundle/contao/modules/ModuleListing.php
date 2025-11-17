@@ -14,7 +14,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\Pagination\PaginationConfig;
-use Contao\CoreBundle\Pagination\PaginationInterface;
 
 /**
  * Provide methods to render content element "listing".
@@ -154,7 +153,6 @@ class ModuleListing extends Module
 
 		try
 		{
-			/** @var PaginationInterface $pagination */
 			$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
 		}
 		catch (PageOutOfRangeException $e)

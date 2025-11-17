@@ -23,9 +23,9 @@ class PaginationConfig
     private bool $ignoreOutOfBounds = false;
 
     public function __construct(
-        private string $queryParameterName,
-        private int $total,
-        private int $perPage,
+        private readonly string $queryParameterName,
+        private readonly int $total,
+        private readonly int $perPage,
     ) {
     }
 

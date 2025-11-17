@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Pagination\PaginationConfig;
-use Contao\CoreBundle\Pagination\PaginationInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -197,7 +196,6 @@ class ModuleSearch extends Module
 
 				try
 				{
-					/** @var PaginationInterface $pagination */
 					$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $count, $per_page));
 				}
 				catch (PageOutOfRangeException $e)
@@ -231,7 +229,7 @@ class ModuleSearch extends Module
 				$totalLength = $lengths[1];
 			}
 
-			$arrResult = $objResult->getResults($to-$from, $from);
+			$arrResult = $objResult->getResults($to - $from, $from);
 
 			// Get the results
 			foreach (array_keys($arrResult) as $i)

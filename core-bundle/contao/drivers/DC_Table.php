@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Pagination\PaginationConfig;
-use Contao\CoreBundle\Pagination\PaginationInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -5941,7 +5940,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			Input::setGet('lp', $offset / $limit + 1); // see #6923
 		}
 
-		/** @var PaginationInterface $pagination */
 		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
 			(new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds()
 		);

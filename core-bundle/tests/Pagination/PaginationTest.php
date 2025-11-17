@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\OptIn;
+namespace Contao\CoreBundle\Tests\Pagination;
 
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\Pagination\Pagination;
