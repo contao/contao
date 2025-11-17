@@ -21,10 +21,10 @@
                             %}
                             <a{{ first_attributes }}>{% block pagination_first_label %}{{ 'MSC.first'|trans }}{% endblock %}</a>
                         </li>
-                    {% endblock %}
-                {% endif %}
-                {% if pagination.previous %}
-                    {% block pagination_previous %}
+                    {% endif %}
+                {% endblock %}
+                {% block pagination_previous %}
+                    {% if pagination.previous %}
                         <li class="previous">
                             {% set previous_attributes = attrs()
                                 .set('href', pagination.urlForPage(pagination.previous))
@@ -32,8 +32,8 @@
                             %}
                             <a{{ previous_attributes }}>{% block pagination_previous_label %}{{ 'MSC.previous'|trans }}{% endblock %}</a>
                         </li>
-                    {% endblock %}
-                {% endif %}
+                    {% endif %}
+                {% endblock %}
 
                 {% for page in pagination.pages %}
                     {% block pagination_link %}
@@ -51,8 +51,8 @@
                     {% endblock %}
                 {% endfor %}
 
-                {% if pagination.next %}
-                    {% block pagination_next %}
+                {% block pagination_next %}
+                    {% if pagination.next %}
                         <li class="next">
                             {% set next_attributes = attrs()
                                 .set('href', pagination.urlForPage(pagination.next))
@@ -60,10 +60,10 @@
                             %}
                             <a{{ next_attributes }}>{% block pagination_next_label %}{{ 'MSC.next'|trans }}{% endblock %}</a>
                         </li>
-                    {% endblock %}
-                {% endif %}
-                {% if pagination.last %}
-                    {% block pagination_last %}
+                    {% endif %}
+                {% endblock %}
+                {% block pagination_last %}
+                    {% if pagination.last %}
                         <li class="last">
                             {% set last_attributes = attrs()
                                 .set('href', pagination.urlForPage(pagination.last))
@@ -71,8 +71,8 @@
                             %}
                             <a{{ last_attributes }}>{% block pagination_last_label %}{{ 'MSC.last'|trans }}{% endblock %}</a>
                         </li>
-                    {% endblock %}
-                {% endif %}
+                    {% endif %}
+                {% endblock %}
             </ul>
         </nav>
     {% endif %}
