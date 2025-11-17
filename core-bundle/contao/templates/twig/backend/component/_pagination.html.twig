@@ -12,8 +12,8 @@
                 <p>{{ 'MSC.totalPages'|trans([pagination.current, pagination.pageCount]) }}</p>
             {% endblock %}
             <ul>
-                {% if pagination.first %}
-                    {% block pagination_first %}
+                {% block pagination_first %}
+                    {% if pagination.first %}
                         <li class="first">
                             {% set first_attributes = attrs()
                                 .set('href', pagination.urlForPage(pagination.first))
