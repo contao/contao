@@ -190,10 +190,7 @@ class PermissionsListener implements ResetInterface
         $groups = $this->fetchRecords('tl_user_group', 'g', $rootField, $canEditGroups);
         $filter = static fn (string|null $value): bool => \in_array($recordId, StringUtil::deserialize($value, true), false);
 
-        return array_merge(
-            array_keys(array_filter($users, $filter)),
-            array_keys(array_filter($groups, $filter)),
-        );
+        return [...array_keys(array_filter($users, $filter)), ...array_keys(array_filter($groups, $filter))];
     }
 
     private function savePermissions(int $recordId, string $rootField, mixed $value, $canEditUsers, $canEditGroups): void
@@ -201,7 +198,7 @@ class PermissionsListener implements ResetInterface
         $value = StringUtil::deserialize($value, true);
 
         $this->updatePermission('tl_user', 'u', $rootField, $canEditUsers, $value, $recordId);
-        $this->updatePermission('tl_user_group', 'g', $rootField, $canEditUsers, $value, $recordId);
+        $this->updatePermission('tl_user_group', 'g', $rootField, $canEditGroups, $value, $recordId);
     }
 
     private function updatePermission(string $table, string $prefix, string $rootField, bool $canEdit, array $selection, int $recordId): void
