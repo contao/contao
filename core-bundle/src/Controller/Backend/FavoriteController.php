@@ -52,6 +52,7 @@ class FavoriteController extends AbstractController
             }
 
             $this->framework->getAdapter(Controller::class)->loadDataContainer('tl_favorites');
+
             $dc = $this->framework->createInstance(DC_Table::class, ['tl_favorites']);
             $dc->id = $id;
             $dc->delete(true);
@@ -74,7 +75,7 @@ class FavoriteController extends AbstractController
             return $this->redirect($url);
         }
 
-        if (!($targetPath = $request->get('target_path'))) {
+        if (!$targetPath = $request->get('target_path')) {
             throw new BadRequestException('Missing target_path in request.');
         }
 

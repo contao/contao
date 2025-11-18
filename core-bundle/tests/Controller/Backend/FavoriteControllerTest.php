@@ -38,7 +38,6 @@ class FavoriteControllerTest extends TestCase
     public function testReturnsEmptyResponseWithoutBackendUser(): void
     {
         $container = $this->getContainer(null, [], null, false);
-
         $connection = $this->createMock(Connection::class);
 
         $controller = new FavoriteController($this->mockContaoFramework(), $connection);
@@ -52,9 +51,7 @@ class FavoriteControllerTest extends TestCase
     public function testThrowsExceptionWithoutTargetPath(): void
     {
         $container = $this->getContainer();
-
         $connection = $this->createMock(Connection::class);
-
         $request = new Request();
 
         $controller = new FavoriteController($this->mockContaoFramework(), $connection);
