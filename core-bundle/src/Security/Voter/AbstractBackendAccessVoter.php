@@ -52,7 +52,7 @@ abstract class AbstractBackendAccessVoter extends Voter
     protected function checkAccess(mixed $subject, string $field, BackendUser $user): bool
     {
         if (null === $subject) {
-            return $this->checkAccess(null, $field, $user);
+            return $this->hasAccess(null, $field, $user);
         }
 
         if (!\is_scalar($subject) && !\is_array($subject)) {
@@ -63,7 +63,7 @@ abstract class AbstractBackendAccessVoter extends Voter
             $subject = [$subject];
         }
 
-        return $this->checkAccess($subject, $field, $user);
+        return $this->hasAccess($subject, $field, $user);
     }
 
     abstract protected function hasAccess(array|null $subject, string $field, BackendUser $user): bool;
