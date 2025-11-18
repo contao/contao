@@ -8,13 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Backend;
-use Contao\BackendUser;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\StringUtil;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_faq_category'] = array
 (

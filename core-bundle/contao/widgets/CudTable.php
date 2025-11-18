@@ -40,18 +40,18 @@ class CudTable extends Widget
 		foreach ($this->options as $table => $operations)
 		{
 			$tables[$table] = array_column($operations, 'value');
-			$hasAdditional = $hasAdditional ?: !empty(array_diff($tables[$table], ['create', 'update', 'delete']));
+			$hasAdditional = $hasAdditional ?: !empty(array_diff($tables[$table], array('create', 'update', 'delete')));
 		}
 
 		ksort($tables);
 
-		return System::getContainer()->get('twig')->render('@Contao/backend/widget/cud_table.html.twig', [
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/cud_table.html.twig', array(
 			'id' => $this->strId,
 			'name' => $this->strName,
 			'tables' => $tables,
 			'values' => $this->varValue,
 			'attributes' => $this->getAttributes(),
 			'has_additional' => $hasAdditional,
-		]);
+		));
 	}
 }

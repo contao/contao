@@ -42,14 +42,9 @@ class PermissionsListener implements ResetInterface
     ) {
     }
 
-    public function reset(): void
-    {
-        $this->recordCache = [];
-    }
-
     public function __invoke(string $table): void
     {
-        if (!isset($GLOBALS['TL_DCA'][$table]['config']['userRoot']) || !\is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
+        if (!isset($GLOBALS['TL_DCA'][$table]['config']['userRoot']) || !is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
             return;
         }
 
@@ -71,12 +66,17 @@ class PermissionsListener implements ResetInterface
         $this->injectPermissionField($table, $rootField);
     }
 
+    public function reset(): void
+    {
+        $this->recordCache = [];
+    }
+
     private function filterRecords(string $table, string $rootField, BackendUser $user): void
     {
         $root = $user->{$rootField};
 
         if (empty($root) || !\is_array($root)) {
-            $root = array(0);
+            $root = [0];
         }
 
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] = $root;
@@ -87,7 +87,7 @@ class PermissionsListener implements ResetInterface
         $root = $user->{$rootField};
 
         if (empty($root) || !\is_array($root)) {
-            $root = array(0);
+            $root = [0];
         }
 
         // The new element is enabled already
@@ -108,7 +108,7 @@ class PermissionsListener implements ResetInterface
             $groups = $this->connection->fetchAllAssociative(
                 'SELECT * FROM tl_user_group WHERE id IN (?)',
                 [$user->groups],
-                [ArrayParameterType::INTEGER]
+                [ArrayParameterType::INTEGER],
             );
 
             foreach ($groups as $group) {
@@ -168,7 +168,7 @@ class PermissionsListener implements ResetInterface
             'options_callback' => fn () => $this->getUserAndGroupOptions($table, $canEditUsers, $canEditGroups),
             'eval' => ['multiple' => true, 'doNotSaveEmpty' => true],
             'load_callback' => [fn ($value, DataContainer $dc) => $this->loadPermissions((int) $dc->id, $rootField, $canEditUsers, $canEditGroups)],
-            'save_callback' => [fn ($value, DataContainer $dc) => $this->savePermissions((int) $dc->id, $rootField, $value, $canEditUsers, $canEditGroups)]
+            'save_callback' => [fn ($value, DataContainer $dc) => $this->savePermissions((int) $dc->id, $rootField, $value, $canEditUsers, $canEditGroups)],
         ];
 
         $GLOBALS['TL_DCA'][$table]['config']['onpalette_callback'][] = static fn (string $palette): string => PaletteManipulator::create()

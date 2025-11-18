@@ -18,12 +18,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Contracts\Service\ResetInterface;
 
-/**
- * @extends Voter<string, mixed>
- */
 class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInterface
 {
     private const PAGE_PERMISSIONS = [

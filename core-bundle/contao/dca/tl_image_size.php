@@ -9,8 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image\ResizeOptions;

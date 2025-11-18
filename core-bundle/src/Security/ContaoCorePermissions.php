@@ -95,8 +95,9 @@ final class ContaoCorePermissions
     public const USER_CAN_EDIT_FIELD_OF_TABLE = 'contao_user.alexf';
 
     /**
-     * Access is granted if the current user can create/update/delete records of a table. Subject
-     * must be a table and operation separated by two colons (e.g. "tl_page::create").
+     * Access is granted if the current user can create/update/delete records of
+     * a table. Subject must be a table and operation separated by two colons
+     * (e.g. "tl_page::create").
      */
     public const USER_CAN_OPERATE_ON_TABLE = 'contao_user.cud';
 

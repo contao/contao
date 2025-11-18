@@ -18,7 +18,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DC_Table;
-use Contao\System;
 
 /**
  * @internal
@@ -74,7 +73,7 @@ class CudPermissionListener
 
     private function loadDcaFiles(): void
     {
-        $processed = array();
+        $processed = [];
         $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
 

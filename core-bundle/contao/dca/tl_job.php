@@ -25,7 +25,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
 		'notDeletable'                => true,
-		'permissions'                 => [],
+		'permissions'                 => array(),
 		'backendSearchIgnore'         => true,
 		'sql' => array
 		(

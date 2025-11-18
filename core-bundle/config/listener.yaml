@@ -10,13 +10,6 @@ services:
             - '@router'
             - '@security.helper'
 
-    contao.listener.data_container.permissions:
-        class: Contao\CoreBundle\EventListener\DataContainer\PermissionsListener
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@database_connection'
-
     contao.listener.backend_cache_response:
         class: Contao\CoreBundle\EventListener\BackendCacheResponseListener
         arguments:
@@ -252,6 +245,13 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUseSslDefaultListener
         arguments:
             - '@request_stack'
+
+    contao.listener.data_container.permissions:
+        class: Contao\CoreBundle\EventListener\DataContainer\PermissionsListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@database_connection'
 
     contao.listener.data_container.personal_data_password:
         class: Contao\CoreBundle\EventListener\DataContainer\PersonalDataPasswordListener

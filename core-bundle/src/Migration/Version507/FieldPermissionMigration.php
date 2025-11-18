@@ -16,6 +16,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 
 class FieldPermissionMigration extends AbstractMigration
@@ -37,7 +38,7 @@ class FieldPermissionMigration extends AbstractMigration
         foreach (['tl_user', 'tl_user_group'] as $table) {
             $tableColumns = array_keys($schemaManager->listTableColumns($table));
 
-            if (!\in_array('cud', $tableColumns)) {
+            if (!\in_array('cud', $tableColumns, true)) {
                 continue;
             }
 
@@ -70,6 +71,9 @@ class FieldPermissionMigration extends AbstractMigration
         ];
     }
 
+    /**
+     * @param AbstractSchemaManager<AbstractMySQLPlatform> $schemaManager
+     */
     private function migrateTable(AbstractSchemaManager $schemaManager, array $mapping, string $table, string $where = ''): void
     {
         $columns = array_keys($schemaManager->listTableColumns($table));

@@ -33,6 +33,7 @@ class BackwardsCompatibilityBackendAccessVoter extends AbstractBackendAccessVote
         $table = match ($field) {
             'calendarp' => 'tl_calendar',
             'calendarfeedp' => 'tl_calendar_feed',
+            default => throw new \InvalidArgumentException('Invalid field '.$field),
         };
 
         if (null === $subject) {
