@@ -50,6 +50,9 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao_faq.security.backwards_compatibility_backend_access:
+        class: Contao\FaqBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+
     contao_faq.security.faq_access_voter:
         class: Contao\FaqBundle\Security\Voter\FaqAccessVoter
         arguments:

@@ -1046,6 +1046,9 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.security.backwards_compatibility_backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:

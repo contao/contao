@@ -128,6 +128,9 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao_calendar.security.backwards_compatibility_backend_access:
+        class: Contao\CalendarBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+
     contao_calendar.security.calendar_access_voter:
         class: Contao\CalendarBundle\Security\Voter\CalendarAccessVoter
         arguments:

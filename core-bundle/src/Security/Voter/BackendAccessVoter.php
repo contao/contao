@@ -18,15 +18,13 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @extends Voter<string, mixed>
  */
-class BackendAccessVoter extends Voter implements ResetInterface
+class BackendAccessVoter extends AbstractBackendAccessVoter implements ResetInterface
 {
     private const PAGE_PERMISSIONS = [
         'can_edit_page' => 1,
@@ -56,30 +54,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
         return str_starts_with($attribute, 'contao_user.');
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, Vote|null $vote = null): bool
+    protected function checkAccess(mixed $subject, string $field, BackendUser $user): bool
     {
-        $user = $token->getUser();
-
-        if (!$user instanceof BackendUser) {
-            return false;
-        }
-
-        $permission = explode('.', $attribute, 3);
-
-        if ('contao_user' !== $permission[0] || !isset($permission[1])) {
-            return false;
-        }
-
-        if ($user->isAdmin) {
-            return true;
-        }
-
-        $field = $permission[1];
-
-        if (!$subject && isset($permission[2])) {
-            $subject = $permission[2];
-        }
-
         if ('can_edit_fields' === $field) {
             return $this->canEditFieldsOf($subject, $user);
         }
@@ -88,24 +64,16 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return $this->isAllowed($subject, self::PAGE_PERMISSIONS[$field], $user);
         }
 
-        return $this->hasAccess($subject, $field, $user);
+        return parent::checkAccess($subject, $field, $user);
     }
 
     /**
      * Checks the user permissions against a field in tl_user(_group).
      */
-    private function hasAccess(mixed $subject, string $field, BackendUser $user): bool
+    protected function hasAccess(array|null $subject, string $field, BackendUser $user): bool
     {
         if (null === $subject) {
             return \is_array($user->$field) && [] !== $user->$field;
-        }
-
-        if (!\is_scalar($subject) && !\is_array($subject)) {
-            return false;
-        }
-
-        if (!\is_array($subject)) {
-            $subject = [$subject];
         }
 
         if (\is_array($user->$field) && array_intersect($subject, $user->$field)) {

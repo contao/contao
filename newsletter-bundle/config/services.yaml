@@ -33,6 +33,9 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao_newsletter.security.backwards_compatibility_backend_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+
     contao_newsletter.security.newsletter_access_voter:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterAccessVoter
         arguments:
