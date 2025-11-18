@@ -4576,7 +4576,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					}
 					else
 					{
-						$return .= '<div class="tl_content_left'.($dragHandle ? 'draggable' : '').'">' . $dragHandle . $label . '</div>';
+						$return .= '<div class="tl_content_left' . ($dragHandle ? 'draggable' : '') . '">' . $dragHandle . $label . '</div>';
 					}
 				}
 
