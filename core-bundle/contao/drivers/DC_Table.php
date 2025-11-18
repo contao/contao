@@ -1263,7 +1263,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							foreach ($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] as $callback)
 							{
 								$dc = (new \ReflectionClass(self::class))->newInstanceWithoutConstructor();
-								$dc->table = $k;
+								$dc->strTable = $k;
 								$dc->id = $kk;
 
 								if (\is_array($callback))
