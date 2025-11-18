@@ -40,7 +40,7 @@ class CudPermissionListener
         }
 
         // Do not overwrite existing permissions
-        if (isset($GLOBALS['TL_DCA'][$table]['config']['permissions'][1])) {
+        if (isset($GLOBALS['TL_DCA'][$table]['config']['permissions'])) {
             return;
         }
 
@@ -49,7 +49,7 @@ class CudPermissionListener
             return;
         }
 
-        $GLOBALS['TL_DCA'][$table]['config']['permissions'][1] = ['create', 'update', 'delete'];
+        $GLOBALS['TL_DCA'][$table]['config']['permissions'] = ['create', 'update', 'delete'];
     }
 
     /**
@@ -64,8 +64,8 @@ class CudPermissionListener
         $options = [];
 
         foreach ($GLOBALS['TL_DCA'] as $table => $dca) {
-            if (\is_array($dca['config']['permissions'][1] ?? null) && [] !== $dca['config']['permissions'][1]) {
-                $options[$table] = $dca['config']['permissions'][1];
+            if (\is_array($dca['config']['permissions'] ?? null) && [] !== $dca['config']['permissions']) {
+                $options[$table] = $dca['config']['permissions'];
             }
         }
 

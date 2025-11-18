@@ -49,7 +49,7 @@ class PermissionsListener implements ResetInterface
 
     public function __invoke(string $table): void
     {
-        if (!\is_array($GLOBALS['TL_DCA'][$table]['config']['permissions'] ?? null) || !\is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
+        if (!isset($GLOBALS['TL_DCA'][$table]['config']['userRoot']) || !\is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
             return;
         }
 
@@ -59,13 +59,13 @@ class PermissionsListener implements ResetInterface
             return;
         }
 
-        $rootField = $GLOBALS['TL_DCA'][$table]['config']['permissions'][0];
-        $permissionField = $GLOBALS['TL_DCA'][$table]['config']['permissions'][1] ?? null;
+        $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
+        $permissions = $GLOBALS['TL_DCA'][$table]['config']['permissions'] ?? [];
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             $GLOBALS['TL_DCA'][$table]['config']['onload_callback'][] = fn () => $this->filterRecords($table, $rootField, $user);
-            $GLOBALS['TL_DCA'][$table]['config']['oncreate_callback'][] = fn ($ignore, $insertId) => $this->adjustPermissions($table, $rootField, $permissionField, (int) $insertId, $user);
-            $GLOBALS['TL_DCA'][$table]['config']['oncopy_callback'][] = fn ($insertId) => $this->adjustPermissions($table, $rootField, $permissionField, (int) $insertId, $user);
+            $GLOBALS['TL_DCA'][$table]['config']['oncreate_callback'][] = fn ($ignore, $insertId) => $this->adjustPermissions($table, $rootField, $permissions, (int) $insertId, $user);
+            $GLOBALS['TL_DCA'][$table]['config']['oncopy_callback'][] = fn ($insertId) => $this->adjustPermissions($table, $rootField, $permissions, (int) $insertId, $user);
         }
 
         $this->injectPermissionField($table, $rootField);
@@ -82,7 +82,7 @@ class PermissionsListener implements ResetInterface
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] = $root;
     }
 
-    private function adjustPermissions(string $table, string $rootField, string|null $permissionField, int $insertId, BackendUser $user): void
+    private function adjustPermissions(string $table, string $rootField, array $permissions, int $insertId, BackendUser $user): void
     {
         $root = $user->{$rootField};
 
@@ -112,13 +112,13 @@ class PermissionsListener implements ResetInterface
             );
 
             foreach ($groups as $group) {
-                $this->addNewPermission('tl_user_group', $group, $rootField, $permissionField, $insertId);
+                $this->addNewPermission('tl_user_group', $group, $rootField, $permissions, $insertId);
             }
         }
 
         // Add the permissions on user level
         if ('group' !== $user->inherit) {
-            $this->addNewPermission('tl_user', $user->getData(), $rootField, $permissionField, $insertId);
+            $this->addNewPermission('tl_user', $user->getData(), $rootField, $permissions, $insertId);
         }
 
         // Add the new element to the user object
@@ -126,9 +126,12 @@ class PermissionsListener implements ResetInterface
         $user->{$rootField} = $root;
     }
 
-    private function addNewPermission(string $table, array $record, string $rootField, string|null $permissionField, int $insertId): void
+    private function addNewPermission(string $table, array $record, string $rootField, array $permissions, int $insertId): void
     {
-        if (null !== $permissionField && !$this->security->isGranted('contao_user.'.$permissionField, 'create')) {
+        if (
+            \in_array('create', $permissions, true)
+            && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_OPERATE_ON_TABLE, $table.'::create')
+        ) {
             return;
         }
 

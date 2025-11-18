@@ -28,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
-		'permissions'                 => ['imageSizes'],
+		'userRoot'                   => 'imageSizes',
 		'sql' => array
 		(
 			'keys' => array

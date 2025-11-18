@@ -26,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'permissions'                 => ['faqs'],
+		'userRoot'                    => 'faqs',
 		'sql' => array
 		(
 			'keys' => array
