@@ -23,7 +23,7 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
-    contao_newsletter.migration.field_permissions:
+    contao_newsletter.migration.field_permission:
         class: Contao\NewsletterBundle\Migration\FieldPermissionMigration
         arguments:
             - '@database_connection'

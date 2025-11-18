@@ -184,7 +184,7 @@ class PermissionsListener implements ResetInterface
             && $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table.'::'.$rootField);
     }
 
-    private function loadPermissions(int $recordId, string $rootField, $canEditUsers, $canEditGroups): array
+    private function loadPermissions(int $recordId, string $rootField, bool $canEditUsers, bool $canEditGroups): array
     {
         $users = $this->fetchRecords('tl_user', 'u', $rootField, $canEditUsers);
         $groups = $this->fetchRecords('tl_user_group', 'g', $rootField, $canEditGroups);
@@ -193,7 +193,7 @@ class PermissionsListener implements ResetInterface
         return [...array_keys(array_filter($users, $filter)), ...array_keys(array_filter($groups, $filter))];
     }
 
-    private function savePermissions(int $recordId, string $rootField, mixed $value, $canEditUsers, $canEditGroups): void
+    private function savePermissions(int $recordId, string $rootField, mixed $value, bool $canEditUsers, bool $canEditGroups): void
     {
         $value = StringUtil::deserialize($value, true);
 

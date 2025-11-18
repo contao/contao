@@ -27,7 +27,7 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
-    contao_faq.migration.field_permissions:
+    contao_faq.migration.field_permission:
         class: Contao\FaqBundle\Migration\FieldPermissionMigration
         arguments:
             - '@database_connection'
@@ -50,7 +50,7 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao_faq.security.backwards_compatibility_backend_access:
+    contao_faq.security.backwards_compatibility_backend_access_voter:
         class: Contao\FaqBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
 
     contao_faq.security.faq_access_voter:
