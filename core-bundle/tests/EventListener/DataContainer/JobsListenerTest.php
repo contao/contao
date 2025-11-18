@@ -181,6 +181,7 @@ class JobsListenerTest extends AbstractJobsTestCase
     public function testProgress(): void
     {
         $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+
         $jobs = $this->getJobs();
         $job = $jobs->createJob('job-type');
         $job = $job->withProgress(37.0);
@@ -205,6 +206,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         );
 
         $row = ['id' => 42, 'uuid' => $job->getUuid()];
+
         $columns = [
             '2025-10-30 13:10',
             'Rebuild the back end search index',
