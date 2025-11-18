@@ -1403,6 +1403,9 @@
       <trans-unit id="MSC.search">
         <source>Search</source>
       </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+      </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
       </trans-unit>
@@ -2290,6 +2293,15 @@
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>

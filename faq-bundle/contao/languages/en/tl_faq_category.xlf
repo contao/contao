@@ -53,6 +53,9 @@
       <trans-unit id="tl_faq_category.delete.1">
         <source>Delete category ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_faq_category.tableLabel">
+        <source>FAQ category</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
