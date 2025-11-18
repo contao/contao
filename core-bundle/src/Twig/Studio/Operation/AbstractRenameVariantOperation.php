@@ -49,8 +49,10 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         // Rename the variant template file
         $this->getUserTemplatesStorage()->move($context->getUserTemplatesStoragePath(), $newStoragePath);
 
-        $this->migrateDatabaseUsages($context->getIdentifier(), $newIdentifier);
+        $this->invalidateTemplateCache($context);
         $this->refreshTemplateHierarchy();
+
+        $this->migrateDatabaseUsages($context->getIdentifier(), $newIdentifier);
 
         return $this->render('@Contao/backend/template_studio/operation/rename_variant_result.stream.html.twig', [
             'old_identifier' => $context->getIdentifier(),
