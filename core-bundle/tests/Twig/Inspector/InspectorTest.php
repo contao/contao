@@ -58,10 +58,10 @@ class InspectorTest extends TestCase
     public function testHidesVirtualDeferredBlocks(): void
     {
         $templates = [
-            'foo.html.twig' => '{% defer %}{% block foo %}[…]{% endblock %}{% enddefer %}',
+            '@Contao_specific/foo.html.twig' => '{% defer %}{% block foo %}[…]{% endblock %}{% enddefer %}',
         ];
 
-        $information = $this->getInspector($templates)->inspectTemplate('foo.html.twig');
+        $information = $this->getInspector($templates)->inspectTemplate('@Contao_specific/foo.html.twig');
 
         $this->assertSame(['foo'], $information->getBlockNames());
     }
