@@ -175,6 +175,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@contao.framework'
+            - '@twig'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
