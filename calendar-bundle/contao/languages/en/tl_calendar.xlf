@@ -86,6 +86,9 @@
       <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -34,6 +34,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'backendSearchIgnore'         => true,
 		'userRoot'                    => 'calendarfeeds',
 		'onload_callback' => array
 		(
