@@ -1,6 +1,7 @@
 /* List view */
 .list_view .tl_listing img.theme_preview {
     margin-right: 9px;
+    border-radius: var(--border-radius);
 }
 
 .tl_show {
@@ -478,10 +479,11 @@
     margin-bottom: 6px;
 }
 
-.cte_preview img {
+.cte_preview img:not(.backend-icon) {
     max-width: 320px;
     height: auto;
-    padding: 6px 0;
+    margin: 6px 0;
+    border-radius: var(--border-radius);
 }
 
 .cte_preview .media--left figure {
