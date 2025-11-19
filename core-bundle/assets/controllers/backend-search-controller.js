@@ -80,6 +80,17 @@ export default class BackendSearchController extends Controller {
         this.#setState('hidden');
     }
 
+    setButtonActive(event) {
+        const target = event.target;
+        const siblings = target.closest('ul').querySelectorAll('button');
+
+        for (const sibling of siblings) {
+            sibling.classList.toggle('active', false);
+        }
+
+        target.addClass('active');
+    }
+
     #stopPendingSearch() {
         clearTimeout(this.debounceTimeout);
         this.searchResultConnection.abortPending();

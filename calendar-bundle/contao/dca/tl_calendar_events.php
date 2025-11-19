@@ -67,7 +67,12 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'title',
-			'child_record_callback'   => array('tl_calendar_events', 'listEvents')
+		),
+		'label' => array
+		(
+			'fields'                  => array('title'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_calendar_events', 'listEvents'),
 		),
 		'operations' => array
 		(
@@ -630,7 +635,7 @@ class tl_calendar_events extends Backend
 	 *
 	 * @return string
 	 */
-	public function listEvents($arrRow)
+	public function listEvents($arrRow, $label)
 	{
 		$span = Calendar::calculateSpan($arrRow['startTime'], $arrRow['endTime']);
 
@@ -647,7 +652,7 @@ class tl_calendar_events extends Backend
 			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get('timeFormat'), $arrRow['endTime']) : '');
 		}
 
-		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span class="label-info">[' . $date . ']</span></div>';
+		return $label . ' <span class="label-info">[' . $date . ']</span>';
 	}
 
 	/**

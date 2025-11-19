@@ -39,16 +39,25 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertSame($userLoggedIn ? 42 : Owner::SYSTEM, $job->getOwner()->getId());
     }
 
-    #[DataProvider('twithProgressFromAmountsProvider')]
-    public function testWithProgressFromAmounts(int $total, int $amount, float $expectedProgress): void
+    #[DataProvider('withProgressFromAmountsProvider')]
+    public function testWithProgressFromFixedAmounts(int|null $total, int $amount, float $expectedProgress): void
     {
         $jobs = $this->getJobs($this->mockSecurity());
         $job = $jobs->createJob('job-type');
-        $job = $job->withProgressFromAmounts($total, $amount);
+        $job = $job->withProgressFromAmounts($amount, $total);
         $this->assertSame($expectedProgress, $job->getProgress());
     }
 
-    public static function twithProgressFromAmountsProvider(): iterable
+    public function testWithProgressFromUnknownTotal(): void
+    {
+        $jobs = $this->getJobs($this->mockSecurity());
+        $job = $jobs->createJob('job-type');
+        $job = $job->withProgressFromAmounts(100);
+        $this->assertGreaterThan(0, $job->getProgress());
+        $this->assertLessThan(100, $job->getProgress());
+    }
+
+    public static function withProgressFromAmountsProvider(): iterable
     {
         yield 'basic 25%' => [200, 50, 25.0];
         yield 'zero total returns same' => [0, 50, 0.0];
