@@ -57,7 +57,7 @@ class SearchIndexListenerTest extends TestCase
     public static function getRequestResponse(): iterable
     {
         yield 'Should index because the response was successful and contains ld+json information' => [
-            Request::create('/foobar'),
+            Request::create('/contao-likes-to-index-things'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             true,
@@ -106,6 +106,14 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be skipped because it is a contao backend request' => [
             Request::create('/contao?do=article'),
+            new Response(),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        yield 'Should be skipped because it is a web profiler request' => [
+            Request::create('/_wdt/123'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
