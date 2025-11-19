@@ -4,47 +4,50 @@
     .mergeWith(html_attributes|default)
 -%}
 
-{%- set body_attributes = attrs()
-    .set('id', 'top')
-    .addClass(contao.page.cssClass)
-    .mergeWith(body_attributes|default)
--%}
-
 <!DOCTYPE html>
 <html{{ html_attributes|default }}>
 <head>
 {% block head %}
     <meta charset="UTF-8">
     <meta name="generator" content="Contao Open Source CMS">
-    {%- block title %}
-        {% set title = head.title|default %}
-        {% if title and contao.page.rootPageTitle|default %}
-            {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
+    {# Defer accessing the response context, so that elements coming after it can still affect it. #}
+    {% defer %}
+        {%- block title %}
+            {% set title = response_context.head.title|default %}
+            {% if title and contao.page.rootPageTitle|default %}
+                {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
+            {% endif %}
+             <title>{{ title }}</title>
+        {%- endblock -%}
+
+        {% block viewport %}
+            <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+        {% endblock %}
+
+        <meta name="robots" content="{{ response_context.head.metaRobots }}">
+        <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
+        {% if page['enableCanonical'] -%}
+            <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request) }}">
         {% endif %}
-         <title>{{ title }}</title>
-    {%- endblock -%}
 
-    {% block viewport %}
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
-    {% endblock %}
-
-    {# @var \Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag head_bag #}
-    {% set head_bag = response_context.head %}
-
-    <meta name="robots" content="{{ head_bag.metaRobots }}">
-    <meta name="description" content="{{ head_bag.metaDescription|u.truncate(320, '…') }}">
-    {% if page['enableCanonical'] -%}
-        <link rel="canonical" href="{{ head_bag.canonicalUriForRequest(app.request) }}">
-    {% endif %}
-
-    {%- block end_of_head -%}
-        {% for element in response_context.end_of_head %}
-            {{ element|raw }}
-        {% endfor %}
-    {%- endblock -%}
+        {%- block end_of_head -%}
+            {% for element in response_context.end_of_head %}
+                {{ element|raw }}
+            {% endfor %}
+        {%- endblock -%}
+    {% enddefer %}
 {%- endblock -%}
 </head>
-<body{{ body_attributes|default }}>
+
+{%- defer %}
+    {# Defer outputting the body tag so that extensions can still adjust the page's cssClass #}
+    {%- set body_attributes = attrs()
+        .set('id', 'top')
+        .addClass(contao.page.cssClass)
+        .mergeWith(body_attributes|default)
+    -%}
+    <body{{ body_attributes|default }}>
+{% enddefer -%}
 {% block body %}
     {% block body_content %}
         {% slot header %}
@@ -60,13 +63,16 @@
         {% endslot %}
     {% endblock %}
 
-    {% block end_of_body %}
-        {% for element in response_context.end_of_body %}
-            {{ element|raw }}
-        {% endfor %}
+    {# Access the response context inside a "defer" block, so that elements coming after it can still affect it. #}
+    {% defer %}
+        {% block end_of_body %}
+            {% for element in response_context.end_of_body %}
+                {{ element|raw }}
+            {% endfor %}
 
-        {{ response_context.json_ld_scripts|default|raw }}
-    {% endblock %}
+            {{ response_context.json_ld_scripts|default|raw }}
+        {% endblock %}
+    {% enddefer %}
 {% endblock %}
 </body>
 </html>
