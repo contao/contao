@@ -53,7 +53,7 @@ class JobsTest extends AbstractJobsTestCase
         $jobs = $this->getJobs($this->mockSecurity());
         $job = $jobs->createJob('job-type');
         $job = $job->withProgressFromAmounts(100);
-        $this->assertGreaterThan(50, $job->getProgress());
+        $this->assertGreaterThan(0, $job->getProgress());
         $this->assertLessThan(100, $job->getProgress());
     }
 

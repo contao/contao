@@ -73,19 +73,27 @@ final class Job
         return $this->uuid;
     }
 
-    public function withProgressFromAmounts(int $amount, int|null $total = null): self
+    public function withProgressFromAmounts(int $completed, int|null $total = null): self
     {
         // Prevent division by 0
         if (0 === $total) {
             return $this;
         }
 
-        // Sometimes the total is not known, let's just estimate for our progress
-        if (null === $total) {
-            $total = $amount * random_int(110, 200) / 100; // do not use a hardcoded number as otherwise progress would always show 50%
+        // Sometimes the total is not known, let's calculate some monotonic progress for
+        // our users to indicate steady progress
+        if (0 !== $completed && null === $total) {
+            $progress = 20 * log10(1 + $completed);
+
+            // Don't reach 100% until we *know* it's done
+            if ($progress > 95.0) {
+                $progress = 95.0;
+            }
+
+            return $this->withProgress($progress);
         }
 
-        $progress = 100 / $total * $amount;
+        $progress = 100 / $total * $completed;
 
         // Ensure valid percentage
         $progress = max(0, min($progress, 100));
