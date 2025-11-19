@@ -42,6 +42,27 @@ class JobsListenerTest extends AbstractJobsTestCase
 
         $jobs = $this->getJobs($security, new MockClock(), $router);
         $job = $jobs->createJob('job-type');
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(
+                    function (array $context): bool {
+                        $this->assertSame('filemounts.svg', $context['more_icon']);
+                        $this->assertTrue($context['has_primary']);
+                        $this->assertFalse($context['globalOperations']);
+
+                        $this->assertCount(2, $context['operations']);
+                        $this->assertSame('https://contao.org/contao/jobs/download', $context['operations'][0]['href']);
+
+                        return true;
+                    }
+                ),
+            )
+            ->willReturn('rendered-html')
+        ;
 
         $listener = new JobsListener(
             $jobs,
@@ -49,7 +70,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $this->createMock(Connection::class),
             $this->getRequestStack(),
             $this->mockContaoFramework(),
-            $this->createMock(Environment::class),
+            $twig,
         );
 
         $operation = new DataContainerOperation(
@@ -76,8 +97,8 @@ class JobsListenerTest extends AbstractJobsTestCase
         $jobs->addAttachment($job, 'foobar2', 'foobar2');
 
         $listener->onAttachmentsCallback($operation);
-        $this->assertSame('https://contao.org/contao/jobs/download', $operation->getUrl());
-        $this->assertSame('theme_import.svg', $operation['icon']);
+
+        $this->assertSame('rendered-html', $operation->getHtml());
     }
 
     public function testInvokeWithoutRequest(): void

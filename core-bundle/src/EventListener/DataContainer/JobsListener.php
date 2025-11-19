@@ -65,23 +65,34 @@ class JobsListener
         }
 
         $attachments = $this->jobs->getAttachments($job);
-        $numberOfAttachments = \count($attachments);
 
-        if (0 === $numberOfAttachments) {
+        if ([] === $attachments) {
             $operation->hide();
 
             return;
         }
 
-        // TODO: we need a template and Stimulus logic to have an operation with sub
-        // operations just like the [...] in the current context menu to be able to
-        // display more than just one download
-        $attachment = $attachments[0];
+        $operations = [];
 
-        $operation['icon'] = 'theme_import.svg';
-        $operation['title'] = $attachment->getFileLabel();
+        foreach ($attachments as $attachment) {
+            $operations[] = new DataContainerOperation(
+                'download',
+                [
+                    'icon' => 'theme_import.svg',
+                    'label' => $attachment->getFileLabel(),
+                    'href' => $attachment->getDownloadUrl(),
+                ],
+                null,
+                $operation->getDataContainer(),
+            );
+        }
 
-        $operation->setUrl($attachment->getDownloadUrl());
+        $operation->setHtml($this->twig->render('@Contao/backend/data_container/operations.html.twig', [
+            'operations' => $operations,
+            'has_primary' => true,
+            'more_icon' => 'filemounts.svg',
+            'globalOperations' => false,
+        ]));
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]

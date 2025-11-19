@@ -1,6 +1,7 @@
 {% trans_default_domain 'contao_default' %}
 {% set has_submenu = false %}
 {% set show_button = false %}
+{% set more_icon = more_icon|default('more.svg') %}
 
 <div class="operations"{% if globalOperations %} id="tl_buttons" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
     <ul data-contao--operations-menu-target="menu">
@@ -17,9 +18,9 @@
             <li class="operations-menu-container{% if not show_button %} is-hidden{% endif %}">
                 <button type="button" class="has-icon" data-contao--operations-menu-target="controller">
                     {% if globalOperations %}
-                        {{ backend_icon('more.svg', 'DCA.global_operations'|trans) }}
+                        {{ backend_icon(more_icon, 'DCA.global_operations'|trans) }}
                     {% else %}
-                        {{ backend_icon('more.svg', 'DCA.operations'|trans([id|default])) }}
+                        {{ backend_icon(more_icon, 'DCA.operations'|trans([id|default])) }}
                     {% endif %}
                 </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="submenu">
