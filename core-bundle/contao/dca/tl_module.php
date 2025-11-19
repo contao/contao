@@ -86,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC,imgSize,fullsize,useCaption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
-		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'template'                    => '{title_legend},name,headline,type;{template_legend},customTpl,data;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
@@ -523,7 +523,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'data' => array
 		(
-			'inputType'               => 'keyValueWizard',
+			'inputType'               => 'rowWizard',
+			'fields' => array
+			(
+				'key' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_key'],
+					'inputType'       => 'text'
+				),
+				'value' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_value'],
+					'inputType'       => 'text'
+				)
+			),
+			'eval'                    => array('tl_class'=>'w66 clr'),
 			'sql'                     => "text NULL"
 		),
 		'protected' => array
