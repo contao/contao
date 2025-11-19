@@ -58,7 +58,7 @@ class JobsListenerTest extends AbstractJobsTestCase
                         $this->assertSame('https://contao.org/contao/jobs/download', $context['operations'][0]['href']);
 
                         return true;
-                    }
+                    },
                 ),
             )
             ->willReturn('rendered-html')
