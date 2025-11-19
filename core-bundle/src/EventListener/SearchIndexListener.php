@@ -63,7 +63,12 @@ class SearchIndexListener
         }
 
         // Do not handle Contao backend requests
-        if (preg_match('~(?:^|/)'.preg_quote($this->contaoBackendRoutePrefix, '~').'~', $request->getPathInfo())) {
+        if (preg_match('~(?:^|/)'.preg_quote(ltrim($this->contaoBackendRoutePrefix, '/'), '~').'(?:$|/)~', $request->getPathInfo())) {
+            return;
+        }
+
+        // Do not handle profiler requests
+        if (preg_match('~(?:^|/)_wdt/~', $request->getPathInfo())) {
             return;
         }
 
