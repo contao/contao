@@ -95,7 +95,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 				'primary'             => true
 			),
 			'show',
-			'diff',
+			'versions',
 		)
 	),
 

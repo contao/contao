@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 				'button_callback'     => array('tl_calendar_feed', 'deleteFeed')
 			),
 			'show',
-			'diff',
+			'versions',
 		)
 	),
 

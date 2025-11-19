@@ -92,7 +92,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 				'primary'             => true,
 			),
 			'show',
-			'diff',
+			'versions',
 		)
 	),
 
