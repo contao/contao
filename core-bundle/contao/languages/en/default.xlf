@@ -2112,7 +2112,7 @@
         <source>Remove URL from favorites</source>
       </trans-unit>
       <trans-unit id="MSC.confirmUnfavorite">
-        <source>Do you want to remove the current URL from favorites?</source>
+        <source>Do you really want to remove the current URL from your favorites?</source>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
