@@ -14,8 +14,6 @@
         <input type="hidden" name="IDS[]" value="{{ id }}">
     {% endfor %}
 
-    {# todo: check if this is a bug, because the same message is already output in the header
-             and does not make a whole lot sense with this condition #}
     {% if error_no_fields %}
         <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
     {% endif %}
