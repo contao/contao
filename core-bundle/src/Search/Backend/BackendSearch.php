@@ -148,6 +148,7 @@ class BackendSearch
         $this->deleteDocuments($config->getLimitedDocumentIds(), false);
 
         $jobUuid = $job?->getUuid();
+
         $onProgressCallback = null === $jobUuid ? null : function (string $index, int $processedDocuments) use ($jobUuid): void {
             $job = $this->jobs->getByUuid($jobUuid);
             if (!$job) {
