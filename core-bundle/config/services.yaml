@@ -1324,6 +1324,11 @@ services:
             - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
 
+    contao.twig.defer.renderer:
+        class: Contao\CoreBundle\Twig\Defer\Renderer
+        arguments:
+            - '@twig'
+
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
         public: true
