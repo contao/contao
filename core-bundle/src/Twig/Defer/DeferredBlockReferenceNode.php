@@ -18,10 +18,10 @@ use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
 
 /**
- * @internal
- *
  * This node outputs a stringable closure that only returns the block content when
- * being resolved
+ * being resolved.
+ *
+ * @internal
  *
  * @see \Twig\Node\BlockReferenceNode
  * @see DeferredStringable

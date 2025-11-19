@@ -235,7 +235,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
         // The abstract parent class does several things when rendering a template (like
-        // handling Symfony Forms) but uses the default Twig environment, which would
+        // handling Symfony forms) but uses the default Twig environment, which would
         // output the content in a linear fashion. In order to use our own renderer
         // capable of deferred blocks, we first render an empty template using the
         // default method and then set our own content.

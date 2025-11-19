@@ -57,6 +57,7 @@ class DeferTokenParserTest extends TestCase
         );
 
         $environment->addTokenParser(new DeferTokenParser());
+
         $environment->setLoader(new ArrayLoader([
             'template.html.twig' => '{% defer %}{{ counter }}{% enddefer %}{% do counter.increase() %}',
         ]));
