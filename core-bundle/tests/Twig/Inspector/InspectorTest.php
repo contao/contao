@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Inspector;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\BlockType;
@@ -33,6 +34,13 @@ use Twig\Source;
 
 class InspectorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        DeferTokenParser::reset();
+
+        parent::tearDown();
+    }
+
     public function testAnalyzesBlocks(): void
     {
         $templates = [
@@ -45,6 +53,17 @@ class InspectorTest extends TestCase
         $this->assertSame('@Contao_specific/foo.html.twig', $information->getName());
         $this->assertSame(['bar', 'foo'], $information->getBlockNames());
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
+    }
+
+    public function testHidesVirtualDeferredBlocks(): void
+    {
+        $templates = [
+            '@Contao_specific/foo.html.twig' => '{% defer %}{% block foo %}[…]{% endblock %}{% enddefer %}',
+        ];
+
+        $information = $this->getInspector($templates)->inspectTemplate('@Contao_specific/foo.html.twig');
+
+        $this->assertSame(['foo'], $information->getBlockNames());
     }
 
     #[DataProvider('provideSlotScenarios')]
