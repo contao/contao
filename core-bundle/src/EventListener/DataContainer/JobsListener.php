@@ -65,20 +65,32 @@ class JobsListener
         }
 
         $attachments = $this->jobs->getAttachments($job);
+        $numberOfAttachments = \count($attachments);
 
-        if ([] === $attachments) {
+        // Hide operation if there are no attachments
+        if (0 === $numberOfAttachments) {
             $operation->hide();
 
             return;
         }
 
+        // Link directly to the one attachment, if there is only one
+        if (1 === $numberOfAttachments) {
+            $operation['icon'] = 'theme_export.svg';
+            $operation['title'] = $attachments[0]->getFileLabel();
+            $operation->setUrl($attachments[0]->getDownloadUrl());
+
+            return;
+        }
+
+        // Otherwise, we build a button with submenu
         $operations = [];
 
         foreach ($attachments as $attachment) {
             $operations[] = new DataContainerOperation(
                 'download',
                 [
-                    'icon' => 'theme_import.svg',
+                    'icon' => 'theme_export.svg',
                     'label' => $attachment->getFileLabel(),
                     'href' => $attachment->getDownloadUrl(),
                 ],
@@ -90,7 +102,7 @@ class JobsListener
         $operation->setHtml($this->twig->render('@Contao/backend/data_container/operations.html.twig', [
             'operations' => $operations,
             'has_primary' => true,
-            'more_icon' => 'filemounts.svg',
+            'more_icon' => 'theme_export.svg',
             'globalOperations' => false,
         ]));
     }
