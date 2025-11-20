@@ -10,6 +10,7 @@ use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeleton;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
@@ -65,12 +66,13 @@ abstract class AbstractOperationTestCase extends TestCase
         ];
     }
 
-    protected function getContainer(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null): Container
+    protected function getContainer(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null, CacheInvalidator|null $cacheInvalidator = null): Container
     {
         $loader ??= $this->mockContaoFilesystemLoader();
         $storage ??= $this->mockUserTemplatesStorage();
         $twig ??= $this->mockTwigEnvironment();
         $skeletonFactory ??= $this->mockTemplateSkeletonFactory();
+        $cacheInvalidator ??= $this->mockCacheInvalidator();
 
         $container = new Container();
         $container->set('contao.twig.filesystem_loader', $loader);
@@ -78,6 +80,7 @@ abstract class AbstractOperationTestCase extends TestCase
         $container->set('twig', $twig);
         $container->set('contao.twig.studio.template_skeleton_factory', $skeletonFactory);
         $container->set('contao.twig.finder_factory', $this->mockTwigFinderFactory($loader));
+        $container->set('contao.twig.studio.cache_invalidator', $cacheInvalidator);
 
         return $container;
     }
@@ -173,6 +176,14 @@ abstract class AbstractOperationTestCase extends TestCase
         ;
 
         return $factory;
+    }
+
+    /**
+     * @return CacheInvalidator&MockObject
+     */
+    protected function mockCacheInvalidator(): CacheInvalidator
+    {
+        return $this->createMock(CacheInvalidator::class);
     }
 
     /**

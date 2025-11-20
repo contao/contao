@@ -23,7 +23,7 @@ class SealUtil
 
     public static function internalReindexConfigToSealReindexConfig(ReindexConfig $reindexConfig): SealReindexConfig
     {
-        $sealConfig = new SealReindexConfig();
+        $sealConfig = (new SealReindexConfig())->withIndex(SealReindexProvider::getIndex());
 
         if ($reindexConfig->getUpdateSince()) {
             $sealConfig = $sealConfig->withDateTimeBoundary($reindexConfig->getUpdateSince());

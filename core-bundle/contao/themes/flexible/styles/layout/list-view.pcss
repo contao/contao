@@ -1,6 +1,7 @@
 /* List view */
 .list_view .tl_listing img.theme_preview {
     margin-right: 9px;
+    border-radius: var(--border-radius);
 }
 
 .tl_show {
@@ -328,7 +329,7 @@
     position: relative;
     align-items: center;
 
-    &.is--hidden {
+    &.is-hidden {
         visibility: hidden;
         width: 0;
         margin-left: -3px;
@@ -398,6 +399,11 @@
 .tl_right:has(.operations + :is(.tl_tree_checkbox, .tl_tree_radio)) {
     display: flex;
     align-items: start;
+}
+
+.tl_listing.picker .operations {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .cte_type {
@@ -483,10 +489,11 @@
     margin-bottom: 6px;
 }
 
-.cte_preview img {
+.cte_preview img:not(.backend-icon) {
     max-width: 320px;
     height: auto;
-    padding: 6px 0;
+    margin: 6px 0;
+    border-radius: var(--border-radius);
 }
 
 .cte_preview .media--left figure {
