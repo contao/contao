@@ -1,7 +1,7 @@
 {% set wrapper_attributes = attrs()
     .addClass('tl_formbody_submit')
+    .addStyle({'text-align': 'right'}, right|default)
     .set('data-controller', 'contao--sticky-observer')
-    .addStyle('text-align:right', right|default)
 %}
 <div{{ wrapper_attributes }}>
     <div class="tl_submit_container">

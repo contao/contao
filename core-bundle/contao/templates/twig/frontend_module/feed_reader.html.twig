@@ -1,4 +1,5 @@
 {% extends "@Contao/frontend_module/_base.html.twig" %}
+{% use "@Contao/component/_pagination.html.twig" %}
 
 {% block wrapper_tag %}article{% endblock %}
 
@@ -62,6 +63,8 @@
     {% endblock %}
 
     {% block pagination %}
-        {{ pagination|default|raw }}
+        {% if pagination|default %}
+            {% with {pagination: pagination} %}{{ block('pagination_component') }}{% endwith %}
+        {% endif %}
     {% endblock %}
 {% endblock %}

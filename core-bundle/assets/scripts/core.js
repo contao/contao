@@ -345,7 +345,10 @@ window.AjaxRequest =
 							}
 
 							const newSrc = !published ? img.get('data-icon') : img.get('data-icon-disabled');
-							img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+
+							if (newSrc) {
+								img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+							}
 						}
 					})
 				}
