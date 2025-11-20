@@ -125,6 +125,11 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_jobs:
+        class: Contao\CoreBundle\Cron\PurgeJobsCron
+        arguments:
+            - '@contao.job.jobs'
+
     contao.cron.purge_opt_in_tokens:
         class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
         arguments:
@@ -190,6 +195,11 @@ services:
             - '@contao.image.imagine'
             - '@router'
             - '@contao.routing.page_finder'
+            - '@contao.cron'
+            - '@?contao.search.backend'
+            - '@?contao.messenger.web_worker'
+            - '@?contao.search_backend.adapter'
+
         tags:
             - { name: data_collector, template: '@Contao/web_debug_toolbar/contao_collector.html.twig', id: contao }
 
@@ -629,6 +639,8 @@ services:
         arguments:
             - '@database_connection'
             - '@security.helper'
+            - '@contao.filesystem.virtual.job-attachments'
+            - '@router'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -703,6 +715,12 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+
+    contao.pagination.factory:
+        class: Contao\CoreBundle\Pagination\PaginationFactory
+        public: true
+        arguments:
+            - '@request_stack'
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider
@@ -1281,6 +1299,12 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    contao.translation.legacy_locale_switcher:
+        class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
         decorates: translator
@@ -1305,6 +1329,11 @@ services:
             - '@contao.routing.response_context_accessor'
             - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
+
+    contao.twig.defer.renderer:
+        class: Contao\CoreBundle\Twig\Defer\Renderer
+        arguments:
+            - '@twig'
 
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
@@ -1470,6 +1499,7 @@ services:
     Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
     Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
+    Contao\CoreBundle\Pagination\PaginationFactoryInterface: '@contao.pagination.factory'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ContentUrlGenerator: '@contao.routing.content_url_generator'
     Contao\CoreBundle\Routing\PageFinder: '@contao.routing.page_finder'

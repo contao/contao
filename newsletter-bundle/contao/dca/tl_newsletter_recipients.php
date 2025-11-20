@@ -53,7 +53,12 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'email',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
-			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient')
+		),
+		'label' => array
+		(
+			'fields'                  => array('email'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_newsletter_recipients', 'listRecipient')
 		),
 		'global_operations' => array
 		(
@@ -243,7 +248,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		return sprintf(
-			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",
+			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>' . "\n",
 			$row['active'] ? $icon : $icond,
 			$icon,
 			$icond,

@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "contao/core-bundle": "self.version",
         "symfony/filesystem": "^7.3",
         "symfony/maker-bundle": "^1.1",
@@ -36,7 +36,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
-        "phpunit/phpunit": "^11.5"
+        "phpunit/phpunit": "^12.4"
     },
     "conflict": {
         "contao/core": "*",

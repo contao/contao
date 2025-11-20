@@ -79,8 +79,8 @@
             {% endif %}
 
             {# Header #}
-            {% if header %}
-                {% block table_header %}
+            {% block table_header %}
+                {% if header %}
                     <thead{{ table_header_attributes|default }}>
                     {% block table_header_inner %}
                         <tr>
@@ -98,12 +98,12 @@
                         </tr>
                     {% endblock %}
                     </thead>
-                {% endblock %}
-            {% endif %}
+                {% endif %}
+            {% endblock %}
 
             {# Footer #}
-            {% if footer %}
-                {% block table_footer %}
+            {% block table_footer %}
+                {% if footer %}
                     <tfoot{{ table_footer_attributes|default }}>
                     {% block table_footer_inner %}
                         <tr>
@@ -117,8 +117,8 @@
                         </tr>
                     {% endblock %}
                     </tfoot>
-                {% endblock %}
-            {% endif %}
+                {% endif %}
+            {% endblock %}
 
             {# Body #}
             {% block table_body %}
@@ -176,7 +176,9 @@
                         script.addEventListener('load', () => {
                             new MutationObserver(function (mutations) {
                                 mutations.forEach(function (mutation) {
-                                    initTree(mutation.target)
+                                    if (mutation.target instanceof HTMLElement) {
+                                        initTree(mutation.target)
+                                    }
                                 });
                             }).observe(document, {
                                 childList: true,

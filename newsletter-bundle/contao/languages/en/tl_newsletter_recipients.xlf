@@ -86,6 +86,9 @@
       <trans-unit id="tl_newsletter_recipients.toggle.4">
         <source>Activate</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

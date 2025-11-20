@@ -20,9 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
-/**
- * @experimental
- */
 class TemplateLocator
 {
     final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
@@ -33,6 +30,9 @@ class TemplateLocator
 
     private readonly string $globalTemplateDirectory;
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly string $projectDir,
         private readonly ResourceFinder $resourceFinder,

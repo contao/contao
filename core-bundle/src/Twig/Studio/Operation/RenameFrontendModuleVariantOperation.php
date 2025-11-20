@@ -15,10 +15,10 @@ namespace Contao\CoreBundle\Twig\Studio\Operation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 
 /**
- * @experimental
+ * @internal
  */
 #[AsOperationForTemplateStudioElement]
-class RenameFrontendModuleVariantOperation extends AbstractRenameVariantOperation
+final class RenameFrontendModuleVariantOperation extends AbstractRenameVariantOperation
 {
     protected function getPrefix(): string
     {

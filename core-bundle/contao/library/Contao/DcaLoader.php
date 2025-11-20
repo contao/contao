@@ -198,9 +198,11 @@ class DcaLoader extends Controller
 				{
 					include $strCachePath;
 				}
-				catch (\Throwable)
+				catch (\Throwable $e)
 				{
 					$filesystem->remove($strCachePath);
+
+					throw $e;
 				}
 			}
 		}

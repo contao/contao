@@ -344,7 +344,7 @@ class Newsletter extends Backend
 
 		$return .= '
 
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
 <button type="submit" name="preview" class="tl_submit" accesskey="p">' . $GLOBALS['TL_LANG']['tl_newsletter']['preview'] . '</button>
 <button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\'' . str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) . '\')">' . $GLOBALS['TL_LANG']['tl_newsletter']['send'][0] . '</button>
@@ -642,7 +642,7 @@ class Newsletter extends Backend
 
 </div>
 
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 
 <div class="tl_submit_container">
   <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['tl_newsletter_recipients']['import'][0] . '</button>

@@ -18,11 +18,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-/**
- * @experimental
- */
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly ContaoFilesystemLoader $loader,
         private readonly string $cacheDir,

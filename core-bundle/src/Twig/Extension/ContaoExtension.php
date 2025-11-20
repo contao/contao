@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
@@ -62,13 +63,13 @@ use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-/**
- * @experimental
- */
 final class ContaoExtension extends AbstractExtension implements GlobalsInterface
 {
     private array $contaoEscaperFilterRules = [];
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly Environment $environment,
         private readonly ContaoFilesystemLoader $filesystemLoader,
@@ -159,6 +160,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new AddTokenParser(self::class),
             // Add a parser for the Contao specific "slot" tag
             new SlotTokenParser(),
+            // Add a parser for the Contao specific "defer" tag
+            new DeferTokenParser(),
         ];
     }
 
@@ -200,11 +203,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [FigureRuntime::class, 'renderFigure'],
                 [
                     'is_safe' => ['html'],
-                    'deprecated_info' => new DeprecatedCallableInfo(
-                        'contao/core-bundle',
-                        '5.0',
-                        'The "contao_figure" function is deprecated, use the "figure" function together with the "component/_figure.html.twig" component instead.',
-                    ),
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'),
                 ],
             ),
             new TwigFunction(
@@ -268,6 +267,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'backend_icon',
                 [BackendHelperRuntime::class, 'icon'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFunction(
+                'file_icon',
+                [BackendHelperRuntime::class, 'fileIcon'],
                 ['is_safe' => ['html']],
             ),
         ];
@@ -351,6 +355,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'format_bytes',
                 [FormatterRuntime::class, 'formatBytes'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFilter(
+                'format_number',
+                [FormatterRuntime::class, 'formatNumber'],
                 ['is_safe' => ['html']],
             ),
             new TwigFilter(
