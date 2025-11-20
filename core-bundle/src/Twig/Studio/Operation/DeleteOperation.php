@@ -37,6 +37,7 @@ class DeleteOperation extends AbstractOperation
         // Delete the user template file
         $this->getUserTemplatesStorage()->delete($context->getUserTemplatesStoragePath());
 
+        $this->invalidateTemplateCache($context);
         $this->refreshTemplateHierarchy();
 
         return $this->render('@Contao/backend/template_studio/operation/delete_result.stream.html.twig', [
