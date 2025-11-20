@@ -15,6 +15,7 @@ use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -375,7 +376,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->get('twig')
 			->render(
 				"@Contao/backend/data_container/table/$component.html.twig",
-				array('table' => $this->table, ...$parameters)
+				array(
+					'table' => $this->table,
+					'is_upload_form' => $this->blnUploadable,
+					'form_onsubmit' => $this->onsubmit,
+					'error' => $this->noReload,
+					...$parameters
+				)
 			)
 		;
 	}
@@ -2011,7 +2018,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if ($ajaxWidgetGroupTree && $ajaxId == $thisId)
 						{
-							return $this->render('edit_ajax', array(
+							return $this->render('edit/ajax', array(
 								'version_number' => $intLatestVersion,
 								'widget_groups_tree' => $ajaxWidgetGroupTree,
 							));
@@ -2069,12 +2076,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$widgetGroupTree->addContentNode($this->row());
 				}
 
-				$key = $box['key'];
-
 				$parameters['boxes'][] = array(
-					'key' => $key,
+					'id' => $box['key'],
 					'class' => $box['class'],
-					'label' => $GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key,
+					'label' => $GLOBALS['TL_LANG'][$this->strTable][$box['key']] ??  $box['key'],
 					'widget_groups_tree' => $widgetGroupTree,
 				);
 			}
@@ -2209,19 +2214,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		// Form settings and buttons
-		$parameters['form'] = array(
-			'multipart' => $this->blnUploadable,
-			'onsubmit' => $this->onsubmit,
-			'buttons' => System::getContainer()
-				->get('contao.data_container.buttons_builder')
-				->generateEditButtons(
-					$this->strTable,
-					(bool) $this->ptable,
-					$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
-					$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
-					$this
-				),
-		);
+		$parameters['form_buttons'] = System::getContainer()
+			->get('contao.data_container.buttons_builder')
+			->generateEditButtons(
+				$this->strTable,
+				(bool) $this->ptable,
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
+				$this
+			)
+		;
 
 		// Back button
 		$strBackUrl = $this->getReferer(true);
@@ -2241,9 +2243,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Messages
 		$parameters['message'] = Message::generate();
-		$parameters['error'] = $this->noReload;
 
-		return $this->render('edit', $parameters);
+		return $this->render('edit/single', $parameters);
 	}
 
 	/**
@@ -2262,8 +2263,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
-
-		$return = '';
 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
@@ -2289,15 +2288,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->configurePidAndSortingFields();
 
-		// Add fields
+		$parameters = array(
+			'ids' => $ids,
+			'add_jump_targets' => \count($ids) < min(Config::get('resultsPerPage') ?? 30, 50),
+			'back_button' => System::getContainer()
+				->get('contao.data_container.global_operations_builder')
+				->initialize($this->strTable)
+				->addBackButton(),
+		);
+
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
 
-		$blnAddJumpTarget = \count($ids) < min(Config::get('resultsPerPage') ?? 30, 50);
-
+		// Step 2: Show a form to select the fields
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
-			$class = 'tl_tbox';
-
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
 			{
 				$db->beginTransaction();
@@ -2310,6 +2314,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				static::preloadCurrentRecords($ids, $this->strTable);
 
 				// Walk through each record
+				$parameters['boxes'] = array();
+
 				foreach ($ids as $id)
 				{
 					try
@@ -2346,41 +2352,29 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$objVersions->initialize();
 
 					// Begin current row
-					$arrAjax = array();
-					$blnAjax = false;
 					$thisId = '';
-					$box = '';
 
 					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
+
+					// Generate the box's tree of widget groups. When edit() was called in
+					// AJAX mode, we return early and only render the matching subtree.
+					$widgetGroupTree = new ArrayTree();
+					$ajaxWidgetGroupTree = null;
 
 					foreach ($paletteFields as $v)
 					{
 						if ($v == '[EOF]')
 						{
-							if ($blnAjax && Environment::get('isAjaxRequest'))
+							if ($ajaxWidgetGroupTree && $ajaxId == $thisId)
 							{
-								if ($ajaxId == $thisId)
-								{
-									if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-									{
-										$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
-									}
-
-									return $arrAjax[$thisId];
-								}
-
-								if (\count($arrAjax) > 1)
-								{
-									$current = "\n" . '<div id="' . $thisId . '" class="subpal widget-group">' . $arrAjax[$thisId] . '</div>';
-									unset($arrAjax[$thisId]);
-									end($arrAjax);
-									$thisId = key($arrAjax);
-									$arrAjax[$thisId] .= $current;
-								}
+								return $this->render('edit/ajax', array(
+									'version_number' => $objVersions->getLatestVersion(),
+									'widget_groups_tree' => $ajaxWidgetGroupTree,
+								));
 							}
 
-							$box .= "\n  " . '</div>';
+							$widgetGroupTree->up();
 
 							continue;
 						}
@@ -2388,9 +2382,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (preg_match('/^\[.*]$/', $v))
 						{
 							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-							$arrAjax[$thisId] = '';
-							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal widget-group">';
+
+							$widgetGroupTree->enterChildNode($thisId);
+
+							if ($ajaxId == $thisId && Environment::get('isAjaxRequest'))
+							{
+								// We only need to output the current subtree in AJAX mode, so we store a reference here
+								$ajaxWidgetGroupTree = $widgetGroupTree->current();
+							}
 
 							continue;
 						}
@@ -2446,8 +2445,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Re-set the current value
 						$this->objActiveRecord->{$this->strField} = $this->varValue;
 
-						// Build the row and pass the current palette string (thanks to Tristan Lins)
-						$blnAjax ? $arrAjax[$thisId] .= $this->row() : $box .= $this->row();
+						$widgetGroupTree->addContentNode($this->row());
 					}
 
 					// Save record
@@ -2460,17 +2458,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						continue;
 					}
 
-					$label = StringUtil::specialchars(System::getContainer()->get('contao.data_container.record_labeler')->getLabel('contao.db.' . $this->strTable . '.' . $currentRecord['id'], $currentRecord));
-
-					$return .= Message::generateUnwrapped() . \sprintf(
-						'<fieldset data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-collapsed-class="collapsed"%s class="%s cf"><legend><button type="button" data-action="contao--toggle-fieldset#toggle">%s</button></legend>%s</fieldset>',
-						$blnAddJumpTarget ? ('data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . $label . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open"') : '',
-						$class,
-						$label,
-						$box
+					$parameters['boxes'][] = array(
+						'class' => 'cf',
+						'label' => System::getContainer()
+							->get('contao.data_container.record_labeler')
+							->getLabel('contao.db.' . $this->strTable . '.' . $currentRecord['id'], $currentRecord),
+						'widget_groups_tree' => $widgetGroupTree,
+						'message' => Message::generateUnwrapped(),
 					);
-
-					$class = 'tl_box';
 				}
 
 				$this->noReload = $blnNoReload || $this->noReload;
@@ -2505,95 +2500,47 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
+			$parameters['form_buttons'] = System::getContainer()
+				->get('contao.data_container.buttons_builder')
+				->generateEditAllButtons($this->strTable, $this)
+			;
 
-			// Add the form
-			$return = '
-
-<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
-<div class="tl_formbody_edit nogrid">
-<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
-</div>
-  ' . $strButtons . '
-</form>';
+			return $this->render('edit/multiple', $parameters);
 		}
 
-		// Else show a form to select the fields
-		else
+		// Step 1: Show a form to select the fields of the current table
+		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
+
+		// Add meta fields if the current user is an administrator
+		if ($user->isAdmin)
 		{
-			$options = '';
-			$fields = array();
-
-			// Add fields of the current table
-			$fields = array_merge($fields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()));
-
-			// Add meta fields if the current user is an administrator
-			if ($user->isAdmin)
+			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
-				if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
-				{
-					array_unshift($fields, 'sorting');
-				}
-
-				if ($db->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
-				{
-					array_unshift($fields, 'pid');
-				}
+				array_unshift($fields, 'sorting');
 			}
 
-			// Show all non-excluded fields
-			foreach ($fields as $field)
+			if ($db->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
 			{
-				if ((!DataContainer::isFieldExcluded($this->strTable, $field) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null)))
-				{
-					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)) ?? $field) . ' <span class="label-info">[' . $field . ']</span>') . '</label><br>';
-				}
+				array_unshift($fields, 'pid');
 			}
-
-			$blnIsError = Input::isPost() && !Input::post('all_fields');
-
-			// Return the select menu
-			$return .= '
-
-<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post" data-turbo="false">
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div class="tl_tbox">
-<div class="widget">
-<fieldset class="tl_checkbox_container">
-  <legend' . ($blnIsError ? ' class="error"' : '') . '>' . $GLOBALS['TL_LANG']['MSC']['all_fields'][0] . '<span class="mandatory">*</span></legend>
-  <input type="checkbox" id="check_all" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' . $options . '
-</fieldset>' . ($blnIsError ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['all_fields'] . '</p>' : ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
-<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['all_fields'][1] . '</p>' : '')) . '
-</div>
-</div>
-</div>
-<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
-<div class="tl_submit_container">
-  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</button>
-</div>
-</div>
-</form>';
 		}
 
-		// Return
-		$return = ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') .
-System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;
+		// Show all non-excluded fields
+		$parameters['fields'] = array();
 
-		return $blnAddJumpTarget ? '
-<div data-controller="contao--jump-targets">
-	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
-	' . $return . '
-</div>' : $return;
+		foreach ($fields as $field)
+		{
+			if ((!DataContainer::isFieldExcluded($this->strTable, $field) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null)))
+			{
+				$label = ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)) ?? $field);
+				$parameters['fields'][$field] = $label;
+			}
+		}
+
+		$parameters['error_no_fields'] = Input::isPost() && !Input::post('all_fields');
+		$parameters['show_help'] = !$parameters['error_no_fields'] && Config::get('showHelp') && isset($GLOBALS['TL_LANG']['MSC']['all_fields'][1]);
+
+		return $this->render('edit/select_fields', $parameters);
 	}
 
 	/**
@@ -2686,8 +2633,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
-		$return = '';
-
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Get current IDs from session
@@ -2707,12 +2652,19 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		$this->configurePidAndSortingFields();
 
-		// Add fields
+		$parameters = array(
+			'ids' => $ids,
+			'back_button' => System::getContainer()
+				->get('contao.data_container.global_operations_builder')
+				->initialize($this->strTable)
+				->addBackButton(),
+		);
+
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
 
+		// Step 2: Show a form to select the fields
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
-			$class = 'tl_tbox';
 			$excludedFields = array();
 
 			// Save record
@@ -2810,8 +2762,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			}
 
 			// Begin current row
-			$return .= '
-<div class="' . $class . '">';
+			$parameters['widgets'] = array();
 
 			foreach ($fields as $v)
 			{
@@ -2830,94 +2781,54 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 				// Disable auto-submit
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['submitOnChange'] = false;
-				$return .= $this->row();
+				$parameters['widgets'][] = $this->row();
 			}
 
-			// Close box
-			$return .= '
-</div>';
+			$parameters['form_buttons'] = System::getContainer()
+				->get('contao.data_container.buttons_builder')
+				->generateEditAllButtons($this->strTable, $this)
+			;
 
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
+			$parameters['message'] = Message::generate();
 
-			// Add the form
-			$return = '
-<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
-<div class="tl_formbody_edit nogrid">
-<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
-</div>
-  ' . $strButtons . '
-</form>';
+			return $this->render('edit/override_all', $parameters);
 		}
 
-		// Else show a form to select the fields
-		else
+		// Step 1: Show a form to select the fields of the current table
+		$fields = array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array());
+
+		// Add meta fields if the current user is an administrator
+		if ($user->isAdmin)
 		{
-			$options = '';
-			$fields = array();
-
-			// Add fields of the current table
-			$fields = array_merge($fields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()));
-
-			// Add meta fields if the current user is an administrator
-			if ($user->isAdmin)
+			if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 			{
-				if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
-				{
-					array_unshift($fields, 'sorting');
-				}
-
-				if ($db->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
-				{
-					array_unshift($fields, 'pid');
-				}
+				array_unshift($fields, 'sorting');
 			}
 
-			// Show all non-excluded fields
-			foreach ($fields as $field)
+			if ($db->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
 			{
-				if ((!DataContainer::isFieldExcluded($this->strTable, $field) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null)))
-				{
-					$options .= '
-  <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)) ?? $field) . ' <span class="label-info">[' . $field . ']</span>') . '</label><br>';
-				}
+				array_unshift($fields, 'pid');
 			}
-
-			$blnIsError = Input::isPost() && !Input::post('all_fields');
-
-			// Return the select menu
-			$return .= '
-<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post" data-turbo="false">
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div class="tl_tbox">
-<div class="widget">
-<fieldset class="tl_checkbox_container">
-  <legend' . ($blnIsError ? ' class="error"' : '') . '>' . $GLOBALS['TL_LANG']['MSC']['all_fields'][0] . '<span class="mandatory">*</span></legend>
-  <input type="checkbox" id="check_all" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' . $options . '
-</fieldset>' . ($blnIsError ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['all_fields'] . '</p>' : ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['MSC']['all_fields'][1])) ? '
-<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['all_fields'][1] . '</p>' : '')) . '
-</div>
-</div>
-</div>
-<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
-<div class="tl_submit_container">
-  <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</button>
-</div>
-</div>
-</form>';
 		}
 
-		// Return
-		return Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') .
-System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;
+		// Show all non-excluded fields
+		$parameters['fields'] = array();
+
+		foreach ($fields as $field)
+		{
+			if ((!DataContainer::isFieldExcluded($this->strTable, $field) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null)))
+			{
+				$label = ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null)) ?? $field);
+				$parameters['fields'][$field] = $label;
+			}
+		}
+
+		$parameters['error_no_fields'] = Input::isPost() && !Input::post('all_fields');
+		$parameters['show_help'] = !$parameters['error_no_fields'] && Config::get('showHelp') && isset($GLOBALS['TL_LANG']['MSC']['all_fields'][1]);
+
+		$parameters['message'] = Message::generate();
+
+		return $this->render('edit/select_fields', $parameters);
 	}
 
 	/**
@@ -5941,9 +5852,11 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			Input::setGet('lp', $offset / $limit + 1); // see #6923
 		}
 
-		$objPagination = new Pagination($this->total, $limit, 7, 'lp', new BackendTemplate('be_pagination'), true);
+		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
+			(new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds()
+		);
 
-		return $objPagination->generate();
+		return System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 	}
 
 	/**

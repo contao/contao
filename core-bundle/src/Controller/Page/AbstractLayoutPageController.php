@@ -248,7 +248,7 @@ abstract class AbstractLayoutPageController extends AbstractController
     /**
      * @param list<array{type: string, id: int}> $elementReferences
      */
-    protected function renderSlot(string $slot, array $elementReferences, string $identifier = 'layout/_element_group'): string
+    protected function renderSlot(string $slot, array $elementReferences, string $identifier = 'page/_element_group'): string
     {
         $result = $this->renderView("@Contao/$identifier.html.twig", [
             '_slot_name' => $slot,
