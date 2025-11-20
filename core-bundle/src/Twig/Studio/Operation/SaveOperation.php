@@ -47,7 +47,7 @@ final class SaveOperation extends AbstractOperation
 
         $storage->write($context->getUserTemplatesStoragePath(), $code);
 
-        // Invalidate template
+        // Only invalidate the template cache of the current template
         $this->getTwig()->removeCache(
             $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier(), $context->getThemeSlug()),
         );

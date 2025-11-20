@@ -35,7 +35,7 @@ class RetentionPolicyTest extends ContaoTestCase
     }
 
     /**
-     * @param array<int>    $keepIntervals
+     * @param array<string> $keepIntervals
      * @param array<Backup> $allBackups
      * @param array<string> $expectedBackupFilePathsToKeep
      */

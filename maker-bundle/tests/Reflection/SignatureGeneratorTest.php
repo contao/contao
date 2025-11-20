@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
 class SignatureGeneratorTest extends TestCase
 {
     /**
-     * @param array<array> $parameters
+     * @param array<string, array|string|null> $parameters
      */
     #[DataProvider('methodProvider')]
     public function testSignatureCreation(string $signature, string|null $returnType, array $parameters): void
