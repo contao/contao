@@ -687,6 +687,10 @@ services:
             - '@cache.app'
             - '@console.command.messenger_consume_messages'
 
+    contao.model:
+        class: Contao\CoreBundle\Model\Model
+        public: true
+
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
         arguments:

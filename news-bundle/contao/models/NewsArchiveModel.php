@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsModel;
 use Contao\Model\Collection;
 
 /**
@@ -80,6 +81,7 @@ use Contao\Model\Collection;
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
  */
+#[AsModel('tl_news_archive')]
 class NewsArchiveModel extends Model
 {
 	/**

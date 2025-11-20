@@ -44,7 +44,3 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'news';
 $GLOBALS['TL_PERMISSIONS'][] = 'newp';
-
-// Models
-$GLOBALS['TL_MODELS']['tl_news_archive'] = NewsArchiveModel::class;
-$GLOBALS['TL_MODELS']['tl_news'] = NewsModel::class;

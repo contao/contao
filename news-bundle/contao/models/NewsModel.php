@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsModel;
 use Contao\Model\Collection;
 use Contao\Model\MetadataTrait;
 
@@ -177,6 +178,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
  */
+#[AsModel('tl_news')]
 class NewsModel extends Model
 {
 	use MetadataTrait;

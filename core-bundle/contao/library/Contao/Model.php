@@ -1372,12 +1372,13 @@ abstract class Model
 	 */
 	public static function getClassFromTable($strTable)
 	{
-		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
-		{
+		$models = System::getContainer()->get('contao.model')?->getModels() ?? [];
+
+		if (!isset($GLOBALS['TL_MODELS'][$strTable]) && !isset($models[$strTable])) {
 			throw new \RuntimeException(\sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
-		return $GLOBALS['TL_MODELS'][$strTable];
+		return $GLOBALS['TL_MODELS'][$strTable] ?? $models[$strTable];
 	}
 
 	/**

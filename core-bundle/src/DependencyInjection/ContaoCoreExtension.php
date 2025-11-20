@@ -22,6 +22,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
@@ -205,6 +206,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsInsertTag::class => 'contao.insert_tag',
             AsBlockInsertTag::class => 'contao.block_insert_tag',
             AsInsertTagFlag::class => 'contao.insert_tag_flag',
+            AsModel::class => 'contao.model',
         ];
 
         foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {

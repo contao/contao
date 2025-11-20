@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Model\Model as ContaoModel;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -578,6 +579,12 @@ class StringUtilTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
+        $model = $this->createMock(ContaoModel::class);
+        $model
+            ->method('getModels')
+            ->willReturn([])
+        ;
+
         $container = System::getContainer();
         $container->set('database_connection', $connection);
 
@@ -586,6 +593,8 @@ class StringUtilTest extends TestCase
 
         $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
         $container->set('contao.resource_locator', $locator);
+
+        $container->set('contao.model', $model);
 
         $GLOBALS['TL_DCA']['tl_files'] = [];
         $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;
