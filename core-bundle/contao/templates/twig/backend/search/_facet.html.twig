@@ -1,0 +1,29 @@
+{% trans_default_domain "contao_default" %}
+
+{% if facets and facets|length > 1 %}
+    <nav class="facet-{{ facetName }}">
+        <form method="post" data-turbo-stream>
+            <div class="facet-title">
+                <h2>{{ ('MSC.searchFacetTitle.' ~ facetName)|trans }}</h2>
+                {% if resetAction %}
+                    <button{{ attrs()
+                        .addClass('reset')
+                        .set('formaction', resetAction)
+                        .set('aria-label', 'MSC.reset'|trans)
+                    }}>{{ backend_icon('close', attributes: attrs().set('width', 12).set('height', 12)) }}</button>
+                {% endif %}
+            </div>
+            <ul>
+                {% for facet in facets %}
+                    <li>
+                        <button{{ attrs()
+                            .set('disabled', null, activeFilter == facet.key)
+                            .set('data-action', 'contao--backend-search#setButtonActive')
+                            .set('formaction', path('_contao_backend_search.stream', query.toUrlParams|merge({(filterName): facet.key})))
+                        }}>{{ facet.label }} <sup>({{ facet.count }})</sup></button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </form>
+    </nav>
+{% endif %}

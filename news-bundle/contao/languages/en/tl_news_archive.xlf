@@ -68,6 +68,9 @@
       <trans-unit id="tl_news_archive.delete.1">
         <source>Delete news archive ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_news_archive.tableLabel">
+        <source>News archive</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

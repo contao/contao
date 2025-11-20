@@ -19,10 +19,12 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
 
 class JobsListener
 {
@@ -32,7 +34,22 @@ class JobsListener
         private readonly Connection $connection,
         private readonly RequestStack $requestStack,
         private readonly ContaoFramework $contaoFramework,
+        private readonly Environment $twig,
     ) {
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'list.label.label')]
+    public function onLabelCallback(array $row, string $label, DC_Table $dc, array $columns): array
+    {
+        $job = $this->jobs->getByUuid($row['uuid']);
+
+        if (!$job) {
+            return $columns;
+        }
+
+        $columns[2] = $this->twig->render('@Contao/backend/jobs/_progress.html.twig', ['progress' => $job->getProgress()]);
+
+        return $columns;
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.attachments.button')]

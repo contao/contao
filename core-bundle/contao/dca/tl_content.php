@@ -97,11 +97,11 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderStop'                  => '{type_legend},title,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
 		'code'                        => '{type_legend},title,headline,type;{text_legend},highlight,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'markdown'                    => '{type_legend},title,headline,type;{text_legend},markdownSource;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'template'                    => '{type_legend},title,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'template'                    => '{type_legend},title,headline,type;{template_legend},customTpl,data;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'hyperlink'                   => '{type_legend},title,headline,type;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'toplink'                     => '{type_legend},title,type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'image'                       => '{type_legend},title,type;headline;{source_legend},singleSRC,size,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'gallery'                     => '{type_legend},title,type;headline;{source_legend},multiSRC,useHomeDir,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'gallery'                     => '{type_legend},title,type;headline;{source_legend},multiSRC,useHomeDir,sortBy,metaIgnore;{image_legend},size,fullsize,perRow,numberOfItems,perPage,serverPagination;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'player'                      => '{type_legend},title,type;headline;{source_legend},playerSRC;{texttrack_legend},textTrackSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'youtube'                     => '{type_legend},title,type;headline;{source_legend},youtube;{player_legend},youtubeOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerStop;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'vimeo'                       => '{type_legend},title,type;headline;{source_legend},vimeo;{player_legend},vimeoOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerColor;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
@@ -500,6 +500,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
+		'serverPagination' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false),
+		),
 		'numberOfItems' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['numberOfItems'],
@@ -689,7 +695,21 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'data' => array
 		(
-			'inputType'               => 'keyValueWizard',
+			'inputType'               => 'rowWizard',
+			'fields' => array
+			(
+				'key' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_key'],
+					'inputType'       => 'text'
+				),
+				'value' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_value'],
+					'inputType'       => 'text'
+				)
+			),
+			'eval'                    => array('tl_class'=>'w66 clr'),
 			'sql'                     => "text NULL"
 		),
 		'cteAlias' => array

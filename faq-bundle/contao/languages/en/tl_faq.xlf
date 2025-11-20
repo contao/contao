@@ -131,6 +131,9 @@
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
       </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
