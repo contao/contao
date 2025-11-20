@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Twig\Extra\String\StringExtension;
 
-class ConfigureTwigExtensionsPass implements CompilerPassInterface
+class RegisterTwigExtensionsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {

@@ -21,7 +21,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddInsertTagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\IntlInstalledLocalesAndCountriesPass;
@@ -31,6 +30,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -131,7 +131,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
         $container->addCompilerPass(new AccessDecisionStrategyPass());
-        $container->addCompilerPass(new ConfigureTwigExtensionsPass());
+        $container->addCompilerPass(new RegisterTwigExtensionsPass());
     }
 
     public static function getVersion(): string

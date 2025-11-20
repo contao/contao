@@ -12,18 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureTwigExtensionsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Twig\Extra\String\StringExtension;
 
-class ConfigureTwigExtensionsPassTest extends TestCase
+class RegisterTwigExtensionsPassTest extends TestCase
 {
     public function testRegistersStringExtension(): void
     {
         $container = new ContainerBuilder();
 
-        (new ConfigureTwigExtensionsPass())->process($container);
+        (new RegisterTwigExtensionsPass())->process($container);
 
         $this->assertTrue($container->hasDefinition('twig.extension.string'));
 
