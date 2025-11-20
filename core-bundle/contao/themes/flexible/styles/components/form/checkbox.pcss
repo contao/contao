@@ -7,6 +7,13 @@
     margin: 1px 1px 1px 0;
 }
 
+/* Checkboxes in Safari are 12x12 instead of 14x14, so increase the margin */
+@supports (hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none) {
+    .tl_tree_checkbox {
+        margin: 2px 2px 2px 1px;
+    }
+}
+
 .tl_checkbox_single_container {
     margin: 16px 0 0;
 }
