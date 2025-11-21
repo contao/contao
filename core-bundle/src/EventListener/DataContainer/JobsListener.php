@@ -76,7 +76,7 @@ class JobsListener
 
         // Link directly to the one attachment, if there is only one
         if (1 === $numberOfAttachments) {
-            $operation['icon'] = 'theme_export.svg';
+            $operation['icon'] = 'theme_import.svg';
             $operation['title'] = $attachments[0]->getFileLabel();
             $operation->setUrl($attachments[0]->getDownloadUrl());
 
@@ -90,7 +90,7 @@ class JobsListener
             $operations[] = new DataContainerOperation(
                 'download',
                 [
-                    'icon' => 'theme_export.svg',
+                    'icon' => 'theme_import.svg',
                     'label' => $attachment->getFileLabel(),
                     'href' => $attachment->getDownloadUrl(),
                 ],
@@ -102,7 +102,7 @@ class JobsListener
         $operation->setHtml($this->twig->render('@Contao/backend/data_container/operations.html.twig', [
             'operations' => $operations,
             'has_primary' => true,
-            'more_icon' => 'theme_export.svg',
+            'more_icon' => 'theme_import.svg',
             'globalOperations' => false,
         ]));
     }

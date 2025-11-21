@@ -79,7 +79,7 @@ class JobsListenerTest extends AbstractJobsTestCase
 
         $listener->onAttachmentsCallback($operation);
         $this->assertSame('https://contao.org/contao/jobs/download', $operation->getUrl());
-        $this->assertSame('theme_export.svg', $operation['icon']);
+        $this->assertSame('theme_import.svg', $operation['icon']);
     }
 
     public function testAttachmentsCallbackWithMultipleAttachments(): void
@@ -104,12 +104,12 @@ class JobsListenerTest extends AbstractJobsTestCase
                 '@Contao/backend/data_container/operations.html.twig',
                 $this->callback(
                     function (array $context): bool {
-                        $this->assertSame('theme_export.svg', $context['more_icon']);
+                        $this->assertSame('theme_import.svg', $context['more_icon']);
                         $this->assertTrue($context['has_primary']);
                         $this->assertFalse($context['globalOperations']);
 
                         $this->assertCount(2, $context['operations']);
-                        $this->assertSame('theme_export.svg', $context['operations'][0]['icon']);
+                        $this->assertSame('theme_import.svg', $context['operations'][0]['icon']);
                         $this->assertSame('https://contao.org/contao/jobs/download', $context['operations'][0]['href']);
 
                         return true;
