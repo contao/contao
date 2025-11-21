@@ -103,6 +103,7 @@ class JobsListener
             'operations' => $operations,
             'has_primary' => true,
             'more_icon' => 'theme_import.svg',
+            'more_alt' => 'MSC.jobs.viewAttachments',
             'globalOperations' => false,
         ]));
     }
