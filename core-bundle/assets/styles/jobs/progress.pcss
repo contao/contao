@@ -1,0 +1,47 @@
+.jobs-progress {
+    position: relative;
+    overflow: hidden;
+}
+
+.jobs-progress-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--black);
+    font-size: 0.7rem;
+}
+
+.jobs-progress-bar {
+    appearance: none;
+    border: none;
+    position: relative;
+    background: var(--body-bg);
+    width: min(100%, 200px);
+    height: 16px;
+    border-radius: 50px;
+
+    &[value="100"] {
+        --progress-running: var(--progress-finished);
+    }
+}
+
+/** Webkit / Chromium */
+.jobs-progress-bar::-webkit-progress-bar {
+    background-color: var(--body-bg);
+    border-radius: 50px;
+}
+
+/** Chromium */
+.jobs-progress-bar::-webkit-progress-value {
+    background-color: var(--progress-running);
+    color: var(--body-bg);
+    border-radius: 50px;
+}
+
+/** Gecko engine */
+.jobs-progress-bar::-moz-progress-bar {
+    background-color: var(--progress-running);
+    color: var(--body-bg);
+    border-radius: 50px;
+}

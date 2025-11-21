@@ -188,6 +188,9 @@
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
       </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

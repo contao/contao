@@ -77,6 +77,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'edit',
 			'delete',
 			'show',
+			'versions',
 			'-',
 			'elements' => array
 			(

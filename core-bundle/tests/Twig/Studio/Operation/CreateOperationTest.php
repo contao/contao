@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\CreateOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -81,7 +82,14 @@ class CreateOperationTest extends AbstractOperationTestCase
             ->willReturn('create_result.stream')
         ;
 
-        $operation = $this->getCreateOperation($loader, $storage, $twig);
+        $cacheInvalidator = $this->mockCacheInvalidator();
+        $cacheInvalidator
+            ->expects($this->once())
+            ->method('invalidateCache')
+            ->with('content_element/no_user_template', $themeSlug)
+        ;
+
+        $operation = $this->getCreateOperation($loader, $storage, $twig, $cacheInvalidator);
 
         $response = $operation->execute(
             new Request(),
@@ -91,10 +99,10 @@ class CreateOperationTest extends AbstractOperationTestCase
         $this->assertSame('create_result.stream', $response->getContent());
     }
 
-    private function getCreateOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): CreateOperation
+    private function getCreateOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, CacheInvalidator|null $cacheInvalidator = null): CreateOperation
     {
         $operation = new CreateOperation();
-        $operation->setContainer($this->getContainer($loader, $storage, $twig));
+        $operation->setContainer($this->getContainer($loader, $storage, $twig, null, $cacheInvalidator));
         $operation->setName('create_*');
 
         return $operation;

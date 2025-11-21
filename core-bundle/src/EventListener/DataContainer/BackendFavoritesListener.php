@@ -14,10 +14,11 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\DataContainer;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[AsCallback(table: 'tl_favorites', target: 'config.onload')]
 class BackendFavoritesListener
 {
     public function __construct(
@@ -26,7 +27,8 @@ class BackendFavoritesListener
     ) {
     }
 
-    public function __invoke(): void
+    #[AsCallback(table: 'tl_favorites', target: 'config.onload')]
+    public function enableEditing(): void
     {
         $user = $this->security->getUser();
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
@@ -43,6 +45,16 @@ class BackendFavoritesListener
             $GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable'] = false;
             $GLOBALS['TL_DCA']['tl_favorites']['fields']['url']['default'] = base64_decode($data, true);
             $GLOBALS['TL_DCA']['tl_favorites']['fields']['user']['default'] = $userId;
+        }
+    }
+
+    #[AsCallback('tl_favorites', 'config.onsubmit')]
+    public function redirectBack(DataContainer $dc): void
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($request && $request->query->get('return') && $request->request->has('saveNclose')) {
+            throw new RedirectResponseException($dc->getCurrentRecord()['url']);
         }
     }
 }

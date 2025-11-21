@@ -84,7 +84,7 @@ export default class extends Controller {
             rowClick = true;
         }
 
-        if (!input) {
+        if (!input || input.disabled) {
             return;
         }
 
