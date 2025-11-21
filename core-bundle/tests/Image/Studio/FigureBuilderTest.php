@@ -358,7 +358,7 @@ class FigureBuilderTest extends TestCase
             ->willReturn($filePathOutsideUploadDir)
         ;
 
-        $studio = $this->mockStudioForImage($filePathOutsideUploadDir);
+        $studio = $this->mockStudioForImage($image);
 
         $this->getFigureBuilder($studio)->fromImage($image)->build();
     }
@@ -478,7 +478,7 @@ class FigureBuilderTest extends TestCase
             Validator::class => $validatorAdapter,
         ]);
 
-        $studio = $this->mockStudioForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($mixedIdentifier instanceof ImageInterface ? $mixedIdentifier : $absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->from($mixedIdentifier)->build();
     }
@@ -1539,7 +1539,7 @@ class FigureBuilderTest extends TestCase
         return $builder->build();
     }
 
-    private function mockStudioForImage(string $expectedFilePath, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
+    private function mockStudioForImage(ImageInterface|string $expectedImage, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1547,7 +1547,7 @@ class FigureBuilderTest extends TestCase
         $studio
             ->expects($this->once())
             ->method('createImage')
-            ->with($expectedFilePath, $expectedSizeConfiguration, $resizeOptions)
+            ->with($expectedImage, $expectedSizeConfiguration, $resizeOptions)
             ->willReturn($image)
         ;
 

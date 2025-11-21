@@ -77,7 +77,7 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     /**
      * @param class-string<ContentModel|ModuleModel> $class
      */
-    private function getModel(string $class, int|string $typeOrId, array $data = []): ContentModel|ModuleModel
+    private function getModel(string $class, int|string $typeOrId, array $data = []): ContentModel|ModuleModel|null
     {
         if (is_numeric($typeOrId)) {
             /** @var Adapter<ContentModel|ModuleModel> $adapter */
@@ -86,6 +86,10 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         } else {
             $model = $this->framework->createInstance($class);
             $model->type = $typeOrId;
+        }
+
+        if (null === $model) {
+            return null;
         }
 
         foreach ($data as $k => $v) {

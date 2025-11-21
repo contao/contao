@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
@@ -159,6 +160,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new AddTokenParser(self::class),
             // Add a parser for the Contao specific "slot" tag
             new SlotTokenParser(),
+            // Add a parser for the Contao specific "defer" tag
+            new DeferTokenParser(),
         ];
     }
 
@@ -200,11 +203,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 [FigureRuntime::class, 'renderFigure'],
                 [
                     'is_safe' => ['html'],
-                    'deprecated_info' => new DeprecatedCallableInfo(
-                        'contao/core-bundle',
-                        '5.0',
-                        'The "contao_figure" function is deprecated, use the "figure" function together with the "component/_figure.html.twig" component instead.',
-                    ),
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'),
                 ],
             ),
             new TwigFunction(

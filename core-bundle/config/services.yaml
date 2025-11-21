@@ -1281,6 +1281,12 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    contao.translation.legacy_locale_switcher:
+        class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+
     contao.translation.translator:
         class: Contao\CoreBundle\Translation\Translator
         decorates: translator
@@ -1305,6 +1311,11 @@ services:
             - '@contao.routing.response_context_accessor'
             - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
+
+    contao.twig.defer.renderer:
+        class: Contao\CoreBundle\Twig\Defer\Renderer
+        arguments:
+            - '@twig'
 
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension

@@ -1,6 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="cs">
     <body>
+      <trans-unit id="tl_files.preview.0">
+        <source>Image preview</source>
+      </trans-unit>
+      <trans-unit id="tl_files.preview.1">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Označit důležitou část obrázku pomocí kurzoru myši.</target>
+      </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
         <target>Jméno</target>
@@ -120,10 +127,6 @@
       <trans-unit id="tl_files.editFile">
         <source>Edit file &quot;%s&quot;</source>
         <target>Upravit soubor &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Označit důležitou část obrázku pomocí kurzoru myši.</target>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
@@ -272,6 +275,10 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Upravit zdrojový text nebo soubor &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Nahrát soubory</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

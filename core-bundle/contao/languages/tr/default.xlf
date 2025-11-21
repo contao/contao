@@ -2905,6 +2905,9 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Yolda zorunlu parametreler bulunduğundan ön izleme adresi oluşturulamadı.</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>Seçenek bilinmiyor: %s</target>

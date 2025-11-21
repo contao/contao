@@ -41,7 +41,7 @@ class DirectoryFilterVirtualFilesystem implements VirtualFilesystemInterface
         $this->inner = $virtualFilesystem;
 
         // Normalize
-        $allowedDirectories = array_map(static fn (string $path): string => Path::canonicalize($path), $allowedDirectories);
+        $allowedDirectories = array_map(Path::canonicalize(...), $allowedDirectories);
         sort($allowedDirectories);
 
         $prefixPaths = [];

@@ -1,6 +1,14 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="de">
     <body>
+      <trans-unit id="tl_files.preview.0">
+        <source>Image preview</source>
+        <target>Bildvorschau</target>
+      </trans-unit>
+      <trans-unit id="tl_files.preview.1">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Markieren Sie den wichtigen Teil des Bildes mit Ihrem Mauszeiger.</target>
+      </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
         <target>Name</target>
@@ -91,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
-        <target>Datei-Upload</target>
+        <target>Dateiupload</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.1">
         <source>Select the files you want to upload to the server (maximum %s and %s pixels).</source>
@@ -120,10 +128,6 @@
       <trans-unit id="tl_files.editFile">
         <source>Edit file &quot;%s&quot;</source>
         <target>Die Datei &quot;%s&quot; bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Markieren Sie den wichtigen Teil des Bildes mit Ihrem Mauszeiger.</target>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
@@ -272,6 +276,10 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Den Quelltext der Datei &quot;%s&quot; bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Dateien hochladen</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

@@ -1,6 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="nl">
     <body>
+      <trans-unit id="tl_files.preview.0">
+        <source>Image preview</source>
+      </trans-unit>
+      <trans-unit id="tl_files.preview.1">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>Markeer het belangrijkste deel van de afbeelding met de muis-cursor.</target>
+      </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
         <target>Naam</target>
@@ -120,10 +127,6 @@
       <trans-unit id="tl_files.editFile">
         <source>Edit file &quot;%s&quot;</source>
         <target>Bewerk de inhoud van bestand &quot;%s&quot;</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Markeer het belangrijkste deel van de afbeelding met de muis-cursor.</target>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
@@ -271,6 +274,10 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Bewerk de brontekst van het bestand &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Bestanden uploaden</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

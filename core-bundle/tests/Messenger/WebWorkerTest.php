@@ -52,6 +52,8 @@ class WebWorkerTest extends TestCase
 
             /**
              * @param string $message
+             *
+             * @throws void
              */
             public function log($level, $message, array $context = []): void
             {

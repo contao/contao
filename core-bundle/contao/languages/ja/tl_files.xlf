@@ -1,6 +1,14 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_files.php" source-language="en" target-language="ja">
     <body>
+      <trans-unit id="tl_files.preview.0">
+        <source>Image preview</source>
+        <target>画像のプレビュー</target>
+      </trans-unit>
+      <trans-unit id="tl_files.preview.1">
+        <source>Mark the important part of the image with your mouse cursor.</source>
+        <target>画像の重要な部分をマウスカーソルで指し示してください。</target>
+      </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
         <target>名前</target>
@@ -120,10 +128,6 @@
       <trans-unit id="tl_files.editFile">
         <source>Edit file &quot;%s&quot;</source>
         <target>&quot;%s&quot;というファイルを編集</target>
-      </trans-unit>
-      <trans-unit id="tl_files.edit_preview_help">
-        <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>画像の重要な部分をマウスカーソルで指し示してください。</target>
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
@@ -272,6 +276,10 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>&quot;%s&quot;というファイルのソースのテキストを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>ファイルをアップロード</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>
