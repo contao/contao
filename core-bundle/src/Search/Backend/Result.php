@@ -18,10 +18,15 @@ namespace Contao\CoreBundle\Search\Backend;
 class Result
 {
     /**
-     * @param array<Hit> $hits
+     * @param array<Hit>   $hits
+     * @param array<Facet> $typeFacets
+     * @param array<Facet> $tagFacets
      */
-    public function __construct(private readonly array $hits)
-    {
+    public function __construct(
+        private readonly array $hits,
+        private readonly array $typeFacets = [],
+        private readonly array $tagFacets = [],
+    ) {
     }
 
     /**
@@ -35,5 +40,21 @@ class Result
     public static function createEmpty(): self
     {
         return new self([]);
+    }
+
+    /**
+     * @return array<Facet>
+     */
+    public function getTypeFacets(): array
+    {
+        return $this->typeFacets;
+    }
+
+    /**
+     * @return array<Facet>
+     */
+    public function getTagFacets(): array
+    {
+        return $this->tagFacets;
     }
 }

@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractRenameVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
@@ -196,12 +197,20 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
             )
         ;
 
+        $cacheInvalidator = $this->mockCacheInvalidator();
+        $cacheInvalidator
+            ->expects($this->once())
+            ->method('invalidateCache')
+            ->with('prefix/foo/my_variant', null)
+        ;
+
         $operation = $this->getRenameVariantOperation(
             $loader,
             $storage,
             $twig,
             $this->mockTemplateSkeletonFactory('@Contao/prefix/foo.html.twig'),
             $connection,
+            $cacheInvalidator,
         );
 
         $response = $operation->execute(
@@ -212,7 +221,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
         $this->assertSame('rename_variant_result.stream', $response->getContent());
     }
 
-    private function getRenameVariantOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null, Connection|null $connection = null): AbstractRenameVariantOperation
+    private function getRenameVariantOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null, Connection|null $connection = null, CacheInvalidator|null $cacheInvalidator = null): AbstractRenameVariantOperation
     {
         $operation = new class() extends AbstractRenameVariantOperation {
             protected function getPrefix(): string
@@ -226,7 +235,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
             }
         };
 
-        $container = $this->getContainer($loader, $storage, $twig, $skeletonFactory);
+        $container = $this->getContainer($loader, $storage, $twig, $skeletonFactory, $cacheInvalidator);
         $container->set('database_connection', $connection);
 
         $operation->setContainer($container);

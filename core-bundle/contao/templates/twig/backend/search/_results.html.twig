@@ -1,60 +1,66 @@
 {% trans_default_domain "contao_default" %}
 {% use "@Contao/component/_figure.html.twig" %}
 
-{% for hit in hits %}
-    <li class="tl_search_hit">
-        {% block hit %}
-            <div class="hit_header">
-                {# Preview image #}
-                {% if hit.imageFigureBuilder %}
-                    {% block hit_preview %}
-                        <div class="hit_preview">
-                            {% set figure = hit.imageFigureBuilder.setSize([preview_width|default(200), preview_height|default(200)]).buildIfResourceExists %}
-                            {% if figure %}
-                                {{ block('figure_component') }}
-                            {% endif %}
+<ul class="backend-search_results" >
+    {% for hit in hits %}
+        <li class="tl_search_hit">
+            {% block hit %}
+                <div class="hit_header">
+                    {# Preview image #}
+                    {% if hit.imageFigureBuilder %}
+                        {% block hit_preview %}
+                            <div class="hit_preview">
+                                {% set figure = hit.imageFigureBuilder.setSize([preview_width|default(200), preview_height|default(200)]).buildIfResourceExists() %}
+                                {% if figure %}
+                                    {{ block('figure_component') }}
+                                {% endif %}
+                            </div>
+                        {% endblock %}
+                    {% endif %}
+
+                    {% block hit_actions %}
+                        <div class="hit_actions">
+                            {# Title #}
+                            {% block hit_title %}
+                                    <div class="title">
+                                        <sub class="type">{{ hit.visibleType }}</sub>
+                                        {% set hit_title_attributes = attrs()
+                                            .set('href', hit.viewUrl)
+                                            .set('title', 'MSC.searchHitView'|trans([hit.title]))
+                                            .addClass('hit_title')
+                                            .mergeWith(hit_title_attributes|default)
+                                        %}
+                                        <a{{ hit_title_attributes }}>
+                                            {% for item in hit.breadcrumbs %}
+                                               {{ item.label }} ›
+                                            {% endfor %}
+                                            {{ hit.title }}
+                                        </a>
+                                    </div>
+                                    </div>
+                            {% endblock %}
+
+                            {# Operations #}
+                            {% block hit_operations %}
+                                {% if hit.editUrl %}
+                                    <a class="hit_edit" href="{{ hit.editUrl }}">{{ backend_icon('edit.svg', 'MSC.searchHitEdit'|trans([hit.title])) }}</a>
+                                {% endif %}
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                </div>
+
+                {# Context #}
+                {% if hit.context %}
+                    {% block hit_context %}
+                        <div class="hit_context-container">
+                            <p class="context">{{ hit.context }}</p>
                         </div>
                     {% endblock %}
                 {% endif %}
-
-                {% block hit_actions %}
-                    <div class="hit_actions">
-                        {# Title #}
-                        {% block hit_title %}
-                            {% set hit_title_attributes = attrs()
-                                .set('href', hit.viewUrl)
-                                .set('title', 'MSC.searchHitView'|trans([hit.title]))
-                                .addClass('hit_title')
-                                .mergeWith(hit_title_attributes|default)
-                            %}
-                            <a{{ hit_title_attributes }}>
-                                {% for item in hit.breadcrumbs %}
-                                    {{ item.label }} ›
-                                {% endfor %}
-                                {{ hit.title }}
-                            </a>
-                        {% endblock %}
-
-                        {# Operations #}
-                        {% block hit_operations %}
-                            {% if hit.editUrl %}
-                                <a class="hit_edit" href="{{ hit.editUrl }}">{{ backend_icon('edit.svg', 'MSC.searchHitEdit'|trans([hit.title])) }}</a>
-                            {% endif %}
-                        {% endblock %}
-                    </div>
-                {% endblock %}
-            </div>
-
-            {# Context #}
-            {% if hit.context %}
-                {% block hit_context %}
-                    <div class="hit_context-container">
-                        <p class="context">{{ hit.context }}</p>
-                    </div>
-                {% endblock %}
-            {% endif %}
-        {% endblock %}
-    </li>
-{% else %}
-    <li class="search-message--empty">{{ 'MSC.noResults'|trans }}</li>
-{% endfor %}
+            {% endblock %}
+        </li>
+    {% else %}
+        <li class="search-message--empty">{{ 'MSC.noResultsOrNotEnoughPermissions'|trans }}</li>
+    {% endfor %}
+</ul>

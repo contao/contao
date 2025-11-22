@@ -63,6 +63,12 @@ services:
     contao.listener.data_container.accordion:
         class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
 
+    contao.listener.data_container.active_member_groups:
+        class: Contao\CoreBundle\EventListener\DataContainer\ActiveMemberGroupsListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
+
     contao.listener.data_container.article_column:
         class: Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener
         arguments:
@@ -164,10 +170,12 @@ services:
     contao.listener.data_container.jobs:
         class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
         arguments:
+            - '@contao.job.jobs'
             - '@security.helper'
             - '@database_connection'
             - '@request_stack'
             - '@contao.framework'
+            - '@twig'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener

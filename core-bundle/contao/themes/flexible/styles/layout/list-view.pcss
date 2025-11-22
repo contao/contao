@@ -1,6 +1,7 @@
 /* List view */
 .list_view .tl_listing img.theme_preview {
     margin-right: 9px;
+    border-radius: var(--border-radius);
 }
 
 .tl_show {
@@ -131,11 +132,8 @@
 }
 
 .tl_content .inside {
-    padding: var(--row-padding) 6px;
-}
-
-.tl_content.draft .inside {
     min-height: 16px;
+    padding: var(--row-padding) 6px;
 }
 
 .tl_content.draft .inside > :not(.tl_content_right, .cte_type) {
@@ -304,6 +302,7 @@
     gap: 3px;
     list-style: none;
     margin: 0;
+    padding: 0;
 }
 
 .operations a,
@@ -325,7 +324,7 @@
     position: relative;
     align-items: center;
 
-    &.is--hidden {
+    &.is-hidden {
         visibility: hidden;
         width: 0;
         margin-left: -3px;
@@ -366,8 +365,8 @@
 }
 
 .operations-menu li.separator {
-    margin-top: 4px;
-    padding-top: 4px;
+    margin-top: 6px;
+    padding-top: 6px;
     border-top: 1px solid var(--border);
 }
 
@@ -397,6 +396,11 @@
     align-items: start;
 }
 
+.tl_listing.picker .operations {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .cte_type {
     margin: 0 0 4px;
     font-size: .75rem;
@@ -411,6 +415,7 @@
     font-size: .815rem;
     display: flex;
     align-items: center;
+    gap: 3px;
     border-top-left-radius: var(--border-radius);
 }
 
@@ -422,6 +427,7 @@
     color: var(--red);
 }
 
+/** Deprecated in Contao 5.6, to be removed in Contao 6 */
 .cte_type.icon-protected {
     padding-left: 27px;
     background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
@@ -438,7 +444,15 @@
     margin-left: -10px;
     background: none;
     border: none;
-    padding-right: 3px;
+    padding-right: 4px;
+}
+
+.cte_type .drag-handle {
+    padding-right: 1px;
+}
+
+.tl_content_left .drag-handle img {
+    vertical-align: bottom;
 }
 
 .cte_preview {
@@ -470,10 +484,11 @@
     margin-bottom: 6px;
 }
 
-.cte_preview img {
+.cte_preview img:not(.backend-icon) {
     max-width: 320px;
     height: auto;
-    padding: 6px 0;
+    margin: 6px 0;
+    border-radius: var(--border-radius);
 }
 
 .cte_preview .media--left figure {

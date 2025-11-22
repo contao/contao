@@ -1694,7 +1694,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </div>
 </div>
 </div>
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
   <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</button>
 </div>

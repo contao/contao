@@ -50,9 +50,14 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'subject',
-			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
+		),
+		'label' => array
+		(
+			'fields'                  => array('subject'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_newsletter', 'listNewsletters'),
 		),
 		'operations' => array
 		(
@@ -242,16 +247,15 @@ class tl_newsletter extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function listNewsletters($arrRow)
 	{
-		return '
-<div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="cte_preview">' . (!$arrRow['sendText'] ? '
-' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
-<pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
-</div>' . "\n";
+		return array(
+			'<strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']),
+			(!$arrRow['sendText'] ? StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '<pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>',
+			($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished',
+		);
 	}
 
 	/**

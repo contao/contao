@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -83,13 +84,14 @@ class ContaoExtensionTest extends TestCase
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(5, $tokenParsers);
+        $this->assertCount(6, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
         $this->assertInstanceOf(DynamicUseTokenParser::class, $tokenParsers[2]);
         $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[3]);
         $this->assertInstanceOf(SlotTokenParser::class, $tokenParsers[4]);
+        $this->assertInstanceOf(DeferTokenParser::class, $tokenParsers[5]);
     }
 
     public function testAddsTheFunctions(): void
@@ -158,6 +160,7 @@ class ContaoExtensionTest extends TestCase
             'highlight_auto',
             'format_bytes',
             'sanitize_html',
+            'format_number',
             'csp_unsafe_inline_style',
             'csp_inline_styles',
             'encode_email',
