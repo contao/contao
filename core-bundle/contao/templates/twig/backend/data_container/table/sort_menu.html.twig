@@ -1,11 +1,25 @@
 {% trans_default_domain "contao_default" %}
 
 <div class="tl_sorting tl_subpanel">
+
     <strong>{{ 'MSC.sortBy'|trans }}:</strong>
+
     <div class="tl_select_wrapper" data-controller="contao--choices">
-        <select name="tl_sort" id="tl_sort" class="tl_select">
+        {% set select_attributes = attrs()
+            .set('name', 'tl_sort')
+            .set('id', 'tl_sort')
+            .addClass('tl_select')
+        %}
+        <select{{ select_attributes }}>
             {% for option in options %}
-                <option value="{{ option.value }}"{{ option.selected ? 'selected="selected"' }} aria-label="{{ option.aria_label }}">{{ option.label }}</option>
+                {% for option in options %}
+                    {% set option_attributes = attrs()
+                        .set('value', option.value)
+                        .set('selected', option.selected)
+                        .set('aria-label', option.aria_label ?? '')
+                    %}
+                    <option{{ option_attributes }}>{{ option.label }}</option>
+                {% endfor %}
             {% endfor %}
         </select>
     </div>
