@@ -5173,7 +5173,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label);
 			}
 
-			$options_sorter[$sortKey] = '  <option value="' . StringUtil::specialchars($value) . '"' . (((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue) ? ' selected="selected"' : '') . ' aria-label="' . $aria_label . '">' . $options_label . '</option>';
+			$options_sorter[$sortKey] = array(
+				'label' => $options_label,
+				'aria_label' => $aria_label,
+				'value' => StringUtil::specialchars($value),
+				'selected' => ((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue)
+			);
 		}
 
 		// Sort by option values
@@ -5189,15 +5194,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
 		});
 
-		return '
-<div class="tl_sorting tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<div class="tl_select_wrapper"" data-controller="contao--choices">
-<select name="tl_sort" id="tl_sort" class="tl_select">
-' . implode("\n", $options_sorter) . '
-</select>
-</div>
-</div>';
+		$parameters = array(
+			'options' => $options_sorter
+		);
+
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/sort_menu.html.twig', $parameters);
 	}
 
 	/**
