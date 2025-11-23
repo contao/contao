@@ -5030,7 +5030,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$options_sorter[$option_label . '_' . $field] = array(
 				'label' => $option_label,
-				'value' => StringUtil::specialchars($field),
+				'value' => $field,
 				'selected' => (($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field)
 			);
 		}
@@ -5054,8 +5054,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters = array(
 			'active' => $active,
-			'value' => StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? ''),
 			'options' => $options_sorter
+			'value' => $session['search'][$this->strTable]['value'] ?? '',
 		);
 
 		return System::getContainer()
@@ -5174,7 +5174,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$options_sorter[$sortKey] = array(
 				'label' => $options_label,
 				'aria_label' => $aria_label,
-				'value' => StringUtil::specialchars($value),
+				'value' => $value,
 				'selected' => ((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue)
 			);
 		}
