@@ -4957,8 +4957,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Set the search value from the session
 		elseif (isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '')
 		{
-			$parameters = array();
-
 			$searchValue = $session['search'][$this->strTable]['value'];
 			$fld = $session['search'][$this->strTable]['field'] ?? null;
 
