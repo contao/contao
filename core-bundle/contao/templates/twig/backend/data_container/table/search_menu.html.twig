@@ -1,0 +1,14 @@
+{% trans_default_domain "contao_default" %}
+
+<div class="tl_search tl_subpanel">
+    <strong>{{ 'MSC.search'|trans }}:</strong>
+    <div class="tl_select_wrapper" data-controller="contao--choices">
+        <select name="tl_field" class="tl_select{{ active ? ' active' }}">
+            {% for option in options %}
+                <option value="{{ option.value }}" selected="{{ option.selected ? 'selected' }}">{{ option.label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <span>=</span>
+    <input type="search" name="tl_value" class="tl_text{{ active ? ' active' }}" value="{{ value }}"/>
+</div>

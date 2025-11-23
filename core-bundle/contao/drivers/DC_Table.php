@@ -4957,6 +4957,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Set the search value from the session
 		elseif (isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '')
 		{
+			$parameters = array();
+
 			$searchValue = $session['search'][$this->strTable]['value'];
 			$fld = $session['search'][$this->strTable]['field'] ?? null;
 
@@ -5028,7 +5030,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
 			}
 
-			$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options_sorter[$option_label . '_' . $field] = array(
+				'label' => $option_label,
+				'value' => StringUtil::specialchars($field),
+				'selected' => (($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field)
+			);
 		}
 
 		// Sort by option values
@@ -5048,17 +5054,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->setPanelState($active);
 
-		return '
-<div class="tl_search tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-' . implode("\n", $options_sorter) . '
-</select>
-</div>
-<span>=</span>
-<input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
-</div>';
+		$parameters = array(
+			'active' => $active,
+			'value' => StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? ''),
+			'options' => $options_sorter
+		);
+
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/search_menu.html.twig', $parameters);
 	}
 
 	/**
