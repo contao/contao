@@ -23,6 +23,25 @@
         .content > .tree-view:has(>.content-filter) {
             display: grid;
             grid-template-columns: auto var(--filter-width, 240px);
+            grid-template-areas: "listing filter";
+
+            > .content-filter {
+                grid-area: filter;
+            }
+
+            > *:not(.content-filter, .operations) {
+                grid-area: listing;
+            }
+
+            > .operations, > #picker-menu {
+                grid-area: top;
+            }
+
+            &:has(>.operations, > #picker-menu) {
+                grid-template-rows: auto 1fr;
+                grid-template-areas: "top filter"
+                                     "listing filter";
+            }
         }
     }
 }
