@@ -5054,8 +5054,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters = array(
 			'active' => $active,
-			'options' => $options_sorter
 			'value' => $session['search'][$this->strTable]['value'] ?? '',
+			'options' => array_values($options_sorter)
 		);
 
 		return System::getContainer()
@@ -5193,7 +5193,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		});
 
 		$parameters = array(
-			'options' => $options_sorter
+			'options' => array_values($options_sorter)
 		);
 
 		return System::getContainer()
