@@ -2989,6 +2989,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$this->noReload = true;
 						Message::addError($e->getMessage());
+						System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
 
 						break;
 					}

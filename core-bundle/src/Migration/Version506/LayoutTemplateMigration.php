@@ -32,6 +32,18 @@ class LayoutTemplateMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
+        $schemaManager = $this->connection->createSchemaManager();
+
+        if (!$schemaManager->tablesExist(['tl_layout'])) {
+            return false;
+        }
+
+        $columns = $schemaManager->listTableColumns('tl_layout');
+
+        if (!\array_key_exists('type', $columns) || !\array_key_exists('template', $columns)) {
+            return false;
+        }
+
         $test = $this->connection->fetchOne("SELECT TRUE FROM tl_layout WHERE type='modern' AND template='layout/default' LIMIT 1");
 
         return false !== $test;
