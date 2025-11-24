@@ -16,7 +16,7 @@
                     {% set option_attributes = attrs()
                         .set('value', option.value)
                         .set('selected', option.selected)
-                        .set('aria-label', option.aria_label ?? '')
+                        .set('aria-label', option.aria_label|default)
                     %}
                     <option{{ option_attributes }}>{{ option.label }}</option>
                 {% endfor %}
