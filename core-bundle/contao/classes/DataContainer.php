@@ -1312,82 +1312,11 @@ abstract class DataContainer extends Backend
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
 		$args = array();
 
+		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
+
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			if (str_contains($v, ':'))
-			{
-				list($strKey, $strTable) = explode(':', $v, 2);
-				list($strTable, $strField) = explode('.', $strTable, 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
-					->limit(1)
-					->execute($row[$strKey]);
-
-				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
-			}
-			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
-			{
-				$key = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey'], 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-					->limit(1)
-					->execute($row[$v]);
-
-				$args[$k] = $objRef->numRows ? $objRef->value : '';
-			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
-			{
-				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('dateFormat'), $row[$v]) : '-';
-				}
-				elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('timeFormat'), $row[$v]) : '-';
-				}
-				else
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('datimFormat'), $row[$v]) : '-';
-				}
-			}
-			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null)))
-			{
-				$args[$k] = ($row[$v] ?? null) ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-			}
-			elseif (isset($row[$v]))
-			{
-				$row_v = StringUtil::deserialize($row[$v]);
-
-				if (\is_array($row_v))
-				{
-					$args_k = array();
-
-					foreach ($row_v as $option)
-					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
-					}
-
-					$args[$k] = implode(', ', iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($args_k)), false));
-				}
-				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
-				{
-					$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
-				}
-				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
-				{
-					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]];
-				}
-				else
-				{
-					$args[$k] = $row[$v];
-				}
-			}
-			else
-			{
-				$args[$k] = null;
-			}
+			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
 		}
 
 		// Render the label

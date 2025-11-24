@@ -267,6 +267,15 @@ services:
         arguments:
             - '@event_dispatcher'
 
+    contao.data_container.value_formatter:
+        class: Contao\CoreBundle\DataContainer\ValueFormatter
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@translator'
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 
