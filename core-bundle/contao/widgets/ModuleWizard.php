@@ -174,7 +174,7 @@ class ModuleWizard extends Widget
 		}
 
 		// Make sure there is at least an empty array
-		if (!\is_array($this->varValue) || !$this->varValue[0])
+		if (!\is_array($this->varValue) || !($this->varValue[0] ?? null))
 		{
 			$this->varValue = array(array('mod'=>0, 'col'=>'main'));
 		}
