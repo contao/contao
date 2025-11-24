@@ -30,6 +30,10 @@
             <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request) }}">
         {% endif %}
 
+        {% for metaTag in response_context.head.metaTags %}
+            <meta{{ metaTag }}>
+        {% endfor %}
+
         {%- block end_of_head -%}
             {% for element in response_context.end_of_head %}
                 {{ element|raw }}
