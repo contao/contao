@@ -3144,6 +3144,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					{
 						$this->noReload = true;
 						Message::addError($e->getMessage());
+						System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
 
 						break;
 					}
