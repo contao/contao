@@ -104,7 +104,11 @@
     border-bottom: 1px solid var(--content-border);
 
     .tl_formbody {
-        padding: 15px;
+        padding: 12px 15px 15px;
+    }
+
+    > .close {
+        display: none;
     }
 }
 
@@ -130,10 +134,27 @@
         visibility: hidden;
         transition: transform .2s ease, visibility .2s ease;
         will-change: transform, visibility;
+
+        > .close {
+            position: absolute;
+            inset: 12px 12px auto auto;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            border: 0 none;
+            background: transparent;
+            font-size: 30px;
+            line-height: 19px;
+        }
     }
 
-    /* ToDo: add toggle-state-controller */
-    #main.filter-active {
+    li:has(>.header_filter_toggle) {
+        display: initial !important;
+    }
+
+    .content.filter-active {
         .content-filter {
             visibility: visible;
             transform: translateX(0);

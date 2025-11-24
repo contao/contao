@@ -19,6 +19,17 @@ $this->bodyAttributes = $this
     ->mergeWith($this->bodyAttributes)
 ;
 
+$this->mainAttributes = $this
+  ->attrs($this->attributes)
+  ->set('id', 'main')
+  ->addClass('be_main')
+  ->set('aria-labelledby', 'main_headline')
+  ->set('data-controller', 'contao--toggle-state')
+  ->set('data-action', 'keydown.esc@document->contao--toggle-state#close')
+  ->set('data-contao--toggle-state-active-class', 'filter-active')
+  ->mergeWith($this->mainAttributes)
+;
+
 ?>
 <!DOCTYPE html>
 <html<?= $this->rootAttributes ?>>
@@ -100,14 +111,14 @@ $this->bodyAttributes = $this
       <?php $this->endblock(); ?>
 
       <?php $this->block('main'); ?>
-        <main id="main" aria-labelledby="main_headline">
+        <main<?= $this->mainAttributes ?>>
           <?php $this->block('main_headline'); ?>
             <h1 id="main_headline">
               <?= $this->headline ?>
               <?= $this->toggleFavorites ?>
             </h1>
           <?php $this->endblock(); ?>
-          <div class="content">
+          <div class="content" data-contao--toggle-state-target="controls">
             <?php if ($this->pickerMenu): ?>
               <div id="picker-menu">
                 <?= $this->pickerMenu ?>

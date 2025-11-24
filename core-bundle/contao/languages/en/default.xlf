@@ -1670,6 +1670,12 @@
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
       </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
+      </trans-unit>
+      <trans-unit id="MSC.filterClose">
+        <source>Collapse the</source>
+      </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
       </trans-unit>
@@ -2458,6 +2464,12 @@
       </trans-unit>
       <trans-unit id="DCA.collapseNodes.1">
         <source>Collapse all nodes</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Toggle filter</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Expand the filter panel</source>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
