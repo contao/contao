@@ -58,14 +58,28 @@ class ThemeLayoutListener
     #[AsCallback(table: 'tl_layout', target: 'fields.template.attributes')]
     public function adjustFieldsForLegacyType(array $attributes, DataContainer $dc): array
     {
-        unset($attributes['unknownOption']);
-
         if ($this->isLegacy($dc)) {
             $attributes['mandatory'] = false;
             $attributes['submitOnChange'] = false;
         }
 
         return $attributes;
+    }
+
+    #[AsCallback(table: 'tl_layout', target: 'config.onbeforesubmit')]
+    public function resetTemplateForType(array $values, DataContainer $dc): array
+    {
+        if (!isset($values['type'])) {
+            return $values;
+        }
+
+        $current = $dc->getCurrentRecord();
+
+        if ($current['type'] !== $values['type']) {
+            $values['template'] = '';
+        }
+
+        return $values;
     }
 
     private function isLegacy(DataContainer $dc): bool
