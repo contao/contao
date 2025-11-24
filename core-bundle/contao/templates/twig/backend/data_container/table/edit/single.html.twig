@@ -1,0 +1,22 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/backend/data_container/table/edit/_edit.html.twig" %}
+
+{% block header %}
+    {{ version_dropdown|raw }}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block form_body %}
+    <input type="hidden" name="FORM_SUBMIT" value="{{ table }}">
+    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+    {% if version_number is not null %}
+        <input type="hidden" name="VERSION_NUMBER" value="{{ version_number }}">
+    {% endif %}
+
+    {% embed "@Contao/backend/data_container/table/edit/_boxes.html.twig" %}
+        {% block widget_groups %}
+            <div class="widget-group">{{ parent() }}</div>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

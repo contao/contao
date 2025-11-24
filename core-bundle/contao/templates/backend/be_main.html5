@@ -13,8 +13,9 @@ $this->bodyAttributes = $this
     ->set('id', 'top')
     ->addClass('be_main')
     ->addClass('popup', $this->isPopup)
-    ->set('data-controller', 'contao--tooltips')
-    ->set('data-action', 'touchstart@document->contao--tooltips#touchStart')
+    ->set('data-controller', 'contao--tooltips contao--toggle-state')
+    ->set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
+    ->set('data-contao--toggle-state-active-class', 'active')
     ->mergeWith($this->bodyAttributes)
 ;
 
@@ -87,7 +88,7 @@ $this->bodyAttributes = $this
 
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>
-          <aside id="left">
+          <aside id="left" data-contao--toggle-state-target="controls">
             <?= $this->menu ?>
             <div class="version">
               <?php $this->block('version'); ?>
@@ -100,7 +101,12 @@ $this->bodyAttributes = $this
 
       <?php $this->block('main'); ?>
         <main id="main" aria-labelledby="main_headline">
-          <h1 id="main_headline"><?= $this->headline ?></h1>
+          <?php $this->block('main_headline'); ?>
+            <h1 id="main_headline">
+              <?= $this->headline ?>
+              <?= $this->toggleFavorites ?>
+            </h1>
+          <?php $this->endblock(); ?>
           <div class="content">
             <?php if ($this->pickerMenu): ?>
               <div id="picker-menu">

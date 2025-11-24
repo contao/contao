@@ -338,7 +338,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function getReferer($blnEncodeAmpersands = false, $strTable = null): never
+    public static function getReferer($blnEncodeAmpersands = false, $strTable = null, $intLevel = 1): never
     {
         self::throwOnAccess();
     }
@@ -663,6 +663,9 @@ final class FragmentTemplate extends Template
         self::throwOnAccess();
     }
 
+    /**
+     * @throws \Exception
+     */
     private static function throwOnAccess(): never
     {
         $function = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];

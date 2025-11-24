@@ -13,10 +13,6 @@
         will-change: transform;
     }
 
-    .show-navigation #main {
-        transform: translateX(240px);
-    }
-
     #left {
         visibility: hidden;
         width: 240px;
@@ -26,9 +22,13 @@
         will-change: transform, visibility;
     }
 
-    .show-navigation #left {
+    #left.active {
         visibility: visible;
         transform: translateX(240px);
+
+        + #main {
+            transform: translateX(240px);
+        }
     }
 
     #tmenu .burger {
@@ -266,7 +266,7 @@
         --widget-gap-cols: 30px;
     }
 
-    .w16, .w25, .w33, .w50, .w75 {
+    .w16, .w25, .w33, .w50, .w66, .w75 {
         --widget-cols: 6;
     }
 
@@ -286,7 +286,7 @@
         min-height: 80px;
     }
 
-    .nogrid :not(.widget-group) > :is(.w25, .w33, .w50, .w66, .w75) {
+    .nogrid :not(.widget-group) > :is(.w16, .w25, .w33, .w50, .w66, .w75) {
         float: none;
     }
 
@@ -316,6 +316,10 @@
 
     .w50 {
         --widget-cols: 6;
+    }
+
+    .w66 {
+        --widget-cols: 8;
     }
 
     .w75 {
@@ -426,5 +430,11 @@
 
     .split-button > button[type="button"]:focus {
         outline: none;
+    }
+}
+
+@media (width >= 1280px) {
+    .d-xl-none {
+        display: none;
     }
 }

@@ -608,6 +608,9 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
       </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

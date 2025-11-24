@@ -1,7 +1,9 @@
 import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
 import '@hotwired/turbo';
+import PasswordVisibility from '@stimulus-components/password-visibility';
 import WebAuthn from '@web-auth/webauthn-stimulus';
+import TextareaAutogrow from 'stimulus-textarea-autogrow';
 
 import './scripts/mootao.js';
 import './scripts/core.js';
@@ -12,6 +14,7 @@ import './styles/backend.pcss';
 // Start the Stimulus application
 const application = Application.start();
 application.debug = process.env.NODE_ENV === 'development';
+application.register('contao--textarea-autogrow', TextareaAutogrow);
 
 // Register all controllers with `contao--` prefix
 const context = require.context('./controllers', true, /\.js$/);
@@ -28,6 +31,7 @@ application.load(
 );
 
 application.register('contao--webauthn', WebAuthn);
+application.register('contao--password-visibility', PasswordVisibility);
 
 document.documentElement.addEventListener('turbo:before-prefetch', (e) => {
     if (
@@ -85,21 +89,4 @@ document.documentElement.addEventListener('turbo:before-cache', (e) => {
 
     // Remove the Symfony toolbar
     e.target.querySelector('.sf-toolbar')?.remove();
-});
-
-// If the previously fetched resource got redirected and a full page reload
-// occurs, Turbo currently uses the wrong URL (the originally fetched one, not
-// the effective URL after the redirect).
-// TODO: Remove again once hotwired/turbo#1391 is fixed.
-let targetURLAfterRedirectedFetch = null;
-
-document.documentElement.addEventListener('turbo:reload', (event) => {
-    if (event.detail.reason !== 'request_failed' && targetURLAfterRedirectedFetch) {
-        Turbo.session.adapter.location = new URL(targetURLAfterRedirectedFetch);
-    }
-});
-
-document.documentElement.addEventListener('turbo:before-fetch-response', (event) => {
-    const response = event.detail.fetchResponse;
-    targetURLAfterRedirectedFetch = response.redirected ? response.response.url : null;
 });

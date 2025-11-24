@@ -53,11 +53,23 @@ class ScopeMatcher
 
     public function isBackendRequest(Request|null $request = null): bool
     {
-        return $this->backendMatcher->matches($request ?? $this->requestStack->getCurrentRequest());
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
+        return $this->backendMatcher->matches($request);
     }
 
     public function isFrontendRequest(Request|null $request = null): bool
     {
-        return $this->frontendMatcher->matches($request ?? $this->requestStack->getCurrentRequest());
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
+        return $this->frontendMatcher->matches($request);
     }
 }

@@ -30,6 +30,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TableDataContainerProviderTest extends AbstractProviderTestCase
 {
@@ -53,6 +54,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createMock(AccessDecisionManagerInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(DcaUrlAnalyzer::class),
+            $this->createMock(TranslatorInterface::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -132,6 +134,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createMock(AccessDecisionManagerInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(DcaUrlAnalyzer::class),
+            $this->createMock(TranslatorInterface::class),
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

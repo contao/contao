@@ -258,6 +258,25 @@ class FinderTest extends TestCase
         $this->assertSame($expected, $options);
     }
 
+    public function testGetAsTemplateOptionsWithoutDefaultKey(): void
+    {
+        $options = $this->getFinder()
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->excludePartials()
+            ->asTemplateOptions(false)
+        ;
+
+        $expected = [
+            'content_element/text' => 'content_element/text [App, ContaoCore]',
+            'content_element/text/bar' => 'content_element/text/bar [App]',
+            'content_element/text/foo' => 'content_element/text/foo [App]',
+            'content_element/text/foo_bar' => 'content_element/text/foo_bar [App]',
+        ];
+
+        $this->assertSame($expected, $options);
+    }
+
     private function getFinder(array $translations = []): Finder
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
