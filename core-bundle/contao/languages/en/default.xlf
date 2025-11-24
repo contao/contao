@@ -1673,9 +1673,6 @@
       <trans-unit id="MSC.filterTitle">
         <source>Filter</source>
       </trans-unit>
-      <trans-unit id="MSC.filterClose">
-        <source>Collapse the</source>
-      </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
       </trans-unit>
