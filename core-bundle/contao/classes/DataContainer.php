@@ -1163,7 +1163,7 @@ abstract class DataContainer extends Backend
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
   ' . $return . '
-</div>' . $submit. '
+</div>' . $submit . '
 </form>';
 
 		return $return;
