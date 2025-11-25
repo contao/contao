@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.57] (2025-11-25)
+
+**Security fixes:**
+
+- [CVE-2025-65961]: Cross-site scripting in templates
+- [CVE-2025-65960]: Remote code execution in template closures
+
 ## [4.13.56] (2025-08-28)
 
 **Security fixes:**
@@ -255,7 +262,7 @@ This project adheres to [Semantic Versioning].
 - [#6721] Revert "Allow data-lightbox in TinyMCE by default" ([fritzmg])
 - [#6697] Fix an error if a gallery image does not exist ([fritzmg])
 - [#6474] Retrieve the `PageModel` correctly in `ContaoMailer` ([fritzmg])
-- [#6692] Make `FrontendTemplateTrait::getTemplate()` static ([Shadow-Devil])
+- [#6692] Make `FrontendTemplateTrait::getTemplate()` static ([f-schnabel])
 - [#6699] Fix the compression in the `contao:backup:create` command ([Toflar])
 - [#6700] Fix tests when `MAILER_DSN` env var is defined ([fritzmg])
 - [#6684] Do not overwrite `id`, `pid`, `ptable` and `sorting` when restoring a version ([leofeyer])
@@ -1145,6 +1152,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.57]: https://github.com/contao/contao/releases/tag/4.13.57
 [4.13.56]: https://github.com/contao/contao/releases/tag/4.13.56
 [4.13.55]: https://github.com/contao/contao/releases/tag/4.13.55
 [4.13.54]: https://github.com/contao/contao/releases/tag/4.13.54
@@ -1205,6 +1213,8 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
+[CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
 [CVE-2025-57756]: https://github.com/contao/contao/security/advisories/GHSA-2xmj-8wmq-7475
 [CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
@@ -1237,6 +1247,7 @@ This project adheres to [Semantic Versioning].
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
 [e-spin]: https://github.com/e-spin
+[f-schnabel]: https://github.com/f-schnabel
 [fiedsch]: https://github.com/fiedsch
 [fritzmg]: https://github.com/fritzmg
 [janborg]: https://github.com/janborg
@@ -1252,7 +1263,6 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [rorych]: https://github.com/rorych
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
-[Shadow-Devil]: https://github.com/Shadow-Devil
 [sheeep]: https://github.com/sheeep
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
