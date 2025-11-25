@@ -5152,28 +5152,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$sortKey = $options_label . '|ASC';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
-				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['ascending']);
-				$options_label .= ' ↑';
+				$order = 'ASC';
 			}
 			elseif (str_ends_with($value, ' DESC'))
 			{
 				$sortKey = $options_label . '|DESC';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
-				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['descending']);
-				$options_label .= ' ↓';
+				$order = 'DESC';
 			}
 			else
 			{
 				$sortKey = $options_label;
 				$sessionValue = str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? '');
-				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label);
+				$order = null;
 			}
 
 			$options_sorter[$sortKey] = array(
 				'label' => $options_label,
-				'aria_label' => $aria_label,
 				'value' => $value,
-				'selected' => ((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue)
+				'selected' => ((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue),
+				'order' => $order,
 			);
 		}
 

@@ -17,8 +17,13 @@
                     .set('selected', option.selected)
                     .set('aria-label', option.aria_label|default)
                 %}
-                <option{{ option_attributes }}>{{ option.label }}</option>
-
+                {% if option.order == 'ASC' %}
+                    <option{{ option_attributes.set('aria-label', 'MSC.list_orderBy'|trans(["#{option.label} #{'MSC.ascending'|trans}"])) }}>{{ option.label }} ↑</option>
+                {% elseif option.order == 'DESC' %}
+                    <option{{ option_attributes.set('aria-label', 'MSC.list_orderBy'|trans(["#{option.label} #{'MSC.descending'|trans}"])) }}>{{ option.label }} ↓</option>
+                {% else %}
+                    <option{{ option_attributes }}>{{ option.label }}</option>
+                {% endif %}
             {% endfor %}
         </select>
     </div>
