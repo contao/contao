@@ -2,6 +2,26 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.42] (2025-11-25)
+
+**Security fixes:**
+
+- [CVE-2025-65961]: Cross-site scripting in templates
+- [CVE-2025-65960]: Remote code execution in template closures
+
+**Fixed issues:**
+
+- [#9032] Also delete the dev cache in `contao-setup` ([fritzmg])
+- [#8997] Fix `isHidden()` for `ContentProxy` ([fritzmg])
+- [#9023] Fix a PHP8 issue in the module wizard ([aschempp])
+- [#9024] Fix rendering member fields without label ([aschempp])
+- [#9011] Only load disabled images in `AjaxRequest.toggleField` if they exist ([zoglo])
+- [#8945] Use the original Swiper markup ([leofeyer])
+- [#9015] Ignore web profiler requests in the search index and fix the back end request regex ([fritzmg])
+- [#8991] Move the try/catch block only around the insert statement ([bytehead])
+- [#8993] Fix a bug with HTML encoded styles in `HtmlAttributes` ([ausi])
+- [#8996] Fix a typo for `addBefore` in `ModuleFaqReader` ([fritzmg])
+
 ## [5.3.41] (2025-11-13)
 
 **Fixed issues:**
@@ -823,6 +843,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.42]: https://github.com/contao/contao/releases/tag/5.3.42
 [5.3.41]: https://github.com/contao/contao/releases/tag/5.3.41
 [5.3.40]: https://github.com/contao/contao/releases/tag/5.3.40
 [5.3.39]: https://github.com/contao/contao/releases/tag/5.3.39
@@ -869,6 +890,8 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
+[CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
 [CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
@@ -1467,7 +1490,17 @@ This project adheres to [Semantic Versioning].
 [#8936]: https://github.com/contao/contao/pull/8936
 [#8937]: https://github.com/contao/contao/pull/8937
 [#8941]: https://github.com/contao/contao/pull/8941
+[#8945]: https://github.com/contao/contao/pull/8945
 [#8946]: https://github.com/contao/contao/pull/8946
 [#8959]: https://github.com/contao/contao/pull/8959
 [#8969]: https://github.com/contao/contao/pull/8969
 [#8986]: https://github.com/contao/contao/pull/8986
+[#8991]: https://github.com/contao/contao/pull/8991
+[#8993]: https://github.com/contao/contao/pull/8993
+[#8996]: https://github.com/contao/contao/pull/8996
+[#8997]: https://github.com/contao/contao/pull/8997
+[#9011]: https://github.com/contao/contao/pull/9011
+[#9015]: https://github.com/contao/contao/pull/9015
+[#9023]: https://github.com/contao/contao/pull/9023
+[#9024]: https://github.com/contao/contao/pull/9024
+[#9032]: https://github.com/contao/contao/pull/9032
