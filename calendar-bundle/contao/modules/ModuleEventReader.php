@@ -260,7 +260,7 @@ class ModuleEventReader extends Events
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 		$objTemplate->calendar = CalendarModel::findById($objEvent->pid);
 		$objTemplate->count = 0; // see #74
-		$objTemplate->details = '';
+		$objTemplate->details = Template::once(static fn () => '');
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
 
@@ -274,7 +274,7 @@ class ModuleEventReader extends Events
 		// Display the "read more" button for external/article links
 		if ($objEvent->source != 'default')
 		{
-			$objTemplate->hasDetails = true;
+			$objTemplate->hasDetails = Template::once(static fn () => true);
 			$objTemplate->hasReader = false;
 		}
 

@@ -119,7 +119,7 @@ class Comments extends Frontend
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-					$objPartial->reply = System::getContainer()->get('contao.insert_tag.parser')->replace($objComments->reply);
+					$objPartial->reply = $objComments->reply;
 					$objPartial->author = $objAuthor;
 				}
 
