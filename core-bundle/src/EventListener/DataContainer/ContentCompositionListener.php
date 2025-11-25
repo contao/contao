@@ -57,14 +57,15 @@ class ContentCompositionListener
             return;
         }
 
+        $record = $operation->getRecord();
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow($operation->getRecord());
+        $pageModel->setRow($record);
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
             $operation->hide();
         } else {
-            $operation->setUrl($this->urlGenerator->generate('contao_backend', ['do' => 'article', 'pn' => $operation->getRecord()['id']]));
+            $operation->setUrl($this->urlGenerator->generate('contao_backend', ['do' => 'article', 'pn' => $record['id']]));
         }
     }
 
