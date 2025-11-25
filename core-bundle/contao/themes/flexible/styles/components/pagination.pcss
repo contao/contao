@@ -4,24 +4,30 @@
     margin-bottom: 18px;
     border: solid var(--border);
     border-width: 1px 0;
-    padding: 12px 15px;
+    padding: 2px 15px;
 }
 
 .pagination ul {
     width: 60%;
     float: right;
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .pagination p {
     width: 30%;
     float: left;
     margin-bottom: 0;
+    padding-block: 5px;
 }
 
 .pagination li {
-    display: inline;
-    padding-left: 3px;
+    > * {
+        display: block;
+        padding-inline: 8px;
+        line-height: 24px;
+    }
 }
 
 .pagination .active {
@@ -31,5 +37,5 @@
 .pagination-lp {
     margin-bottom: 0;
     border-bottom: 0;
-    padding: 15px 12px;
+    padding: 5px 12px;
 }
