@@ -5032,7 +5032,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$options_sorter[$option_label . '_' . $field] = array(
 				'label' => $option_label,
 				'value' => $field,
-				'selected' => (($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field)
+				'selected' => ($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field,
 			);
 		}
 
@@ -5058,7 +5058,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->render('@Contao/backend/data_container/table/menu/search.html.twig', array(
 				'active' => $active,
 				'value' => $session['search'][$this->strTable]['value'] ?? '',
-				'options' => array_values($options_sorter)
+				'options' => array_values($options_sorter),
 			));
 	}
 
@@ -5171,7 +5171,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$options_sorter[$sortKey] = array(
 				'label' => $options_label,
 				'value' => $value,
-				'selected' => ((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue),
+				'selected' => (!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue,
 				'order' => $order,
 			);
 		}
@@ -5192,7 +5192,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return System::getContainer()
 			->get('twig')
 			->render('@Contao/backend/data_container/table/menu/sort.html.twig', array(
-				'options' => array_values($options_sorter)
+				'options' => array_values($options_sorter),
 			));
 	}
 
