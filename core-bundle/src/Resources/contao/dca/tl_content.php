@@ -1307,7 +1307,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $type . '</div>
-<div class="' . trim($class) . '">
+<div class="' . trim($class) . '" style="contain:paint">
 ' . StringUtil::insertTagToSrc($this->getContentElement($objModel)) . '
 </div>' . "\n";
 	}

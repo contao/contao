@@ -162,17 +162,17 @@ class DynamicExtendsTokenParserTest extends TestCase
     {
         yield 'extend from within a block' => [
             "{% block b %}{% extends '@Foo/bar.html.twig' %}{% endblock %}",
-            'Cannot use "extends" in a block.',
+            'Cannot use "extends" in a block',
         ];
 
         yield 'extend from within macro' => [
             "{% macro m() %}{% extends '@Foo/bar.html.twig' %}{% endmacro %}",
-            'Cannot use "extends" in a macro.',
+            'Cannot use "extends" in a macro',
         ];
 
         yield 'multiple extends' => [
             "{% extends '@Foo/bar1.html.twig' %}{% extends '@Foo/bar2.html.twig' %}",
-            'Multiple extends tags are forbidden.',
+            'Multiple extends tags are forbidden',
         ];
     }
 }
