@@ -38,7 +38,8 @@ class ContextFactoryTest extends TestCase
             'lazy2' => static fn (int $n = 0): string => "evaluated: $n",
             'lazy3' => static fn (): array => [1, 2],
             'lazy4' => $closure(...),
-            'value' => 'strtolower', // do not confuse with callable
+            'value' => 'strtolower', // do not confuse with callable,
+            'has_foo' => Template::once(static fn (): bool => false),
         ];
 
         $template = $this->createMock(Template::class);
@@ -58,6 +59,7 @@ class ContextFactoryTest extends TestCase
                 lazy3: {{ lazy3.invoke()|join('|') }}
                 lazy4: {{ lazy4 }}
                 value: {{ value }}
+                has_foo? {% if has_foo.invoke() %}yes{% else %}no{% endif %}.
 
                 TEMPLATE;
 
@@ -72,6 +74,7 @@ class ContextFactoryTest extends TestCase
                 lazy3: 1|2
                 lazy4: evaluated Closure
                 value: strtolower
+                has_foo? no.
 
                 OUTPUT;
 
