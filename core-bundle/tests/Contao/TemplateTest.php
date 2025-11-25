@@ -20,6 +20,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Contao\Template;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -456,5 +457,24 @@ class TemplateTest extends TestCase
             '[{][}]<script>[{][}]</script>[{][}]<script>[{][}]</script>[{][}]',
             '&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;',
         ];
+    }
+
+    public function testOnceHelperExecutesCodeOnce(): void
+    {
+        $invocationCount = 0;
+
+        $expensiveFunction = static function () use (&$invocationCount) {
+            ++$invocationCount;
+
+            return false;
+        };
+
+        $template = new FrontendTemplate();
+        $template->hasFoo = Template::once($expensiveFunction);
+
+        $this->assertFalse($template->hasFoo, 'first call');
+        $this->assertFalse($template->hasFoo, 'second call');
+
+        $this->assertSame(1, $invocationCount);
     }
 }
