@@ -6,6 +6,7 @@
         .set('id', name)
         .addClass('tl_select')
         .addClass('active', active|default)
+        .mergeWith(select_attributes|default)
     %}
     <select{{ select_attributes }}>
         {% for option in options %}

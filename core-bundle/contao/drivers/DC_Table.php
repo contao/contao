@@ -5059,7 +5059,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'active' => $active,
 				'value' => $session['search'][$this->strTable]['value'] ?? '',
 				'options' => array_values($options_sorter),
-			));
+			))
+		;
 	}
 
 	/**
@@ -5193,7 +5194,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->get('twig')
 			->render('@Contao/backend/data_container/table/menu/sort.html.twig', array(
 				'options' => array_values($options_sorter),
-			));
+			))
+		;
 	}
 
 	/**
@@ -5209,7 +5211,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session = $objSessionBag->all();
 
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
-		$fields = '';
+
+		$active = false;
+		$options = array();
 
 		// Set limit from user input
 		if (\in_array(Input::post('FORM_SUBMIT'), array('tl_filters', 'tl_filters_limit')))
@@ -5278,8 +5282,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$session['filter'][$filter]['limit'] = Config::get('maxResultsPerPage');
 			}
 
-			$options = '';
-
 			// Build options
 			if ($this->total > 0)
 			{
@@ -5302,14 +5304,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$upper_limit = $this->total;
 					}
 
-					$options .= '
-  <option value="' . $this_limit . '"' . Widget::optionSelected($this->limit, $this_limit) . '>' . ($i*Config::get('resultsPerPage')+1) . ' - ' . $upper_limit . '</option>';
+					$options[] = array(
+						'label' => ($i * Config::get('resultsPerPage') + 1) . ' - ' . $upper_limit,
+						'value' => $this_limit,
+						'selected' => $this->limit === $this_limit,
+					);
 				}
 
 				if (!$blnIsMaxResultsPerPage)
 				{
-					$options .= '
-  <option value="all"' . Widget::optionSelected($this->limit, null) . '>' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</option>';
+					$options[] = array(
+						'label' => $GLOBALS['TL_LANG']['MSC']['filterAll'],
+						'value' => 'all',
+						'selected' => $this->limit === null,
+					);
 				}
 			}
 
@@ -5329,19 +5337,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$this->setPanelState($active);
 			}
-
-			$fields = '
-<div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.requestSubmit()">
-  ' . $options . '
-</select>
-</div> ';
 		}
 
-		return '
-<div class="tl_limit tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['showOnly'] . ':</strong> ' . $fields . '
-</div>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/limit.html.twig', array(
+				'active' => $active,
+				'options' => $options,
+			))
+		;
 	}
 
 	/**
