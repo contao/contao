@@ -5052,15 +5052,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->setPanelState($active);
 
-		$parameters = array(
-			'active' => $active,
-			'value' => $session['search'][$this->strTable]['value'] ?? '',
-			'options' => array_values($options_sorter)
-		);
-
 		return System::getContainer()
 			->get('twig')
-			->render('@Contao/backend/data_container/table/search_menu.html.twig', $parameters);
+			->render('@Contao/backend/data_container/table/menu/search.html.twig', array(
+				'active' => $active,
+				'value' => $session['search'][$this->strTable]['value'] ?? '',
+				'options' => array_values($options_sorter)
+			));
 	}
 
 	/**
@@ -5192,13 +5190,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
 		});
 
-		$parameters = array(
-			'options' => array_values($options_sorter)
-		);
-
 		return System::getContainer()
 			->get('twig')
-			->render('@Contao/backend/data_container/table/sort_menu.html.twig', $parameters);
+			->render('@Contao/backend/data_container/table/menu/sort.html.twig', array(
+				'options' => array_values($options_sorter)
+			));
 	}
 
 	/**
