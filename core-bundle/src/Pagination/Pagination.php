@@ -32,7 +32,7 @@ class Pagination implements PaginationInterface
     {
         $this->pageCount = $config->getPerPage() > 0 ? (int) ceil($config->getTotal() / $config->getPerPage()) : 0;
 
-        $currentPage = $this->config->getRequest()?->query->getInt($this->getQueryParameterName(), 1) ?? 1;
+        $currentPage = $config->getCurrentPage() ?? $this->config->getRequest()?->query->getInt($this->getQueryParameterName(), 1) ?? 1;
 
         if ($currentPage < 1 || $currentPage > $this->pageCount) {
             if (!$config->getIgnoreOutOfBounds()) {
