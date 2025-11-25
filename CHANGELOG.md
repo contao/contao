@@ -2,6 +2,33 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.5] (2025-11-25)
+
+**Security fixes:**
+
+- [CVE-2025-65961]: Cross-site scripting in templates
+- [CVE-2025-65960]: Remote code execution in template closures
+
+**Fixed issues:**
+
+- [#8706] Use the attributes callback to initialize the layout template widget ([aschempp])
+- [#9033] Output custom meta tags in Twig layouts ([fritzmg])
+- [#9019] Check if operation description exists ([aschempp])
+- [#9020] Fix `supportsSource` of `PageCommentsVoter` ([fritzmg])
+- [#9025] Make class optional again for global operation with icon and button callback ([fritzmg])
+- [#9027] Set widget error on onbeforesubmit exception ([aschempp])
+- [#9004] Change the name of the default layout template in Twig layouts ([m-vo])
+- [#9014] Improve the Template Studio cache invalidation ([m-vo])
+- [#9001] Fix the picker offset in the list view ([zoglo])
+- [#9009] Provide the index to SEAL when reindexing ([Toflar])
+- [#8774] Add deferred execution for Twig layouts ([m-vo])
+- [#9000] Rename the `is--hidden` class to `is-hidden` ([leofeyer])
+- [#8988] Fix table sorting error in mutation observer ([aschempp])
+- [#8782] Analyze if parent slots were overwritten in the Twig inspector ([m-vo])
+- [#8989] Allow overriding the table header and footer blocks ([aschempp])
+- [#8783] Render both content elements and front end modules in the Twig layout ([m-vo])
+- [#8966] Increase the z-index of the jobs overlay ([stefansl])
+
 ## [5.6.4] (2025-10-31)
 
 **Fixed issues:**
@@ -238,6 +265,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.5]: https://github.com/contao/contao/releases/tag/5.6.5
 [5.6.4]: https://github.com/contao/contao/releases/tag/5.6.4
 [5.6.3]: https://github.com/contao/contao/releases/tag/5.6.3
 [5.6.2]: https://github.com/contao/contao/releases/tag/5.6.2
@@ -246,6 +274,8 @@ This project adheres to [Semantic Versioning].
 [5.6.0-RC3]: https://github.com/contao/contao/releases/tag/5.6.0-RC3
 [5.6.0-RC2]: https://github.com/contao/contao/releases/tag/5.6.0-RC2
 [5.6.0-RC1]: https://github.com/contao/contao/releases/tag/5.6.0-RC1
+[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
+[CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
 [CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
@@ -260,6 +290,7 @@ This project adheres to [Semantic Versioning].
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
+[stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [Werbeagentur-Kopfnuss]: https://github.com/Werbeagentur-Kopfnuss
@@ -401,6 +432,7 @@ This project adheres to [Semantic Versioning].
 [#8696]: https://github.com/contao/contao/pull/8696
 [#8697]: https://github.com/contao/contao/pull/8697
 [#8700]: https://github.com/contao/contao/pull/8700
+[#8706]: https://github.com/contao/contao/pull/8706
 [#8707]: https://github.com/contao/contao/pull/8707
 [#8710]: https://github.com/contao/contao/pull/8710
 [#8715]: https://github.com/contao/contao/pull/8715
@@ -416,8 +448,11 @@ This project adheres to [Semantic Versioning].
 [#8768]: https://github.com/contao/contao/pull/8768
 [#8769]: https://github.com/contao/contao/pull/8769
 [#8773]: https://github.com/contao/contao/pull/8773
+[#8774]: https://github.com/contao/contao/pull/8774
 [#8775]: https://github.com/contao/contao/pull/8775
 [#8777]: https://github.com/contao/contao/pull/8777
+[#8782]: https://github.com/contao/contao/pull/8782
+[#8783]: https://github.com/contao/contao/pull/8783
 [#8784]: https://github.com/contao/contao/pull/8784
 [#8788]: https://github.com/contao/contao/pull/8788
 [#8790]: https://github.com/contao/contao/pull/8790
@@ -449,3 +484,16 @@ This project adheres to [Semantic Versioning].
 [#8954]: https://github.com/contao/contao/pull/8954
 [#8956]: https://github.com/contao/contao/pull/8956
 [#8958]: https://github.com/contao/contao/pull/8958
+[#8966]: https://github.com/contao/contao/pull/8966
+[#8988]: https://github.com/contao/contao/pull/8988
+[#8989]: https://github.com/contao/contao/pull/8989
+[#9000]: https://github.com/contao/contao/pull/9000
+[#9001]: https://github.com/contao/contao/pull/9001
+[#9004]: https://github.com/contao/contao/pull/9004
+[#9009]: https://github.com/contao/contao/pull/9009
+[#9014]: https://github.com/contao/contao/pull/9014
+[#9019]: https://github.com/contao/contao/pull/9019
+[#9020]: https://github.com/contao/contao/pull/9020
+[#9025]: https://github.com/contao/contao/pull/9025
+[#9027]: https://github.com/contao/contao/pull/9027
+[#9033]: https://github.com/contao/contao/pull/9033

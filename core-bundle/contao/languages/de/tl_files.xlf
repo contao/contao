@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_files.move.0">
         <source>Upload files</source>
-        <target>Dateiupload</target>
+        <target>Dateien hochladen</target>
       </trans-unit>
       <trans-unit id="tl_files.move.1">
         <source>Upload files to the server</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_files.upload.0">
         <source>Upload files</source>
-        <target>Dateien hochladen</target>
+        <target>Dateiupload</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>
