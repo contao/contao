@@ -1,22 +1,13 @@
 {% trans_default_domain "contao_default" %}
 
-{% set select_attributes = attrs()
-    .set('name', 'tl_field')
-    .addClass('tl_select')
-    .addClass('active', active)
-%}
-
-{% set input_attributes = attrs()
-    .set('type', 'search')
-    .set('name', 'tl_value')
-    .set('value', value)
-    .addClass('tl_text')
-    .addClass('active', active)
-%}
-
 <div class="tl_search tl_subpanel">
     <strong>{{ 'MSC.search'|trans }}:</strong>
 
+    {% set select_attributes = attrs()
+        .set('name', 'tl_field')
+        .addClass('tl_select')
+        .addClass('active', active)
+    %}
     <div class="tl_select_wrapper" data-controller="contao--choices">
         <select{{ select_attributes }}>
             {% for option in options %}
@@ -34,5 +25,12 @@
 
     <span>=</span>
 
+    {% set input_attributes = attrs()
+        .set('type', 'search')
+        .set('name', 'tl_value')
+        .set('value', value)
+        .addClass('tl_text')
+        .addClass('active', active)
+    %}
     <input{{ input_attributes }}/>
 </div>
