@@ -257,7 +257,7 @@ class ModuleSearch extends Module
 				// Shorten the context and highlight all keywords
 				if (!empty($arrContext))
 				{
-					$objTemplate->context = trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength));
+					$objTemplate->context = StringUtil::specialchars(trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength)));
 					$objTemplate->context = preg_replace('((?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$))ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;
