@@ -22,6 +22,8 @@ class PaginationConfig
 
     private bool $ignoreOutOfBounds = false;
 
+    private int|null $currentPage = null;
+
     public function __construct(
         private readonly string $queryParameterName,
         private readonly int $total,
@@ -64,6 +66,17 @@ class PaginationConfig
         return $clone;
     }
 
+    /**
+     * Forces the pagination to use the given page number as the current page.
+     */
+    public function withCurrentPage(int $currentPage): self
+    {
+        $clone = clone $this;
+        $clone->currentPage = $currentPage;
+
+        return $clone;
+    }
+
     public function getQueryParameterName(): string
     {
         return $this->queryParameterName;
@@ -92,5 +105,10 @@ class PaginationConfig
     public function getIgnoreOutOfBounds(): bool
     {
         return $this->ignoreOutOfBounds;
+    }
+
+    public function getCurrentPage(): int|null
+    {
+        return $this->currentPage;
     }
 }
