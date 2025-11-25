@@ -10,6 +10,11 @@
 {% block head %}
     <meta charset="UTF-8">
     <meta name="generator" content="Contao Open Source CMS">
+
+    {% block viewport %}
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+    {% endblock %}
+
     {# Defer accessing the response context, so that elements coming after it can still affect it. #}
     {% defer %}
         {%- block title %}
@@ -20,12 +25,12 @@
              <title>{{ title }}</title>
         {%- endblock -%}
 
-        {% block viewport %}
-            <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
-        {% endblock %}
-
         <meta name="robots" content="{{ response_context.head.metaRobots }}">
         <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
+        {% for metaTag in response_context.head.metaTags %}
+            <meta{{ metaTag }}>
+        {% endfor %}
+
         {% if page['enableCanonical'] -%}
             <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request) }}">
         {% endif %}
