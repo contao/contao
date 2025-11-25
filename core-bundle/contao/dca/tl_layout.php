@@ -48,8 +48,12 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_layout', 'listLayout')
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('name'),
+			'format'                  => '%s',
+		),
 	),
 
 	// Palettes
@@ -352,18 +356,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  */
 class tl_layout extends Backend
 {
-	/**
-	 * List a page layout
-	 *
-	 * @param array $row
-	 *
-	 * @return string
-	 */
-	public function listLayout($row)
-	{
-		return '<div class="tl_content_left">' . $row['name'] . '</div>';
-	}
-
 	/**
 	 * Auto-select layout.css if responsive.css is selected (see #8222)
 	 *

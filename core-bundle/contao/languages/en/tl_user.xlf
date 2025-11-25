@@ -332,6 +332,9 @@
       <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_user.tableLabel">
+        <source>User</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

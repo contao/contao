@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -198,14 +199,24 @@ class DefaultOperationsListener
             ];
         }
 
-        return $operations + [
-            'show' => [
-                'href' => 'act=show',
-                'icon' => 'show.svg',
+        $operations['show'] = [
+            'href' => 'act=show',
+            'icon' => 'show.svg',
+            'method' => 'GET',
+            'prefetch' => false,
+        ];
+
+        if ($canEdit && ($GLOBALS['TL_DCA'][$table]['config']['enableVersioning'] ?? false)) {
+            $operations['versions'] = [
+                'href' => 'act=edit&versions=1',
+                'icon' => 'diff.svg',
                 'method' => 'GET',
                 'prefetch' => false,
-            ],
-        ];
+                'button_callback' => $this->diffCallback($table),
+            ];
+        }
+
+        return $operations;
     }
 
     private function isGrantedCallback(string $actionClass, string $table, array|null $new = null): \Closure
@@ -295,6 +306,29 @@ class DefaultOperationsListener
         }
 
         return $field;
+    }
+
+    private function diffCallback(string $table): \Closure
+    {
+        $versionIds = null;
+
+        return function (DataContainerOperation $operation) use ($table, &$versionIds): void {
+            if (null === $versionIds) {
+                $versionIds = $this->connection->fetchFirstColumn(
+                    'SELECT pid, COUNT(*) AS total FROM tl_version WHERE fromTable=? GROUP BY pid HAVING total > 1',
+                    [$table],
+                );
+            }
+
+            $operation['attributes'] = 'onclick="Backend.openModalIframe({title:\''.StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $operation->getRecord()['id'], $table)).'\', url:this.href+\'&popup=1&nb=1\'});return false"';
+
+            if (
+                !\in_array($operation->getRecord()['id'], $versionIds, false)
+                || !$this->isGranted(UpdateAction::class, $table, $operation)
+            ) {
+                $operation->disable();
+            }
+        };
     }
 
     private function isGranted(string $actionClass, string $table, DataContainerOperation $operation, array|null $new = null): bool

@@ -57,8 +57,13 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_image_size', 'listImageSize')
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('name'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_image_size', 'listImageSize'),
+		),
 	),
 
 	// Palettes
@@ -288,24 +293,19 @@ class tl_image_size extends Backend
 	 *
 	 * @return string
 	 */
-	public function listImageSize($row)
+	public function listImageSize($row, $label)
 	{
-		$html = '<div class="tl_content_left">';
-		$html .= $row['name'];
-
 		if ($row['width'] || $row['height'])
 		{
-			$html .= ' <span class="label-info">' . $row['width'] . 'x' . $row['height'] . '</span>';
+			$label .= ' <span class="label-info">' . $row['width'] . 'x' . $row['height'] . '</span>';
 		}
 
 		if ($row['zoom'])
 		{
-			$html .= ' <span class="label-info">(' . (int) $row['zoom'] . '%)</span>';
+			$label .= ' <span class="label-info">(' . (int) $row['zoom'] . '%)</span>';
 		}
 
-		$html .= "</div>\n";
-
-		return $html;
+		return $label;
 	}
 
 	/**

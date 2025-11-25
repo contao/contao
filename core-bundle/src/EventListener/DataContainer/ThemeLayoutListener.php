@@ -34,11 +34,11 @@ class ThemeLayoutListener
 
         return $this->finderFactory
             ->create()
-            ->identifierRegex('%^layout/%')
+            ->identifier('page/layout')
             ->extension('html.twig')
             ->withVariants()
             ->excludePartials()
-            ->asTemplateOptions()
+            ->asTemplateOptions(false)
         ;
     }
 
@@ -63,16 +63,31 @@ class ThemeLayoutListener
         return $value;
     }
 
-    #[AsCallback(table: 'tl_layout', target: 'fields.type.load')]
-    public function adjustFieldsForLegacyType(string $value, DataContainer $dc): string
+    #[AsCallback(table: 'tl_layout', target: 'fields.template.attributes')]
+    public function adjustFieldsForLegacyType(array $attributes, DataContainer $dc): array
     {
         if ($this->isLegacy($dc)) {
-            $templateField = &$GLOBALS['TL_DCA']['tl_layout']['fields']['template'];
-            $templateField['eval']['mandatory'] = false;
-            $templateField['eval']['submitOnChange'] = false;
+            $attributes['mandatory'] = false;
+            $attributes['submitOnChange'] = false;
         }
 
-        return $value;
+        return $attributes;
+    }
+
+    #[AsCallback(table: 'tl_layout', target: 'config.onbeforesubmit')]
+    public function resetTemplateForType(array $values, DataContainer $dc): array
+    {
+        if (!isset($values['type'])) {
+            return $values;
+        }
+
+        $current = $dc->getCurrentRecord();
+
+        if ($current['type'] !== $values['type']) {
+            $values['template'] = '';
+        }
+
+        return $values;
     }
 
     private function isLegacy(DataContainer $dc): bool
