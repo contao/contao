@@ -27,6 +27,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContentCompositionListener
 {
@@ -36,6 +37,7 @@ class ContentCompositionListener
         private readonly PageRegistry $pageRegistry,
         private readonly Connection $connection,
         private readonly RequestStack $requestStack,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -60,9 +62,9 @@ class ContentCompositionListener
         $pageModel->setRow($operation->getRecord());
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            $operation->disable();
+            $operation->hide();
         } else {
-            $operation['href'] .= '&amp;pn='.$operation->getRecord()['id'];
+            $operation->setUrl($this->urlGenerator->generate('contao_backend', ['do' => 'article', 'pn' => $operation->getRecord()['id']]));
         }
     }
 
