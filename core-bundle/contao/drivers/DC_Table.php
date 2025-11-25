@@ -4481,7 +4481,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($label[1] ?? null)
 						{
-							$return .= '<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview">' . ($label[1] ?? '') . '</div></div>';
+							$return .= '<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview" style="contain:paint">' . ($label[1] ?? '') . '</div></div>';
 						}
 					}
 					else
