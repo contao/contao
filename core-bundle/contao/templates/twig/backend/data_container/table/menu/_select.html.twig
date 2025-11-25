@@ -1,0 +1,20 @@
+<strong>{{ title }}:</strong>
+
+<div class="tl_select_wrapper" data-controller="contao--choices">
+    {% set select_attributes = attrs()
+        .set('name', 'tl_field')
+        .addClass('tl_select')
+        .addClass('active', active|default)
+    %}
+    <select{{ select_attributes }}>
+        {% for option in options %}
+            {% set option_attributes = attrs()
+                .set('value', option.value)
+                .set('selected', option.selected)
+            %}
+            {% block option %}
+                <option{{ option_attributes }}>{{ option.label }}</option>
+            {% endblock %}
+        {% endfor %}
+    </select>
+</div>

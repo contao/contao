@@ -1,32 +1,9 @@
 {% trans_default_domain "contao_default" %}
 
 <div class="tl_search tl_subpanel">
-    <strong>{{ 'MSC.search'|trans }}:</strong>
-
-    {% set select_attributes = attrs()
-        .set('name', 'tl_field')
-        .addClass('tl_select')
-        .addClass('active', active)
-    %}
-    <div class="tl_select_wrapper" data-controller="contao--choices">
-        <select{{ select_attributes }}>
-            {% for option in options %}
-
-                {% set option_attributes = attrs()
-                    .set('value', option.value)
-                    .set('selected', option.selected)
-                    .set('aria-label', option.aria_label|default)
-                %}
-                {% if option.order == 'ASC' %}
-                    <option{{ option_attributes.set('aria-label', 'MSC.list_orderBy'|trans(["#{option.label} #{'MSC.ascending'|trans}"])) }}>{{ option.label }} ↑</option>
-                {% elseif option.order == 'DESC' %}
-                    <option{{ option_attributes.set('aria-label', 'MSC.list_orderBy'|trans(["#{option.label} #{'MSC.descending'|trans}"])) }}>{{ option.label }} ↓</option>
-                {% else %}
-                    <option{{ option_attributes }}>{{ option.label }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </div>
+    {% include "@Contao/backend/data_container/table/menu/_select.html.twig" with {
+        title: 'MSC.search'|trans
+    }%}
 
     <span>=</span>
 
