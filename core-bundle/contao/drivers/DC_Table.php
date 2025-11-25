@@ -5848,14 +5848,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', Environment::get('requestUri')));
 		}
 
+		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds();
+
 		if ($limit)
 		{
-			Input::setGet('lp', $offset / $limit + 1); // see #6923
+			$paginationConfig = $paginationConfig->withCurrentPage($offset / $limit + 1);
 		}
 
-		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
-			(new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds()
-		);
+		$pagination = System::getContainer()->get('contao.pagination.factory')->create($paginationConfig);
 
 		return System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 	}
