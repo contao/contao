@@ -4940,7 +4940,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
-			$strField = Input::post('tl_field', true);
+			$strField = Input::post('tl_search', true);
 			$strKeyword = ltrim(Input::postRaw('tl_value'), '*');
 
 			if ($strField && !\in_array($strField, $searchFields, true))

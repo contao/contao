@@ -1,8 +1,9 @@
-<strong>{{ title }}:</strong>
+<label for="{{ name }}"><strong>{{ title }}:</strong></label>
 
 <div class="tl_select_wrapper" data-controller="contao--choices">
     {% set select_attributes = attrs()
-        .set('name', 'tl_field')
+        .set('name', name)
+        .set('id', name)
         .addClass('tl_select')
         .addClass('active', active|default)
     %}
