@@ -1041,7 +1041,7 @@ class tl_content extends Backend
 		}
 		else
 		{
-			$preview = '<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
+			$preview = '<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '" style="contain:paint">' . $preview . '</div></div>';
 		}
 
 		$dragHandle = '';
