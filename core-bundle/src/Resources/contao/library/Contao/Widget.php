@@ -1574,15 +1574,6 @@ abstract class Widget extends Controller
 
 		return '';
 	}
-
-	protected static function specialcharsValue($strString): string
-	{
-		return str_replace(
-			array('&amp;#35;', '&amp;#60;', '&amp;#62;', '&amp;#40;', '&amp;#41;', '&amp;#92;', '&amp;#61;', '&amp;#34;', '&amp;#39;'),
-			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
-			StringUtil::specialchars((string) $strString, false, true),
-		);
-	}
 }
 
 class_alias(Widget::class, 'Widget');
