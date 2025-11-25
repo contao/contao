@@ -5056,9 +5056,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return System::getContainer()
 			->get('twig')
 			->render('@Contao/backend/data_container/table/menu/search.html.twig', array(
+				'options' => array_values($options_sorter),
 				'active' => $active,
 				'value' => $session['search'][$this->strTable]['value'] ?? '',
-				'options' => array_values($options_sorter),
 			))
 		;
 	}
@@ -5359,7 +5359,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
-		$fields = '';
 		$sortingFields = array();
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
@@ -5483,6 +5482,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Add sorting options
+		$filters = array();
+
 		foreach ($sortingFields as $field)
 		{
 			$arrValues = array();
@@ -5577,12 +5578,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->setPanelState($active);
 
-			// Begin select menu
-			$fields .= '
-<div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '">
-  <option value="tl_' . $field . '">---</option>';
+			$options_sorter = array();
 
+			// Begin select menu
 			if ($objFields->numRows)
 			{
 				$options = $objFields->fetchEach($field);
@@ -5699,7 +5697,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$options_sorter = array();
 				$blnDate = \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH));
 
 				// Options
@@ -5784,7 +5781,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$options_sorter[$option_label . '_' . $field . '_' . $kk] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
+					$options_sorter[$option_label . '_' . $field . '_' . $kk] = array(
+						'value' => $value,
+						'label' => $option_label,
+						'selected' => isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field],
+					);
 				}
 
 				// Sort by option values
@@ -5807,20 +5808,29 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$options_sorter = array_reverse($options_sorter, true);
 					}
 				}
-
-				$fields .= "\n" . implode("\n", array_values($options_sorter));
 			}
 
-			// End select menu
-			$fields .= '
-</select>
-</div> ';
+			$filters[] = array(
+				'name' => $field,
+				'options' => array(
+					array(
+						'value' => 'tl_' . $field,
+						'label' => '---',
+						'selected' => false,
+					),
+					...array_values($options_sorter),
+				),
+				'active' => $active,
+				'placeholder' => \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null),
+			);
 		}
 
-		return '
-<div class="tl_filter tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['filter'] . ':</strong> ' . $fields . '
-</div>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/filter.html.twig', array(
+				'filters' => $filters,
+			))
+		;
 	}
 
 	/**
