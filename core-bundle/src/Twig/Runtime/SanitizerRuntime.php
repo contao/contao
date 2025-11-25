@@ -18,18 +18,24 @@ use Symfony\Bridge\Twig\Extension\HtmlSanitizerExtension;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
+// Backwards compatibility: To be removed in Contao 6
 final class SanitizerRuntime implements RuntimeExtensionInterface
 {
     /**
      * @internal
      */
-    public function __construct(private readonly Environment $twig)
-    {
+    public function __construct(
+        private readonly Environment $twig,
+    ) {
     }
 
     public function sanitizeHtml(string $html, string|null $sanitizer = null): string
     {
         $html = $this->twig->getExtension(HtmlSanitizerExtension::class)->sanitize($html, $sanitizer);
+
+        if ('contao' === $sanitizer) {
+            return $html;
+        }
 
         // Encode Contao-specific special characters like insert tags
         return Input::encodeInput($html, InputEncodingMode::encodeNone);

@@ -102,8 +102,12 @@ use Doctrine\DBAL\Types\Types;
  */
 abstract class Widget extends Controller
 {
-	use TemplateInheritance;
+	use TemplateInheritance {
+		TemplateInheritance::renderTwigSurrogateIfExists as baseRenderTwigSurrogateIfExists;
+	}
 	use TemplateTrait;
+
+	private bool $enableSurrogateRendering = true;
 
 	/**
 	 * Id
@@ -434,41 +438,31 @@ abstract class Widget extends Controller
 	{
 		switch ($strKey)
 		{
-			case 'id':
-				return isset($this->strId);
-
-			case 'name':
-				return isset($this->strName);
-
-			case 'label':
-				return isset($this->strLabel);
-
-			case 'value':
-				return isset($this->varValue);
-
-			case 'class':
-				return isset($this->strClass);
-
-			case 'template':
-				return isset($this->strTemplate);
-
-			case 'wizard':
-				return isset($this->strWizard);
-
 			case 'required':
 				return isset($this->arrConfiguration[$strKey]);
 
+			case 'id':
+			case 'name':
+			case 'label':
+			case 'value':
+			case 'class':
+			case 'template':
+			case 'wizard':
 			case 'forAttribute':
-				return isset($this->blnForAttribute);
-
 			case 'dataContainer':
-				return isset($this->objDca);
+				return true;
 
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
 
 			default:
-				return isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]);
+				if (isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]))
+				{
+					return true;
+				}
+
+				// If the magic getter returns a value it "is set" by definition
+				return $this->__get($strKey) !== null;
 		}
 	}
 
@@ -1566,5 +1560,25 @@ abstract class Widget extends Controller
 			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
 			StringUtil::specialchars((string) $strString, false, true),
 		);
+	}
+
+	protected function renderTwigSurrogateIfExists(): string|null
+	{
+		return $this->enableSurrogateRendering ? $this->baseRenderTwigSurrogateIfExists() : null;
+	}
+
+	/**
+	 * @interal
+	 */
+	public function renderLegacyFromTwig(array $blocks): string
+	{
+		$this->arrBlocks = $blocks;
+		$this->enableSurrogateRendering = false;
+
+		$return = $this->inherit();
+
+		$this->enableSurrogateRendering = true;
+
+		return $return;
 	}
 }
