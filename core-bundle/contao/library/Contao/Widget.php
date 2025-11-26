@@ -438,9 +438,6 @@ abstract class Widget extends Controller
 	{
 		switch ($strKey)
 		{
-			case 'required':
-				return isset($this->arrConfiguration[$strKey]);
-
 			case 'id':
 			case 'name':
 			case 'label':
@@ -452,6 +449,9 @@ abstract class Widget extends Controller
 			case 'dataContainer':
 				return true;
 
+			case 'required':
+				return isset($this->arrConfiguration[$strKey]);
+
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
 
@@ -462,7 +462,7 @@ abstract class Widget extends Controller
 				}
 
 				// If the magic getter returns a value it "is set" by definition
-				return $this->__get($strKey) !== null;
+				return null !== $this->__get($strKey);
 		}
 	}
 

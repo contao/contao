@@ -116,6 +116,7 @@ class CalendarEventsGenerator
                     if (!($event['details'] ?? null) instanceof \Closure) {
                         $events[$keyPerDay][$keyPerTime][$key]['details'] = static fn () => $event['details'];
                     }
+
                     if (!($event['hasDetails'] ?? null) instanceof \Closure) {
                         $events[$keyPerDay][$keyPerTime][$key]['hasDetails'] = static fn () => $event['hasDetails'];
                     }

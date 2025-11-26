@@ -18,9 +18,8 @@ use Contao\Template;
 
 final class ContextFactory
 {
-    public function __construct(
-        private readonly ScopeMatcher $scopeMatcher,
-    ) {
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
+    {
     }
 
     /**

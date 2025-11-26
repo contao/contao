@@ -291,7 +291,7 @@ class BackendCsvImportControllerTest extends TestCase
 
     private function getController(Request|null $request = null, Connection|null $connection = null, ContaoFramework|null $framework = null): BackendCsvImportController
     {
-        $request ?? new Request();
+        $request ??= new Request();
         $request->setSession($this->mockSession());
 
         $requestStack = new RequestStack();

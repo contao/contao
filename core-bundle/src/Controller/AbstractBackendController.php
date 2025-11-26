@@ -54,7 +54,7 @@ abstract class AbstractBackendController extends AbstractController
                     $this->Template = new BackendTemplate();
                     $this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'].' '.ContaoCoreBundle::getVersion();
 
-                    // Handle ajax request
+                    // Handle Ajax request
                     if (Input::post('action') && Environment::get('isAjaxRequest')) {
                         $this->objAjax = new Ajax(Input::post('action'));
                         $this->objAjax->executePreActions();

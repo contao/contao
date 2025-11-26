@@ -510,7 +510,7 @@ class Form extends Hybrid
 				// Encode the values (see #6053)
 				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1); });
 
-				// @todo This template only exists for backwards compatibility and needs to be replaced with a DOM object in Contao 6
+				// TODO: This template only exists for backwards compatibility and needs to be replaced with a DOM object in Contao 6
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');

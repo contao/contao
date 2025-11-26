@@ -24,9 +24,8 @@ final class SanitizerRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(
-        private readonly Environment $twig,
-    ) {
+    public function __construct(private readonly Environment $twig)
+    {
     }
 
     public function sanitizeHtml(string $html, string|null $sanitizer = null): string

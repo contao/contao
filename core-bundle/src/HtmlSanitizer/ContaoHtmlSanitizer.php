@@ -19,9 +19,8 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 
 class ContaoHtmlSanitizer implements HtmlSanitizerInterface
 {
-    public function __construct(
-        private readonly ContaoFramework $framework,
-    ) {
+    public function __construct(private readonly ContaoFramework $framework)
+    {
     }
 
     public function sanitize(string $input): string
