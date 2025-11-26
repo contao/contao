@@ -1,7 +1,7 @@
 
 <section class="<?= $this->class ?> ce_accordion block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
 
-  <div<?php $this->attrs()->addClass($this->toggler)->addStyle($this->headlineStyle) ?>>
+  <div<?= $this->attrs()->addClass($this->toggler)->addStyle($this->headlineStyle) ?>>
     <?= $this->headline ?>
   </div>
 
