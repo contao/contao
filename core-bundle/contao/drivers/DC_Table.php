@@ -4014,13 +4014,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!Input::get('nb'))
 		{
-			if ($this->ptable)
+			if (Input::get('act') == 'select')
 			{
 				$operations->addBackButton($this->getReferer(true, $this->ptable));
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
 				$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			}
+			elseif ($this->ptable)
+			{
+				$operations->addBackButton($this->getReferer(true, $this->ptable));
 			}
 		}
 
@@ -4681,13 +4685,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Display buttons
 		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
-		if (Input::get('act') == 'select' || $this->ptable)
+		if (Input::get('act') == 'select')
 		{
 			$operations->addBackButton($this->getReferer(true, $this->ptable));
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
 			$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+		}
+		elseif ($this->ptable)
+		{
+			$operations->addBackButton($this->getReferer(true, $this->ptable));
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
