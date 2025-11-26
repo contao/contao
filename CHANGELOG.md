@@ -2,12 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.43] (2025-11-26)
+
+**Fixed issues:**
+
+- [#9045] Fix the legacy accordion templates ([zoglo])
+
 ## [5.3.42] (2025-11-25)
 
 **Security fixes:**
 
-- [CVE-2025-65961]: Cross-site scripting in templates
 - [CVE-2025-65960]: Remote code execution in template closures
+- [CVE-2025-65961]: Cross-site scripting in templates
 
 **Fixed issues:**
 
@@ -843,6 +849,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.43]: https://github.com/contao/contao/releases/tag/5.3.43
 [5.3.42]: https://github.com/contao/contao/releases/tag/5.3.42
 [5.3.41]: https://github.com/contao/contao/releases/tag/5.3.41
 [5.3.40]: https://github.com/contao/contao/releases/tag/5.3.40
@@ -890,8 +897,8 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
-[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
+[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
 [CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
@@ -1504,3 +1511,4 @@ This project adheres to [Semantic Versioning].
 [#9023]: https://github.com/contao/contao/pull/9023
 [#9024]: https://github.com/contao/contao/pull/9024
 [#9032]: https://github.com/contao/contao/pull/9032
+[#9045]: https://github.com/contao/contao/pull/9045
