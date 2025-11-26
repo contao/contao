@@ -2,12 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.58] (2025-11-26)
+
+**Fixed issues:**
+
+- [#9042] Convert the TextField input value using `StringUtll::specialChars()` ([zoglo])
+
 ## [4.13.57] (2025-11-25)
 
 **Security fixes:**
 
-- [CVE-2025-65961]: Cross-site scripting in templates
 - [CVE-2025-65960]: Remote code execution in template closures
+- [CVE-2025-65961]: Cross-site scripting in templates
 
 ## [4.13.56] (2025-08-28)
 
@@ -1152,6 +1158,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.58]: https://github.com/contao/contao/releases/tag/4.13.58
 [4.13.57]: https://github.com/contao/contao/releases/tag/4.13.57
 [4.13.56]: https://github.com/contao/contao/releases/tag/4.13.56
 [4.13.55]: https://github.com/contao/contao/releases/tag/4.13.55
@@ -1213,8 +1220,8 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
-[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
+[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-57756]: https://github.com/contao/contao/security/advisories/GHSA-2xmj-8wmq-7475
 [CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
@@ -2079,3 +2086,4 @@ This project adheres to [Semantic Versioning].
 [#8055]: https://github.com/contao/contao/pull/8055
 [#8056]: https://github.com/contao/contao/pull/8056
 [#8662]: https://github.com/contao/contao/pull/8662
+[#9042]: https://github.com/contao/contao/pull/9042
