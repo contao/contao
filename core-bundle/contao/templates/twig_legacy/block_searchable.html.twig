@@ -1,0 +1,20 @@
+{% set wrapperAttributes = attrs(cssID)
+    .addClass([class, 'block'])
+    .addStyle(style|default)
+    .mergeWith(wrapperAttributes|default)
+ %}
+
+{% block wrapper %}
+  <div{{ wrapperAttributes }}>
+
+    {% block headline %}
+      {% if headline|default %}
+        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
+      {% endif %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+  </div>
+{% endblock %}

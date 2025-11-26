@@ -1,0 +1,137 @@
+{% trans_default_domain "contao_default" %}
+
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+
+  <meta charset="{{ charset }}">
+  <title>{{ title }} | {{ host }}</title>
+  <meta name="generator" content="Contao Open Source CMS">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+  <meta name="referrer" content="origin">
+
+  <link rel="stylesheet" href="{{ asset('popup.css', 'system/themes/' ~ theme) }}">
+  {{ stylesheets|default|raw }}
+
+  <script>{{ getLocaleString.invoke()|raw }}</script>
+  <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
+  <script src="{{ asset('backend.js', 'contao_core') }}"></script>
+  <script>{{ getDateString.invoke()|raw }}</script>
+  {{ javascripts|default|raw }}
+
+</head>
+<body>
+
+  <div id="container">
+    <main id="main">
+      <table class="tl_show with-padding with-zebra">
+        <tr>
+          <td><span class="tl_label">{{ labels.fileCreated }}:</span></td>
+          <td>{{ ctime }}</td>
+        </tr>
+        <tr>
+          <td><span class="tl_label">{{ labels.fileModified }}:</span></td>
+          <td>{{ mtime }}</td>
+        </tr>
+        <tr>
+          <td><span class="tl_label">{{ labels.fileAccessed }}:</span></td>
+          <td>{{ atime }}</td>
+        </tr>
+        <tr>
+          <td><span class="tl_label">{{ labels.filePath }}:</span></td>
+          <td>{{ path }}</td>
+        </tr>
+        {% if uuid|default %}
+          <tr>
+            <td><span class="tl_label">{{ labels.fileUuid }}:</span></td>
+            <td>{{ uuid }}</td>
+          </tr>
+        {% endif %}
+        {% if filesize|default %}
+          <tr>
+            <td><span class="tl_label">{{ labels.fileSize }}:</span></td>
+            <td>{{ filesize }}</td>
+          </tr>
+        {% endif %}
+        {% if src|default %}
+          <tr>
+            <td><span class="tl_label">{{ labels.fileImageSize }}:</span></td>
+            {% if width|default and height|default %}
+              <td>{{ width }} x {{ height }}</td>
+            {% else %}
+              <td>-</td>
+            {% endif %}
+          </tr>
+        {% endif %}
+        {% if meta|default %}
+          <tr class="meta">
+            <td><span class="tl_label">{{ labels.fileMeta }}:</span></td>
+            <td>
+              {% for lang, data in meta %}
+                <p>{{ languages[lang] }}</p>
+                {% for field, value in data %}
+                  {% if value|default %}
+                    {{ value }} ({{ labels['aw_' ~ field] }})<br>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+            </td>
+          </tr>
+        {% endif %}
+      </table>
+      {% if href|default %}
+        <div id="download">
+          <a href="{{ href }}" class="tl_submit" download="{{ path|split('/')|last }}">{{ backend_icon(icon, '', attrs().addClass('mime_icon')) }} {{ download }}</a>
+        </div>
+      {% endif %}
+      {% if isImage|default %}
+        <div id="preview">
+
+          <div{{ attrs()
+            .addClass('checkerbox')
+            .addStyle(
+              { width: "#{width|default}px", height: "#{height|default}px" },
+              width|default and width|default
+            )
+          }}>
+            <img src="{{ dataUri }}" alt="" style="image-orientation:from-image"{% if width|default and height|default %} width="{{ width }}" height="{{ height }}"{% endif %}>
+          </div>
+        </div>
+      {% endif %}
+      {% if metadata|default %}
+        {% for format, table in metadata %}
+          <table class="tl_show with-padding with-zebra">
+            <caption>
+                {{- 'MSC.imageMetadata'|trans({ '%s': ('iptc' == format ? 'IPTC IIM' : format)|upper }) -}}
+            </caption>
+            {% for label, values in table %}
+              {% if values|filter(v => v|length > 0) %}
+                <tr>
+                  <td><span class="tl_label">{{ label }}</span></td>
+                  <td>{{ values|join(', ') }}</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </table>
+        {% endfor %}
+      {% endif %}
+      {% if hasPreview|default %}
+        <div id="preview">
+          {% for picture in previewPictures %}
+            <div{{ attrs()
+              .addClass('checkerbox')
+              .addStyle(
+                { width: "#{picture.img.width|default}px", height: "#{picture.img.height|default}px" },
+                picture.img.width|default and picture.img.height|default
+              )
+            }}>
+              {% include "@Contao/picture_default.html.twig" with picture %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </main>
+  </div>
+
+</body>
+</html>

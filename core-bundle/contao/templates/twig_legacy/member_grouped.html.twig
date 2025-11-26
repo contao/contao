@@ -1,0 +1,35 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% set wrapperAttributes = attrs(cssID)
+    .addClass([class, 'block'])
+    .addStyle(style|default)
+    .mergeWith(wrapperAttributes|default)
+%}
+
+{% block content %}
+
+  {% if message|default %}
+    <p class="tl_confirm">{{ message }}</p>
+  {% endif %}
+
+  <form id="{{ formId }}" method="post" enctype="{{ enctype }}">
+    <div class="formbody">
+      <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+      <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+
+      {% for legend, category in categories %}
+        <fieldset>
+          {% if legend %}
+            <legend>{{ legend }}</legend>
+          {% endif %}
+          {{ category|join|raw }}
+        </fieldset>
+      {% endfor %}
+
+      <div class="widget widget-submit">
+        <button type="submit" class="submit">{{ slabel }}</button>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}

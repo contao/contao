@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+
+  <meta charset="{{ charset }}">
+  <title>{{ title }} | {{ host }}</title>
+  <meta name="generator" content="Contao Open Source CMS">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+  <meta name="referrer" content="origin">
+
+  <link rel="stylesheet" href="{{ asset('backend.css', 'system/themes/' ~ theme) }}">
+  {{ stylesheets|default|raw }}
+
+  <script>{{ getLocaleString.invoke()|raw }}</script>
+  <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
+  <script src="{{ asset('backend.js', 'contao_core') }}"></script>
+  <script>{{ getDateString.invoke()|raw }}</script>
+  {{ javascripts|default|raw }}
+
+</head>
+<body class="popup">
+
+  <div id="container">
+    <main id="main">
+      <div id="tl_soverview">
+        <div id="tl_messages">
+            {{ messages|default(noMessages)|raw }}
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

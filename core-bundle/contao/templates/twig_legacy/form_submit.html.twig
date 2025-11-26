@@ -1,0 +1,24 @@
+{% extends "@Contao/form_row.html.twig" %}
+
+{% block field %}
+  {% if this.src|default %}
+     <input{{ attrs()
+       .set('type', 'image')
+       .set('src', this.src)
+       .set('id', "ctrl_#{this.id}")
+       .addClass('submit')
+       .addClass(this.class|default)
+       .set('title', this.slabel)
+       .set('alt', this.slabel)
+       .mergeWith(getAttributes.invoke())
+     }}>
+  {% else %}
+     <button{{ attrs()
+       .set('type', 'submit')
+       .set('id', "ctrl_#{this.id}")
+       .addClass('submit')
+       .addClass(this.class|default)
+       .mergeWith(getAttributes.invoke())
+     }}>{{ this.slabel }}</button>
+  {% endif %}
+{% endblock %}

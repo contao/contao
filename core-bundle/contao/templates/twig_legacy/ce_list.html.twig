@@ -1,0 +1,11 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% block content %}
+
+  <{{ tag }}>
+    {% for item in items %}
+      <li>{{ item|sanitize_html('contao')|insert_tag_raw }}</li>
+    {% endfor %}
+  </{{ tag }}>
+
+{% endblock %}

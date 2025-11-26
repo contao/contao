@@ -1,0 +1,16 @@
+{% trans_default_domain "contao_default" %}
+
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+  (function() {
+    if (navigator.cookieEnabled) return;
+    var e = document.querySelectorAll('input[name="REQUEST_TOKEN"]'), t, c, i;
+    for (i=0; i<e.length; i++) {
+      c = e[i].parentNode;
+      if ('formbody' !== c.className) return;
+      t = document.createElement('p');
+      t.className = 'error nocookie';
+      t.innerHTML = '{{ 'ERR.formCookieWarning'|trans|e('js') }}';
+      c.insertBefore(t, c.firstChild);
+    }
+  })();
+</script>

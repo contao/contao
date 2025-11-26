@@ -1,0 +1,24 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+  <div class="rss_default_header">
+    <h1><a href="{{ link }}" target="_blank" rel="noreferrer noopener">{{ title }}</a></h1>
+    {% if image|default %}
+      <a href="{{ href }}" title="{{ alt }}"><img src="{{ src }}" alt="{{ alt }}"></a>
+    {% endif %}
+    {% if description %}
+      <div class="description">{{ description }}</div>
+    {% endif %}
+  </div>
+
+  {% for item in items %}
+    <div class="rss_default">
+      <h2><a href="{{ item.link }}" target="_blank" rel="noreferrer noopener">{{ item.title }}</a></h2>
+      <div class="description">{{ item.description|sanitize_html }}</div>
+    </div>
+  {% endfor %}
+
+  {{ pagination|default|raw }}
+
+{% endblock %}

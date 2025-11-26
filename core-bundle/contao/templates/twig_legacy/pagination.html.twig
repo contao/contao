@@ -1,0 +1,34 @@
+{% trans_default_domain "contao_default" %}
+<!-- indexer::stop -->
+<nav class="pagination block" aria-label="{{ 'MSC.pagination'|trans }}">
+
+  <p>{{ total }}</p>
+
+  <ul>
+    {% if hasFirst %}
+      <li class="first"><a href="{{ first.href }}" class="first" title="{{ first.title }}">{{ first.link }}</a></li>
+    {% endif %}
+
+    {% if hasPrevious %}
+      <li class="previous"><a href="{{ previous.href }}" class="previous" title="{{ previous.title }}">{{ previous.link }}</a></li>
+    {% endif %}
+
+    {% for page in pages %}
+      {% if page.href is null %}
+        <li><strong class="active">{{ page.page }}</strong></li>
+      {% else %}
+        <li><a href="{{ page.href }}" class="link" title="{{ page.title }}">{{ page.page }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if hasNext %}
+      <li class="next"><a href="{{ next.href }}" class="next" title="{{ next.title }}">{{ next.link }}</a></li>
+    {% endif %}
+
+    {% if hasLast %}
+      <li class="last"><a href="{{ last.href }}" class="last" title="{{ last.title }}">{{ last.link }}</a></li>
+    {% endif %}
+  </ul>
+
+</nav>
+<!-- indexer::continue -->

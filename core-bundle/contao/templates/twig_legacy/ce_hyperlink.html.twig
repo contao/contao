@@ -1,0 +1,38 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% block content %}
+
+  {% if useImage %}
+    <figure class="image_container">
+      {{ embed_pre|insert_tag_raw }}
+      <a{{ attrs()
+          .addClass('hyperlink_img')
+          .set('href', href|insert_tag)
+          .setIfExists('title', linkTitle|default|insert_tag)
+          .mergeWith(attribute|default)
+          .mergeWith(target)
+          .mergeWith(rel)
+      }}>
+          {% include "@Contao/picture_default" with picture %}
+      </a>
+      {{ embed_post|insert_tag_raw }}
+      {% if caption|default %}
+        <figcaption class="caption">{{ caption|sanitize_html('contao')|insert_tag_raw }}</figcaption>
+      {% endif %}
+    </figure>
+  {% else %}
+    {{ embed_pre|insert_tag_raw }}
+    <a{{ attrs()
+        .addClass('hyperlink_txt')
+        .set('href', href|insert_tag)
+        .setIfExists('title', linkTitle|default|insert_tag)
+        .mergeWith(attribute|default)
+        .mergeWith(target)
+        .mergeWith(rel)
+    }}>
+      {{ link|insert_tag }}
+    </a>
+    {{ embed_post|insert_tag_raw }}
+  {% endif %}
+
+{% endblock %}

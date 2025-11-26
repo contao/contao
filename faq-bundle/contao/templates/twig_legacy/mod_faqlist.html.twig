@@ -1,0 +1,14 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+  {% for category in faq %}
+    <h2>{{ category.headline }}</h2>
+    <ul>
+      {% for faq in category.items %}
+        <li><a href="{{ faq.href }}" title="{{ faq.title }}">{{ faq.question }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,6 @@
+
+<fieldset{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
+
+  {% if this.label %}
+    <legend>{{ this.label }}</legend>
+  {% endif %}

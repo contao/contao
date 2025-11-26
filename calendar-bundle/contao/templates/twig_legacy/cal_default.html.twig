@@ -1,0 +1,31 @@
+
+<table class="calendar">
+<thead>
+  <tr>
+    <th colspan="2" class="head previous">{% if prevHref|default %}<a href="{{ prevHref }}" title="{{ prevTitle }}">{{ prevLink }}</a>{% else %}&nbsp;{% endif %}</th>
+    <th colspan="3" class="head current">{{ current }}</th>
+    <th colspan="2" class="head next">{% if nextHref|default %}<a href="{{ nextHref }}" title="{{ nextTitle }}">{{ nextLink }}</a>{% else %}&nbsp;{% endif %}</th>
+  </tr>
+  <tr>
+    {% for day in days %}
+      <th class="label{{ day.class }}">{{ day.name }}</th>
+    {% endfor %}
+  </tr>
+</thead>
+<tbody>
+  {% for week in weeks %}
+    <tr>
+      {% for day in week %}
+        <td{% if day.class|default %} class="{{ day.class }}"{% endif %}>
+          <div class="header">{{ day.label }}</div>
+          {% for event in day.events %}
+            <div class="event cal_{{ event.parent }}{{ event.class }}">
+              <a href="{{ event.href }}" title="{{ event.title }} ({% if event.day|default %}{{ event.day }}, {% endif %}{{ event.date }}{% if event.time|default %} {{ event.time }}{% endif %})"{{ event.target }}>{{ event.link }}</a>
+            </div>
+          {% endfor %}
+        </td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+</tbody>
+</table>

@@ -1,0 +1,33 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+  <figure class="{{ containerClass }}">
+    {% if isVideo %}
+      <video{{ attrs(size)
+        .setIfExists('poster', poster)
+        .setIfExists('preload', preload)
+        .mergeWith(attributes|join(' '))
+      }}>
+        {% for file in files %}
+          {% do csp_source('media-src', file.path) %}
+          <source type="{{ file.mime }}" src="{{ file.path ~ range }}">
+        {% endfor %}
+      </video>
+    {% else %}
+      <audio{{ attrs()
+          .setIfExists('preload', preload)
+          .mergeWith(attributes|join(' '))
+      }}>
+        {% for file in files %}
+          {% do csp_source('media-src', file.path) %}
+          <source type="{{ file.mime }}" src="{{ file.path }}">
+        {% endfor %}
+      </audio>
+    {% endif %}
+    {% if caption %}
+      <figcaption class="caption">{{ caption|insert_tag_raw }}</figcaption>
+    {% endif %}
+  </figure>
+
+{% endblock %}

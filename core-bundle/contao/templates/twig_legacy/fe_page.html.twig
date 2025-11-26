@@ -1,0 +1,117 @@
+{%- set rootAttributes = attrs()
+    .set('lang', language)
+    .set('dir', 'rtl', isRTL)
+    .mergeWith(rootAttributes|default)
+-%}
+
+{%- set bodyAttributes = attrs()
+    .set('id', 'top')
+    .addClass(class)
+    .setIfExists('onload', onload)
+    .mergeWith(bodyAttributes|default)
+ -%}
+<!DOCTYPE html>
+<html{{ rootAttributes }}>
+<head>
+
+  {% block head %}
+    <meta charset="{{ charset }}">
+    <title>{{ title }}</title>
+    <base href="{{ base }}">
+
+    {% block meta %}
+      <meta name="robots" content="{{ robots }}">
+      <meta name="description" content="{{ description|u.truncate(320, '…') }}">
+      <meta name="generator" content="Contao Open Source CMS">
+      {% for metaTag in metaTags|default %}
+        <meta{{ attrs(metaTag) }}>
+      {% endfor %}
+    {% endblock %}
+
+    {% if canonical|default %}
+      <link rel="canonical" href="{{ canonical }}">
+    {% endif %}
+
+    {{ viewport|raw }}
+    {{ framework|raw }}
+    {{ stylesheets|raw }}
+    {{ mooScripts|raw }}
+    {{ head|raw }}
+  {% endblock %}
+
+</head>
+<body{{ bodyAttributes }}>
+
+  {% block body %}
+    {{ contao_sections('top') }}
+
+    <div id="wrapper">
+
+      {% block header %}
+        {% if header %}
+          <header id="header">
+            <div class="inside">
+              {{ header|raw }}
+            </div>
+          </header>
+        {% endif %}
+      {% endblock %}
+
+      {{ contao_sections('before') }}
+
+      {% block container %}
+        <div id="container">
+
+          {% block main %}
+            <main id="main">
+              <div class="inside">
+                {{ main|raw }}
+              </div>
+              {{ contao_sections('main') }}
+            </main>
+          {% endblock %}
+
+          {% block left %}
+            {% if left %}
+              <aside id="left">
+                <div class="inside">
+                  {{ left|raw }}
+                </div>
+              </aside>
+            {% endif %}
+          {% endblock %}
+
+          {% block right %}
+            {% if right %}
+              <aside id="right">
+                <div class="inside">
+                  {{ right|raw }}
+                </div>
+              </aside>
+            {% endif %}
+          {% endblock %}
+
+        </div>
+      {% endblock %}
+
+      {{ contao_sections('after') }}
+
+      {% block footer %}
+        {% if footer %}
+          <footer id="footer">
+            <div class="inside">
+              {{ footer|raw }}
+            </div>
+          </footer>
+        {% endif %}
+      {% endblock %}
+
+    </div>
+
+    {{ contao_sections('bottom') }}
+  {% endblock %}
+
+  {{ mootools|raw }}
+  {{ jsonLdScripts|raw }}
+</body>
+</html>

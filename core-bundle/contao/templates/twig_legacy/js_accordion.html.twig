@@ -1,0 +1,51 @@
+{% use "@Contao/component/_stylesheet.html.twig" %}
+
+{# Add the handorgel style sheet #}
+{% add "handorgel" to stylesheets %}
+    {% with {file: asset('css/handorgel.min.css', 'contao-components/handorgel')} %}{{ block('stylesheet_component') }}{% endwith %}
+{% endadd %}
+
+<script src="{{ asset('js/handorgel.min.js', 'contao-components/handorgel') }}"></script>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+  (function () {
+    // DO NOT CHANGE THIS FUNCTION!
+    // Set the Handorgel.js options in the function call below.
+    const initAccordion = function (selector, options) {
+      const headerElements = document.querySelectorAll(selector);
+      const contentElements = [];
+
+      if (!headerElements) {
+        return;
+      }
+
+      headerElements.forEach((toggler) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.append(...toggler.childNodes);
+        toggler.appendChild(button);
+        toggler.parentNode.classList.add('handorgel');
+        contentElements.push(toggler.nextElementSibling);
+
+        new handorgel(toggler.parentElement, Object.assign({
+          headerElements,
+          contentElements,
+          headerOpenClass: 'open',
+          contentOpenClass: 'open',
+          headerOpenedClass: 'active',
+          contentOpenedClass: 'active',
+          headerFocusClass: 'focus',
+          contentFocusClass: 'focus',
+          headerDisabledClass: 'disabled',
+          contentDisabledClass: 'disabled',
+        }, options || {}));
+      });
+    }
+
+    // Change this selector according to your template, or duplicate
+    // the line if you use multiple accordion element classes.
+    initAccordion('.ce_accordion > .toggler', {
+      // Put custom options here
+      multiSelectable: false
+    });
+  })();
+</script>

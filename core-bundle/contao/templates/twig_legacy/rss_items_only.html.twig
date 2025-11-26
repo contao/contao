@@ -1,0 +1,14 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+  {% for item in items %}
+    <div class="rss_items_only{{ item.class|default }}">
+      <h2><a href="{{ item.link }}" target="_blank" rel="noreferrer noopener">{{ item.title }}</a></h2>
+      <div class="description">{{ item.description|sanitize_html }}</div>
+    </div>
+  {% endfor %}
+
+  {{ pagination|default|raw }}
+
+{% endblock %}
