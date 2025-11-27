@@ -18,7 +18,9 @@ use Symfony\Bridge\Twig\Extension\HtmlSanitizerExtension;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
-// Backwards compatibility: To be removed in Contao 6
+/**
+ * @todo Remove this in Contao 6 when there is no more input encoding
+ */
 final class SanitizerRuntime implements RuntimeExtensionInterface
 {
     /**
