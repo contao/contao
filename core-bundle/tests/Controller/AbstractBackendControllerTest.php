@@ -234,7 +234,7 @@ class AbstractBackendControllerTest extends TestCase
         ];
 
         $requestAcceptingTurboStreams = new Request(server: ['HTTP_HOST' => 'localhost']);
-        $requestAcceptingTurboStreams->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
+        $requestAcceptingTurboStreams->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
         yield 'regular request accepting turbo stream' => [
             clone $requestAcceptingTurboStreams,
