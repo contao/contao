@@ -1,48 +1,48 @@
 {% if enableAce|default %}
-<script>
-  {
-    const config = (editor) => {
-      editor.$blockScrolling = Infinity;
-      editor.setTheme((document.documentElement.dataset.colorScheme === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds'));
-      editor.renderer.setScrollMargin(3, 3, 0, 0);
-      editor.renderer.scrollBy(0, -6);
-      editor.container.style.lineHeight = 1.45;
-      editor.getSession().setMode("ace/mode/{{ aceType|e('js') }}");
-      editor.getSession().setUseSoftTabs(false);
-      editor.getSession().setUseWrapMode(true);
-      editor.setAutoScrollEditorIntoView(true);
+    <script>
+        {
+            const config = (editor) => {
+                editor.$blockScrolling = Infinity;
+                editor.setTheme((document.documentElement.dataset.colorScheme === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds'));
+                editor.renderer.setScrollMargin(3, 3, 0, 0);
+                editor.renderer.scrollBy(0, -6);
+                editor.container.style.lineHeight = 1.45;
+                editor.getSession().setMode("ace/mode/{{ aceType|e('js') }}");
+                editor.getSession().setUseSoftTabs(false);
+                editor.getSession().setUseWrapMode(true);
+                editor.setAutoScrollEditorIntoView(true);
 
-      {% if readonly|default %}
-        editor.setReadOnly(true);
-      {% endif %}
+                {% if readonly|default %}
+                    editor.setReadOnly(true);
+                {% endif %}
 
-      // Auto-detect the indentation
-      let ws = ace.require('ace/ext/whitespace');
-      ws.detectIndentation(editor.getSession());
+                // Auto-detect the indentation
+                let ws = ace.require('ace/ext/whitespace');
+                ws.detectIndentation(editor.getSession());
 
-      // Add the fullscreen command
-      editor.commands.addCommand({
-        name: 'Fullscreen',
-        bindKey: 'F11',
-        exec: function(editor) {
-          let dom = ace.require('ace/lib/dom');
-          dom.toggleCssClass(document.body, 'ace-fullsize');
-          editor.resize();
+                // Add the fullscreen command
+                editor.commands.addCommand({
+                    name: 'Fullscreen',
+                    bindKey: 'F11',
+                    exec: function(editor) {
+                        let dom = ace.require('ace/lib/dom');
+                        dom.toggleCssClass(document.body, 'ace-fullsize');
+                        editor.resize();
+                    }
+                });
+
+                editor.setOptions({
+                    enableSnippets: true,
+                    enableBasicAutocompletion: true,
+                    enableLiveAutocompletion: true,
+                    enableKeyboardAccessibility: true
+                });
+            }
+
+            const target = document.getElementById('{{ selector|e('js') }}');
+            target.configCallback = config;
+            target.setAttribute('data-controller', 'contao--ace');
+            target.setAttribute('data-action', 'contao--color-scheme:change@window->contao--ace#colorChange');
         }
-      });
-
-      editor.setOptions({
-        enableSnippets: true,
-        enableBasicAutocompletion: true,
-        enableLiveAutocompletion: true,
-        enableKeyboardAccessibility: true
-      });
-    }
-
-    const target = document.getElementById('{{ selector|e('js') }}');
-    target.configCallback = config;
-    target.setAttribute('data-controller', 'contao--ace');
-    target.setAttribute('data-action', 'contao--color-scheme:change@window->contao--ace#colorChange');
-  }
-</script>
+    </script>
 {% endif %}

@@ -2,48 +2,48 @@
 
 {% block content %}
 
-  <table id="{{ id }}"{% if sortable %} class="sortable" data-sort-default="{{ sortDefault }}"{% endif %}>
-    {% if summary %}
-      <caption>{{ summary|insert_tag_raw }}</caption>
-    {% endif %}
+    <table id="{{ id }}"{% if sortable %} class="sortable" data-sort-default="{{ sortDefault }}"{% endif %}>
+        {% if summary %}
+            <caption>{{ summary|insert_tag_raw }}</caption>
+        {% endif %}
 
-    {% if useHeader %}
-      <thead>
-        <tr>
-          {% for col in header %}
-            {% if loop.index0 == 0 and useLeftTh %}
-              <th class="unsortable">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
-            {% else %}
-              <th>{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
-            {% endif %}
-          {% endfor %}
-        </tr>
-      </thead>
-    {% endif %}
+        {% if useHeader %}
+            <thead>
+            <tr>
+                {% for col in header %}
+                    {% if loop.index0 == 0 and useLeftTh %}
+                        <th class="unsortable">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
+                    {% else %}
+                        <th>{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            </thead>
+        {% endif %}
 
-    {% if useFooter %}
-      <tfoot>
-        <tr>
-          {% for col in footer %}
-            <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
-          {% endfor %}
-        </tr>
-      </tfoot>
-    {% endif %}
+        {% if useFooter %}
+            <tfoot>
+            <tr>
+                {% for col in footer %}
+                    <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
+                {% endfor %}
+            </tr>
+            </tfoot>
+        {% endif %}
 
-    <tbody>
-      {% for row in body %}
-        <tr>
-          {% for col in row %}
-            {% if loop.index0 == 0 and useLeftTh %}
-              <th scope="row">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
-            {% else %}
-              <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
-            {% endif %}
-          {% endfor %}
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        <tbody>
+        {% for row in body %}
+            <tr>
+                {% for col in row %}
+                    {% if loop.index0 == 0 and useLeftTh %}
+                        <th scope="row">{{ col|sanitize_html('contao')|insert_tag_raw }}</th>
+                    {% else %}
+                        <td>{{ col|sanitize_html('contao')|insert_tag_raw }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}

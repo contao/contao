@@ -6,7 +6,7 @@
 
 <script src="{{ asset('js/chosen.min.js', 'contao-components/chosen') }}"></script>
 <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
-  window.addEvent('domready', function() {
-    $$('select.tl_chosen').chosen();
-  });
+    window.addEvent('domready', function() {
+        $$('select.tl_chosen').chosen();
+    });
 </script>

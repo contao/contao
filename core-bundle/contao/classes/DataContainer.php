@@ -703,11 +703,11 @@ abstract class DataContainer extends Backend
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
-			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
 			$objTemplate->theme = Backend::getTheme();
 			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
-			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
 			$objTemplate->aceType = Backend::getAceType($type);
+			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
+			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 

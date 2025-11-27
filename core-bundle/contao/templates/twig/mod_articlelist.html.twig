@@ -2,10 +2,10 @@
 
 {% block content %}
 
-  <ul>
-    {% for article in articles %}
-      <li><a href="{{ request }}#{{ article.id }}" title="{{ article.title }}">{{ article.link }}</a></li>
-    {% endfor %}
-  </ul>
+    <ul>
+        {% for article in articles %}
+            <li><a href="{{ request }}#{{ article.id }}" title="{{ article.title }}">{{ article.link }}</a></li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

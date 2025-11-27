@@ -2,19 +2,19 @@
     .addClass([class, 'block'])
     .addStyle(style|default)
     .mergeWith(wrapperAttributes|default)
- %}
+%}
 
 {% block wrapper %}
-  <div{{ wrapperAttributes }}>
+    <div{{ wrapperAttributes }}>
 
-    {% block headline %}
-      {% if headline|default %}
-        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
-      {% endif %}
-    {% endblock %}
+        {% block headline %}
+            {% if headline|default %}
+                <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
+            {% endif %}
+        {% endblock %}
 
-    {% block content %}
-    {% endblock %}
+        {% block content %}
+        {% endblock %}
 
-  </div>
+    </div>
 {% endblock %}

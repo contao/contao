@@ -3,20 +3,20 @@
     .addStyle(style|default)
     .setIfExists('aria-label', ariaLabel)
     .mergeWith(wrapperAttributes|default)
- %}
+%}
 
 <!-- indexer::stop -->
 <nav{{ wrapperAttributes }}>
 
-  {% if headline %}
-    <{{ hl }}>{{ headline }}</{{ hl }}>
-  {% endif %}
+    {% if headline %}
+        <{{ hl }}>{{ headline }}</{{ hl }}>
+    {% endif %}
 
-  <a href="{{ request }}#{{ skipId }}" class="invisible">{{ skipNavigation }}</a>
+    <a href="{{ request }}#{{ skipId }}" class="invisible">{{ skipNavigation }}</a>
 
-  {{ items|raw }}
+    {{ items|raw }}
 
-  <span id="{{ skipId }}" class="invisible"></span>
+    <span id="{{ skipId }}" class="invisible"></span>
 
 </nav>
 <!-- indexer::continue -->

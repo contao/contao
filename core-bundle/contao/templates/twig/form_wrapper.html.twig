@@ -2,104 +2,104 @@
     .addClass([class, 'block'])
     .addStyle(style|default)
     .mergeWith(wrapperAttributes|default)
- %}
+%}
 
 <!-- indexer::stop -->
 <div{{ wrapperAttributes }}>
 
-  {% if headline|default %}
-    <{{ hl }}>{{ headline }}</{{ hl }}>
-  {% endif %}
+    {% if headline|default %}
+        <{{ hl }}>{{ headline }}</{{ hl }}>
+    {% endif %}
 
-  {% if message|default %}
-    {% include "@Contao/form_message.html.twig" %}
-  {% else %}
-    {% include "@Contao/form_inline.html.twig" %}
-  {% endif %}
+    {% if message|default %}
+        {% include "@Contao/form_message.html.twig" %}
+    {% else %}
+        {% include "@Contao/form_inline.html.twig" %}
+    {% endif %}
 
 </div>
 <!-- indexer::continue -->
 
 {% if ajax|default %}
-  <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
-    window.addEventListener('DOMContentLoaded', () => {
-      const el = document.querySelector('[data-ajax-form="{{ id|e('js') }}"]');
+    <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+        window.addEventListener('DOMContentLoaded', () => {
+            const el = document.querySelector('[data-ajax-form="{{ id|e('js') }}"]');
 
-      function request(form, body, callback) {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', form.action, true);
-        xhr.setRequestHeader('Accept', 'text/html');
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.setRequestHeader('X-Contao-Ajax-Form', form.querySelector('[name="FORM_SUBMIT"]').value);
+            function request(form, body, callback) {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', form.action, true);
+                xhr.setRequestHeader('Accept', 'text/html');
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.setRequestHeader('X-Contao-Ajax-Form', form.querySelector('[name="FORM_SUBMIT"]').value);
 
-        form.ariaBusy = 'true';
-        form.dataset.ajaxForm = 'loading';
+                form.ariaBusy = 'true';
+                form.dataset.ajaxForm = 'loading';
 
-        xhr.onload = () => {
-          form.dispatchEvent(new CustomEvent('ajax-form-onload', {
-            bubbles: true,
-            detail: { body, form, xhr },
-          }));
+                xhr.onload = () => {
+                    form.dispatchEvent(new CustomEvent('ajax-form-onload', {
+                        bubbles: true,
+                        detail: { body, form, xhr },
+                    }));
 
-          form.ariaBusy = 'false';
-          form.dataset.ajaxForm = '';
+                    form.ariaBusy = 'false';
+                    form.dataset.ajaxForm = '';
 
-          callback(xhr);
-        };
+                    callback(xhr);
+                };
 
-        xhr.send(body || null)
-      }
-
-      function initForm(form) {
-        form.addEventListener('submit', e => {
-          e.preventDefault();
-
-          const formData = new FormData(form);
-
-          // Send the triggered button data as well
-          if (e.submitter) {
-            formData.append(e.submitter.name, e.submitter.value);
-
-            // Prevent double form submission
-            e.submitter.disabled = true;
-            setTimeout(() => e.submitter.disabled = false, 30000);
-          }
-
-          request(form, formData, xhr => {
-            const location = xhr.getResponseHeader('X-Ajax-Location');
-
-            // Handle the redirect header
-            if (location) {
-              window.location.href = location;
-              return;
+                xhr.send(body || null)
             }
 
-            const range = document.createRange();
-            range.selectNode(form.parentNode);
+            function initForm(form) {
+                form.addEventListener('submit', e => {
+                    e.preventDefault();
 
-            const newForm = range.createContextualFragment(xhr.responseText).firstElementChild;
-            form.replaceWith(newForm);
+                    const formData = new FormData(form);
 
-            if (!newForm.getAttribute('action')) {
-              newForm.action = xhr.responseURL;
+                    // Send the triggered button data as well
+                    if (e.submitter) {
+                        formData.append(e.submitter.name, e.submitter.value);
+
+                        // Prevent double form submission
+                        e.submitter.disabled = true;
+                        setTimeout(() => e.submitter.disabled = false, 30000);
+                    }
+
+                    request(form, formData, xhr => {
+                        const location = xhr.getResponseHeader('X-Ajax-Location');
+
+                        // Handle the redirect header
+                        if (location) {
+                            window.location.href = location;
+                            return;
+                        }
+
+                        const range = document.createRange();
+                        range.selectNode(form.parentNode);
+
+                        const newForm = range.createContextualFragment(xhr.responseText).firstElementChild;
+                        form.replaceWith(newForm);
+
+                        if (!newForm.getAttribute('action')) {
+                            newForm.action = xhr.responseURL;
+                        }
+
+                        initForm(newForm);
+                    });
+                });
             }
 
-            initForm(newForm);
-          });
+            initForm(el);
         });
-      }
-
-      initForm(el);
-    });
-  </script>
+    </script>
 {% else %}
-  <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
-    document.currentScript.previousElementSibling.querySelector('form')?.addEventListener('submit', e => {
-      // Prevent double form submission
-      if (e.submitter) {
-        setTimeout(() => e.submitter.disabled = true);
-        setTimeout(() => e.submitter.disabled = false, 30000);
-      }
-    });
-  </script>
+    <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+        document.currentScript.previousElementSibling.querySelector('form')?.addEventListener('submit', e => {
+            // Prevent double form submission
+            if (e.submitter) {
+                setTimeout(() => e.submitter.disabled = true);
+                setTimeout(() => e.submitter.disabled = false, 30000);
+            }
+        });
+    </script>
 {% endif %}

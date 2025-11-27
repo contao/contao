@@ -2,45 +2,45 @@
 <html lang="{{ language }}">
 <head>
 
-  <meta charset="{{ charset }}">
-  <title>{{ title }} | {{ host }}</title>
-  <meta name="generator" content="Contao Open Source CMS">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
-  <meta name="referrer" content="origin">
+    <meta charset="{{ charset }}">
+    <title>{{ title }} | {{ host }}</title>
+    <meta name="generator" content="Contao Open Source CMS">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+    <meta name="referrer" content="origin">
 
-  <link rel="stylesheet" href="{{ asset('help.css', 'system/themes/' ~ theme) }}">
-  {{ stylesheets|default|raw }}
+    <link rel="stylesheet" href="{{ asset('help.css', 'system/themes/' ~ theme) }}">
+    {{ stylesheets|default|raw }}
 
-  <script>{{ getLocaleString.invoke()|raw }}</script>
-  <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
-  <script src="{{ asset('backend.js', 'contao_core') }}"></script>
-  <script>{{ getDateString.invoke()|raw }}</script>
-  {{ javascripts|default|raw }}
+    <script>{{ getLocaleString.invoke()|raw }}</script>
+    <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
+    <script src="{{ asset('backend.js', 'contao_core') }}"></script>
+    <script>{{ getDateString.invoke()|raw }}</script>
+    {{ javascripts|default|raw }}
 
 </head>
 <body>
 
-  <div id="container">
+<div id="container">
     <main id="main">
-      {{ explanation|default|raw }}
-      {% if rows|default %}
-        <table class="tl_help_table">
-          {% for row in rows %}
-            <tr>
-              {% if 'colspan' == row.0 %}
-                <td colspan="2">{{ row.1|default|raw }}</td>
-              {% elseif 'headspan' == row.0 %}
-                <td colspan="2" class="headline">{{ row.1|default|raw }}</td>
-              {% else %}
-                <td class="tl_label">{{ row.0|raw }}</td>
-                <td>{{ row.1|default|raw }}</td>
-              {% endif %}
-            </tr>
-          {% endfor %}
-        </table>
-      {% endif %}
+        {{ explanation|default|raw }}
+        {% if rows|default %}
+            <table class="tl_help_table">
+                {% for row in rows %}
+                    <tr>
+                        {% if 'colspan' == row.0 %}
+                            <td colspan="2">{{ row.1|default|raw }}</td>
+                        {% elseif 'headspan' == row.0 %}
+                            <td colspan="2" class="headline">{{ row.1|default|raw }}</td>
+                        {% else %}
+                            <td class="tl_label">{{ row.0|raw }}</td>
+                            <td>{{ row.1|default|raw }}</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
     </main>
-  </div>
+</div>
 
 </body>
 </html>

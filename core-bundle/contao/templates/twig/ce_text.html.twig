@@ -2,16 +2,16 @@
 
 {% block content %}
 
-  {% if not addBefore %}
-    {{ text|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
-  {% endif %}
+    {% if not addBefore %}
+        {{ text|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+    {% endif %}
 
-  {% if addImage %}
-    {% include "@Contao/image.html.twig" %}
-  {% endif %}
+    {% if addImage %}
+        {% include "@Contao/image.html.twig" %}
+    {% endif %}
 
-  {% if addBefore %}
-    {{ text|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
-  {% endif %}
+    {% if addBefore %}
+        {{ text|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+    {% endif %}
 
 {% endblock %}

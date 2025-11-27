@@ -1,12 +1,12 @@
 {% set wrapperAttributes = attrs()
     .addClass([this.prefix, this.class|default])
     .mergeWith(wrapperAttributes|default)
- %}
+%}
 
 <div{{ wrapperAttributes }}>
-  {% block label %}
-  {% endblock %}
+    {% block label %}
+    {% endblock %}
 
-  {% block field %}
-  {% endblock %}
+    {% block field %}
+    {% endblock %}
 </div>

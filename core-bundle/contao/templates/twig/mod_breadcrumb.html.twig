@@ -5,28 +5,28 @@
     .addStyle(style|default)
     .set('aria-label', 'MSC.breadcrumbMenu'|trans)
     .mergeWith(wrapperAttributes|default)
- %}
+%}
 
 <!-- indexer::stop -->
 <nav{{ wrapperAttributes }}>
 
-  {% block headline %}
-    {% if headline %}
-      <{{ hl }}>{{ headline }}</{{ hl }}>
-    {% endif %}
-  {% endblock %}
-
-  {% block content %}
-    <ul>
-      {% for item in items %}
-        {% if item.isActive %}
-          <li class="active" aria-current="page">{{ item.link|insert_tag }}</li>
-        {% else %}
-          <li><a href="{{ item.href }}">{{ item.link }}</a></li>
+    {% block headline %}
+        {% if headline %}
+            <{{ hl }}>{{ headline }}</{{ hl }}>
         {% endif %}
-      {% endfor %}
-    </ul>
-  {% endblock %}
+    {% endblock %}
+
+    {% block content %}
+        <ul>
+            {% for item in items %}
+                {% if item.isActive %}
+                    <li class="active" aria-current="page">{{ item.link|insert_tag }}</li>
+                {% else %}
+                    <li><a href="{{ item.href }}">{{ item.link }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endblock %}
 
 </nav>
 <!-- indexer::continue -->

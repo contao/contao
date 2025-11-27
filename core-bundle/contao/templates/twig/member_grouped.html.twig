@@ -8,28 +8,28 @@
 
 {% block content %}
 
-  {% if message|default %}
-    <p class="tl_confirm">{{ message }}</p>
-  {% endif %}
+    {% if message|default %}
+        <p class="tl_confirm">{{ message }}</p>
+    {% endif %}
 
-  <form id="{{ formId }}" method="post" enctype="{{ enctype }}">
-    <div class="formbody">
-      <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
-      <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+    <form id="{{ formId }}" method="post" enctype="{{ enctype }}">
+        <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
 
-      {% for legend, category in categories %}
-        <fieldset>
-          {% if legend %}
-            <legend>{{ legend }}</legend>
-          {% endif %}
-          {{ category|join|raw }}
-        </fieldset>
-      {% endfor %}
+            {% for legend, category in categories %}
+                <fieldset>
+                    {% if legend %}
+                        <legend>{{ legend }}</legend>
+                    {% endif %}
+                    {{ category|join|raw }}
+                </fieldset>
+            {% endfor %}
 
-      <div class="widget widget-submit">
-        <button type="submit" class="submit">{{ slabel }}</button>
-      </div>
-    </div>
-  </form>
+            <div class="widget widget-submit">
+                <button type="submit" class="submit">{{ slabel }}</button>
+            </div>
+        </div>
+    </form>
 
 {% endblock %}

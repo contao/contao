@@ -1842,8 +1842,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$objTemplate = new BackendTemplate('be_ace');
 			$objTemplate->selector = 'ctrl_source';
 			$objTemplate->type = $objFile->extension;
-			$objTemplate->aceType = Backend::getAceType($objFile->extension);
 			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'];
+			$objTemplate->aceType = Backend::getAceType($objFile->extension);
 
 			$codeEditor = $objTemplate->parse();
 		}

@@ -2,13 +2,13 @@
     .addClass([class, 'block'])
     .addStyle(style|default)
     .mergeWith(wrapperAttributes|default)
- %}
+%}
 
 <div{{ wrapperAttributes }}>
 
-  {% if headline|default %}
-    <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
-  {% endif %}
+    {% if headline|default %}
+        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
+    {% endif %}
 
-  <div class="content-slider" data-config="{{ config }}">
-    <div class="slider-wrapper">
+    <div class="content-slider" data-config="{{ config }}">
+        <div class="slider-wrapper">

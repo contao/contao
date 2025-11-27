@@ -2,37 +2,37 @@
 
 {% block content %}
 
-  {% if yearly|default %}
-    <ul class="level_1">
-      {% for year, month in items %}
-        {% if month.isActive %}
-          <li class="active"><strong class="active">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</strong></li>
-        {% else %}
-          <li><a href="{{ month.href }}" title="{{ month.title }}">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</a></li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  {% else %}
-    <ul class="level_1">
-      {% for year, months in items %}
-        <li class="year submenu">
-          {% if year == activeYear %}
-            <strong class="active">{{ year }}</strong>
-          {% else %}
-            <a href="{{ url }}year={{ year }}">{{ year }}</a>
-          {% endif %}
-          <ul class="level_2">
-            {% for month in months %}
-              {% if month.isActive %}
-                <li class="active"><strong class="active">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</strong></li>
-              {% else %}
-                <li><a href="{{ url }}month={{ month.date }}" title="{{ month.title }}">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</a></li>
-              {% endif %}
+    {% if yearly|default %}
+        <ul class="level_1">
+            {% for year, month in items %}
+                {% if month.isActive %}
+                    <li class="active"><strong class="active">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</strong></li>
+                {% else %}
+                    <li><a href="{{ month.href }}" title="{{ month.title }}">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</a></li>
+                {% endif %}
             {% endfor %}
-          </ul>
-        </li>
-      {% endfor %}
-    </ul>
-  {% endif %}
+        </ul>
+    {% else %}
+        <ul class="level_1">
+            {% for year, months in items %}
+                <li class="year submenu">
+                    {% if year == activeYear %}
+                        <strong class="active">{{ year }}</strong>
+                    {% else %}
+                        <a href="{{ url }}year={{ year }}">{{ year }}</a>
+                    {% endif %}
+                    <ul class="level_2">
+                        {% for month in months %}
+                            {% if month.isActive %}
+                                <li class="active"><strong class="active">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</strong></li>
+                            {% else %}
+                                <li><a href="{{ url }}month={{ month.date }}" title="{{ month.title }}">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 {% endblock %}
