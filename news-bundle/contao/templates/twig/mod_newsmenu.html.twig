@@ -1,0 +1,70 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+    {% if not items|default and not days|default %}
+        <p class="empty">{{ empty }}</p>
+    {% else %}
+        {% if yearly|default %}
+            <ul class="level_1">
+                {% for year, month in items %}
+                    {% if month.isActive %}
+                        <li class="active"><strong class="active">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</strong></li>
+                    {% else %}
+                        <li><a href="{{ month.href }}" title="{{ month.title }}">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% elseif daily|default %}
+            <table class="minicalendar">
+                <thead>
+                <tr>
+                    <th class="head previous"><a href="{{ prevHref }}" title="{{ prevTitle }}">{{ prevLabel }}</a></th>
+                    <th colspan="5" class="head current">{{ current }}</th>
+                    <th class="head next"><a href="{{ nextHref }}" title="{{ nextTitle }}">{{ nextLabel }}</a></th>
+                </tr>
+                <tr>
+                    {% for day in days %}
+                        <th class="label">{{ day[:2] }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for class, week in weeks %}
+                    <tr class="{{ class }}">
+                        {% for day in week %}
+                            {% if day.href|default %}
+                                <td class="{{ day.class }}"><a href="{{ day.href }}" title="{{ day.title }}">{{ day.label }}</a></td>
+                            {% else %}
+                                <td class="{{ day.class }}">{{ day.label }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <ul class="level_1">
+                {% for year, months in items %}
+                    <li class="year submenu">
+                        {% if year == activeYear %}
+                            <strong class="active">{{ year }}</strong>
+                        {% else %}
+                            <a href="{{ url }}year={{ year }}">{{ year }}</a>
+                        {% endif %}
+                        <ul class="level_2">
+                            {% for month in months %}
+                                {% if month.isActive %}
+                                    <li class="active"><strong class="active">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</strong></li>
+                                {% else %}
+                                    <li><a href="{{ url }}month={{ month.date }}" title="{{ month.title }}">{{ month.link }}{% if showQuantity %} ({{ month.quantity }}){% endif %}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

@@ -1,5 +1,5 @@
 
-<?= Contao\Message::generate() ?>
+<?= $this->messages; ?>
 
 <div id="tl_buttons">
   <a href="<?= Contao\StringUtil::ampersand($this->backUrl) ?>" class="header_back" title="<?= Contao\StringUtil::specialchars($this->backBTTitle) ?>" accesskey="b"><?= $this->backBT ?></a>
@@ -27,8 +27,8 @@
       <div class="widget clr">
         <h3><?= $this->sourceLabel ?></h3>
         <?= $this->uploader ?>
-        <?php if (isset($this->sourceHelp)): ?>
-          <p class="tl_help tl_tip"><?= $this->sourceHelp ?></p>
+        <?php if (isset($this->sourceLabelHelp)): ?>
+          <p class="tl_help tl_tip"><?= $this->sourceLabelHelp ?></p>
         <?php endif; ?>
       </div>
     </fieldset>

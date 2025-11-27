@@ -1,0 +1,15 @@
+{% trans_default_domain "contao_default" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
+
+{% add "moo_mediabox" to stylesheets %}
+    {% with {file: 'assets/tablesort/css/tablesort.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+{% endadd %}
+
+<script src="{{ asset('js/tablesort.min.js', 'contao-components/tablesort') }}"></script>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+    window.addEvent('domready', function() {
+        $$('.ce_table .sortable').each(function(table) {
+            new TableSort(table, '{{ 'MSC.thousandsSeparator'|trans|e('js') }}', '{{ 'MSC.decimalSeparator'|trans|e('js') }}');
+        });
+    });
+</script>

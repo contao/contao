@@ -33,7 +33,7 @@ class BackendTemplateStudioControllerTest extends TestCase
     public function testInvalidIdentifierIsDenied(string $action, array $parameters, string|null $streamError = null, Request|null $request = null): void
     {
         $request ??= new Request();
-        $request->headers->set('Accept', 'text/vnd.turbo-stream.html, charset=UTF-8');
+        $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
         $twig = null;
 

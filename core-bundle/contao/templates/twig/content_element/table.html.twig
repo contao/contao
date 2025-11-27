@@ -6,9 +6,9 @@
 {% endblock %}
 
 {%- block table_caption_inner %}
-    {{- caption|insert_tag_raw|raw -}}
+    {{- caption|sanitize_html('contao')|insert_tag_raw -}}
 {% endblock -%}
 
 {%- block table_cell_content %}
-    {{- cell|trim|replace({'\n': '<br>\n'})|insert_tag_raw|raw -}}
+    {{- cell|trim|replace({'\n': '<br>\n'})|sanitize_html('contao')|insert_tag_raw -}}
 {% endblock -%}

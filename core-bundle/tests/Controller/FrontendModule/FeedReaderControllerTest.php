@@ -19,8 +19,10 @@ use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
 use Contao\CoreBundle\Pagination\PaginationInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\ModuleModel;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -41,7 +43,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
-use Twig\Loader\LoaderInterface;
 
 class FeedReaderControllerTest extends TestCase
 {
@@ -347,11 +348,17 @@ class FeedReaderControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, callable|null $assertTwigContext = null): ContainerBuilder
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
             ->method('exists')
-            ->with('@Contao/frontend_module/feed_reader.html.twig')
             ->willReturn(true)
+        ;
+
+        $loader
+            ->method('getFirst')
+            ->willReturnCallback(
+                static fn (string $identifier): string => 'pagination' === $identifier ? 'templates/pagination.html5' : "path/to/$identifier.html.twig",
+            )
         ;
 
         $twig = $this->createMock(TwigEnvironment::class);
@@ -374,7 +381,7 @@ class FeedReaderControllerTest extends TestCase
         }
 
         $this->container->set('contao.twig.filesystem_loader', $loader);
-        $this->container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $this->container->set('contao.twig.interop.context_factory', new ContextFactory($this->createMock(ScopeMatcher::class)));
         $this->container->set('twig', $twig);
         $this->container->set('contao.framework', $this->mockContaoFramework());
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());

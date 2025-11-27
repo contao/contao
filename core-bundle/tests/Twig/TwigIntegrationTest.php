@@ -21,6 +21,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -104,10 +105,24 @@ class TwigIntegrationTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request = new Request());
 
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('exists')
+            ->with('@Contao/form_text.html.twig')
+            ->willReturn(true)
+        ;
+
+        $filesystemLoader
+            ->method('getFirst')
+            ->with('form_text')
+            ->willReturn('/path/to/form_text.html.twig')
+        ;
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
-        $container->set(ContextFactory::class, new ContextFactory());
+        $container->set(ContextFactory::class, new ContextFactory($this->createMock(ScopeMatcher::class)));
         $container->set('request_stack', $requestStack);
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
 
         System::setContainer($container);
 
@@ -181,9 +196,23 @@ class TwigIntegrationTest extends TestCase
             ),
         );
 
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('exists')
+            ->with('@Contao/twig_template.html.twig')
+            ->willReturn(true)
+        ;
+
+        $filesystemLoader
+            ->method('getFirst')
+            ->with('twig_template')
+            ->willReturn('/path/to/twig_template.html.twig')
+        ;
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
-        $container->set(ContextFactory::class, new ContextFactory());
+        $container->set(ContextFactory::class, new ContextFactory($this->mockScopeMatcher()));
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
 
         $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
