@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="{{ language }}" data-turbo="false">
 <head>
+    <meta name="turbo-visit-control" content="reload">
 
     {% block head %}
         <meta charset="{{ charset }}">
@@ -13,7 +14,6 @@
             <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
             <meta name="referrer" content="origin">
             <meta name="robots" content="noindex,follow">
-            <meta name="turbo-visit-control" content="reload">
         {% endblock %}
 
         <link rel="stylesheet" href="{{ asset('login.css', 'system/themes/' ~ theme) }}">
