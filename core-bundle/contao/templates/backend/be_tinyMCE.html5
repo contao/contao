@@ -2,7 +2,7 @@
 
 namespace Contao;
 
-if ($this->enabled):
+if ($this->enableTinyMce):
 
 ?>
 <script>
