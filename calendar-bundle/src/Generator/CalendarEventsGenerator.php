@@ -217,7 +217,7 @@ class CalendarEventsGenerator
         $event['begin'] = $start;
         $event['end'] = $end;
         $event['effectiveEndTime'] = $end;
-        $event['details'] = Template::once(static fn () => '');
+        $event['details'] = Template::once(static fn (): string => '');
         $event['hasTeaser'] = false;
 
         // Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
@@ -238,7 +238,7 @@ class CalendarEventsGenerator
 
         // Display the "read more" button for external/article links
         if ('default' !== $eventModel->source) {
-            $event['hasDetails'] = Template::once(static fn () => null !== $url);
+            $event['hasDetails'] = Template::once(static fn (): bool => null !== $url);
         }
 
         // Compile the event text
@@ -261,7 +261,7 @@ class CalendarEventsGenerator
                 },
             );
 
-            $event['hasDetails'] = $template->once(static fn (): bool => null === $url ? false : $contentModel->countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
+            $event['hasDetails'] = $template->once(static fn (): bool => null !== $url && $contentModel->countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
         }
 
         // Get today's start and end timestamp

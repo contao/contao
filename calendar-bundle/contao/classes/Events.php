@@ -223,7 +223,7 @@ abstract class Events extends Module
 		$arrEvent['begin'] = $intStart;
 		$arrEvent['end'] = $intEnd;
 		$arrEvent['effectiveEndTime'] = $arrEvent['endTime'];
-		$arrEvent['details'] = Template::once(static fn () => '');
+		$arrEvent['details'] = Template::once(static fn (): string => '');
 		$arrEvent['hasTeaser'] = false;
 
 		// Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
@@ -248,7 +248,7 @@ abstract class Events extends Module
 		// Display the "read more" button for external/article links
 		if ($objEvents->source != 'default')
 		{
-			$arrEvent['hasDetails'] = Template::once(static fn () => null !== $url);
+			$arrEvent['hasDetails'] = Template::once(static fn (): bool => null !== $url);
 		}
 
 		// Compile the event text
@@ -256,7 +256,7 @@ abstract class Events extends Module
 		{
 			$id = $objEvents->id;
 
-			$arrEvent['details'] = Template::once(function () use ($id) {
+			$arrEvent['details'] = Template::once(function () use ($id): string {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -271,8 +271,8 @@ abstract class Events extends Module
 				return $strDetails;
 			});
 
-			$arrEvent['hasDetails'] = Template::once(static function () use ($id, $url) {
-				return null === $url ? false : ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
+			$arrEvent['hasDetails'] = Template::once(static function () use ($url, $id): bool {
+				return null !== $url && ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
 			});
 		}
 
