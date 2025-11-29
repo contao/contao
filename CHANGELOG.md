@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.7] (2025-11-29)
+
+**Fixed issues:**
+
+- [#9050] Increase the field length for the ALTCHA challenge ([fritzmg])
+- [#9048] Fix the `LayoutTemplateMigration` ([fritzmg])
+
 ## [5.6.6] (2025-11-26)
 
 **Fixed issues:**
@@ -273,6 +280,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.7]: https://github.com/contao/contao/releases/tag/5.6.7
 [5.6.6]: https://github.com/contao/contao/releases/tag/5.6.6
 [5.6.5]: https://github.com/contao/contao/releases/tag/5.6.5
 [5.6.4]: https://github.com/contao/contao/releases/tag/5.6.4
@@ -509,3 +517,5 @@ This project adheres to [Semantic Versioning].
 [#9037]: https://github.com/contao/contao/pull/9037
 [#9043]: https://github.com/contao/contao/pull/9043
 [#9044]: https://github.com/contao/contao/pull/9044
+[#9048]: https://github.com/contao/contao/pull/9048
+[#9050]: https://github.com/contao/contao/pull/9050
