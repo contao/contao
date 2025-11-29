@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning].
 
 **Fixed issues:**
 
-- [#9042] Convert the TextField input value using `StringUtll::specialChars()` ([zoglo])
+- [#9042] Convert the TextField input value using `StringUtil::specialChars()` ([zoglo])
 
 ## [4.13.57] (2025-11-25)
 
