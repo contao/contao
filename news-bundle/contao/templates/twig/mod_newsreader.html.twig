@@ -1,4 +1,4 @@
-{% extends "@Contao/block_searchable.html.twig" %}
+{% extends '@Contao/block_searchable.html.twig' %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
             {{ comments|join|raw }}
             {{ pagination|default|raw }}
             <{{ hlc }}>{{ addComment }}</{{ hlc }}>
-            {% include "@Contao/mod_comment_form.html.twig" ignore missing %}
+            {{ include('@Contao/mod_comment_form.html.twig', ignore_missing: true) }}
         </div>
     {% endif %}
 

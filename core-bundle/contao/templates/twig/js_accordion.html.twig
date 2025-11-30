@@ -1,7 +1,7 @@
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {# Add the handorgel style sheet #}
-{% add "handorgel" to stylesheets %}
+{% add 'handorgel' to stylesheets %}
     {% with {file: asset('css/handorgel.min.css', 'contao-components/handorgel')} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 

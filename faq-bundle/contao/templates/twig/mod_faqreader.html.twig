@@ -1,4 +1,4 @@
-{% extends "@Contao/block_searchable.html.twig" %}
+{% extends '@Contao/block_searchable.html.twig' %}
 
 {% block content %}
 
@@ -13,7 +13,7 @@
             {% endif %}
 
             {% if addImage %}
-                {% include "@Contao/image.html.twig" %}
+                {{ include('@Contao/image.html.twig') }}
             {% endif %}
 
             {% if addBefore|default %}
@@ -46,7 +46,7 @@
             {{ comments|join|raw }}
             {{ pagination|default|raw }}
             <{{ hlc }}>{{ addComment }}</{{ hlc }}>
-            {% include "@Contao/mod_comment_form.html.twig" ignore missing %}
+            {{ include('@Contao/mod_comment_form.html.twig', [], true, true) }}
         </div>
     {% endif %}
 

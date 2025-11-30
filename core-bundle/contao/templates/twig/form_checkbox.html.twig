@@ -1,4 +1,4 @@
-{% extends "@Contao/form_row.html.twig" %}
+{% extends '@Contao/form_row.html.twig' %}
 
 {% block field %}
     <fieldset id="ctrl_{{ this.id }}" class="checkbox_container{% if this.class|default %} {{ this.class|default }}{% endif %}"{% if this.help|default %} aria-describedby="help_ctrl_{{ this.id }}"{% endif %}>
