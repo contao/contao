@@ -97,6 +97,34 @@ jobs:
               run: |
                   vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
+    twig-cs:
+        name: Twig-CS
+        runs-on: ubuntu-latest
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
+
+            - name: Install Contao
+              uses: ramsey/composer-install@v3
+
+            - name: Install Twig-CS
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: vendor-bin/twig-cs
+
+            - name: Run Twig-CS
+              run: vendor-bin/twig-cs/vendor/bin/twig-cs-fixer --config=vendor-bin/twig-cs/config/config.php lint
+
+
     phpstan:
         name: PHPStan
         runs-on: ubuntu-latest
