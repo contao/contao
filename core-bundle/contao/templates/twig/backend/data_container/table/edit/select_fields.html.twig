@@ -1,5 +1,5 @@
-{% trans_default_domain "contao_default" %}
-{% extends "@Contao/backend/data_container/table/edit/_edit.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% extends '@Contao/backend/data_container/table/edit/_edit.html.twig' %}
 
 {% set form_attributes = attrs()
     .set('action', "#{app.request.requestUri}&fields=1")
@@ -60,5 +60,5 @@
     {% set submit_button %}
         <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">{{ 'MSC.continue'|trans }}</button>
     {% endset %}
-    {% include "@Contao/backend/data_container/buttons.html.twig" with { buttons: [submit_button] } %}
+    {{ include('@Contao/backend/data_container/buttons.html.twig', {buttons: [submit_button]}) }}
 {% endblock %}
