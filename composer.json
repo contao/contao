@@ -319,6 +319,7 @@
         "all": [
             "@rector",
             "@ecs",
+            "@twig-cs-fixer",
             "@service-linter",
             "@monorepo-tools",
             "@unit-tests",
@@ -335,12 +336,12 @@
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",
-        "twig-cs": "@php vendor-bin/twig-cs/vendor/bin/twig-cs-fixer --config=vendor-bin/twig-cs/config/config.php fix",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional",
         "monorepo-tools": "@php vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate",
         "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze",
         "rector": "@php vendor-bin/rector/vendor/bin/rector",
         "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids",
+        "twig-cs-fixer": "@php vendor-bin/twig-cs-fixer/vendor/bin/twig-cs-fixer fix",
         "unit-tests": "@php vendor/bin/phpunit"
     }
 }

@@ -97,8 +97,8 @@ jobs:
               run: |
                   vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
-    twig-cs:
-        name: Twig-CS
+    twig-cs-fixer:
+        name: Twig CS Fixer
         runs-on: ubuntu-latest
         steps:
             - name: Setup PHP
@@ -116,14 +116,13 @@ jobs:
             - name: Install Contao
               uses: ramsey/composer-install@v3
 
-            - name: Install Twig-CS
+            - name: Install Twig CS Fixer
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: vendor-bin/twig-cs
+                  working-directory: vendor-bin/twig-cs-fixer
 
-            - name: Run Twig-CS
-              run: vendor-bin/twig-cs/vendor/bin/twig-cs-fixer --config=vendor-bin/twig-cs/config/config.php lint
-
+            - name: Run Twig CS Fixer
+              run: vendor-bin/twig-cs-fixer/vendor/bin/twig-cs-fixer lint
 
     phpstan:
         name: PHPStan

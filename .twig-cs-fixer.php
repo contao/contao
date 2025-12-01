@@ -32,16 +32,16 @@ use TwigCsFixer\Rules\Whitespace\IndentRule;
 use TwigCsFixer\Rules\Whitespace\TrailingSpaceRule;
 use TwigCsFixer\Ruleset\Ruleset;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/vendor-bin/twig-cs-fixer/vendor/autoload.php';
 
 $templatePaths = [
-    __DIR__ . '/../../../calendar-bundle/contao/templates',
-    __DIR__ . '/../../../comments-bundle/contao/templates',
-    __DIR__ . '/../../../core-bundle/contao/templates',
-    __DIR__ . '/../../../faq-bundle/contao/templates',
-    __DIR__ . '/../../../listing-bundle/contao/templates',
-    __DIR__ . '/../../../news-bundle/contao/templates',
-    __DIR__ . '/../../../newsletter-bundle/contao/templates',
+    __DIR__ . '/calendar-bundle/contao/templates',
+    __DIR__ . '/comments-bundle/contao/templates',
+    __DIR__ . '/core-bundle/contao/templates',
+    __DIR__ . '/faq-bundle/contao/templates',
+    __DIR__ . '/listing-bundle/contao/templates',
+    __DIR__ . '/news-bundle/contao/templates',
+    __DIR__ . '/newsletter-bundle/contao/templates',
 ];
 
 $ruleset = new Ruleset();
@@ -73,7 +73,7 @@ $ruleset->addRule(new SingleQuoteRule());
 // Node rules
 $ruleset->addRule(new ValidConstantFunctionRule());
 $ruleset->addRule(new ForbiddenFunctionRule([
-    'contao_figure', // you should use figure function instead
+    'contao_figure', // you should use the "figure" function instead
     'insert_tag', // you should not misuse insert tags in templates
     'contao_sections', // only for legacy layout
     'contao_section', // only for legacy layout
@@ -106,9 +106,6 @@ $config->addTokenParser(new AddTokenParser(''));
 $config->addTokenParser(new SlotTokenParser());
 
 // Only lint/fix templates in subdirectories, otherwise we would also target our surrogate templates
-$config->setFinder(
-    (new Finder())->in(__DIR__ . '/../../../*-bundle/contao/templates/twig/*',)
-);
-
+$config->setFinder((new Finder())->in(__DIR__ . '/*-bundle/contao/templates/twig/*'));
 
 return $config;
