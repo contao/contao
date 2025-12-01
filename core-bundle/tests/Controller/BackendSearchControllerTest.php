@@ -93,7 +93,7 @@ class BackendSearchControllerTest extends TestCase
     {
         $getTurboStreamRequest = static function (array $query = []): Request {
             $request = new Request($query);
-            $request->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
+            $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
             return $request;
         };
