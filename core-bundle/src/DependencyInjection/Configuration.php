@@ -23,13 +23,16 @@ use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Imagine\Image\ImageInterface;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @return TreeBuilder<'array'>
+     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('contao');
@@ -133,7 +136,10 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addMessengerNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addMessengerNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('messenger'))
             ->getRootNode()
@@ -217,7 +223,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addImageNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addImageNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('image'))
             ->getRootNode()
@@ -465,7 +474,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addImagineOptionsNode(bool $withDefaults): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addImagineOptionsNode(bool $withDefaults): ArrayNodeDefinition
     {
         $node = (new TreeBuilder('imagine_options'))
             ->getRootNode()
@@ -543,7 +555,10 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    private function addIntlNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addIntlNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('intl'))
             ->getRootNode()
@@ -625,7 +640,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addSecurityNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addSecurityNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('security'))
             ->getRootNode()
@@ -652,7 +670,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addSearchNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addSearchNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('search'))
             ->getRootNode()
@@ -693,7 +714,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addBackendSearchNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addBackendSearchNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('backend_search'))
             ->getRootNode()
@@ -711,7 +735,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addCrawlNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addCrawlNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('crawl'))
             ->getRootNode()
@@ -745,7 +772,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addMailerNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addMailerNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('mailer'))
             ->getRootNode()
@@ -771,7 +801,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addBackendNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addBackendNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('backend'))
             ->getRootNode()
@@ -833,7 +866,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addInsertTagsNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addInsertTagsNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('insert_tags'))
             ->getRootNode()
@@ -849,7 +885,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addBackupNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addBackupNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('backup'))
             ->getRootNode()
@@ -887,7 +926,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addSanitizerNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addSanitizerNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('sanitizer'))
             ->getRootNode()
@@ -914,7 +956,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addCronNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addCronNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('cron'))
             ->getRootNode()
@@ -929,7 +974,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addCspNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addCspNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('csp'))
             ->getRootNode()
@@ -981,7 +1029,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addAltchaNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addAltchaNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('altcha'))
             ->getRootNode()
@@ -1006,7 +1057,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addTemplateStudioNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addTemplateStudioNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('template_studio'))
             ->getRootNode()
