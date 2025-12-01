@@ -44,7 +44,7 @@ class RoutingTest extends FunctionalTestCase
         $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text('Not Found'));
+        $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -264,7 +264,7 @@ class RoutingTest extends FunctionalTestCase
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text('Not Found'));
+        $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -493,7 +493,7 @@ class RoutingTest extends FunctionalTestCase
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text('Not Found'));
+        $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -737,7 +737,7 @@ class RoutingTest extends FunctionalTestCase
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text('Not Found'));
+        $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
