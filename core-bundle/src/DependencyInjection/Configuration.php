@@ -24,7 +24,6 @@ use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Filesystem\Path;
