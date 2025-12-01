@@ -19,6 +19,11 @@ set_time_limit(0);
 @ini_set('zlib.output_compression', '0');
 @ini_set('display_errors', '0');
 
+// System maintenance mode comes first as it has to work even if the vendor directory does not exist
+if ('contao:cron' === ($_SERVER['argv'][1] ?? null) && file_exists(getcwd().'/var/maintenance.html')) {
+    exit;
+}
+
 if (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 2);
 } elseif (file_exists(__DIR__.'/../../../autoload.php')) {
