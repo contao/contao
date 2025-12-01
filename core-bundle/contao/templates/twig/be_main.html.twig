@@ -11,8 +11,9 @@
     .set('id', 'top')
     .addClass('be_main')
     .addClass('popup', isPopup)
-    .set('data-controller', 'contao--tooltips')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
+    .set('data-controller', 'contao--tooltips contao--toggle-state')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
+    .set('data-contao--toggle-state-active-class', 'active')
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -85,7 +86,7 @@
 
         {% block left %}
             {% if not isPopup %}
-                <aside id="left">
+                <aside id="left" data-contao--toggle-state-target="controls">
                     {{ menu|raw }}
                     <div class="version">
                         {% block version %}
