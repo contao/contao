@@ -55,7 +55,7 @@ class NewsFeedControllerTest extends ContaoTestCase
      * @dataProvider getXMLFeedFormats
      * @dataProvider getJSONFeedFormats
      */
-    public function testConfiguresPageRoute(string $format, string $suffix): void
+    public function testConfiguresPageRoute(string $format, string $suffix, string $url, string $contentType, bool $isDebug = false): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,
@@ -130,7 +130,7 @@ class NewsFeedControllerTest extends ContaoTestCase
     /**
      * @dataProvider getXMLFeedFormats
      */
-    public function testProperlyEncodesXMLEntities(string $format): void
+    public function testProperlyEncodesXMLEntities(string $format, string $suffix, string $url, string $contentType, bool $isDebug = false): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,

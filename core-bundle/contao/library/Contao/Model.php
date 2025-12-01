@@ -841,7 +841,7 @@ abstract class Model
 		{
 			$varAliasValue = $this->{$strColumn};
 
-			if (!$registry->isRegisteredAlias($this, $strColumn, $varAliasValue))
+			if (null !== $varAliasValue && !$registry->isRegisteredAlias($this, $strColumn, $varAliasValue))
 			{
 				$registry->registerAlias($this, $strColumn, $varAliasValue);
 			}

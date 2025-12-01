@@ -60,7 +60,9 @@ class MetadataBag implements \ArrayAccess
 
     public function getFirst(): Metadata|null
     {
-        return $this->metadata[array_key_first($this->metadata)] ?? null;
+        $key = array_key_first($this->metadata);
+
+        return null === $key ? null : $this->metadata[$key] ?? null;
     }
 
     /**

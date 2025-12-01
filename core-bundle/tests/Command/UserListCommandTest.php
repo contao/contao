@@ -54,7 +54,7 @@ class UserListCommandTest extends TestCase
     /**
      * @dataProvider listsUsersProvider
      */
-    public function testListsUsers(array $input, array $data, string $expected): void
+    public function testListsUsers(array $input, array $data, string $expected, array $expectedArray): void
     {
         $command = $this->getCommand($this->mockQueryBuilder($data));
         $output = $this->executeCommand($command, $input);

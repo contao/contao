@@ -163,43 +163,43 @@ class BackendAccessVoterTest extends TestCase
     public static function userDataProvider(): iterable
     {
         yield 'Check access on table fields' => [
-            ['alexf' => ['tl_user.field']],
+            ['id' => 42, 'alexf' => ['tl_user.field']],
             ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE,
             'tl_user.field',
         ];
 
         yield 'Check access on content elements' => [
-            ['elements' => ['text']],
+            ['id' => 42, 'elements' => ['text']],
             ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE,
             'text',
         ];
 
         yield 'Check access on front end module' => [
-            ['frontendModules' => ['navigation']],
+            ['id' => 42, 'frontendModules' => ['navigation']],
             ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE,
             'navigation',
         ];
 
         yield 'Compares numeric strings and integers' => [
-            ['forms' => [15]],
+            ['id' => 42, 'forms' => [15]],
             ContaoCorePermissions::USER_CAN_EDIT_FORM,
             '15',
         ];
 
         yield 'Uses subject from permission' => [
-            ['themes' => ['theme_export', 'theme_import']],
+            ['id' => 42, 'themes' => ['theme_export', 'theme_import']],
             ContaoCorePermissions::USER_CAN_EXPORT_THEMES,
             null,
         ];
 
         yield 'Check permission on mounted folder' => [
-            ['filemounts' => ['files/foobar']],
+            ['id' => 42, 'filemounts' => ['files/foobar']],
             ContaoCorePermissions::USER_CAN_ACCESS_PATH,
             'files/foobar',
         ];
 
         yield 'Check permission on mounted pages' => [
-            ['pagemounts' => [17]],
+            ['id' => 42, 'pagemounts' => [17]],
             ContaoCorePermissions::USER_CAN_ACCESS_PAGE,
             17,
         ];
@@ -224,7 +224,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testGrantsAccessToChildPages(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['pagemounts' => [1, 2, 3]]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'pagemounts' => [1, 2, 3]]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -247,7 +247,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testDeniesAccessIfUserCannotEditFieldsOfTable(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_bar::foo']]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'alexf' => ['tl_bar::foo']]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -261,7 +261,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testDeniesAccessToEditFieldsOfTableIfSubjectIsNotAString(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_foobar::foo']]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'alexf' => ['tl_foobar::foo']]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -275,7 +275,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testGrantsAccessToEditFieldsOfTableIfUserIsAdmin(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => [], 'isAdmin' => true]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'alexf' => [], 'isAdmin' => true]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -289,7 +289,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testGrantsAccessToEditFieldsOfTable(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_foobar::foo']]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'alexf' => ['tl_foobar::foo']]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -303,7 +303,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testGrantsAccessToEditFieldsOfTableInAttribute(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_foobar::foo']]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'alexf' => ['tl_foobar::foo']]);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -317,7 +317,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testGrantsAccessToPageIfUserIsAdmin(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'isAdmin' => true]);
 
         $token = $this->createMock(TokenInterface::class);
         $token

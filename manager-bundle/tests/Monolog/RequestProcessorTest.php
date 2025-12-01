@@ -60,7 +60,7 @@ class RequestProcessorTest extends ContaoTestCase
     /**
      * @dataProvider logExtrasProvider
      */
-    public function testIgnoresIfRequestIsNotSet(): void
+    public function testIgnoresIfRequestIsNotSet(string $uri, string $method): void
     {
         $processor = new RequestProcessor();
 
