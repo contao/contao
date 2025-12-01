@@ -67,6 +67,7 @@ class DumperTest extends ContaoTestCase
 
     public static function successfulDumpProvider(): iterable
     {
+        $tinyint = (new MySQLPlatform())->getBooleanTypeDeclarationSQL([]);
         $tableOptions = ['charset' => 'utf8', 'collation' => 'utf8_unicode_ci', 'engine' => 'InnoDB'];
 
         yield 'Empty table without data' => [
@@ -128,7 +129,7 @@ class DumperTest extends ContaoTestCase
                 'SET FOREIGN_KEY_CHECKS = 0;',
                 '-- BEGIN STRUCTURE tl_page',
                 'DROP TABLE IF EXISTS `tl_page`;',
-                'CREATE TABLE `tl_page` (`stringCol` VARCHAR(255) NOT NULL, `integerCol` INT NOT NULL, `booleanCol` TINYINT NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
+                "CREATE TABLE `tl_page` (`stringCol` VARCHAR(255) NOT NULL, `integerCol` INT NOT NULL, `booleanCol` $tinyint NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;",
                 '-- BEGIN DATA tl_page',
                 "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `booleanCol`) VALUES ('value1', 42, 1);",
                 "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `booleanCol`) VALUES ('', NULL, 0);",
@@ -179,7 +180,7 @@ class DumperTest extends ContaoTestCase
                 'SET FOREIGN_KEY_CHECKS = 0;',
                 '-- BEGIN STRUCTURE tl_page',
                 'DROP TABLE IF EXISTS `tl_page`;',
-                'CREATE TABLE `tl_page` (`stringCol` VARCHAR(255) NOT NULL, `integerCol` INT NOT NULL, `floatCol` DOUBLE PRECISION NOT NULL, `bigintCol` BIGINT NOT NULL, `decimalCol` NUMERIC(10, 0) NOT NULL, `booleanCol` TINYINT NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
+                "CREATE TABLE `tl_page` (`stringCol` VARCHAR(255) NOT NULL, `integerCol` INT NOT NULL, `floatCol` DOUBLE PRECISION NOT NULL, `bigintCol` BIGINT NOT NULL, `decimalCol` NUMERIC(10, 0) NOT NULL, `booleanCol` $tinyint NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;",
                 '-- BEGIN DATA tl_page',
                 "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `floatCol`, `bigintCol`, `decimalCol`, `booleanCol`) VALUES ('value1', 42, '4.2', '92233720368547758079223372036854775807', '4.2', 1);",
                 "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `floatCol`, `bigintCol`, `decimalCol`, `booleanCol`) VALUES ('value1', 42, '4.2', '92233720368547758079223372036854775807', '4.2', 1);",
