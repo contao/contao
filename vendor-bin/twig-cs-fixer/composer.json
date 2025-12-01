@@ -2,20 +2,7 @@
     "require": {
         "vincentlanglet/twig-cs-fixer": "^3.11"
     },
-    "require-dev": {
-        "symfony/twig-bridge": "*",
-        "contao/core-bundle": "*"
-    },
-    "autoload": {
-      "psr-4": {
-        "Contao\\Tools\\TwigCs\\": "src/"
-      }
-    },
     "config": {
-        "allow-plugins": {
-            "contao-components/installer": false,
-            "php-http/discovery": false
-        },
         "platform": {
             "php": "8.3"
         }
