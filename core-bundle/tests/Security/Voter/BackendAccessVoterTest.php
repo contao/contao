@@ -141,6 +141,7 @@ class BackendAccessVoterTest extends TestCase
     public function testDeniesAccessIfTheUserDataDoesNotIntersect(array $userData, string $attribute, int|string|null $subject): void
     {
         $userData = array_fill_keys(array_keys($userData), []);
+        $userData['id'] = 42;
 
         $token = $this->createMock(TokenInterface::class);
         $token
