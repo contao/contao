@@ -73,6 +73,9 @@
         "contao/news-bundle": "self.version",
         "phpunit/phpunit": "^11.5"
     },
+    "conflict": {
+        "symfony/var-exporter": ">=8.0"
+    },
     "autoload": {
         "psr-4": {
             "Contao\\ManagerBundle\\": "src/"
