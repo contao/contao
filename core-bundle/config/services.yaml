@@ -271,6 +271,7 @@ services:
         class: Contao\CoreBundle\DataContainer\ValueFormatter
         public: true
         arguments:
+            - '@contao.framework'
             - '@database_connection'
             - '@translator'
         tags:

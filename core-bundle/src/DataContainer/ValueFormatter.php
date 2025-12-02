@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\DataContainer;
 use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FilesModel;
@@ -38,6 +39,7 @@ class ValueFormatter implements ResetInterface
     private array $optionsCallbackCache = [];
 
     public function __construct(
+        private readonly ContaoFramework $framework,
         private readonly Connection $connection,
         private readonly TranslatorInterface $translator,
     ) {
@@ -85,16 +87,16 @@ class ValueFormatter implements ResetInterface
             \in_array(
                 (int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null),
                 [
-                DataContainer::SORT_DAY_ASC,
-                DataContainer::SORT_DAY_DESC,
-                DataContainer::SORT_DAY_BOTH,
-                DataContainer::SORT_MONTH_ASC,
-                DataContainer::SORT_MONTH_DESC,
-                DataContainer::SORT_MONTH_BOTH,
-                DataContainer::SORT_YEAR_ASC,
-                DataContainer::SORT_YEAR_DESC,
-                DataContainer::SORT_YEAR_BOTH,
-            ],
+                    DataContainer::SORT_DAY_ASC,
+                    DataContainer::SORT_DAY_DESC,
+                    DataContainer::SORT_DAY_BOTH,
+                    DataContainer::SORT_MONTH_ASC,
+                    DataContainer::SORT_MONTH_DESC,
+                    DataContainer::SORT_MONTH_BOTH,
+                    DataContainer::SORT_YEAR_ASC,
+                    DataContainer::SORT_YEAR_DESC,
+                    DataContainer::SORT_YEAR_BOTH,
+                ],
                 true,
             )
         ) {
@@ -132,7 +134,7 @@ class ValueFormatter implements ResetInterface
                 }
 
                 return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
-            }
+            },
         );
 
         if (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null, [DataContainer::SORT_INITIAL_LETTER_DESC, DataContainer::SORT_INITIAL_LETTERS_DESC, DataContainer::SORT_DESC], false)) {
@@ -146,19 +148,22 @@ class ValueFormatter implements ResetInterface
     {
         // Translate UUIDs to paths
         if ('fileTree' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null)) {
-            $objFile = FilesModel::findByUuid($value);
+            $objFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($value);
 
             if (null !== $objFile) {
                 return $objFile->path;
             }
         }
 
+        $dateAdapter = $this->framework->getAdapter(Date::class);
+        $configAdapter = $this->framework->getAdapter(Config::class);
+
         if ('date' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] ?? null)) {
-            return $value ? Date::parse(Config::get('dateFormat'), $value) : '';
+            return $value ? $dateAdapter->parse($configAdapter->get('dateFormat'), $value) : '';
         }
 
         if ('time' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] ?? null)) {
-            return $value ? Date::parse(Config::get('timeFormat'), $value) : '';
+            return $value ? $dateAdapter->parse($configAdapter->get('timeFormat'), $value) : '';
         }
 
         if (
@@ -180,7 +185,7 @@ class ValueFormatter implements ResetInterface
                 true,
             )
         ) {
-            return $value ? Date::parse(Config::get('datimFormat'), $value) : '';
+            return $value ? $dateAdapter->parse($configAdapter->get('datimFormat'), $value) : '';
         }
 
         if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
@@ -219,7 +224,7 @@ class ValueFormatter implements ResetInterface
             && !isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'])
         ) {
             $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'];
-            Controller::loadDataContainer($ptable);
+            $this->framework->getAdapter(Controller::class)->loadDataContainer($ptable);
             $showField = $GLOBALS['TL_DCA'][$ptable]['list']['label']['fields'][0] ?? 'id';
 
             $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
@@ -242,7 +247,7 @@ class ValueFormatter implements ResetInterface
                 && !($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['multiple'] ?? null)
             )
         ) {
-            return $this->translator->trans($value ?? null ? 'MSC.yes' : 'MSC.no', [], 'contao_default');
+            return $this->translator->trans($value ? 'MSC.yes' : 'MSC.no', [], 'contao_default');
         }
 
         return (string) $value;
@@ -257,17 +262,19 @@ class ValueFormatter implements ResetInterface
             \in_array(
                 (int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null),
                 [
-                DataContainer::SORT_DAY_ASC,
-                DataContainer::SORT_DAY_DESC,
-                DataContainer::SORT_DAY_BOTH,
-            ],
+                    DataContainer::SORT_DAY_ASC,
+                    DataContainer::SORT_DAY_DESC,
+                    DataContainer::SORT_DAY_BOTH,
+                ],
                 true,
             )
         ) {
             ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null) === DataContainer::SORT_DAY_DESC ? rsort($values) : sort($values);
+            $dateAdapter = $this->framework->getAdapter(Date::class);
+            $configAdapter = $this->framework->getAdapter(Config::class);
 
             foreach ($values as $v) {
-                $options[] = ['value' => $v, 'label' => $v ? Date::parse(Config::get('dateFormat'), $v) : '-'];
+                $options[] = ['value' => $v, 'label' => $v ? $dateAdapter->parse($configAdapter->get('dateFormat'), $v) : '-'];
             }
 
             return $options;
@@ -278,10 +285,10 @@ class ValueFormatter implements ResetInterface
             \in_array(
                 (int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null),
                 [
-                DataContainer::SORT_MONTH_ASC,
-                DataContainer::SORT_MONTH_DESC,
-                DataContainer::SORT_MONTH_BOTH,
-            ],
+                    DataContainer::SORT_MONTH_ASC,
+                    DataContainer::SORT_MONTH_DESC,
+                    DataContainer::SORT_MONTH_BOTH,
+                ],
                 true,
             )
         ) {
@@ -311,10 +318,10 @@ class ValueFormatter implements ResetInterface
             \in_array(
                 (int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null),
                 [
-                DataContainer::SORT_YEAR_ASC,
-                DataContainer::SORT_YEAR_DESC,
-                DataContainer::SORT_YEAR_BOTH,
-            ],
+                    DataContainer::SORT_YEAR_ASC,
+                    DataContainer::SORT_YEAR_DESC,
+                    DataContainer::SORT_YEAR_BOTH,
+                ],
                 true,
             )
         ) {
@@ -369,7 +376,7 @@ class ValueFormatter implements ResetInterface
         if (\is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['options_callback'] ?? null)) {
             [$class, $method] = $GLOBALS['TL_DCA'][$table]['fields'][$field]['options_callback'];
 
-            return $this->optionsCallbackCache[$table][$field] = System::importStatic($class)->$method($dc);
+            return $this->optionsCallbackCache[$table][$field] = $this->framework->getAdapter(System::class)->importStatic($class)->$method($dc);
         }
 
         if (\is_callable($GLOBALS['TL_DCA'][$table]['fields'][$field]['options_callback'] ?? null)) {
