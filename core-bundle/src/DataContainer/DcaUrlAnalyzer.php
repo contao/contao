@@ -157,6 +157,14 @@ class DcaUrlAnalyzer
                 $query['act'] = 'edit';
             }
 
+            $treeTrail = null;
+
+            if (DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+                $treeTrail = $this->getRootTrail($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? '', (int) ($row['pid'] ?? 0), ['do' => $do, 'table' => $table]);
+            } elseif (DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+                $treeTrail = $this->getRootTrail($table, (int) ($row['pid'] ?? 0), ['do' => $do, 'table' => $table]);
+            }
+
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
                 if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
                     $links[] = [
@@ -170,6 +178,7 @@ class DcaUrlAnalyzer
                             [],
                             'contao_default',
                         ),
+                        'treeTrail' => null,
                     ];
                 } else {
                     $query['act'] = $this->findGet('act');
@@ -179,18 +188,21 @@ class DcaUrlAnalyzer
             $links[] = [
                 'url' => $this->router->generate('contao_backend', $query),
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                'treeTrail' => $treeTrail,
             ];
         }
 
         $links[] = [
             'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
             'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+            'treeTrail' => null,
         ];
 
         if ($this->findGet('clipboard')) {
             array_unshift($links, [
                 'url' => $links[0]['url'].(str_contains($links[0]['url'], '?') ? '&' : '?').'clipboard=1',
                 'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
+                'treeTrail' => null,
             ]);
         }
 
@@ -424,5 +436,30 @@ class DcaUrlAnalyzer
         }
 
         return array_keys($modules)[0] ?? null;
+    }
+
+    private function getRootTrail(string $table, int $id, array $query): array|null
+    {
+        if (!$table || !$id) {
+            return null;
+        }
+
+        (new DcaLoader($table))->load();
+
+        if (!($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)) {
+            return null;
+        }
+
+        $links = [];
+
+        while ($id && $row = $this->getCurrentRecord($id, $table)) {
+            $links[] = [
+                'url' => $this->router->generate('contao_backend', [...$query, 'pn' => (int) $row['id']]),
+                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+            ];
+            $id = (int) $row['pid'];
+        }
+
+        return array_reverse($links);
     }
 }

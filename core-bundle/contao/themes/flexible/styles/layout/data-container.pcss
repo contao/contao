@@ -24,10 +24,11 @@
 }
 
 #main_headline span {
+    position: relative;
     display: inline-block;
     max-width: max-content;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: visible;
     text-overflow: ellipsis;
     flex: 1 0 0;
 }
@@ -48,6 +49,41 @@
 
     #main_headline span + span::before {
         font-weight: 500;
+    }
+}
+
+#main_headline span ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-width: 150px;
+    position: absolute;
+    background: var(--content-bg);
+    border: 1px solid var(--content-border);
+    font-size: .8rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    z-index: 4; /* Above .jump-targets */
+    color: var(--text);
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s ease;
+}
+
+#main_headline span:hover ul,
+#main_headline span:has(:focus-visible) ul {
+    opacity: 1;
+    visibility: visible;
+}
+
+#main_headline span ul li a {
+    display: block;
+    color: inherit;
+    padding: 3px 10px;
+    white-space: nowrap;
+
+    &::before {
+        content: "› ";
     }
 }
 
