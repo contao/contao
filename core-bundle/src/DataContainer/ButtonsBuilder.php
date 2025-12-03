@@ -99,7 +99,7 @@ class ButtonsBuilder
             $arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['moveSelected'].'</button>';
         }
 
-        if (!($GLOBALS['TL_DCA'][$strTable]['config']['notEditable'] ?? null) && (\is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true) || ($GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? null))) {
+        if (!($GLOBALS['TL_DCA'][$strTable]['config']['notEditable'] ?? null) && (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true) || ($GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? null))) {
             $arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
         }
 
