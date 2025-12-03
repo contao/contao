@@ -196,7 +196,10 @@ class TableDataContainerProvider implements ProviderInterface
             static fn (array $config): bool => isset($config['search']) && true === $config['search'],
         );
 
-        $qb = $this->createQueryBuilderForTable($table);
+        // Only select the rows we need to make sure we're not transferring the entire
+        // database when indexing
+        $select = array_unique(array_merge(['id'], array_keys($searchableFields)));
+        $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
         if ($reindexConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
             $qb->andWhere('tstamp <= ', $qb->createNamedParameter($reindexConfig->getUpdateSince()));
@@ -248,7 +251,9 @@ class TableDataContainerProvider implements ProviderInterface
 
     private function loadRow(string $table, int $id): array|false
     {
-        $qb = $this->createQueryBuilderForTable($table);
+        // In this case, we want to load the entire row as it's used only for the hit
+        // metadata of which there are not a lot
+        $qb = $this->createQueryBuilderForTable($table, '*');
 
         return $qb
             ->andWhere('id = '.$qb->createNamedParameter($id, ParameterType::INTEGER))
@@ -256,11 +261,11 @@ class TableDataContainerProvider implements ProviderInterface
         ;
     }
 
-    private function createQueryBuilderForTable(string $table): QueryBuilder
+    private function createQueryBuilderForTable(string $table, string $select): QueryBuilder
     {
         return $this->connection
             ->createQueryBuilder()
-            ->select('*')
+            ->select($select)
             ->from($table)
         ;
     }
