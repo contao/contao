@@ -90,8 +90,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertFalse($authenticator->isInteractive());
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()], [$request]);
 
         $authenticator = $this->getContaoLoginAuthenticator(requestStack: $requestStack);
 
@@ -101,7 +100,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $request->attributes->set('pageModel', $this->createMock(PageModel::class));
 
         $requestStack = new RequestStack();
-        $requestStack->push($request);
 
         $authenticator = $this->getContaoLoginAuthenticator(requestStack: $requestStack);
 

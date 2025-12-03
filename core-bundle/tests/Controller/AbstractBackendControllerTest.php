@@ -301,8 +301,7 @@ class AbstractBackendControllerTest extends TestCase
         $request = new Request();
         $request->setSession(new Session($sessionStorage));
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
@@ -367,8 +366,7 @@ class AbstractBackendControllerTest extends TestCase
             )
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request ?? new Request(server: $_SERVER));
+        $requestStack = new RequestStack([$request ?? new Request(server: $_SERVER)]);
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher

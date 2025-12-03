@@ -69,8 +69,7 @@ class BackendFavoritesListenerTest extends TestCase
         $request->query->set('act', 'create');
         $request->query->set('data', base64_encode($url));
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
         $listener->enableEditing();
@@ -108,8 +107,7 @@ class BackendFavoritesListenerTest extends TestCase
         $request = new Request();
         $request->query->set('act', 'create');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
         $listener->enableEditing();
@@ -136,8 +134,7 @@ class BackendFavoritesListenerTest extends TestCase
             ->willReturn($this->createMock(UserInterface::class))
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
         $listener->enableEditing();
@@ -161,8 +158,7 @@ class BackendFavoritesListenerTest extends TestCase
         $request->query->set('return', '1');
         $request->request->set('saveNclose', '1');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
         $redirect = null;
@@ -188,8 +184,7 @@ class BackendFavoritesListenerTest extends TestCase
         $request->query->set('return', '1');
         $request->request->set('save', '1');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
         $listener->redirectBack($dataContainer);
@@ -206,8 +201,7 @@ class BackendFavoritesListenerTest extends TestCase
         $request = new Request();
         $request->request->set('saveNclose', '1');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
         $listener->redirectBack($dataContainer);

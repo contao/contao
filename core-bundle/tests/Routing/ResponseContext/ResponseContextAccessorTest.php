@@ -26,7 +26,7 @@ class ResponseContextAccessorTest extends TestCase
 {
     public function testGettingAndSettingTheResponseContext(): void
     {
-        $requestStack = new RequestStack();
+        $requestStack = new RequestStack([new Request()]);
         $context = new ResponseContext();
         $accessor = new ResponseContextAccessor($requestStack);
 
@@ -34,16 +34,13 @@ class ResponseContextAccessorTest extends TestCase
         $this->assertSame($accessor, $accessor->setResponseContext($context));
         $this->assertNull($accessor->getResponseContext());
 
-        $requestStack->push(new Request());
-
         $this->assertSame($accessor, $accessor->setResponseContext($context));
         $this->assertSame($context, $accessor->getResponseContext());
     }
 
     public function testFinalizing(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $accessor = new ResponseContextAccessor($requestStack);
 

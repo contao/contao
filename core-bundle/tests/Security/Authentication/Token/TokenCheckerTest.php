@@ -550,10 +550,7 @@ class TokenCheckerTest extends TestCase
 
     private function mockRequestStack(Request $request): RequestStack
     {
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        return $requestStack;
+        return new RequestStack([$request]);
     }
 
     private function mockFirewallMapWithConfigContext(string $context): FirewallMap&MockObject
