@@ -61,7 +61,7 @@
                     {% if operation.method != 'POST' %}<input type="hidden" name="_method" value="{{ operation.method }}">{% endif %}
                     <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                     <button type="submit"{{ operation_attributes }}>
-                        {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default(operation.label|default), operation.iconAttributes|default(null)) }}{% endif %}
+                        {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default(operation.label|default)|trans, operation.iconAttributes|default(null)) }}{% endif %}
                         {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
                     </button>
                 </form>
@@ -70,7 +70,7 @@
                     .set('href', operation.href)
                 %}
                 <a{{ operation_attributes }}>
-                    {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default(operation.label|default), operation.iconAttributes|default(null)) }}{% endif %}
+                    {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default(operation.label|default)|trans, operation.iconAttributes|default(null)) }}{% endif %}
                     {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
                 </a>
             {% endif %}
