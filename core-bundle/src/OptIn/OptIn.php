@@ -19,8 +19,6 @@ use Contao\OptInModel;
 
 class OptIn implements OptInInterface
 {
-    private string $removeOn = '+3 days';
-
     /**
      * @internal
      */
@@ -28,12 +26,7 @@ class OptIn implements OptInInterface
     {
     }
 
-    public function setRemoveOn(string $removeOn): void
-    {
-        $this->removeOn = $removeOn;
-    }
-
-    public function create(string $prefix, string $email, array $related): OptInTokenInterface
+    public function create(string $prefix, string $email, array $related, \DateTimeInterface|null $validUntil = null): OptInTokenInterface
     {
         if ($prefix) {
             $prefix = rtrim($prefix, '-');
@@ -49,13 +42,17 @@ class OptIn implements OptInInterface
             $token = $prefix.'-'.substr($token, \strlen($prefix) + 1);
         }
 
+        if (!$validUntil) {
+            $validUntil = new \DateTime('+24 hours');
+        }
+
         $this->framework->initialize();
 
         $optIn = $this->framework->createInstance(OptInModel::class);
         $optIn->tstamp = time();
         $optIn->token = $token;
         $optIn->createdOn = time();
-        $optIn->removeOn = strtotime($this->removeOn);
+        $optIn->removeOn = $validUntil->getTimestamp();
         $optIn->email = $email;
         $optIn->save();
 
@@ -87,9 +84,16 @@ class OptIn implements OptInInterface
             return;
         }
 
+        $time = strtotime('+2 days');
         $adapter = $this->framework->getAdapter(Model::class);
 
         foreach ($tokens as $token) {
+            // Keep unconfirmed tokens for two additional days to ensure they are not removed
+            // before the cron jobs that purge unconfirmed subscriptions have run.
+            if (!$token->confirmedOn && $token->removeOn < $time) {
+                continue;
+            }
+
             $delete = true;
 
             // If the token has been confirmed, check if the related records still exist
