@@ -35,6 +35,7 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Pdo\Mysql;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -255,7 +256,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        $key = defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
+        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined

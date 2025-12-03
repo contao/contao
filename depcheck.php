@@ -17,6 +17,7 @@ use App\FrontendModule\LegacyModule;
 use App\Messenger\UnionTypeMessage;
 use App\Model\FooModel;
 use AppBundle\AppBundle;
+use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
@@ -36,7 +37,7 @@ return (new Configuration())
         'Swift_Message',
         UnionTypeMessage::class,
         ValidListener::class,
-        Pdo\Mysql::class,
+        Mysql::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()

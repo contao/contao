@@ -26,6 +26,7 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Pdo\Mysql;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -476,7 +477,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                             ],
                         ],
                     ],
@@ -554,7 +555,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'pdo_mysql',
                             'options' => [
-                                defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
                                 1002 => '',
                             ],
                         ],
@@ -607,7 +608,7 @@ class PluginTest extends ContaoTestCase
 
     public static function provideDatabaseDrivers(): iterable
     {
-        $key = defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
+        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
 
         yield 'pdo with driver' => [
             [
@@ -682,7 +683,7 @@ class PluginTest extends ContaoTestCase
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'options' => [defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'options' => [\defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
                             'default_table_options' => [
                                 'charset' => 'utf8mb4',
                                 'collate' => 'utf8mb4_unicode_ci',
@@ -1028,7 +1029,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                                 1002 => '',
                             ],
                         ],
