@@ -1,10 +1,10 @@
 {% trans_default_domain 'contao_default' %}
 {% set has_submenu = false %}
 {% set show_button = false %}
-{% set more_icon_global = more_icon_global|default('more.svg') %}
 {% set more_icon = more_icon|default('more.svg') %}
-{% set more_alt_global = more_alt_global|default('DCA.global_operations') %}
 {% set more_alt = more_alt|default('DCA.operations') %}
+{% set more_icon_global = more_icon_global|default('more.svg') %}
+{% set more_alt_global = more_alt_global|default('DCA.global_operations') %}
 
 <div class="operations"{% if globalOperations %} id="tl_buttons" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
     <ul data-contao--operations-menu-target="menu">

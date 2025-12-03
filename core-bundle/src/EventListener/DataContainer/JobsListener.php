@@ -67,7 +67,7 @@ class JobsListener
         $attachments = $this->jobs->getAttachments($job);
         $numberOfAttachments = \count($attachments);
 
-        // Hide operation if there are no attachments
+        // Hide the operation if there are no attachments
         if (0 === $numberOfAttachments) {
             $operation->hide();
 
@@ -103,7 +103,7 @@ class JobsListener
             'operations' => $operations,
             'has_primary' => true,
             'more_icon' => 'theme_import.svg',
-            'more_alt' => 'MSC.jobs.viewAttachments',
+            'more_alt' => 'MSC.viewAttachments',
             'globalOperations' => false,
         ]));
     }

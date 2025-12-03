@@ -2210,7 +2210,7 @@
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
       </trans-unit>
-      <trans-unit id="MSC.jobs.viewAttachments">
+      <trans-unit id="MSC.viewAttachments">
         <source>View attachments</source>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">

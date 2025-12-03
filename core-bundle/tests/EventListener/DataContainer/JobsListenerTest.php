@@ -96,6 +96,7 @@ class JobsListenerTest extends AbstractJobsTestCase
 
         $jobs = $this->getJobs($security, new MockClock(), $router);
         $job = $jobs->createJob('job-type');
+
         $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
