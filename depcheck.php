@@ -36,6 +36,7 @@ return (new Configuration())
         'Swift_Message',
         UnionTypeMessage::class,
         ValidListener::class,
+        Pdo\Mysql::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
