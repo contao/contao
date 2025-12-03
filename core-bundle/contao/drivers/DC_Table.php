@@ -2989,6 +2989,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$this->noReload = true;
 						Message::addError($e->getMessage());
+						System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
 
 						break;
 					}
@@ -4013,13 +4014,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!Input::get('nb'))
 		{
-			if ($this->ptable)
+			if (Input::get('act') == 'select')
 			{
 				$operations->addBackButton($this->getReferer(true, $this->ptable));
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
 				$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			}
+			elseif ($this->ptable)
+			{
+				$operations->addBackButton($this->getReferer(true, $this->ptable));
 			}
 		}
 
@@ -4407,7 +4412,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($label[1] ?? null)
 						{
-							$return .= '<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview">' . ($label[1] ?? '') . '</div></div>';
+							$return .= '<div class="cte_content" data-contao--limit-height-target="node"><div class="cte_preview" style="contain:paint">' . ($label[1] ?? '') . '</div></div>';
 						}
 					}
 					else
@@ -4607,13 +4612,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Display buttons
 		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
-		if (Input::get('act') == 'select' || $this->ptable)
+		if (Input::get('act') == 'select')
 		{
 			$operations->addBackButton($this->getReferer(true, $this->ptable));
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
 			$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+		}
+		elseif ($this->ptable)
+		{
+			$operations->addBackButton($this->getReferer(true, $this->ptable));
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
@@ -5562,14 +5571,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', Environment::get('requestUri')));
 		}
 
+		$paginationConfig = (new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds();
+
 		if ($limit)
 		{
-			Input::setGet('lp', $offset / $limit + 1); // see #6923
+			$paginationConfig = $paginationConfig->withCurrentPage($offset / $limit + 1);
 		}
 
-		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
-			(new PaginationConfig('lp', (int) $this->total, (int) $limit))->withIgnoreOutOfBounds()
-		);
+		$pagination = System::getContainer()->get('contao.pagination.factory')->create($paginationConfig);
 
 		return System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 	}

@@ -1,0 +1,99 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% set wrapperAttributes = attrs()
+    .addClass(['ce_table', 'listing'])
+    .mergeWith(wrapperAttributes|default)
+%}
+
+{% block content %}
+
+    {% if searchable %}
+        <div class="list_search">
+            <form method="get">
+                <div class="formbody">
+                    <input type="hidden" name="order_by" value="{{ order_by }}">
+                    <input type="hidden" name="sort" value="{{ sort }}">
+                    <input type="hidden" name="per_page" value="{{ per_page }}">
+                    <div class="widget widget-select">
+                        <label for="ctrl_search" class="invisible">{{ fields_label }}</label>
+                        <select name="search" id="ctrl_search" class="select">
+                            {{ search_fields|raw }}
+                        </select>
+                    </div>
+                    <div class="widget widget-text">
+                        <label for="ctrl_for" class="invisible">{{ keywords_label }}</label>
+                        <input type="text" name="for" id="ctrl_for" class="text" value="{{ for }}">
+                    </div>
+                    <div class="widget widget-submit">
+                        <button type="submit" class="submit">{{ search_label }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if per_page %}
+        <div class="list_per_page">
+            <form method="get">
+                <div class="formbody">
+                    <input type="hidden" name="order_by" value="{{ order_by }}">
+                    <input type="hidden" name="sort" value="{{ sort }}">
+                    <input type="hidden" name="search" value="{{ search }}">
+                    <input type="hidden" name="for" value="{{ for }}">
+                    <div class="widget widget-select">
+                        <label for="ctrl_per_page" class="invisible">{{ per_page_label }}</label>
+                        <select name="per_page" id="ctrl_per_page" class="select">
+                            <option value="10"{% if 10 == per_page %} selected{% endif %}>10</option>
+                            <option value="20"{% if 20 == per_page %} selected{% endif %}>20</option>
+                            <option value="30"{% if 30 == per_page %} selected{% endif %}>30</option>
+                            <option value="50"{% if 50 == per_page %} selected{% endif %}>50</option>
+                            <option value="100"{% if 100 == per_page %} selected{% endif %}>100</option>
+                            <option value="250"{% if 250 == per_page %} selected{% endif %}>250</option>
+                            <option value="500"{% if 500 == per_page %} selected{% endif %}>500</option>
+                        </select>
+                    </div>
+                    <div class="widget widget-submit">
+                        <button type="submit" class="submit">{{ per_page_label }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if searchable and for and not tbody|default %}
+        {{ no_results }}
+    {% else %}
+        <table class="all_records">
+            <thead>
+            <tr>
+                {% for col in thead %}
+                    <th class="head{{ col.class }}"><a href="{{ col.href }}" title="{{ col.title }}">{{ col.link }}</a></th>
+                {% endfor %}
+                {% if details %}
+                    <th class="head">&nbsp;</th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in tbody %}
+                <tr>
+                    {% for col in row %}
+                        <td class="body">{{ col.content|sanitize_html }}</td>
+                    {% endfor %}
+                    {% set col = row|last %}
+                    {% if details and col %}
+                        {% if col.details %}
+                            <td class="body"><a href="{{ col.url }}">{{ backend_icon('assets/contao/images/info.svg') }}</a></td>
+                        {% else %}
+                            <td class="body">&nbsp;</td>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {{ pagination|default|raw }}
+
+{% endblock %}

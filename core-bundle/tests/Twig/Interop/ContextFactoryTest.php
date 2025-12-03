@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\Fixtures\Twig\ChildClassWithMembersStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
@@ -38,7 +39,8 @@ class ContextFactoryTest extends TestCase
             'lazy2' => static fn (int $n = 0): string => "evaluated: $n",
             'lazy3' => static fn (): array => [1, 2],
             'lazy4' => $closure(...),
-            'value' => 'strtolower', // do not confuse with callable
+            'value' => 'strtolower', // do not confuse with callable,
+            'has_foo' => Template::once(static fn (): bool => false),
         ];
 
         $template = $this->createMock(Template::class);
@@ -58,6 +60,7 @@ class ContextFactoryTest extends TestCase
                 lazy3: {{ lazy3.invoke()|join('|') }}
                 lazy4: {{ lazy4 }}
                 value: {{ value }}
+                has_foo? {% if has_foo.invoke() %}yes{% else %}no{% endif %}.
 
                 TEMPLATE;
 
@@ -72,10 +75,11 @@ class ContextFactoryTest extends TestCase
                 lazy3: 1|2
                 lazy4: evaluated Closure
                 value: strtolower
+                has_foo? no.
 
                 OUTPUT;
 
-        $context = (new ContextFactory())->fromContaoTemplate($template);
+        $context = (new ContextFactory($this->mockScopeMatcher()))->fromContaoTemplate($template);
 
         $this->assertSame($template, $context['Template']);
 
@@ -94,7 +98,7 @@ class ContextFactoryTest extends TestCase
             ],
         ];
 
-        $context = (new ContextFactory())->fromData($data);
+        $context = (new ContextFactory($this->mockScopeMatcher()))->fromData($data);
 
         $this->assertSame('a', $context['foo']);
         $this->assertSame('b', $context['bar']());
@@ -104,7 +108,7 @@ class ContextFactoryTest extends TestCase
     public function testCreateContextFromClass(): void
     {
         $object = new ChildClassWithMembersStub();
-        $context = (new ContextFactory())->fromClass($object);
+        $context = (new ContextFactory($this->mockScopeMatcher()))->fromClass($object);
 
         $expectedFields = [
             'PROTECTED_CONSTANT' => 2,
@@ -150,7 +154,7 @@ class ContextFactoryTest extends TestCase
         $this->assertArrayHasKey('this', $context);
         $this->assertSame($object, $context['this']);
 
-        $this->assertCount(\count($expectedFields) + \count($expectedFunctions) + 1, $context);
+        $this->assertCount(\count($expectedFields) + \count($expectedFunctions) + 2, $context);
     }
 
     public function testEnhancesErrorMessageInCallableWrappersIfStringAccessFails(): void
@@ -163,7 +167,7 @@ class ContextFactoryTest extends TestCase
 
         $content = '{{ lazy }}';
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $content]));
-        $context = (new ContextFactory())->fromContaoTemplate($template);
+        $context = (new ContextFactory($this->mockScopeMatcher()))->fromContaoTemplate($template);
 
         $this->expectException(RuntimeError::class);
 
@@ -174,5 +178,25 @@ class ContextFactoryTest extends TestCase
         );
 
         $environment->render('test.html.twig', $context);
+    }
+
+    public function testAddsAsEditorViewParameter(): void
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
+
+        $template = $this->createMock(Template::class);
+        $template
+            ->method('getData')
+            ->willReturn([])
+        ;
+
+        $context = (new ContextFactory($scopeMatcher))->fromContaoTemplate($template);
+
+        $this->assertArrayHasKey('as_editor_view', $context);
+        $this->assertTrue($context['as_editor_view']);
     }
 }

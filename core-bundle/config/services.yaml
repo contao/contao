@@ -415,6 +415,13 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
+    contao.html_sanitizer:
+        class: Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: html_sanitizer, sanitizer: contao }
+
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
@@ -1443,6 +1450,8 @@ services:
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory
         public: true
+        arguments:
+            - '@contao.routing.scope_matcher'
 
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
@@ -1477,6 +1486,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\StringRuntime
         arguments:
             - '@contao.framework'
+            - '@contao.string.html_decoder'
 
     contao.twig.url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime

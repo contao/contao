@@ -32,6 +32,7 @@ jobs:
               with:
                   ref: ${{ matrix.contao }}
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3
