@@ -65,7 +65,8 @@ class ValueFormatter implements ResetInterface
             [$key, $table] = explode(':', $field, 2);
             [$table, $field] = explode('.', $table, 2);
 
-            if (!isset($row[$key])) {
+            // Ignore NULL but also 0 value, since 0 is not a valid foreign key ID
+            if (!($row[$key] ?? null)) {
                 return null;
             }
 

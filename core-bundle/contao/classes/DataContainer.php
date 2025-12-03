@@ -1357,11 +1357,11 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($labelConfig['label_callback']))
 				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
 				}
 				elseif (\is_callable($labelConfig['label_callback']))
 				{
-					$label = $labelConfig['label_callback']($row, $label, $this);
+					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
 			else

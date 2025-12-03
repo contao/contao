@@ -370,6 +370,161 @@ class ValueFormatterTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
+    #[DataProvider('formatDateFilterOptionsProvider')]
+    public function testFormatDateFilterOptions(int $flag, string $format, array $values, array $expected): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = ['flag' => $flag];
+
+        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter
+            ->method('get')
+            ->with('dateFormat')
+            ->willReturn('Y-m-d')
+        ;
+
+        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter
+            ->method('parse')
+            ->willReturnMap(array_map(
+                static fn ($v) => ['Y-m-d', $v, date($format, (int) $v)],
+                $values,
+            ))
+        ;
+
+        $framework = $this->mockContaoFramework([
+            Date::class => $dateAdapter,
+            Config::class => $configAdapter,
+        ]);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $valueFormatter = new ValueFormatter(
+            $framework,
+            $this->createMock(Connection::class),
+            $translator,
+        );
+
+        $result = $valueFormatter->formatFilterOptions('tl_foo', 'foo', $values, $this->createMock(DataContainer::class));
+
+        $this->assertSame($expected, $result);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public static function formatDateFilterOptionsProvider(): iterable
+    {
+        $values = [
+            '1764689000', // 2025-12-02T15:23:20+00:00
+            '1764689390', // 2025-12-02T15:29:50+00:00
+            '176468900',  // 1975-08-05T12:08:20+00:00
+        ];
+
+        yield [
+            DataContainer::SORT_DAY_ASC,
+            'Y-m-d',
+            $values,
+            [
+                ['value' => '176468900', 'label' => '1975-08-05'],
+                ['value' => '1764689000', 'label' => '2025-12-02'],
+                ['value' => '1764689390', 'label' => '2025-12-02'],
+            ],
+        ];
+
+        yield [
+            DataContainer::SORT_DAY_BOTH,
+            'Y-m-d',
+            $values,
+            [
+                ['value' => '176468900', 'label' => '1975-08-05'],
+                ['value' => '1764689000', 'label' => '2025-12-02'],
+                ['value' => '1764689390', 'label' => '2025-12-02'],
+            ],
+        ];
+
+        yield [
+            DataContainer::SORT_DAY_DESC,
+            'Y-m-d',
+            $values,
+            [
+                ['value' => '1764689390', 'label' => '2025-12-02'],
+                ['value' => '1764689000', 'label' => '2025-12-02'],
+                ['value' => '176468900', 'label' => '1975-08-05'],
+            ],
+        ];
+
+        yield [
+            DataContainer::SORT_MONTH_ASC,
+            'Y-m',
+            $values,
+            [
+                ['value' => '176468900', 'label' => '1975-08'],
+                ['value' => '1764689000', 'label' => '2025-12'],
+                ['value' => '1764689390', 'label' => '2025-12'],
+            ],
+        ];
+
+        yield [
+            DataContainer::SORT_MONTH_BOTH,
+            'Y-m',
+            $values,
+            [
+                ['value' => '176468900', 'label' => '1975-08'],
+                ['value' => '1764689000', 'label' => '2025-12'],
+                ['value' => '1764689390', 'label' => '2025-12'],
+            ],
+        ];
+
+        yield [
+            DataContainer::SORT_MONTH_DESC,
+            'Y-m',
+            $values,
+            [
+                ['value' => '1764689390', 'label' => '2025-12'],
+                ['value' => '1764689000', 'label' => '2025-12'],
+                ['value' => '176468900', 'label' => '1975-08'],
+            ],
+        ];
+
+
+
+        yield [
+            DataContainer::SORT_YEAR_ASC,
+            'Y-m',
+            $values,
+            [
+                ['value' => '176468900', 'label' => '1975'],
+                ['value' => '1764689000', 'label' => '2025'],
+                ['value' => '1764689390', 'label' => '2025'],
+            ],
+        ];
+
+        yield [
+            DataContainer::SORT_YEAR_BOTH,
+            'Y-m',
+            $values,
+            [
+                ['value' => '176468900', 'label' => '1975'],
+                ['value' => '1764689000', 'label' => '2025'],
+                ['value' => '1764689390', 'label' => '2025'],
+            ],
+        ];
+
+        yield [
+            DataContainer::SORT_YEAR_DESC,
+            'Y-m',
+            $values,
+            [
+                ['value' => '1764689390', 'label' => '2025'],
+                ['value' => '1764689000', 'label' => '2025'],
+                ['value' => '176468900', 'label' => '1975'],
+            ],
+        ];
+    }
+
     private function mockConnection(): Connection&MockObject
     {
         $databasePlatform = $this->createMock(AbstractPlatform::class);
