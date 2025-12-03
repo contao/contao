@@ -1,13 +1,14 @@
 {% trans_default_domain 'contao_tl_user_group' %}
+
 <table id="ctrl_{{ id }}" class="tl_chmod">
     <thead>
         <tr aria-hidden="true">
             <th></th>
-            <th scope="col">{{ 'tl_user_group.cud.create'|trans }}</th>
-            <th scope="col">{{ 'tl_user_group.cud.update'|trans }}</th>
-            <th scope="col">{{ 'tl_user_group.cud.delete'|trans }}</th>
+            <th scope="col">{{ 'tl_user.cud.create'|trans }}</th>
+            <th scope="col">{{ 'tl_user.cud.update'|trans }}</th>
+            <th scope="col">{{ 'tl_user.cud.delete'|trans }}</th>
             {% if has_additional %}
-                <th scope="col" style="text-align: left">{{ 'tl_user_group.cud.other'|trans }}</th>
+                <th scope="col" style="text-align: left">{{ 'tl_user.cud.other'|trans }}</th>
             {% endif %}
         </tr>
     </thead>
@@ -28,7 +29,7 @@
                             .addClass('tl_checkbox')
                             .setIfExists('checked', value in values)
                         %}
-                        <label for="{{ input_attributes.id }}" class="invisible">{{ ('tl_user_group.cud.table_'~operation)|trans([table]) }}</label>
+                        <label for="{{ input_attributes.id }}" class="invisible">{{ ('tl_user.cud.table_'~operation)|trans([table]) }}</label>
                         <input{{ input_attributes }}>
                     {% endif %}
                 </td>
@@ -51,7 +52,7 @@
                             %}
                             <span>
                                 <input{{ input_attributes }}>
-                                <label for="{{ input_attributes.id }}">{{ ('tl_user_group.cud.'~table~'.'~operation)|trans([table]) }}</label>
+                                <label for="{{ input_attributes.id }}">{{ ('tl_user.cud.'~table~'.'~operation)|trans([table]) }}</label>
                             </span>
                         {% endfor %}
                     </fieldset>

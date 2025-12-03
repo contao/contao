@@ -182,6 +182,33 @@
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
       </trans-unit>
+      <trans-unit id="tl_user.cud.0">
+        <source>Table permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.1">
+        <source>Here you can choose what operations are allowed on tables.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.create">
+        <source>Create</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.update">
+        <source>Update</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.delete">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.other">
+        <source>Additional permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_create">
+        <source>Create records in "%s"</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_update">
+        <source>Update records of "%s"</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_delete">
+        <source>Delete records of "%s"</source>
+      </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
       </trans-unit>
@@ -244,6 +271,9 @@
       </trans-unit>
       <trans-unit id="tl_user.amg_legend">
         <source>Allowed member groups</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud_legend">
+        <source>Table permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>

@@ -8,33 +8,6 @@
       <trans-unit id="tl_user_group.name.1">
         <source>Please enter the group title.</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.cud.0">
-        <source>Table permissions</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.1">
-        <source>Here you can choose what operations are allowed on tables.</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.create">
-        <source>Create</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.update">
-        <source>Update</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.delete">
-        <source>Delete</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.other">
-        <source>Additional permissions</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.table_create">
-        <source>Create records in "%s"</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.table_update">
-        <source>Update records of "%s"</source>
-      </trans-unit>
-      <trans-unit id="tl_user_group.cud.table_delete">
-        <source>Delete records of "%s"</source>
-      </trans-unit>
       <trans-unit id="tl_user_group.alexf.0">
         <source>Allowed fields</source>
       </trans-unit>
