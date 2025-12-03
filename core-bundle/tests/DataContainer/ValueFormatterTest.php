@@ -370,6 +370,133 @@ class ValueFormatterTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
+    #[DataProvider('formatFilterOptionsProvider')]
+    public function testFormatFilterOptions(array $dca, array $values, array $expected): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = $dca;
+
+        $configAdapter = $this->mockAdapter(['get']);
+        $dateAdapter = $this->mockAdapter(['parse']);
+
+        $framework = $this->mockContaoFramework([
+            Date::class => $dateAdapter,
+            Config::class => $configAdapter,
+        ]);
+
+        $valueFormatter = new ValueFormatter(
+            $framework,
+            $this->createMock(Connection::class),
+            $this->createMock(TranslatorInterface::class),
+        );
+
+        $result = $valueFormatter->formatFilterOptions('tl_foo', 'foo', $values, $this->createMock(DataContainer::class));
+
+        $this->assertSame($expected, $result);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public static function formatFilterOptionsProvider(): iterable
+    {
+        yield 'Empty values' => [
+            [],
+            [],
+            [],
+        ];
+
+        yield 'Values' => [
+            [],
+            ['a', 'b', 'c', 'd'],
+            [
+                ['value' => 'a', 'label' => 'a'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'c', 'label' => 'c'],
+                ['value' => 'd', 'label' => 'd'],
+            ],
+        ];
+
+        yield 'Multiple values' => [
+            ['eval' => ['multiple' => true]],
+            [
+                serialize(['a', 'b']),
+                serialize(['c', 'd']),
+            ],
+            [
+                ['value' => 'a', 'label' => 'a'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'c', 'label' => 'c'],
+                ['value' => 'd', 'label' => 'd'],
+            ],
+        ];
+
+        yield 'Removes duplicate values from multiple values' => [
+            ['eval' => ['multiple' => true]],
+            [
+                serialize(['a', 'b']),
+                serialize(['b', 'd']),
+            ],
+            [
+                ['value' => 'a', 'label' => 'a'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'd', 'label' => 'd'],
+            ],
+        ];
+
+        yield 'CSV values' => [
+            ['eval' => ['csv' => ',']],
+            ['a,b', 'c,d'],
+            [
+                ['value' => 'a', 'label' => 'a'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'c', 'label' => 'c'],
+                ['value' => 'd', 'label' => 'd'],
+            ],
+        ];
+
+        yield 'Removes duplicate values from CSV values' => [
+            ['eval' => ['csv' => ',']],
+            ['a,b', 'b,c'],
+            [
+                ['value' => 'a', 'label' => 'a'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'c', 'label' => 'c'],
+            ],
+        ];
+
+        yield 'Reverse sorting for SORT_INITIAL_LETTER_DESC' => [
+            ['flag' => DataContainer::SORT_INITIAL_LETTER_DESC],
+            ['a', 'b', 'c', 'd'],
+            [
+                ['value' => 'd', 'label' => 'd'],
+                ['value' => 'c', 'label' => 'c'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'a', 'label' => 'a'],
+            ],
+        ];
+
+        yield 'Reverse sorting for SORT_INITIAL_LETTERS_DESC' => [
+            ['flag' => DataContainer::SORT_INITIAL_LETTERS_DESC],
+            ['a', 'b', 'c', 'd'],
+            [
+                ['value' => 'd', 'label' => 'd'],
+                ['value' => 'c', 'label' => 'c'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'a', 'label' => 'a'],
+            ],
+        ];
+
+        yield 'Reverse sorting for SORT_DESC' => [
+            ['flag' => DataContainer::SORT_DESC],
+            ['a', 'b', 'c', 'd'],
+            [
+                ['value' => 'd', 'label' => 'd'],
+                ['value' => 'c', 'label' => 'c'],
+                ['value' => 'b', 'label' => 'b'],
+                ['value' => 'a', 'label' => 'a'],
+            ],
+        ];
+    }
+
     #[DataProvider('formatDateFilterOptionsProvider')]
     public function testFormatDateFilterOptions(int $flag, string $format, array $values, array $expected): void
     {

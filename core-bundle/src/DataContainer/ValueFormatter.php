@@ -104,24 +104,29 @@ class ValueFormatter implements ResetInterface
             return $this->getDateOptions($table, $field, $values);
         }
 
-        foreach ($values as $k => $value) {
+        foreach ($values as $value) {
             $v = $this->getValues($table, $field, $value);
 
             if (\is_array($v) && !\is_array($value)) {
-                foreach ($v as $kk => $vv) {
-                    $label = $this->getLabel($table, $field, $vv, $dc);
-
-                    $options[$label.'_'.$field.'_'.$k.'_'.$kk] = ['value' => $vv, 'label' => $label];
+                foreach ($v as $vv) {
+                    $options[] = $vv;
                 }
             } else {
                 if (\is_array($value)) {
                     $value = implode(', ', $value);
                 }
 
-                $label = $this->getLabel($table, $field, $value, $dc);
-
-                $options[$label.'_'.$field.'_'.$k] = ['value' => $value, 'label' => $label];
+                $options[] = $value;
             }
+        }
+
+        $options = array_unique($options);
+
+        foreach ($options as $k => $value) {
+            $label = $this->getLabel($table, $field, $value, $dc);
+
+            $options[$label.'_'.$field.'_'.$k] = ['value' => $value, 'label' => $label];
+            unset($options[$k]);
         }
 
         uksort(
@@ -142,7 +147,7 @@ class ValueFormatter implements ResetInterface
             $options = array_reverse($options, true);
         }
 
-        return $options;
+        return array_values($options);
     }
 
     public function getLabel(string $table, string $field, mixed $value, mixed $dc): string
