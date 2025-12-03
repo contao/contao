@@ -255,10 +255,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
+        $key = defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined
-        if (isset($options[\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+        if (isset($options[$key])) {
             return $extensionConfigs;
         }
 
@@ -272,7 +273,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            $key => false,
                         ],
                     ],
                 ],

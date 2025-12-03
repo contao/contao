@@ -476,7 +476,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                             ],
                         ],
                     ],
@@ -554,7 +554,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'pdo_mysql',
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
                                 1002 => '',
                             ],
                         ],
@@ -607,10 +607,12 @@ class PluginTest extends ContaoTestCase
 
     public static function provideDatabaseDrivers(): iterable
     {
+        $key = defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
+
         yield 'pdo with driver' => [
             [
                 'driver' => 'mysql',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -618,7 +620,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with driver alias mysql2' => [
             [
                 'driver' => 'mysql2',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -626,7 +628,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with driver alias pdo_mysql' => [
             [
                 'driver' => 'pdo_mysql',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -634,7 +636,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url' => [
             [
                 'url' => 'mysql://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -642,7 +644,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url and driver alias mysql2' => [
             [
                 'url' => 'mysql2://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -650,7 +652,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url and driver alias pdo_mysql' => [
             [
                 'url' => 'pdo-mysql://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -680,7 +682,7 @@ class PluginTest extends ContaoTestCase
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'options' => [defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
                             'default_table_options' => [
                                 'charset' => 'utf8mb4',
                                 'collate' => 'utf8mb4_unicode_ci',
@@ -1026,7 +1028,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? \Pdo\Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                                 1002 => '',
                             ],
                         ],
