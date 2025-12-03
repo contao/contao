@@ -365,7 +365,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Skip if driver is not supported
-        if (null === $driver || null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver ?? ''] ?? null)) {
             return $extensionConfigs;
         }
 
