@@ -703,6 +703,11 @@ abstract class DataContainer extends Backend
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
+			$objTemplate->theme = Backend::getTheme();
+			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
+			$objTemplate->aceType = Backend::getAceType($type);
+			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
+			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 
@@ -865,7 +870,7 @@ abstract class DataContainer extends Backend
 			{
 				$icon = Controller::addAssetsUrlTo(Image::getPath($config['icon']));
 				$config['attributes']->addStyle("background-image: url('$icon')");
-				$config['class'] = trim($config['class'] . ' header_icon');
+				$config['class'] = trim(($config['class'] ?? '') . ' header_icon');
 			}
 
 			if (\is_array($config['button_callback'] ?? null))

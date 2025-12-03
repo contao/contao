@@ -1,0 +1,55 @@
+<div class="event layout_full block{{ class }}">
+
+    <h1>{{ title }}</h1>
+
+    {% if recurring %}
+        <p class="info recurring">{{ recurring }}</p>
+    {% else %}
+        <p class="info"><time datetime="{{ datetime }}">{{ date }}{% if time %} {{ time }}{% endif %}</time></p>
+    {% endif %}
+
+    {% if location %}
+        <p class="location">{{ location }}{% if address %} ({{ address }}){% endif %}</p>
+    {% endif %}
+
+    {% if details.invoke() %}
+        {{ details.invoke()|raw }}
+    {% else %}
+        <div class="ce_text block">
+            {% if not addBefore %}
+                {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+            {% endif %}
+
+            {% if addImage %}
+                {% include "@Contao/image.html.twig" %}
+            {% endif %}
+
+            {% if addBefore %}
+                {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if enclosure %}
+        <ul class="enclosure">
+            {% for enclosure in enclosure %}
+                <li class="download-element ext-{{ enclosure.extension }}">
+                    <a href="{{ enclosure.href }}" title="{{ enclosure.title }}">{{ enclosure.link }} <span class="size">({{ enclosure.filesize }})</span></a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+</div>
+
+{% set schemaOrg = getSchemaOrgData.invoke() %}
+
+{% if hasDetails.invoke() %}
+    {% set schemaOrg = schemaOrg|merge({description: details.invoke()|html_to_plain_text}) %}
+{% endif %}
+
+{% do add_schema_org(schemaOrg) %}
+
+{% if figure|default %}
+    {% do add_schema_org({'@type': 'WebPage', primaryImageOfPage: figure.getSchemaOrgData()}) %}
+{% endif %}
