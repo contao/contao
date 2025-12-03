@@ -35,7 +35,7 @@ class ResponseContextAccessorTest extends TestCase
         $this->assertNull($accessor->getResponseContext());
 
         $requestStack->push(new Request());
-        
+
         $this->assertSame($accessor, $accessor->setResponseContext($context));
         $this->assertSame($context, $accessor->getResponseContext());
     }
