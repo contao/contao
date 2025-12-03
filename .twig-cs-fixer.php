@@ -15,7 +15,6 @@ use TwigCsFixer\Rules\Variable\VariableNameRule;
 use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\TwigCsFixer;
 
-require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor-bin/twig-cs-fixer/vendor/autoload.php';
 
 $templatePaths = [

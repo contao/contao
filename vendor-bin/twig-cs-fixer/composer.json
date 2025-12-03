@@ -2,7 +2,14 @@
     "require": {
         "vincentlanglet/twig-cs-fixer": "^3.11"
     },
+    "require-dev": {
+        "contao/core-bundle": "^5.6"
+    },
     "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "php-http/discovery": true
+        },
         "platform": {
             "php": "8.3"
         }
