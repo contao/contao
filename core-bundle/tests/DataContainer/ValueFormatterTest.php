@@ -489,8 +489,6 @@ class ValueFormatterTest extends TestCase
             ],
         ];
 
-
-
         yield [
             DataContainer::SORT_YEAR_ASC,
             'Y-m',
