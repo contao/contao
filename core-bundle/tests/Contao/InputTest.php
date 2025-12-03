@@ -71,7 +71,7 @@ class InputTest extends TestCase
      *
      * @dataProvider encodeInputProvider
      */
-    public function testCleansTheGlobalArrays(string $source, string $expected, string|null $expectedEncoded = null): void
+    public function testCleansTheGlobalArrays(string $source, string $expected): void
     {
         $_GET = $_POST = $_COOKIE = [$source => 1];
 
