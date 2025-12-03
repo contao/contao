@@ -1,0 +1,13 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+    {% if newsletters %}
+        <ul>
+            {% for newsletter in newsletters %}
+                <li>{{ newsletter.datim }}: <a href="{{ newsletter.href }}" title="{{ newsletter.title }}">{{ newsletter.subject }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

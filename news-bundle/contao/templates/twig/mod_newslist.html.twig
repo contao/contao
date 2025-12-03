@@ -1,0 +1,12 @@
+{% extends "@Contao/block_unsearchable.html.twig" %}
+
+{% block content %}
+
+    {% if not articles %}
+        <p class="empty">{{ empty }}</p>
+    {% else %}
+        {{ articles|join|raw }}
+        {{ pagination|default|raw }}
+    {% endif %}
+
+{% endblock %}

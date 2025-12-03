@@ -1,0 +1,33 @@
+{% trans_default_domain "contao_default" %}
+
+<nav class="pagination {{ class }}" aria-label="{{ 'MSC.pagination'|trans }}">
+
+    <p>{{ total }}</p>
+
+    <ul>
+        {% if hasFirst|default %}
+            <li class="first"><a href="{{ first.href }}" class="first" title="{{ first.title }}" data-contao--tooltips-target="tooltip">{{ first.link }}</a></li>
+        {% endif %}
+
+        {% if hasPrevious|default %}
+            <li class="previous"><a href="{{ previous.href }}" class="previous" title="{{ previous.title }}" data-contao--tooltips-target="tooltip">{{ previous.link }}</a></li>
+        {% endif %}
+
+        {% for page in pages %}
+            {% if page.href is null %}
+                <li><strong class="active">{{ page.page }}</strong></li>
+            {% else %}
+                <li><a href="{{ page.href }}" class="link" title="{{ page.title }}" data-contao--tooltips-target="tooltip">{{ page.page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if hasNext|default %}
+            <li class="next"><a href="{{ next.href }}" class="next" title="{{ next.title }}" data-contao--tooltips-target="tooltip">{{ next.link }}</a></li>
+        {% endif %}
+
+        {% if hasLast|default %}
+            <li class="last"><a href="{{ last.href }}" class="last" title="{{ last.title }}" data-contao--tooltips-target="tooltip">{{ last.link }}</a></li>
+        {% endif %}
+    </ul>
+
+</nav>

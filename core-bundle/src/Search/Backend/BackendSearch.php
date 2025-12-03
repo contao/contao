@@ -147,7 +147,18 @@ class BackendSearch
         // will get re-indexed after.
         $this->deleteDocuments($config->getLimitedDocumentIds(), false);
 
-        $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config));
+        $jobUuid = $job?->getUuid();
+
+        $onProgressCallback = null === $jobUuid ? null : function (string $index, int $processedDocuments) use ($jobUuid): void {
+            $job = $this->jobs->getByUuid($jobUuid);
+            if (!$job) {
+                return;
+            }
+
+            $this->jobs->persist($job->withProgressFromAmounts($processedDocuments));
+        };
+
+        $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config), $onProgressCallback);
 
         // Mark job as completed
         if ($job) {

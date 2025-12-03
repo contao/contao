@@ -405,6 +405,13 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
+    contao.html_sanitizer:
+        class: Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: html_sanitizer, sanitizer: contao }
+
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
@@ -715,6 +722,12 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+
+    contao.pagination.factory:
+        class: Contao\CoreBundle\Pagination\PaginationFactory
+        public: true
+        arguments:
+            - '@request_stack'
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider
@@ -1327,6 +1340,11 @@ services:
             - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
 
+    contao.twig.defer.renderer:
+        class: Contao\CoreBundle\Twig\Defer\Renderer
+        arguments:
+            - '@twig'
+
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
         public: true
@@ -1425,6 +1443,8 @@ services:
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory
         public: true
+        arguments:
+            - '@contao.routing.scope_matcher'
 
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
@@ -1459,6 +1479,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\StringRuntime
         arguments:
             - '@contao.framework'
+            - '@contao.string.html_decoder'
 
     contao.twig.url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
@@ -1491,6 +1512,7 @@ services:
     Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
     Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
+    Contao\CoreBundle\Pagination\PaginationFactoryInterface: '@contao.pagination.factory'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ContentUrlGenerator: '@contao.routing.content_url_generator'
     Contao\CoreBundle\Routing\PageFinder: '@contao.routing.page_finder'

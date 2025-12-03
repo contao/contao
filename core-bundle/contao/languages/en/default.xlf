@@ -110,6 +110,9 @@
       <trans-unit id="ERR.filetarget">
         <source>Cannot move %s to %s because the target exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
       </trans-unit>
@@ -2108,6 +2111,12 @@
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
       </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+      </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
       </trans-unit>
@@ -2485,6 +2494,12 @@
       </trans-unit>
       <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>

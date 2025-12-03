@@ -88,7 +88,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_calendar_feed', 'deleteFeed')
 			),
-			'show'
+			'show',
+			'versions',
 		)
 	),
 

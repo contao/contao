@@ -378,7 +378,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         );
 
         $request = Request::create('https://example.com/foo/bar');
-        $request->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8', true);
+        $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
         $response = $authenticator->start($request);
 

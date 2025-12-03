@@ -31,19 +31,19 @@
         "contao/core-bundle": "self.version",
         "php-feed-io/feed-io": "^6.0",
         "friendsofsymfony/http-cache": "^3.0",
-        "symfony/config": "^7.3",
-        "symfony/dependency-injection": "^7.3",
+        "symfony/config": "^7.4",
+        "symfony/dependency-injection": "^7.4",
         "symfony/deprecation-contracts": "^3.0",
-        "symfony/http-foundation": "^7.3",
-        "symfony/http-kernel": "^7.3",
+        "symfony/http-foundation": "^7.4",
+        "symfony/http-kernel": "^7.4",
         "symfony/polyfill-mbstring": "^1.0",
-        "symfony/yaml": "^7.3"
+        "symfony/yaml": "^7.4"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "self.version",
         "phpunit/phpunit": "^12.4",
-        "symfony/http-client": "^7.3"
+        "symfony/http-client": "^7.4"
     },
     "conflict": {
         "contao/core": "*",

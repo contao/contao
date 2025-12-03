@@ -1,0 +1,55 @@
+{% trans_default_domain "contao_default" %}
+
+<div id="tl_soverview">
+
+    <div id="tl_messages">
+        <h2>{{ systemMessages }}</h2>
+        <p>{{ loginMsg|raw }}</p>
+        {{ messages|raw }}
+    </div>
+
+    <div id="tl_shortcuts">
+        <h2>{{ shortcuts }}</h2>
+        <p>{{ shortcutsLink|raw }}</p>
+    </div>
+
+    <div id="tl_versions">
+        <h2>{{ 'MSC.latestChanges'|trans }}</h2>
+        {% if versions|default %}
+            <table class="tl_listing with-border">
+                <thead>
+                <tr>
+                    <th>{{ 'MSC.date'|trans }}</th>
+                    <th>{{ 'MSC.user'|trans }}</th>
+                    <th>{{ 'MSC.table'|trans }}</th>
+                    <th>ID</th>
+                    <th>{{ 'MSC.description'|trans }}</th>
+                    <th>{{ 'MSC.version'|trans }}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for version in versions %}
+                    <tr class="hover-row" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+                        <td>{{ version.date }}</td>
+                        <td>{{ version.username ?: '-' }}</td>
+                        <td>{{ version.shortTable }}</td>
+                        <td>{{ version.pid }}</td>
+                        <td>{{ version.description ?: '-' }}</td>
+                        <td>
+                            {% if version.active %}<strong>{% endif %}
+                            {{ version.version }}
+                            {% if version.active %}</strong>{% endif %}
+                        </td>
+                        <td class="tl_right_nowrap">{{ version.operations }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {{ pagination|raw }}
+        {% else %}
+            <p>{{ 'MSC.noVersions'|trans }}</p>
+        {% endif %}
+    </div>
+
+</div>

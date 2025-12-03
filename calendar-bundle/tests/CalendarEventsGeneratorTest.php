@@ -99,7 +99,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         $templateAdapter
             ->expects('default' !== ($record['source'] ?? null) ? $this->never() : $this->atLeast(2))
             ->method('once')
-            ->willReturn(true)
+            ->willReturn(static fn () => true)
         ;
 
         $contaoFramework = $this->mockContaoFramework(
@@ -158,6 +158,9 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         $events = array_map(
             static function (array $event): array {
                 ksort($event);
+
+                $event['details'] = $event['details']();
+                $event['hasDetails'] = $event['hasDetails']();
 
                 return $event;
             },

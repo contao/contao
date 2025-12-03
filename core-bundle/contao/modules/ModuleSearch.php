@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -183,33 +185,33 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$from = 1;
-			$to = $count;
+			$from = 0;
+			$to = $count + 1;
 
 			// Pagination
 			if ($this->perPage > 0)
 			{
-				$id = 'page_s' . $this->id;
-				$page = (int) (Input::get($id) ?? 1);
+				$param = 'page_s' . $this->id;
 				$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
-				// Do not index or cache the page if the page number is outside the range
-				if ($page < 1 || $page > max(ceil($count/$per_page), 1))
+				try
 				{
-					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+					$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $count, $per_page));
+				}
+				catch (PageOutOfRangeException $e)
+				{
+					throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 				}
 
-				$from = (($page - 1) * $per_page) + 1;
-				$to = (($from + $per_page) > $count) ? $count : ($from + $per_page - 1);
+				list($from, $to) = $pagination->getIndexRange();
 
 				// Pagination menu
-				if ($to < $count || $from > 1)
+				if ($pagination->getPageCount() > 1)
 				{
-					$objPagination = new Pagination($count, $per_page, Config::get('maxPaginationLinks'), $id);
-					$this->Template->pagination = $objPagination->generate("\n  ");
+					$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 				}
 
-				$this->Template->page = $page;
+				$this->Template->page = $pagination->getCurrent();
 			}
 
 			$contextLength = 48;
@@ -227,7 +229,7 @@ class ModuleSearch extends Module
 				$totalLength = $lengths[1];
 			}
 
-			$arrResult = $objResult->getResults($to-$from+1, $from-1);
+			$arrResult = $objResult->getResults($to - $from, $from);
 
 			// Get the results
 			foreach (array_keys($arrResult) as $i)
@@ -257,7 +259,7 @@ class ModuleSearch extends Module
 				// Shorten the context and highlight all keywords
 				if (!empty($arrContext))
 				{
-					$objTemplate->context = trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength));
+					$objTemplate->context = StringUtil::specialchars(trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength)));
 					$objTemplate->context = preg_replace('((?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$))ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;
@@ -268,7 +270,7 @@ class ModuleSearch extends Module
 				$this->Template->results .= $objTemplate->parse();
 			}
 
-			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));
+			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from + 1, $to, $count, $strKeywords));
 			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 		}
 	}

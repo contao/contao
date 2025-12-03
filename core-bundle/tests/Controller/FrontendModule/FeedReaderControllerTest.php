@@ -16,11 +16,13 @@ use Contao\Config;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
-use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
+use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
+use Contao\CoreBundle\Pagination\PaginationInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
-use Contao\Environment;
-use Contao\Input;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\ModuleModel;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -41,7 +43,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
-use Twig\Loader\LoaderInterface;
 
 class FeedReaderControllerTest extends TestCase
 {
@@ -228,13 +229,28 @@ class FeedReaderControllerTest extends TestCase
         $container = $this->mockContainer(null, $assertTwigContext);
         $container->set('contao.resource_finder', $finder);
 
-        $controller = $this->getController($feedIo, $cache, $requestStack, null, $container);
+        $pagination = $this->createMock(PaginationInterface::class);
+        $pagination
+            ->expects($this->once())
+            ->method('getItemsForPage')
+            ->willReturn(['dummy'])
+        ;
+
+        $paginationFactory = $this->createMock(PaginationFactoryInterface::class);
+        $paginationFactory
+            ->expects($this->once())
+            ->method('create')
+            ->with(new PaginationConfig('page_r42', 2, 1))
+            ->willReturn($pagination)
+        ;
+
+        $controller = $this->getController($feedIo, $cache, $requestStack, null, $container, $paginationFactory);
         $response = $controller($request, $model, 'main');
 
         $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
     }
 
-    public function testThrowExceptionIfRequestedPageIsOutOfBounds(): void
+    public function testDoesNotUsePagination(): void
     {
         $GLOBALS['TL_LANG']['MSC'] = [
             'first' => '',
@@ -265,18 +281,35 @@ class FeedReaderControllerTest extends TestCase
             'rss_cache' => 3600,
             'skipFirst' => 0,
             'numberOfItems' => 0,
-            'perPage' => 1,
+            'perPage' => 0,
         ]);
 
-        $request = new Request(['page_r42' => 3], [], ['_scope' => 'frontend']);
+        $request = new Request(['page_r42' => 2], [], ['_scope' => 'frontend']);
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $controller = $this->getController($feedIo, $cache, $requestStack);
+        $assertTwigContext = function (array $context) {
+            $this->assertCount(2, $context['elements']);
+            $this->assertEmpty($context['pagination']);
 
-        $this->expectException(PageNotFoundException::class);
+            return true;
+        };
 
-        $controller($request, $model, 'main');
+        $finder = new ResourceFinder(__DIR__.'/../../../contao');
+
+        $container = $this->mockContainer(null, $assertTwigContext);
+        $container->set('contao.resource_finder', $finder);
+
+        $paginationFactory = $this->createMock(PaginationFactoryInterface::class);
+        $paginationFactory
+            ->expects($this->never())
+            ->method('create')
+        ;
+
+        $controller = $this->getController($feedIo, $cache, $requestStack, null, $container, $paginationFactory);
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
     }
 
     private function getDummyFeed(): FeedInterface
@@ -300,11 +333,13 @@ class FeedReaderControllerTest extends TestCase
         return $feed;
     }
 
-    private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface|null $logger = null, ContainerInterface|null $container = null): FeedReaderController
+    private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface|null $logger = null, ContainerInterface|null $container = null, PaginationFactoryInterface|null $paginationFactory = null): FeedReaderController
     {
         $logger ??= $this->createMock(LoggerInterface::class);
 
-        $controller = new FeedReaderController($feedIo, $logger, $cache);
+        $paginationFactory ??= $this->createMock(PaginationFactoryInterface::class);
+
+        $controller = new FeedReaderController($feedIo, $logger, $cache, $paginationFactory);
         $controller->setFragmentOptions(['template' => 'frontend_module/feed_reader']);
         $controller->setContainer($container ?? $this->mockContainer($requestStack));
 
@@ -313,11 +348,17 @@ class FeedReaderControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, callable|null $assertTwigContext = null): ContainerBuilder
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
             ->method('exists')
-            ->with('@Contao/frontend_module/feed_reader.html.twig')
             ->willReturn(true)
+        ;
+
+        $loader
+            ->method('getFirst')
+            ->willReturnCallback(
+                static fn (string $identifier): string => 'pagination' === $identifier ? 'templates/pagination.html5' : "path/to/$identifier.html.twig",
+            )
         ;
 
         $twig = $this->createMock(TwigEnvironment::class);
@@ -340,28 +381,9 @@ class FeedReaderControllerTest extends TestCase
         }
 
         $this->container->set('contao.twig.filesystem_loader', $loader);
-        $this->container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $this->container->set('contao.twig.interop.context_factory', new ContextFactory($this->createMock(ScopeMatcher::class)));
         $this->container->set('twig', $twig);
-
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->method('get')
-            ->with('maxPaginationLinks')
-            ->willReturn(7)
-        ;
-
-        $environmentAdapter = $this->mockAdapter(['get']);
-        $environmentAdapter
-            ->method('get')
-            ->willReturnMap([
-                ['requestUri', ''],
-                ['queryString', ''],
-            ])
-        ;
-
-        $framework = $this->mockContaoFramework([Config::class => $configAdapter, Environment::class => $environmentAdapter, Input::class => $this->mockAdapter(['get'])]);
-
-        $this->container->set('contao.framework', $framework);
+        $this->container->set('contao.framework', $this->mockContaoFramework());
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
         $this->container->set('cache.system', $this->createMock(CacheInterface::class));
         $this->container->set('translator', $this->createMock(TranslatorInterface::class));

@@ -55,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'type', 'status', 'owner'),
+			'fields'                  => array('tstamp', 'type', 'progress', 'status', 'owner'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -98,6 +98,10 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['owner'],
 			'foreignKey'              => 'tl_user.name',
 			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+		),
+		'progress' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['jobs']['progress'],
 		),
 		'status' => array
 		(

@@ -94,6 +94,13 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_506.layout_template:
+        class: Contao\CoreBundle\Migration\Version506\LayoutTemplateMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.twig.filesystem_loader'
+            - '@filesystem'
+
     contao.migration.version_506.search_indexer_settings:
         class: Contao\CoreBundle\Migration\Version506\SearchIndexerSettingsMigration
         arguments:

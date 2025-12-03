@@ -17,7 +17,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	'config' => array
 	(
 		'dataContainer'               => DC_Table::class,
-		'enableVersioning'            => true,
 		'notCreatable'                => true,
 		'notCopyable'                 => true,
 		'backendSearchIgnore'         => true,
