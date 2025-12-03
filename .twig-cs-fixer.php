@@ -16,6 +16,13 @@ use TwigCsFixer\Ruleset\Ruleset;
 use TwigCsFixer\Standard\TwigCsFixer;
 
 require_once __DIR__ . '/vendor-bin/twig-cs-fixer/vendor/autoload.php';
+require_once __DIR__ . '/core-bundle/src/Twig/Defer/DeferredBlockReferenceNode.php';
+require_once __DIR__ . '/core-bundle/src/Twig/Defer/DeferTokenParser.php';
+require_once __DIR__ . '/core-bundle/src/Twig/ResponseContext/AddNode.php';
+require_once __DIR__ . '/core-bundle/src/Twig/ResponseContext/AddTokenParser.php';
+require_once __DIR__ . '/core-bundle/src/Twig/ResponseContext/DocumentLocation.php';
+require_once __DIR__ . '/core-bundle/src/Twig/Slots/SlotNode.php';
+require_once __DIR__ . '/core-bundle/src/Twig/Slots/SlotTokenParser.php';
 
 $templatePaths = [
     __DIR__ . '/calendar-bundle/contao/templates',
