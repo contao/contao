@@ -80,8 +80,7 @@ class BackendSearchControllerTest extends TestCase
             ->willReturn('<stream>')
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $container = new ContainerBuilder();
         $container->set('twig', $twig);

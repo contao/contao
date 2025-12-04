@@ -149,8 +149,7 @@ class CoreResponseContextFactoryTest extends TestCase
             ])
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create('https://example.com/'));
+        $requestStack = new RequestStack([Request::create('https://example.com/')]);
 
         $cpHandlerFactory = new CspHandlerFactory(new CspParser(new PolicyManager()));
 
@@ -257,8 +256,7 @@ class CoreResponseContextFactoryTest extends TestCase
             ])
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create('https://example.com/'));
+        $requestStack = new RequestStack([Request::create('https://example.com/')]);
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 0;

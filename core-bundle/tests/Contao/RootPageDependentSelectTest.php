@@ -57,8 +57,7 @@ class RootPageDependentSelectTest extends TestCase
             ->willReturn('Choose module for "%s"')
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $pageAdapter]));

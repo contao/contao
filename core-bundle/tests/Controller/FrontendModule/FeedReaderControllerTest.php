@@ -93,8 +93,7 @@ class FeedReaderControllerTest extends TestCase
         ]);
 
         $request = new Request([], [], ['_scope' => 'frontend']);
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $controller = $this->getController($feedIo, $cache, $requestStack);
         $response = $controller($request, $model, 'main');
@@ -131,8 +130,7 @@ class FeedReaderControllerTest extends TestCase
         ]);
 
         $request = new Request([], [], ['_scope' => 'frontend']);
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $controller = $this->getController($feedIo, $cache, $requestStack);
         $response = $controller($request, $model, 'main');
@@ -163,8 +161,7 @@ class FeedReaderControllerTest extends TestCase
         ]);
 
         $request = new Request([], [], ['_scope' => 'frontend']);
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
@@ -214,8 +211,7 @@ class FeedReaderControllerTest extends TestCase
         ]);
 
         $request = new Request(['page_r42' => 2], [], ['_scope' => 'frontend']);
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $assertTwigContext = function (array $context) {
             $this->assertCount(1, $context['elements']);
@@ -285,8 +281,7 @@ class FeedReaderControllerTest extends TestCase
         ]);
 
         $request = new Request(['page_r42' => 2], [], ['_scope' => 'frontend']);
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $assertTwigContext = function (array $context) {
             $this->assertCount(2, $context['elements']);

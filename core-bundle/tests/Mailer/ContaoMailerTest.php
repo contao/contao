@@ -37,8 +37,7 @@ class ContaoMailerTest extends TestCase
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $transport = $this->createMock(TransportInterface::class);
         $mailer = new Mailer($transport);

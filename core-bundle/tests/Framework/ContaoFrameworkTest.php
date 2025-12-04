@@ -357,8 +357,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->reset();
 
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create('/index.html'));
+        $requestStack = new RequestStack([Request::create('/index.html')]);
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);

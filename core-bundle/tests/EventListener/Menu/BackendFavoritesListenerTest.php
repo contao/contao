@@ -84,8 +84,7 @@ class BackendFavoritesListenerTest extends TestCase
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
         $request->setSession($session);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -254,8 +253,7 @@ class BackendFavoritesListenerTest extends TestCase
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
         $request->setSession($session);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $connection = $this->createMock(Connection::class);
         $connection

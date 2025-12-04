@@ -176,8 +176,7 @@ class BackendTemplateStudioControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request ?? new Request());
+        $requestStack = new RequestStack([$request ?? new Request()]);
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
