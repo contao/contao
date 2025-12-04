@@ -503,13 +503,19 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
         }
 
+        // Not explicitly configured or disabled means, we can apply our defaults which
+        // should be Loupe if it is available. Loupe is not installed, keep the search
+        // disabled (default)
         if (!class_exists(LoupeFactory::class)) {
             return $extensionConfigs;
         }
 
         $loupeFactory = new LoupeFactory();
 
-        if (!$loupeFactory->isSupported()) {
+        // Older versions of Loupe did not require dependencies in the composer.json
+        // directly. There we need to check if Loupe is supported. In newer versions of
+        // Loupe, this is ensured by Composer requirements.
+        if (method_exists($loupeFactory, 'isSupported') && !$loupeFactory->isSupported()) {
             return $extensionConfigs;
         }
 
