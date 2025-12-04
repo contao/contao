@@ -24,7 +24,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: pcov
 
             - name: Checkout

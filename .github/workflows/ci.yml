@@ -19,7 +19,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
@@ -47,7 +47,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
@@ -75,7 +75,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
@@ -108,7 +108,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
@@ -165,7 +165,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
@@ -193,7 +193,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
@@ -238,7 +238,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Initialize the database
@@ -276,7 +276,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
@@ -300,7 +300,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: nightly
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Initialize the database
@@ -335,7 +335,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Initialize the database
@@ -375,7 +375,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, zlib
                   coverage: none
 
             - name: Checkout
