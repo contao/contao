@@ -28,6 +28,9 @@ class ValueFormatterTest extends TestCase
     #[DataProvider('formatProvider')]
     public function testFormat(mixed $value, array $dca, string $expected, array|null $rawValues = null): void
     {
+        $tz = date_default_timezone_get();
+        date_default_timezone_set('UTC');
+
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = $dca;
 
         $configAdapter = $this->mockAdapter(['get']);
@@ -67,6 +70,8 @@ class ValueFormatterTest extends TestCase
         $this->assertSame($expected, $result);
 
         unset($GLOBALS['TL_DCA']);
+
+        date_default_timezone_set($tz);
     }
 
     public static function formatProvider(): iterable

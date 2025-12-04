@@ -143,7 +143,17 @@ class ValueFormatter implements ResetInterface
             },
         );
 
-        if (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null, [DataContainer::SORT_INITIAL_LETTER_DESC, DataContainer::SORT_INITIAL_LETTERS_DESC, DataContainer::SORT_DESC], false)) {
+        if (
+            \in_array(
+                (int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null),
+                [
+                    DataContainer::SORT_INITIAL_LETTER_DESC,
+                    DataContainer::SORT_INITIAL_LETTERS_DESC,
+                    DataContainer::SORT_DESC,
+                ],
+                true,
+            )
+        ) {
             $options = array_reverse($options, true);
         }
 
@@ -275,7 +285,7 @@ class ValueFormatter implements ResetInterface
                 true,
             )
         ) {
-            ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null) === DataContainer::SORT_DAY_DESC ? rsort($values) : sort($values);
+            DataContainer::SORT_DAY_DESC === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null) ? rsort($values) : sort($values);
             $dateAdapter = $this->framework->getAdapter(Date::class);
             $configAdapter = $this->framework->getAdapter(Config::class);
 
@@ -298,7 +308,7 @@ class ValueFormatter implements ResetInterface
                 true,
             )
         ) {
-            ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null) === DataContainer::SORT_MONTH_DESC ? rsort($values) : sort($values);
+            DataContainer::SORT_MONTH_DESC === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null) ? rsort($values) : sort($values);
 
             foreach ($values as $v) {
                 if ('' === $v) {
@@ -331,7 +341,7 @@ class ValueFormatter implements ResetInterface
                 true,
             )
         ) {
-            ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null) === DataContainer::SORT_YEAR_DESC ? rsort($values) : sort($values);
+            DataContainer::SORT_YEAR_DESC === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['flag'] ?? null) ? rsort($values) : sort($values);
 
             foreach ($values as $v) {
                 $options[] = ['value' => $v, 'label' => $v ? date('Y', (int) $v) : '-'];
@@ -361,7 +371,7 @@ class ValueFormatter implements ResetInterface
 
     private function fetchForeignValue(string $table, string $field, mixed $id): mixed
     {
-        // cannot use isset() because the value can be NULL
+        // Cannot use isset() because the value can be NULL
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
             $dbField = $this->connection->getDatabasePlatform()->quoteSingleIdentifier($field);
             $value = $this->connection->fetchOne("SELECT $dbField FROM $table WHERE id=?", [$id]);
@@ -374,7 +384,7 @@ class ValueFormatter implements ResetInterface
 
     private function fetchOptionsCallback(string $table, string $field, mixed $dc): array|null
     {
-        // cannot use isset() because the value can be NULL
+        // Cannot use isset() because the value can be NULL
         if (\array_key_exists($field, $this->optionsCallbackCache[$table] ?? [])) {
             return $this->optionsCallbackCache[$table][$field];
         }
