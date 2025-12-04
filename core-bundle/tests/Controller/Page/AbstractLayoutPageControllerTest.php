@@ -212,8 +212,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $page);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $pageFinder = new PageFinder(
             $framework,

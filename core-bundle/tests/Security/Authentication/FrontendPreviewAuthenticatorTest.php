@@ -312,8 +312,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $request = new Request();
         $request->setSession($session);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $security ??= $this->createMock(Security::class);
         $tokenStorage ??= $this->createMock(TokenStorageInterface::class);

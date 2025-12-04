@@ -97,8 +97,7 @@ class ContentElementControllerTest extends TestCase
     public function testDoesNotCreateTheTemplateFromACustomTplInTheBackend(): void
     {
         $request = new Request([], [], ['_scope' => 'backend']);
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $this->container->set('request_stack', $requestStack);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());

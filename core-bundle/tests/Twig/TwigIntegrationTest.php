@@ -102,8 +102,7 @@ class TwigIntegrationTest extends TestCase
             ),
         );
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request = new Request());
+        $requestStack = new RequestStack([$request = new Request()]);
 
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader

@@ -255,8 +255,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler ??= $this->createMock(BaseFragmentHandler::class);
         $pageFinder ??= $this->createMock(PageFinder::class);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, $pageFinder, true);
     }
