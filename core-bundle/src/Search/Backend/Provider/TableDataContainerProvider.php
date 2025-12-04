@@ -251,8 +251,9 @@ class TableDataContainerProvider implements ProviderInterface
 
     private function loadRow(string $table, int $id): array|false
     {
-        // In this case, we want to load the entire row as it's used only for the hit
-        // metadata of which there are not a lot
+        // In this case, we want to load the entire row. This method is called only when
+        // generating the search result hits of which there are not that many and the
+        // entire row can be useful in the EnhanceHitEvent.
         $qb = $this->createQueryBuilderForTable($table, '*');
 
         return $qb
