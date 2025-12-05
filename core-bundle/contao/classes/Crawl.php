@@ -55,6 +55,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$template->subscribersWidget = $subscribersWidget;
 		$template->maxDepthWidget = $maxDepthWidget;
 		$template->memberWidget = $memberWidget;
+		$template->isActive = $this->isActive();
 
 		if ($this->isActive() && $this->valid)
 		{
