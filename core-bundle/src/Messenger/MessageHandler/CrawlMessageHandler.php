@@ -16,7 +16,6 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
-use Contao\CoreBundle\Job\Status;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
@@ -41,8 +40,7 @@ class CrawlMessageHandler
     {
         $job = $this->jobs->getByUuid($message->jobUuid);
 
-        // TODO: $jobs->isCompleted()
-        if (null === $job || Status::completed === $job->getStatus()) {
+        if (null === $job || $job->isCompleted()) {
             return;
         }
 
@@ -73,7 +71,7 @@ class CrawlMessageHandler
         }
 
         $escargot = $escargot
-            ->withMaxDurationInSeconds(20)
+            ->withMaxDurationInSeconds(20) // This we can improve in the future. It's only needed in the "web" scope
             ->withConcurrency($this->concurrency)
             ->withMaxDepth($message->maxDepth)
             ->withLogger($this->createLogger($job, $message->subscribers))
@@ -87,7 +85,7 @@ class CrawlMessageHandler
         $all = $queue->countAll($escargotJobId);
         $finished = 0 === $pending;
 
-        $job = $job->withProgressFromAmounts($all, $pending);
+        $job = $job->withProgressFromAmounts($pending, $all);
         $this->jobs->persist($job);
 
         if ($finished) {
