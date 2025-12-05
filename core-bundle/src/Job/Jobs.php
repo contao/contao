@@ -264,7 +264,7 @@ class Jobs
     {
         return new Attachment(
             $filesystemItem,
-            new TranslatableMessage('jobs.download_attachment', [$filesystemItem->getName()], 'contao_jobs'),
+            new TranslatableMessage('MSC.downloadAttachment', [$filesystemItem->getName()], 'contao_default'),
             $this->router->generate(
                 '_contao_jobs.download',
                 ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],

@@ -32,9 +32,6 @@
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>
       </trans-unit>
-      <trans-unit id="jobs.download_attachment">
-        <source>Download attachment "%s"</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>
