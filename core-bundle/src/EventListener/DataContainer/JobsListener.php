@@ -67,21 +67,45 @@ class JobsListener
         $attachments = $this->jobs->getAttachments($job);
         $numberOfAttachments = \count($attachments);
 
+        // Hide the operation if there are no attachments
         if (0 === $numberOfAttachments) {
             $operation->hide();
 
             return;
         }
 
-        // TODO: we need a template and Stimulus logic to have an operation with sub
-        // operations just like the [...] in the current context menu to be able to
-        // display more than just one download
-        $attachment = $attachments[0];
+        // Link directly to the one attachment, if there is only one
+        if (1 === $numberOfAttachments) {
+            $operation['icon'] = 'theme_import.svg';
+            $operation['title'] = $attachments[0]->getFileLabel();
+            $operation->setUrl($attachments[0]->getDownloadUrl());
 
-        $operation['icon'] = 'theme_import.svg';
-        $operation['title'] = $attachment->getFileLabel();
+            return;
+        }
 
-        $operation->setUrl($attachment->getDownloadUrl());
+        // Otherwise, we build a button with submenu
+        $operations = [];
+
+        foreach ($attachments as $attachment) {
+            $operations[] = new DataContainerOperation(
+                'download',
+                [
+                    'icon' => 'theme_import.svg',
+                    'label' => $attachment->getFileLabel(),
+                    'href' => $attachment->getDownloadUrl(),
+                ],
+                null,
+                $operation->getDataContainer(),
+            );
+        }
+
+        $operation->setHtml($this->twig->render('@Contao/backend/data_container/operations.html.twig', [
+            'operations' => $operations,
+            'has_primary' => true,
+            'more_icon' => 'theme_import.svg',
+            'more_alt' => 'MSC.viewAttachments',
+            'globalOperations' => false,
+        ]));
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]

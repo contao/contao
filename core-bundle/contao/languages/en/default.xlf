@@ -2210,6 +2210,12 @@
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
       </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
+      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
       </trans-unit>
