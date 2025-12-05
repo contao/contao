@@ -189,7 +189,7 @@ class OptInTest extends TestCase
     {
         $properties = [
             'confirmedOn' => 0,
-            'removeOn' => strtotime('+2 days'),
+            'removeOn' => strtotime('-2 days'),
         ];
 
         $token = $this->mockClassWithProperties(OptInModel::class, $properties);
@@ -229,7 +229,7 @@ class OptInTest extends TestCase
     {
         $properties = [
             'confirmedOn' => 0,
-            'removeOn' => strtotime('+2 days -1 minute'),
+            'removeOn' => strtotime('-2 days +1 minute'),
         ];
 
         $token = $this->mockClassWithProperties(OptInModel::class, $properties);
