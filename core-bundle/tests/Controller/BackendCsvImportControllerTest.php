@@ -294,8 +294,7 @@ class BackendCsvImportControllerTest extends TestCase
         $request ??= new Request();
         $request->setSession($this->mockSession());
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         System::getContainer()->set('request_stack', $requestStack);
 

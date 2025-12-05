@@ -1,6 +1,8 @@
 {% trans_default_domain 'contao_default' %}
 {% set has_submenu = false %}
 {% set show_button = false %}
+{% set more_icon = more_icon|default('more.svg') %}
+{% set more_alt = more_alt|default('DCA.operations') %}
 
 <div class="operations"{% if globalOperations %} id="tl_buttons" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
     <ul data-contao--operations-menu-target="menu">
@@ -19,7 +21,7 @@
                     {% if globalOperations %}
                         {{ backend_icon('more.svg', 'DCA.global_operations'|trans) }}
                     {% else %}
-                        {{ backend_icon('more.svg', 'DCA.operations'|trans([id|default])) }}
+                        {{ backend_icon(more_icon, more_alt|trans([id|default])) }}
                     {% endif %}
                 </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="submenu">
@@ -66,8 +68,8 @@
                     .set('href', operation.href)
                 %}
                 <a{{ operation_attributes }}>
-                    {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or show_labels) ? '' : operation.title|default(operation.label|default), operation.iconAttributes|default(null)) }}{% endif %}
-                    {% if menu or show_labels %}{{ operation.label|default }}{% endif %}
+                    {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or show_labels) ? '' : operation.title|default(operation.label|default)|trans, operation.iconAttributes|default(null)) }}{% endif %}
+                    {% if menu or show_labels %}{{ operation.label|default|trans }}{% endif %}
                 </a>
             {% endif %}
         </li>

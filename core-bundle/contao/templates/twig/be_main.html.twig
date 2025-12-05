@@ -17,6 +17,11 @@
     .mergeWith(bodyAttributes|default)
 -%}
 
+{%- set containerAttributes = attrs()
+    .addClass(containerClass)
+    .mergeWith(containerAttributes|default)
+-%}
+
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
 <head>
@@ -82,7 +87,7 @@
 {% endblock %}
 
 {% block container %}
-    <div id="container">
+    <div id="container"{{ containerAttributes }}>
 
         {% block left %}
             {% if not isPopup %}

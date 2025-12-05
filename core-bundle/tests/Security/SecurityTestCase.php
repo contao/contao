@@ -27,8 +27,7 @@ abstract class SecurityTestCase extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', $scope);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $requestStack);
