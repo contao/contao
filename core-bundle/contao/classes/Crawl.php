@@ -69,7 +69,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 				if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
 				{
 					$objAuthenticator->removeFrontendAuthentication();
-					$clientOptions = array();
 				}
 				else
 				{
@@ -87,13 +86,9 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			$subscribers = $subscribersWidget->value;
 			$maxDepth = $maxDepthWidget->value;
 
-			$job = System::getContainer()->get('contao.job.jobs')->createJob('crawl');
-			System::getContainer()->get('messenger.bus.default')->dispatch(new CrawlMessage(
-				$job->getUuid(),
-				$subscribers,
-				$maxDepth,
-				$headers,
-			));
+			$jobs = System::getContainer()->get('contao.job.jobs');
+			$job = $jobs->createJob('crawl');
+			$jobs->dispatchJob(new CrawlMessage($subscribers, $maxDepth, $headers), $job);
 
 			// TODO: translation
 			Message::addConfirmation('Yo! Check the jobs framework!', self::class);

@@ -38,7 +38,7 @@ class CrawlMessageHandler
 
     public function __invoke(CrawlMessage $message): void
     {
-        $job = $this->jobs->getByUuid($message->jobUuid);
+        $job = $this->jobs->getByUuid($message->getJobId());
 
         if (null === $job || $job->isCompleted()) {
             return;
