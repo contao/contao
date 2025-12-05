@@ -1,6 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    #sourceElements = new Map();
+
     static values = {
         id: String,
         trail: String,
@@ -9,8 +11,6 @@ export default class extends Controller {
     };
 
     static targets = ['url', 'title', 'description'];
-
-    sourceElements = new Map();
 
     connect() {
         // Install event listeners on the source fields
@@ -25,32 +25,32 @@ export default class extends Controller {
                 }
 
                 elements.push(el);
-                el.addEventListener('input', this._update.bind(this, sourceType));
+                el.addEventListener('input', this.#update.bind(this, sourceType));
             }
 
-            this.sourceElements.set(sourceType, elements);
+            this.#sourceElements.set(sourceType, elements);
 
             // Initially gather content
-            this._update(sourceType);
+            this.#update(sourceType);
         }
     }
 
     disconnect() {
-        for (const elements of this.sourceElements.values()) {
+        for (const elements of this.#sourceElements.values()) {
             for (const el of elements) {
-                el.removeEventListener('input', this._update);
+                el.removeEventListener('input', this.#update);
             }
         }
 
-        this.sourceElements.clear();
+        this.#sourceElements.clear();
     }
 
-    _update(sourceType) {
-        const value = this._getValue(sourceType);
+    #update(sourceType) {
+        const value = this.#getValue(sourceType);
 
         if (sourceType === 'title') {
-            this.titleTarget.textContent = this._shorten(
-                this._html2string(this.titleTagValue.replace(/%s/, value)).replace(/%%/g, '%'),
+            this.titleTarget.textContent = this.#shorten(
+                this.#html2string(this.titleTagValue.replace(/%s/, value)).replace(/%%/g, '%'),
                 64,
             );
         } else if (sourceType === 'alias') {
@@ -59,20 +59,17 @@ export default class extends Controller {
                     ? this.trailValue
                     : `${this.trailValue} › ${(value || this.idValue).replace(/\//g, ' › ')}`;
         } else if (sourceType === 'description') {
-            this.descriptionTarget.textContent = this._shorten(value, 160);
+            this.descriptionTarget.textContent = this.#shorten(value, 160);
         }
     }
 
-    _getValue(sourceType) {
-        for (const el of this.sourceElements.get(sourceType)) {
+    #getValue(sourceType) {
+        for (const el of this.#sourceElements.get(sourceType)) {
             if (!el) {
                 continue;
             }
 
-            const value =
-                el.classList.contains('tl_textarea') && el.classList.contains('noresize')
-                    ? this._html2string(el.value)
-                    : el.value;
+            const value = el.classList.contains('tl_textarea') ? this.#html2string(el.value) : el.value;
 
             if (value) {
                 return value;
@@ -82,7 +79,7 @@ export default class extends Controller {
         return '';
     }
 
-    _shorten(str, max) {
+    #shorten(str, max) {
         if (str.length <= max) {
             return str;
         }
@@ -90,7 +87,7 @@ export default class extends Controller {
         return `${str.substr(0, str.lastIndexOf(' ', max))} …`;
     }
 
-    _html2string(html) {
+    #html2string(html) {
         return new DOMParser()
             .parseFromString(html, 'text/html')
             .body.textContent.replace(/\[-]/g, '\xAD')

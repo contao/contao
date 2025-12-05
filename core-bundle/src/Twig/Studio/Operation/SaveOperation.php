@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
@@ -10,10 +18,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @experimental
+ * @internal
  */
 #[AsOperationForTemplateStudioElement]
-class SaveOperation extends AbstractOperation
+final class SaveOperation extends AbstractOperation
 {
     public function __construct(private readonly Inspector $inspector)
     {
@@ -24,7 +32,7 @@ class SaveOperation extends AbstractOperation
         return $this->userTemplateExists($context);
     }
 
-    public function execute(Request $request, OperationContext $context): Response|null
+    public function execute(Request $request, OperationContext $context): Response
     {
         $storage = $this->getUserTemplatesStorage();
         $stateHash = $this->getStateHash($context);
@@ -39,7 +47,7 @@ class SaveOperation extends AbstractOperation
 
         $storage->write($context->getUserTemplatesStoragePath(), $code);
 
-        // Invalidate template
+        // Only invalidate the template cache of the current template
         $this->getTwig()->removeCache(
             $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier(), $context->getThemeSlug()),
         );

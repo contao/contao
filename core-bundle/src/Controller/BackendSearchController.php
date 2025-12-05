@@ -26,8 +26,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(
     '%contao.backend.route_prefix%/search',
     name: '_contao_backend_search.stream',
-    defaults: ['_scope' => 'backend', '_store_referrer' => false],
-    methods: ['GET'],
+    defaults: ['_scope' => 'backend', '_store_referrer' => false, '_token_check' => false],
+    methods: ['GET', 'POST'],
     condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
 )]
 class BackendSearchController extends AbstractBackendController
@@ -54,7 +54,10 @@ class BackendSearchController extends AbstractBackendController
         $result = $this->backendSearch->search($query);
 
         return $this->render('@Contao/backend/search/show_results.stream.html.twig', [
+            'query' => $query,
             'hits' => $result->getHits(),
+            'typeFacets' => $result->getTypeFacets(),
+            'tagFacets' => $result->getTagFacets(),
         ]);
     }
 }

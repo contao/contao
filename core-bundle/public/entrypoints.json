@@ -2,18 +2,18 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/bundles/contaocore/backend.363c53c4.css"
+        "/bundles/contaocore/backend.9bd9f49c.css"
       ],
       "js": [
-        "/bundles/contaocore/backend.15a5ee57.js"
+        "/bundles/contaocore/backend.1f5ac436.js"
       ]
     },
     "navigation": {
       "css": [
-        "/bundles/contaocore/navigation.fb29ed99.css"
+        "/bundles/contaocore/navigation.54bbedc9.css"
       ],
       "js": [
-        "/bundles/contaocore/navigation.8e9846cd.js"
+        "/bundles/contaocore/navigation.742f2632.js"
       ]
     },
     "passkey_login": {

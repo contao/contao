@@ -19,7 +19,7 @@ services:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
             - '@security.helper'
-            - '@translator'
+            - '@translation.locale_switcher'
 
     contao.listener.backend_noindex:
         class: Contao\CoreBundle\EventListener\BackendNoindexListener
@@ -62,6 +62,12 @@ services:
 
     contao.listener.data_container.accordion:
         class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
+
+    contao.listener.data_container.active_member_groups:
+        class: Contao\CoreBundle\EventListener\DataContainer\ActiveMemberGroupsListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
 
     contao.listener.data_container.article_column:
         class: Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener
@@ -147,6 +153,14 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.file_image_preview:
+        class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+            - '@contao.image.factory'
+            - '%kernel.project_dir%'
+
     contao.listener.data_container.frontend_module_permissions:
         class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
         arguments:
@@ -161,6 +175,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@contao.framework'
+            - '@twig'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
@@ -401,7 +416,7 @@ services:
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
-            - '@translator'
+            - '@translation.locale_switcher'
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
 

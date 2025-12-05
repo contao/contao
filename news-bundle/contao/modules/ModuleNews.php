@@ -90,7 +90,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->linkHeadline = $objArticle->headline;
 		$objTemplate->archive = NewsArchiveModel::findById($objArticle->pid);
 		$objTemplate->count = $intCount; // see #5708
-		$objTemplate->text = '';
+		$objTemplate->text = Template::once(static fn (): string => '');
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
 		$objTemplate->author = null; // see #6827
@@ -113,8 +113,8 @@ abstract class ModuleNews extends Module
 		// Display the "read more" button for external/article links
 		if ($objArticle->source != 'default')
 		{
-			$objTemplate->text = true;
-			$objTemplate->hasText = null !== $url;
+			$objTemplate->text = Template::once(static fn (): bool => true);
+			$objTemplate->hasText = Template::once(static fn (): bool => null !== $url);
 			$objTemplate->hasReader = false;
 		}
 
@@ -123,7 +123,7 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = Template::once(function () use ($id) {
+			$objTemplate->text = Template::once(function () use ($id): string {
 				$strText = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
 
@@ -138,8 +138,8 @@ abstract class ModuleNews extends Module
 				return $strText;
 			});
 
-			$objTemplate->hasText = null === $url ? false : Template::once(static function () use ($objArticle) {
-				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
+			$objTemplate->hasText = Template::once(static function () use ($url, $objArticle): bool {
+				return null !== $url && ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
 			});
 		}
 

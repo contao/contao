@@ -3,6 +3,7 @@
 {% set list_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
     .set('data-controller', 'contao--row-wizard contao--sortable')
+    .set('data-contao--row-wizard-name-value', id)
     .set('data-contao--sortable-handle-value', '.drag-handle')
     .set('data-contao--row-wizard-target', 'body')
     .addClass('tl_listwizard')

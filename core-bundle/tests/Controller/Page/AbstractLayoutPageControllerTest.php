@@ -89,7 +89,6 @@ class AbstractLayoutPageControllerTest extends TestCase
                     'defaultImageDensities' => 'foo_densities',
                     'template' => 'foo_template',
                 ],
-                'head' => [],
                 'preview_mode' => false,
                 'locale' => 'en',
                 'rtl' => false,
@@ -117,7 +116,7 @@ class AbstractLayoutPageControllerTest extends TestCase
                         </script>
                         EOF,
                 ],
-                'modules' => [],
+                'element_references' => [],
                 'templateName' => 'foo_template',
             ],
             $data,
@@ -190,8 +189,16 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn($layoutModel)
         ;
 
+        $systemAdapter = $this->mockAdapter(['loadLanguageFile']);
+        $systemAdapter
+            ->expects($this->once())
+            ->method('loadLanguageFile')
+            ->with('default')
+        ;
+
         $framework = $this->mockContaoFramework([
             LayoutModel::class => $layoutAdapter,
+            System::class => $systemAdapter,
         ]);
 
         $page = $this->mockClassWithProperties(PageModel::class);
@@ -205,8 +212,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $page);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $pageFinder = new PageFinder(
             $framework,

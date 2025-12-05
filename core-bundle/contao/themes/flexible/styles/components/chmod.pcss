@@ -1,8 +1,12 @@
+.tl_chmod {
+    margin: 2px 0;
+}
+
 .tl_chmod th {
     height: 18px;
     text-align: center;
     font-weight: 400;
-    background: var(--tree-header);
+    background: var(--table-header);
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -11,9 +15,25 @@
     }
 }
 
+.tl_chmod tr:first-child th:first-child {
+  border-top-left-radius: var(--border-radius);
+}
+
+.tl_chmod tr:first-child th:last-child {
+  border-top-right-radius: var(--border-radius);
+}
+
+.tl_chmod tr:last-child th:first-child {
+  border-bottom-left-radius: var(--border-radius);
+}
+
+.tl_chmod tr:last-child td:last-child {
+  border-bottom-right-radius: var(--border-radius);
+}
+
 .tl_chmod td {
     text-align: center;
-    background: var(--table-header);
+    background: var(--table-even);
 }
 
 .tl_chmod th[scope="row"] {

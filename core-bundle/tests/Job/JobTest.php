@@ -27,6 +27,7 @@ class JobTest extends TestCase
         $this->assertSame('9ad2f29c-671b-4a1a-9a15-dabda4fd6bad', $job->getUuid());
         $this->assertSame('2025-01-01 00:00:00', $job->getCreatedAt()->format('Y-m-d H:i:s'));
         $this->assertSame(Status::new, $job->getStatus());
+        $this->assertTrue($job->isNew());
         $this->assertSame(Owner::asSystem()->getId(), $job->getOwner()->getId());
 
         $this->assertSame(
@@ -48,12 +49,14 @@ class JobTest extends TestCase
     {
         $job = $this->getJob()->markPending();
         $this->assertSame(Status::pending, $job->getStatus());
+        $this->assertTrue($job->isPending());
     }
 
     public function testMarkCompletedChangesStatus(): void
     {
         $job = $this->getJob()->markCompleted();
         $this->assertSame(Status::completed, $job->getStatus());
+        $this->assertTrue($job->isCompleted());
     }
 
     public function testCanAddWarnings(): void

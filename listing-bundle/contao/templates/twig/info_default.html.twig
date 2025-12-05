@@ -1,0 +1,25 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% set wrapperAttributes = attrs()
+    .addClass('listing')
+    .mergeWith(wrapperAttributes|default)
+%}
+
+{% block content %}
+
+    <table class="single_record">
+        <tbody>
+        {% for col in record %}
+            <tr>
+                <td class="label">{{ col.label }}</td>
+                <td class="value">{{ col.content|sanitize_html }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- indexer::stop -->
+    <p class="back"><a href="{{ referer }}" title="{{ back }}">{{ back }}</a></p>
+    <!-- indexer::continue -->
+
+{% endblock %}

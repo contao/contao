@@ -63,7 +63,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
     }
 
     #[DataProvider('providePreviewToolbarTemplateScenarios')]
-    public function testRendersToolbar(bool $legacyTemplateExists, string $expectedTemplate): void
+    public function testRendersToolbar(bool $legacyTemplateExists, string $expectedTemplate, array $backendAttributes = [], string $backendBadgeTitle = ''): void
     {
         $loader = $this->createMock(LoaderInterface::class);
         $loader
@@ -87,6 +87,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->mockRouter(),
             $this->mockTokenManager(),
             $this->mockTranslator(),
+            $backendAttributes,
+            $backendBadgeTitle,
         );
 
         $request = $this->createMock(Request::class);
@@ -102,9 +104,13 @@ class BackendPreviewSwitchControllerTest extends TestCase
         ;
 
         $response = $controller($request);
+        $templateContent = json_decode($response->getContent(), true, flags: JSON_THROW_ON_ERROR);
+        $expectedAttributes = array_merge(...array_map(static fn (string $k, string $v) => ['data-'.$k => $v], array_keys($backendAttributes), $backendAttributes));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame($expectedTemplate, $response->getContent());
+        $this->assertSame($expectedTemplate, $templateContent['name']);
+        $this->assertSame($expectedAttributes, $templateContent['data']['attributes']);
+        $this->assertSame($backendBadgeTitle, $templateContent['data']['badgeTitle']);
     }
 
     public static function providePreviewToolbarTemplateScenarios(): iterable
@@ -112,6 +118,10 @@ class BackendPreviewSwitchControllerTest extends TestCase
         yield 'legacy template' => [true, '@ContaoCore/Frontend/preview_toolbar_base.html.twig'];
 
         yield 'modern template' => [false, '@Contao/frontend_preview/toolbar.html.twig'];
+
+        yield 'back end attributes' => [false, '@Contao/frontend_preview/toolbar.html.twig', ['foo' => 'bar']];
+
+        yield 'badge title' => [false, '@Contao/frontend_preview/toolbar.html.twig', [], 'Some badge title'];
     }
 
     public function testAddsShareLinkToToolbar(): void
@@ -399,7 +409,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturnArgument(0)
+            ->willReturnCallback(static fn (string $name, array $data = []): string => json_encode(['name' => $name, 'data' => $data], JSON_THROW_ON_ERROR))
         ;
 
         return $twig;

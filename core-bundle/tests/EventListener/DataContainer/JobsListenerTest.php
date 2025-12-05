@@ -6,9 +6,11 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\JobsListener;
+use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Tests\Job\AbstractJobsTestCase;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,6 +18,7 @@ use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Twig\Environment;
 
 class JobsListenerTest extends AbstractJobsTestCase
 {
@@ -26,9 +29,63 @@ class JobsListenerTest extends AbstractJobsTestCase
         parent::tearDown();
     }
 
-    public function testAttachmentsCallback(): void
+    public function testAttachmentsCallbackWithNoAttachments(): void
     {
         $security = $this->mockSecurity(42);
+        $jobs = $this->getJobs($security, new MockClock());
+        $job = $jobs->createJob('job-type');
+
+        $listener = new JobsListener(
+            $jobs,
+            $security,
+            $this->createMock(Connection::class),
+            $this->getRequestStack(),
+            $this->mockContaoFramework(),
+            $this->createMock(Environment::class),
+        );
+
+        $operation = $this->getOperationForJob($job);
+
+        $listener->onAttachmentsCallback($operation);
+        $this->assertSame('', $operation->getHtml());
+    }
+
+    public function testAttachmentsCallbackWithOneAttachment(): void
+    {
+        $security = $this->mockSecurity(42);
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('_contao_jobs.download')
+            ->willReturn('https://contao.org/contao/jobs/download')
+        ;
+
+        $jobs = $this->getJobs($security, new MockClock(), $router);
+        $job = $jobs->createJob('job-type');
+
+        $jobs->addAttachment($job, 'foobar', 'foobar');
+
+        $listener = new JobsListener(
+            $jobs,
+            $security,
+            $this->createMock(Connection::class),
+            $this->getRequestStack(),
+            $this->mockContaoFramework(),
+            $this->createMock(Environment::class),
+        );
+
+        $operation = $this->getOperationForJob($job);
+
+        $listener->onAttachmentsCallback($operation);
+        $this->assertSame('https://contao.org/contao/jobs/download', $operation->getUrl());
+        $this->assertSame('theme_import.svg', $operation['icon']);
+    }
+
+    public function testAttachmentsCallbackWithMultipleAttachments(): void
+    {
+        $security = $this->mockSecurity(42);
+
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->exactly(2))
@@ -40,23 +97,37 @@ class JobsListenerTest extends AbstractJobsTestCase
         $jobs = $this->getJobs($security, new MockClock(), $router);
         $job = $jobs->createJob('job-type');
 
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(
+                    function (array $context): bool {
+                        $this->assertSame('theme_import.svg', $context['more_icon']);
+                        $this->assertTrue($context['has_primary']);
+                        $this->assertFalse($context['globalOperations']);
+
+                        $this->assertCount(2, $context['operations']);
+                        $this->assertSame('theme_import.svg', $context['operations'][0]['icon']);
+                        $this->assertSame('https://contao.org/contao/jobs/download', $context['operations'][0]['href']);
+
+                        return true;
+                    },
+                ),
+            )
+            ->willReturn('rendered-html')
+        ;
+
         $listener = new JobsListener(
             $jobs,
             $security,
             $this->createMock(Connection::class),
             $this->getRequestStack(),
             $this->mockContaoFramework(),
+            $twig,
         );
-
-        $operation = new DataContainerOperation(
-            'attachments',
-            ['label' => 'attachments', 'title' => 'attachments'],
-            ['uuid' => 'i-do-not-exist'],
-            $this->createMock(DataContainer::class),
-        );
-
-        $listener->onAttachmentsCallback($operation);
-        $this->assertSame('', $operation->getHtml());
 
         $operation = new DataContainerOperation(
             'attachments',
@@ -72,8 +143,8 @@ class JobsListenerTest extends AbstractJobsTestCase
         $jobs->addAttachment($job, 'foobar2', 'foobar2');
 
         $listener->onAttachmentsCallback($operation);
-        $this->assertSame('https://contao.org/contao/jobs/download', $operation->getUrl());
-        $this->assertSame('theme_import.svg', $operation['icon']);
+
+        $this->assertSame('rendered-html', $operation->getHtml());
     }
 
     public function testInvokeWithoutRequest(): void
@@ -84,6 +155,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $this->createMock(Connection::class),
             $this->getRequestStack(),
             $this->mockContaoFramework(),
+            $this->createMock(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -99,6 +171,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/')),
             $this->mockContaoFramework(),
+            $this->createMock(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -116,6 +189,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
             $framework,
+            $this->createMock(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -144,6 +218,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
             $framework,
+            $this->createMock(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -167,6 +242,58 @@ class JobsListenerTest extends AbstractJobsTestCase
                 ],
             ],
             $GLOBALS['TL_DCA']['tl_job'],
+        );
+    }
+
+    public function testProgress(): void
+    {
+        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+
+        $jobs = $this->getJobs();
+        $job = $jobs->createJob('job-type');
+        $job = $job->withProgress(37.0);
+
+        $jobs->persist($job);
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with('@Contao/backend/jobs/_progress.html.twig', ['progress' => 37.0])
+            ->willReturn('the resulting twig output')
+        ;
+
+        $listener = new JobsListener(
+            $jobs,
+            $this->createMock(Security::class),
+            $this->createMock(Connection::class),
+            $this->getRequestStack(Request::create('/contao?do=jobs')),
+            $framework,
+            $twig,
+        );
+
+        $row = ['id' => 42, 'uuid' => $job->getUuid()];
+
+        $columns = [
+            '2025-10-30 13:10',
+            'Rebuild the back end search index',
+            null,
+            'Completed',
+            'Kevin Jones',
+        ];
+
+        $columnsNew = $listener->onLabelCallback($row, 'label', $this->createMock(DC_Table::class), $columns);
+
+        $this->assertSame('the resulting twig output', $columnsNew[2]);
+    }
+
+    private function getOperationForJob(Job $job): DataContainerOperation
+    {
+        return new DataContainerOperation(
+            'attachments',
+            ['label' => 'attachments', 'title' => 'attachments'],
+            ['uuid' => $job->getUuid()],
+            $this->createMock(DataContainer::class),
         );
     }
 

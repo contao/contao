@@ -67,7 +67,7 @@
         .badge {
             background-color: color-mix(in srgb, currentcolor 20%, transparent);
             display: inline-flex;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
             padding: 2px 6px;
             color: var(--gray);
 
@@ -103,9 +103,7 @@
             width: 14px;
             height: 14px;
             opacity: 0.5;
-            font-family:
-                -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
-                sans-serif;
+            font-family: var(--font-family);
 
             &:hover {
                 opacity: 1;
@@ -115,15 +113,16 @@
     }
 
     .shadowed {
-        background-image: linear-gradient(
-            45deg,
-            var(--panel-bg) 25%,
-            transparent 25%,
-            transparent 50%,
-            var(--panel-bg) 50%,
-            var(--panel-bg) 75%,
-            transparent 75%
-        );
+        background-image:
+            linear-gradient(
+                45deg,
+                var(--panel-bg) 25%,
+                transparent 25%,
+                transparent 50%,
+                var(--panel-bg) 50%,
+                var(--panel-bg) 75%,
+                transparent 75%
+            );
         background-size: 10px 10px;
     }
 
@@ -132,7 +131,7 @@
         color: var(--red);
         padding: 12px;
         margin: 6px 12px;
-        border-radius: 8px;
+        border-radius: var(--border-radius);
         font-size: 0.8rem;
 
         svg {

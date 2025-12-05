@@ -23,6 +23,6 @@ class TestController extends AbstractFrontendModuleController
 {
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        return new JsonResponse(array_merge($template->getData(), ['templateName' => $template->getName()]));
+        return new JsonResponse([...$template->getData(), 'templateName' => $template->getName()]);
     }
 }

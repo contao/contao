@@ -1,0 +1,23 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% block content %}
+
+    {{ articles|raw }}
+
+    {% if referer|default %}
+        <!-- indexer::stop -->
+        <p class="back"><a href="{{ referer }}" title="{{ back }}">{{ back }}</a></p>
+        <!-- indexer::continue -->
+    {% endif %}
+
+    {% if allowComments|default %}
+        <div class="ce_comments block">
+            <{{ hlc }}>{{ hlcText }}</{{ hlc }}>
+            {{ comments|join|raw }}
+            {{ pagination|default|raw }}
+            <{{ hlc }}>{{ addComment }}</{{ hlc }}>
+            {% include "@Contao/mod_comment_form.html.twig" ignore missing %}
+        </div>
+    {% endif %}
+
+{% endblock %}

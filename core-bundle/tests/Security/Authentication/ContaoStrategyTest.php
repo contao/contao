@@ -50,8 +50,7 @@ class ContaoStrategyTest extends TestCase
 
     public function testUsesDefaultDecisionStrategyIfFirewallMapHasNoConfig(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(true),
@@ -65,8 +64,7 @@ class ContaoStrategyTest extends TestCase
 
     public function testUsesPriorityStrategyIfContaoFrontendRequest(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
+        $requestStack = new RequestStack([new Request([], [], ['_scope' => 'frontend'])]);
 
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(false),
@@ -80,8 +78,7 @@ class ContaoStrategyTest extends TestCase
 
     public function testUsesPriorityStrategyIfContaoBackendRequest(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => 'backend']));
+        $requestStack = new RequestStack([new Request([], [], ['_scope' => 'backend'])]);
 
         $accessDecisionManager = new ContaoStrategy(
             $this->mockAccessDecisionStrategy(false),

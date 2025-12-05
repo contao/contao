@@ -1,5 +1,5 @@
 {% trans_default_domain "contao_template_studio" %}
-{% extends '@Contao/be_main.html5' %}
+{% extends "@Contao/be_main.html.twig" %}
 
 {% block head %}
     {{ parent() }}
@@ -15,7 +15,10 @@
           data-contao--template-studio-block-info-url-value="{{ path('_contao_template_studio_block_info.stream') }}"
     >
         {# Headline #}
-        <h1 id="main_headline">{{ headline }}</h1>
+        <h1 id="main_headline">
+            {{ headline }}
+            {{ render(path('contao_backend_favorites', { target_path: app.request.requestUri })) }}
+        </h1>
 
         <section id="template-studio" class="content chrome">
             <div id="template-studio--nav">

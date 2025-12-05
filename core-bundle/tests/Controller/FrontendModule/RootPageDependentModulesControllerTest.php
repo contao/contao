@@ -72,8 +72,7 @@ class RootPageDependentModulesControllerTest extends TestCase
 
         $request = new Request([], [], ['_scope' => 'frontend', 'pageModel' => $page]);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $controller = new RootPageDependentModulesController();
         $controller->setContainer($this->mockContainer($requestStack));
@@ -94,8 +93,7 @@ class RootPageDependentModulesControllerTest extends TestCase
 
         $request = new Request([], [], ['_scope' => 'frontend', 'pageModel' => $page]);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $controller = new RootPageDependentModulesController();
         $controller->setContainer($this->mockContainer($requestStack, 'example-content'));

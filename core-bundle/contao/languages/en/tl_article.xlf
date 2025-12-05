@@ -194,6 +194,9 @@
       <trans-unit id="tl_article.pastenewinto.1">
         <source>Add a new article in page ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

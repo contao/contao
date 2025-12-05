@@ -32,6 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @experimental
@@ -47,6 +48,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -142,6 +144,13 @@ class TableDataContainerProvider implements ProviderInterface
             [ContaoCorePermissions::DC_PREFIX.$table],
             new ReadAction($table, $row),
         );
+    }
+
+    public function convertTypeToVisibleType(string $type): string
+    {
+        $table = substr($type, \strlen(self::TYPE_PREFIX));
+
+        return $this->translator->trans($table.'.tableLabel', [], 'contao_'.$table);
     }
 
     private function addCurrentRowToDocumentIfNotAlreadyLoaded(Document $document): Document

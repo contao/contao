@@ -73,14 +73,27 @@ final class Job
         return $this->uuid;
     }
 
-    public function withProgressFromAmounts(int $total, int $amount): self
+    public function withProgressFromAmounts(int $completed, int|null $total = null): self
     {
         // Prevent division by 0
         if (0 === $total) {
             return $this;
         }
 
-        $progress = 100 / $total * $amount;
+        // Sometimes the total is not known, let's calculate some monotonic progress for
+        // our users to indicate steady progress
+        if (0 !== $completed && null === $total) {
+            $progress = 20 * log10(1 + $completed);
+
+            // Don't reach 100% until we *know* it's done
+            if ($progress > 95.0) {
+                $progress = 95.0;
+            }
+
+            return $this->withProgress($progress);
+        }
+
+        $progress = 100 / $total * $completed;
 
         // Ensure valid percentage
         $progress = max(0, min($progress, 100));
@@ -91,6 +104,21 @@ final class Job
     public function getCreatedAt(): \DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function isCompleted(): bool
+    {
+        return Status::completed === $this->getStatus();
+    }
+
+    public function isPending(): bool
+    {
+        return Status::pending === $this->getStatus();
+    }
+
+    public function isNew(): bool
+    {
+        return Status::new === $this->getStatus();
     }
 
     public function getStatus(): Status

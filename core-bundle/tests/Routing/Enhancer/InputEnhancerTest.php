@@ -50,8 +50,7 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel($language, $urlPrefix),
@@ -94,8 +93,7 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
@@ -126,8 +124,7 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->createMock(PageModel::class),
@@ -153,8 +150,7 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $request = Request::create('/?foo=bar');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
@@ -186,8 +182,7 @@ class InputEnhancerTest extends TestCase
         $framework = $this->mockContaoFramework($adapters);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),

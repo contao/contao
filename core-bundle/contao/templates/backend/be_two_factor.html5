@@ -117,7 +117,7 @@
 <div class="two-factor passkeys">
   <h2 class="sub_headline"><?= $this->trans('MSC.passkeys') ?></h2>
   <p><?= $this->trans('MSC.passkeysDescription') ?></p>
-  <div class="tl_listing_container">
+  <div class="list_passkeys">
     <turbo-frame id="passkeys" data-turbo-action="advance">
       <?php if ($this->credentials): ?>
         <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">

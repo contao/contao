@@ -13,9 +13,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Types\Types;
-use Psr\Clock\ClockInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatableMessage;
 
@@ -146,6 +147,7 @@ class Jobs
     public function addAttachment(Job $job, string $identifier, mixed $contents): void
     {
         $location = $this->getAttachmentIdentifier($job, $identifier);
+
         if (\is_string($contents)) {
             $this->jobAttachmentsStorage->write($location, $contents);
 
@@ -223,12 +225,7 @@ class Jobs
 
     public function createChildJob(Job $parent): Job
     {
-        $child = Job::new(
-            $parent->getType(),
-            $parent->getOwner(),
-            $this->clock->now(),
-        )->withParent($parent);
-
+        $child = Job::new($parent->getType(), $parent->getOwner(), $this->clock->now())->withParent($parent);
         $this->persist($child);
 
         return $child;
@@ -267,11 +264,11 @@ class Jobs
     {
         return new Attachment(
             $filesystemItem,
-            new TranslatableMessage('file_label.'.$filesystemItem->getName(), [], 'contao_jobs'),
+            new TranslatableMessage('MSC.downloadAttachment', [$filesystemItem->getName()], 'contao_default'),
             $this->router->generate(
                 '_contao_jobs.download',
                 ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],
-                RouterInterface::ABSOLUTE_URL,
+                UrlGeneratorInterface::ABSOLUTE_URL,
             ),
         );
     }
@@ -365,12 +362,12 @@ class Jobs
         foreach ($children as $childRow) {
             $childJob = $this->databaseRowToDto($childRow);
 
-            if (Status::pending === $childJob->getStatus()) {
+            if ($childJob->isPending()) {
                 $onePending = true;
                 break;
             }
 
-            if (Status::completed !== $childJob->getStatus()) {
+            if (!$childJob->isCompleted()) {
                 $allCompleted = false;
             }
         }

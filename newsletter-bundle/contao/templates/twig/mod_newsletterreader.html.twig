@@ -1,0 +1,27 @@
+{% extends "@Contao/block_searchable.html.twig" %}
+
+{% block content %}
+
+    <h1>{{ subject }}</h1>
+
+    <div class="newsletter">
+        {{ content|sanitize_html('contao') }}
+    </div>
+
+    {% if enclosure|default %}
+        <ul class="enclosure">
+            {% for item in enclosure %}
+                <li class="download-element ext-{{ item.extension }}">
+                    <a href="{{ item.href }}" title="{{ item.title }}">{{ item.link }} <span class="size">({{ item.filesize }})</span></a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if referer|default %}
+        <!-- indexer::stop -->
+        <p class="back"><a href="{{ referer }}" title="{{ back }}">{{ back }}</a></p>
+        <!-- indexer::continue -->
+    {% endif %}
+
+{% endblock %}

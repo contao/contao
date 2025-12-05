@@ -55,8 +55,7 @@ class PaginationTest extends TestCase
     {
         $currentPage = $data['currentPage'] ?? 1;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request(['page' => $currentPage]));
+        $requestStack = new RequestStack([new Request(['page' => $currentPage])]);
 
         System::getContainer()->set('request_stack', $requestStack);
 

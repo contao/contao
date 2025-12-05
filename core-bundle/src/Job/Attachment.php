@@ -49,14 +49,18 @@ class Attachment
     public function toStreamedResponse(): StreamedResponse
     {
         $stream = $this->filesystemItem->getStorage()->readStream($this->filesystemItem->getPath());
+
         $response = new StreamedResponse(
             static function () use ($stream): void {
                 stream_copy_to_stream($stream, fopen('php://output', 'w'));
             },
         );
+
         $response->headers->set('Content-Type', $this->filesystemItem->getMimeType('application/octet-stream'));
-        $response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
-            HeaderUtils::DISPOSITION_ATTACHMENT, $this->filesystemItem->getName()),
+
+        $response->headers->set(
+            'Content-Disposition',
+            HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $this->filesystemItem->getName()),
         );
 
         return $response;
