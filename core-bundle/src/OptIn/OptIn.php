@@ -84,13 +84,13 @@ class OptIn implements OptInInterface
             return;
         }
 
-        $time = strtotime('+2 days');
+        $time = strtotime('-2 days');
         $adapter = $this->framework->getAdapter(Model::class);
 
         foreach ($tokens as $token) {
             // Keep unconfirmed tokens for two additional days to ensure they are not removed
             // before the cron jobs that purge unconfirmed subscriptions have run.
-            if (!$token->confirmedOn && $token->removeOn < $time) {
+            if (!$token->confirmedOn && $token->removeOn > $time) {
                 continue;
             }
 
