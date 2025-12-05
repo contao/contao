@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.8] (2025-12-04)
+
+**Fixed issues:**
+
+- [#9080] Fix accessing a method that potentially does not exist ([Toflar])
+- [#9068] Correctly bypass the password change for impersonated users ([aschempp])
+
 ## [5.6.7] (2025-11-29)
 
 **Fixed issues:**
@@ -280,6 +287,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.8]: https://github.com/contao/contao/releases/tag/5.6.8
 [5.6.7]: https://github.com/contao/contao/releases/tag/5.6.7
 [5.6.6]: https://github.com/contao/contao/releases/tag/5.6.6
 [5.6.5]: https://github.com/contao/contao/releases/tag/5.6.5
@@ -519,3 +527,5 @@ This project adheres to [Semantic Versioning].
 [#9044]: https://github.com/contao/contao/pull/9044
 [#9048]: https://github.com/contao/contao/pull/9048
 [#9050]: https://github.com/contao/contao/pull/9050
+[#9068]: https://github.com/contao/contao/pull/9068
+[#9080]: https://github.com/contao/contao/pull/9080
