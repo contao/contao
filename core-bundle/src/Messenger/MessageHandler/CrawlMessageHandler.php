@@ -133,17 +133,17 @@ class CrawlMessageHandler
 
     private function getDebugLogPath(Job $job): string
     {
-        return $this->getLogDir().'/'.$job->getUuid().'_log.csv';
+        return $this->getLogDir($job).'/_debug_log.csv';
     }
 
     private function getSubscriberLogFilePath(Job $job, string $subscriberName): string
     {
-        return $this->getLogDir().'/'.$job->getUuid().'_'.$subscriberName.'_log.csv';
+        return $this->getLogDir($job).'/'.$subscriberName.'_log.csv';
     }
 
-    private function getLogDir(): string
+    private function getLogDir(Job $job): string
     {
-        $logDir = \sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), hash('xxh3', $this->projectDir));
+        $logDir = \sprintf('%s/%s/contao-crawl/%s', sys_get_temp_dir(), hash('xxh3', $this->projectDir), $job->getUuid());
 
         if (!is_dir($logDir)) {
             $this->fs->mkdir($logDir);
@@ -170,6 +170,10 @@ class CrawlMessageHandler
                 $this->getSubscriberLogFilePath($job, $subscriber->getName()), 'r'),
             );
         }
+
+        // Now that we have attached the files to the job (and thus they have been copied
+        // to the VFS) we can delete the temp log dir to clean up
+        $this->fs->remove($this->getLogDir($job));
 
         $job = $job->markCompleted();
         $this->jobs->persist($job);
