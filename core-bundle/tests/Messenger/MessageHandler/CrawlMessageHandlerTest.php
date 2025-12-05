@@ -48,6 +48,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
 
         $job = $jobs->createJob('crawl');
         $job = $job->markCompleted();
+
         $jobs->persist($job);
 
         $handler($this->createMessage($job));
@@ -121,6 +122,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
         $jobs = $this->getJobs();
         $job = $jobs->createJob('crawl');
         $job = $job->withMetadata(['escargotJobId' => $escargot->getJobId()]);
+
         $jobs->persist($job);
 
         $message = $this->createMessage($job);
@@ -194,7 +196,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
 
     private function createMessageHandler(Jobs $jobs, Factory|null $factory = null, MessageBusInterface|null $messageBus = null): CrawlMessageHandler
     {
-        if (null === $messageBus) {
+        if (!$messageBus) {
             $messageBus = $this->createMock(MessageBusInterface::class);
             $messageBus
                 ->expects($this->never())

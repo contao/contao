@@ -27,20 +27,23 @@ use Symfony\Component\Messenger\MessageBusInterface;
 #[AsMessageHandler]
 class CrawlMessageHandler
 {
+    private readonly Filesystem $fs;
+
     public function __construct(
         private readonly Factory $factory,
         private readonly Jobs $jobs,
         private readonly MessageBusInterface $messageBus,
-        private string $projectDir,
-        private int $concurrency,
+        private readonly string $projectDir,
+        private readonly int $concurrency,
     ) {
+        $this->fs = new Filesystem();
     }
 
     public function __invoke(CrawlMessage $message): void
     {
         $job = $this->jobs->getByUuid($message->getJobId());
 
-        if (null === $job || $job->isCompleted()) {
+        if (!$job || $job->isCompleted()) {
             return;
         }
 
@@ -143,7 +146,7 @@ class CrawlMessageHandler
         $logDir = \sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), hash('xxh3', $this->projectDir));
 
         if (!is_dir($logDir)) {
-            (new Filesystem())->mkdir($logDir);
+            $this->fs->mkdir($logDir);
         }
 
         return $logDir;
@@ -154,12 +157,12 @@ class CrawlMessageHandler
      */
     private function finishJob(Job $job, array $activeSubscribers): void
     {
-        if (file_exists($this->getDebugLogPath($job))) {
+        if ($this->fs->exists($this->getDebugLogPath($job))) {
             $this->jobs->addAttachment($job, 'debug_log.csv', fopen($this->getDebugLogPath($job), 'r'));
         }
 
         foreach ($this->factory->getSubscribers($activeSubscribers) as $subscriber) {
-            if (!file_exists($this->getSubscriberLogFilePath($job, $subscriber->getName()))) {
+            if (!$this->fs->exists($this->getSubscriberLogFilePath($job, $subscriber->getName()))) {
                 continue;
             }
 
