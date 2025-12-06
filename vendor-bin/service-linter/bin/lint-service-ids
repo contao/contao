@@ -24,6 +24,6 @@ use Symfony\Component\Console\Application;
 $command = new LintServiceIdsCommand(dirname(__DIR__, 3));
 
 $application = new Application();
-$application->add($command);
-$application->setDefaultCommand($command->getName(), true);
+$application->addCommand($command);
+$application->setDefaultCommand('contao:lint-service-ids', true);
 $application->run();

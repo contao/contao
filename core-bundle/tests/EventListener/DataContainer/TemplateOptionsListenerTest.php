@@ -112,8 +112,7 @@ class TemplateOptionsListenerTest extends TestCase
         $request = new Request(['act' => 'overrideAll']);
         $request->setSession($session);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $result = $this->createMock(Result::class);
         $result

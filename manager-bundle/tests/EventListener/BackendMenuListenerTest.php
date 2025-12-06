@@ -47,8 +47,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $request = new Request();
         $request->server->set('QUERY_STRING', 'do=page');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $translator = $this->getTranslator();
 
@@ -94,8 +93,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
     public function testAddsTheHoverClassIfTheDebugModeIsEnabled(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $translator = $this->getTranslator();
         $router = $this->createMock(RouterInterface::class);
@@ -201,8 +199,7 @@ class BackendMenuListenerTest extends ContaoTestCase
             ->willReturnArgument(0)
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, $managerPath, null);
         $listener($event);
@@ -233,8 +230,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $router = $this->createMock(RouterInterface::class);
         $translator = $this->getTranslator();
 
-        $requestStack = new RequestStack();
-        $requestStack->push($this->createMock(Request::class));
+        $requestStack = new RequestStack([$this->createMock(Request::class)]);
 
         $listener = new BackendMenuListener($security, $router, $requestStack, $translator, false, null, null);
         $listener($event);

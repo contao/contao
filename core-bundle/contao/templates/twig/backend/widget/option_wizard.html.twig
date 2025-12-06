@@ -3,6 +3,7 @@
 {% set table_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
     .set('data-controller', 'contao--row-wizard')
+    .set('data-contao--row-wizard-name-value', id)
     .addClass('tl_optionwizard')
 %}
 <table{{ table_attributes }}>

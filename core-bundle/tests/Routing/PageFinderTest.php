@@ -52,8 +52,7 @@ class PageFinderTest extends TestCase
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $pageModel);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $pageFinder = new PageFinder(
             $this->mockContaoFramework(),

@@ -73,7 +73,7 @@
             </div>
           </div>
         </form>
-        <?= $this->loginMenu ?>
+        <?php $this->insert('@Contao/backend/chrome/login_menu.html.twig') ?>
       </main>
       <?= $this->messages ?>
       <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>

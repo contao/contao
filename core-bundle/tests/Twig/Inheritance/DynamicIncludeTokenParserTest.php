@@ -106,6 +106,12 @@ class DynamicIncludeTokenParserTest extends TestCase
             "{% include ['@Contao/missing.html.twig', '@Contao/bar.html.twig'] %}",
             '@Contao/missing.html.twig', '<bar-template>',
         ];
+
+        yield 'optional Contao include, explicitly allowed to fail' => [
+            // If explicitly allowed to be missing, a Contao include must not fail
+            "foo{% include '@Contao/missing.html.twig' ignore missing %}",
+            'foo',
+        ];
     }
 
     public function testHandlesContaoIncludesWithThemeDifferentContexts(): void

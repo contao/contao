@@ -509,7 +509,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $loupeFactory = new LoupeFactory();
 
-        if (!$loupeFactory->isSupported()) {
+        // Older versions of Loupe did not require dependencies in the composer.json
+        // directly. There, we need to check if Loupe is supported. In newer versions of
+        // Loupe, this is ensured by Composer requirements.
+        if (method_exists($loupeFactory, 'isSupported') && !$loupeFactory->isSupported()) {
             return $extensionConfigs;
         }
 

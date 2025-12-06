@@ -86,8 +86,7 @@ class ContaoTableProcessorTest extends TestCase
     {
         $request = new Request([], [], [], [], [], ['HTTP_USER_AGENT' => 'Contao test']);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $processor = $this->getContaoTableProcessor($requestStack);
 
