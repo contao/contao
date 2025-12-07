@@ -1,5 +1,5 @@
-{% extends "@Contao/content_element/_base.html.twig" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {#
     The "slider_settings" variable contains the settings for the content slider.
@@ -65,7 +65,7 @@
 {% endblock %}
 
 {% block script %}
-    {% add "swiper_js" to body %}
+    {% add 'swiper_js' to body %}
         {% set script_attributes = attrs()
             .setIfExists('nonce', csp_nonce('script-src'))
             .mergeWith(script_attributes|default)
@@ -97,7 +97,7 @@
 {% endblock %}
 
 {% block style %}
-    {% add "swiper_css" to stylesheets %}
+    {% add 'swiper_css' to stylesheets %}
         {% with {file: swiper_css_file|default(asset('css/swiper-bundle.min.css', 'contao-components/swiper'))} %}
             {{ block('stylesheet_component') }}
         {% endwith %}

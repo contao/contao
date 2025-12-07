@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 <!DOCTYPE html>
 <html lang="{{ language }}">
@@ -91,9 +91,9 @@
                     .addClass('checkerbox')
                     .addStyle({
                         width: "#{width|default}px",
-                        height: "#{height|default}px"
+                        height: "#{height|default}px",
                     },
-                    width|default and height|default
+                    width|default and height|default,
                 ) }}>
                     <img src="{{ dataUri }}" alt="" style="image-orientation:from-image"{% if width|default and height|default %} width="{{ width }}" height="{{ height }}"{% endif %}>
                 </div>
@@ -103,7 +103,7 @@
             {% for format, table in metadata %}
                 <table class="tl_show with-padding with-zebra">
                     <caption>
-                        {{- 'MSC.imageMetadata'|trans({ '%s': ('iptc' == format ? 'IPTC IIM' : format)|upper }) -}}
+                        {{- 'MSC.imageMetadata'|trans({'%s': ('iptc' == format ? 'IPTC IIM' : format)|upper}) -}}
                     </caption>
                     {% for label, values in table %}
                         {% if values|filter(v => v|length > 0) %}
@@ -123,11 +123,11 @@
                         .addClass('checkerbox')
                         .addStyle({
                             width: "#{picture.img.width|default}px",
-                            height: "#{picture.img.height|default}px"
+                            height: "#{picture.img.height|default}px",
                         },
-                        picture.img.width|default and picture.img.height|default
+                        picture.img.width|default and picture.img.height|default,
                     ) }}>
-                        {% include "@Contao/picture_default.html.twig" with picture %}
+                        {{ include('@Contao/picture_default.html.twig', picture) }}
                     </div>
                 {% endfor %}
             </div>

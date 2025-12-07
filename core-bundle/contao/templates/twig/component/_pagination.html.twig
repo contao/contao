@@ -1,8 +1,8 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% block pagination_component %}
-    {% set pageCount = pagination|default ? pagination.pageCount : number_of_pages %}
-    {% if pageCount > 1 %}
+    {% set page_count = pagination|default ? pagination.pageCount : number_of_pages %}
+    {% if page_count > 1 %}
         {% set pagination_attributes = attrs(pagination_attributes|default)
             .addClass('pagination')
             .set('role', 'navigation')
