@@ -4809,26 +4809,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-        $return = System::getContainer()
-            ->get('twig')
-            ->render('@Contao/backend/data_container/table/view/list.html.twig', $parameters);
+		$parameters['limitHeight'] = $limitHeight;
 
-        $parameters['hasLimitedHeight'] = $limitHeight;
-		if ($limitHeight)
-		{
-			$return = '<div
-				data-controller="contao--limit-height"
-				data-contao--limit-height-max-value="' . $limitHeight . '"
-				data-contao--limit-height-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
-				data-contao--limit-height-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
-				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
-				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
-				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
-			>' . $return . '</div>';
-		}
-
-		return $return;
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/view/list.html.twig', $parameters);
 	}
 
 	/**
