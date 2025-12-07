@@ -1,6 +1,6 @@
 {% for section in matches %}
-    {% include "@Contao/#{section.template}.html.twig" with {
+    {{ include("@Contao/#{section.template}.html.twig", {
         id: section.id,
-        content: section.content
-    } %}
+        content: section.content,
+    }) }}
 {% endfor %}
