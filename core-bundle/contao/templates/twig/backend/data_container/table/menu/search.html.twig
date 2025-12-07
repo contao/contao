@@ -1,10 +1,10 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 <div class="tl_search tl_subpanel">
-    {% include "@Contao/backend/data_container/table/menu/_select.html.twig" with {
+    {{ include('@Contao/backend/data_container/table/menu/_select.html.twig', {
         name: 'tl_search',
-        title: 'MSC.search'|trans
-    }%}
+        title: 'MSC.search'|trans,
+    }) }}
 
     <span>=</span>
 
