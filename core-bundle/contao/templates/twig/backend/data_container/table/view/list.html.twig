@@ -38,7 +38,7 @@
                             {% if isSelecting %}
                                 <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_{{ row.id }}" class="tl_tree_checkbox" data-contao--check-all-target="input" data-action="contao--check-all#toggleInput" value="{{ row.id }}"></td>
                             {% else %}
-                                <td class="tl_file_list tl_right_nowrap">{{ row.buttons|raw }}{{ row.pickerField }}</td>
+                                <td class="tl_file_list tl_right_nowrap">{{ row.buttons|raw }}{{ row.pickerField|raw }}</td>
                             {% endif %}
                         </tr>
                     {% endfor %}
