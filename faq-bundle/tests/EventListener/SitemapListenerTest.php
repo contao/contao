@@ -88,7 +88,7 @@ class SitemapListenerTest extends ContaoTestCase
 
     private function createListener(array $allPages, array $adapters, ContentUrlGenerator|null $urlGenerator = null): SitemapListener
     {
-        $database = $this->createMock(Database::class);
+        $database = $this->createStub(Database::class);
         $database
             ->method('getChildRecords')
             ->willReturn($allPages)
@@ -99,9 +99,11 @@ class SitemapListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters, $instances);
-        $security = $this->createMock(Security::class);
 
-        if ([] !== $allPages) {
+        if ([] === $allPages) {
+            $security = $this->createStub(Security::class);
+        } else {
+            $security = $this->createMock(Security::class);
             $security
                 ->expects($this->once())
                 ->method('isGranted')
@@ -110,7 +112,7 @@ class SitemapListenerTest extends ContaoTestCase
             ;
         }
 
-        $urlGenerator ??= $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator ??= $this->createStub(ContentUrlGenerator::class);
 
         return new SitemapListener($framework, $security, $urlGenerator);
     }

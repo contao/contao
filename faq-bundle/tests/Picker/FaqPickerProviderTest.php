@@ -141,7 +141,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         $model = $this->mockClassWithProperties(FaqCategoryModel::class);
         $model->id = 1;
 
-        $faq = $this->createMock(FaqModel::class);
+        $faq = $this->createStub(FaqModel::class);
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
@@ -181,7 +181,7 @@ class FaqPickerProviderTest extends ContaoTestCase
 
     public function testDoesNotAddTableAndIdIfThereIsNoCategoryModel(): void
     {
-        $faq = $this->createMock(FaqModel::class);
+        $faq = $this->createStub(FaqModel::class);
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
@@ -209,7 +209,7 @@ class FaqPickerProviderTest extends ContaoTestCase
             ->willReturn($accessGranted ?? false)
         ;
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
+        $menuFactory = $this->createStub(FactoryInterface::class);
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -225,13 +225,13 @@ class FaqPickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Faq picker')

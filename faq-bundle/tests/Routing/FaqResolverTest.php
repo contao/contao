@@ -26,9 +26,9 @@ class FaqResolverTest extends ContaoTestCase
     {
         $target = $this->mockClassWithProperties(PageModel::class);
         $category = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
-        $content = $this->createMock(FaqModel::class);
+        $content = $this->createStub(FaqModel::class);
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')

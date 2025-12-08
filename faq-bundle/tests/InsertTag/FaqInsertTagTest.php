@@ -30,9 +30,9 @@ class FaqInsertTagTest extends ContaoTestCase
     #[DataProvider('replacesTheFaqTagsProvider')]
     public function testReplacesTheFaqTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
-        $page = $this->createMock(PageModel::class);
+        $page = $this->createStub(PageModel::class);
 
-        $categoryModel = $this->createMock(FaqCategoryModel::class);
+        $categoryModel = $this->createStub(FaqCategoryModel::class);
         $categoryModel
             ->method('getRelated')
             ->willReturn($page)
@@ -170,13 +170,13 @@ class FaqInsertTagTest extends ContaoTestCase
 
     public function testHandlesEmptyUrls(): void
     {
-        $page = $this->createMock(PageModel::class);
+        $page = $this->createStub(PageModel::class);
         $page
             ->method('getFrontendUrl')
             ->willReturn('')
         ;
 
-        $categoryModel = $this->createMock(FaqCategoryModel::class);
+        $categoryModel = $this->createStub(FaqCategoryModel::class);
         $categoryModel
             ->method('getRelated')
             ->willReturn($page)
@@ -195,7 +195,7 @@ class FaqInsertTagTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
+        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $this->createStub(ContentUrlGenerator::class));
 
         $this->assertSame(
             '<a href="./">What does "foobar" mean?</a>',
@@ -219,14 +219,14 @@ class FaqInsertTagTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
         ];
 
-        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
+        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $this->createStub(ContentUrlGenerator::class));
 
         $this->assertSame('', $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['2']), []))->getValue());
     }
 
     public function testReturnsAnEmptyStringIfTheRouterThrowsAnException(): void
     {
-        $faqModel = $this->createMock(FaqModel::class);
+        $faqModel = $this->createStub(FaqModel::class);
         $faqModel
             ->method('getRelated')
             ->willReturn(null)
