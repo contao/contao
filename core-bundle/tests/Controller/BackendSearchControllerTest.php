@@ -80,8 +80,7 @@ class BackendSearchControllerTest extends TestCase
             ->willReturn('<stream>')
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $container = new ContainerBuilder();
         $container->set('twig', $twig);
@@ -100,7 +99,7 @@ class BackendSearchControllerTest extends TestCase
     {
         $getTurboStreamRequest = static function (array $query = []): Request {
             $request = new Request($query);
-            $request->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
+            $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
             return $request;
         };

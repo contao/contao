@@ -1,0 +1,140 @@
+{% trans_default_domain 'contao_default' -%}
+
+{%- set rootAttributes = attrs()
+    .set('lang', language)
+    .set('data-controller', 'contao--scroll-offset')
+    .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
+    .mergeWith(rootAttributes|default)
+-%}
+
+{%- set bodyAttributes = attrs(attributes|default)
+    .set('id', 'top')
+    .addClass('be_main')
+    .addClass('popup', isPopup)
+    .set('data-controller', 'contao--tooltips contao--toggle-state')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
+    .set('data-contao--toggle-state-active-class', 'active')
+    .mergeWith(bodyAttributes|default)
+-%}
+
+{%- set containerAttributes = attrs()
+    .addClass(containerClass)
+    .mergeWith(containerAttributes|default)
+-%}
+
+<!DOCTYPE html>
+<html{{ rootAttributes }}>
+<head>
+
+    {% block head %}
+        <meta charset="{{ charset }}">
+        <title>{{ title }} | {{ host }}</title>
+
+        {% block meta %}
+            <meta name="generator" content="Contao Open Source CMS">
+            <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+            <meta name="referrer" content="origin">
+        {% endblock %}
+
+        <link rel="stylesheet" href="{{ asset('css/choices.min.css', 'contao-components/choices') }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('css/simplemodal.min.css', 'contao-components/simplemodal') }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('css/datepicker.min.css', 'contao-components/datepicker') }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('css/dropzone.min.css', 'contao-components/dropzone') }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('backend.css', 'system/themes/' ~ theme) }}" data-turbo-track="reload">
+        <link rel="stylesheet" href="{{ asset('backend.css', 'contao_core') }}" data-turbo-track="reload">
+        {{ stylesheets|default|raw }}
+
+        <script>{{ getLocaleString.invoke()|raw }}</script>
+        <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/choices.min.js', 'contao-components/choices') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/simplemodal.min.js', 'contao-components/simplemodal') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/datepicker.min.js', 'contao-components/datepicker') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/tinymce.min.js', 'contao-components/tinymce4') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/ace.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/ext-language_tools.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/ext-whitespace.js', 'contao-components/ace') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('js/dropzone.min.js', 'contao-components/dropzone') }}" data-turbo-track="reload"></script>
+        <script src="{{ asset('backend.js', 'contao_core') }}" data-turbo-track="reload"></script>
+        <script>{{ getDateString.invoke()|raw }}</script>
+        {{ javascripts|default|raw }}
+    {% endblock %}
+
+</head>
+<body{{ bodyAttributes }}>
+<a class="invisible show-on-focus" href="#main" data-turbo="false">{{ 'MSC.skipToContent'|trans }}</a>
+
+{% block header %}
+    {% if not isPopup %}
+        <header id="header">
+            <div class="inner">
+                <h1>
+                    <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
+                        <span class="app-title">Contao</span>
+                        {% if badgeTitle|default %}
+                            <span class="badge-title">{{ badgeTitle }}</span>
+                        {% endif %}
+                    </a>
+                </h1>
+                {{ headerMenu|raw }}
+            </div>
+        </header>
+
+        {% block header_outlets %}
+            {{ include('@Contao/backend/component/message/_outlet.html.twig') }}
+            {{ include('@Contao/backend/component/dialog/_outlet.html.twig') }}
+        {% endblock %}
+    {% endif %}
+{% endblock %}
+
+{% block container %}
+    <div id="container"{{ containerAttributes }}>
+
+        {% block left %}
+            {% if not isPopup %}
+                <aside id="left" data-contao--toggle-state-target="controls">
+                    {{ menu|raw }}
+                    <div class="version">
+                        {% block version %}
+                            {{ version }}<br>{{ learnMore|raw }}
+                        {% endblock %}
+                    </div>
+                </aside>
+            {% endif %}
+        {% endblock %}
+
+        {% block main %}
+            <main id="main" aria-labelledby="main_headline">
+                <h1 id="main_headline">{{ headline|raw }}</h1>
+                <div class="content">
+                    {% if pickerMenu|default %}
+                        <div id="picker-menu">
+                            {{ pickerMenu|raw }}
+                        </div>
+                    {% endif %}
+                    {% if error|default %}
+                        <p class="tl_gerror">{{ error }}</p>
+                    {% endif %}
+                    {% block main_content %}
+                        {{ main|raw }}
+                    {% endblock %}
+                </div>
+            </main>
+        {% endblock %}
+
+    </div>
+{% endblock %}
+
+{% if isPopup %}
+    <script>
+        if (!document.location.search.test('act=select') && $$('.tl_tree_checkbox,.tl_tree_radio').length > 0) {
+            parent.document.getElements('.simple-modal-footer a.primary').removeClass('btn-disabled');
+        } else {
+            parent.document.getElements('.simple-modal-footer a.primary').addClass('btn-disabled');
+        }
+    </script>
+{% endif %}
+
+{{ mootools|default|raw }}
+
+</body>
+</html>

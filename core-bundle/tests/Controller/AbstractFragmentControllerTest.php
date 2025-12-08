@@ -120,7 +120,7 @@ class AbstractFragmentControllerTest extends TestCase
 
         $container = new Container();
         $container->set('contao.twig.filesystem_loader', $loader);
-        $container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $container->set('contao.twig.interop.context_factory', new ContextFactory($this->mockScopeMatcher()));
         $container->set('twig', $twig);
 
         $fragmentController = new FragmentController();

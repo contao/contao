@@ -30,8 +30,8 @@
 {%- endset %}
 
 {{ help_text_blocks|replace({
-    ':blocks:': template.block_names|raw|join('", "')|u.wordwrap(50, "\n    "),
-    ':demo_block:': template.block_names|first
+    ':blocks:': template.block_names|raw|join('", "')|u.wordwrap(50, '\n    '),
+    ':demo_block:': template.block_names|first,
 })|raw }}
 {%- endif %}
 

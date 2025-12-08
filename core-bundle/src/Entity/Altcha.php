@@ -31,7 +31,7 @@ class Altcha
     #[GeneratedValue]
     protected int $id;
 
-    #[Column(type: 'string', length: 64, nullable: false)]
+    #[Column(type: 'string', length: 128, nullable: false)]
     protected string $challenge;
 
     #[Column(type: 'datetime_immutable')]

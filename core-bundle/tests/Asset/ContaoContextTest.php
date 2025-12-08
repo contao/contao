@@ -72,8 +72,7 @@ class ContaoContextTest extends TestCase
 
         $request->attributes->set('pageModel', $page);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $context = $this->getContaoContext('staticPlugins', $requestStack);
 
@@ -90,8 +89,7 @@ class ContaoContextTest extends TestCase
             ->willReturn($basePath)
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $page = $this->getPageWithDetails();
         $page->rootUseSSL = $useSSL;
@@ -122,8 +120,7 @@ class ContaoContextTest extends TestCase
             ->willReturn('/foo')
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $page = $this->getPageWithDetails();
         $page->rootUseSSL = true;
@@ -150,8 +147,7 @@ class ContaoContextTest extends TestCase
         $request = new Request();
         $request->attributes = new ParameterBag(['pageModel' => $page]);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $context = $this->getContaoContext('', $requestStack);
 
@@ -167,8 +163,7 @@ class ContaoContextTest extends TestCase
         $request = new Request();
         $request->attributes = $this->createMock(ParameterBag::class);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $context = $this->getContaoContext('', $requestStack);
 

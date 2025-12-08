@@ -49,8 +49,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $request->query->set('do', $do);
         $request->query->set('id', $id);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher

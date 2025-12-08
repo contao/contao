@@ -79,8 +79,7 @@ class StringResolverTest extends TestCase
             ->willReturn($insertTagResult)
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create($baseUrl));
+        $requestStack = new RequestStack([Request::create($baseUrl)]);
 
         $requestContext = new RequestContext();
         $urlHelper = new UrlHelper($requestStack, $requestContext);
