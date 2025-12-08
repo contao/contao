@@ -36,7 +36,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_settings'] = [];
         $before = $GLOBALS['TL_DCA']['tl_settings'];
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['table' => 'tl_settings']);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class, ['table' => 'tl_settings']);
 
         $listener = $this->createListener();
         $listener->onLoadCallback($dataContainer);
@@ -68,7 +68,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
             ],
         ];
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['table' => 'tl_settings']);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class, ['table' => 'tl_settings']);
 
         $listener = $this->createListener(
             [
@@ -122,7 +122,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
             ->with('tl_settings.configuredInApp', [], 'contao_tl_settings')
         ;
 
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterStub(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -139,10 +139,10 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
 
     private function createListener(array|null $localConfig = null, TranslatorInterface|null $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
     {
-        $this->mockContaoFramework()->initialize();
+        $this->createContaoFrameworkStub()->initialize();
 
         $translator ??= $this->createMock(TranslatorInterface::class);
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         return new DisableAppConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
     }

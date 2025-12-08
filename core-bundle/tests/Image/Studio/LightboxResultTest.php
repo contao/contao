@@ -52,19 +52,19 @@ class LightboxResultTest extends TestCase
         $size = [100, 200, 'crop'];
         $layoutId = 1;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->lightboxSize = serialize($size);
 
-        $layoutModelAdapter = $this->mockAdapter(['findById']);
+        $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
             ->with($layoutId)
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutModelAdapter]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->layout = $layoutId;
 
         $request = Request::create('https://localhost');
@@ -106,19 +106,19 @@ class LightboxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $layoutId = 1;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->lightboxSize = '';
 
-        $layoutModelAdapter = $this->mockAdapter(['findById']);
+        $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
             ->with($layoutId)
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutModelAdapter]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->layout = $layoutId;
 
         $request = Request::create('https://localhost');
@@ -158,7 +158,7 @@ class LightboxResultTest extends TestCase
     public function testFallBackLightboxSizeConfigurationFailsIfNoPage(): void
     {
         $resource = 'foo/bar.png';
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $image = $this->createMock(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);

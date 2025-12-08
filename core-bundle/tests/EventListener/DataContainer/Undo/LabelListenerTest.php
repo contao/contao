@@ -35,8 +35,8 @@ class LabelListenerTest extends TestCase
     {
         $row = $this->setupDataSet();
 
-        $userModelAdapter = $this->mockAdapter(['findById']);
-        $userModel = $this->mockClassWithProperties(UserModel::class, [
+        $userModelAdapter = $this->createAdapterStub(['findById']);
+        $userModel = $this->createClassWithPropertiesStub(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
         ]);
@@ -48,10 +48,10 @@ class LabelListenerTest extends TestCase
             ->willReturn($userModel)
         ;
 
-        $framework = $this->mockContaoFramework([
-            Backend::class => $this->mockAdapter(['addToUrl']),
-            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
-            Image::class => $this->mockAdapter(['getHtml']),
+        $framework = $this->createContaoFrameworkStub([
+            Backend::class => $this->createAdapterStub(['addToUrl']),
+            Controller::class => $this->createAdapterStub(['loadLanguageFile', 'loadDataContainer']),
+            Image::class => $this->createAdapterStub(['getHtml']),
             UserModel::class => $userModelAdapter,
         ]);
 
@@ -72,8 +72,8 @@ class LabelListenerTest extends TestCase
     {
         $row = $this->setupTabularDataSet();
 
-        $userModelAdapter = $this->mockAdapter(['findById']);
-        $userModel = $this->mockClassWithProperties(UserModel::class, [
+        $userModelAdapter = $this->createAdapterStub(['findById']);
+        $userModel = $this->createClassWithPropertiesStub(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
         ]);
@@ -85,10 +85,10 @@ class LabelListenerTest extends TestCase
             ->willReturn($userModel)
         ;
 
-        $framework = $this->mockContaoFramework([
-            Backend::class => $this->mockAdapter(['addToUrl']),
-            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
-            Image::class => $this->mockAdapter(['getHtml']),
+        $framework = $this->createContaoFrameworkStub([
+            Backend::class => $this->createAdapterStub(['addToUrl']),
+            Controller::class => $this->createAdapterStub(['loadLanguageFile', 'loadDataContainer']),
+            Image::class => $this->createAdapterStub(['getHtml']),
             UserModel::class => $userModelAdapter,
         ]);
 

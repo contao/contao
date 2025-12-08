@@ -51,7 +51,7 @@ class DataContainerOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerOperationsBuilder(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $twig,
             $this->createMock(Security::class),
             $this->createMock(UrlGeneratorInterface::class),
@@ -122,7 +122,7 @@ class DataContainerOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerOperationsBuilder(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $twig,
             $this->createMock(Security::class),
             $this->createMock(UrlGeneratorInterface::class),
@@ -155,7 +155,7 @@ class DataContainerOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerOperationsBuilder(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $twig,
             $this->createMock(Security::class),
             $this->createMock(UrlGeneratorInterface::class),

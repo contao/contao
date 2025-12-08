@@ -18,6 +18,7 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\User;
+use PHPUnit\Framework\MockObject\Generator\Generator as MockGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -259,7 +260,15 @@ abstract class ContaoTestCase extends TestCase
     {
         trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockClassWithProperties()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createClassWithPropertiesMock()" or "ContaoTestCase::createClassWithPropertiesStub()" instead.');
 
-        return $this->createClassWithPropertiesMock($class, $properties, $except);
+        $classMethods = get_class_methods($class);
+
+        if (!$except) {
+            $mock = $this->createMock($class);
+        } else {
+            $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
+        }
+
+        return $this->addMethods($mock, $classMethods, $properties);
     }
 
     /**
@@ -271,17 +280,9 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      */
-    protected function createClassWithPropertiesMock(string $class, array $properties = [], array $except = []): MockObject
+    protected function createClassWithPropertiesMock(string $class, array $properties = []): MockObject
     {
-        $classMethods = get_class_methods($class);
-
-        if (!$except) {
-            $mock = $this->createMock($class);
-        } else {
-            $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
-        }
-
-        return $this->addMethods($mock, $classMethods, $properties);
+        return $this->addMethods($this->createMock($class), get_class_methods($class), $properties);
     }
 
     /**
@@ -295,10 +296,7 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function createClassWithPropertiesStub(string $class, array $properties = []): Stub
     {
-        $classMethods = get_class_methods($class);
-        $stub = $this->createStub($class);
-
-        return $this->addMethods($stub, $classMethods, $properties);
+        return $this->addMethods($this->createStub($class), get_class_methods($class), $properties);
     }
 
     /**

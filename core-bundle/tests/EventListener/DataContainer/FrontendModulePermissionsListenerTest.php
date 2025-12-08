@@ -39,7 +39,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
     public function testSetsDefaultTypeIfUserHasLimitedAccess(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -57,7 +57,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
     public function testGetFrontendModuleOptions(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -87,7 +87,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
     public function testFilterFrontendModuleOptions(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, [
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, [
             'id' => 1,
             'isAdmin' => false,
             'frontendModules' => ['navigation'],

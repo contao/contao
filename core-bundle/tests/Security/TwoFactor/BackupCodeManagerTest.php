@@ -32,10 +32,10 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesNullValue(): void
     {
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
+        $frontendUser = $this->createClassWithPropertiesStub(FrontendUser::class);
         $frontendUser->backupCodes = null;
 
-        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser = $this->createClassWithPropertiesStub(BackendUser::class);
         $backendUser->backupCodes = null;
 
         $backupCodeManager = new BackupCodeManager();
@@ -46,10 +46,10 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesInvalidJson(): void
     {
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
+        $frontendUser = $this->createClassWithPropertiesStub(FrontendUser::class);
         $frontendUser->backupCodes = 'foobar';
 
-        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser = $this->createClassWithPropertiesStub(BackendUser::class);
         $backendUser->backupCodes = 'foobar';
 
         $backupCodeManager = new BackupCodeManager();
@@ -68,10 +68,10 @@ class BackupCodeManagerTest extends TestCase
             JSON_THROW_ON_ERROR,
         );
 
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class);
+        $frontendUser = $this->createClassWithPropertiesStub(FrontendUser::class);
         $frontendUser->backupCodes = $backupCodes;
 
-        $backendUser = $this->mockClassWithProperties(BackendUser::class);
+        $backendUser = $this->createClassWithPropertiesStub(BackendUser::class);
         $backendUser->backupCodes = $backupCodes;
 
         $backupCodeManager = new BackupCodeManager();
@@ -90,7 +90,7 @@ class BackupCodeManagerTest extends TestCase
             JSON_THROW_ON_ERROR,
         );
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->backupCodes = $backupCodes;
 
         $user
@@ -109,7 +109,7 @@ class BackupCodeManagerTest extends TestCase
     {
         $backupCodeManager = new BackupCodeManager();
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user
             ->expects($this->once())
             ->method('save')

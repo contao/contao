@@ -43,7 +43,7 @@ class PreviewLinkListenerTest extends TestCase
         $GLOBALS['BE_MOD']['system'] = ['preview_link' => ['foo']];
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
             $this->createMock(RequestStack::class),
@@ -67,7 +67,7 @@ class PreviewLinkListenerTest extends TestCase
         $GLOBALS['TL_DCA'] = ['tl_preview_link' => ['config' => ['foo']]];
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
             $this->createMock(RequestStack::class),
@@ -89,7 +89,7 @@ class PreviewLinkListenerTest extends TestCase
         $GLOBALS['TL_DCA'] = ['tl_preview_link' => 'foo', 'tl_member' => 'bar'];
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
             $this->createMock(RequestStack::class),
@@ -124,7 +124,7 @@ class PreviewLinkListenerTest extends TestCase
         $clock = new MockClock();
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
+            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->createMock(Connection::class),
             $this->mockSecurity($userId),
             $this->createMock(RequestStack::class),
@@ -135,7 +135,7 @@ class PreviewLinkListenerTest extends TestCase
             '/preview.php',
         );
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $listener->createFromUrl($dc);
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
@@ -171,7 +171,7 @@ class PreviewLinkListenerTest extends TestCase
         $input = $this->mockInputAdapter(['act' => 'create', 'url' => '/preview.php/foo/bar']);
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
+            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->createMock(RequestStack::class),
@@ -182,7 +182,7 @@ class PreviewLinkListenerTest extends TestCase
             '/preview.php',
         );
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
 
         $listener->createFromUrl($dc);
 
@@ -199,7 +199,7 @@ class PreviewLinkListenerTest extends TestCase
         $input = $this->mockInputAdapter(['act' => 'create']);
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
+            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->createMock(RequestStack::class),
@@ -210,7 +210,7 @@ class PreviewLinkListenerTest extends TestCase
             '/preview.php',
         );
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
 
         $listener->createFromUrl($dc);
 
@@ -219,7 +219,7 @@ class PreviewLinkListenerTest extends TestCase
 
     private function mockSecurity(int $userId = 42): Security&MockObject
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -243,7 +243,7 @@ class PreviewLinkListenerTest extends TestCase
      */
     private function mockInputAdapter(array $inputData): Adapter&MockObject
     {
-        $inputAdapter = $this->mockAdapter(['get']);
+        $inputAdapter = $this->createAdapterStub(['get']);
         $inputAdapter
             ->method('get')
             ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)

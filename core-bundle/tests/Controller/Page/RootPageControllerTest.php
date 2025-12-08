@@ -41,10 +41,10 @@ class RootPageControllerTest extends TestCase
 
     public function testRedirectsToTheFirstChildPage(): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
-        $childPage = $this->mockClassWithProperties(PageModel::class);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
+        $childPage = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $adapter = $this->createAdapterStub(['findFirstPublishedByPid']);
         $adapter
             ->expects($this->once())
             ->method('findFirstPublishedByPid')
@@ -61,7 +61,7 @@ class RootPageControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
+        $container->set('contao.framework', $this->createContaoFrameworkStub([PageModel::class => $adapter]));
         $container->set('contao.routing.content_url_generator', $urlGenerator);
 
         $controller = new RootPageController(new NullLogger());
@@ -76,9 +76,9 @@ class RootPageControllerTest extends TestCase
 
     public function testThrowsExceptionIfNoRedirectPageIsFound(): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
-        $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
+        $adapter = $this->createAdapterStub(['findFirstPublishedByPid']);
         $adapter
             ->expects($this->once())
             ->method('findFirstPublishedByPid')
@@ -87,7 +87,7 @@ class RootPageControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $adapter]));
+        $container->set('contao.framework', $this->createContaoFrameworkStub([PageModel::class => $adapter]));
 
         $controller = new RootPageController(new NullLogger());
         $controller->setContainer($container);

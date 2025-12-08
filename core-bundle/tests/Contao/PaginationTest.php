@@ -59,15 +59,15 @@ class PaginationTest extends TestCase
 
         System::getContainer()->set('request_stack', $requestStack);
 
-        $input = $this->mockAdapter(['get']);
+        $input = $this->createAdapterStub(['get']);
         $input
             ->method('get')
             ->with('page')
             ->willReturn($currentPage)
         ;
 
-        $framework = $this->mockContaoFramework([
-            Environment::class => $this->mockAdapter(['requestUri', 'queryString']),
+        $framework = $this->createContaoFrameworkStub([
+            Environment::class => $this->createAdapterStub(['requestUri', 'queryString']),
             Input::class => $input,
         ]);
 

@@ -27,7 +27,7 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         parent::setUp();
 
-        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['importStatic'])]);
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['importStatic'])]);
 
         $this->listener = new DataContainerCallbackListener($framework);
     }
@@ -234,14 +234,14 @@ class DataContainerCallbackListenerTest extends TestCase
             ->willReturn('foo')
         ;
 
-        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter = $this->createAdapterStub(['importStatic']);
         $systemAdapter
             ->expects($expected ? $this->once() : $this->never())
             ->method('importStatic')
             ->willReturn($testListener)
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
+        $framework = $this->createContaoFrameworkStub([System::class => $systemAdapter]);
 
         $listener = new DataContainerCallbackListener($framework);
 

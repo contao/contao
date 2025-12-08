@@ -100,14 +100,14 @@ class LanguageFallbackWarningListenerTest extends TestCase
             ->willReturnCallback(static fn (string $msg) => $msg)
         ;
 
-        $contaoMessage = $this->mockAdapter(['addRaw']);
+        $contaoMessage = $this->createAdapterStub(['addRaw']);
         $contaoMessage
             ->expects($this->once())
             ->method('addRaw')
             ->with('<p class="tl_error">ERR.noFallbackEmpty</p>')
         ;
 
-        $contaoFramework = $this->mockContaoFramework([Message::class => $contaoMessage]);
+        $contaoFramework = $this->createContaoFrameworkStub([Message::class => $contaoMessage]);
 
         $listener = new LanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
         $listener->onPageLoad();
@@ -134,13 +134,13 @@ class LanguageFallbackWarningListenerTest extends TestCase
             ->method('trans')
         ;
 
-        $contaoMessage = $this->mockAdapter(['addRaw']);
+        $contaoMessage = $this->createAdapterStub(['addRaw']);
         $contaoMessage
             ->expects($this->never())
             ->method('addRaw')
         ;
 
-        $contaoFramework = $this->mockContaoFramework([Message::class => $contaoMessage]);
+        $contaoFramework = $this->createContaoFrameworkStub([Message::class => $contaoMessage]);
 
         $listener = new LanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
         $listener->onPageLoad();

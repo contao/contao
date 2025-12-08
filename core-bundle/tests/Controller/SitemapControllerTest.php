@@ -472,7 +472,7 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsPagesWithRoutingException(): void
     {
-        $page1 = $this->mockClassWithProperties(PageModel::class, [
+        $page1 = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 43,
             'pid' => 42,
             'type' => 'error_404',
@@ -637,7 +637,7 @@ class SitemapControllerTest extends TestCase
             ],
         );
 
-        $article1 = $this->mockClassWithProperties(ArticleModel::class, [
+        $article1 = $this->createClassWithPropertiesStub(ArticleModel::class, [
             'id' => 1,
             'pid' => 43,
             'alias' => 'foobar',
@@ -804,14 +804,14 @@ class SitemapControllerTest extends TestCase
 
     private function mockPageFinder(Request $request): PageFinder&MockObject
     {
-        $rootPage1 = $this->mockClassWithProperties(PageModel::class);
+        $rootPage1 = $this->createClassWithPropertiesStub(PageModel::class);
         $rootPage1->id = 42;
         $rootPage1->dns = 'www.foobar.com';
         $rootPage1->urlPrefix = 'en';
         $rootPage1->language = 'en';
         $rootPage1->fallback = true;
 
-        $rootPage2 = $this->mockClassWithProperties(PageModel::class);
+        $rootPage2 = $this->createClassWithPropertiesStub(PageModel::class);
         $rootPage2->id = 21;
         $rootPage2->dns = 'www.foobar.com';
         $rootPage2->urlPrefix = 'de';
@@ -835,7 +835,7 @@ class SitemapControllerTest extends TestCase
             $pages[$parentId] = [$parentId, ['order' => 'sorting'], $return];
         }
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
+        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages', 'findByPid']);
         $pageModelAdapter
             ->expects($this->exactly(\count($pages)))
             ->method('findByPid')
@@ -846,14 +846,14 @@ class SitemapControllerTest extends TestCase
             $articles[$pageId] = [$pageId, ['ignoreFePreview' => true], $return];
         }
 
-        $articleModelAdapter = $this->mockAdapter(['findPublishedWithTeaserByPid']);
+        $articleModelAdapter = $this->createAdapterStub(['findPublishedWithTeaserByPid']);
         $articleModelAdapter
             ->expects($this->exactly(\count($articles)))
             ->method('findPublishedWithTeaserByPid')
             ->willReturnMap($articles)
         ;
 
-        return $this->mockContaoFramework([
+        return $this->createContaoFrameworkStub([
             PageModel::class => $pageModelAdapter,
             ArticleModel::class => $articleModelAdapter,
         ]);
@@ -920,7 +920,7 @@ class SitemapControllerTest extends TestCase
 
     private function mockPage(array $data): PageModel
     {
-        $page = $this->mockClassWithProperties(PageModel::class, $data);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, $data);
         $page
             ->expects($this->atLeastOnce())
             ->method('loadDetails')

@@ -132,7 +132,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     {
         $model = $this->createMock(PageModel::class);
 
-        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->once())
             ->method('findFirstActiveByMemberGroups')
@@ -140,7 +140,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn($model)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -174,7 +174,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheDefaultUrlIfNotAPageModel(): void
     {
-        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->once())
             ->method('findFirstActiveByMemberGroups')
@@ -182,7 +182,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
 
         $parameters = [
             '_always_use_target_path' => '0',
@@ -215,13 +215,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheTargetPath(): void
     {
-        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->never())
             ->method('findFirstActiveByMemberGroups')
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
 
         $parameters = [
             '_always_use_target_path' => '1',
@@ -254,13 +254,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheTargetPathFromQueryIfTheUrlIsSigned(): void
     {
-        $adapter = $this->mockAdapter(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->never())
             ->method('findFirstActiveByMemberGroups')
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
         $request = new Request(['_target_path' => base64_encode('http://localhost/target')]);
 
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -435,7 +435,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, bool $checkRequest = false, ContentUrlGenerator|null $urlGenerator = null): AuthenticationSuccessHandler
     {
-        $framework ??= $this->mockContaoFramework();
+        $framework ??= $this->createContaoFrameworkStub();
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $firewallMap = $this->createMock(FirewallMap::class);
         $tokenStorage = $this->createMock(TokenStorageInterface::class);

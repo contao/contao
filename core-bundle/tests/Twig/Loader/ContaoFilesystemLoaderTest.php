@@ -54,7 +54,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetCacheKeyWithThemeTemplate(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->templateGroup = 'templates/demo';
 
         $pageFinder = $this->createMock(PageFinder::class);
@@ -115,7 +115,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetSourceContextFromThemeTemplate(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->templateGroup = 'templates/my/theme';
 
         $pageFinder = $this->createMock(PageFinder::class);
@@ -201,7 +201,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $pageFinder = null;
 
         if ($isThemeContext) {
-            $page = $this->mockClassWithProperties(PageModel::class, [
+            $page = $this->createClassWithPropertiesStub(PageModel::class, [
                 'templateGroup' => 'templates/my/theme',
             ]);
 
@@ -373,7 +373,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testThrowsInvalidThemePathExceptionWhenGeneratingSlug(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'templateGroup' => 'templates/my_theme',
         ]);
 
@@ -567,8 +567,8 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetCurrentThemeSlug(): void
     {
-        $page1 = $this->mockClassWithProperties(PageModel::class, ['templateGroup' => null]);
-        $page2 = $this->mockClassWithProperties(PageModel::class, ['templateGroup' => 'templates/foo/bar']);
+        $page1 = $this->createClassWithPropertiesStub(PageModel::class, ['templateGroup' => null]);
+        $page2 = $this->createClassWithPropertiesStub(PageModel::class, ['templateGroup' => 'templates/foo/bar']);
 
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder

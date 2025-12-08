@@ -155,13 +155,13 @@ class PictureFactoryTest extends TestCase
             ]),
         ];
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel = $this->createClassWithPropertiesStub(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
+        $imageSizeAdapter = $this->createConfiguredAdapterStub(['findById' => $imageSizeModel]);
 
         $imageSizeItemProperties = [
             'width' => 50,
@@ -173,21 +173,21 @@ class PictureFactoryTest extends TestCase
             'media' => '(max-width: 900px)',
         ];
 
-        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $imageSizeItemProperties);
+        $imageSizeItemModel = $this->createClassWithPropertiesStub(ImageSizeItemModel::class, $imageSizeItemProperties);
         $imageSizeItemModel
             ->method('row')
             ->willReturn($imageSizeItemProperties)
         ;
 
         $collection = new Collection([$imageSizeItemModel], 'tl_image_size_item');
-        $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => $collection]);
+        $imageSizeItemAdapter = $this->createConfiguredAdapterStub(['findVisibleByPid' => $collection]);
 
         $adapters = [
             ImageSizeModel::class => $imageSizeAdapter,
             ImageSizeItemModel::class => $imageSizeItemAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
         $picture = $pictureFactory->create($path, 1);
@@ -238,21 +238,21 @@ class PictureFactoryTest extends TestCase
             'formats' => '',
         ];
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel = $this->createClassWithPropertiesStub(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
-        $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => null]);
+        $imageSizeAdapter = $this->createConfiguredAdapterStub(['findById' => $imageSizeModel]);
+        $imageSizeItemAdapter = $this->createConfiguredAdapterStub(['findVisibleByPid' => null]);
 
         $adapters = [
             ImageSizeModel::class => $imageSizeAdapter,
             ImageSizeItemModel::class => $imageSizeItemAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
         $pictureFactory->create($path, 1);

@@ -174,14 +174,14 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testUsesLegacyTemplatesForOptInLegacyContentElements(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
             ->with('ce_text_', [], 'ce_text')
             ->willReturn(['' => '[result from legacy class]'])
         ;
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
 
         $listener = $this->getTemplateOptionsListener($framework);
         $listener->setDefaultIdentifiersByType('tl_content', ['text' => 'content_element/text']);
@@ -196,14 +196,14 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testUsesLegacyTemplatesIfDefined(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
             ->with('ce_custom_', [], 'ce_custom')
             ->willReturn(['' => '[result from legacy class]'])
         ;
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
 
         $listener = $this->getTemplateOptionsListener($framework);
         $listener->setDefaultIdentifiersByType('tl_content', ['example' => 'ce_custom']);
@@ -272,7 +272,7 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function mockFramework(): ContaoFramework&MockObject
     {
-        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
             ->willReturnMap([
@@ -296,12 +296,12 @@ class TemplateOptionsListenerTest extends TestCase
             ])
         ;
 
-        return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        return $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
     }
 
     private function mockDataContainer(string $table, array $currentRecord = []): DC_Table&MockObject
     {
-        $dc = $this->mockClassWithProperties(DC_Table::class);
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class);
         $dc->table = $table;
 
         if ($currentRecord) {

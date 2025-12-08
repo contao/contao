@@ -42,7 +42,7 @@ class MarkdownControllerTest extends ContentElementTestCase
     {
         $container = $this->mockContainer('<h1>Headline</h1>'."\n");
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = '# Headline';
 
@@ -64,7 +64,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         $container = $this->mockContainer('<p><a rel="noopener noreferrer" target="_blank" class="external-link" href="https://contao.org/news-alias%20that-needs-encoding.html">My text for my link</a></p>'."\n");
         $container->set('contao.insert_tag.parser', $insertTagParser);
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = '[My text for my link]({{news_url::42}})';
 
@@ -93,7 +93,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         System::setContainer($container);
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = <<<'MARKDOWN'
             # Headline
@@ -119,17 +119,17 @@ class MarkdownControllerTest extends ContentElementTestCase
         $tempTestFile = $fs->tempnam($this->getTempDir(), '');
         $fs->dumpFile($tempTestFile, '# Headline');
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $filesModel
             ->expects($this->once())
             ->method('getAbsolutePath')
             ->willReturn($tempTestFile)
         ;
 
-        $filesAdapter = $this->mockConfiguredAdapter(['findById' => $filesModel]);
+        $filesAdapter = $this->createConfiguredAdapterStub(['findById' => $filesModel]);
         $container = $this->mockContainer('<h1>Headline</h1>'."\n", [FilesModel::class => $filesAdapter]);
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceFile';
         $contentModel->singleSRC = 'uuid';
 
@@ -178,7 +178,7 @@ class MarkdownControllerTest extends ContentElementTestCase
             },
         );
 
-        $framework = $this->mockContaoFramework($frameworkAdapters);
+        $framework = $this->createContaoFrameworkStub($frameworkAdapters);
         $framework
             ->expects($this->once())
             ->method('createInstance')

@@ -26,7 +26,7 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,7 +59,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testChecksIsGrantedBeforeRenderingBackEndExceptions(): void
     {
         $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $pageFinder = $this->createMock(PageFinder::class);
@@ -89,7 +89,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturnCallback(static fn (string $template) => "template: $template")
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $pageFinder = $this->createMock(PageFinder::class);
@@ -228,7 +228,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $pageFinder = $this->createMock(PageFinder::class);
@@ -249,7 +249,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testDoesNotRenderExceptionsUponSubrequests(): void
     {
         $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $pageFinder = $this->createMock(PageFinder::class);
@@ -313,7 +313,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testDoesNothingIfTheFormatIsNotHtml(): void
     {
         $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $pageFinder = $this->createMock(PageFinder::class);
@@ -340,7 +340,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testDoesNothingIfTextHtmlIsNotAccepted(): void
     {
         $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $pageFinder = $this->createMock(PageFinder::class);
@@ -445,7 +445,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ;
         }
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $security = $this->createMock(Security::class);
         $security
@@ -476,9 +476,9 @@ class PrettyErrorScreenListenerTest extends TestCase
         return new ExceptionEvent($kernel, $request ?? $this->getRequest(), $type, $exception);
     }
 
-    private function mockPageWithProperties(array $properties = []): PageModel&MockObject
+    private function mockPageWithProperties(array $properties = []): PageModel&Stub
     {
-        $page = $this->mockClassWithProperties(PageModel::class, $properties);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, $properties);
         $page
             ->method('loadDetails')
             ->willReturnSelf()

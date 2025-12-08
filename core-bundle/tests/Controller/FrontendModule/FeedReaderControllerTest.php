@@ -84,7 +84,7 @@ class FeedReaderControllerTest extends TestCase
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -121,7 +121,7 @@ class FeedReaderControllerTest extends TestCase
             ->willReturn($feed)
         ;
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -152,7 +152,7 @@ class FeedReaderControllerTest extends TestCase
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -201,7 +201,7 @@ class FeedReaderControllerTest extends TestCase
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -271,7 +271,7 @@ class FeedReaderControllerTest extends TestCase
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -378,7 +378,7 @@ class FeedReaderControllerTest extends TestCase
         $this->container->set('contao.twig.filesystem_loader', $loader);
         $this->container->set('contao.twig.interop.context_factory', new ContextFactory($this->createMock(ScopeMatcher::class)));
         $this->container->set('twig', $twig);
-        $this->container->set('contao.framework', $this->mockContaoFramework());
+        $this->container->set('contao.framework', $this->createContaoFrameworkStub());
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
         $this->container->set('cache.system', $this->createMock(CacheInterface::class));
         $this->container->set('translator', $this->createMock(TranslatorInterface::class));

@@ -113,7 +113,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     public function testAddsAndRemovesMultiValueHeaders(): void
     {
-        $listener = new MergeHttpHeadersListener($this->mockContaoFramework());
+        $listener = new MergeHttpHeadersListener($this->createContaoFrameworkStub());
 
         $this->assertSame(
             [

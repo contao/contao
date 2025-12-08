@@ -52,7 +52,7 @@ class DebugPagesCommandTest extends TestCase
 
     public function testNameAndArguments(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $command = new DebugPagesCommand($framework, $pageRegistry);
 
@@ -98,7 +98,7 @@ class DebugPagesCommandTest extends TestCase
             ->willReturnCallback(static fn (PageModel $pageModel): bool => 'regular' === $pageModel->type)
         ;
 
-        $command = new DebugPagesCommand($this->mockContaoFramework(), $pageRegistry);
+        $command = new DebugPagesCommand($this->createContaoFrameworkStub(), $pageRegistry);
 
         $GLOBALS['TL_PTY'] = $legacyPages;
 

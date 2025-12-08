@@ -45,7 +45,7 @@ class UserAdminFieldListenerTest extends TestCase
 
     public function testUnsetsFieldsForAdminWhenEditingOwnRecord(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 42]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -61,7 +61,7 @@ class UserAdminFieldListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 42]);
 
         $listener = new UserAdminFieldListener($security);
         $palette = $listener('foo,bar;{admin_legend},admin;disable,start,stop', $dataContainer);
@@ -71,7 +71,7 @@ class UserAdminFieldListenerTest extends TestCase
 
     public function testKeepsAdminFieldForAdminWhenEditingOtherRecords(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 42]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 42]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -87,7 +87,7 @@ class UserAdminFieldListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 1]);
 
         $listener = new UserAdminFieldListener($security);
         $palette = $listener('foo,bar;{admin_legend},admin;disable,start,stop', $dataContainer);

@@ -169,7 +169,7 @@ class UserCreateCommandTest extends TestCase
             ->willReturn($passwordHasher)
         ;
 
-        $userGroupModelAdapter = $this->mockAdapter(['findAll']);
+        $userGroupModelAdapter = $this->createAdapterStub(['findAll']);
         $userGroupModelAdapter
             ->method('findAll')
             ->willReturn(null, null)
@@ -181,7 +181,7 @@ class UserCreateCommandTest extends TestCase
             ->willReturn(['en', 'de', 'ru'])
         ;
 
-        $command = new UserCreateCommand($this->mockContaoFramework([UserGroupModel::class => $userGroupModelAdapter]), $connection, $passwordHasherFactory, $locales);
+        $command = new UserCreateCommand($this->createContaoFrameworkStub([UserGroupModel::class => $userGroupModelAdapter]), $connection, $passwordHasherFactory, $locales);
         $command->setApplication(new Application());
 
         return $command;

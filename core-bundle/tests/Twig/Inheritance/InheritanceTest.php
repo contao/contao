@@ -48,7 +48,7 @@ class InheritanceTest extends TestCase
 
     public function testInheritsMultipleTimesWithTheme(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->templateGroup = 'templates/my/theme';
 
         $pageFinder = $this->createMock(PageFinder::class);

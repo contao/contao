@@ -39,8 +39,8 @@ class DefaultOperationsListenerTest extends TestCase
 
         unset($GLOBALS['TL_DCA']);
 
-        $controllerAdapter = $this->mockAdapter(['loadDataContainer']);
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        $controllerAdapter = $this->createAdapterStub(['loadDataContainer']);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
 
         $this->security = $this->createMock(Security::class);
         $this->listener = new DefaultOperationsListener($framework, $this->security, $this->createMock(Connection::class));

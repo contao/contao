@@ -78,16 +78,16 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testCollectsDataInFrontEnd(): void
     {
-        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layout->name = 'Default';
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        $adapter = $this->mockConfiguredAdapter(['findById' => $layout]);
-        $articleModelAdapter = $this->mockConfiguredAdapter(['findByPid' => []]);
-        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter, ArticleModel::class => $articleModelAdapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findById' => $layout]);
+        $articleModelAdapter = $this->createConfiguredAdapterStub(['findByPid' => []]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $adapter, ArticleModel::class => $articleModelAdapter]);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->id = 2;
         $page->title = 'Page';
         $page->layoutId = 2;
@@ -133,16 +133,16 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testSetsTheFrontendPreviewFromTokenChecker(): void
     {
-        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layout->name = 'Default';
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        $adapter = $this->mockConfiguredAdapter(['findById' => $layout]);
-        $articleModelAdapter = $this->mockConfiguredAdapter(['findByPid' => []]);
-        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter, ArticleModel::class => $articleModelAdapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findById' => $layout]);
+        $articleModelAdapter = $this->createConfiguredAdapterStub(['findByPid' => []]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $adapter, ArticleModel::class => $articleModelAdapter]);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->id = 2;
         $page->title = 'Page';
         $page->layoutId = 2;

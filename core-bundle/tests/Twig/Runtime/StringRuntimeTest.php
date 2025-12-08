@@ -21,7 +21,7 @@ class StringRuntimeTest extends TestCase
 {
     public function testDelegatesCalls(): void
     {
-        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil = $this->createAdapterStub(['encodeEmail']);
         $stringUtil
             ->expects($this->once())
             ->method('encodeEmail')

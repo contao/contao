@@ -64,7 +64,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testDeniesAccessIfTheUserIsNotInGroups(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => '2']);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class, ['groups' => '2']);
         $user
             ->expects($this->never())
             ->method('isMemberOf')
@@ -82,7 +82,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testGrantsAccessIfTheUserIsInGroups(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => [1, 2, 3]]);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class, ['groups' => [1, 2, 3]]);
         $user
             ->expects($this->never())
             ->method('isMemberOf')
@@ -102,7 +102,7 @@ class MemberGroupVoterTest extends TestCase
     {
         $ids = [1, 2, 3, 4];
 
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => $ids]);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class, ['groups' => $ids]);
         $user
             ->expects($this->never())
             ->method('isMemberOf')

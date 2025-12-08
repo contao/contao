@@ -176,32 +176,32 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn('rendered page content')
         ;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, [
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([]),
             'defaultImageDensities' => 'foo_densities',
             'template' => 'foo_template',
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
             ->with(42)
             ->willReturn($layoutModel)
         ;
 
-        $systemAdapter = $this->mockAdapter(['loadLanguageFile']);
+        $systemAdapter = $this->createAdapterStub(['loadLanguageFile']);
         $systemAdapter
             ->expects($this->once())
             ->method('loadLanguageFile')
             ->with('default')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             LayoutModel::class => $layoutAdapter,
             System::class => $systemAdapter,
         ]);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->layout = 42;
         $page->language = 'en';
 

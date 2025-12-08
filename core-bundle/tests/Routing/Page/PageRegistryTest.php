@@ -26,7 +26,7 @@ class PageRegistryTest extends TestCase
 {
     public function testReturnsParameteredPageRouteIfPathIsNullWithoutRequireItem(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'foo',
             'alias' => 'bar',
             'urlPrefix' => 'foo',
@@ -43,7 +43,7 @@ class PageRegistryTest extends TestCase
 
     public function testReturnsParameteredPageRouteIfPathIsNullWithRequireItem(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'foo',
             'alias' => 'bar',
             'urlPrefix' => 'foo',
@@ -61,7 +61,7 @@ class PageRegistryTest extends TestCase
 
     public function testReturnsUnparameteredPageRouteForForwardPages(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'forward',
             'alias' => 'bar',
             'urlPrefix' => 'foo',
@@ -77,7 +77,7 @@ class PageRegistryTest extends TestCase
 
     public function testReturnsParameteredPageRouteIfTheAlwaysForwardOptionIsSet(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'forward',
             'alias' => 'bar',
             'urlPrefix' => 'foo',
@@ -96,7 +96,7 @@ class PageRegistryTest extends TestCase
     #[DataProvider('pageRouteWithPathProvider')]
     public function testReturnsPageRouteWithPath(RouteConfig $config, string $urlPrefix, string $alias, string $urlSuffix, string $expectedPath): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'foo',
             'alias' => $alias,
             'urlPrefix' => $urlPrefix,
@@ -180,7 +180,7 @@ class PageRegistryTest extends TestCase
 
     public function testConfiguresTheRoute(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'foo',
             'urlPrefix' => '',
             'urlSuffix' => '',
@@ -263,7 +263,7 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionReturnsTrueForUnknownType(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foo']);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $this->assertTrue($registry->supportsContentComposition($pageModel));
@@ -275,8 +275,8 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionWithBoolean(): void
     {
-        $fooModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
-        $barModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'bar']);
+        $fooModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foo']);
+        $barModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'bar']);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foo', new RouteConfig(), null, false);
@@ -288,7 +288,7 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionFromPage(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foo']);
 
         $page = $this->createMock(ContentCompositionInterface::class);
         $page
@@ -306,7 +306,7 @@ class PageRegistryTest extends TestCase
 
     public function testOverwritesExistingTypes(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'foo',
             'urlPrefix' => '',
             'urlSuffix' => '',
@@ -352,7 +352,7 @@ class PageRegistryTest extends TestCase
 
     public function testRemovesType(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'foo',
             'alias' => 'baz',
             'urlPrefix' => 'bar',
@@ -385,7 +385,7 @@ class PageRegistryTest extends TestCase
 
     public function testDoesNotGenerateRoutableRoutesForNonRoutablePages(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foobar']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foobar']);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foobar', new RouteConfig(false, null, null, []));

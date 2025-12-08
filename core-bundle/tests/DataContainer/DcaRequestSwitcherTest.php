@@ -22,13 +22,13 @@ class DcaRequestSwitcherTest extends TestCase
 {
     public function testRunWithRequest(): void
     {
-        $dcaLoader = $this->mockAdapter(['switchToCurrentRequest']);
+        $dcaLoader = $this->createAdapterStub(['switchToCurrentRequest']);
         $dcaLoader
             ->expects($this->exactly(2))
             ->method('switchToCurrentRequest')
         ;
 
-        $framework = $this->mockContaoFramework([DcaLoader::class => $dcaLoader]);
+        $framework = $this->createContaoFrameworkStub([DcaLoader::class => $dcaLoader]);
 
         $requestStack = new RequestStack();
 
@@ -57,13 +57,13 @@ class DcaRequestSwitcherTest extends TestCase
 
     public function testRunWithStringRequest(): void
     {
-        $dcaLoader = $this->mockAdapter(['switchToCurrentRequest']);
+        $dcaLoader = $this->createAdapterStub(['switchToCurrentRequest']);
         $dcaLoader
             ->expects($this->exactly(2))
             ->method('switchToCurrentRequest')
         ;
 
-        $framework = $this->mockContaoFramework([DcaLoader::class => $dcaLoader]);
+        $framework = $this->createContaoFrameworkStub([DcaLoader::class => $dcaLoader]);
 
         $requestStack = new RequestStack();
 

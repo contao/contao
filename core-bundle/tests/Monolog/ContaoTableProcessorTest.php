@@ -223,7 +223,7 @@ class ContaoTableProcessorTest extends TestCase
     public function testAddsThePageId(Request|null $request = null, int|null $pageId = null): void
     {
         if (\is_array($pageModel = $request?->attributes->get('pageModel'))) {
-            $request->attributes->set('pageModel', $this->mockClassWithProperties(PageModel::class, $pageModel));
+            $request->attributes->set('pageModel', $this->createClassWithPropertiesStub(PageModel::class, $pageModel));
         }
 
         $requestStack = new RequestStack();

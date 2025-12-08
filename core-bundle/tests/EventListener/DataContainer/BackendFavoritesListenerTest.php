@@ -54,7 +54,7 @@ class BackendFavoritesListenerTest extends TestCase
         ];
 
         $userId = 2;
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -95,7 +95,7 @@ class BackendFavoritesListenerTest extends TestCase
         ];
 
         $userId = 2;
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security

@@ -27,6 +27,7 @@ use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -100,7 +101,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -137,18 +138,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 17, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -185,18 +186,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -231,14 +232,14 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -277,7 +278,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectUser();
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -308,7 +309,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectUser();
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -343,7 +344,7 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($request)
         ;
 
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['id' => 1]);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class, ['id' => 1]);
 
         $this->security
             ->expects($this->atLeastOnce())
@@ -351,7 +352,7 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -377,7 +378,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectRequest(false);
         $this->expectUser();
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -407,7 +408,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -442,7 +443,7 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -474,18 +475,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 17, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -517,18 +518,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -560,18 +561,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -603,18 +604,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -630,7 +631,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('insert')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($this->pageRecord)
@@ -654,18 +655,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -681,7 +682,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('insert')
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($this->pageRecord)
@@ -705,18 +706,18 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([['mod' => 0, 'col' => 'main']]),
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -744,7 +745,7 @@ class ContentCompositionListenerTest extends TestCase
             ->with('tl_article', $article)
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($this->pageRecord)
@@ -772,16 +773,16 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectSupportsContentComposition(true, $page);
         $this->expectArticleCount(0);
 
-        $layout = $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)]);
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, ['modules' => serialize($modules)]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layout)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -806,7 +807,7 @@ class ContentCompositionListenerTest extends TestCase
             ->with('tl_article', $article)
         ;
 
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($this->pageRecord)
@@ -854,7 +855,7 @@ class ContentCompositionListenerTest extends TestCase
 
     private function expectUser(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1]);
 
         $this->security
             ->expects($this->atLeastOnce())
@@ -904,9 +905,9 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    private function mockPageWithRow(): PageModel&MockObject
+    private function mockPageWithRow(): PageModel&Stub
     {
-        $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, $this->pageRecord);
         $page
             ->expects($this->once())
             ->method('preventSaving')
@@ -944,7 +945,7 @@ class ContentCompositionListenerTest extends TestCase
 
     private function getListener(ContaoFramework|null $framework = null): ContentCompositionListener
     {
-        $framework ??= $this->mockContaoFramework([PageModel::class => $this->mockAdapter(['findById'])]);
+        $framework ??= $this->createContaoFrameworkStub([PageModel::class => $this->createAdapterStub(['findById'])]);
 
         return new ContentCompositionListener($framework, $this->security, $this->pageRegistry, $this->connection, $this->requestStack);
     }

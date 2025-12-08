@@ -23,7 +23,7 @@ class FragmentRuntimeTest extends TestCase
 {
     public function testRenderModuleFromType(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -37,9 +37,9 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $framework = $this->mockContaoFramework(
+        $framework = $this->createContaoFrameworkStub(
             [Controller::class => $controllerAdapter],
-            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)],
+            [ModuleModel::class => $this->createClassWithPropertiesStub(ModuleModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
@@ -50,7 +50,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderModuleFromId(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -64,15 +64,15 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $moduleAdapter = $this->mockAdapter(['findById']);
+        $moduleAdapter = $this->createAdapterStub(['findById']);
         $moduleAdapter
             ->expects($this->once())
             ->method('findById')
             ->with(42)
-            ->willReturn($this->mockClassWithProperties(ModuleModel::class, ['id' => 42, 'type' => 'navigation']))
+            ->willReturn($this->createClassWithPropertiesStub(ModuleModel::class, ['id' => 42, 'type' => 'navigation']))
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Controller::class => $controllerAdapter,
             ModuleModel::class => $moduleAdapter,
         ]);
@@ -85,7 +85,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderArticleModule(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -93,9 +93,9 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $framework = $this->mockContaoFramework(
+        $framework = $this->createContaoFrameworkStub(
             [Controller::class => $controllerAdapter],
-            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)],
+            [ModuleModel::class => $this->createClassWithPropertiesStub(ModuleModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
@@ -106,7 +106,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderModuleFromUnavailableId(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -114,7 +114,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('')
         ;
 
-        $moduleAdapter = $this->mockAdapter(['findById']);
+        $moduleAdapter = $this->createAdapterStub(['findById']);
         $moduleAdapter
             ->expects($this->once())
             ->method('findById')
@@ -122,7 +122,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Controller::class => $controllerAdapter,
             ModuleModel::class => $moduleAdapter,
         ]);
@@ -135,7 +135,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderContentFromType(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -149,9 +149,9 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $framework = $this->mockContaoFramework(
+        $framework = $this->createContaoFrameworkStub(
             [Controller::class => $controllerAdapter],
-            [ContentModel::class => $this->mockClassWithProperties(ContentModel::class)],
+            [ContentModel::class => $this->createClassWithPropertiesStub(ContentModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
@@ -162,7 +162,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderNestedContent(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -183,9 +183,9 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $framework = $this->mockContaoFramework(
+        $framework = $this->createContaoFrameworkStub(
             [Controller::class => $controllerAdapter],
-            [ContentModel::class => fn () => $this->mockClassWithProperties(ContentModel::class)],
+            [ContentModel::class => fn () => $this->createClassWithPropertiesStub(ContentModel::class)],
         );
 
         $runtime = new FragmentRuntime($framework);
@@ -208,7 +208,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderContentFromId(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -222,15 +222,15 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $contentAdapter = $this->mockAdapter(['findById']);
+        $contentAdapter = $this->createAdapterStub(['findById']);
         $contentAdapter
             ->expects($this->once())
             ->method('findById')
             ->with(42)
-            ->willReturn($this->mockClassWithProperties(ContentModel::class, ['id' => 42, 'type' => 'text']))
+            ->willReturn($this->createClassWithPropertiesStub(ContentModel::class, ['id' => 42, 'type' => 'text']))
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Controller::class => $controllerAdapter,
             ContentModel::class => $contentAdapter,
         ]);
@@ -243,7 +243,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderContentFromUnavailableId(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -251,7 +251,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('')
         ;
 
-        $contentAdapter = $this->mockAdapter(['findById']);
+        $contentAdapter = $this->createAdapterStub(['findById']);
         $contentAdapter
             ->expects($this->once())
             ->method('findById')
@@ -259,7 +259,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Controller::class => $controllerAdapter,
             ContentModel::class => $contentAdapter,
         ]);

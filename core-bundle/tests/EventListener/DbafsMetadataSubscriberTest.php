@@ -83,7 +83,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
     public function testSetsMetadataBagDefaultLocales(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->language = 'fr';
         $pageModel->rootFallbackLanguage = 'de';
 

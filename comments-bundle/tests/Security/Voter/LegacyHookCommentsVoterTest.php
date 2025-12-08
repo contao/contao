@@ -45,7 +45,7 @@ class LegacyHookCommentsVoterTest extends TestCase
     {
         unset($GLOBALS['TL_HOOKS']['isAllowedToEditComment']);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $voter = new LegacyHookCommentsVoter($this->createContaoFrameworkStub());
 
@@ -63,7 +63,7 @@ class LegacyHookCommentsVoterTest extends TestCase
             },
         );
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $voter = $this->getVoter();
 
@@ -76,7 +76,7 @@ class LegacyHookCommentsVoterTest extends TestCase
 
         HookHelper::registerHook('isAllowedToEditComment', static fn () => '');
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $voter = $this->getVoter();
 

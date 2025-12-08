@@ -229,7 +229,7 @@ class UserAccessVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
 
         if (\is_array($user)) {
-            $user = $this->mockClassWithProperties(BackendUser::class, $user);
+            $user = $this->createClassWithPropertiesStub(BackendUser::class, $user);
         }
 
         $token

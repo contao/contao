@@ -26,7 +26,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent('page', 42);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -51,7 +51,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $connection);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -82,7 +82,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $connection);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -110,7 +110,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -127,7 +127,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 0);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());

@@ -188,7 +188,7 @@ abstract class ContentElementTestCase extends TestCase
         $this->setDefaultSanitizerConfig();
 
         // Render template with model data
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $model
             ->method('getOverwriteMetadata')
             ->willReturnCallback(
@@ -538,7 +538,7 @@ abstract class ContentElementTestCase extends TestCase
             'UNITS' => ['Byte'],
         ];
 
-        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
             ->willReturnCallback(
@@ -553,34 +553,34 @@ abstract class ContentElementTestCase extends TestCase
             )
         ;
 
-        $inputAdapter = $this->mockAdapter(['stripTags']);
+        $inputAdapter = $this->createAdapterStub(['stripTags']);
         $inputAdapter
             ->method('stripTags')
             ->willReturnArgument(0)
         ;
 
-        $page1 = $this->mockClassWithProperties(PageModel::class);
+        $page1 = $this->createClassWithPropertiesStub(PageModel::class);
         $page1->id = self::PAGE1;
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterStub(['findPublishedById']);
         $pageAdapter
             ->method('findPublishedById')
             ->willReturnCallback(static fn (int $id) => [self::PAGE1 => $page1][$id] ?? null)
         ;
 
-        $article1 = $this->mockClassWithProperties(ArticleModel::class);
+        $article1 = $this->createClassWithPropertiesStub(ArticleModel::class);
         $article1->id = self::ARTICLE1;
         $article1->pid = self::PAGE1;
         $article1->title = 'A title';
         $article1->teaser = '<p>This will tease you to read article 1.</p>';
 
-        $article2 = $this->mockClassWithProperties(ArticleModel::class);
+        $article2 = $this->createClassWithPropertiesStub(ArticleModel::class);
         $article2->id = self::ARTICLE2;
         $article2->pid = self::PAGE1;
         $article2->title = 'Just a title, no teaser';
         $article2->teaser = null;
 
-        $articleAdapter = $this->mockAdapter(['findPublishedById']);
+        $articleAdapter = $this->createAdapterStub(['findPublishedById']);
         $articleAdapter
             ->method('findPublishedById')
             ->willReturnCallback(static fn (int $id) => match ($id) {
@@ -590,20 +590,20 @@ abstract class ContentElementTestCase extends TestCase
             })
         ;
 
-        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
         $controllerAdapter
             ->method('getContentElement')
             ->with($this->isInstanceOf(ContentElementReference::class))
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($el) => $el->getContentModel()->type, $nestedFragments))
         ;
 
-        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil = $this->createAdapterStub(['encodeEmail']);
         $stringUtil
             ->method('encodeEmail')
             ->willReturnArgument(0)
         ;
 
-        return $this->mockContaoFramework([
+        return $this->createContaoFrameworkStub([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,

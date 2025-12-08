@@ -72,7 +72,7 @@ class PaletteBuilderTest extends TestCase
             ->willReturn($currentRecord)
         ;
 
-        $inputAdapter = $this->mockAdapter(['get', 'post']);
+        $inputAdapter = $this->createAdapterStub(['get', 'post']);
         $inputAdapter
             ->method('get')
             ->with('act')
@@ -84,7 +84,7 @@ class PaletteBuilderTest extends TestCase
             ->willReturnCallback(static fn ($key) => $postData[$key] ?? null)
         ;
 
-        $framework = $this->mockContaoFramework([Input::class => $inputAdapter]);
+        $framework = $this->createContaoFrameworkStub([Input::class => $inputAdapter]);
 
         $paletteBuilder = new PaletteBuilder($framework, $this->createMock(RequestStack::class), $this->createMock(Security::class), $this->createMock(Connection::class));
 
@@ -230,7 +230,7 @@ class PaletteBuilderTest extends TestCase
         ;
 
         $paletteBuilder = new PaletteBuilder(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(RequestStack::class),
             $this->createMock(Security::class),
             $this->createMock(Connection::class),
@@ -253,7 +253,7 @@ class PaletteBuilderTest extends TestCase
         ;
 
         $paletteBuilder = new PaletteBuilder(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->mockRequestStackWithFieldsetState(['tl_foo' => $fieldsetStates]),
             $security,
             $this->mockConnectionWithTableColumns($tableColumns),

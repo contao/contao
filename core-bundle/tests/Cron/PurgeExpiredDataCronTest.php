@@ -53,7 +53,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ];
         }
 
-        $config = $this->mockAdapter(['get']);
+        $config = $this->createAdapterStub(['get']);
         $config
             ->expects($this->exactly(3))
             ->method('get')
@@ -74,7 +74,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ))
         ;
 
-        $framework = $this->mockContaoFramework([Config::class => $config]);
+        $framework = $this->createContaoFrameworkStub([Config::class => $config]);
 
         $cron = new PurgeExpiredDataCron($framework, $connection, new MockClock('@'.$mockedTime));
         $cron->onHourly();

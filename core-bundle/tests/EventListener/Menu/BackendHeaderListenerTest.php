@@ -27,7 +27,7 @@ class BackendHeaderListenerTest extends TestCase
 {
     public function testBuildsTheHeaderMenu(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->id = 1;
         $user->name = 'Foo Bar';
         $user->username = 'foo';
@@ -54,7 +54,7 @@ class BackendHeaderListenerTest extends TestCase
             )
         ;
 
-        $systemMessages = $this->mockAdapter(['getSystemMessages']);
+        $systemMessages = $this->createAdapterStub(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())
             ->method('getSystemMessages')
@@ -68,7 +68,7 @@ class BackendHeaderListenerTest extends TestCase
             $security,
             $router,
             $this->getTranslator(),
-            $this->mockContaoFramework([Backend::class => $systemMessages]),
+            $this->createContaoFrameworkStub([Backend::class => $systemMessages]),
         );
 
         $listener($event);

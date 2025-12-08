@@ -55,7 +55,7 @@ class TranslatorTest extends TestCase
             ->willReturn('en')
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -78,14 +78,14 @@ class TranslatorTest extends TestCase
 
     public function testReadsFromTheGlobalLanguageArray(): void
     {
-        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter = $this->createAdapterStub(['loadLanguageFile']);
         $adapter
             ->expects($this->atLeastOnce())
             ->method('loadLanguageFile')
             ->with('default')
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
@@ -142,14 +142,14 @@ class TranslatorTest extends TestCase
             )
         ;
 
-        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter = $this->createAdapterStub(['loadLanguageFile']);
         $adapter
             ->expects($this->atLeastOnce())
             ->method('loadLanguageFile')
             ->with('default', 'de')
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
@@ -248,7 +248,7 @@ class TranslatorTest extends TestCase
         $expected = [['default', 'de'], ['default', 'en']];
         $matcher = $this->exactly(2);
 
-        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter = $this->createAdapterStub(['loadLanguageFile']);
         $adapter
             ->expects($matcher)
             ->method('loadLanguageFile')
@@ -257,7 +257,7 @@ class TranslatorTest extends TestCase
             ))
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([System::class => $adapter]);
         $framework
             ->expects($this->atLeastOnce())
             ->method('initialize')
@@ -288,7 +288,7 @@ class TranslatorTest extends TestCase
             ;
         }
 
-        $framework ??= $this->mockContaoFramework();
+        $framework ??= $this->createContaoFrameworkStub();
         $resourceFinder = $this->createMock(ResourceFinder::class);
 
         return new Translator($translator, $framework, $resourceFinder);

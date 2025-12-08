@@ -42,7 +42,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
 
     protected function mockSecurity(int|null $userId = null): Security
     {
-        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $userMock = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security

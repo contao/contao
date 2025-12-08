@@ -41,7 +41,7 @@ class RootPageDependentSelectTest extends TestCase
             $this->mockPageModel(['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr']),
         ];
 
-        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter = $this->createAdapterStub(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -60,7 +60,7 @@ class RootPageDependentSelectTest extends TestCase
         $requestStack = new RequestStack([new Request()]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $pageAdapter]));
+        $container->set('contao.framework', $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
         $container->set('translator', $translator);
         $container->set('request_stack', $requestStack);
 
@@ -126,7 +126,7 @@ class RootPageDependentSelectTest extends TestCase
 
     private function mockPageModel(array $properties): PageModel
     {
-        $model = $this->mockClassWithProperties(PageModel::class);
+        $model = $this->createClassWithPropertiesStub(PageModel::class);
 
         foreach ($properties as $key => $property) {
             $model->$key = $property;

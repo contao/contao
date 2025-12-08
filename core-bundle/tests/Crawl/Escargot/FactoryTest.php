@@ -43,7 +43,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-2')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $factory = new Factory($this->createMock(Connection::class), $this->createContaoFrameworkStub(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
         $factory->addSubscriber($subscriber2);
 
@@ -58,7 +58,7 @@ class FactoryTest extends TestCase
     {
         $rootPage = $this->createMock(PageModel::class);
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
+        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage])
@@ -73,7 +73,7 @@ class FactoryTest extends TestCase
 
         $factory = new Factory(
             $this->createMock(Connection::class),
-            $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
             ['https://example.com'],
@@ -98,7 +98,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $factory = new Factory($this->createMock(Connection::class), $this->createContaoFrameworkStub(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
 
         $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
@@ -121,7 +121,7 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $factory = new Factory($this->createMock(Connection::class), $this->createContaoFrameworkStub(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();
@@ -170,8 +170,8 @@ class FactoryTest extends TestCase
         $mockClient = new MockHttpClient($expectedRequests);
         $clientFactory = static fn (array $defaultOptions) => $mockClient;
 
-        $rootPage1 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.org']);
-        $rootPage2 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.de']);
+        $rootPage1 = $this->createClassWithPropertiesStub(PageModel::class, ['dns' => 'contao.org']);
+        $rootPage2 = $this->createClassWithPropertiesStub(PageModel::class, ['dns' => 'contao.de']);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -179,7 +179,7 @@ class FactoryTest extends TestCase
             ->willReturnCallback(static fn (PageModel $rootPage) => 'https://'.$rootPage->dns)
         ;
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
+        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage1, $rootPage2])
@@ -193,7 +193,7 @@ class FactoryTest extends TestCase
 
         $factory = new Factory(
             $this->createMock(Connection::class),
-            $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
             ['https://www.foreign-domain.com'],

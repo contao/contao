@@ -23,7 +23,7 @@ class OptInTest extends TestCase
 {
     public function testCreatesAToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model
             ->expects($this->once())
             ->method('save')
@@ -35,7 +35,7 @@ class OptInTest extends TestCase
             ->with(['tl_member' => [1]])
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -53,7 +53,7 @@ class OptInTest extends TestCase
 
     public function testDoesNotCreateATokenIfThePrefixIsTooLong(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -67,17 +67,17 @@ class OptInTest extends TestCase
 
     public function testFindsAToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model->token = 'foobar';
 
-        $adapter = $this->mockAdapter(['findByToken']);
+        $adapter = $this->createAdapterStub(['findByToken']);
         $adapter
             ->expects($this->exactly(2))
             ->method('findByToken')
             ->willReturnOnConsecutiveCalls($model, null)
         ;
 
-        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([OptInModel::class => $adapter]);
         $token = (new OptIn($framework))->find('foobar');
 
         $this->assertSame('foobar', $token->getIdentifier());
@@ -90,7 +90,7 @@ class OptInTest extends TestCase
             'confirmedOn' => strtotime('yesterday'),
         ];
 
-        $token = $this->mockClassWithProperties(OptInModel::class, $properties);
+        $token = $this->createClassWithPropertiesStub(OptInModel::class, $properties);
         $token
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -102,21 +102,21 @@ class OptInTest extends TestCase
             ->method('delete')
         ;
 
-        $optInAdapter = $this->mockAdapter(['findExpiredTokens']);
+        $optInAdapter = $this->createAdapterStub(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
             ->method('findExpiredTokens')
             ->willReturn([$token])
         ;
 
-        $modelAdapter = $this->mockAdapter(['getClassFromTable']);
+        $modelAdapter = $this->createAdapterStub(['getClassFromTable']);
         $modelAdapter
             ->expects($this->once())
             ->method('getClassFromTable')
             ->willReturn(MemberModel::class)
         ;
 
-        $memberAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $memberAdapter = $this->createAdapterStub(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
@@ -129,7 +129,7 @@ class OptInTest extends TestCase
             MemberModel::class => $memberAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         (new OptIn($framework))->purgeTokens();
     }
 
@@ -140,7 +140,7 @@ class OptInTest extends TestCase
             'confirmedOn' => strtotime('yesterday'),
         ];
 
-        $token = $this->mockClassWithProperties(OptInModel::class, $properties);
+        $token = $this->createClassWithPropertiesStub(OptInModel::class, $properties);
         $token
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -152,21 +152,21 @@ class OptInTest extends TestCase
             ->method('save')
         ;
 
-        $optInAdapter = $this->mockAdapter(['findExpiredTokens']);
+        $optInAdapter = $this->createAdapterStub(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
             ->method('findExpiredTokens')
             ->willReturn([$token])
         ;
 
-        $modelAdapter = $this->mockAdapter(['getClassFromTable']);
+        $modelAdapter = $this->createAdapterStub(['getClassFromTable']);
         $modelAdapter
             ->expects($this->once())
             ->method('getClassFromTable')
             ->willReturn(MemberModel::class)
         ;
 
-        $memberAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $memberAdapter = $this->createAdapterStub(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
@@ -179,7 +179,7 @@ class OptInTest extends TestCase
             MemberModel::class => $memberAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         (new OptIn($framework))->purgeTokens();
 
         $this->assertSame(strtotime('+3 years', $properties['removeOn']), $token->removeOn);
@@ -191,7 +191,7 @@ class OptInTest extends TestCase
             'confirmedOn' => 0,
         ];
 
-        $token = $this->mockClassWithProperties(OptInModel::class, $properties);
+        $token = $this->createClassWithPropertiesStub(OptInModel::class, $properties);
         $token
             ->expects($this->never())
             ->method('getRelatedRecords')
@@ -202,14 +202,14 @@ class OptInTest extends TestCase
             ->method('delete')
         ;
 
-        $optInAdapter = $this->mockAdapter(['findExpiredTokens']);
+        $optInAdapter = $this->createAdapterStub(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
             ->method('findExpiredTokens')
             ->willReturn([$token])
         ;
 
-        $modelAdapter = $this->mockAdapter(['getClassFromTable']);
+        $modelAdapter = $this->createAdapterStub(['getClassFromTable']);
         $modelAdapter
             ->expects($this->never())
             ->method('getClassFromTable')
@@ -220,7 +220,7 @@ class OptInTest extends TestCase
             Model::class => $modelAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         (new OptIn($framework))->purgeTokens();
     }
 }

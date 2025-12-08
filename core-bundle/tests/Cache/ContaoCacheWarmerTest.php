@@ -86,7 +86,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn(['tl_foobar.new.0' => 'Create new foobar'])
         ;
 
-        $catalogue = new MessageCatalogue($parentCatalogue, $this->mockContaoFramework(), $this->createMock(ResourceFinder::class));
+        $catalogue = new MessageCatalogue($parentCatalogue, $this->createContaoFrameworkStub(), $this->createMock(ResourceFinder::class));
 
         $translator = $this->createMock(Translator::class);
         $translator
@@ -165,7 +165,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willThrowException(new \Exception())
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -193,7 +193,7 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn(['MSC.goBack' => 'Foobar'])
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $finder = $this->createMock(Finder::class);
         $finder
@@ -229,7 +229,7 @@ class ContaoCacheWarmerTest extends TestCase
     private function getCacheWarmer(Connection|null $connection = null, ContaoFramework|null $framework = null, string $bundle = 'test-bundle', Translator|null $translator = null): ContaoCacheWarmer
     {
         $connection ??= $this->createMock(Connection::class);
-        $framework ??= $this->mockContaoFramework();
+        $framework ??= $this->createContaoFrameworkStub();
         $translator ??= $this->createMock(Translator::class);
 
         $fixtures = Path::join($this->getFixturesDir(), 'vendor/contao/'.$bundle.'/Resources/contao');

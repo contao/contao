@@ -23,7 +23,7 @@ class ErrorPageControllerTest extends TestCase
     public function testRendersThePageThroughFrontendIndex(): void
     {
         $response = $this->createMock(Response::class);
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
 
         $frontendIndex = $this->createMock(FrontendIndex::class);
         $frontendIndex
@@ -33,7 +33,7 @@ class ErrorPageControllerTest extends TestCase
             ->willReturn($response)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -48,36 +48,36 @@ class ErrorPageControllerTest extends TestCase
 
     public function testSupportsContentComposition(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'error_404',
             'autoforward' => false,
         ]);
 
-        $controller = new ErrorPageController($this->mockContaoFramework());
+        $controller = new ErrorPageController($this->createContaoFrameworkStub());
 
         $this->assertTrue($controller->supportsContentComposition($pageModel));
     }
 
     public function testDisablesContentCompositionWithAutoforward(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'error_404',
             'autoforward' => true,
         ]);
 
-        $controller = new ErrorPageController($this->mockContaoFramework());
+        $controller = new ErrorPageController($this->createContaoFrameworkStub());
 
         $this->assertFalse($controller->supportsContentComposition($pageModel));
     }
 
     public function testAlwaysSupportsContentCompositionFor503Page(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'type' => 'error_503',
             'autoforward' => true,
         ]);
 
-        $controller = new ErrorPageController($this->mockContaoFramework());
+        $controller = new ErrorPageController($this->createContaoFrameworkStub());
 
         $this->assertTrue($controller->supportsContentComposition($pageModel));
     }

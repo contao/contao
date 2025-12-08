@@ -36,7 +36,7 @@ class ActiveMemberGroupsListenerTest extends TestCase
 
         $scopeMatcher = $this->mockLocalScopeMatcher($backend);
 
-        $listener = new ActiveMemberGroupsListener($this->mockContaoFramework(), $scopeMatcher);
+        $listener = new ActiveMemberGroupsListener($this->createContaoFrameworkStub(), $scopeMatcher);
         $listener($table);
 
         $this->assertSame($expected, \is_callable($GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] ?? null));
@@ -76,14 +76,14 @@ class ActiveMemberGroupsListenerTest extends TestCase
 
         $collection = new Collection([$group1, $group2], 'tl_member_group');
 
-        $memberGroupAdapter = $this->mockAdapter(['findAllActive']);
+        $memberGroupAdapter = $this->createAdapterStub(['findAllActive']);
         $memberGroupAdapter
             ->expects($this->once())
             ->method('findAllActive')
             ->willReturn($collection)
         ;
 
-        $framework = $this->mockContaoFramework([MemberGroupModel::class => $memberGroupAdapter]);
+        $framework = $this->createContaoFrameworkStub([MemberGroupModel::class => $memberGroupAdapter]);
 
         $scopeMatcher = $this->mockLocalScopeMatcher(false);
 
@@ -99,14 +99,14 @@ class ActiveMemberGroupsListenerTest extends TestCase
 
     public function testCallbackReturnsEmptyArrayIfNoGroupsAreFound(): void
     {
-        $memberGroupAdapter = $this->mockAdapter(['findAllActive']);
+        $memberGroupAdapter = $this->createAdapterStub(['findAllActive']);
         $memberGroupAdapter
             ->expects($this->once())
             ->method('findAllActive')
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([MemberGroupModel::class => $memberGroupAdapter]);
+        $framework = $this->createContaoFrameworkStub([MemberGroupModel::class => $memberGroupAdapter]);
 
         $scopeMatcher = $this->mockLocalScopeMatcher(false);
 

@@ -58,7 +58,7 @@ class BackendFavoritesListenerTest extends TestCase
     #[DataProvider('getCollapsedStatus')]
     public function testAddsTheMainMenu(bool $collapsed): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 2]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -196,7 +196,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testDoesNotAddTheMainMenuIfThereIsNoRequest(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 2]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -232,7 +232,7 @@ class BackendFavoritesListenerTest extends TestCase
 
     public function testDoesNotAddTheMainMenuIfThereAreNoChildren(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 2]);
 
         $security = $this->createMock(Security::class);
         $security

@@ -40,7 +40,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $security,
             $this->createMock(Connection::class),
             $this->getRequestStack(),
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(Environment::class),
         );
 
@@ -71,7 +71,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $security,
             $this->createMock(Connection::class),
             $this->getRequestStack(),
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(Environment::class),
         );
 
@@ -125,7 +125,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $security,
             $this->createMock(Connection::class),
             $this->getRequestStack(),
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $twig,
         );
 
@@ -154,7 +154,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $this->createMock(Security::class),
             $this->createMock(Connection::class),
             $this->getRequestStack(),
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(Environment::class),
         );
 
@@ -170,7 +170,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             $this->mockSecurity(),
             $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/')),
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(Environment::class),
         );
 
@@ -181,7 +181,7 @@ class JobsListenerTest extends AbstractJobsTestCase
 
     public function testRegularView(): void
     {
-        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
             $this->createMock(Jobs::class),
@@ -210,7 +210,7 @@ class JobsListenerTest extends AbstractJobsTestCase
 
     public function testChildView(): void
     {
-        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
             $this->createMock(Jobs::class),
@@ -247,7 +247,7 @@ class JobsListenerTest extends AbstractJobsTestCase
 
     public function testProgress(): void
     {
-        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
         $jobs = $this->getJobs();
         $job = $jobs->createJob('job-type');

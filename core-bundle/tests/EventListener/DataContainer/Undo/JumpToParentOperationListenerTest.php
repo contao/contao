@@ -42,9 +42,9 @@ class JumpToParentOperationListenerTest extends TestCase
 
         $this->translator = $this->createMock(TranslatorInterface::class);
 
-        $this->framework = $this->mockContaoFramework([
-            Backend::class => $this->mockAdapter(['addToUrl']),
-            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
+        $this->framework = $this->createContaoFrameworkStub([
+            Backend::class => $this->createAdapterStub(['addToUrl']),
+            Controller::class => $this->createAdapterStub(['loadLanguageFile', 'loadDataContainer']),
         ]);
 
         $this->connection = $this->createMock(Connection::class);

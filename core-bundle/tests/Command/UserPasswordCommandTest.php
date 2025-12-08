@@ -284,7 +284,7 @@ class UserPasswordCommandTest extends TestCase
             ->willReturn($passwordHasher)
         ;
 
-        $command = new UserPasswordCommand($this->mockContaoFramework(), $connection, $passwordHasherFactory);
+        $command = new UserPasswordCommand($this->createContaoFrameworkStub(), $connection, $passwordHasherFactory);
         $command->setApplication(new Application());
 
         return $command;

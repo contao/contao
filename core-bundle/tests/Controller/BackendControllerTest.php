@@ -45,7 +45,7 @@ class BackendControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('router', $router);
 
@@ -69,7 +69,7 @@ class BackendControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
         $container->set('router', $router);
 
         $controller = new BackendController();

@@ -184,7 +184,7 @@ class LogoutListenerTest extends TestCase
             ->with('User "foobar" has logged out')
         ;
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->username = 'foobar';
 
         $token = $this->createMock(TokenInterface::class);

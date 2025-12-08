@@ -68,7 +68,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
@@ -79,7 +79,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromFilesModelFailsWithInvalidDBAFSType(): void
     {
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->path = 'foo';
         $model->type = 'folder';
 
@@ -97,7 +97,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromFilesModelFailsWithNonExistingResource(): void
     {
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = 'this/does/not/exist.jpg';
 
@@ -118,18 +118,18 @@ class FigureBuilderTest extends TestCase
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
         $uuid = 'foo-uuid';
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid']);
+        $filesModelAdapter = $this->createAdapterStub(['findByUuid']);
         $filesModelAdapter
             ->method('findByUuid')
             ->with($uuid)
             ->willReturn($model)
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromUuid($uuid)->build();
@@ -137,8 +137,8 @@ class FigureBuilderTest extends TestCase
 
     public function testFromUuidFailsWithNonExistingResource(): void
     {
-        $filesModelAdapter = $this->mockAdapter(['findByUuid']);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $filesModelAdapter = $this->createAdapterStub(['findByUuid']);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
 
         $figureBuilder = $this->getFigureBuilder(null, $framework)->fromUuid('invalid-uuid');
         $exception = $figureBuilder->getLastException();
@@ -156,18 +156,18 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findById']);
+        $filesModelAdapter = $this->createAdapterStub(['findById']);
         $filesModelAdapter
             ->method('findById')
             ->with(5)
             ->willReturn($model)
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromId(5)->build();
@@ -175,8 +175,8 @@ class FigureBuilderTest extends TestCase
 
     public function testFromIdFailsWithNonExistingResource(): void
     {
-        $filesModelAdapter = $this->mockAdapter(['findById']);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $filesModelAdapter = $this->createAdapterStub(['findById']);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
 
         $figureBuilder = $this->getFigureBuilder(null, $framework)->fromId(99);
         $exception = $figureBuilder->getLastException();
@@ -194,11 +194,11 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->expects($this->once())
             ->method('findByPath')
@@ -206,7 +206,7 @@ class FigureBuilderTest extends TestCase
             ->willReturn($model)
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromPath($absoluteFilePath)->build();
@@ -216,11 +216,11 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->expects($this->once())
             ->method('findByPath')
@@ -228,7 +228,7 @@ class FigureBuilderTest extends TestCase
             ->willReturn($model)
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromPath($relativeFilePath)->build();
@@ -391,18 +391,18 @@ class FigureBuilderTest extends TestCase
         $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/files');
         $absoluteFilePath = Path::join($basePath, 'public/foo.jpg');
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = 'files/public/foo.jpg';
 
-        $filesModelAdapter = $this->mockAdapter(['findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $mountManager = new MountManager();
@@ -418,7 +418,7 @@ class FigureBuilderTest extends TestCase
     public function testFromMixed(int|string $identifier, string $type = 'default'): void
     {
         if ('filesModel' === $type) {
-            $filesModel = $this->mockClassWithProperties(FilesModel::class);
+            $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
             $filesModel->type = 'file';
             $filesModel->path = $identifier;
 
@@ -438,11 +438,11 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $filesModel->type = 'file';
         $filesModel->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findById', 'findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
             ->with('1d902bf1-2683-406e-b004-f0b59095e5a1')
@@ -467,13 +467,13 @@ class FigureBuilderTest extends TestCase
             ->willReturn($filesModel)
         ;
 
-        $validatorAdapter = $this->mockAdapter(['isUuid']);
+        $validatorAdapter = $this->createAdapterStub(['isUuid']);
         $validatorAdapter
             ->method('isUuid')
             ->willReturnCallback(static fn ($value): bool => '1d902bf1-2683-406e-b004-f0b59095e5a1' === $value)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             FilesModel::class => $filesModelAdapter,
             Validator::class => $validatorAdapter,
         ]);
@@ -504,18 +504,18 @@ class FigureBuilderTest extends TestCase
         $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/files');
         $absoluteFilePath = Path::join($basePath, 'public/foo.jpg');
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = 'files/public/foo.jpg';
 
-        $filesModelAdapter = $this->mockAdapter(['findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
             ->with($absoluteFilePath)
             ->willReturn($model)
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $mountManager = new MountManager();
@@ -620,14 +620,14 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model = $this->createClassWithPropertiesStub(FilesModel::class);
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $invalidModel = $this->mockClassWithProperties(FilesModel::class);
+        $invalidModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $invalidModel->type = 'folder';
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findById', 'findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
             ->willReturnMap([
@@ -652,7 +652,7 @@ class FigureBuilderTest extends TestCase
             ])
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
         $figureBuilder = $this->getFigureBuilder($studio, $framework);
 
@@ -772,26 +772,26 @@ class FigureBuilderTest extends TestCase
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
         ];
 
-        $currentPage = $this->mockClassWithProperties(PageModel::class);
+        $currentPage = $this->createClassWithPropertiesStub(PageModel::class);
         $currentPage->language = 'es';
         $currentPage->rootFallbackLanguage = 'de';
 
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class, except: ['getMetadata']);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
             'meta' => $serializedMetadata,
         ]);
 
-        $filesModelAdapter = $this->mockAdapter(['getMetaFields']);
+        $filesModelAdapter = $this->createAdapterStub(['getMetaFields']);
         $filesModelAdapter
             ->method('getMetaFields')
             ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $figure = $this->getFigureBuilder($studio, $framework, null, $currentPage)
@@ -970,20 +970,20 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
             'meta' => '',
         ]);
 
-        $filesModelAdapter = $this->mockAdapter(['getMetaFields']);
+        $filesModelAdapter = $this->createAdapterStub(['getMetaFields']);
         $filesModelAdapter
             ->method('getMetaFields')
             ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
         ;
 
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
         $figure = $this->getFigureBuilder($studio, $framework)->fromFilesModel($filesModel)->build();
 
@@ -1002,7 +1002,7 @@ class FigureBuilderTest extends TestCase
     {
         if (\is_array($resource)) {
             $getFilesModel = function (array $metaData, string|null $uuid) use ($resource) {
-                $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+                $filesModel = $this->createClassWithPropertiesStub(FilesModel::class, except: ['getMetadata']);
 
                 $filesModel->setRow([
                     'type' => 'file',
@@ -1020,7 +1020,7 @@ class FigureBuilderTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         System::setContainer($container);
 
-        $currentPage = $this->mockClassWithProperties(PageModel::class);
+        $currentPage = $this->createClassWithPropertiesStub(PageModel::class);
         $currentPage->language = 'en';
         $currentPage->rootFallbackLanguage = 'de';
 
@@ -1034,7 +1034,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath] = self::getTestFilePaths();
 
-        $filesModelAdapter = $this->mockAdapter(['getMetaFields', 'findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['getMetaFields', 'findByPath']);
         $filesModelAdapter
             ->method('getMetaFields')
             ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
@@ -1045,7 +1045,7 @@ class FigureBuilderTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             FilesModel::class => $filesModelAdapter,
             Validator::class => new Adapter(Validator::class),
         ]);
@@ -1580,7 +1580,7 @@ class FigureBuilderTest extends TestCase
         $requestStack = new RequestStack([$request]);
 
         $pageFinder = new PageFinder(
-            $framework ?? $this->mockContaoFramework(),
+            $framework ?? $this->createContaoFrameworkStub(),
             $this->createMock(RequestMatcherInterface::class),
             $requestStack,
         );

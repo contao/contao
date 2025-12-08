@@ -155,7 +155,7 @@ class PreviewFactoryTest extends TestCase
     #[DataProvider('getImageSizes')]
     public function testGetPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $expectedSize, string $defaultDensities = ''): void
     {
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        $imageSizeModel = $this->createClassWithPropertiesStub(ImageSizeModel::class);
         $imageSizeModel->setRow([
             'id' => 456,
             'width' => 20,
@@ -163,7 +163,7 @@ class PreviewFactoryTest extends TestCase
             'densities' => '1x, 2x, 120w',
         ]);
 
-        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
+        $imageSizeItemModel = $this->createClassWithPropertiesStub(ImageSizeItemModel::class);
         $imageSizeItemModel->setRow([
             'pid' => 456,
             'width' => 789,
@@ -171,19 +171,19 @@ class PreviewFactoryTest extends TestCase
             'densities' => '0.5x',
         ]);
 
-        $imageSizeAdapter = $this->mockAdapter(['findById']);
+        $imageSizeAdapter = $this->createAdapterStub(['findById']);
         $imageSizeAdapter
             ->method('findById')
             ->willReturn($imageSizeModel)
         ;
 
-        $imageSizeItemAdapter = $this->mockAdapter(['findVisibleByPid']);
+        $imageSizeItemAdapter = $this->createAdapterStub(['findVisibleByPid']);
         $imageSizeItemAdapter
             ->method('findVisibleByPid')
             ->willReturn([$imageSizeItemModel])
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             ImageSizeModel::class => $imageSizeAdapter,
             ImageSizeItemModel::class => $imageSizeItemAdapter,
         ]);

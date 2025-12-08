@@ -29,7 +29,7 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('foo/bar');
 
         // Create template
-        $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
+        $template = $fragmentController->doCreateTemplate($this->createClassWithPropertiesStub(Model::class));
         $this->assertSame('foo/bar', $template->getName());
         $this->assertEmpty($template->getData());
 
@@ -61,7 +61,7 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('original/template', $twig);
 
         // Create and modify template
-        $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
+        $template = $fragmentController->doCreateTemplate($this->createClassWithPropertiesStub(Model::class));
         $template->setName('modified/template');
         $template->set('some', 'data');
 
@@ -85,7 +85,7 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('foo/bar', $twig);
 
         // GGet original response with rendered content via fragment template
-        $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
+        $template = $fragmentController->doCreateTemplate($this->createClassWithPropertiesStub(Model::class));
         $response = $template->getResponse($preBuiltResponse);
 
         $this->assertSame($preBuiltResponse, $response);

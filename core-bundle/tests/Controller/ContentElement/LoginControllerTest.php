@@ -136,11 +136,11 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testUsesRedirectPageTargetPath(): void
     {
-        $jumpTo = $this->mockClassWithProperties(PageModel::class, ['id', 'alias']);
+        $jumpTo = $this->createClassWithPropertiesStub(PageModel::class, ['id', 'alias']);
         $jumpTo->id = 1;
         $jumpTo->alias = 'foobar';
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterStub(['findById']);
         $pageAdapter
             ->expects($this->exactly(2))
             ->method('findById')
@@ -155,7 +155,7 @@ class LoginControllerTest extends ContentElementTestCase
             )
         ;
 
-        $contaoFramework = $this->mockContaoFramework([
+        $contaoFramework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
         ]);
 
@@ -280,11 +280,11 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testShowsPasswordResetLink(): void
     {
-        $pwResetPage = $this->mockClassWithProperties(PageModel::class, ['id']);
+        $pwResetPage = $this->createClassWithPropertiesStub(PageModel::class, ['id']);
         $pwResetPage->id = 8472;
         $pwResetPage->alias = 'pw-reset';
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterStub(['findById']);
         $pageAdapter
             ->expects($this->exactly(2))
             ->method('findById')
@@ -299,7 +299,7 @@ class LoginControllerTest extends ContentElementTestCase
             )
         ;
 
-        $contaoFramework = $this->mockContaoFramework([
+        $contaoFramework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
         ]);
 
@@ -470,7 +470,7 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testUsesHomepageTargetPathForLogoutIfPageIsProtected(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['protected']);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, ['protected']);
         $page->protected = true;
 
         $request = Request::create('https://protected-target-path-test.com/foobar');
@@ -504,7 +504,7 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testShowsAuthenticateRemembered(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['protected']);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, ['protected']);
         $page->type = 'error_401';
 
         $response = $this->renderWithModelData(
@@ -537,7 +537,7 @@ class LoginControllerTest extends ContentElementTestCase
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->lastLogin = strtotime('2032-01-01 01:01:01');
 
         $token = $this->createMock(TokenInterface::class);

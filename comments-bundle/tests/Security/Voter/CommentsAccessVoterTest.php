@@ -29,7 +29,7 @@ class CommentsAccessVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager

@@ -73,7 +73,7 @@ class AutomatorCommandTest extends TestCase
         $application = new Application($kernel);
         $application->setCatchExceptions(true);
 
-        $command = new AutomatorCommand($this->mockContaoFramework());
+        $command = new AutomatorCommand($this->createContaoFrameworkStub());
         $command->setApplication($application);
 
         return $command;

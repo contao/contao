@@ -95,7 +95,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
     private function createRequestWithPageModel(array $trail): Request
     {
         $request = new Request();
-        $request->attributes->set('pageModel', $this->mockClassWithProperties(PageModel::class, ['trail' => $trail]));
+        $request->attributes->set('pageModel', $this->createClassWithPropertiesStub(PageModel::class, ['trail' => $trail]));
 
         return $request;
     }

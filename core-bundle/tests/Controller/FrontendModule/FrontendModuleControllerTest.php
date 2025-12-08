@@ -55,7 +55,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_test', $template['templateName']);
@@ -65,7 +65,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController(['type' => 'foo']);
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_foo', $template['templateName']);
@@ -75,7 +75,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController(['template' => 'mod_bar']);
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_bar', $template['templateName']);
@@ -95,7 +95,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, ['customTpl' => 'mod_bar']);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['customTpl' => 'mod_bar']);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -107,7 +107,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('', $template['cssID']);
@@ -118,7 +118,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, ['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -131,7 +131,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, ['cssID' => serialize(['foo', 'bar'])]);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['cssID' => serialize(['foo', 'bar'])]);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -144,7 +144,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'left');
+        $response = $controller(new Request(), $this->createClassWithPropertiesStub(ModuleModel::class), 'left');
         $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('left', $template['inColumn']);
@@ -178,7 +178,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController(['type' => 'html', 'template' => 'frontend_module/html']);
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'headline' => serialize(['value' => 'foo', 'unit' => 'h3']),
             'cssID' => serialize(['foo-id', 'foo-class']),
         ]);
@@ -240,7 +240,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'type' => 'foobar',
             'name' => 'foo',
@@ -260,7 +260,7 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testAddsTheCacheTags(): void
     {
-        $model = $this->mockClassWithProperties(ModuleModel::class);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class);
         $model->id = 42;
 
         $cacheTagManager = $this->createMock(CacheTagManager::class);
@@ -270,7 +270,7 @@ class FrontendModuleControllerTest extends TestCase
             ->with($model)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->method('createInstance')
             ->willReturnCallback(

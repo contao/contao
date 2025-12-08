@@ -40,7 +40,7 @@ class RedirectControllerTest extends TestCase
             ->willReturn($response)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['useSSL' => false]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['useSSL' => false]);
 
         $request = Request::create('https://localhost/');
         $request->attributes->set('pageModel', $pageModel);
@@ -66,7 +66,7 @@ class RedirectControllerTest extends TestCase
             ->willReturn($response)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['useSSL' => false]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['useSSL' => false]);
 
         $request = Request::create('http://localhost/');
         $request->attributes->set('pageModel', $pageModel);
@@ -114,7 +114,7 @@ class RedirectControllerTest extends TestCase
             ->willReturn($response)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['useSSL' => true]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['useSSL' => true]);
 
         $request = Request::create('https://localhost/');
         $request->attributes->set('pageModel', $pageModel);

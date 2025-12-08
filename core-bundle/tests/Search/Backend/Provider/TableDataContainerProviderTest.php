@@ -48,7 +48,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
     public function testSupports(): void
     {
         $provider = new TableDataContainerProvider(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(ResourceFinder::class),
             $this->createMock(Connection::class),
             $this->createMock(AccessDecisionManagerInterface::class),
@@ -109,7 +109,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             ],
         );
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $fixturesDir = $this->getFixturesDir();
         $resourceFinder = new ResourceFinder(Path::join($fixturesDir, 'table-data-container-provider'));

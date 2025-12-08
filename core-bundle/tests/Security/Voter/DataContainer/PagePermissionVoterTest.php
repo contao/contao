@@ -35,7 +35,7 @@ class PagePermissionVoterTest extends TestCase
     public function testSupport(): void
     {
         $voter = new PagePermissionVoter(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->createMock(AccessDecisionManagerInterface::class),
             $this->createMock(Connection::class),
         );
@@ -68,7 +68,7 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn('regular')
         ;
 
-        $voter = new PagePermissionVoter($this->mockContaoFramework(), $decisionManager, $connection);
+        $voter = new PagePermissionVoter($this->createContaoFrameworkStub(), $decisionManager, $connection);
         $result = $voter->vote($token, new CreateAction('tl_page'), [ContaoCorePermissions::DC_PREFIX.'tl_page']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
@@ -920,7 +920,7 @@ class PagePermissionVoterTest extends TestCase
                 ->method('getUser')
             ;
         } else {
-            $backendUser = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'pagemounts' => $pagemounts]);
+            $backendUser = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 42, 'pagemounts' => $pagemounts]);
 
             $token
                 ->expects($this->atLeastOnce())
@@ -950,6 +950,6 @@ class PagePermissionVoterTest extends TestCase
             ;
         }
 
-        return $this->mockContaoFramework([], [Database::class => $database]);
+        return $this->createContaoFrameworkStub([], [Database::class => $database]);
     }
 }

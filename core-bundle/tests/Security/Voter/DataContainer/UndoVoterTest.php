@@ -69,7 +69,7 @@ class UndoVoterTest extends TestCase
 
     public function testDeniesAccessIfUserIsNotABackendUser(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -101,7 +101,7 @@ class UndoVoterTest extends TestCase
     #[DataProvider('voteOnActionProvider')]
     public function testVoteOnAction(array $user, CreateAction|DeleteAction|ReadAction|UpdateAction $action, int $expectedVote): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, $user);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, $user);
 
         $token = $this->createMock(TokenInterface::class);
         $token

@@ -39,14 +39,14 @@ class AdministratorEmailListenerTest extends TestCase
 
     public function testDoesNotAddMessageIfAdminEmailIsSet(): void
     {
-        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
             ->with('adminEmail')
             ->willReturn('foobar@example.com')
         ;
 
-        $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
+        $framework = $this->createContaoFrameworkStub([Config::class => $configAdapter]);
         $listener = $this->createAdministratorEmailListener($framework);
 
         $this->assertNull($listener());
@@ -85,14 +85,14 @@ class AdministratorEmailListenerTest extends TestCase
     private function createAdministratorEmailListener(ContaoFramework|null $framework = null, Security|null $security = null): AdministratorEmailListener
     {
         if (!$framework) {
-            $configAdapter = $this->mockAdapter(['get']);
+            $configAdapter = $this->createAdapterStub(['get']);
             $configAdapter
                 ->method('get')
                 ->with('adminEmail')
                 ->willReturn(null)
             ;
 
-            $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
+            $framework = $this->createContaoFrameworkStub([Config::class => $configAdapter]);
         }
 
         $translator = $this->createMock(TranslatorInterface::class);

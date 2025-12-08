@@ -131,12 +131,12 @@ class HtmlDecoderTest extends TestCase
 
     private function createDateInsertTag(): DateInsertTag
     {
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
         $dateAdapter
             ->method('parse')
             ->willReturnCallback(static fn (string $argument) => $argument)
         ;
 
-        return new DateInsertTag($this->mockContaoFramework([Date::class => $dateAdapter]));
+        return new DateInsertTag($this->createContaoFrameworkStub([Date::class => $dateAdapter]));
     }
 }

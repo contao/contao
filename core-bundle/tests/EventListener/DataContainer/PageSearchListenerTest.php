@@ -32,7 +32,7 @@ class PageSearchListenerTest extends TestCase
             ->willReturn(['uri'])
         ;
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterStub(['removeEntry']);
         if ($shouldPurgeSearchIndex) {
             $search
                 ->expects($this->once())
@@ -46,14 +46,14 @@ class PageSearchListenerTest extends TestCase
             ;
         }
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)
         ;
 
         $listener = new PageSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
+            $this->createContaoFrameworkStub([Search::class => $search]),
             $connection,
         );
 
@@ -135,17 +135,17 @@ class PageSearchListenerTest extends TestCase
             ->willReturn(['uri'])
         ;
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterStub(['removeEntry']);
         $search
             ->expects($this->once())
             ->method('removeEntry')
             ->with('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 17]);
 
         $listener = new PageSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
+            $this->createContaoFrameworkStub([Search::class => $search]),
             $connection,
         );
 
@@ -160,16 +160,16 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterStub(['removeEntry']);
         $search
             ->expects($this->never())
             ->method($this->anything())
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => null]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => null]);
 
         $listener = new PageSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
+            $this->createContaoFrameworkStub([Search::class => $search]),
             $connection,
         );
 

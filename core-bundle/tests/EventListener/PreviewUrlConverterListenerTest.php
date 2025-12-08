@@ -40,7 +40,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->mockPageRegistry(),
             $this->createMock(ContentUrlGenerator::class),
             $this->createMock(UriSigner::class),
@@ -79,7 +79,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $this->mockPageRegistry(),
             $this->createMock(ContentUrlGenerator::class),
             $this->createMock(UriSigner::class),
@@ -95,12 +95,12 @@ class PreviewUrlConverterListenerTest extends TestCase
         $request = new Request();
         $request->query->set('page', '9');
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 9;
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByIdOrAliasAndPid' => null]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),
+            ArticleModel::class => $this->createConfiguredAdapterStub(['findByIdOrAliasAndPid' => null]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -114,7 +114,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(
-            $this->mockContaoFramework($adapters),
+            $this->createContaoFrameworkStub($adapters),
             $this->mockPageRegistry(),
             $urlGenerator,
             $this->createMock(UriSigner::class),
@@ -131,10 +131,10 @@ class PreviewUrlConverterListenerTest extends TestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => null]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => null]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -160,16 +160,16 @@ class PreviewUrlConverterListenerTest extends TestCase
         $request->query->set('page', '9');
         $request->query->set('article', 'foobar');
 
-        $articleModel = $this->mockClassWithProperties(ArticleModel::class);
+        $articleModel = $this->createClassWithPropertiesStub(ArticleModel::class);
         $articleModel->alias = 'foobar';
         $articleModel->inColumn = 'main';
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 9;
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByIdOrAliasAndPid' => $articleModel]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),
+            ArticleModel::class => $this->createConfiguredAdapterStub(['findByIdOrAliasAndPid' => $articleModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -183,7 +183,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(
-            $this->mockContaoFramework($adapters),
+            $this->createContaoFrameworkStub($adapters),
             $this->mockPageRegistry(),
             $urlGenerator,
             $this->createMock(UriSigner::class),
@@ -196,7 +196,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
     public function testRediectsToFragmentUrlIfPreviewUrlThrowsException(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'rootLanguage' => 'en',
             'urlPrefix' => '',
@@ -215,7 +215,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         ;
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -233,7 +233,7 @@ class PreviewUrlConverterListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(
@@ -256,7 +256,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
     public function testReturnsEmptyUrlForPagesThatRequireAnItem(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'rootLanguage' => 'en',
             'urlPrefix' => '',
@@ -270,7 +270,7 @@ class PreviewUrlConverterListenerTest extends TestCase
         $request->query = new InputBag(['page' => '42']);
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findWithDetails' => $pageModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -294,7 +294,7 @@ class PreviewUrlConverterListenerTest extends TestCase
             ->method('sign')
         ;
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         $event = new PreviewUrlConvertEvent($request);
 
         $listener = new PreviewUrlConvertListener(

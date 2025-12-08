@@ -161,7 +161,7 @@ class CoreResponseContextFactoryTest extends TestCase
             ->willReturn('https://example.com/csp/report')
         ;
 
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->groups = serialize($memberGroups);
 
         $security = $this->createMock(Security::class);
@@ -171,7 +171,7 @@ class CoreResponseContextFactoryTest extends TestCase
             ->willReturn([] === $memberGroups ? null : $user)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 1;
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
@@ -258,7 +258,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $requestStack = new RequestStack([Request::create('https://example.com/')]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 0;
         $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
@@ -299,7 +299,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
         System::setContainer($container);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';

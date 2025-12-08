@@ -76,7 +76,7 @@ abstract class DoctrineTestCase extends TestCase
             ->willReturn($dca)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->method('createInstance')
             ->willReturn($installer)

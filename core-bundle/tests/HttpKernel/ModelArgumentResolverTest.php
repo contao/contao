@@ -38,8 +38,8 @@ class ModelArgumentResolverTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         $pageModel = $this->createMock(PageModel::class);
-        $adapter = $this->mockConfiguredAdapter(['findById' => $pageModel]);
-        $framework = $this->mockContaoFramework([$class => $adapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findById' => $pageModel]);
+        $framework = $this->createContaoFrameworkStub([$class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
@@ -66,7 +66,7 @@ class ModelArgumentResolverTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         $pageModel = $this->createMock(PageModel::class);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', $pageModel);
@@ -84,7 +84,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testDoesNothingIfOutsideTheContaoScope(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -99,7 +99,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testDoesNothingIfTheArgumentTypeDoesNotMatch(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -117,7 +117,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testDoesNothingIfTheArgumentNameIsNotFound(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -136,8 +136,8 @@ class ModelArgumentResolverTest extends TestCase
     public function testSupportsNullableArguments(): void
     {
         $pageModel = $this->createMock(PageModel::class);
-        $adapter = $this->mockConfiguredAdapter(['findById' => $pageModel]);
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findById' => $pageModel]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
@@ -151,8 +151,8 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testChecksIfTheModelExistsIfTheArgumentIsNotNullable(): void
     {
-        $adapter = $this->mockConfiguredAdapter(['findById' => null]);
-        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findById' => null]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);

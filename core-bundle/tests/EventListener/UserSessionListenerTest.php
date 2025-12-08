@@ -48,7 +48,7 @@ class UserSessionListenerTest extends TestCase
         ];
 
         /** @var BackendUser&MockObject $user */
-        $user = $this->mockClassWithProperties($userClass);
+        $user = $this->createClassWithPropertiesStub($userClass);
         $user->session = $sessionValues;
 
         $security = $this->createMock(Security::class);
@@ -316,7 +316,7 @@ class UserSessionListenerTest extends TestCase
 
     public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->session = [];
 
         $security = $this->createMock(Security::class);

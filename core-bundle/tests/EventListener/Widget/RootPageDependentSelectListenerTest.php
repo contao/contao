@@ -42,7 +42,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
         );
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
         $dataContainer->value = serialize([]);
 
         $this->assertSame('', $listener->wizardCallback($dataContainer));
@@ -65,7 +65,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             $translator,
         );
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
         $dataContainer->value = serialize([
             '1' => '10',
             '2' => '20',
@@ -111,7 +111,7 @@ class RootPageDependentSelectListenerTest extends TestCase
     {
         $this->populateGlobalsArray([]);
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
 
@@ -154,7 +154,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             ],
         ]);
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
 

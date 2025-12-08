@@ -176,7 +176,7 @@ class BackendPreviewControllerTest extends TestCase
             '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
-            $this->mockSecurityHelper(true, $this->mockClassWithProperties(BackendUser::class), $twoFactorComplete),
+            $this->mockSecurityHelper(true, $this->createClassWithPropertiesStub(BackendUser::class), $twoFactorComplete),
             $loginLinkHandler,
             $uriSigner,
         );

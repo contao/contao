@@ -23,7 +23,7 @@ use Contao\PageModel;
 use Contao\System;
 use Contao\Template;
 use Contao\TemplateLoader;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -64,10 +64,10 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     public function testReturnsEmptyResponseWhenNoModulesConfigured(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->rootId = 1;
 
-        $module = $this->mockClassWithProperties(ModuleModel::class);
+        $module = $this->createClassWithPropertiesStub(ModuleModel::class);
         $module->rootPageDependentModules = serialize([]);
 
         $request = new Request([], [], ['_scope' => 'frontend', 'pageModel' => $page]);
@@ -84,10 +84,10 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     public function testPopulatesTheTemplateWithTheModule(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->rootId = 1;
 
-        $module = $this->mockClassWithProperties(ModuleModel::class);
+        $module = $this->createClassWithPropertiesStub(ModuleModel::class);
         $module->rootPageDependentModules = serialize([1 => '10']);
         $module->classes = ['foo', 'bar'];
 
@@ -118,21 +118,21 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, string|null $content = null): ContainerBuilder
     {
-        $moduleAdapter = $this->mockAdapter(['findById']);
+        $moduleAdapter = $this->createAdapterStub(['findById']);
         $moduleAdapter
             ->expects($content ? $this->once() : $this->never())
             ->method('findById')
             ->willReturn($this->createMock(ModuleModel::class))
         ;
 
-        $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
         $controllerAdapter
             ->expects($content ? $this->once() : $this->never())
             ->method('getFrontendModule')
             ->willReturn($content ?? '')
         ;
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter, ModuleModel::class => $moduleAdapter]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter, ModuleModel::class => $moduleAdapter]);
 
         $pageFinder = new PageFinder(
             $framework,
@@ -151,8 +151,8 @@ class RootPageDependentModulesControllerTest extends TestCase
         return $this->container;
     }
 
-    private function getModuleModel(): ModuleModel&MockObject
+    private function getModuleModel(): ModuleModel&Stub
     {
-        return $this->mockClassWithProperties(ModuleModel::class);
+        return $this->createClassWithPropertiesStub(ModuleModel::class);
     }
 }

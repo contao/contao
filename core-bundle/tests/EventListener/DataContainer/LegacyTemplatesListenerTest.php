@@ -22,14 +22,14 @@ class LegacyTemplatesListenerTest extends TestCase
 {
     public function testAddsInfoMessage(): void
     {
-        $message = $this->mockAdapter(['addInfo']);
+        $message = $this->createAdapterStub(['addInfo']);
         $message
             ->expects($this->once())
             ->method('addInfo')
             ->with('<message>')
         ;
 
-        $framework = $this->mockContaoFramework([Message::class => $message]);
+        $framework = $this->createContaoFrameworkStub([Message::class => $message]);
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

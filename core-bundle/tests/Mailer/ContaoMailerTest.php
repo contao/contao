@@ -31,7 +31,7 @@ class ContaoMailerTest extends TestCase
 {
     public function testSetsTransportForRequest(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->mailerTransport = 'foobar';
 
         $request = new Request();

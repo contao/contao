@@ -152,7 +152,7 @@ class FragmentHandlerTest extends TestCase
         $pageFinder
             ->expects($this->once())
             ->method('getCurrentPage')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['id' => 42]))
+            ->willReturn($this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]))
         ;
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, pageFinder: $pageFinder);

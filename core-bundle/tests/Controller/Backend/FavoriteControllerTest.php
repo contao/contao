@@ -40,7 +40,7 @@ class FavoriteControllerTest extends TestCase
         $container = $this->getContainer(null, [], null, false);
         $connection = $this->createMock(Connection::class);
 
-        $controller = new FavoriteController($this->mockContaoFramework(), $connection);
+        $controller = new FavoriteController($this->createContaoFrameworkStub(), $connection);
         $controller->setContainer($container);
 
         $response = $controller(new Request());
@@ -54,7 +54,7 @@ class FavoriteControllerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $request = new Request();
 
-        $controller = new FavoriteController($this->mockContaoFramework(), $connection);
+        $controller = new FavoriteController($this->createContaoFrameworkStub(), $connection);
         $controller->setContainer($container);
 
         $this->expectException(BadRequestException::class);
@@ -66,10 +66,10 @@ class FavoriteControllerTest extends TestCase
     #[DataProvider('favoriteProvider')]
     public function testRendersAddToFavoriteButton(Request $request, int|false $currentId, array $parameters, string|null $block = 'form', string $expectedResponse = Response::class): void
     {
-        $controllerAdapter = $this->mockAdapter(['loadDataContainer']);
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class);
+        $controllerAdapter = $this->createAdapterStub(['loadDataContainer']);
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class);
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter], [DC_Table::class => $dataContainer]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter], [DC_Table::class => $dataContainer]);
 
         $queries = [[
             'SELECT id FROM tl_favorites WHERE url = :url AND user = :user',
@@ -170,7 +170,7 @@ class FavoriteControllerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($backendUser ? $this->mockClassWithProperties(BackendUser::class, ['id' => 42]) : null)
+            ->willReturn($backendUser ? $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 42]) : null)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);

@@ -90,7 +90,7 @@ class DynamicUseTokenParserTest extends TestCase
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['templateGroup' => 'templates/theme']))
+            ->willReturn($this->createClassWithPropertiesStub(PageModel::class, ['templateGroup' => 'templates/theme']))
         ;
 
         $environment = $this->getDemoEnvironment($pageFinder);

@@ -76,7 +76,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = true;
 
         $options = $this->imageSizes->getOptionsForUser($user);
@@ -91,7 +91,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow only one image size
@@ -103,7 +103,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow only some default options
@@ -114,7 +114,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('custom', $options);
         $this->assertArrayNotHasKey('My theme', $options);
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow nothing

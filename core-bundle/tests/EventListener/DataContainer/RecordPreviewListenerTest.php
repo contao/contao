@@ -38,14 +38,14 @@ class RecordPreviewListenerTest extends TestCase
         $GLOBALS['TL_DCA'][$table]['config']['notDeletable'] = $notDeletable;
         $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] = $dataContainer;
 
-        $dcAdapter = $this->mockAdapter(['getDriverForTable']);
+        $dcAdapter = $this->createAdapterStub(['getDriverForTable']);
         $dcAdapter
             ->method('getDriverForTable')
             ->with($table)
             ->willReturn($driver)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             DataContainer::class => $dcAdapter,
         ]);
 
@@ -70,7 +70,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
         ];
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             System::class => $this->createMock(System::class),
         ]);
 
@@ -101,7 +101,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_form',
         ]);
@@ -128,7 +128,7 @@ class RecordPreviewListenerTest extends TestCase
             'email' => 'foo@example.org',
         ];
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             System::class => $this->createMock(System::class),
         ]);
 
@@ -153,7 +153,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_user',
         ]);
@@ -189,7 +189,7 @@ class RecordPreviewListenerTest extends TestCase
             'email' => 'foo@example.org',
         ];
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             System::class => $this->createMock(System::class),
         ]);
 
@@ -214,7 +214,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_user',
         ]);
@@ -247,7 +247,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
         ];
 
-        $childRecordListener = $this->mockAdapter(['callback']);
+        $childRecordListener = $this->createAdapterStub(['callback']);
         $childRecordListener
             ->expects($this->once())
             ->method('callback')
@@ -255,7 +255,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn('<record-preview>')
         ;
 
-        $systemAdapter = $this->mockAdapter([
+        $systemAdapter = $this->createAdapterStub([
             'importStatic',
         ]);
 
@@ -266,7 +266,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($childRecordListener)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             System::class => $systemAdapter,
         ]);
 
@@ -297,7 +297,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_content',
         ]);
@@ -320,7 +320,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
         ];
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             System::class => $this->createMock(System::class),
         ]);
 
@@ -351,7 +351,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_content',
         ]);
@@ -371,7 +371,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => 42,
         ];
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             System::class => $this->createMock(System::class),
         ]);
 
@@ -402,7 +402,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => ''], ['id' => '42'])
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_content',
         ]);
@@ -419,7 +419,7 @@ class RecordPreviewListenerTest extends TestCase
 
     public function testFailsSilentlyIfRowDoesNotExist(): void
     {
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             System::class => $this->createMock(System::class),
         ]);
 
@@ -436,7 +436,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_form',
         ]);

@@ -33,8 +33,8 @@ class ValueFormatterTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = $dca;
 
-        $configAdapter = $this->mockAdapter(['get']);
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
 
         if (isset($dca['eval']['rgxp'])) {
             $configAdapter
@@ -54,7 +54,7 @@ class ValueFormatterTest extends TestCase
             ;
         }
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Date::class => $dateAdapter,
             Config::class => $configAdapter,
         ]);
@@ -207,9 +207,9 @@ class ValueFormatterTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = $dca;
 
-        $framework = $this->mockContaoFramework([
-            Date::class => $this->mockAdapter(['parse']),
-            Config::class => $this->mockAdapter(['get']),
+        $framework = $this->createContaoFrameworkStub([
+            Date::class => $this->createAdapterStub(['parse']),
+            Config::class => $this->createAdapterStub(['get']),
         ]);
 
         $translator = $this->createMock(TranslatorInterface::class);
@@ -316,10 +316,10 @@ class ValueFormatterTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = [];
 
-        $configAdapter = $this->mockAdapter(['get']);
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Date::class => $dateAdapter,
             Config::class => $configAdapter,
         ]);
@@ -341,10 +341,10 @@ class ValueFormatterTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = [];
 
-        $configAdapter = $this->mockAdapter(['get']);
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Date::class => $dateAdapter,
             Config::class => $configAdapter,
         ]);
@@ -380,10 +380,10 @@ class ValueFormatterTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = $dca;
 
-        $configAdapter = $this->mockAdapter(['get']);
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Date::class => $dateAdapter,
             Config::class => $configAdapter,
         ]);
@@ -507,14 +507,14 @@ class ValueFormatterTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = ['flag' => $flag];
 
-        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
             ->with('dateFormat')
             ->willReturn('Y-m-d')
         ;
 
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
         $dateAdapter
             ->method('parse')
             ->willReturnMap(array_map(
@@ -523,7 +523,7 @@ class ValueFormatterTest extends TestCase
             ))
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Date::class => $dateAdapter,
             Config::class => $configAdapter,
         ]);
