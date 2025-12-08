@@ -320,6 +320,7 @@
         "all": [
             "@rector",
             "@ecs",
+            "@twig-cs-fixer",
             "@service-linter",
             "@monorepo-tools",
             "@unit-tests",
@@ -341,6 +342,7 @@
         "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze",
         "rector": "@php vendor-bin/rector/vendor/bin/rector",
         "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids",
+        "twig-cs-fixer": "@php vendor-bin/twig-cs-fixer/vendor/bin/twig-cs-fixer fix",
         "unit-tests": "@php vendor/bin/phpunit"
     }
 }

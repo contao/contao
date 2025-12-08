@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set table_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
@@ -27,7 +27,7 @@
                         .set('data-action', 'keydown->contao--sortable#move')
                         .addClass('drag-handle')
                     %}
-                    <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                    <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
                 </td>
 
                 {# Title #}
@@ -61,7 +61,7 @@
                         .set('data-action', 'focus->contao--scroll-offset#store')
                         .addClass('tl_select')
                     %}
-                    <select{{ template_select_attributes}}>
+                    <select{{ template_select_attributes }}>
                         {% for option in row.template_options %}
                             {% set option_attributes = attrs()
                                 .set('value', option.value)
@@ -79,7 +79,7 @@
                         .set('data-action', 'focus->contao--scroll-offset#store')
                         .addClass('tl_select')
                     %}
-                    <select{{ position_select_attributes}}>
+                    <select{{ position_select_attributes }}>
                         {% for option in row.position_options %}
                             {% set option_attributes = attrs()
                                 .set('value', option.value)

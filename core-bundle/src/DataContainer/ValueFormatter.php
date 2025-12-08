@@ -80,6 +80,9 @@ class ValueFormatter implements ResetInterface
         return $this->format($table, $field, $row[$field], $dc);
     }
 
+    /**
+     * @return list<array{value: string, label: string}>
+     */
     public function formatFilterOptions(string $table, string $field, array $values, DataContainer $dc): array
     {
         $options = [];
