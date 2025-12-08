@@ -150,7 +150,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -169,7 +169,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -190,7 +190,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);

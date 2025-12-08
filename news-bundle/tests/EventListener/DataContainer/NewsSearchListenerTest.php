@@ -36,7 +36,7 @@ class NewsSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
             Search::class => $search,
         ]);
@@ -212,7 +212,7 @@ class NewsSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
             Search::class => $search,
         ]);

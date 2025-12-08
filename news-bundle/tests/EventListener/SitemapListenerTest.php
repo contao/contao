@@ -124,7 +124,7 @@ class SitemapListenerTest extends ContaoTestCase
             Database::class => $database,
         ];
 
-        $framework = $this->mockContaoFramework($adapters, $instances);
+        $framework = $this->createContaoFrameworkStub($adapters, $instances);
 
         if ([] === $allPages) {
             $security = $this->createStub(Security::class);

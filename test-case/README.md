@@ -37,10 +37,11 @@ echo $container->getParameter('kernel.cache_dir'); // will output "/tmp/var/cach
 
 ## Mocking the Contao framework
 
-The `mockContaoFramework)` method mocks an initialized Contao framework.
+The `createContaoFrameworkMock()` and `createContaoFrameworkStub()` methods
+create a mock or stab of an initialized Contao framework.
 
 ```php
-$framework = $this->mockContaoFramework();
+$framework = $this->createContaoFrameworkMock();
 $framework
     ->expect($this->atLeastOnce())
     ->method('initialize')
@@ -50,7 +51,7 @@ $framework
 The method automatically adds a Config adapter with the Contao settings:
 
 ```php
-$framework = $this->mockContaoFramework();
+$framework = $this->createContaoFrameworkStub();
 $config = $framework->getAdapter(Contao\Config::class);
 
 echo $config->get('datimFormat'); // will output "'Y-m-d H:i'"
@@ -64,23 +65,24 @@ $adapters = [
     Contao\Encryption::class => $encryptionAdapter,
 ];
 
-$framework = $this->mockContaoFramework($adapters);
+$framework = $this->createContaoFrameworkStub($adapters);
 ```
 
 The given Config adapter will overwrite the default Config adapter.
 
 ## Mocking an adapter
 
-The `mockAdapter()` method will mock an adapter with the given methods.
+The `createAdapterMock()` and `createAdapterStub()` methods will create an
+adapter mock or stub with the given methods.
 
 ```php
-$adapter = $this->mockAdapter(['findById']);
+$adapter = $this->createAdapterStub(['findById']);
 $adapter
     ->method('findById')
     ->willReturn($model)
 ;
 
-$framework = $this->mockContaoFramework([Contao\FilesModel::class => $adapter]);
+$framework = $this->createContaoFrameworkStub([Contao\FilesModel::class => $adapter]);
 ```
 
 Adapters with a simple return value like above can be further simplified:

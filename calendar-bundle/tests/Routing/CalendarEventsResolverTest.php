@@ -28,7 +28,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
     {
         $content = $this->mockClassWithProperties(CalendarEventsModel::class, ['source' => 'external', 'url' => 'foobar']);
 
-        $resolver = new CalendarEventsResolver($this->mockContaoFramework());
+        $resolver = new CalendarEventsResolver($this->createContaoFrameworkStub());
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());
@@ -49,7 +49,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
             ->willReturn($jumpTo)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
         $resolver = new CalendarEventsResolver($framework);
         $result = $resolver->resolve($content);
@@ -71,7 +71,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
             ->willReturn($article)
         ;
 
-        $framework = $this->mockContaoFramework([ArticleModel::class => $articleAdapter]);
+        $framework = $this->createContaoFrameworkStub([ArticleModel::class => $articleAdapter]);
 
         $resolver = new CalendarEventsResolver($framework);
         $result = $resolver->resolve($content);
@@ -94,7 +94,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
             CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendar]),
         ]);
@@ -115,7 +115,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
         $content = $this->mockClassWithProperties($class, $properties);
 
         $pageModel = $this->createStub(PageModel::class);
-        $resolver = new CalendarEventsResolver($this->mockContaoFramework());
+        $resolver = new CalendarEventsResolver($this->createContaoFrameworkStub());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }

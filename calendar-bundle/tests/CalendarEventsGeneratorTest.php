@@ -58,7 +58,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         ;
 
         $generator = new CalendarEventsGenerator(
-            $this->mockContaoFramework([CalendarEventsModel::class => $calendarEventsAdapter]),
+            $this->createContaoFrameworkStub([CalendarEventsModel::class => $calendarEventsAdapter]),
             $this->createStub(PageFinder::class),
             $this->createStub(ContentUrlGenerator::class),
             $this->createStub(TranslatorInterface::class),
@@ -96,14 +96,14 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ->willReturn($calendarModel)
         ;
 
-        $templateAdapter = $this->mockAdapter(['once']);
+        $templateAdapter = $this->createAdapterMock(['once']);
         $templateAdapter
             ->expects('default' !== ($record['source'] ?? null) ? $this->never() : $this->atLeast(2))
             ->method('once')
             ->willReturn(static fn () => true)
         ;
 
-        $contaoFramework = $this->mockContaoFramework(
+        $contaoFramework = $this->createContaoFrameworkStub(
             [
                 CalendarEventsModel::class => $calendarEventsAdapter,
                 CalendarModel::class => $calendarAdapter,

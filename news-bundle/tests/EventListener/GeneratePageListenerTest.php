@@ -72,7 +72,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new GeneratePageListener($this->createContaoFrameworkStub($adapters), $urlGenerator);
         $listener($this->createStub(PageModel::class), $layoutModel);
 
         $this->assertSame(
@@ -86,7 +86,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = '';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework(), $this->createStub(ContentUrlGenerator::class));
+        $listener = new GeneratePageListener($this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class));
         $listener($this->createStub(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
@@ -104,7 +104,7 @@ class GeneratePageListenerTest extends ContaoTestCase
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework($adapters), $this->createStub(ContentUrlGenerator::class));
+        $listener = new GeneratePageListener($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
         $listener($this->createStub(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);

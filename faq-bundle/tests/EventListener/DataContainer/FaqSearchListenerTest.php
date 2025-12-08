@@ -36,7 +36,7 @@ class FaqSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
             Search::class => $search,
         ]);
@@ -212,7 +212,7 @@ class FaqSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
             Search::class => $search,
         ]);

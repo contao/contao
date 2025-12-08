@@ -36,7 +36,7 @@ class EventInsertTagTest extends ContaoTestCase
             CalendarFeedModel::class => $this->mockConfiguredAdapter(['findById' => $feedModel]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
 
         $listener = new EventInsertTag($framework, $urlGenerator);
@@ -64,7 +64,7 @@ class EventInsertTagTest extends ContaoTestCase
             ->willReturn($url ?? '')
         ;
 
-        $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new EventInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
         $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
         $this->assertSame($expectedValue, $result->getValue());
@@ -190,7 +190,7 @@ class EventInsertTagTest extends ContaoTestCase
         ];
 
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
-        $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new EventInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('calendar_feed', new ResolvedParameters(['3']), []))->getValue());
         $this->assertSame('', $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['3']), []))->getValue());

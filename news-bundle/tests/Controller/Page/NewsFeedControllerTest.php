@@ -105,7 +105,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
         $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
 
         $cacheTagManager = $this->createMock(CacheTagManager::class);
@@ -139,7 +139,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
         $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
@@ -170,7 +170,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         $dispatcher = $this->createStub(EventDispatcher::class);

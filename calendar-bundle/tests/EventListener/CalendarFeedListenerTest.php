@@ -64,7 +64,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
         $normalCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 1, 'protected' => 0]);
         $protectedCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 2, 'protected' => 1]);
 
-        $calendarAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $calendarAdapter = $this->createAdapterMock(['findMultipleByIds']);
         $calendarAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
@@ -72,7 +72,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(new Collection([$normalCalendar, $protectedCalendar], 'tl_calendar'))
         ;
 
-        $framework = $this->mockContaoFramework(
+        $framework = $this->createContaoFrameworkStub(
             [
                 CalendarModel::class => $calendarAdapter,
             ],
@@ -227,7 +227,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Environment::class => $environment,
             Controller::class => $controller,
             ContentModel::class => $contentModel,

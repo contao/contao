@@ -84,7 +84,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn(new Collection([$normalArchive, $protectedArchive], 'tl_news_archive'))
         ;
 
-        $framework = $this->mockContaoFramework([NewsModel::class => $newsAdapter, NewsArchiveModel::class => $newsArchiveAdapter]);
+        $framework = $this->createContaoFrameworkStub([NewsModel::class => $newsAdapter, NewsArchiveModel::class => $newsArchiveAdapter]);
         $feed = $this->createStub(Feed::class);
         $request = $this->createStub(Request::class);
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
@@ -215,7 +215,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Environment::class => $environment,
             Controller::class => $controller,
             ContentModel::class => $contentModel,

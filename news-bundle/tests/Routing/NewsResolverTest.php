@@ -28,7 +28,7 @@ class NewsResolverTest extends ContaoTestCase
     {
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'external', 'url' => 'foobar']);
 
-        $resolver = new NewsResolver($this->mockContaoFramework());
+        $resolver = new NewsResolver($this->createContaoFrameworkStub());
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());
@@ -41,7 +41,7 @@ class NewsResolverTest extends ContaoTestCase
         $jumpTo = $this->mockClassWithProperties(PageModel::class);
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'internal', 'jumpTo' => 42]);
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -49,7 +49,7 @@ class NewsResolverTest extends ContaoTestCase
             ->willReturn($jumpTo)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
         $resolver = new NewsResolver($framework);
         $result = $resolver->resolve($content);
@@ -63,7 +63,7 @@ class NewsResolverTest extends ContaoTestCase
         $article = $this->mockClassWithProperties(ArticleModel::class);
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'article', 'articleId' => 42]);
 
-        $articleAdapter = $this->mockAdapter(['findById']);
+        $articleAdapter = $this->createAdapterMock(['findById']);
         $articleAdapter
             ->expects($this->once())
             ->method('findById')
@@ -71,7 +71,7 @@ class NewsResolverTest extends ContaoTestCase
             ->willReturn($article)
         ;
 
-        $framework = $this->mockContaoFramework([ArticleModel::class => $articleAdapter]);
+        $framework = $this->createContaoFrameworkStub([ArticleModel::class => $articleAdapter]);
 
         $resolver = new NewsResolver($framework);
         $result = $resolver->resolve($content);
@@ -87,7 +87,7 @@ class NewsResolverTest extends ContaoTestCase
 
         $content = $this->mockClassWithProperties(NewsModel::class, ['source' => '']);
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -95,7 +95,7 @@ class NewsResolverTest extends ContaoTestCase
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
             NewsArchiveModel::class => $this->mockConfiguredAdapter(['findById' => $newsArchive]),
         ]);
@@ -115,7 +115,7 @@ class NewsResolverTest extends ContaoTestCase
     {
         $content = $this->mockClassWithProperties($class, $properties);
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $resolver = new NewsResolver($this->mockContaoFramework());
+        $resolver = new NewsResolver($this->createContaoFrameworkStub());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }

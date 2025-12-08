@@ -44,7 +44,7 @@ class NewsInsertTagTest extends ContaoTestCase
             ->willReturn($url ?? '')
         ;
 
-        $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new NewsInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
         $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
         $this->assertSame($expectedValue, $result->getValue());
@@ -169,7 +169,7 @@ class NewsInsertTagTest extends ContaoTestCase
         ];
 
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
-        $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new NewsInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['3']), []))->getValue());
     }
@@ -188,7 +188,7 @@ class NewsInsertTagTest extends ContaoTestCase
             ->willThrowException(new ForwardPageNotFoundException())
         ;
 
-        $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new NewsInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['4']), []))->getValue());
     }

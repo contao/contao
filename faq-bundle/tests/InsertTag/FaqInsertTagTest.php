@@ -59,7 +59,7 @@ class FaqInsertTagTest extends ContaoTestCase
             ->willReturn($url ?? '')
         ;
 
-        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
         $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
         $this->assertSame($expectedValue, $result->getValue());
@@ -195,7 +195,7 @@ class FaqInsertTagTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $this->createStub(ContentUrlGenerator::class));
+        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
 
         $this->assertSame(
             '<a href="./">What does "foobar" mean?</a>',
@@ -219,7 +219,7 @@ class FaqInsertTagTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
         ];
 
-        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $this->createStub(ContentUrlGenerator::class));
+        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
 
         $this->assertSame('', $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['2']), []))->getValue());
     }
@@ -243,7 +243,7 @@ class FaqInsertTagTest extends ContaoTestCase
             ->willThrowException(new ForwardPageNotFoundException())
         ;
 
-        $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('faq_url', new ResolvedParameters(['3']), []))->getValue());
     }

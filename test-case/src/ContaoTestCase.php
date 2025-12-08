@@ -118,42 +118,41 @@ abstract class ContaoTestCase extends TestCase
      * automatically if no Config adapter is given.
      *
      * @return ContaoFramework&Stub
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createContaoFrameworkMock() or createContaoFrameworkStub() instead.
      */
     protected function mockContaoFramework(array $adapters = [], array $instances = []): ContaoFramework
     {
-        $this->addConfigAdapter($adapters);
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockContaoFramework()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createContaoFrameworkMock()" or "ContaoTestCase::createContaoFrameworkStub()" instead.');
 
-        $framework = $this->createStub(ContaoFramework::class);
-        $framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
+        return $this->createContaoFrameworkMock($adapters, $instances);
+    }
 
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
-        ;
+    /**
+     * Creates a Contao framework mock object with optional adapters.
+     *
+     * A Config adapter with the default Contao configuration will be added
+     * automatically if no Config adapter is given.
+     *
+     * @return ContaoFramework&MockObject
+     */
+    protected function createContaoFrameworkMock(array $adapters = [], array $instances = []): ContaoFramework
+    {
+        return $this->addAdaptersAndInstances($this->createMock(ContaoFramework::class), $adapters, $instances);
+    }
 
-        if ($instances) {
-            $framework
-                ->method('createInstance')
-                ->willReturnCallback(
-                    static function (string $key) use ($instances): mixed {
-                        if (!isset($instances[$key])) {
-                            return null;
-                        }
-
-                        if ($instances[$key] instanceof \Closure) {
-                            return $instances[$key]();
-                        }
-
-                        return $instances[$key];
-                    },
-                )
-            ;
-        }
-
-        return $framework;
+    /**
+     * Creates a Contao framework stub object with optional adapters.
+     *
+     * A Config adapter with the default Contao configuration will be added
+     * automatically if no Config adapter is given.
+     *
+     * @return ContaoFramework&Stub
+     */
+    protected function createContaoFrameworkStub(array $adapters = [], array $instances = []): ContaoFramework
+    {
+        return $this->addAdaptersAndInstances($this->createStub(ContaoFramework::class), $adapters, $instances);
     }
 
     /**
@@ -421,7 +420,7 @@ abstract class ContaoTestCase extends TestCase
         sort($methods);
 
         $namespace = 'Contao\DynamicTestClass';
-        $className = 'MockAdapter'.sha1(implode(':', $methods));
+        $className = 'Adapter'.sha1(implode(':', $methods));
         $fqcn = $namespace.'\\'.$className;
 
         if (!class_exists($fqcn, false)) {
@@ -432,6 +431,47 @@ abstract class ContaoTestCase extends TestCase
         }
 
         return $fqcn;
+    }
+
+    /**
+     * @param ContaoFramework&(MockObject|Stub) $framework
+     *
+     * @return ContaoFramework&(MockObject|Stub)
+     */
+    private function addAdaptersAndInstances(ContaoFramework $framework, $adapters, $instances): ContaoFramework
+    {
+        $this->addConfigAdapter($adapters);
+
+        $framework
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $framework
+            ->method('getAdapter')
+            ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
+        ;
+
+        if ($instances) {
+            $framework
+                ->method('createInstance')
+                ->willReturnCallback(
+                    static function (string $key) use ($instances): mixed {
+                        if (!isset($instances[$key])) {
+                            return null;
+                        }
+
+                        if ($instances[$key] instanceof \Closure) {
+                            return $instances[$key]();
+                        }
+
+                        return $instances[$key];
+                    },
+                )
+            ;
+        }
+
+        return $framework;
     }
 
     /**

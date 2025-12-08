@@ -36,7 +36,7 @@ class NewsletterResolverTest extends ContaoTestCase
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
             NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findById' => $channel]),
         ]);
@@ -57,7 +57,7 @@ class NewsletterResolverTest extends ContaoTestCase
         $content = $this->mockClassWithProperties($class, $properties);
         $pageModel = $this->createStub(PageModel::class);
 
-        $resolver = new NewsletterResolver($this->mockContaoFramework());
+        $resolver = new NewsletterResolver($this->createContaoFrameworkStub());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }

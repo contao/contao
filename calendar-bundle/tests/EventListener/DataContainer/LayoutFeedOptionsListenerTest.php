@@ -20,7 +20,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
 {
     public function testReturnsAllCalendarFeeds(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -55,7 +55,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
         $listener = new LayoutFeedOptionsListener($framework);
 
         $this->assertSame(
@@ -70,7 +70,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
 
     public function testReturnsEmptyArrayIfNoFeedsExist(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -78,7 +78,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
         $listener = new LayoutFeedOptionsListener($framework);
 
         $this->assertSame([], $listener());

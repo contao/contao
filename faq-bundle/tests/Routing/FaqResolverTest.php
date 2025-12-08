@@ -36,7 +36,7 @@ class FaqResolverTest extends ContaoTestCase
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
             FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $category]),
         ]);
@@ -56,7 +56,7 @@ class FaqResolverTest extends ContaoTestCase
     {
         $content = $this->mockClassWithProperties($class, $properties);
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $resolver = new FaqResolver($this->mockContaoFramework());
+        $resolver = new FaqResolver($this->createContaoFrameworkStub());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }

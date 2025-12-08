@@ -36,7 +36,7 @@ class EventSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
             Search::class => $search,
         ]);
@@ -212,7 +212,7 @@ class EventSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
             Search::class => $search,
         ]);
