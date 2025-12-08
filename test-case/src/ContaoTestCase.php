@@ -162,10 +162,12 @@ abstract class ContaoTestCase extends TestCase
      * @return Adapter&MockObject
      *
      * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
-     *             use createAdapterMock() instead.
+     *             use createAdapterMock() or createAdapterStub() instead.
      */
     protected function mockAdapter(array $methods): Adapter
     {
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockAdapter()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createAdapterMock()" or "ContaoTestCase::createAdapterStub()" instead.');
+
         return $this->createAdapterMock($methods);
     }
 
@@ -176,7 +178,7 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function createAdapterMock(array $methods): Adapter
     {
-        return $this->createMock($this->createAdapter($methods));
+        return $this->createMock($this->createAdapterClass($methods));
     }
 
     /**
@@ -186,7 +188,7 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function createAdapterStub(array $methods): Adapter
     {
-        return $this->createStub($this->createAdapter($methods));
+        return $this->createStub($this->createAdapterClass($methods));
     }
 
     /**
@@ -414,7 +416,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Creates an adapter with the given methods and returns the class name.
      */
-    private function createAdapter(array $methods): string
+    private function createAdapterClass(array $methods): string
     {
         sort($methods);
 
