@@ -38,7 +38,7 @@ class FaqInsertTagTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        $faqModel = $this->mockClassWithProperties(FaqModel::class);
+        $faqModel = $this->createClassWithPropertiesStub(FaqModel::class);
         $faqModel->alias = 'what-does-foobar-mean';
         $faqModel->question = 'What does "foobar" mean?';
 
@@ -48,7 +48,7 @@ class FaqInsertTagTest extends ContaoTestCase
         ;
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $faqModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -182,7 +182,7 @@ class FaqInsertTagTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        $faqModel = $this->mockClassWithProperties(FaqModel::class);
+        $faqModel = $this->createClassWithPropertiesStub(FaqModel::class);
         $faqModel->alias = 'what-does-foobar-mean';
         $faqModel->question = 'What does "foobar" mean?';
 
@@ -192,7 +192,7 @@ class FaqInsertTagTest extends ContaoTestCase
         ;
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $faqModel]),
         ];
 
         $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
@@ -216,7 +216,7 @@ class FaqInsertTagTest extends ContaoTestCase
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => null]),
         ];
 
         $listener = new FaqInsertTag($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
@@ -233,7 +233,7 @@ class FaqInsertTagTest extends ContaoTestCase
         ;
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $faqModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);

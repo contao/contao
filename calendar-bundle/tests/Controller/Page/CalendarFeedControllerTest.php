@@ -55,7 +55,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
     #[DataProvider('getJSONFeedFormats', validateArgumentCount: false)]
     public function testConfiguresPageRoute(string $format, string $suffix): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Next events',
             'alias' => 'next-events',
@@ -74,7 +74,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
     public function testThrowsExceptionOnInvalidFeedFormat(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Next events',
             'alias' => 'next-events',
@@ -93,7 +93,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
     public function testReturnsEmptyFeed(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Next events',
             'alias' => 'next-events',
@@ -128,7 +128,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
     #[DataProvider('getXMLFeedFormats', validateArgumentCount: false)]
     public function testProperlyEncodesXMLEntities(string $format): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Next events &lt;/channel&gt;',
             'alias' => 'next-events',
@@ -168,7 +168,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
     #[DataProvider('getJSONFeedFormats')]
     public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Next events',
             'alias' => 'next-events',

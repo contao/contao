@@ -37,7 +37,7 @@ class FaqSearchListenerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faqModel]),
             Search::class => $search,
         ]);
 
@@ -213,7 +213,7 @@ class FaqSearchListenerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faqModel]),
             Search::class => $search,
         ]);
 
@@ -231,7 +231,7 @@ class FaqSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $recordData['id']]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => $recordData['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)

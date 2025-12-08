@@ -24,8 +24,8 @@ class FaqResolverTest extends ContaoTestCase
 {
     public function testResolveFaq(): void
     {
-        $target = $this->mockClassWithProperties(PageModel::class);
-        $category = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
+        $target = $this->createClassWithPropertiesStub(PageModel::class);
+        $category = $this->createClassWithPropertiesStub(FaqCategoryModel::class, ['jumpTo' => 42]);
         $content = $this->createStub(FaqModel::class);
 
         $pageAdapter = $this->createAdapterMock(['findById']);
@@ -38,7 +38,7 @@ class FaqResolverTest extends ContaoTestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $category]),
+            FaqCategoryModel::class => $this->createConfiguredAdapterStub(['findById' => $category]),
         ]);
 
         $resolver = new FaqResolver($framework);
@@ -54,8 +54,8 @@ class FaqResolverTest extends ContaoTestCase
     #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
-        $content = $this->mockClassWithProperties($class, $properties);
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $content = $this->createClassWithPropertiesStub($class, $properties);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $resolver = new FaqResolver($this->createContaoFrameworkStub());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));

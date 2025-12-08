@@ -138,15 +138,15 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
+        $calendarModel = $this->createClassWithPropertiesStub(CalendarModel::class);
         $calendarModel->id = 1;
 
         $calendarEvents = $this->createStub(CalendarEventsModel::class);
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendarModel]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+            CalendarModel::class => $this->createConfiguredAdapterStub(['findById' => $calendarModel]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();
@@ -165,7 +165,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -185,8 +185,8 @@ class EventPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => null]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+            CalendarModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();

@@ -56,7 +56,7 @@ class NewsFeedControllerTest extends ContaoTestCase
     #[DataProvider('getJSONFeedFormats', validateArgumentCount: false)]
     public function testConfiguresPageRoute(string $format, string $suffix): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -75,7 +75,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public function testThrowsExceptionOnInvalidFeedFormat(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -94,7 +94,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public function testReturnsEmptyFeed(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -129,7 +129,7 @@ class NewsFeedControllerTest extends ContaoTestCase
     #[DataProvider('getXMLFeedFormats', validateArgumentCount: false)]
     public function testProperlyEncodesXMLEntities(string $format): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News &lt;/channel&gt;',
             'alias' => 'latest-news',
@@ -162,7 +162,7 @@ class NewsFeedControllerTest extends ContaoTestCase
     #[DataProvider('getJSONFeedFormats')]
     public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType, bool $isDebug = false): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -233,7 +233,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $articles = [];
 
         for ($i = 0; $i < $count; ++$i) {
-            $articles[] = $this->mockClassWithProperties(NewsModel::class, [
+            $articles[] = $this->createClassWithPropertiesStub(NewsModel::class, [
                 'id' => 1 + $i,
                 'pid' => 1 + $i,
                 'title' => 'Example title',

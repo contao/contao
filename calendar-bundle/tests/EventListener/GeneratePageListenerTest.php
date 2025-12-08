@@ -65,11 +65,11 @@ class GeneratePageListenerTest extends ContaoTestCase
 
         $adapters = [
             Environment::class => $this->createAdapterStub(['get']),
-            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findMultipleByIds' => $collection]),
             Template::class => new Adapter(Template::class),
         ];
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->calendarfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->createContaoFrameworkStub($adapters), $urlGenerator);
@@ -83,7 +83,7 @@ class GeneratePageListenerTest extends ContaoTestCase
 
     public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoFeeds(): void
     {
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->calendarfeeds = '';
 
         $listener = new GeneratePageListener($this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class));
@@ -94,14 +94,14 @@ class GeneratePageListenerTest extends ContaoTestCase
 
     public function testDoesNotAddTheCalendarFeedLinkIfThereAreNoValidModels(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'regular']);
         $collection = new Collection([$pageModel], 'tl_page');
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findMultipleByIds' => $collection]),
         ];
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->calendarfeeds = 'a:1:{i:0;i:3;}';
 
         $listener = new GeneratePageListener($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));

@@ -36,7 +36,7 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNothingIsAddedIfNoPublishedCalendar(): void
     {
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findAll' => null]),
+            CalendarModel::class => $this->createConfiguredAdapterStub(['findAll' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -49,18 +49,18 @@ class SitemapListenerTest extends ContaoTestCase
     #[DataProvider('getCalendarEvents')]
     public function testCalendarEventIsAdded(array $pageProperties, array $calendarProperties, bool $hasAuthenticatedMember): void
     {
-        $jumpToPage = $this->mockClassWithProperties(PageModel::class, $pageProperties);
-        $calendar = $this->mockClassWithProperties(CalendarModel::class, $calendarProperties);
+        $jumpToPage = $this->createClassWithPropertiesStub(PageModel::class, $pageProperties);
+        $calendar = $this->createClassWithPropertiesStub(CalendarModel::class, $calendarProperties);
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter([
+            CalendarModel::class => $this->createConfiguredAdapterStub([
                 'findByProtected' => [$calendar],
                 'findAll' => [$calendar],
             ]),
-            PageModel::class => $this->mockConfiguredAdapter([
+            PageModel::class => $this->createConfiguredAdapterStub([
                 'findWithDetails' => $jumpToPage,
             ]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter([
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub([
                 'findPublishedDefaultByPid' => [
                     $this->createStub(CalendarEventsModel::class),
                 ],

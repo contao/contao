@@ -28,12 +28,12 @@ class NewsInsertTagTest extends ContaoTestCase
     #[DataProvider('replacesNewsTagsProvider')]
     public function testReplacesTheNewsTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
-        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel = $this->createClassWithPropertiesStub(NewsModel::class);
         $newsModel->headline = '"Foo" is not "bar"';
         $newsModel->teaser = '<p>Foo does not equal bar.</p>';
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $newsModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -165,7 +165,7 @@ class NewsInsertTagTest extends ContaoTestCase
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => null]),
         ];
 
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
@@ -176,10 +176,10 @@ class NewsInsertTagTest extends ContaoTestCase
 
     public function testReturnsAnEmptyUrlIfTheUrlGeneratorThrowsException(): void
     {
-        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel = $this->createClassWithPropertiesStub(NewsModel::class);
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $newsModel]),
         ];
 
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);

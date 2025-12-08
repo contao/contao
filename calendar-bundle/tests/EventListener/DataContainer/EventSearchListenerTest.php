@@ -37,7 +37,7 @@ class EventSearchListenerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $eventModel]),
             Search::class => $search,
         ]);
 
@@ -213,7 +213,7 @@ class EventSearchListenerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $eventModel]),
             Search::class => $search,
         ]);
 
@@ -231,7 +231,7 @@ class EventSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $recordData['id']]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => $recordData['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)

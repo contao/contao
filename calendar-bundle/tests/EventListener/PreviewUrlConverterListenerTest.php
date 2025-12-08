@@ -33,7 +33,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $eventModel = $this->createStub(CalendarEventsModel::class);
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $eventModel]),
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);
@@ -106,7 +106,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_PORT', 80);
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);

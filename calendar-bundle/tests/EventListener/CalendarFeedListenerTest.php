@@ -61,8 +61,8 @@ class CalendarFeedListenerTest extends ContaoTestCase
         $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $cacheTags = $this->createStub(CacheTagManager::class);
         $eventModel = $this->createStub(CalendarEventsModel::class);
-        $normalCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 1, 'protected' => 0]);
-        $protectedCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 2, 'protected' => 1]);
+        $normalCalendar = $this->createClassWithPropertiesStub(CalendarModel::class, ['id' => 1, 'protected' => 0]);
+        $protectedCalendar = $this->createClassWithPropertiesStub(CalendarModel::class, ['id' => 2, 'protected' => 1]);
 
         $calendarAdapter = $this->createAdapterMock(['findMultipleByIds']);
         $calendarAdapter
@@ -93,7 +93,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'eventCalendars' => serialize([1, 2]),
             'feedFeatured' => $feedFeatured,
             'maxFeedItems' => 0,
@@ -187,7 +187,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(new Collection([$element], 'tl_calendar_events'))
         ;
 
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, [
+        $eventModel = $this->createClassWithPropertiesStub(CalendarEventsModel::class, [
             'id' => 42,
             'startTime' => 1656578758,
             'title' => $title[0],
@@ -214,15 +214,15 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(
                 new Collection(
                     [
-                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/foo.jpg']),
-                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/bar.jpg']),
+                        $this->createClassWithPropertiesStub(FilesModel::class, ['path' => 'files/foo.jpg']),
+                        $this->createClassWithPropertiesStub(FilesModel::class, ['path' => 'files/bar.jpg']),
                     ],
                     'tl_files',
                 ),
             )
         ;
 
-        $userModel = $this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']);
+        $userModel = $this->createClassWithPropertiesStub(UserModel::class, ['name' => 'Jane Doe']);
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
@@ -232,7 +232,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             Controller::class => $controller,
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
-            UserModel::class => $this->mockConfiguredAdapter(['findById' => $userModel]),
+            UserModel::class => $this->createConfiguredAdapterStub(['findById' => $userModel]),
         ]);
 
         $framework->setContainer($container);
@@ -249,7 +249,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn('https://example.org/news/example-title')
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'feedSource' => $feedSource,
             'imgSize' => serialize([100, 100, 'crop']),
         ]);

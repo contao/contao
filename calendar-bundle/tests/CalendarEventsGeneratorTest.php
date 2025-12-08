@@ -75,7 +75,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         $rangeStart = new \DateTimeImmutable();
         $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59');
 
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, $record);
+        $eventModel = $this->createClassWithPropertiesStub(CalendarEventsModel::class, $record);
 
         $collection = new Collection([$eventModel], CalendarEventsModel::getTable());
 
@@ -113,7 +113,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
         );
 
-        $page = $this->mockClassWithProperties(PageModel::class, ['dateFormat']);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, ['dateFormat']);
         $page->dateFormat = 'Y-m-d';
         $page->timeFormat = 'H:i';
         $page->datimFormat = 'Y-m-d H:i';

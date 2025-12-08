@@ -58,8 +58,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $cacheTags = $this->createStub(CacheTagManager::class);
         $newsModel = $this->createStub(NewsModel::class);
-        $normalArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 1, 'protected' => 0]);
-        $protectedArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 2, 'protected' => 1]);
+        $normalArchive = $this->createClassWithPropertiesStub(NewsArchiveModel::class, ['id' => 1, 'protected' => 0]);
+        $protectedArchive = $this->createClassWithPropertiesStub(NewsArchiveModel::class, ['id' => 2, 'protected' => 1]);
 
         $collection = $this->createMock(Collection::class);
         $collection
@@ -96,7 +96,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'newsArchives' => serialize([1, 2]),
             'feedFeatured' => $feedFeatured,
             'maxFeedItems' => 0,
@@ -165,7 +165,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn($content[0])
         ;
 
-        $element = $this->mockClassWithProperties(ContentModel::class, [
+        $element = $this->createClassWithPropertiesStub(ContentModel::class, [
             'pid' => 42,
             'ptable' => 'tl_news',
         ]);
@@ -177,7 +177,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn(new Collection([$element], 'tl_news'))
         ;
 
-        $article = $this->mockClassWithProperties(NewsModel::class, [
+        $article = $this->createClassWithPropertiesStub(NewsModel::class, [
             'id' => 42,
             'date' => 1656578758,
             'headline' => $headline[0],
@@ -202,15 +202,15 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn(
                 new Collection(
                     [
-                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/foo.jpg']),
-                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/bar.jpg']),
+                        $this->createClassWithPropertiesStub(FilesModel::class, ['path' => 'files/foo.jpg']),
+                        $this->createClassWithPropertiesStub(FilesModel::class, ['path' => 'files/bar.jpg']),
                     ],
                     'tl_files',
                 ),
             )
         ;
 
-        $userModel = $this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']);
+        $userModel = $this->createClassWithPropertiesStub(UserModel::class, ['name' => 'Jane Doe']);
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
@@ -220,7 +220,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             Controller::class => $controller,
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
-            UserModel::class => $this->mockConfiguredAdapter(['findById' => $userModel]),
+            UserModel::class => $this->createConfiguredAdapterStub(['findById' => $userModel]),
         ]);
 
         $framework->setContainer($container);
@@ -237,7 +237,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn('https://example.org/news/example-title')
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'feedSource' => $feedSource,
             'imgSize' => serialize([100, 100, 'crop']),
         ]);

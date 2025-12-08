@@ -138,15 +138,15 @@ class FaqPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        $model = $this->mockClassWithProperties(FaqCategoryModel::class);
+        $model = $this->createClassWithPropertiesStub(FaqCategoryModel::class);
         $model->id = 1;
 
         $faq = $this->createStub(FaqModel::class);
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $model]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faq]),
+            FaqCategoryModel::class => $this->createConfiguredAdapterStub(['findById' => $model]),
         ];
 
         $picker = $this->getPicker();
@@ -165,7 +165,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -185,8 +185,8 @@ class FaqPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faq]),
+            FaqCategoryModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();

@@ -36,7 +36,7 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNothingIsAddedIfNoPublishedArchive(): void
     {
         $adapters = [
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByProtected' => null]),
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub(['findByProtected' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -49,19 +49,19 @@ class SitemapListenerTest extends ContaoTestCase
     #[DataProvider('getNewsArticles')]
     public function testNewsArticleIsAdded(array $pageProperties, array $newsArchiveProperties, bool $hasAuthenticatedMember): void
     {
-        $newsArchive = $this->mockClassWithProperties(NewsArchiveModel::class, $newsArchiveProperties);
+        $newsArchive = $this->createClassWithPropertiesStub(NewsArchiveModel::class, $newsArchiveProperties);
 
         $adapters = [
-            NewsArchiveModel::class => $this->mockConfiguredAdapter([
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub([
                 'findByProtected' => [$newsArchive],
                 'findAll' => [$newsArchive],
             ]),
-            PageModel::class => $this->mockConfiguredAdapter([
-                'findWithDetails' => $this->mockClassWithProperties(PageModel::class, $pageProperties),
+            PageModel::class => $this->createConfiguredAdapterStub([
+                'findWithDetails' => $this->createClassWithPropertiesStub(PageModel::class, $pageProperties),
             ]),
-            NewsModel::class => $this->mockConfiguredAdapter([
+            NewsModel::class => $this->createConfiguredAdapterStub([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(NewsModel::class, ['jumpTo' => 42]),
+                    $this->createClassWithPropertiesStub(NewsModel::class, ['jumpTo' => 42]),
                 ],
             ]),
         ];

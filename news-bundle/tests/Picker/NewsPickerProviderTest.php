@@ -138,15 +138,15 @@ class NewsPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        $model = $this->mockClassWithProperties(NewsArchiveModel::class);
+        $model = $this->createClassWithPropertiesStub(NewsArchiveModel::class);
         $model->id = 1;
 
         $news = $this->createStub(NewsModel::class);
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findById' => $model]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $news]),
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub(['findById' => $model]),
         ];
 
         $picker = $this->getPicker();
@@ -165,7 +165,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -185,8 +185,8 @@ class NewsPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $news]),
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();

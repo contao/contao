@@ -37,7 +37,7 @@ class NewsSearchListenerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $newsModel]),
             Search::class => $search,
         ]);
 
@@ -64,7 +64,7 @@ class NewsSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)
@@ -213,7 +213,7 @@ class NewsSearchListenerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $newsModel]),
             Search::class => $search,
         ]);
 
@@ -231,7 +231,7 @@ class NewsSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $recordData['id']]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => $recordData['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)

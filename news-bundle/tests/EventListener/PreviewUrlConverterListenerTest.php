@@ -33,7 +33,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $newsModel = $this->createStub(NewsModel::class);
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $newsModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -105,7 +105,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_PORT', 80);
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);

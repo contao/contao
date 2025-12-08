@@ -194,8 +194,42 @@ abstract class ContaoTestCase extends TestCase
      * Mocks a configured adapter with the given methods and return values.
      *
      * @return Adapter&MockObject
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createConfiguredAdapterMock() or createConfiguredAdapterStub() instead.
      */
     protected function mockConfiguredAdapter(array $configuration): Adapter
+    {
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockConfiguredAdapter()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createConfiguredAdapterMock()" or "ContaoTestCase::createConfiguredAdapterStub()" instead.');
+
+        return $this->createConfiguredAdapterMock($configuration);
+    }
+
+    /**
+     * Creates a configured adapter mock object with the given methods and return values.
+     *
+     * @return Adapter&MockObject
+     */
+    protected function createConfiguredAdapterMock(array $configuration): Adapter
+    {
+        $adapter = $this->createAdapterMock(array_keys($configuration));
+
+        foreach ($configuration as $method => $return) {
+            $adapter
+                ->method($method)
+                ->willReturn($return)
+            ;
+        }
+
+        return $adapter;
+    }
+
+    /**
+     * Creates a configured adapter stub object with the given methods and return values.
+     *
+     * @return Adapter&Stub
+     */
+    protected function createConfiguredAdapterStub(array $configuration): Adapter
     {
         $adapter = $this->createAdapterStub(array_keys($configuration));
 
@@ -217,71 +251,54 @@ abstract class ContaoTestCase extends TestCase
      * @param class-string<T> $class
      *
      * @return T&MockObject
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createClassWithPropertiesMock() or createClassWithPropertiesStub() instead.
      */
     protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject|Stub
+    {
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockClassWithProperties()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createClassWithPropertiesMock()" or "ContaoTestCase::createClassWithPropertiesStub()" instead.');
+
+        return $this->createClassWithPropertiesMock($class, $properties, $except);
+    }
+
+    /**
+     * Creates a mock object of a class with magic properties.
+     *
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T&MockObject
+     */
+    protected function createClassWithPropertiesMock(string $class, array $properties = [], array $except = []): MockObject
     {
         $classMethods = get_class_methods($class);
 
         if (!$except) {
-            $mock = $this->createStub($class);
+            $mock = $this->createMock($class);
         } else {
             $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
         }
 
-        $mock
-            ->method('__get')
-            ->willReturnCallback(
-                static function (string $key) use (&$properties) {
-                    return $properties[$key] ?? null;
-                },
-            )
-        ;
+        return $this->addMethods($mock, $classMethods, $properties);
+    }
 
-        if (\in_array('__set', $classMethods, true)) {
-            $mock
-                ->method('__set')
-                ->willReturnCallback(
-                    static function (string $key, $value) use (&$properties): void {
-                        $properties[$key] = $value;
-                    },
-                )
-            ;
-        }
+    /**
+     * Creates a stub object of a class with magic properties.
+     *
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T&Stub
+     */
+    protected function createClassWithPropertiesStub(string $class, array $properties = []): Stub
+    {
+        $classMethods = get_class_methods($class);
+        $stub = $this->createStub($class);
 
-        if (\in_array('__isset', $classMethods, true)) {
-            $mock
-                ->method('__isset')
-                ->willReturnCallback(
-                    static function (string $key) use (&$properties) {
-                        return isset($properties[$key]);
-                    },
-                )
-            ;
-        }
-
-        if (\in_array('row', $classMethods, true)) {
-            $mock
-                ->method('row')
-                ->willReturnCallback(
-                    static function () use (&$properties) {
-                        return $properties;
-                    },
-                )
-            ;
-        }
-
-        if (\in_array('setRow', $classMethods, true)) {
-            $mock
-                ->method('setRow')
-                ->willReturnCallback(
-                    static function (array $data) use (&$properties): void {
-                        $properties = $data;
-                    },
-                )
-            ;
-        }
-
-        return $mock;
+        return $this->addMethods($stub, $classMethods, $properties);
     }
 
     /**
@@ -472,6 +489,64 @@ abstract class ContaoTestCase extends TestCase
         }
 
         return $framework;
+    }
+
+    private function addMethods(MockObject|Stub $object, array $methods, array $properties): MockObject|Stub
+    {
+        $object
+            ->method('__get')
+            ->willReturnCallback(
+                static function (string $key) use (&$properties) {
+                    return $properties[$key] ?? null;
+                },
+            )
+        ;
+
+        if (\in_array('__set', $methods, true)) {
+            $object
+                ->method('__set')
+                ->willReturnCallback(
+                    static function (string $key, $value) use (&$properties): void {
+                        $properties[$key] = $value;
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('__isset', $methods, true)) {
+            $object
+                ->method('__isset')
+                ->willReturnCallback(
+                    static function (string $key) use (&$properties) {
+                        return isset($properties[$key]);
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('row', $methods, true)) {
+            $object
+                ->method('row')
+                ->willReturnCallback(
+                    static function () use (&$properties) {
+                        return $properties;
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('setRow', $methods, true)) {
+            $object
+                ->method('setRow')
+                ->willReturnCallback(
+                    static function (array $data) use (&$properties): void {
+                        $properties = $data;
+                    },
+                )
+            ;
+        }
+
+        return $object;
     }
 
     /**

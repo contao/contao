@@ -36,7 +36,7 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNothingIsAddedIfNoPublishedChannel(): void
     {
         $adapters = [
-            NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findAll' => null]),
+            NewsletterChannelModel::class => $this->createConfiguredAdapterStub(['findAll' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -48,24 +48,24 @@ class SitemapListenerTest extends ContaoTestCase
 
     public function testNewsletterIsAdded(): void
     {
-        $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
+        $jumpToPage = $this->createClassWithPropertiesStub(PageModel::class, [
             'published' => 1,
             'protected' => 1,
             'groups' => [1],
         ]);
 
         $adapters = [
-            NewsletterChannelModel::class => $this->mockConfiguredAdapter([
+            NewsletterChannelModel::class => $this->createConfiguredAdapterStub([
                 'findAll' => [
-                    $this->mockClassWithProperties(NewsletterChannelModel::class, ['jumpTo' => 42]),
+                    $this->createClassWithPropertiesStub(NewsletterChannelModel::class, ['jumpTo' => 42]),
                 ],
             ]),
-            PageModel::class => $this->mockConfiguredAdapter([
+            PageModel::class => $this->createConfiguredAdapterStub([
                 'findWithDetails' => $jumpToPage,
             ]),
-            NewsletterModel::class => $this->mockConfiguredAdapter([
+            NewsletterModel::class => $this->createConfiguredAdapterStub([
                 'findSentByPid' => [
-                    $this->mockClassWithProperties(NewsletterModel::class),
+                    $this->createClassWithPropertiesStub(NewsletterModel::class),
                 ],
             ]),
         ];

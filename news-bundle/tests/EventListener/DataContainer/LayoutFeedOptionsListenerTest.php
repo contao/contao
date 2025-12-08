@@ -27,7 +27,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
             ->with('news_feed')
             ->willReturn(
                 [
-                    $this->mockClassWithProperties(
+                    $this->createClassWithPropertiesStub(
                         PageModel::class,
                         [
                             'id' => 1,
@@ -35,7 +35,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                             'feedFormat' => 'rss',
                         ],
                     ),
-                    $this->mockClassWithProperties(
+                    $this->createClassWithPropertiesStub(
                         PageModel::class,
                         [
                             'id' => 2,
@@ -43,7 +43,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                             'feedFormat' => 'atom',
                         ],
                     ),
-                    $this->mockClassWithProperties(
+                    $this->createClassWithPropertiesStub(
                         PageModel::class,
                         [
                             'id' => 3,

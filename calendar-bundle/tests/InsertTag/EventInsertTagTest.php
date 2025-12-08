@@ -28,12 +28,12 @@ class EventInsertTagTest extends ContaoTestCase
 {
     public function testReplacesTheCalendarFeedTag(): void
     {
-        $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class);
+        $feedModel = $this->createClassWithPropertiesStub(CalendarFeedModel::class);
         $feedModel->feedBase = 'http://localhost/';
         $feedModel->alias = 'events';
 
         $adapters = [
-            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findById' => $feedModel]),
+            CalendarFeedModel::class => $this->createConfiguredAdapterStub(['findById' => $feedModel]),
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);
@@ -48,12 +48,12 @@ class EventInsertTagTest extends ContaoTestCase
     #[DataProvider('replacesTheEventTagsProvider')]
     public function testReplacesTheEventTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
+        $eventModel = $this->createClassWithPropertiesStub(CalendarEventsModel::class);
         $eventModel->title = 'The "foobar" event';
         $eventModel->teaser = '<p>The annual foobar event.</p>';
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $eventModel]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $eventModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -185,8 +185,8 @@ class EventInsertTagTest extends ContaoTestCase
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
-            CalendarFeedModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => null]),
+            CalendarFeedModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);

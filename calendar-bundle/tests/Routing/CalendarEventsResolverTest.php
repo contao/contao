@@ -26,7 +26,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
 {
     public function testResolveEventWithExternalSource(): void
     {
-        $content = $this->mockClassWithProperties(CalendarEventsModel::class, ['source' => 'external', 'url' => 'foobar']);
+        $content = $this->createClassWithPropertiesStub(CalendarEventsModel::class, ['source' => 'external', 'url' => 'foobar']);
 
         $resolver = new CalendarEventsResolver($this->createContaoFrameworkStub());
         $result = $resolver->resolve($content);
@@ -39,7 +39,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
     public function testResolveEventWithInternalSource(): void
     {
         $jumpTo = $this->createStub(PageModel::class);
-        $content = $this->mockClassWithProperties(CalendarEventsModel::class, ['source' => 'internal', 'jumpTo' => 42]);
+        $content = $this->createClassWithPropertiesStub(CalendarEventsModel::class, ['source' => 'internal', 'jumpTo' => 42]);
 
         $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
@@ -61,7 +61,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
     public function testResolveEventWithArticleSource(): void
     {
         $article = $this->createStub(ArticleModel::class);
-        $content = $this->mockClassWithProperties(CalendarEventsModel::class, ['source' => 'article', 'articleId' => 42]);
+        $content = $this->createClassWithPropertiesStub(CalendarEventsModel::class, ['source' => 'article', 'articleId' => 42]);
 
         $articleAdapter = $this->createAdapterMock(['findById']);
         $articleAdapter
@@ -83,8 +83,8 @@ class CalendarEventsResolverTest extends ContaoTestCase
     public function testResolveEventWithoutSource(): void
     {
         $target = $this->createStub(PageModel::class);
-        $calendar = $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]);
-        $content = $this->mockClassWithProperties(CalendarEventsModel::class, ['source' => '']);
+        $calendar = $this->createClassWithPropertiesStub(CalendarModel::class, ['jumpTo' => 42]);
+        $content = $this->createClassWithPropertiesStub(CalendarEventsModel::class, ['source' => '']);
 
         $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
@@ -96,7 +96,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
 
         $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendar]),
+            CalendarModel::class => $this->createConfiguredAdapterStub(['findById' => $calendar]),
         ]);
 
         $resolver = new CalendarEventsResolver($framework);
@@ -112,7 +112,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
     #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
-        $content = $this->mockClassWithProperties($class, $properties);
+        $content = $this->createClassWithPropertiesStub($class, $properties);
 
         $pageModel = $this->createStub(PageModel::class);
         $resolver = new CalendarEventsResolver($this->createContaoFrameworkStub());
