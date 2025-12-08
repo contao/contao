@@ -141,7 +141,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
         $calendarModel->id = 1;
 
-        $calendarEvents = $this->createMock(CalendarEventsModel::class);
+        $calendarEvents = $this->createStub(CalendarEventsModel::class);
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
@@ -181,7 +181,7 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
     {
-        $calendarEvents = $this->createMock(CalendarEventsModel::class);
+        $calendarEvents = $this->createStub(CalendarEventsModel::class);
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
@@ -209,7 +209,7 @@ class EventPickerProviderTest extends ContaoTestCase
             ->willReturn($accessGranted ?? false)
         ;
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
+        $menuFactory = $this->createStub(FactoryInterface::class);
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -225,13 +225,13 @@ class EventPickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Event picker')

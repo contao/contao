@@ -32,7 +32,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertSame('calendar=1', $event->getQuery());
@@ -40,7 +40,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
     public function testDoesNotCreateThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)
@@ -48,7 +48,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -58,7 +58,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
     {
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -75,7 +75,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -92,7 +92,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -109,7 +109,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('calendar', 2);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertSame('calendar=2', $event->getQuery());

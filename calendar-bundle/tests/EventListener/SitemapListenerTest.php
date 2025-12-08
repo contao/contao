@@ -50,22 +50,19 @@ class SitemapListenerTest extends ContaoTestCase
     public function testCalendarEventIsAdded(array $pageProperties, array $calendarProperties, bool $hasAuthenticatedMember): void
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, $pageProperties);
+        $calendar = $this->mockClassWithProperties(CalendarModel::class, $calendarProperties);
 
         $adapters = [
             CalendarModel::class => $this->mockConfiguredAdapter([
-                'findByProtected' => [
-                    $this->mockClassWithProperties(CalendarModel::class, $calendarProperties),
-                ],
-                'findAll' => [
-                    $this->mockClassWithProperties(CalendarModel::class, $calendarProperties),
-                ],
+                'findByProtected' => [$calendar],
+                'findAll' => [$calendar],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([
                 'findWithDetails' => $jumpToPage,
             ]),
             CalendarEventsModel::class => $this->mockConfiguredAdapter([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(CalendarEventsModel::class),
+                    $this->createStub(CalendarEventsModel::class),
                 ],
             ]),
         ];
@@ -118,7 +115,7 @@ class SitemapListenerTest extends ContaoTestCase
 
     private function createListener(array $allPages, array $adapters, bool $hasAuthenticatedMember = false): SitemapListener
     {
-        $database = $this->createMock(Database::class);
+        $database = $this->createStub(Database::class);
         $database
             ->method('getChildRecords')
             ->willReturn($allPages)
@@ -129,9 +126,11 @@ class SitemapListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters, $instances);
-        $security = $this->createMock(Security::class);
 
-        if ([] !== $allPages) {
+        if ([] === $allPages) {
+            $security = $this->createStub(Security::class);
+        } else {
+            $security = $this->createMock(Security::class);
             $security
                 ->expects($this->atLeastOnce())
                 ->method('isGranted')
@@ -139,7 +138,7 @@ class SitemapListenerTest extends ContaoTestCase
             ;
         }
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
             ->willReturn('https://contao.org')

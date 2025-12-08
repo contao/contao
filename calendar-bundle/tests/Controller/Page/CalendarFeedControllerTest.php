@@ -105,7 +105,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
 
         $cacheTagManager = $this->createMock(CacheTagManager::class);
         $cacheTagManager
@@ -139,7 +139,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
 
         $cacheTagManager = $this->createMock(CacheTagManager::class);
         $cacheTagManager
@@ -147,7 +147,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
             ->method('tagWith')
         ;
 
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -177,9 +177,9 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
-        $dispatcher = $this->createMock(EventDispatcher::class);
+        $dispatcher = $this->createStub(EventDispatcher::class);
         $dispatcher
             ->method('dispatch')
             ->willReturnCallback(
@@ -225,7 +225,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
     private function getController(): CalendarFeedController
     {
-        $contaoContext = $this->createMock(ContaoContext::class);
+        $contaoContext = $this->createStub(ContaoContext::class);
         $specification = new Specification(new NullLogger());
 
         return new CalendarFeedController($contaoContext, $specification, 'UTF-8');

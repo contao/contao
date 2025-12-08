@@ -19,6 +19,7 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -116,13 +117,13 @@ abstract class ContaoTestCase extends TestCase
      * A Config adapter with the default Contao configuration will be added
      * automatically if no Config adapter is given.
      *
-     * @return ContaoFramework&MockObject
+     * @return ContaoFramework&Stub
      */
     protected function mockContaoFramework(array $adapters = [], array $instances = []): ContaoFramework
     {
         $this->addConfigAdapter($adapters);
 
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(true)
@@ -159,26 +160,33 @@ abstract class ContaoTestCase extends TestCase
      * Mocks an adapter with the given methods.
      *
      * @return Adapter&MockObject
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createAdapterMock() instead.
      */
     protected function mockAdapter(array $methods): Adapter
     {
-        sort($methods);
+        return $this->createAdapterMock($methods);
+    }
 
-        $namespace = 'Contao\DynamicTestClass';
-        $className = 'MockAdapter'.sha1(implode(':', $methods));
-        $fqcn = $namespace.'\\'.$className;
+    /**
+     * Creates an adapter mock object with the given methods.
+     *
+     * @return Adapter&MockObject
+     */
+    protected function createAdapterMock(array $methods): Adapter
+    {
+        return $this->createMock($this->createAdapter($methods));
+    }
 
-        if (!class_exists($fqcn, false)) {
-            $class = 'namespace %s; class %s extends \%s { %s }';
-            $methods = array_map(static fn (string $method): string => \sprintf('public function %s() {}', $method), $methods);
-
-            eval(\sprintf($class, $namespace, $className, Adapter::class, implode(' ', $methods)));
-        }
-
-        /** @var Adapter&MockObject $adapter */
-        $adapter = $this->createMock($fqcn);
-
-        return $adapter;
+    /**
+     * Creates an adapter stub object with the given methods.
+     *
+     * @return Adapter&Stub
+     */
+    protected function createAdapterStub(array $methods): Adapter
+    {
+        return $this->createStub($this->createAdapter($methods));
     }
 
     /**
@@ -188,7 +196,7 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function mockConfiguredAdapter(array $configuration): Adapter
     {
-        $adapter = $this->mockAdapter(array_keys($configuration));
+        $adapter = $this->createAdapterStub(array_keys($configuration));
 
         foreach ($configuration as $method => $return) {
             $adapter
@@ -209,12 +217,12 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      */
-    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject|Stub
     {
         $classMethods = get_class_methods($class);
 
         if (!$except) {
-            $mock = $this->createMock($class);
+            $mock = $this->createStub($class);
         } else {
             $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
         }
@@ -389,7 +397,7 @@ abstract class ContaoTestCase extends TestCase
 
         $this->loadDefaultConfiguration();
 
-        $adapter = $this->mockAdapter(['isComplete', 'get']);
+        $adapter = $this->createAdapterStub(['isComplete', 'get']);
         $adapter
             ->method('isComplete')
             ->willReturn(true)
@@ -401,6 +409,27 @@ abstract class ContaoTestCase extends TestCase
         ;
 
         $adapters[Config::class] = $adapter;
+    }
+
+    /**
+     * Creates an adapter with the given methods and returns the class name.
+     */
+    private function createAdapter(array $methods): string
+    {
+        sort($methods);
+
+        $namespace = 'Contao\DynamicTestClass';
+        $className = 'MockAdapter'.sha1(implode(':', $methods));
+        $fqcn = $namespace.'\\'.$className;
+
+        if (!class_exists($fqcn, false)) {
+            $class = 'namespace %s; class %s extends \%s { %s }';
+            $methods = array_map(static fn (string $method): string => \sprintf('public function %s() {}', $method), $methods);
+
+            eval(\sprintf($class, $namespace, $className, Adapter::class, implode(' ', $methods)));
+        }
+
+        return $fqcn;
     }
 
     /**

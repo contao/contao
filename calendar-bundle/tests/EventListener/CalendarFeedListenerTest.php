@@ -57,10 +57,10 @@ class CalendarFeedListenerTest extends ContaoTestCase
     #[DataProvider('featured')]
     public function testFetchesEventsFromCalendars(string $feedFeatured, bool|null $featuredOnly): void
     {
-        $insertTags = $this->createMock(InsertTagParser::class);
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $cacheTags = $this->createMock(CacheTagManager::class);
-        $eventModel = $this->createMock(CalendarEventsModel::class);
+        $insertTags = $this->createStub(InsertTagParser::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
+        $cacheTags = $this->createStub(CacheTagManager::class);
+        $eventModel = $this->createStub(CalendarEventsModel::class);
         $normalCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 1, 'protected' => 0]);
         $protectedCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 2, 'protected' => 1]);
 
@@ -77,14 +77,14 @@ class CalendarFeedListenerTest extends ContaoTestCase
                 CalendarModel::class => $calendarAdapter,
             ],
             [
-                ModuleModel::class => $this->createMock(ModuleModel::class),
-                ModuleEventlist::class => $this->createMock(ModuleEventlist::class),
+                ModuleModel::class => $this->createStub(ModuleModel::class),
+                ModuleEventlist::class => $this->createStub(ModuleEventlist::class),
             ],
         );
 
-        $feed = $this->createMock(Feed::class);
-        $request = $this->createMock(Request::class);
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $feed = $this->createStub(Feed::class);
+        $request = $this->createStub(Request::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
 
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker
@@ -140,7 +140,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ;
         }
 
-        $image = $this->createMock(ImageInterface::class);
+        $image = $this->createStub(ImageInterface::class);
         $image
             ->method('getUrl')
             ->willReturnOnConsecutiveCalls(
@@ -165,7 +165,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             )
         ;
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturn($image)
@@ -178,12 +178,9 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn($content[0])
         ;
 
-        $element = $this->mockClassWithProperties(ContentModel::class, [
-            'pid' => 42,
-            'ptable' => 'tl_calendar_events',
-        ]);
+        $element = $this->createStub(ContentModel::class);
 
-        $contentModel = $this->mockAdapter(['findPublishedByPidAndTable']);
+        $contentModel = $this->createAdapterStub(['findPublishedByPidAndTable']);
         $contentModel
             ->method('findPublishedByPidAndTable')
             ->with(42, 'tl_calendar_events')
@@ -202,15 +199,15 @@ class CalendarFeedListenerTest extends ContaoTestCase
             'author' => 1,
         ]);
 
-        $environment = $this->mockAdapter(['set', 'get']);
+        $environment = $this->createAdapterStub(['set', 'get']);
 
-        $controller = $this->mockAdapter(['getContentElement', 'convertRelativeUrls']);
+        $controller = $this->createAdapterStub(['getContentElement', 'convertRelativeUrls']);
         $controller
             ->method('convertRelativeUrls')
             ->willReturn($content[0])
         ;
 
-        $filesModel = $this->mockAdapter(['findMultipleByUuids']);
+        $filesModel = $this->createAdapterMock(['findMultipleByUuids']);
         $filesModel
             ->expects($this->once())
             ->method('findMultipleByUuids')
@@ -240,9 +237,9 @@ class CalendarFeedListenerTest extends ContaoTestCase
 
         $framework->setContainer($container);
 
-        $feed = $this->createMock(Feed::class);
-        $cacheTags = $this->createMock(CacheTagManager::class);
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $feed = $this->createStub(Feed::class);
+        $cacheTags = $this->createStub(CacheTagManager::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -257,7 +254,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             'imgSize' => serialize([100, 100, 'crop']),
         ]);
 
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $baseUrl = 'example.org';
 
         $eventData = $eventModel->row();

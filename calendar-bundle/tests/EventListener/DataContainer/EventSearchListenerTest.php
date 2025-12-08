@@ -27,9 +27,9 @@ class EventSearchListenerTest extends TestCase
     #[DataProvider('purgeSearchEntryProvider')]
     public function testEventChanges(string $field, string $newValue, array $recordData, array|null $readerPageSettings, bool $shouldRemoveSearchEntry): void
     {
-        $eventModel = $this->createMock(CalendarEventsModel::class);
+        $eventModel = $this->createStub(CalendarEventsModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
@@ -64,7 +64,7 @@ class EventSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc = $this->createStub(DataContainer::class);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)
@@ -203,9 +203,9 @@ class EventSearchListenerTest extends TestCase
     #[DataProvider('deleteProvider')]
     public function testOnDelete(array $recordData, bool $shouldRemoveSearchEntry): void
     {
-        $eventModel = $this->createMock(CalendarEventsModel::class);
+        $eventModel = $this->createStub(CalendarEventsModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
