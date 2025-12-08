@@ -25,7 +25,7 @@ class MemberActivationMailListenerTest extends ContaoTestCase
     public function testAddsChannelsTokenIfNewsletterSelected(): void
     {
         $member = $this->mockClassWithProperties(MemberModel::class, ['newsletter' => serialize([2, 3])]);
-        $event = new MemberActivationMailEvent($member, $this->createMock(OptInToken::class), 'subject', 'text', []);
+        $event = new MemberActivationMailEvent($member, $this->createStub(OptInToken::class), 'subject', 'text', []);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -43,7 +43,7 @@ class MemberActivationMailListenerTest extends ContaoTestCase
     public function testDoesNotAddChannelsTokenIfNoNewsletterSelected(): void
     {
         $member = $this->mockClassWithProperties(MemberModel::class, ['newsletter' => null]);
-        $event = new MemberActivationMailEvent($member, $this->createMock(OptInToken::class), 'subject', 'text', []);
+        $event = new MemberActivationMailEvent($member, $this->createStub(OptInToken::class), 'subject', 'text', []);
 
         $connection = $this->createMock(Connection::class);
         $connection

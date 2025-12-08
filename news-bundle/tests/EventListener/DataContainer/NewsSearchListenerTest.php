@@ -27,9 +27,9 @@ class NewsSearchListenerTest extends TestCase
     #[DataProvider('purgeSearchEntryProvider')]
     public function testNewsChanges(string $field, string $newValue, array $recordData, array|null $readerPageSettings, bool $shouldRemoveSearchEntry): void
     {
-        $newsModel = $this->createMock(NewsModel::class);
+        $newsModel = $this->createStub(NewsModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
@@ -203,9 +203,9 @@ class NewsSearchListenerTest extends TestCase
     #[DataProvider('deleteProvider')]
     public function testOnDelete(array $recordData, bool $shouldRemoveSearchEntry): void
     {
-        $newsModel = $this->createMock(NewsModel::class);
+        $newsModel = $this->createStub(NewsModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')

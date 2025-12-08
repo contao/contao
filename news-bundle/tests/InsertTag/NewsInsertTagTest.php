@@ -168,7 +168,7 @@ class NewsInsertTagTest extends ContaoTestCase
             NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
         ];
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['3']), []))->getValue());
@@ -182,7 +182,7 @@ class NewsInsertTagTest extends ContaoTestCase
             NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
         ];
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
             ->willThrowException(new ForwardPageNotFoundException())

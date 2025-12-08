@@ -26,9 +26,9 @@ class NewsletterResolverTest extends ContaoTestCase
     {
         $target = $this->mockClassWithProperties(PageModel::class);
         $channel = $this->mockClassWithProperties(NewsletterChannelModel::class, ['jumpTo' => 42]);
-        $content = $this->createMock(NewsletterModel::class);
+        $content = $this->createStub(NewsletterModel::class);
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -55,8 +55,8 @@ class NewsletterResolverTest extends ContaoTestCase
     public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
         $content = $this->mockClassWithProperties($class, $properties);
+        $pageModel = $this->createStub(PageModel::class);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new NewsletterResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));

@@ -30,7 +30,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request->server->set('SERVER_NAME', 'localhost');
         $request->server->set('SERVER_PORT', 80);
 
-        $newsModel = $this->createMock(NewsModel::class);
+        $newsModel = $this->createStub(NewsModel::class);
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
@@ -55,7 +55,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
     public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)

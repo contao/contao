@@ -54,10 +54,10 @@ class NewsFeedListenerTest extends ContaoTestCase
     #[DataProvider('featured')]
     public function testFetchesArticlesFromArchives(string $feedFeatured, bool|null $featuredOnly): void
     {
-        $insertTags = $this->createMock(InsertTagParser::class);
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $cacheTags = $this->createMock(CacheTagManager::class);
-        $newsModel = $this->createMock(NewsModel::class);
+        $insertTags = $this->createStub(InsertTagParser::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
+        $cacheTags = $this->createStub(CacheTagManager::class);
+        $newsModel = $this->createStub(NewsModel::class);
         $normalArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 1, 'protected' => 0]);
         $protectedArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 2, 'protected' => 1]);
 
@@ -68,7 +68,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn([$newsModel])
         ;
 
-        $newsAdapter = $this->mockAdapter(['findPublishedByPids']);
+        $newsAdapter = $this->createAdapterMock(['findPublishedByPids']);
         $newsAdapter
             ->expects($this->once())
             ->method('findPublishedByPids')
@@ -76,7 +76,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn($collection)
         ;
 
-        $newsArchiveAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $newsArchiveAdapter = $this->createAdapterMock(['findMultipleByIds']);
         $newsArchiveAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
@@ -85,9 +85,9 @@ class NewsFeedListenerTest extends ContaoTestCase
         ;
 
         $framework = $this->mockContaoFramework([NewsModel::class => $newsAdapter, NewsArchiveModel::class => $newsArchiveAdapter]);
-        $feed = $this->createMock(Feed::class);
-        $request = $this->createMock(Request::class);
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $feed = $this->createStub(Feed::class);
+        $request = $this->createStub(Request::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
 
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker
@@ -127,7 +127,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             ;
         }
 
-        $image = $this->createMock(ImageInterface::class);
+        $image = $this->createStub(ImageInterface::class);
         $image
             ->method('getUrl')
             ->willReturnOnConsecutiveCalls(
@@ -152,7 +152,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             )
         ;
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturn($image)
@@ -170,7 +170,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             'ptable' => 'tl_news',
         ]);
 
-        $contentModel = $this->mockAdapter(['findPublishedByPidAndTable']);
+        $contentModel = $this->createAdapterStub(['findPublishedByPidAndTable']);
         $contentModel
             ->method('findPublishedByPidAndTable')
             ->with(42, 'tl_news')
@@ -187,15 +187,15 @@ class NewsFeedListenerTest extends ContaoTestCase
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
 
-        $environment = $this->mockAdapter(['set', 'get']);
+        $environment = $this->createAdapterStub(['set', 'get']);
 
-        $controller = $this->mockAdapter(['getContentElement', 'convertRelativeUrls']);
+        $controller = $this->createAdapterStub(['getContentElement', 'convertRelativeUrls']);
         $controller
             ->method('convertRelativeUrls')
             ->willReturn($content[0])
         ;
 
-        $filesModel = $this->mockAdapter(['findMultipleByUuids']);
+        $filesModel = $this->createAdapterMock(['findMultipleByUuids']);
         $filesModel
             ->expects($this->once())
             ->method('findMultipleByUuids')
@@ -225,9 +225,9 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $framework->setContainer($container);
 
-        $feed = $this->createMock(Feed::class);
-        $cacheTags = $this->createMock(CacheTagManager::class);
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $feed = $this->createStub(Feed::class);
+        $cacheTags = $this->createStub(CacheTagManager::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -242,7 +242,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             'imgSize' => serialize([100, 100, 'crop']),
         ]);
 
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $baseUrl = 'example.org';
         $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
 

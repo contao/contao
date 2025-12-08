@@ -106,7 +106,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
 
         $cacheTagManager = $this->createMock(CacheTagManager::class);
         $cacheTagManager
@@ -140,15 +140,8 @@ class NewsFeedControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
-
-        $cacheTagManager = $this->createMock(CacheTagManager::class);
-        $cacheTagManager
-            ->expects($this->never())
-            ->method('tagWith')
-        ;
-
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -178,9 +171,9 @@ class NewsFeedControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
-        $dispatcher = $this->createMock(EventDispatcher::class);
+        $dispatcher = $this->createStub(EventDispatcher::class);
         $dispatcher
             ->method('dispatch')
             ->willReturnCallback(
@@ -229,7 +222,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     private function getController(bool $isDebug = false): NewsFeedController
     {
-        $contaoContext = $this->createMock(ContaoContext::class);
+        $contaoContext = $this->createStub(ContaoContext::class);
         $specification = new Specification(new NullLogger());
 
         return new NewsFeedController($contaoContext, $specification, 'UTF-8', $isDebug);
