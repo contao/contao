@@ -65,7 +65,7 @@ class ContaoVariableTest extends TestCase
             ->willReturn($request)
         ;
 
-        $contaoFramework = $this->createContaoFrameworkStub();
+        $contaoFramework = $this->createContaoFrameworkMock();
         $contaoFramework
             ->expects($this->never())
             ->method('initialize')
@@ -97,7 +97,7 @@ class ContaoVariableTest extends TestCase
             ->willReturn($request)
         ;
 
-        $config = $this->createAdapterStub(['get']);
+        $config = $this->createAdapterMock(['get']);
         $config
             ->expects($this->once())
             ->method('get')
@@ -105,7 +105,7 @@ class ContaoVariableTest extends TestCase
             ->willReturn($format)
         ;
 
-        $contaoFramework = $this->createContaoFrameworkStub([Config::class => $config]);
+        $contaoFramework = $this->createContaoFrameworkMock([Config::class => $config]);
         $contaoFramework
             ->expects($this->once())
             ->method('initialize')

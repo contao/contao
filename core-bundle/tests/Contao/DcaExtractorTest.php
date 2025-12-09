@@ -31,7 +31,7 @@ class DcaExtractorTest extends TestCase
     {
         parent::setUp();
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('getParams')
             ->willReturn([])

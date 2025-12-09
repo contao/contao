@@ -73,7 +73,7 @@ class PaginationTest extends TestCase
 
         System::getContainer()->set('contao.framework', $framework);
 
-        $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createMock(FrontendTemplate::class));
+        $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createStub(FrontendTemplate::class));
         $items = $pagination->getItemsAsArray();
 
         $this->assertCount($data['expectedCount'], $items);

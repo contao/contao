@@ -27,7 +27,7 @@ class PurgeRegistrationsCronTest extends ContaoTestCase
             ->method('delete')
         ;
 
-        $memberModelAdapter = $this->createAdapterStub(['findExpiredRegistrations']);
+        $memberModelAdapter = $this->createAdapterMock(['findExpiredRegistrations']);
         $memberModelAdapter
             ->expects($this->once())
             ->method('findExpiredRegistrations')

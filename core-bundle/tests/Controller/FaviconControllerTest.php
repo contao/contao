@@ -36,7 +36,7 @@ class FaviconControllerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -61,7 +61,7 @@ class FaviconControllerTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -127,7 +127,7 @@ class FaviconControllerTest extends TestCase
         $faviconModel->path = $iconPath;
         $faviconModel->extension = substr($iconPath, -3);
 
-        $filesModelAdapter = $this->createAdapterStub(['findByUuid']);
+        $filesModelAdapter = $this->createAdapterMock(['findByUuid']);
         $filesModelAdapter
             ->expects($this->once())
             ->method('findByUuid')
@@ -135,7 +135,7 @@ class FaviconControllerTest extends TestCase
             ->willReturn($faviconModel)
         ;
 
-        $framework = $this->createContaoFrameworkStub([
+        $framework = $this->createContaoFrameworkMock([
             FilesModel::class => $filesModelAdapter,
         ]);
 

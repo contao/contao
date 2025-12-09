@@ -76,7 +76,7 @@ class ActiveMemberGroupsListenerTest extends TestCase
 
         $collection = new Collection([$group1, $group2], 'tl_member_group');
 
-        $memberGroupAdapter = $this->createAdapterStub(['findAllActive']);
+        $memberGroupAdapter = $this->createAdapterMock(['findAllActive']);
         $memberGroupAdapter
             ->expects($this->once())
             ->method('findAllActive')
@@ -99,7 +99,7 @@ class ActiveMemberGroupsListenerTest extends TestCase
 
     public function testCallbackReturnsEmptyArrayIfNoGroupsAreFound(): void
     {
-        $memberGroupAdapter = $this->createAdapterStub(['findAllActive']);
+        $memberGroupAdapter = $this->createAdapterMock(['findAllActive']);
         $memberGroupAdapter
             ->expects($this->once())
             ->method('findAllActive')

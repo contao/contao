@@ -44,7 +44,7 @@ class RootPageControllerTest extends TestCase
         $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
         $childPage = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $adapter = $this->createAdapterStub(['findFirstPublishedByPid']);
+        $adapter = $this->createAdapterMock(['findFirstPublishedByPid']);
         $adapter
             ->expects($this->once())
             ->method('findFirstPublishedByPid')
@@ -78,7 +78,7 @@ class RootPageControllerTest extends TestCase
     {
         $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
-        $adapter = $this->createAdapterStub(['findFirstPublishedByPid']);
+        $adapter = $this->createAdapterMock(['findFirstPublishedByPid']);
         $adapter
             ->expects($this->once())
             ->method('findFirstPublishedByPid')

@@ -64,7 +64,7 @@ class PageResolverTest extends TestCase
         $content = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'forward', 'jumpTo' => 43]);
         $jumpTo = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 43]);
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -84,7 +84,7 @@ class PageResolverTest extends TestCase
         $content = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'forward', 'jumpTo' => 0]);
         $jumpTo = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $pageAdapter = $this->createAdapterStub(['findFirstPublishedRegularByPid']);
+        $pageAdapter = $this->createAdapterMock(['findFirstPublishedRegularByPid']);
         $pageAdapter
             ->expects($this->once())
             ->method('findFirstPublishedRegularByPid')

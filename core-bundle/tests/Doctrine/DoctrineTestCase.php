@@ -27,6 +27,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 abstract class DoctrineTestCase extends TestCase
 {
@@ -68,7 +69,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks the Contao framework with the database installer.
      */
-    protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework&MockObject
+    protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework&Stub
     {
         $installer = $this->createMock(Installer::class);
         $installer

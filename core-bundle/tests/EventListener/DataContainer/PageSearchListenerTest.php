@@ -32,7 +32,8 @@ class PageSearchListenerTest extends TestCase
             ->willReturn(['uri'])
         ;
 
-        $search = $this->createAdapterStub(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
+
         if ($shouldPurgeSearchIndex) {
             $search
                 ->expects($this->once())
@@ -135,7 +136,7 @@ class PageSearchListenerTest extends TestCase
             ->willReturn(['uri'])
         ;
 
-        $search = $this->createAdapterStub(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($this->once())
             ->method('removeEntry')
@@ -160,7 +161,7 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $search = $this->createAdapterStub(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($this->never())
             ->method($this->anything())

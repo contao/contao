@@ -100,7 +100,7 @@ class LanguageFallbackWarningListenerTest extends TestCase
             ->willReturnCallback(static fn (string $msg) => $msg)
         ;
 
-        $contaoMessage = $this->createAdapterStub(['addRaw']);
+        $contaoMessage = $this->createAdapterMock(['addRaw']);
         $contaoMessage
             ->expects($this->once())
             ->method('addRaw')
@@ -134,7 +134,7 @@ class LanguageFallbackWarningListenerTest extends TestCase
             ->method('trans')
         ;
 
-        $contaoMessage = $this->createAdapterStub(['addRaw']);
+        $contaoMessage = $this->createAdapterMock(['addRaw']);
         $contaoMessage
             ->expects($this->never())
             ->method('addRaw')

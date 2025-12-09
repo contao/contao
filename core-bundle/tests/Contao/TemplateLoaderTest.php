@@ -241,7 +241,7 @@ class TemplateLoaderTest extends TestCase
 
     public function testReturnsACustomTwigTemplate(): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([

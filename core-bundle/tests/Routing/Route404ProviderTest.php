@@ -44,7 +44,7 @@ class Route404ProviderTest extends TestCase
 
     public function testGetRoutesByNamesWithValueReturnsEmptyArray(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->never())
             ->method('findByType')
@@ -86,7 +86,7 @@ class Route404ProviderTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findAll']);
+        $pageAdapter = $this->createAdapterMock(['findAll']);
         $pageAdapter
             ->expects($this->once())
             ->method('findAll')
@@ -125,7 +125,7 @@ class Route404ProviderTest extends TestCase
 
     public function testDoesNotCheckCandidatesForEmptyPath(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -153,7 +153,7 @@ class Route404ProviderTest extends TestCase
 
     public function testReturnsEmptyCollectionWithout404Pages(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -192,7 +192,7 @@ class Route404ProviderTest extends TestCase
             'rootLanguage' => 'en',
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -237,7 +237,7 @@ class Route404ProviderTest extends TestCase
             'urlPrefix' => 'de',
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -295,7 +295,7 @@ class Route404ProviderTest extends TestCase
             ]);
         }
 
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -360,7 +360,7 @@ class Route404ProviderTest extends TestCase
 
     public function testIgnoresRoutesWithoutRootId(): void
     {
-        $page = $this->createClassWithPropertiesStub(PageModel::class);
+        $page = $this->createClassWithPropertiesMock(PageModel::class);
         $page->id = 17;
         $page->type = 'error_404';
 
@@ -369,7 +369,7 @@ class Route404ProviderTest extends TestCase
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -393,7 +393,7 @@ class Route404ProviderTest extends TestCase
 
     public function testIgnoresPagesWithNoRootPageFoundException(): void
     {
-        $page = $this->createClassWithPropertiesStub(PageModel::class);
+        $page = $this->createClassWithPropertiesMock(PageModel::class);
         $page->id = 17;
         $page->type = 'error_404';
         $page->rootId = 1;
@@ -404,7 +404,7 @@ class Route404ProviderTest extends TestCase
             ->willThrowException(new NoRootPageFoundException())
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')

@@ -111,7 +111,7 @@ class RootPageDependentSelectListenerTest extends TestCase
     {
         $this->populateGlobalsArray([]);
 
-        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesMock(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
 
@@ -154,7 +154,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             ],
         ]);
 
-        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesMock(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
 

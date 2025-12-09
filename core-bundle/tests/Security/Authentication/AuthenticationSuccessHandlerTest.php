@@ -132,7 +132,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
     {
         $model = $this->createMock(PageModel::class);
 
-        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterMock(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->once())
             ->method('findFirstActiveByMemberGroups')
@@ -174,7 +174,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheDefaultUrlIfNotAPageModel(): void
     {
-        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterMock(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->once())
             ->method('findFirstActiveByMemberGroups')
@@ -215,7 +215,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheTargetPath(): void
     {
-        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterMock(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->never())
             ->method('findFirstActiveByMemberGroups')
@@ -254,7 +254,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheTargetPathFromQueryIfTheUrlIsSigned(): void
     {
-        $adapter = $this->createAdapterStub(['findFirstActiveByMemberGroups']);
+        $adapter = $this->createAdapterMock(['findFirstActiveByMemberGroups']);
         $adapter
             ->expects($this->never())
             ->method('findFirstActiveByMemberGroups')

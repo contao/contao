@@ -35,12 +35,12 @@ class LabelListenerTest extends TestCase
     {
         $row = $this->setupDataSet();
 
-        $userModelAdapter = $this->createAdapterStub(['findById']);
         $userModel = $this->createClassWithPropertiesStub(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
         ]);
 
+        $userModelAdapter = $this->createAdapterMock(['findById']);
         $userModelAdapter
             ->expects($this->once())
             ->method('findById')
@@ -72,12 +72,12 @@ class LabelListenerTest extends TestCase
     {
         $row = $this->setupTabularDataSet();
 
-        $userModelAdapter = $this->createAdapterStub(['findById']);
         $userModel = $this->createClassWithPropertiesStub(UserModel::class, [
             'id' => 1,
             'username' => 'k.jones',
         ]);
 
+        $userModelAdapter = $this->createAdapterMock(['findById']);
         $userModelAdapter
             ->expects($this->once())
             ->method('findById')

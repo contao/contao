@@ -84,7 +84,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testDoesNothingIfOutsideTheContaoScope(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -99,7 +99,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testDoesNothingIfTheArgumentTypeDoesNotMatch(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -117,7 +117,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testDoesNothingIfTheArgumentNameIsNotFound(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->once())
             ->method('initialize')

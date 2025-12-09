@@ -64,7 +64,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
     #[DataProvider('backButtonHrefProvider')]
     public function testBackButtonHref(string|null $href, string $expected): void
     {
-        $systemAdapter = $this->createAdapterStub(['getReferer']);
+        $systemAdapter = $this->createAdapterMock(['getReferer']);
         $systemAdapter
             ->expects(null === $href ? $this->once() : $this->never())
             ->method('getReferer')
@@ -132,7 +132,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
     public function testAddClearClipboardButton(): void
     {
-        $backendAdapter = $this->createAdapterStub(['addToUrl']);
+        $backendAdapter = $this->createAdapterMock(['addToUrl']);
         $backendAdapter
             ->expects($this->once())
             ->method('addToUrl')

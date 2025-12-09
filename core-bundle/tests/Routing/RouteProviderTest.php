@@ -52,7 +52,7 @@ class RouteProviderTest extends TestCase
 
         $route = new PageRoute($page);
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -92,7 +92,7 @@ class RouteProviderTest extends TestCase
 
     public function testThrowsAnExceptionIfThePageIdIsInvalid(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -125,7 +125,7 @@ class RouteProviderTest extends TestCase
         $page2->language = 'en';
         $page2->rootLanguage = 'en';
 
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
@@ -164,7 +164,7 @@ class RouteProviderTest extends TestCase
             'urlSuffix' => '',
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -206,7 +206,7 @@ class RouteProviderTest extends TestCase
             'urlSuffix' => '',
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -238,7 +238,7 @@ class RouteProviderTest extends TestCase
 
     public function testSelectsAllPagesIfNoPageNamesAreGiven(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findAll']);
+        $pageAdapter = $this->createAdapterMock(['findAll']);
         $pageAdapter
             ->expects($this->once())
             ->method('findAll')
@@ -250,7 +250,7 @@ class RouteProviderTest extends TestCase
 
     public function testReturnsAnEmptyArrayIfThereAreNoMatchingPages(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->never())
             ->method('findBy')
@@ -289,7 +289,7 @@ class RouteProviderTest extends TestCase
     {
         $pages = array_map(fn (array $page) => $this->mockPage(...$page), $pages);
 
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
@@ -500,7 +500,7 @@ class RouteProviderTest extends TestCase
             'tl_page.'.$pages[2]->id.'.root',
         ];
 
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->exactly(2))
             ->method('findBy')
@@ -578,7 +578,7 @@ class RouteProviderTest extends TestCase
             'tl_page.'.$pages[2]->id.'.fallback',
         ];
 
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->exactly(2))
             ->method('findBy')
@@ -641,12 +641,7 @@ class RouteProviderTest extends TestCase
         $pageModel = $this->mockPage($language, $alias, true, $domain, $scheme, $urlSuffix);
         $pageModel->urlPrefix = $prependLocale ? $language : '';
 
-        $pageModel
-            ->expects($this->atLeastOnce())
-            ->method('loadDetails')
-        ;
-
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
@@ -706,7 +701,7 @@ class RouteProviderTest extends TestCase
 
         $route = new PageRoute($routablePage);
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->exactly(2))
             ->method('findById')
@@ -765,12 +760,7 @@ class RouteProviderTest extends TestCase
         $page = $this->mockPage('de', 'foo');
         $page->rootId = 0;
 
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-        ;
-
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
@@ -793,7 +783,7 @@ class RouteProviderTest extends TestCase
             ->willThrowException(new NoRootPageFoundException())
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findBy']);
+        $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
             ->expects($this->once())
             ->method('findBy')
@@ -807,9 +797,9 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    private function mockRequestWithPath(string $path, array $languages = ['en']): Request&MockObject
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request&Stub
     {
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $request
             ->method('getPathInfo')
             ->willReturn($path)
@@ -831,16 +821,16 @@ class RouteProviderTest extends TestCase
     /**
      * @param Adapter<PageModel> $pageAdapter
      */
-    private function mockFramework(Adapter|null $pageAdapter = null): ContaoFramework&MockObject
+    private function mockFramework(Adapter|null $pageAdapter = null): ContaoFramework&Stub
     {
         return $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
     }
 
-    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string|null $scheme = null, string $urlSuffix = '.html'): PageModel&Stub
+    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string|null $scheme = null, string $urlSuffix = '.html'): PageModel&MockObject
     {
         mt_srand(++$this->pageModelAutoIncrement);
 
-        $page = $this->createClassWithPropertiesStub(PageModel::class);
+        $page = $this->createClassWithPropertiesMock(PageModel::class);
         $page->id = $this->pageModelAutoIncrement;
         $page->rootId = 1;
         $page->type = 'regular';
@@ -854,6 +844,7 @@ class RouteProviderTest extends TestCase
         $page->rootSorting = mt_rand();
 
         $page
+            ->expects($this->atLeastOnce())
             ->method('loadDetails')
             ->willReturnSelf()
         ;
@@ -861,9 +852,9 @@ class RouteProviderTest extends TestCase
         return $page;
     }
 
-    private function mockRootPage(string $language, string $alias, bool $fallback = true): PageModel&Stub
+    private function mockRootPage(string $language, string $alias, bool $fallback = true): PageModel&MockObject
     {
-        $page = $this->createClassWithPropertiesStub(PageModel::class);
+        $page = $this->createClassWithPropertiesMock(PageModel::class);
         $page->id = ++$this->pageModelAutoIncrement;
         $page->rootId = 1;
         $page->type = 'root';
@@ -877,6 +868,7 @@ class RouteProviderTest extends TestCase
         $page->rootSorting = array_reduce((array) $language, static fn ($c, $i) => $c + \ord($i), 0);
 
         $page
+            ->expects($this->atLeastOnce())
             ->method('loadDetails')
             ->willReturnSelf()
         ;
@@ -886,7 +878,7 @@ class RouteProviderTest extends TestCase
 
     private function getRouteProvider(ContaoFramework|null $framework = null, PageRegistry|null $pageRegistry = null): RouteProvider
     {
-        $candidates = $this->createMock(CandidatesInterface::class);
+        $candidates = $this->createStub(CandidatesInterface::class);
         $candidates
             ->method('getCandidates')
             ->willReturn(['foo'])
@@ -895,7 +887,7 @@ class RouteProviderTest extends TestCase
         $framework ??= $this->createContaoFrameworkStub();
 
         if (!$pageRegistry) {
-            $pageRegistry = $this->createMock(PageRegistry::class);
+            $pageRegistry = $this->createStub(PageRegistry::class);
             $pageRegistry
                 ->method('isRoutable')
                 ->willReturn(true)

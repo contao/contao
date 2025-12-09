@@ -32,7 +32,7 @@ class AbstractPageRouteProviderTest extends TestCase
             $b->setDefault('pageModel', $this->mockPageModel(...$b->getDefault('pageModel')));
         }
 
-        $instance = $this->createMock(RouteProvider::class);
+        $instance = $this->createStub(RouteProvider::class);
         $class = new \ReflectionClass($instance);
 
         if (null !== $languages) {
@@ -276,7 +276,7 @@ class AbstractPageRouteProviderTest extends TestCase
     #[DataProvider('ordersRoutesByPreferredLanguages')]
     public function testOrdersRoutesByPreferredLanguages(array $pageLanguages, array $preferredLanguages, array $expected): void
     {
-        $instance = $this->createMock(RouteProvider::class);
+        $instance = $this->createStub(RouteProvider::class);
         $class = new \ReflectionClass($instance);
 
         $method = $class->getMethod('convertLanguagesForSorting');
@@ -387,7 +387,7 @@ class AbstractPageRouteProviderTest extends TestCase
     #[DataProvider('convertLanguageForSortingProvider')]
     public function testConvertLanguagesForSorting(array $languages, array $expected): void
     {
-        $instance = $this->createMock(RouteProvider::class);
+        $instance = $this->createStub(RouteProvider::class);
 
         $class = new \ReflectionClass($instance);
         $method = $class->getMethod('convertLanguagesForSorting');

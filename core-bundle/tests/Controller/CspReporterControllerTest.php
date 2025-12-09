@@ -34,7 +34,7 @@ class CspReporterControllerTest extends TestCase
         $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->cspReportLog = false;
 
-        $adapter = $this->createAdapterStub(['findWithDetails']);
+        $adapter = $this->createAdapterMock(['findWithDetails']);
         $adapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -69,7 +69,7 @@ class CspReporterControllerTest extends TestCase
         $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->cspReportLog = true;
 
-        $adapter = $this->createAdapterStub(['findWithDetails']);
+        $adapter = $this->createAdapterMock(['findWithDetails']);
         $adapter
             ->expects($this->once())
             ->method('findWithDetails')

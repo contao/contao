@@ -355,7 +355,7 @@ class PageAccessListenerTest extends TestCase
             return $framework;
         }
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')

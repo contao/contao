@@ -22,6 +22,7 @@ use Contao\Message;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -239,9 +240,9 @@ class PreviewLinkListenerTest extends TestCase
     }
 
     /**
-     * @return Adapter<Input>&MockObject
+     * @return Adapter<Input>&Stub
      */
-    private function mockInputAdapter(array $inputData): Adapter&MockObject
+    private function mockInputAdapter(array $inputData): Adapter&Stub
     {
         $inputAdapter = $this->createAdapterStub(['get']);
         $inputAdapter

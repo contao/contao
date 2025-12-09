@@ -35,7 +35,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
         $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->enableCanonical = false;
 
-        $pageModelAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -43,7 +43,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -81,7 +81,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
         $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->enableCanonical = true;
 
-        $pageModelAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -89,7 +89,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn($page)
         ;
 
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->never())
             ->method('getHtml')
@@ -117,7 +117,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
 
     public function testDoesNotDisableTheFieldIfThePageModelCannotBeFound(): void
     {
-        $pageModelAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -125,7 +125,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->never())
             ->method('getHtml')
@@ -155,7 +155,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_page']['fields']['canonicalLink']['eval'] = [];
 
-        $pageModelAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->never())
             ->method('findWithDetails')

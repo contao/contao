@@ -27,7 +27,7 @@ class InputEnhancerTest extends TestCase
 {
     public function testReturnsTheDefaultsIfThereIsNoPageModel(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -40,7 +40,7 @@ class InputEnhancerTest extends TestCase
     #[DataProvider('getLocales')]
     public function testSetsTheLanguageWithUrlPrefix(string $urlPrefix, string $language): void
     {
-        $input = $this->createAdapterStub(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects('' !== $urlPrefix ? $this->once() : $this->never())
             ->method('setGet')
@@ -75,7 +75,7 @@ class InputEnhancerTest extends TestCase
     {
         $matcher = $this->exactly(\count($setters));
 
-        $input = $this->createAdapterStub(['setGet', 'setUnusedRouteParameters']);
+        $input = $this->createAdapterMock(['setGet', 'setUnusedRouteParameters']);
         $input
             ->expects($matcher)
             ->method('setGet')
@@ -115,7 +115,7 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void
     {
-        $input = $this->createAdapterStub(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects($this->once())
             ->method('setGet')
@@ -141,7 +141,7 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponParametersInQuery(): void
     {
-        $input = $this->createAdapterStub(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects($this->never())
             ->method('setGet')
@@ -167,7 +167,7 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionIfAFragmentKeyIsEmpty(): void
     {
-        $input = $this->createAdapterStub(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects($this->once())
             ->method('setGet')

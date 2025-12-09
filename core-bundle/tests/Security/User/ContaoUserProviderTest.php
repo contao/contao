@@ -102,7 +102,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testUpgradesPasswords(): void
     {
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+        $user = $this->createClassWithPropertiesMock(BackendUser::class);
         $user->username = 'foobar';
         $user->password = 'superhash';
 

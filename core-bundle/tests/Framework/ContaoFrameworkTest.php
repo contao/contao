@@ -27,7 +27,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -398,9 +398,9 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @return Adapter<Config>&MockObject
+     * @return Adapter<Config>&Stub
      */
-    private function mockConfigAdapter(): Adapter&MockObject
+    private function mockConfigAdapter(): Adapter&Stub
     {
         $config = $this->createAdapterStub(['preload', 'isComplete', 'getInstance', 'get']);
         $config

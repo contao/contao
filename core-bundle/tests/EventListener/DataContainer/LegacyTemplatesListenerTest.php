@@ -22,7 +22,7 @@ class LegacyTemplatesListenerTest extends TestCase
 {
     public function testAddsInfoMessage(): void
     {
-        $message = $this->createAdapterStub(['addInfo']);
+        $message = $this->createAdapterMock(['addInfo']);
         $message
             ->expects($this->once())
             ->method('addInfo')

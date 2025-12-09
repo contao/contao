@@ -54,7 +54,7 @@ class BackendHeaderListenerTest extends TestCase
             )
         ;
 
-        $systemMessages = $this->createAdapterStub(['getSystemMessages']);
+        $systemMessages = $this->createAdapterMock(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())
             ->method('getSystemMessages')

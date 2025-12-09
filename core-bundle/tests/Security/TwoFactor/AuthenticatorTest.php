@@ -76,7 +76,7 @@ class AuthenticatorTest extends TestCase
         $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(3);
 
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+        $user = $this->createClassWithPropertiesMock(BackendUser::class);
         $user->secret = $secret;
 
         $user
@@ -119,7 +119,8 @@ class AuthenticatorTest extends TestCase
             SVG;
 
         $clock = new MockClock('2025-08-12 08:24:00');
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+
+        $user = $this->createClassWithPropertiesMock(BackendUser::class);
         $user->secret = 'foobar';
 
         $user

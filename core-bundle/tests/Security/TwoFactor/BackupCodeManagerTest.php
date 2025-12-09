@@ -90,7 +90,7 @@ class BackupCodeManagerTest extends TestCase
             JSON_THROW_ON_ERROR,
         );
 
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+        $user = $this->createClassWithPropertiesMock(BackendUser::class);
         $user->backupCodes = $backupCodes;
 
         $user
@@ -109,7 +109,7 @@ class BackupCodeManagerTest extends TestCase
     {
         $backupCodeManager = new BackupCodeManager();
 
-        $user = $this->createClassWithPropertiesStub(BackendUser::class);
+        $user = $this->createClassWithPropertiesMock(BackendUser::class);
         $user
             ->expects($this->once())
             ->method('save')

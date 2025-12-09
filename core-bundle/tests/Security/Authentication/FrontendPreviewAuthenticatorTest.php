@@ -153,7 +153,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturnOnConsecutiveCalls(false)
         ;
 
-        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
+        $user = $this->createClassWithPropertiesMock(FrontendUser::class);
         $user
             ->expects($this->never())
             ->method('getRoles')

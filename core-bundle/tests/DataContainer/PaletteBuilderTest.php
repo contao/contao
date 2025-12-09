@@ -85,7 +85,6 @@ class PaletteBuilderTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([Input::class => $inputAdapter]);
-
         $paletteBuilder = new PaletteBuilder($framework, $this->createMock(RequestStack::class), $this->createMock(Security::class), $this->createMock(Connection::class));
 
         $this->assertSame($expected, $paletteBuilder->getPalette('tl_foo', 42, $dataContainer));

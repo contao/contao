@@ -33,7 +33,7 @@ class ErrorPageControllerTest extends TestCase
             ->willReturn($response)
         ;
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->once())
             ->method('createInstance')

@@ -23,7 +23,7 @@ class OptInTest extends TestCase
 {
     public function testCreatesAToken(): void
     {
-        $model = $this->createClassWithPropertiesStub(OptInModel::class);
+        $model = $this->createClassWithPropertiesMock(OptInModel::class);
         $model
             ->expects($this->once())
             ->method('save')
@@ -35,7 +35,7 @@ class OptInTest extends TestCase
             ->with(['tl_member' => [1]])
         ;
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -53,7 +53,7 @@ class OptInTest extends TestCase
 
     public function testDoesNotCreateATokenIfThePrefixIsTooLong(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -70,7 +70,7 @@ class OptInTest extends TestCase
         $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model->token = 'foobar';
 
-        $adapter = $this->createAdapterStub(['findByToken']);
+        $adapter = $this->createAdapterMock(['findByToken']);
         $adapter
             ->expects($this->exactly(2))
             ->method('findByToken')
@@ -90,7 +90,7 @@ class OptInTest extends TestCase
             'confirmedOn' => strtotime('yesterday'),
         ];
 
-        $token = $this->createClassWithPropertiesStub(OptInModel::class, $properties);
+        $token = $this->createClassWithPropertiesMock(OptInModel::class, $properties);
         $token
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -102,21 +102,21 @@ class OptInTest extends TestCase
             ->method('delete')
         ;
 
-        $optInAdapter = $this->createAdapterStub(['findExpiredTokens']);
+        $optInAdapter = $this->createAdapterMock(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
             ->method('findExpiredTokens')
             ->willReturn([$token])
         ;
 
-        $modelAdapter = $this->createAdapterStub(['getClassFromTable']);
+        $modelAdapter = $this->createAdapterMock(['getClassFromTable']);
         $modelAdapter
             ->expects($this->once())
             ->method('getClassFromTable')
             ->willReturn(MemberModel::class)
         ;
 
-        $memberAdapter = $this->createAdapterStub(['findMultipleByIds']);
+        $memberAdapter = $this->createAdapterMock(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
@@ -140,7 +140,7 @@ class OptInTest extends TestCase
             'confirmedOn' => strtotime('yesterday'),
         ];
 
-        $token = $this->createClassWithPropertiesStub(OptInModel::class, $properties);
+        $token = $this->createClassWithPropertiesMock(OptInModel::class, $properties);
         $token
             ->expects($this->once())
             ->method('getRelatedRecords')
@@ -152,21 +152,21 @@ class OptInTest extends TestCase
             ->method('save')
         ;
 
-        $optInAdapter = $this->createAdapterStub(['findExpiredTokens']);
+        $optInAdapter = $this->createAdapterMock(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
             ->method('findExpiredTokens')
             ->willReturn([$token])
         ;
 
-        $modelAdapter = $this->createAdapterStub(['getClassFromTable']);
+        $modelAdapter = $this->createAdapterMock(['getClassFromTable']);
         $modelAdapter
             ->expects($this->once())
             ->method('getClassFromTable')
             ->willReturn(MemberModel::class)
         ;
 
-        $memberAdapter = $this->createAdapterStub(['findMultipleByIds']);
+        $memberAdapter = $this->createAdapterMock(['findMultipleByIds']);
         $memberAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
@@ -191,7 +191,7 @@ class OptInTest extends TestCase
             'confirmedOn' => 0,
         ];
 
-        $token = $this->createClassWithPropertiesStub(OptInModel::class, $properties);
+        $token = $this->createClassWithPropertiesMock(OptInModel::class, $properties);
         $token
             ->expects($this->never())
             ->method('getRelatedRecords')
@@ -202,14 +202,14 @@ class OptInTest extends TestCase
             ->method('delete')
         ;
 
-        $optInAdapter = $this->createAdapterStub(['findExpiredTokens']);
+        $optInAdapter = $this->createAdapterMock(['findExpiredTokens']);
         $optInAdapter
             ->expects($this->once())
             ->method('findExpiredTokens')
             ->willReturn([$token])
         ;
 
-        $modelAdapter = $this->createAdapterStub(['getClassFromTable']);
+        $modelAdapter = $this->createAdapterMock(['getClassFromTable']);
         $modelAdapter
             ->expects($this->never())
             ->method('getClassFromTable')

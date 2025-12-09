@@ -31,14 +31,14 @@ class ArticleColumnListenerTest extends TestCase
             slots: ['foo', 'bar'],
         );
 
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->with('@Contao/layout/foo.html.twig')
             ->willReturn($templateInformation)
         ;
 
-        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
@@ -47,7 +47,7 @@ class ArticleColumnListenerTest extends TestCase
 
         $pageModel->layout = 2;
 
-        $articleModel = $this->createMock(ArticleModel::class);
+        $articleModel = $this->createStub(ArticleModel::class);
         $articleModel
             ->method('getRelated')
             ->with('pid')
@@ -105,7 +105,7 @@ class ArticleColumnListenerTest extends TestCase
 
     public function testDoesNotSetSlotOptionsForLegacyLayouts(): void
     {
-        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
@@ -114,7 +114,7 @@ class ArticleColumnListenerTest extends TestCase
 
         $pageModel->layout = 2;
 
-        $articleModel = $this->createMock(ArticleModel::class);
+        $articleModel = $this->createStub(ArticleModel::class);
         $articleModel
             ->method('getRelated')
             ->with('pid')
@@ -144,7 +144,7 @@ class ArticleColumnListenerTest extends TestCase
             LayoutModel::class => $layoutAdapter,
         ]);
 
-        $articleColumnListener = new ArticleColumnListener($this->createMock(Inspector::class), $framework);
+        $articleColumnListener = new ArticleColumnListener($this->createStub(Inspector::class), $framework);
 
         $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;

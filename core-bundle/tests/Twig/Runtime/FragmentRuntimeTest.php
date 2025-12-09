@@ -23,7 +23,7 @@ class FragmentRuntimeTest extends TestCase
 {
     public function testRenderModuleFromType(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -50,7 +50,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderModuleFromId(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -64,7 +64,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $moduleAdapter = $this->createAdapterStub(['findById']);
+        $moduleAdapter = $this->createAdapterMock(['findById']);
         $moduleAdapter
             ->expects($this->once())
             ->method('findById')
@@ -85,7 +85,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderArticleModule(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -106,7 +106,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderModuleFromUnavailableId(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getFrontendModule')
@@ -114,7 +114,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('')
         ;
 
-        $moduleAdapter = $this->createAdapterStub(['findById']);
+        $moduleAdapter = $this->createAdapterMock(['findById']);
         $moduleAdapter
             ->expects($this->once())
             ->method('findById')
@@ -135,7 +135,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderContentFromType(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
+        $controllerAdapter = $this->createAdapterMock(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -162,7 +162,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderNestedContent(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
+        $controllerAdapter = $this->createAdapterMock(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -208,7 +208,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderContentFromId(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
+        $controllerAdapter = $this->createAdapterMock(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -222,7 +222,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('runtime-result')
         ;
 
-        $contentAdapter = $this->createAdapterStub(['findById']);
+        $contentAdapter = $this->createAdapterMock(['findById']);
         $contentAdapter
             ->expects($this->once())
             ->method('findById')
@@ -243,7 +243,7 @@ class FragmentRuntimeTest extends TestCase
 
     public function testRenderContentFromUnavailableId(): void
     {
-        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
+        $controllerAdapter = $this->createAdapterMock(['getContentElement']);
         $controllerAdapter
             ->expects($this->once())
             ->method('getContentElement')
@@ -251,7 +251,7 @@ class FragmentRuntimeTest extends TestCase
             ->willReturn('')
         ;
 
-        $contentAdapter = $this->createAdapterStub(['findById']);
+        $contentAdapter = $this->createAdapterMock(['findById']);
         $contentAdapter
             ->expects($this->once())
             ->method('findById')

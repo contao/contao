@@ -122,7 +122,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
             ->with('tl_settings.configuredInApp', [], 'contao_tl_settings')
         ;
 
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')

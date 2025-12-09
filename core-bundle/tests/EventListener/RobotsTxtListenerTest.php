@@ -36,7 +36,7 @@ class RobotsTxtListenerTest extends TestCase
         $rootPage->dns = 'www.foobar.com';
         $rootPage->useSSL = true;
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->exactly(2))
             ->method('initialize')

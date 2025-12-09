@@ -161,7 +161,7 @@ class ContaoContextTest extends TestCase
     public function testReadsTheSslConfigurationFromTheRequest(): void
     {
         $request = new Request();
-        $request->attributes = $this->createMock(ParameterBag::class);
+        $request->attributes = $this->createStub(ParameterBag::class);
 
         $requestStack = new RequestStack([$request]);
 
@@ -187,13 +187,13 @@ class ContaoContextTest extends TestCase
     {
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

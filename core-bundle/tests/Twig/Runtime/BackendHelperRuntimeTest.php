@@ -22,7 +22,7 @@ class BackendHelperRuntimeTest extends TestCase
 {
     public function testDelegatesCallsForIcon(): void
     {
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -39,7 +39,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsDefaultIconForNoMimeType(): void
     {
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -56,7 +56,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsIconForMimeType(): void
     {
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -84,7 +84,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsDefaultIconForMissingRegisteredMimeType(): void
     {
-        $imageAdapter = $this->createAdapterStub(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')

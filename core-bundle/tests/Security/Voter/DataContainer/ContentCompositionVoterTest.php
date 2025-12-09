@@ -48,7 +48,7 @@ class ContentCompositionVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -75,13 +75,13 @@ class ContentCompositionVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->never())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -110,13 +110,13 @@ class ContentCompositionVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -124,7 +124,7 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->createAdapterStub(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
@@ -157,13 +157,13 @@ class ContentCompositionVoterTest extends TestCase
 
         $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, ['modules' => serialize([])]);
 
-        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -171,7 +171,7 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->createAdapterStub(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
@@ -204,13 +204,13 @@ class ContentCompositionVoterTest extends TestCase
 
         $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, ['modules' => serialize([['mod' => 0]])]);
 
-        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -218,7 +218,7 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->createAdapterStub(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')

@@ -55,7 +55,7 @@ class StringUtilTest extends TestCase
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
     }
@@ -566,13 +566,13 @@ class StringUtilTest extends TestCase
 
     public function testInsertTagToSrc(): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

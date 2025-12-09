@@ -65,7 +65,7 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForHostReturnsNullIfRoutingHasNoPageModel(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -79,7 +79,7 @@ class PageFinderTest extends TestCase
 
     public function testFindRootPageForHostReturnsNullIfRoutingThrowsException(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -101,7 +101,7 @@ class PageFinderTest extends TestCase
     {
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -117,14 +117,14 @@ class PageFinderTest extends TestCase
     {
         $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'root']);
 
-        $regularPage = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
+        $regularPage = $this->createClassWithPropertiesMock(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
         $regularPage
             ->expects($this->once())
             ->method('loadDetails')
             ->willReturnSelf()
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findPublishedById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findPublishedById')
@@ -132,7 +132,7 @@ class PageFinderTest extends TestCase
             ->willReturn($rootPage)
         ;
 
-        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkMock([PageModel::class => $pageAdapter]);
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -149,7 +149,7 @@ class PageFinderTest extends TestCase
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
         $request = new Request();
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -173,14 +173,14 @@ class PageFinderTest extends TestCase
     {
         $rootPage = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'root']);
 
-        $regularPage = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
+        $regularPage = $this->createClassWithPropertiesMock(PageModel::class, ['type' => 'regular', 'rootId' => 42]);
         $regularPage
             ->expects($this->once())
             ->method('loadDetails')
             ->willReturnSelf()
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findPublishedById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findPublishedById')
@@ -188,7 +188,7 @@ class PageFinderTest extends TestCase
             ->willReturn($rootPage)
         ;
 
-        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkMock([PageModel::class => $pageAdapter]);
         $framework
             ->expects($this->once())
             ->method('initialize')
@@ -207,7 +207,7 @@ class PageFinderTest extends TestCase
     {
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')

@@ -402,7 +402,7 @@ class BackendAccessVoterTest extends TestCase
             ])
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -439,7 +439,7 @@ class BackendAccessVoterTest extends TestCase
             ])
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -464,7 +464,7 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')

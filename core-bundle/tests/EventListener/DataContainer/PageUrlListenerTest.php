@@ -27,6 +27,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\NativeType;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -40,7 +41,7 @@ class PageUrlListenerTest extends TestCase
     {
         $page = $this->createClassWithPropertiesStub(PageModel::class, $currentRecord);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -148,7 +149,7 @@ class PageUrlListenerTest extends TestCase
             $aliasRoutes[] = new PageRoute($aliasPage);
         }
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findSimilarByAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -222,7 +223,7 @@ class PageUrlListenerTest extends TestCase
             $aliasRoutes[] = new PageRoute($aliasPage);
         }
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findSimilarByAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -280,7 +281,7 @@ class PageUrlListenerTest extends TestCase
     {
         $currentPage = $this->createClassWithPropertiesStub(PageModel::class, $currentRecord);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findSimilarByAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -338,7 +339,7 @@ class PageUrlListenerTest extends TestCase
             $aliasRoutes[] = new PageRoute($aliasPage);
         }
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findSimilarByAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -956,7 +957,7 @@ class PageUrlListenerTest extends TestCase
     {
         $page = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 17]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -1029,7 +1030,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1175,7 +1176,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1278,7 +1279,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1320,7 +1321,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlPrefixIfPageTypeIsNotRoot(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->never())
             ->method('findById')
@@ -1352,7 +1353,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlPrefixIfTheValueHasNotChanged(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->never())
             ->method('findById')
@@ -1384,7 +1385,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlPrefixIfTheRootPageIsNotFound(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -1445,7 +1446,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1538,7 +1539,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1582,7 +1583,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlSuffixIfPageTypeIsNotRoot(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->never())
             ->method('findById')
@@ -1614,7 +1615,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlSuffixIfTheValueHasNotChanged(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->never())
             ->method('findById')
@@ -1646,7 +1647,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlSuffixIfTheRootPageIsNotFound(): void
     {
-        $pageAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -1680,7 +1681,7 @@ class PageUrlListenerTest extends TestCase
     }
 
     /**
-     * @return array{id: array<PageModel&MockObject>, pid: array<int, array<PageModel&MockObject>>}
+     * @return array{id: array<PageModel&Stub>, pid: array<int, array<PageModel&Stub>>}
      */
     private function getPageModels(array $pages): array
     {
@@ -1730,7 +1731,7 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockInputAdapter(array $inputData): Adapter&MockObject
     {
-        $inputAdapter = $this->createAdapterStub(['post']);
+        $inputAdapter = $this->createAdapterMock(['post']);
         $inputAdapter
             ->method('post')
             ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)

@@ -29,7 +29,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -270,7 +270,7 @@ class TemplateOptionsListenerTest extends TestCase
         );
     }
 
-    private function mockFramework(): ContaoFramework&MockObject
+    private function mockFramework(): ContaoFramework&Stub
     {
         $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
@@ -299,7 +299,7 @@ class TemplateOptionsListenerTest extends TestCase
         return $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
     }
 
-    private function mockDataContainer(string $table, array $currentRecord = []): DC_Table&MockObject
+    private function mockDataContainer(string $table, array $currentRecord = []): DC_Table&Stub
     {
         $dc = $this->createClassWithPropertiesStub(DC_Table::class);
         $dc->table = $table;

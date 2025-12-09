@@ -198,7 +198,7 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
+        $filesModelAdapter = $this->createAdapterMock(['findByPath']);
         $filesModelAdapter
             ->expects($this->once())
             ->method('findByPath')
@@ -220,7 +220,7 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
+        $filesModelAdapter = $this->createAdapterMock(['findByPath']);
         $filesModelAdapter
             ->expects($this->once())
             ->method('findByPath')
@@ -395,7 +395,7 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = 'files/public/foo.jpg';
 
-        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
+        $filesModelAdapter = $this->createAdapterMock(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
             ->with($absoluteFilePath)
@@ -778,7 +778,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class, except: ['getMetadata']);
+        $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -1002,7 +1002,7 @@ class FigureBuilderTest extends TestCase
     {
         if (\is_array($resource)) {
             $getFilesModel = function (array $metaData, string|null $uuid) use ($resource) {
-                $filesModel = $this->createClassWithPropertiesStub(FilesModel::class, except: ['getMetadata']);
+                $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
 
                 $filesModel->setRow([
                     'type' => 'file',

@@ -67,7 +67,7 @@ class FormatDateInsertTagTest extends TestCase
 
     public function testUsesConfigFormat(): void
     {
-        $configAdapter = $this->createAdapterStub(['get']);
+        $configAdapter = $this->createAdapterMock(['get']);
         $configAdapter
             ->expects($this->exactly(2))
             ->method('get')

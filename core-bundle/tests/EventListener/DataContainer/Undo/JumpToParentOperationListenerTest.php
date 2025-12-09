@@ -23,6 +23,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -30,7 +31,7 @@ class JumpToParentOperationListenerTest extends TestCase
 {
     private TranslatorInterface&MockObject $translator;
 
-    private ContaoFramework&MockObject $framework;
+    private ContaoFramework&Stub $framework;
 
     private Connection&MockObject $connection;
 

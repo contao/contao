@@ -26,6 +26,7 @@ use Contao\Database;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -932,7 +933,7 @@ class PagePermissionVoterTest extends TestCase
         return $token;
     }
 
-    private function mockContaoFrameworkWithDatabase(array|null $pagemounts = null): ContaoFramework&MockObject
+    private function mockContaoFrameworkWithDatabase(array|null $pagemounts = null): ContaoFramework&Stub
     {
         $database = $this->createMock(Database::class);
 

@@ -41,7 +41,7 @@ class RootPageDependentSelectTest extends TestCase
             $this->mockPageModel(['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr']),
         ];
 
-        $pageAdapter = $this->createAdapterStub(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')

@@ -101,7 +101,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
-        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_form',
         ]);
@@ -153,7 +153,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_user',
         ]);
@@ -214,7 +214,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_user',
         ]);
@@ -247,7 +247,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
         ];
 
-        $childRecordListener = $this->createAdapterStub(['callback']);
+        $childRecordListener = $this->createAdapterMock(['callback']);
         $childRecordListener
             ->expects($this->once())
             ->method('callback')
@@ -255,10 +255,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn('<record-preview>')
         ;
 
-        $systemAdapter = $this->createAdapterStub([
-            'importStatic',
-        ]);
-
+        $systemAdapter = $this->createAdapterMock(['importStatic']);
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
@@ -297,7 +294,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
-        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_content',
         ]);
@@ -351,7 +348,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
-        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_content',
         ]);
@@ -402,7 +399,7 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_undo', ['preview' => ''], ['id' => '42'])
         ;
 
-        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_content',
         ]);
@@ -436,7 +433,7 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
-        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, [
+        $dataContainer = $this->createClassWithPropertiesMock(DC_Table::class, [
             'id' => '42',
             'table' => 'tl_form',
         ]);

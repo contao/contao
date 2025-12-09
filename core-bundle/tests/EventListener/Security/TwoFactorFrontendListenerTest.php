@@ -123,7 +123,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         $rootPage->enforceTwoFactor = true;
         $rootPage->twoFactorJumpTo = 0;
 
-        $adapter = $this->createAdapterStub(['findPublishedById']);
+        $adapter = $this->createAdapterMock(['findPublishedById']);
         $adapter
             ->expects($this->once())
             ->method('findPublishedById')
@@ -158,7 +158,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         $pageModel->enforceTwoFactor = true;
         $pageModel->twoFactorJumpTo = 1;
 
-        $adapter = $this->createAdapterStub(['findPublishedById']);
+        $adapter = $this->createAdapterMock(['findPublishedById']);
         $adapter
             ->expects($this->once())
             ->method('findPublishedById')
@@ -195,7 +195,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         $twoFactorPageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $twoFactorPageModel->id = 2;
 
-        $adapter = $this->createAdapterStub(['findPublishedById']);
+        $adapter = $this->createAdapterMock(['findPublishedById']);
         $adapter
             ->expects($this->once())
             ->method('findPublishedById')
@@ -238,7 +238,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $adapter = $this->createAdapterStub(['find401ByPid']);
+        $adapter = $this->createAdapterMock(['find401ByPid']);
         $adapter
             ->expects($this->never())
             ->method('find401ByPid')

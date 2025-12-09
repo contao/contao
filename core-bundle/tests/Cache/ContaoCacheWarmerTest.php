@@ -43,7 +43,7 @@ class ContaoCacheWarmerTest extends TestCase
             Path::join(self::getTempDir(), 'other'),
         ]);
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider = $this->createStub(SchemaProvider::class);
         $schemaProvider
             ->method('createSchema')
             ->willReturn(new Schema())
@@ -51,7 +51,7 @@ class ContaoCacheWarmerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.doctrine.schema_provider', $schemaProvider);
-        $container->set('database_connection', $this->createMock(Connection::class));
+        $container->set('database_connection', $this->createStub(Connection::class));
 
         System::setContainer($container);
     }
@@ -69,7 +69,7 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testCreatesTheCacheFolder(): void
     {
-        $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
+        $parentCatalogue = $this->createStub(MessageCatalogueInterface::class);
         $parentCatalogue
             ->method('getDomains')
             ->willReturn(['contao_tl_foobar'])
@@ -86,9 +86,9 @@ class ContaoCacheWarmerTest extends TestCase
             ->willReturn(['tl_foobar.new.0' => 'Create new foobar'])
         ;
 
-        $catalogue = new MessageCatalogue($parentCatalogue, $this->createContaoFrameworkStub(), $this->createMock(ResourceFinder::class));
+        $catalogue = new MessageCatalogue($parentCatalogue, $this->createContaoFrameworkStub(), $this->createStub(ResourceFinder::class));
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getCatalogue')
             ->willReturn($catalogue)
@@ -159,13 +159,13 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testDoesNotCreateTheCacheFolderIfTheInstallationIsIncomplete(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('executeQuery')
             ->willThrowException(new \Exception())
         ;
 
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -195,7 +195,7 @@ class ContaoCacheWarmerTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub();
 
-        $finder = $this->createMock(Finder::class);
+        $finder = $this->createStub(Finder::class);
         $finder
             ->method('getIterator')
             ->willReturn(new \EmptyIterator())
@@ -228,9 +228,9 @@ class ContaoCacheWarmerTest extends TestCase
 
     private function getCacheWarmer(Connection|null $connection = null, ContaoFramework|null $framework = null, string $bundle = 'test-bundle', Translator|null $translator = null): ContaoCacheWarmer
     {
-        $connection ??= $this->createMock(Connection::class);
+        $connection ??= $this->createStub(Connection::class);
         $framework ??= $this->createContaoFrameworkStub();
-        $translator ??= $this->createMock(Translator::class);
+        $translator ??= $this->createStub(Translator::class);
 
         $fixtures = Path::join($this->getFixturesDir(), 'vendor/contao/'.$bundle.'/Resources/contao');
 
@@ -238,7 +238,7 @@ class ContaoCacheWarmerTest extends TestCase
         $finder = new ResourceFinder($fixtures);
         $locator = new FileLocator($fixtures);
 
-        $locales = $this->createMock(Locales::class);
+        $locales = $this->createStub(Locales::class);
         $locales
             ->method('getEnabledLocaleIds')
             ->willReturn(['en-US', 'en'])

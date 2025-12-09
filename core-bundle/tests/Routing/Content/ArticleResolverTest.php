@@ -35,7 +35,7 @@ class ArticleResolverTest extends TestCase
         $content = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -54,7 +54,7 @@ class ArticleResolverTest extends TestCase
     {
         $content = $this->createClassWithPropertiesStub(ArticleModel::class, ['pid' => 42]);
 
-        $pageAdapter = $this->createAdapterStub(['findWithDetails']);
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')

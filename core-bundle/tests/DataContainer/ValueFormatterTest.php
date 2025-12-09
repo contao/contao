@@ -33,10 +33,8 @@ class ValueFormatterTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = $dca;
 
-        $configAdapter = $this->createAdapterStub(['get']);
-        $dateAdapter = $this->createAdapterStub(['parse']);
-
         if (isset($dca['eval']['rgxp'])) {
+            $configAdapter = $this->createAdapterMock(['get']);
             $configAdapter
                 ->expects($this->atLeastOnce())
                 ->method('get')
@@ -44,6 +42,7 @@ class ValueFormatterTest extends TestCase
                 ->willReturn($dca['eval']['rgxp'].'Format')
             ;
 
+            $dateAdapter = $this->createAdapterMock(['parse']);
             $dateAdapter
                 ->expects($this->atLeastOnce())
                 ->method('parse')
@@ -52,6 +51,9 @@ class ValueFormatterTest extends TestCase
                     (array) ($rawValues ?? $value),
                 ))
             ;
+        } else {
+            $configAdapter = $this->createAdapterStub(['get']);
+            $dateAdapter = $this->createAdapterStub(['parse']);
         }
 
         $framework = $this->createContaoFrameworkStub([
@@ -61,8 +63,8 @@ class ValueFormatterTest extends TestCase
 
         $valueFormatter = new ValueFormatter(
             $framework,
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $result = $valueFormatter->format('tl_foo', 'foo', $value, null);
@@ -222,7 +224,7 @@ class ValueFormatterTest extends TestCase
 
         $valueFormatter = new ValueFormatter(
             $framework,
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $translator,
         );
 
@@ -326,11 +328,11 @@ class ValueFormatterTest extends TestCase
 
         $valueFormatter = new ValueFormatter(
             $framework,
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
-        $result = $valueFormatter->formatListing('tl_foo', 'foo', ['foo' => 'bar'], $this->createMock(DataContainer::class));
+        $result = $valueFormatter->formatListing('tl_foo', 'foo', ['foo' => 'bar'], $this->createStub(DataContainer::class));
 
         $this->assertSame('bar', $result);
 
@@ -360,14 +362,14 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $connection,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $result = $valueFormatter->formatListing(
             'tl_foo',
             'foo:tl_foo.name',
             ['foo' => 42],
-            $this->createMock(DataContainer::class),
+            $this->createStub(DataContainer::class),
         );
 
         $this->assertSame('bar', $result);
@@ -390,11 +392,11 @@ class ValueFormatterTest extends TestCase
 
         $valueFormatter = new ValueFormatter(
             $framework,
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
-        $result = $valueFormatter->formatFilterOptions('tl_foo', 'foo', $values, $this->createMock(DataContainer::class));
+        $result = $valueFormatter->formatFilterOptions('tl_foo', 'foo', $values, $this->createStub(DataContainer::class));
 
         $this->assertSame($expected, $result);
 
@@ -528,7 +530,7 @@ class ValueFormatterTest extends TestCase
             Config::class => $configAdapter,
         ]);
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnArgument(0)
@@ -536,11 +538,11 @@ class ValueFormatterTest extends TestCase
 
         $valueFormatter = new ValueFormatter(
             $framework,
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $translator,
         );
 
-        $result = $valueFormatter->formatFilterOptions('tl_foo', 'foo', $values, $this->createMock(DataContainer::class));
+        $result = $valueFormatter->formatFilterOptions('tl_foo', 'foo', $values, $this->createStub(DataContainer::class));
 
         $this->assertSame($expected, $result);
 
@@ -657,7 +659,7 @@ class ValueFormatterTest extends TestCase
 
     private function mockConnection(): Connection&MockObject
     {
-        $databasePlatform = $this->createMock(AbstractPlatform::class);
+        $databasePlatform = $this->createStub(AbstractPlatform::class);
         $databasePlatform
             ->method('quoteSingleIdentifier')
             ->willReturnCallback(static fn ($v) => '`'.$v.'`')

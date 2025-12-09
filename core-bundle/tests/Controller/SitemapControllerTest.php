@@ -26,6 +26,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,11 +59,11 @@ class SitemapControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('event_dispatcher', $eventDispatcher);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
 
         $this->expectException(NotFoundHttpException::class);
 
-        $controller = new SitemapController($registry, $pageFinder, $this->createMock(ContentUrlGenerator::class));
+        $controller = new SitemapController($registry, $pageFinder, $this->createStub(ContentUrlGenerator::class));
         $controller->setContainer($container);
         $controller($request);
     }
@@ -82,7 +83,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework, null, 'https://www.foobar.com:8000');
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com:8000/sitemap.xml');
 
         $pageFinder = $this->mockPageFinder($request);
@@ -120,7 +121,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -179,7 +180,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -246,7 +247,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -306,7 +307,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -592,7 +593,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 45 => null]);
         $container = $this->getContainer($framework, [2]);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -645,7 +646,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -705,7 +706,7 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -763,7 +764,7 @@ class SitemapControllerTest extends TestCase
         $container = $this->getContainer($framework);
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('custom1', new RouteConfig(null, null, null, [], [], ['_format' => 'xml'], []));
         $registry->add('custom2', new RouteConfig());
 
@@ -829,13 +830,13 @@ class SitemapControllerTest extends TestCase
         return $pageFinder;
     }
 
-    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework&MockObject
+    private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework&Stub
     {
         foreach ($pages as $parentId => $return) {
             $pages[$parentId] = [$parentId, ['order' => 'sorting'], $return];
         }
 
-        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages', 'findByPid']);
+        $pageModelAdapter = $this->createAdapterMock(['findPublishedRootPages', 'findByPid']);
         $pageModelAdapter
             ->expects($this->exactly(\count($pages)))
             ->method('findByPid')
@@ -846,7 +847,7 @@ class SitemapControllerTest extends TestCase
             $articles[$pageId] = [$pageId, ['ignoreFePreview' => true], $return];
         }
 
-        $articleModelAdapter = $this->createAdapterStub(['findPublishedWithTeaserByPid']);
+        $articleModelAdapter = $this->createAdapterMock(['findPublishedWithTeaserByPid']);
         $articleModelAdapter
             ->expects($this->exactly(\count($articles)))
             ->method('findPublishedWithTeaserByPid')
@@ -878,7 +879,7 @@ class SitemapControllerTest extends TestCase
             ))
         ;
 
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
 
         if (null === $allowedPageIds) {
             $authorizationChecker
@@ -920,7 +921,7 @@ class SitemapControllerTest extends TestCase
 
     private function mockPage(array $data): PageModel
     {
-        $page = $this->createClassWithPropertiesStub(PageModel::class, $data);
+        $page = $this->createClassWithPropertiesMock(PageModel::class, $data);
         $page
             ->expects($this->atLeastOnce())
             ->method('loadDetails')

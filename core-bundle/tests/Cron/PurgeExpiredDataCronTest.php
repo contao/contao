@@ -53,7 +53,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ];
         }
 
-        $config = $this->createAdapterStub(['get']);
+        $config = $this->createAdapterMock(['get']);
         $config
             ->expects($this->exactly(3))
             ->method('get')

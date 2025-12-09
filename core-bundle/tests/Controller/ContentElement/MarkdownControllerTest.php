@@ -119,7 +119,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         $tempTestFile = $fs->tempnam($this->getTempDir(), '');
         $fs->dumpFile($tempTestFile, '# Headline');
 
-        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesMock(FilesModel::class);
         $filesModel
             ->expects($this->once())
             ->method('getAbsolutePath')
@@ -178,7 +178,7 @@ class MarkdownControllerTest extends ContentElementTestCase
             },
         );
 
-        $framework = $this->createContaoFrameworkStub($frameworkAdapters);
+        $framework = $this->createContaoFrameworkMock($frameworkAdapters);
         $framework
             ->expects($this->once())
             ->method('createInstance')

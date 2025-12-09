@@ -118,14 +118,14 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, string|null $content = null): ContainerBuilder
     {
-        $moduleAdapter = $this->createAdapterStub(['findById']);
+        $moduleAdapter = $this->createAdapterMock(['findById']);
         $moduleAdapter
             ->expects($content ? $this->once() : $this->never())
             ->method('findById')
             ->willReturn($this->createMock(ModuleModel::class))
         ;
 
-        $controllerAdapter = $this->createAdapterStub(['getFrontendModule']);
+        $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
         $controllerAdapter
             ->expects($content ? $this->once() : $this->never())
             ->method('getFrontendModule')

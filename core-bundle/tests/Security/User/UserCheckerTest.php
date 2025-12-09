@@ -43,7 +43,7 @@ class UserCheckerTest extends TestCase
 
     public function testDoesNothingIfTheUserIsNotAContaoUser(): void
     {
-        $framework = $this->createContaoFrameworkStub();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('getAdapter')

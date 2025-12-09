@@ -56,7 +56,7 @@ class WidgetTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~E_NOTICE);
 
-        $widget = $this->createMock(Widget::class);
+        $widget = $this->createStub(Widget::class);
 
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');

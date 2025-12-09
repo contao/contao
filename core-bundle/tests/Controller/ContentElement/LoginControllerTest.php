@@ -140,7 +140,7 @@ class LoginControllerTest extends ContentElementTestCase
         $jumpTo->id = 1;
         $jumpTo->alias = 'foobar';
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->exactly(2))
             ->method('findById')
@@ -284,7 +284,7 @@ class LoginControllerTest extends ContentElementTestCase
         $pwResetPage->id = 8472;
         $pwResetPage->alias = 'pw-reset';
 
-        $pageAdapter = $this->createAdapterStub(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->exactly(2))
             ->method('findById')

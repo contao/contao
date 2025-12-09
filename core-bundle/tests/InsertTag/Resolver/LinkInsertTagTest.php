@@ -204,7 +204,7 @@ class LinkInsertTagTest extends TestCase
         $loginPage->alias = '/login';
         $loginPage->title = 'Login';
 
-        $pageAdapter = $this->createAdapterStub(['findByIdOrAlias']);
+        $pageAdapter = $this->createAdapterMock(['findByIdOrAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByIdOrAlias')

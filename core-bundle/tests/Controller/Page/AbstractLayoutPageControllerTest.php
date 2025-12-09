@@ -189,7 +189,7 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn($layoutModel)
         ;
 
-        $systemAdapter = $this->createAdapterStub(['loadLanguageFile']);
+        $systemAdapter = $this->createAdapterMock(['loadLanguageFile']);
         $systemAdapter
             ->expects($this->once())
             ->method('loadLanguageFile')
