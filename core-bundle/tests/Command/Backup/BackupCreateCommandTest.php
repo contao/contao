@@ -113,10 +113,10 @@ class BackupCreateCommandTest extends TestCase
     private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager&MockObject
     {
         $backup = $this
-            ->getMockBuilder(Backup::class)
+            ->getStubBuilder(Backup::class)
             ->setConstructorArgs(['test__20211101141254.sql.gz'])
             ->onlyMethods(['getSize'])
-            ->getMock()
+            ->getStub()
         ;
 
         $backup

@@ -61,7 +61,7 @@ class CommentsAccessVoterTest extends TestCase
     #[DataProvider('votesProvider')]
     public function testVotes(array $current, bool $accessGranted): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new UpdateAction('tl_comments', $current);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);

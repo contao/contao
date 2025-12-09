@@ -40,7 +40,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             fn () => $this->createStub(CronJobRepository::class),
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
         );
 
@@ -58,7 +58,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             fn () => $this->createStub(CronJobRepository::class),
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
         );
 
@@ -105,7 +105,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             fn () => $this->createStub(CronJobRepository::class),
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
             $logger,
         );
@@ -179,7 +179,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             fn () => $this->createStub(CronJobRepository::class),
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
         );
 
@@ -191,7 +191,7 @@ class CronTest extends TestCase
     {
         $cron = new Cron(
             fn () => $this->createStub(CronJobRepository::class),
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
         );
 
@@ -262,7 +262,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             static fn () => $repository,
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
         );
 
@@ -304,7 +304,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             static fn () => $repository,
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
         );
 
@@ -345,7 +345,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             static fn () => $repository,
-            fn () => $this->createEntityManagerMock(true),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $cache,
             $this->createStub(LoggerInterface::class),
         );
@@ -392,7 +392,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             static fn () => $repository,
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $cache,
         );
 
@@ -530,7 +530,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             static fn () => $repository,
-            fn () => $this->createEntityManagerMock(false),
+            fn () => $this->createStub(EntityManagerInterface::class),
             $this->createStub(CacheItemPoolInterface::class),
         );
 

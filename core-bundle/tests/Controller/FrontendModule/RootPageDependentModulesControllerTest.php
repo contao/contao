@@ -38,7 +38,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $this->container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         System::setContainer($this->container);
     }
@@ -110,8 +110,8 @@ class RootPageDependentModulesControllerTest extends TestCase
         $this->expectException(\LogicException::class);
 
         $controller->getResponse(
-            $this->createMock(Template::class),
-            $this->createMock(ModuleModel::class),
+            $this->createStub(Template::class),
+            $this->createStub(ModuleModel::class),
             new Request(),
         );
     }
@@ -122,7 +122,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         $moduleAdapter
             ->expects($content ? $this->once() : $this->never())
             ->method('findById')
-            ->willReturn($this->createMock(ModuleModel::class))
+            ->willReturn($this->createStub(ModuleModel::class))
         ;
 
         $controllerAdapter = $this->createAdapterMock(['getFrontendModule']);
@@ -136,7 +136,7 @@ class RootPageDependentModulesControllerTest extends TestCase
 
         $pageFinder = new PageFinder(
             $framework,
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack ?? new RequestStack(),
         );
 

@@ -25,7 +25,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -325,11 +324,10 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    private function mockRouter(bool $canShare = false): RouterInterface&MockObject
+    private function mockRouter(bool $canShare = false): RouterInterface
     {
-        $router = $this->createMock(RouterInterface::class);
-
         if ($canShare) {
+            $router = $this->createMock(RouterInterface::class);
             $router
                 ->expects($this->exactly(2))
                 ->method('generate')
@@ -343,6 +341,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
                 ])
             ;
         } else {
+            $router = $this->createStub(RouterInterface::class);
             $router
                 ->method('generate')
                 ->with('contao_backend_switch')
@@ -372,7 +371,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @param class-string<User> $userClass
      */
-    private function mockSecurity(bool $canShare = false, string|null $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER', 'IS_AUTHENTICATED_FULLY']): Security&MockObject
+    private function mockSecurity(bool $canShare = false, string|null $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER', 'IS_AUTHENTICATED_FULLY']): Security
     {
         $user = null;
 
@@ -380,13 +379,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $user = $this->createStub($userClass);
         }
 
-        $security = $this->createMock(Security::class);
-        $security
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
         if ($canShare) {
+            $security = $this->createMock(Security::class);
             $security
                 ->expects($this->exactly(2))
                 ->method('isGranted')
@@ -396,11 +390,17 @@ class BackendPreviewSwitchControllerTest extends TestCase
                 ])
             ;
         } else {
+            $security = $this->createStub(Security::class);
             $security
                 ->method('isGranted')
                 ->willReturnCallback(static fn (string $role): bool => \in_array($role, $roles, true))
             ;
         }
+
+        $security
+            ->method('getUser')
+            ->willReturn($user)
+        ;
 
         return $security;
     }
@@ -427,9 +427,9 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $tokenManager;
     }
 
-    private function mockTranslator(): TranslatorInterface&MockObject
+    private function mockTranslator(): TranslatorInterface
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $translation): string => $translation)

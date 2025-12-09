@@ -448,9 +448,9 @@ abstract class ContaoTestCase extends TestCase
     }
 
     /**
-     * @param ContaoFramework&(MockObject|Stub) $framework
+     * @param (ContaoFramework&MockObject)|(ContaoFramework&Stub) $framework
      *
-     * @return ContaoFramework&(MockObject|Stub)
+     * @return (ContaoFramework&MockObject)|(ContaoFramework&Stub)
      */
     private function addAdaptersAndInstances(ContaoFramework $framework, $adapters, $instances): ContaoFramework
     {

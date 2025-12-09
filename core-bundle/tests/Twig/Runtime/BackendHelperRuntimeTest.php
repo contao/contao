@@ -50,7 +50,7 @@ class BackendHelperRuntimeTest extends TestCase
         $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
         $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $this->createMock(FilesystemItem::class), 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+            $this->createStub(FilesystemItem::class), 'alt', (new HtmlAttributes())->set('foo', 'bar'),
         ));
     }
 

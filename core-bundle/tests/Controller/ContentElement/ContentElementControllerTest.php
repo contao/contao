@@ -35,8 +35,8 @@ class ContentElementControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
-        $this->container->set('contao.twig.filesystem_loader', $this->createMock(ContaoFilesystemLoader::class));
+        $this->container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $this->container->set('contao.twig.filesystem_loader', $this->createStub(ContaoFilesystemLoader::class));
 
         System::setContainer($this->container);
     }
@@ -180,13 +180,13 @@ class ContentElementControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
-            ->willReturn($this->createMock(Request::class))
+            ->willReturn($this->createStub(Request::class))
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn($backendScope)

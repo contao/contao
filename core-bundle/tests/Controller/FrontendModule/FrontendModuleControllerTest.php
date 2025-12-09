@@ -37,7 +37,7 @@ class FrontendModuleControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $this->container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         System::setContainer($this->container);
     }
@@ -83,7 +83,7 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
             ->with('@Contao/mod_bar.html.twig')
@@ -160,13 +160,13 @@ class FrontendModuleControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
-            ->willReturn($this->createMock(Request::class))
+            ->willReturn($this->createStub(Request::class))
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(false)
@@ -199,25 +199,25 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testReturnsWildCardInBackendScope(): void
     {
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
-            ->willReturn($this->createMock(Request::class))
+            ->willReturn($this->createStub(Request::class))
         ;
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(true)
         ;
 
-        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager = $this->createStub(ContaoCsrfTokenManager::class);
         $tokenManager
             ->method('getDefaultTokenValue')
             ->willReturn('<token>')
         ;
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with(

@@ -103,13 +103,13 @@ class InheritanceTest extends TestCase
             $paths['App'] = Path::join($projectDir, 'contao/templates');
         }
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
             ->willReturn(['templates/my/theme'])
         ;
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')
@@ -123,8 +123,8 @@ class InheritanceTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $pageFinder ?? $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );
 
@@ -133,9 +133,9 @@ class InheritanceTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
