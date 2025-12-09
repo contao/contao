@@ -34,7 +34,7 @@
                         .set('value', option.value)
                         .set('checked', option.checked, option.checked)
                         .mergeWith(option.attributes)
-                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|raw }}</label></span>
+                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|insert_tag_raw|raw }}</label></span>
             {% endif %}
 
             {% if option.type == 'group_end' %}
