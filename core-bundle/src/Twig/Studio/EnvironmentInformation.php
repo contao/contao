@@ -36,7 +36,7 @@ class EnvironmentInformation
         $normalize = static function (array $array): array {
             rsort($array);
 
-            return array_values($array);
+            return $array;
         };
 
         $tokenParsers = $this->twig->getTokenParsers();

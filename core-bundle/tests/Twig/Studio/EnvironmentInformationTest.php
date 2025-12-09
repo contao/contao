@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Twig\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Twig\Environment;
+use Twig\Node\Node;
 use Twig\Parser;
 use Twig\Token;
 use Twig\TokenParser\TokenParserInterface;
@@ -37,8 +38,9 @@ class EnvironmentInformationTest extends TestCase
             {
             }
 
-            public function parse(Token $token): void
+            public function parse(Token $token): Node
             {
+                throw new \RuntimeException('Not implemented');
             }
 
             public function getTag()

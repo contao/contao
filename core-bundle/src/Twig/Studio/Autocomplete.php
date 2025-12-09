@@ -87,7 +87,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<>
+     * @return list<Completion>
      */
     public function getCompletions(string $logicalName): array
     {
@@ -118,14 +118,14 @@ class Autocomplete
     }
 
     /**
-     * @return Completion
+     * @return Completion|null
      */
-    private function getCompletionForExtendsTag(TemplateInformation|null $templateInformation, string $identifier, string $extension): array
+    private function getCompletionForExtendsTag(TemplateInformation|null $templateInformation, string $identifier, string $extension): array|null
     {
         $currentExtends = $templateInformation?->getExtends();
 
         if ($currentExtends && ContaoTwigUtil::getIdentifier($currentExtends) === $identifier) {
-            return [];
+            return null;
         }
 
         return [

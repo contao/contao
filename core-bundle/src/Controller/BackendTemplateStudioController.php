@@ -510,10 +510,11 @@ class BackendTemplateStudioController extends AbstractBackendController
 
         if ($error instanceof SyntaxError) {
             $error = $getRootError($error);
+            $message = $error instanceof SyntaxError ? $error->getRawMessage() : $error->getMessage();
 
             $data['error'] = [
                 'line' => $error->getLine() > 0 ? $error->getLine() : 1,
-                'message' => "Syntax Error\n\n{$error->getRawMessage()}",
+                'message' => "Syntax Error\n\n{$message}",
             ];
         } elseif ($error instanceof LoaderError) {
             $data['error'] = [
