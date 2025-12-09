@@ -16,7 +16,6 @@ use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FilesModel;
@@ -427,7 +426,8 @@ class ValueFormatter implements ResetInterface
 
     private function quoteIdentifier(string $identifier): string
     {
-        // Quoted already or not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
+        // Quoted already or not an identifier (AbstractPlatform::quoteIdentifier()
+        // handles table.column so also allow . here)
         if (!preg_match('/^[A-Za-z0-9_$.]+$/', $identifier)) {
             return $identifier;
         }

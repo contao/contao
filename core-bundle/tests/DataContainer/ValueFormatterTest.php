@@ -18,7 +18,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
