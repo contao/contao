@@ -11,6 +11,7 @@
     .set('data-contao--limit-height-collapse-all-title-value', 'DCA.collapseNodes.1'|trans, limitHeight)
 %}
 <div{{ view_attributes }}>
+    {{ message|raw }}
     {{ operations|raw }}
 
     {% if isEmpty %}

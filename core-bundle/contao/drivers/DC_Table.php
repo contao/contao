@@ -4645,7 +4645,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
         $parameters = [
-            'operations' => Message::generate() . $operations,
+			'message' => Message::generate(),
+            'operations' => $operations,
             'isEmpty' => $objRow->numRows < 1,
         ];
 
