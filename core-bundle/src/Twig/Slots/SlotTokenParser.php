@@ -26,7 +26,7 @@ use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
 /**
- * @experimental
+ * @internal
  */
 final class SlotTokenParser extends AbstractTokenParser
 {

@@ -29,7 +29,7 @@ use Twig\TokenParser\IncludeTokenParser;
  *
  * @see IncludeTokenParser
  *
- * @experimental
+ * @internal
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
@@ -43,7 +43,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
         // Handle Contao includes
-        if ($contaoNameExpression = $this->traverseAndAdjustTemplateNames($nameExpression)) {
+        if ($contaoNameExpression = $this->traverseAndAdjustTemplateNames($nameExpression, $ignoreMissing)) {
             $nameExpression = $contaoNameExpression;
         }
 
@@ -87,16 +87,16 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     /**
      * Returns a Node if the given $node should be replaced, null otherwise.
      */
-    private function traverseAndAdjustTemplateNames(Node $node): Node|null
+    private function traverseAndAdjustTemplateNames(Node $node, bool $ignoreMissing): Node|null
     {
         if (!$node instanceof ConstantExpression) {
             foreach ($node as $name => $child) {
                 try {
-                    if ($adjustedNode = $this->traverseAndAdjustTemplateNames($child)) {
+                    if ($adjustedNode = $this->traverseAndAdjustTemplateNames($child, $ignoreMissing)) {
                         $node->setNode((string) $name, $adjustedNode);
                     }
 
-                    $this->traverseAndAdjustTemplateNames($child);
+                    $this->traverseAndAdjustTemplateNames($child, $ignoreMissing);
                 } catch (LoaderError $e) {
                     // Allow missing templates if they are listed in an array like "{% include
                     // ['@Contao/missing', '@Contao/existing'] %}"
@@ -119,6 +119,10 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         try {
             $allFirstByThemeSlug = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
         } catch (\LogicException $e) {
+            if ($ignoreMissing) {
+                return null;
+            }
+
             throw new LoaderError($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', $node->getTemplateLine(), $node->getSourceContext(), $e);
         }
 

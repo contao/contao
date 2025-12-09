@@ -1,19 +1,19 @@
-{% extends "@Contao/content_element/_base.html.twig" %}
+{% extends '@Contao/content_element/_base.html.twig' %}
 {% trans_default_domain 'contao_default' %}
 
-{% set passkeyConfig = {
+{% set passkey_config = {
     unsupported: 'ERR.passkeysUnsupported'|trans,
     assertionFailure: 'ERR.passkeyAssertionFailure'|trans,
     optionsUrl: path('webauthn.controller.security.contao_frontend.request.options'),
     resultUrl: path('webauthn.controller.security.contao_frontend.request.result'),
     requestTokenScript: path('contao_frontend_request_token_script'),
-    redirect: redirect|default|raw,
+    redirect: redirect|default,
 } %}
 
 {% set attributes = attrs()
     .addClass(logout|default ? 'logout' : 'login')
     .set('data-passkey-login', not logout|default)
-    .set('data-passkey-config', passkeyConfig|json_encode, not logout|default)
+    .set('data-passkey-config', passkey_config|json_encode, not logout|default)
     .mergeWith(attributes|default)
 %}
 
@@ -91,7 +91,7 @@
 
 {% block script %}
     {% if not as_editor_view and not logout|default %}
-        {% add "passkey_login" to head %}
+        {% add 'passkey_login' to head %}
             <script src="{{ asset('passkey_login.js', 'contao_core') }}" async></script>
         {% endadd %}
     {% endif %}

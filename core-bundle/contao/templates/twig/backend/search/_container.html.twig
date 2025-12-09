@@ -1,11 +1,11 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set search_container_attributes = attrs()
     .set('data-controller', 'contao--backend-search')
     .set('data-contao--backend-search-url-value', path('_contao_backend_search.stream'))
     .set('data-contao--backend-search-min-characters-value', 3)
     .set('data-contao--backend-search-debounce-delay-value', 300)
-    .set('data-action','click@document->contao--backend-search#close keydown.esc@document->contao--backend-search#close')
+    .set('data-action', 'click@document->contao--backend-search#close keydown.esc@document->contao--backend-search#close')
     .set('data-contao--backend-search-hidden-class', 'search--hidden')
     .set('data-contao--backend-search-initial-class', 'search--initial')
     .set('data-contao--backend-search-loading-class', 'search--loading')
@@ -44,7 +44,14 @@
             <span class="backend-search_message search-message--error">{{ 'ERR.general'|trans }}</span>
 
             {# Results #}
-            <ul id="backend-search--results" class="backend-search_results" data-contao--backend-search-target="results"></ul>
+            <div class="backend-search_results-grid">
+                <div class="backend-search_facets">
+                    <div id="backend-search--facet-types" class="backend-search_facet_types"></div>
+                    <div id="backend-search--facet-tags" class="backend-search_facet_tags"></div>
+                </div>
+                <div id="backend-search--results" class="backend-search_results" data-contao--backend-search-target="results"></div>
+            </div>
+
         </div>
     </div>
 </div>

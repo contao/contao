@@ -68,13 +68,19 @@ class BackendSearchControllerTest extends TestCase
             ->method('render')
             ->with(
                 '@Contao/backend/search/show_results.stream.html.twig',
-                $this->callback(static fn (array $parameters) => ['hits' => $hits] === $parameters),
+                $this->callback(
+                    function (array $parameters) use ($expectedQuery, $hits) {
+                        $this->assertTrue($expectedQuery->equals($parameters['query']));
+                        $this->assertSame($hits, $parameters['hits']);
+
+                        return true;
+                    },
+                ),
             )
             ->willReturn('<stream>')
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $container = new ContainerBuilder();
         $container->set('twig', $twig);
@@ -93,7 +99,7 @@ class BackendSearchControllerTest extends TestCase
     {
         $getTurboStreamRequest = static function (array $query = []): Request {
             $request = new Request($query);
-            $request->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
+            $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
             return $request;
         };

@@ -20,8 +20,6 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @experimental
- *
  * @implements \IteratorAggregate<string, string>
  */
 final class Finder implements \IteratorAggregate, \Countable
@@ -142,11 +140,13 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Returns the result as template options.
+     * Returns the result as template options. When searching with an exact
+     * identifier, this identifier becomes the default option (key = ""). Set
+     * $baseIdentifierAsDefaultOption to false, if the key should still be set.
      *
      * @return array<string, string>
      */
-    public function asTemplateOptions(): array
+    public function asTemplateOptions(bool $baseIdentifierAsDefaultOption = true): array
     {
         $getSourceLabel = function (string $name): string {
             if (null !== ($themeSlug = $this->themeNamespace->match($name))) {
@@ -183,7 +183,7 @@ final class Finder implements \IteratorAggregate, \Countable
 
         foreach ($this->asIdentifierList() as $identifier) {
             $sourceLabels = array_map($getSourceLabel, $this->sources[$identifier]);
-            $key = $identifier !== $this->identifier ? $identifier : '';
+            $key = !$baseIdentifierAsDefaultOption || $identifier !== $this->identifier ? $identifier : '';
 
             $options[$key] = $getCustomLabel($identifier, $sourceLabels) ?? $getLabel($identifier, $sourceLabels);
         }

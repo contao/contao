@@ -1,6 +1,6 @@
-{% extends "@Contao/content_element/_base.html.twig" %}
-{% use "@Contao/component/_list.html.twig" %}
-{% use "@Contao/component/_download.html.twig" %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+{% use '@Contao/component/_list.html.twig' %}
+{% use '@Contao/component/_download.html.twig' %}
 
 {% block content %}
     {% with {items: downloads} %}{{ block('list_component') }}{% endwith %}

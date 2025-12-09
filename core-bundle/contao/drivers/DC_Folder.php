@@ -477,23 +477,29 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->addBackButton();
 		}
 
-		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
 		{
-			$operations->append(array(
-				'href' => $this->addToUrl($hrfNew),
-				'label' => $lblNew,
-				'title' => $ttlNew,
-				'attributes' => (new HtmlAttributes())->addClass($clsNew)->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
-				'primary' => true,
-			));
+			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
+			{
+				$operations->append(array(
+					'href' => $this->addToUrl($hrfNew),
+					'label' => $lblNew,
+					'title' => $ttlNew,
+					'attributes' => (new HtmlAttributes())->addClass($clsNew)->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+					'primary' => true,
+				));
+			}
 
-			$operations->append(array(
-				'href' => $this->addToUrl('&amp;act=paste&amp;mode=move'),
-				'label' => $GLOBALS['TL_LANG'][$this->strTable]['move'][0],
-				'title' => $GLOBALS['TL_LANG'][$this->strTable]['move'][1],
-				'attributes' => (new HtmlAttributes())->addClass('header_new')->set('data-action', 'contao--scroll-offset#store'),
-				'primary' => true,
-			));
+			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'file'))))
+			{
+				$operations->append(array(
+					'href' => $this->addToUrl('&amp;act=paste&amp;mode=move'),
+					'label' => $GLOBALS['TL_LANG'][$this->strTable]['move'][0],
+					'title' => $GLOBALS['TL_LANG'][$this->strTable]['move'][1],
+					'attributes' => (new HtmlAttributes())->addClass('header_new')->set('data-action', 'contao--scroll-offset#store'),
+					'primary' => true,
+				));
+			}
 		}
 
 		if ($blnClipboard)
@@ -1686,7 +1692,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </div>
 </div>
 </div>
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
   <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</button>
 </div>
@@ -1836,6 +1842,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$objTemplate = new BackendTemplate('be_ace');
 			$objTemplate->selector = 'ctrl_source';
 			$objTemplate->type = $objFile->extension;
+			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'];
+			$objTemplate->aceType = Backend::getAceType($objFile->extension);
 
 			$codeEditor = $objTemplate->parse();
 		}
@@ -2302,7 +2310,19 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 				elseif ($v == '__new__')
 				{
-					$filesObj->rrdir(StringUtil::stripRootDir($path) . '/' . $v);
+					try
+					{
+						$this->denyAccessUnlessGranted(
+							ContaoCorePermissions::DC_PREFIX . $this->strTable,
+							new DeleteAction($this->strTable, array('id' => $path . '/' . $v, 'type' => 'folder')),
+						);
+
+						$filesObj->rrdir(StringUtil::stripRootDir($path) . '/' . $v);
+					}
+					catch (AccessDeniedException)
+					{
+						// ignore if new folder cannot be deleted, we simply don't list it
+					}
 				}
 				else
 				{
@@ -2441,12 +2461,23 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Default buttons
 				else
 				{
-					$uploadButton = ' <a href="' . $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded) . '">' . Image::getHtml('new.svg', \sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)) . '</a>';
-
 					// Only show the upload button for mounted folders
 					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
 					{
-						$return .= $uploadButton;
+						if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
+						{
+							$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
+
+							$operations->append(array(
+								'label' => $GLOBALS['TL_LANG']['tl_files']['upload'][0],
+								'title' => \sprintf($GLOBALS['TL_LANG']['tl_files']['upload'][1], $currentEncoded),
+								'href' => $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded),
+								'icon' => 'new.svg',
+								'primary' => true,
+							));
+
+							$return .= $operations;
+						}
 					}
 					else
 					{

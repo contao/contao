@@ -212,6 +212,9 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file "%s"</source>
       </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+      </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder "%s"</source>
       </trans-unit>

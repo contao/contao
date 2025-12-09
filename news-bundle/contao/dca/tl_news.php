@@ -91,7 +91,8 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 				'icon'                => 'featured.svg',
 				'primary'             => true,
 			),
-			'show'
+			'show',
+			'versions',
 		)
 	),
 

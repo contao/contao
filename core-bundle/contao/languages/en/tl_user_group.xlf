@@ -95,6 +95,9 @@
       <trans-unit id="tl_user_group.toggle.4">
         <source>Activate</source>
       </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

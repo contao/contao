@@ -178,8 +178,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $request = new Request();
         $request->attributes->set('_controller', BackendTemplateStudioController::class);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, true);
         $listener($event);

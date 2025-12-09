@@ -415,7 +415,7 @@ class FileTree extends Widget
 
 			$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
-			$buffer = \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strInfo, $strClass);
+			$buffer = \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], StringUtil::specialcharsAttribute($strInfo), $strClass);
 		}
 		else
 		{

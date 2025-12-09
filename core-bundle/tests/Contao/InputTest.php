@@ -64,7 +64,7 @@ class InputTest extends TestCase
         parent::tearDown();
     }
 
-    #[DataProvider('encodeInputProvider')]
+    #[DataProvider('encodeInputProvider', validateArgumentCount: false)]
     public function testCleansTheGlobalArrays(string $source, string $expected): void
     {
         $_GET = $_POST = $_COOKIE = [$source => 1];

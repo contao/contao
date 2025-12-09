@@ -1,8 +1,8 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 <div class="header_wrapper">
     <h3>{% block headline %}{% endblock %}</h3>
-    {% include '@Contao/backend/template_studio/_close_button.html.twig' with {target_id: 'template-studio--info'} %}
+    {{ include('@Contao/backend/template_studio/_close_button.html.twig', {target_id: 'template-studio--info'}) }}
 </div>
 
 {% block content %}{% endblock %}

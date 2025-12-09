@@ -11,9 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Controller\Backend\FavoriteController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /**
  * Main back end controller.
@@ -55,7 +57,7 @@ class BackendMain extends Backend
 		$user = BackendUser::getInstance();
 
 		// Password change required
-		if ($user->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		if ($user->pwChange && !$authorizationChecker->isGranted('IS_IMPERSONATOR'))
 		{
 			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}
@@ -101,6 +103,9 @@ class BackendMain extends Backend
 		}
 
 		$this->Template->main = '';
+
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+		$this->Template->toggleFavorites = System::getContainer()->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, array('target_path' => $request->getRequestUri())));
 
 		// Ajax request
 		if (Input::post('action') && Environment::get('isAjaxRequest'))
@@ -242,6 +247,7 @@ class BackendMain extends Backend
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
 		$data['isPopup'] = Input::get('popup');
 		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
+		$data['containerClass'] = BackendUser::getInstance()->backendWidth;
 
 		$twig = $container->get('twig');
 		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();

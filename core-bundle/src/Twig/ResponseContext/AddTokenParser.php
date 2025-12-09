@@ -17,7 +17,10 @@ use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
-class AddTokenParser extends AbstractTokenParser
+/**
+ * @internal
+ */
+final class AddTokenParser extends AbstractTokenParser
 {
     public function __construct(private readonly string $extensionName)
     {

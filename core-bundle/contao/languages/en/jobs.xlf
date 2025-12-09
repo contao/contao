@@ -5,6 +5,9 @@
       <trans-unit id="jobs.tstamp.0">
         <source>Created at</source>
       </trans-unit>
+      <trans-unit id="jobs.progress.0">
+        <source>Progress</source>
+      </trans-unit>
       <trans-unit id="jobs.status.0">
         <source>Status</source>
       </trans-unit>

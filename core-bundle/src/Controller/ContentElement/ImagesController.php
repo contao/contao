@@ -14,12 +14,16 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Pagination\PaginationConfig;
+use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -34,6 +38,7 @@ class ImagesController extends AbstractContentElementController
         private readonly Security $security,
         private readonly VirtualFilesystem $filesStorage,
         private readonly Studio $studio,
+        private readonly PaginationFactoryInterface $paginationFactory,
         private readonly array $validExtensions,
     ) {
     }
@@ -82,6 +87,19 @@ class ImagesController extends AbstractContentElementController
 
         if (!$imageList) {
             return new Response();
+        }
+
+        if ($model->serverPagination && !$randomize) {
+            $param = 'page_g'.$model->id;
+
+            try {
+                $pagination = $this->paginationFactory->create(new PaginationConfig($param, \count($imageList), $model->perPage));
+            } catch (PageOutOfRangeException $e) {
+                throw new PageNotFoundException(\sprintf('Page not found: %s', $request->getUri()), previous: $e);
+            }
+
+            $template->set('pagination', $pagination);
+            $imageList = $pagination->getItemsForPage($imageList);
         }
 
         $template->set('images', $imageList);

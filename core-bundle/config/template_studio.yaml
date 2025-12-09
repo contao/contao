@@ -7,6 +7,10 @@ services:
             calls:
                 - [setContainer, ['@Psr\Container\ContainerInterface']]
 
+        Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation:
+            tags:
+                - { name: container.service_subscriber, id: contao.twig.studio.cache_invalidator }
+
     Contao\CoreBundle\Controller\BackendTemplateStudioController:
         arguments:
             - '@contao.twig.filesystem_loader'
@@ -25,6 +29,12 @@ services:
             - '@contao.twig.inspector'
             - '@contao.twig.finder_factory'
             - '@twig'
+
+    contao.twig.studio.cache_invalidator:
+        class: Contao\CoreBundle\Twig\Studio\CacheInvalidator
+        arguments:
+            - '@twig'
+            - '@contao.twig.filesystem_loader'
 
     contao.twig.studio.create_content_element_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateContentElementVariantOperation
