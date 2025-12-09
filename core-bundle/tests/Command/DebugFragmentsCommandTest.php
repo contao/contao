@@ -39,8 +39,8 @@ class DebugFragmentsCommandTest extends TestCase
     public function testNameAndArguments(): void
     {
         $command = new DebugFragmentsCommand(
-            $this->createMock(FragmentRegistry::class),
-            $this->createMock(ContainerInterface::class),
+            $this->createStub(FragmentRegistry::class),
+            $this->createStub(ContainerInterface::class),
         );
 
         $this->assertSame('debug:fragments', $command->getName());

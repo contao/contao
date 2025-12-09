@@ -28,7 +28,7 @@ class ContentElementReferenceTest extends TestCase
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = $this->createMock(ContentModel::class);
+        $model = $this->createStub(ContentModel::class);
 
         $reference = new ContentElementReference($model);
         $this->assertSame('main', $reference->attributes['section']);

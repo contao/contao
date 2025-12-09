@@ -16,7 +16,7 @@ use Contao\CoreBundle\EventListener\ServiceUnavailableListener;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -164,9 +164,9 @@ class ServiceUnavailableListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockEvent(Request $request, bool $isMainRequest = true): RequestEvent&MockObject
+    private function mockEvent(Request $request, bool $isMainRequest = true): RequestEvent&Stub
     {
-        $event = $this->createMock(RequestEvent::class);
+        $event = $this->createStub(RequestEvent::class);
         $event
             ->method('isMainRequest')
             ->willReturn($isMainRequest)

@@ -69,7 +69,7 @@ class PageUrlListenerTest extends TestCase
         $listener = new PageUrlListener(
             $framework,
             $slug,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
             $this->mockConnection(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
@@ -198,7 +198,7 @@ class PageUrlListenerTest extends TestCase
         $listener = new PageUrlListener(
             $framework,
             $slug,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
             $this->mockConnection(),
             $pageRegistry,
             $this->mockRouter($throwParametersException ? false : $currentRoute),
@@ -314,8 +314,8 @@ class PageUrlListenerTest extends TestCase
         $listener = new PageUrlListener(
             $framework,
             $slug,
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(Connection::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Connection::class),
             $this->mockPageRegistry([false]),
             $this->mockRouter(),
             new UrlMatcher(),
@@ -376,8 +376,8 @@ class PageUrlListenerTest extends TestCase
         $listener = new PageUrlListener(
             $framework,
             $slug,
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(Connection::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Connection::class),
             $pageRegistry,
             $this->mockRouter($currentRoute),
             new UrlMatcher(),
@@ -990,7 +990,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $translator,
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
             new UrlMatcher(),
@@ -1030,7 +1030,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1051,7 +1051,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
+            $this->createStub(Slug::class),
             $this->mockTranslator(),
             $this->mockConnection(true),
             $pageRegistry,
@@ -1093,7 +1093,7 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $this->createContaoFrameworkStub(),
-            $this->createMock(Slug::class),
+            $this->createStub(Slug::class),
             $translator,
             $connection,
             $this->mockPageRegistry(),
@@ -1176,7 +1176,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1202,10 +1202,10 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
+            $this->createStub(Slug::class),
             $translator,
             $this->mockConnection(true),
-            new PageRegistry($this->createMock(Connection::class)),
+            new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(3),
             new UrlMatcher(),
         );
@@ -1279,7 +1279,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1302,10 +1302,10 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Slug::class),
+            $this->createStub(TranslatorInterface::class),
             $this->mockConnection(true),
-            new PageRegistry($this->createMock(Connection::class)),
+            new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(2),
             new UrlMatcher(),
         );
@@ -1331,8 +1331,8 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Slug::class),
+            $this->createStub(TranslatorInterface::class),
             $this->mockConnectionWithStatement(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
@@ -1363,8 +1363,8 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Slug::class),
+            $this->createStub(TranslatorInterface::class),
             $this->mockConnectionWithStatement(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
@@ -1397,8 +1397,8 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Slug::class),
+            $this->createStub(TranslatorInterface::class),
             $this->mockConnectionWithStatement(),
             $this->mockPageRegistry(),
             $this->mockRouter(),
@@ -1446,7 +1446,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1464,10 +1464,10 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
+            $this->createStub(Slug::class),
             $this->mockTranslator(),
             $this->mockConnection(),
-            new PageRegistry($this->createMock(Connection::class)),
+            new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(1),
             new UrlMatcher(),
         );
@@ -1539,7 +1539,7 @@ class PageUrlListenerTest extends TestCase
             ],
         ]);
 
-        $pageAdapter = $this->createAdapterMock(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
+        $pageAdapter = $this->createAdapterStub(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pageModels['id'][$id] ?? null)
@@ -1564,10 +1564,10 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
+            $this->createStub(Slug::class),
             $translator,
             $this->mockConnection(),
-            new PageRegistry($this->createMock(Connection::class)),
+            new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(3),
             new UrlMatcher(),
         );
@@ -1593,9 +1593,9 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(Connection::class),
+            $this->createStub(Slug::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
             new UrlMatcher(),
@@ -1625,9 +1625,9 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(Connection::class),
+            $this->createStub(Slug::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
             new UrlMatcher(),
@@ -1659,9 +1659,9 @@ class PageUrlListenerTest extends TestCase
 
         $listener = new PageUrlListener(
             $framework,
-            $this->createMock(Slug::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(Connection::class),
+            $this->createStub(Slug::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
             new UrlMatcher(),
@@ -1700,11 +1700,10 @@ class PageUrlListenerTest extends TestCase
         return $return;
     }
 
-    private function mockConnection(bool $prefixCheck = false): Connection&MockObject
+    private function mockConnection(bool $prefixCheck = false): Connection
     {
-        $connection = $this->createMock(Connection::class);
-
         if ($prefixCheck) {
+            $connection = $this->createMock(Connection::class);
             $connection
                 ->expects($this->once())
                 ->method('fetchOne')
@@ -1721,17 +1720,19 @@ class PageUrlListenerTest extends TestCase
                 )
                 ->willReturn(0)
             ;
+        } else {
+            $connection = $this->createStub(Connection::class);
         }
 
         return $connection;
     }
 
     /**
-     * @return Adapter<Input>&MockObject
+     * @return Adapter<Input>&Stub
      */
-    private function mockInputAdapter(array $inputData): Adapter&MockObject
+    private function mockInputAdapter(array $inputData): Adapter&Stub
     {
-        $inputAdapter = $this->createAdapterMock(['post']);
+        $inputAdapter = $this->createAdapterStub(['post']);
         $inputAdapter
             ->method('post')
             ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)
@@ -1766,9 +1767,9 @@ class PageUrlListenerTest extends TestCase
         return $translator;
     }
 
-    private function mockConnectionWithStatement(): Connection&MockObject
+    private function mockConnectionWithStatement(): Connection&Stub
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->willReturn(0)
@@ -1777,9 +1778,9 @@ class PageUrlListenerTest extends TestCase
         return $connection;
     }
 
-    private function mockPageRegistry(array $isRoutable = [true], array $routes = []): PageRegistry&MockObject
+    private function mockPageRegistry(array $isRoutable = [true], array $routes = []): PageRegistry&Stub
     {
-        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry = $this->createStub(PageRegistry::class);
         $pageRegistry
             ->method('isRoutable')
             ->willReturn(...$isRoutable)
@@ -1806,7 +1807,7 @@ class PageUrlListenerTest extends TestCase
             $router
                 ->expects($this->atLeastOnce())
                 ->method('generate')
-                ->willThrowException($this->createMock(RouteParametersException::class))
+                ->willThrowException($this->createStub(RouteParametersException::class))
             ;
         } elseif ($route instanceof PageRoute) {
             $path = '/'.$route->getPageModel()->alias;

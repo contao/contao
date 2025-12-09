@@ -49,7 +49,7 @@ class RecordPreviewListenerTest extends TestCase
             DataContainer::class => $dcAdapter,
         ]);
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $listener = new RecordPreviewListener($framework, $connection);
         $listener->registerDeleteCallbacks($table);
@@ -71,10 +71,10 @@ class RecordPreviewListenerTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub([
-            System::class => $this->createMock(System::class),
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -129,10 +129,10 @@ class RecordPreviewListenerTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub([
-            System::class => $this->createMock(System::class),
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -190,10 +190,10 @@ class RecordPreviewListenerTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub([
-            System::class => $this->createMock(System::class),
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -267,7 +267,7 @@ class RecordPreviewListenerTest extends TestCase
             System::class => $systemAdapter,
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -318,10 +318,10 @@ class RecordPreviewListenerTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub([
-            System::class => $this->createMock(System::class),
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -369,10 +369,10 @@ class RecordPreviewListenerTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub([
-            System::class => $this->createMock(System::class),
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn($row)
@@ -417,10 +417,10 @@ class RecordPreviewListenerTest extends TestCase
     public function testFailsSilentlyIfRowDoesNotExist(): void
     {
         $framework = $this->createContaoFrameworkStub([
-            System::class => $this->createMock(System::class),
+            System::class => $this->createStub(System::class),
         ]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchAssociative')
             ->willReturn(false)

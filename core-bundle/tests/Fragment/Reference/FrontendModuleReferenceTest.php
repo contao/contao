@@ -28,7 +28,7 @@ class FrontendModuleReferenceTest extends TestCase
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = $this->createMock(ModuleModel::class);
+        $model = $this->createStub(ModuleModel::class);
 
         $reference = new FrontendModuleReference($model);
         $this->assertSame('main', $reference->attributes['section']);

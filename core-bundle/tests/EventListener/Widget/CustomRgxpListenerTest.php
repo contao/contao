@@ -39,7 +39,7 @@ class CustomRgxpListenerTest extends TestCase
 
         $listener = new CustomRgxpListener($translator);
 
-        $this->assertFalse($listener('foobar', 'input', $this->createMock(Widget::class)));
+        $this->assertFalse($listener('foobar', 'input', $this->createStub(Widget::class)));
     }
 
     public function testReturnsTrueIfNoCustomRgxpSet(): void
@@ -53,7 +53,7 @@ class CustomRgxpListenerTest extends TestCase
 
         $listener = new CustomRgxpListener($translator);
 
-        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'input', $this->createMock(Widget::class)));
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'input', $this->createStub(Widget::class)));
     }
 
     public function testAddsErrorIfInputDoesNotMatchCustomRgxp(): void

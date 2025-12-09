@@ -127,7 +127,7 @@ class InputEnhancerTest extends TestCase
         $requestStack = new RequestStack([$request]);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
+            'pageModel' => $this->createStub(PageModel::class),
             'parameters' => '/foo/bar/foo/bar',
         ];
 

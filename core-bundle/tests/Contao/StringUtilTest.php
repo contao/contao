@@ -53,7 +53,7 @@ class StringUtilTest extends TestCase
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('request_stack', new RequestStack());
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 

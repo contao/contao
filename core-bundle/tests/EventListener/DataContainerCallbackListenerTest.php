@@ -267,7 +267,7 @@ class DataContainerCallbackListenerTest extends TestCase
 
         if ($expected) {
             $this->assertIsCallable($GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]);
-            $this->assertSame('foo', $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]($this->createMock(DataContainer::class)));
+            $this->assertSame('foo', $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]($this->createStub(DataContainer::class)));
         } else {
             $this->assertSame([TestListener::class, 'onClosure'], $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]);
         }

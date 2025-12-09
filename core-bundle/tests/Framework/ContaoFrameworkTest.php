@@ -317,13 +317,13 @@ class ContaoFrameworkTest extends TestCase
 
     public function testDelegatesTheResetCalls(): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

@@ -33,11 +33,11 @@ class PageFinderTest extends TestCase
 
         $pageFinder = new PageFinder(
             $this->createContaoFrameworkStub(),
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $pageModel);
@@ -47,7 +47,7 @@ class PageFinderTest extends TestCase
 
     public function testGetCurrentPageFromRequestStack(): void
     {
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $pageModel);
@@ -56,7 +56,7 @@ class PageFinderTest extends TestCase
 
         $pageFinder = new PageFinder(
             $this->createContaoFrameworkStub(),
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
@@ -85,10 +85,10 @@ class PageFinderTest extends TestCase
             ->method('initialize')
         ;
 
-        $requestMatcher = $this->createMock(RequestMatcherInterface::class);
+        $requestMatcher = $this->createStub(RequestMatcherInterface::class);
         $requestMatcher
             ->method('matchRequest')
-            ->willThrowException($this->createMock(ExceptionInterface::class))
+            ->willThrowException($this->createStub(ExceptionInterface::class))
         ;
 
         $pageFinder = new PageFinder($framework, $requestMatcher, new RequestStack());

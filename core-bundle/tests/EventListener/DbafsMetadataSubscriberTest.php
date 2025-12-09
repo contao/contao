@@ -90,7 +90,7 @@ class DbafsMetadataSubscriberTest extends TestCase
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
             ->willReturn($request)
@@ -169,7 +169,7 @@ class DbafsMetadataSubscriberTest extends TestCase
     private function getDbafsMetadataSubscriber(RequestStack|null $requestStack = null): DbafsMetadataSubscriber
     {
         return new DbafsMetadataSubscriber(
-            $requestStack ?? $this->createMock(RequestStack::class),
+            $requestStack ?? $this->createStub(RequestStack::class),
         );
     }
 

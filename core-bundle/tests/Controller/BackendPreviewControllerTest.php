@@ -19,7 +19,7 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -38,11 +38,11 @@ class BackendPreviewControllerTest extends TestCase
     {
         $controller = new BackendPreviewController(
             '/preview.php',
-            $this->createMock(FrontendPreviewAuthenticator::class),
+            $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockSecurityHelper(),
-            $this->createMock(LoginLinkHandlerInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(UriSigner::class),
         );
 
         $response = $controller(new Request());
@@ -55,11 +55,11 @@ class BackendPreviewControllerTest extends TestCase
     {
         $controller = new BackendPreviewController(
             '/preview.php',
-            $this->createMock(FrontendPreviewAuthenticator::class),
+            $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockSecurityHelper(),
-            $this->createMock(LoginLinkHandlerInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/managed-edition/public/contao/preview?page=123');
@@ -76,11 +76,11 @@ class BackendPreviewControllerTest extends TestCase
     {
         $controller = new BackendPreviewController(
             '/preview.php',
-            $this->createMock(FrontendPreviewAuthenticator::class),
+            $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockSecurityHelper(false),
-            $this->createMock(LoginLinkHandlerInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -112,8 +112,8 @@ class BackendPreviewControllerTest extends TestCase
             $previewAuthenticator,
             new EventDispatcher(),
             $this->mockSecurityHelper(),
-            $this->createMock(LoginLinkHandlerInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(UriSigner::class),
         );
 
         $response = $controller($request);
@@ -132,11 +132,11 @@ class BackendPreviewControllerTest extends TestCase
 
         $controller = new BackendPreviewController(
             '/preview.php',
-            $this->createMock(FrontendPreviewAuthenticator::class),
+            $this->createStub(FrontendPreviewAuthenticator::class),
             $dispatcher,
             $this->mockSecurityHelper(),
-            $this->createMock(LoginLinkHandlerInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -166,7 +166,7 @@ class BackendPreviewControllerTest extends TestCase
             ->willReturn(new LoginLinkDetails($loginUrl ?? '', new \DateTimeImmutable()))
         ;
 
-        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner = $this->createStub(UriSigner::class);
         $uriSigner
             ->method('sign')
             ->willReturnArgument(0)
@@ -174,7 +174,7 @@ class BackendPreviewControllerTest extends TestCase
 
         $controller = new BackendPreviewController(
             '/preview.php',
-            $this->createMock(FrontendPreviewAuthenticator::class),
+            $this->createStub(FrontendPreviewAuthenticator::class),
             $dispatcher,
             $this->mockSecurityHelper(true, $this->createClassWithPropertiesStub(BackendUser::class), $twoFactorComplete),
             $loginLinkHandler,
@@ -225,11 +225,11 @@ class BackendPreviewControllerTest extends TestCase
     {
         $controller = new BackendPreviewController(
             '/preview.php',
-            $this->createMock(FrontendPreviewAuthenticator::class),
+            $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockSecurityHelper(),
-            $this->createMock(LoginLinkHandlerInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(UriSigner::class),
         );
 
         $request = Request::create('https://localhost/preview.php/en/');
@@ -242,9 +242,9 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
-    private function mockSecurityHelper(bool $granted = true, UserInterface|null $user = null, bool $twoFactorComplete = false): Security&MockObject
+    private function mockSecurityHelper(bool $granted = true, UserInterface|null $user = null, bool $twoFactorComplete = false): Security&Stub
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->willReturn($granted)

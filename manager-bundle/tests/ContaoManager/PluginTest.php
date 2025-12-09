@@ -1253,7 +1253,7 @@ class PluginTest extends ContaoTestCase
 
     private function getContainer(): PluginContainerBuilder
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader = $this->createStub(PluginLoader::class);
 
         $container = new PluginContainerBuilder($pluginLoader, []);
         $container->setParameter('database_host', 'localhost');

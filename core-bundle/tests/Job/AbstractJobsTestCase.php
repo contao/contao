@@ -36,7 +36,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
 
         $this->vfs = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
     }
 
@@ -74,9 +74,9 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
 
         return new Jobs(
             $connection,
-            $security ?? $this->createMock(Security::class),
+            $security ?? $this->createStub(Security::class),
             $this->vfs,
-            $router ?? $this->createMock(RouterInterface::class),
+            $router ?? $this->createStub(RouterInterface::class),
             $clock,
         );
     }

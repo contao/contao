@@ -27,7 +27,7 @@ class UserCheckerTest extends TestCase
         $adapter = $this->createConfiguredAdapterStub(['dateFormat' => 'Y-m-d']);
         $framework = $this->createContaoFrameworkStub([Config::class => $adapter]);
 
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user->username = 'foo';
         $user->disable = false;
         $user->login = true;
@@ -50,7 +50,7 @@ class UserCheckerTest extends TestCase
         ;
 
         $userChecker = new UserChecker($framework);
-        $userChecker->checkPreAuth($this->createMock(UserInterface::class));
+        $userChecker->checkPreAuth($this->createStub(UserInterface::class));
     }
 
     public function testThrowsAnExceptionIfTheAccountIsDisabled(): void

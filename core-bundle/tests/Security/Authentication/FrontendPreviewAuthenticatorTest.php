@@ -43,7 +43,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session = $this->mockSession();
         $user = (new \ReflectionClass(FrontendUser::class))->newInstanceWithoutConstructor();
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createStub(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByIdentifier')
             ->willReturn($user)
@@ -98,7 +98,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $session = $this->mockSession();
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createStub(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByIdentifier')
             ->willReturn($user)
@@ -160,7 +160,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createStub(UserProviderInterface::class);
         $userProvider
             ->method('loadUserByIdentifier')
             ->willReturn($user)
@@ -302,7 +302,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     private function getAuthenticator(Security|null $security = null, TokenStorageInterface|null $tokenStorage = null, TokenChecker|null $tokenChecker = null, SessionInterface|null $session = null, UserProviderInterface|null $userProvider = null, LoggerInterface|null $logger = null): FrontendPreviewAuthenticator
     {
         if (!$session) {
-            $session = $this->createMock(SessionInterface::class);
+            $session = $this->createStub(SessionInterface::class);
             $session
                 ->method('isStarted')
                 ->willReturn(true)
@@ -314,11 +314,11 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $security ??= $this->createMock(Security::class);
-        $tokenStorage ??= $this->createMock(TokenStorageInterface::class);
-        $tokenChecker ??= $this->createMock(TokenChecker::class);
-        $userProvider ??= $this->createMock(UserProviderInterface::class);
-        $logger ??= $this->createMock(LoggerInterface::class);
+        $security ??= $this->createStub(Security::class);
+        $tokenStorage ??= $this->createStub(TokenStorageInterface::class);
+        $tokenChecker ??= $this->createStub(TokenChecker::class);
+        $userProvider ??= $this->createStub(UserProviderInterface::class);
+        $logger ??= $this->createStub(LoggerInterface::class);
 
         return new FrontendPreviewAuthenticator($security, $tokenStorage, $tokenChecker, $requestStack, $userProvider, $logger);
     }

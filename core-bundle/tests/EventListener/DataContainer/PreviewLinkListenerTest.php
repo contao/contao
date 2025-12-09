@@ -45,12 +45,12 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub(),
-            $this->createMock(Connection::class),
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(Connection::class),
+            $this->createStub(Security::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
             new MockClock(),
             '',
         );
@@ -69,12 +69,12 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub(),
-            $this->createMock(Connection::class),
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(Connection::class),
+            $this->createStub(Security::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
             new MockClock(),
             '',
         );
@@ -91,12 +91,12 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub(),
-            $this->createMock(Connection::class),
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(Connection::class),
+            $this->createStub(Security::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
             new MockClock(),
             '',
         );
@@ -126,12 +126,12 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->mockSecurity($userId),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
             $clock,
             '/preview.php',
         );
@@ -173,12 +173,12 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->mockSecurity(),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
             new MockClock(),
             '/preview.php',
         );
@@ -201,12 +201,12 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->mockSecurity(),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
             new MockClock(),
             '/preview.php',
         );

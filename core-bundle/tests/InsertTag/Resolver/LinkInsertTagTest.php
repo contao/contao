@@ -46,9 +46,9 @@ class LinkInsertTagTest extends TestCase
         $this->expectExceptionMessage('Missing parameters for link insert tag.');
 
         $listener = new LinkInsertTag(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(TokenChecker::class),
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(ContentUrlGenerator::class),
         );
 
         /** @var ResolvedInsertTag $tag */
@@ -93,7 +93,7 @@ class LinkInsertTagTest extends TestCase
 
         $contaoFramework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
-        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator = $this->createStub(ContentUrlGenerator::class);
         $contentUrlGenerator
             ->method('generate')
             ->willReturnCallback(
@@ -118,7 +118,7 @@ class LinkInsertTagTest extends TestCase
 
         $listener = new LinkInsertTag(
             $contaoFramework,
-            $this->createMock(TokenChecker::class),
+            $this->createStub(TokenChecker::class),
             $contentUrlGenerator,
         );
 
@@ -178,9 +178,9 @@ class LinkInsertTagTest extends TestCase
         ;
 
         $listener = new LinkInsertTag(
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ContaoFramework::class),
             $tokenChecker,
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContentUrlGenerator::class),
         );
 
         /** @var ResolvedInsertTag $tag */
@@ -242,9 +242,9 @@ class LinkInsertTagTest extends TestCase
     private function getInsertTagParser(): InsertTagParser
     {
         return new InsertTagParser(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(FragmentHandler::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(FragmentHandler::class),
             (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
         );
     }

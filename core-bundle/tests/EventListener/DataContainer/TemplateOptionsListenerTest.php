@@ -114,7 +114,7 @@ class TemplateOptionsListenerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('rowCount')
             ->willReturn(null !== $commonType ? 1 : 2)
@@ -127,7 +127,7 @@ class TemplateOptionsListenerTest extends TestCase
             ;
         }
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -216,7 +216,7 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function getDefaultTemplateOptionsListener(RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([
@@ -244,18 +244,18 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function getTemplateOptionsListener(ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, ContaoFilesystemLoader|null $filesystemLoader = null): TemplateOptionsListener
     {
-        $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
-        $connection ??= $this->createMock(Connection::class);
+        $filesystemLoader ??= $this->createStub(ContaoFilesystemLoader::class);
+        $connection ??= $this->createStub(Connection::class);
         $framework ??= $this->mockFramework();
         $requestStack ??= new RequestStack();
 
         $finder = new Finder(
             $filesystemLoader,
-            $this->createMock(ThemeNamespace::class),
-            $this->createMock(Translator::class),
+            $this->createStub(ThemeNamespace::class),
+            $this->createStub(Translator::class),
         );
 
-        $finderFactory = $this->createMock(FinderFactory::class);
+        $finderFactory = $this->createStub(FinderFactory::class);
         $finderFactory
             ->method('create')
             ->willReturn($finder)

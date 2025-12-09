@@ -54,10 +54,10 @@ class PreviewFactoryTest extends TestCase
 
         $factory = new PreviewFactory(
             [],
-            $this->createMock(ImageFactoryInterface::class),
-            $this->createMock(PictureFactoryInterface::class),
-            $this->createMock(Studio::class),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ImageFactoryInterface::class),
+            $this->createStub(PictureFactoryInterface::class),
+            $this->createStub(Studio::class),
+            $this->createStub(ContaoFramework::class),
             'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),
             ['png'],
@@ -399,7 +399,7 @@ class PreviewFactoryTest extends TestCase
             }
         };
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturnCallback(
@@ -408,18 +408,18 @@ class PreviewFactoryTest extends TestCase
                         return $path;
                     }
 
-                    return new Image($path, $this->createMock(ImagineInterface::class));
+                    return new Image($path, $this->createStub(ImagineInterface::class));
                 },
             )
         ;
 
-        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory = $this->createStub(PictureFactoryInterface::class);
         $pictureFactory
             ->method('create')
             ->willReturnCallback(
                 function ($path) {
                     if (!$path instanceof ImageInterface) {
-                        $path = new Image($path, $this->createMock(ImagineInterface::class));
+                        $path = new Image($path, $this->createStub(ImagineInterface::class));
                     }
 
                     return new Picture(['src' => $path, 'srcset' => [[$path, '1x']]], []);
@@ -427,7 +427,7 @@ class PreviewFactoryTest extends TestCase
             )
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
 
         $studio = new Studio(
             $locator,
@@ -437,7 +437,7 @@ class PreviewFactoryTest extends TestCase
             ['png'],
         );
 
-        $filesContext = $this->createMock(ContaoContext::class);
+        $filesContext = $this->createStub(ContaoContext::class);
         $filesContext
             ->method('getStaticUrl')
             ->willReturn('')
@@ -457,7 +457,7 @@ class PreviewFactoryTest extends TestCase
             $imageFactory,
             $pictureFactory,
             $studio,
-            $framework ?? $this->createMock(ContaoFramework::class),
+            $framework ?? $this->createStub(ContaoFramework::class),
             'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),
             ['png'],

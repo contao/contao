@@ -23,7 +23,7 @@ class BackupCodeManagerTest extends TestCase
     public function testDoesNotHandleNonContaoUsers(): void
     {
         $backupCodeManager = new BackupCodeManager();
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
 
         $this->assertFalse($backupCodeManager->isBackupCode($user, '123456'));
 

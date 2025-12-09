@@ -228,7 +228,7 @@ class FilePickerProviderTest extends TestCase
             ->willReturn($accessGranted ?? false)
         ;
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
+        $menuFactory = $this->createStub(FactoryInterface::class);
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -244,7 +244,7 @@ class FilePickerProviderTest extends TestCase
             )
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
@@ -267,7 +267,7 @@ class FilePickerProviderTest extends TestCase
 
         $framwork = $this->createContaoFrameworkStub([FilesModel::class => $adapter]);
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('File picker')

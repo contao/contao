@@ -42,8 +42,8 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $this->createContaoFrameworkStub(),
             $this->mockPageRegistry(),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(UriSigner::class),
         );
 
         $listener($event);
@@ -53,7 +53,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
     public function testDoesNotConvertThePreviewUrlIfTheFrameworkIsNotInitialized(): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)
@@ -64,8 +64,8 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $framework,
             $this->mockPageRegistry(),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(UriSigner::class),
         );
 
         $listener($event);
@@ -81,8 +81,8 @@ class PreviewUrlConverterListenerTest extends TestCase
         $listener = new PreviewUrlConvertListener(
             $this->createContaoFrameworkStub(),
             $this->mockPageRegistry(),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(UriSigner::class),
         );
 
         $listener($event);
@@ -117,7 +117,7 @@ class PreviewUrlConverterListenerTest extends TestCase
             $this->createContaoFrameworkStub($adapters),
             $this->mockPageRegistry(),
             $urlGenerator,
-            $this->createMock(UriSigner::class),
+            $this->createStub(UriSigner::class),
         );
 
         $listener($event);
@@ -146,7 +146,7 @@ class PreviewUrlConverterListenerTest extends TestCase
             $framework,
             $this->mockPageRegistry(),
             $urlGenerator,
-            $this->createMock(UriSigner::class),
+            $this->createStub(UriSigner::class),
         );
 
         $listener($event);
@@ -186,7 +186,7 @@ class PreviewUrlConverterListenerTest extends TestCase
             $this->createContaoFrameworkStub($adapters),
             $this->mockPageRegistry(),
             $urlGenerator,
-            $this->createMock(UriSigner::class),
+            $this->createStub(UriSigner::class),
         );
 
         $listener($event);
@@ -266,7 +266,7 @@ class PreviewUrlConverterListenerTest extends TestCase
 
         $route = new PageRoute($pageModel);
 
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $request->query = new InputBag(['page' => '42']);
 
         $adapters = [

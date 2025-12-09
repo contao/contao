@@ -53,7 +53,7 @@ class DebugPagesCommandTest extends TestCase
     public function testNameAndArguments(): void
     {
         $framework = $this->createContaoFrameworkStub();
-        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry = $this->createStub(PageRegistry::class);
         $command = new DebugPagesCommand($framework, $pageRegistry);
 
         $this->assertSame('debug:pages', $command->getName());
@@ -64,13 +64,13 @@ class DebugPagesCommandTest extends TestCase
     #[DataProvider('commandOutputProvider')]
     public function testCommandOutput(array $pages, array $legacyPages, string $expectedOutput): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

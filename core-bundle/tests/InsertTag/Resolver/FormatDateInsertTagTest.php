@@ -46,9 +46,9 @@ class FormatDateInsertTagTest extends TestCase
         $listener = new FormatDateInsertTag($this->getFramework(), new RequestStack());
 
         $parser = new InsertTagParser(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(FragmentHandler::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(FragmentHandler::class),
             (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
         );
 

@@ -30,7 +30,7 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
         $mountManager = new MountManager([]);
         $mountManager->mount(new InMemoryFilesystemAdapter());
 
-        $baseStorage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), '');
+        $baseStorage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), '');
         $baseStorage->createDirectory('images');
         $baseStorage->createDirectory('images/photos');
         $baseStorage->createDirectory('images/photos/foo');
@@ -137,7 +137,7 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
     #[DataProvider('provideIllegalOperations')]
     public function testDeniesAccess(string $operation, array $arguments, string $expectedExceptionMessage): void
     {
-        $filterStorage = new DirectoryFilterVirtualFilesystem($this->createMock(VirtualFilesystemInterface::class), [
+        $filterStorage = new DirectoryFilterVirtualFilesystem($this->createStub(VirtualFilesystemInterface::class), [
             'foo',
             'bar/baz',
         ]);

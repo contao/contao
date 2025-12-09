@@ -51,7 +51,7 @@ class UserSessionListenerTest extends TestCase
         $user = $this->createClassWithPropertiesStub($userClass);
         $user->session = $sessionValues;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -98,13 +98,13 @@ class UserSessionListenerTest extends TestCase
             ->method('update')
         ;
 
-        $user = $this->createPartialMock($userClass, ['getTable']);
+        $user = $this->createStub($userClass);
         $user
             ->method('getTable')
             ->willReturn($userTable)
         ;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -133,7 +133,7 @@ class UserSessionListenerTest extends TestCase
             ->method('getBag')
         ;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -156,7 +156,7 @@ class UserSessionListenerTest extends TestCase
             ->method('getBag')
         ;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -190,7 +190,7 @@ class UserSessionListenerTest extends TestCase
 
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST);
 
         $listener = $this->getListener();
@@ -216,7 +216,7 @@ class UserSessionListenerTest extends TestCase
 
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new ResponseEvent($kernel, $request, HttpKernelInterface::SUB_REQUEST, new Response());
 
         $listener = $this->getListener($connection);
@@ -261,13 +261,13 @@ class UserSessionListenerTest extends TestCase
 
     public function testDoesNotReplaceTheSessionIfTheUserIsNotAContaoUser(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(new InMemoryUser('foo', 'bar'))
         ;
 
-        $listener = $this->getListener($this->createMock(Connection::class), $security);
+        $listener = $this->getListener($this->createStub(Connection::class), $security);
 
         $request = new Request();
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
@@ -279,13 +279,13 @@ class UserSessionListenerTest extends TestCase
 
     public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(new InMemoryUser('foo', 'bar'))
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $listener = $this->getListener($connection, $security);
 
         $request = new Request();
@@ -319,7 +319,7 @@ class UserSessionListenerTest extends TestCase
         $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->session = [];
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -338,13 +338,13 @@ class UserSessionListenerTest extends TestCase
 
     public function testFailsToStoreTheSessionIfThereIsNoSession(): void
     {
-        $user = $this->createPartialMock(BackendUser::class, ['getTable']);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('getTable')
             ->willReturn('tl_user')
         ;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -363,24 +363,24 @@ class UserSessionListenerTest extends TestCase
 
     private function getListener(Connection|null $connection = null, Security|null $security = null, EventDispatcherInterface|null $eventDispatcher = null): UserSessionListener
     {
-        $connection ??= $this->createMock(Connection::class);
-        $security ??= $this->createMock(Security::class);
+        $connection ??= $this->createStub(Connection::class);
+        $security ??= $this->createStub(Security::class);
         $scopeMatcher = $this->mockScopeMatcher();
-        $eventDispatcher ??= $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher ??= $this->createStub(EventDispatcherInterface::class);
 
         return new UserSessionListener($connection, $security, $scopeMatcher, $eventDispatcher);
     }
 
     private function getRequestEvent(Request|null $request = null): RequestEvent
     {
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
 
         return new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
     }
 
     private function getResponseEvent(Request|null $request = null): ResponseEvent
     {
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
 
         return new ResponseEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST, new Response());
     }

@@ -26,7 +26,7 @@ class ContaoUserProviderTest extends TestCase
 {
     public function testLoadsUsersByUsername(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $adapter = $this->createConfiguredAdapterStub(['loadUserByIdentifier' => $user]);
         $framework = $this->createContaoFrameworkStub([BackendUser::class => $adapter]);
 
@@ -37,7 +37,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testLoadsUsersById(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $adapter = $this->createConfiguredAdapterStub(['loadUserById' => $user]);
         $framework = $this->createContaoFrameworkStub([BackendUser::class => $adapter]);
 
@@ -48,7 +48,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testFailsToLoadAUserIfTheUsernameDoesNotExist(): void
     {
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
         $adapter = $this->createConfiguredAdapterStub(['loadUserByIdentifier' => $user]);
         $framework = $this->createContaoFrameworkStub([BackendUser::class => $adapter]);
 
@@ -75,7 +75,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testFailsToRefreshUnsupportedUsers(): void
     {
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
@@ -119,7 +119,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testFailsToUpgradePasswordsOfUnsupportedUsers(): void
     {
-        $user = $this->createMock(PasswordAuthenticatedUserInterface::class);
+        $user = $this->createStub(PasswordAuthenticatedUserInterface::class);
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);

@@ -37,8 +37,8 @@ class PagePermissionVoterTest extends TestCase
     {
         $voter = new PagePermissionVoter(
             $this->createContaoFrameworkStub(),
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(Connection::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(Connection::class),
         );
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
@@ -53,7 +53,7 @@ class PagePermissionVoterTest extends TestCase
 
     public function testAllowsAllForAdmin(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
@@ -63,7 +63,7 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn(true)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->willReturn('regular')
@@ -78,11 +78,10 @@ class PagePermissionVoterTest extends TestCase
     #[DataProvider('voterProvider')]
     public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
     {
-        $token = $this->mockToken($pagemounts);
-        $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
-        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-
         array_unshift($decisions, [['ROLE_ADMIN'], null, false]);
+
+        $token = $this->mockToken($pagemounts);
+
         array_walk(
             $decisions,
             static function (array &$decision) use ($token): void {
@@ -90,13 +89,16 @@ class PagePermissionVoterTest extends TestCase
             },
         );
 
+        $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
+
+        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
             ->expects($this->exactly(\count($decisions)))
             ->method('decide')
             ->willReturnMap($decisions)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->willReturn('regular')

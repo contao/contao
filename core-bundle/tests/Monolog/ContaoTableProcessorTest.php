@@ -116,7 +116,7 @@ class ContaoTableProcessorTest extends TestCase
 
     public function testAddsTheUsername(): void
     {
-        $token = $this->createMock(UsernamePasswordToken::class);
+        $token = $this->createStub(UsernamePasswordToken::class);
         $token
             ->method('getUserIdentifier')
             ->willReturn('k.jones')
@@ -252,8 +252,8 @@ class ContaoTableProcessorTest extends TestCase
 
     private function getContaoTableProcessor(RequestStack|null $requestStack = null, TokenStorageInterface|null $tokenStorage = null): ContaoTableProcessor
     {
-        $requestStack ??= $this->createMock(RequestStack::class);
-        $tokenStorage ??= $this->createMock(TokenStorageInterface::class);
+        $requestStack ??= $this->createStub(RequestStack::class);
+        $tokenStorage ??= $this->createStub(TokenStorageInterface::class);
 
         return new ContaoTableProcessor($requestStack, $tokenStorage, $this->mockScopeMatcher());
     }

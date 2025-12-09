@@ -33,12 +33,12 @@ class SuperviseWorkersCommandTest extends TestCase
         $messengerTransportLocator->set('prio_normal', $this->mockMessengerTransporter(0, false));
         $messengerTransportLocator->set('prio_high', $this->mockMessengerTransporter($messageCount, true));
 
-        $processUtil = $this->createMock(ProcessUtil::class);
+        $processUtil = $this->createStub(ProcessUtil::class);
         $processUtil
             ->method('createSymfonyConsoleProcess')
             ->willReturnCallback(
                 function () {
-                    $process = $this->createMock(Process::class);
+                    $process = $this->createStub(Process::class);
                     $process
                         ->method('getCommandLine')
                         ->willReturn(implode(' ', \func_get_args()))
@@ -51,7 +51,7 @@ class SuperviseWorkersCommandTest extends TestCase
 
         $commands = [];
 
-        $supervisor = $this->createMock(Supervisor::class);
+        $supervisor = $this->createStub(Supervisor::class);
         $supervisor
             ->method('withCommand')
             ->willReturnCallback(

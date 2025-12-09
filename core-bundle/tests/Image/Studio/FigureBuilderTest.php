@@ -395,7 +395,7 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = 'files/public/foo.jpg';
 
-        $filesModelAdapter = $this->createAdapterMock(['findByPath']);
+        $filesModelAdapter = $this->createAdapterStub(['findByPath']);
         $filesModelAdapter
             ->method('findByPath')
             ->with($absoluteFilePath)
@@ -408,7 +408,7 @@ class FigureBuilderTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
 
-        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), 'files');
+        $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), 'files');
         $item = new FilesystemItem(true, 'public/foo.jpg', storage: $storage);
 
         $this->getFigureBuilder($studio, $framework)->fromFilesystemItem($item)->build();
@@ -521,7 +521,7 @@ class FigureBuilderTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
 
-        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), 'files');
+        $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class), 'files');
 
         $this->getFigureBuilder($studio, $framework)->fromStorage($storage, 'public/foo.jpg')->build();
     }
@@ -534,7 +534,7 @@ class FigureBuilderTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount($inMemoryAdapter);
 
-        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
 
         $figureBuilder = $this->getFigureBuilder()->fromStorage($storage, 'foo.jpg');
         $exception = $figureBuilder->getLastException();
@@ -552,7 +552,7 @@ class FigureBuilderTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount(new InMemoryFilesystemAdapter());
 
-        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
 
         $figureBuilder = $this->getFigureBuilder()->fromStorage($storage, 'invalid/resource.jpg');
         $exception = $figureBuilder->getLastException();
@@ -586,7 +586,7 @@ class FigureBuilderTest extends TestCase
 
     public function testBuildIfResourceExistsHandlesFilesThatCannotBeProcessed(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $image
             ->method('getOriginalDimensions')
             ->willThrowException($innerException = new \Exception('Broken image'))
@@ -764,7 +764,7 @@ class FigureBuilderTest extends TestCase
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -1228,7 +1228,7 @@ class FigureBuilderTest extends TestCase
     public function testSetLightboxResourceOrUrl(ImageInterface|string|null $resource, array|null $expectedArguments = null, bool $hasLightbox = true): void
     {
         if (null === $resource) {
-            $image = $this->createMock(ImageInterface::class);
+            $image = $this->createStub(ImageInterface::class);
             $resource = $image;
             $expectedArguments = [$image, null];
         }
@@ -1236,7 +1236,7 @@ class FigureBuilderTest extends TestCase
         if ($hasLightbox) {
             $studio = $this->mockStudioForLightbox(...$expectedArguments);
         } else {
-            $studio = $this->createMock(Studio::class);
+            $studio = $this->createStub(Studio::class);
         }
 
         $figure = $this->getFigure(
@@ -1372,7 +1372,7 @@ class FigureBuilderTest extends TestCase
 
     public function testSetLightboxSize(): void
     {
-        $image = $this->createMock(ImageInterface::class);
+        $image = $this->createStub(ImageInterface::class);
         $size = '_custom_size_configuration';
         $studio = $this->mockStudioForLightbox($image, null, $size);
 
@@ -1392,7 +1392,7 @@ class FigureBuilderTest extends TestCase
 
     public function testSetLightboxResizeOptions(): void
     {
-        $image = $this->createMock(ImageInterface::class);
+        $image = $this->createStub(ImageInterface::class);
         $resizeOptions = new ResizeOptions();
         $studio = $this->mockStudioForLightbox($image, null, null, null, $resizeOptions);
 
@@ -1412,7 +1412,7 @@ class FigureBuilderTest extends TestCase
 
     public function testSetLightboxGroupIdentifier(): void
     {
-        $image = $this->createMock(ImageInterface::class);
+        $image = $this->createStub(ImageInterface::class);
         $groupIdentifier = '12345';
         $studio = $this->mockStudioForLightbox($image, null, null, $groupIdentifier);
 
@@ -1448,10 +1448,10 @@ class FigureBuilderTest extends TestCase
         $filePath2 = str_replace('foo.jpg', 'bar.jpg', $filePath1);
         $metadata = new Metadata([Metadata::VALUE_ALT => 'foo']);
 
-        $imageResult1 = $this->createMock(ImageResult::class);
-        $imageResult2 = $this->createMock(ImageResult::class);
-        $lightboxResource = $this->createMock(ImageInterface::class);
-        $lightboxImageResult = $this->createMock(LightboxResult::class);
+        $imageResult1 = $this->createStub(ImageResult::class);
+        $imageResult2 = $this->createStub(ImageResult::class);
+        $lightboxResource = $this->createStub(ImageInterface::class);
+        $lightboxImageResult = $this->createStub(LightboxResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -1541,7 +1541,7 @@ class FigureBuilderTest extends TestCase
 
     private function mockStudioForImage(ImageInterface|string $expectedImage, string|null $expectedSizeConfiguration = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -1556,7 +1556,7 @@ class FigureBuilderTest extends TestCase
 
     private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string|null $expectedSizeConfiguration = null, string|null $expectedGroupIdentifier = null, ResizeOptions|null $resizeOptions = null): Studio&MockObject
     {
-        $lightbox = $this->createMock(LightboxResult::class);
+        $lightbox = $this->createStub(LightboxResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -1581,13 +1581,13 @@ class FigureBuilderTest extends TestCase
 
         $pageFinder = new PageFinder(
             $framework ?? $this->createContaoFrameworkStub(),
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
             ->method('get')
             ->willReturnMap([

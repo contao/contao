@@ -71,7 +71,7 @@ abstract class DoctrineTestCase extends TestCase
      */
     protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework&Stub
     {
-        $installer = $this->createMock(Installer::class);
+        $installer = $this->createStub(Installer::class);
         $installer
             ->method('getFromDca')
             ->willReturn($dca)

@@ -22,7 +22,7 @@ class ErrorPageControllerTest extends TestCase
 {
     public function testRendersThePageThroughFrontendIndex(): void
     {
-        $response = $this->createMock(Response::class);
+        $response = $this->createStub(Response::class);
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
 
         $frontendIndex = $this->createMock(FrontendIndex::class);

@@ -40,7 +40,7 @@ class ImageSizesTest extends TestCase
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
     }
 

@@ -115,7 +115,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ),
         );
 
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->willReturnMap([

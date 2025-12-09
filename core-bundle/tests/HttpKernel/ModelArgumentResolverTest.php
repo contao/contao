@@ -37,7 +37,7 @@ class ModelArgumentResolverTest extends TestCase
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
         $adapter = $this->createConfiguredAdapterStub(['findById' => $pageModel]);
         $framework = $this->createContaoFrameworkStub([$class => $adapter]);
 
@@ -65,7 +65,7 @@ class ModelArgumentResolverTest extends TestCase
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
         $framework = $this->createContaoFrameworkStub();
 
         $request = Request::create('/foobar');
@@ -135,7 +135,7 @@ class ModelArgumentResolverTest extends TestCase
 
     public function testSupportsNullableArguments(): void
     {
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
         $adapter = $this->createConfiguredAdapterStub(['findById' => $pageModel]);
         $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
 

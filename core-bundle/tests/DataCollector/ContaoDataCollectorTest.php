@@ -42,15 +42,15 @@ class ContaoDataCollectorTest extends TestCase
     public function testCollectsDataInBackEnd(): void
     {
         $collector = new ContaoDataCollector(
-            $this->createMock(TokenChecker::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(Imagine::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(PageFinder::class),
-            $this->createMock(Cron::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(PageFinder::class),
+            $this->createStub(Cron::class),
         );
 
-        $collector->setFramework($this->createMock(ContaoFramework::class));
+        $collector->setFramework($this->createStub(ContaoFramework::class));
         $collector->collect(new Request(), new Response());
 
         $version = ContaoCoreBundle::getVersion();
@@ -92,19 +92,19 @@ class ContaoDataCollectorTest extends TestCase
         $page->title = 'Page';
         $page->layoutId = 2;
 
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
             ->willReturn($page)
         ;
 
         $collector = new ContaoDataCollector(
-            $this->createMock(TokenChecker::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(Imagine::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
             $pageFinder,
-            $this->createMock(Cron::class),
+            $this->createStub(Cron::class),
         );
 
         $collector->setFramework($framework);
@@ -154,7 +154,7 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
             ->willReturn($page)
@@ -162,11 +162,11 @@ class ContaoDataCollectorTest extends TestCase
 
         $collector = new ContaoDataCollector(
             $tokenChecker,
-            $this->createMock(RequestStack::class),
-            $this->createMock(Imagine::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
             $pageFinder,
-            $this->createMock(Cron::class),
+            $this->createStub(Cron::class),
         );
 
         $collector->setFramework($framework);
@@ -194,12 +194,12 @@ class ContaoDataCollectorTest extends TestCase
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
         $collector = new ContaoDataCollector(
-            $this->createMock(TokenChecker::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(Imagine::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(PageFinder::class),
-            $this->createMock(Cron::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(PageFinder::class),
+            $this->createStub(Cron::class),
         );
 
         $method = new \ReflectionMethod($collector, 'getData');

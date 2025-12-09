@@ -49,7 +49,7 @@ class ConfigureFilesystemPassTest extends TestCase
 
     public function testCallsExtensionsToConfigureTheFilesystem(): void
     {
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
         $container
             ->method('getParameterBag')
             ->willReturn(new ParameterBag([
@@ -77,7 +77,7 @@ class ConfigureFilesystemPassTest extends TestCase
             $configureFilesystemExtensions[] = $extension;
         }
 
-        $regularExtension = $this->createMock(ExtensionInterface::class);
+        $regularExtension = $this->createStub(ExtensionInterface::class);
 
         $container
             ->method('getExtensions')

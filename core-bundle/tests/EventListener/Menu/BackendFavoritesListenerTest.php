@@ -35,7 +35,7 @@ class BackendFavoritesListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($this->createStub(UserInterface::class))
         ;
 
         $event = $this->createMock(MenuEvent::class);
@@ -46,10 +46,10 @@ class BackendFavoritesListenerTest extends TestCase
 
         $listener = new BackendFavoritesListener(
             $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Connection::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $listener($event);
@@ -221,10 +221,10 @@ class BackendFavoritesListenerTest extends TestCase
 
         $listener = new BackendFavoritesListener(
             $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Connection::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $listener($event);

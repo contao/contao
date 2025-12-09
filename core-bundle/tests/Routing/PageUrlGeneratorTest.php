@@ -33,7 +33,7 @@ class PageUrlGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $provider = $this->createMock(RouteProviderInterface::class);
+        $provider = $this->createStub(RouteProviderInterface::class);
 
         $this->pageRegistry = $this->createMock(PageRegistry::class);
         $this->generator = new PageUrlGenerator($provider, $this->pageRegistry);

@@ -307,10 +307,10 @@ abstract class ContaoTestCase extends TestCase
             throw new \InvalidArgumentException(\sprintf('Class "%s" is not a Contao\User class', $class));
         }
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock($class))
+            ->willReturn($this->createStub($class))
         ;
 
         $token
@@ -318,7 +318,7 @@ abstract class ContaoTestCase extends TestCase
             ->willReturn([is_a($class, BackendUser::class, true) ? 'ROLE_USER' : 'ROLE_MEMBER'])
         ;
 
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage = $this->createStub(TokenStorageInterface::class);
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)

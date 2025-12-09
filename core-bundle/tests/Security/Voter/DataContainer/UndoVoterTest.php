@@ -30,7 +30,7 @@ class UndoVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new UndoVoter($this->createMock(AccessDecisionManagerInterface::class));
+        $voter = new UndoVoter($this->createStub(AccessDecisionManagerInterface::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_undo'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -103,7 +103,7 @@ class UndoVoterTest extends TestCase
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, $user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)

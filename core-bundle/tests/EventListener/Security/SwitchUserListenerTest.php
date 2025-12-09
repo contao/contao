@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +42,7 @@ class SwitchUserListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $event = new SwitchUserEvent(new Request(), $this->createMock(BackendUser::class));
+        $event = new SwitchUserEvent(new Request(), $this->createStub(BackendUser::class));
         $listener = new SwitchUserListener($tokenStorage, $this->mockLogger());
 
         $this->expectException('RuntimeException');
@@ -52,14 +51,13 @@ class SwitchUserListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockLogger(string|null $message = null): LoggerInterface&MockObject
+    private function mockLogger(string|null $message = null): LoggerInterface
     {
-        $logger = $this->createMock(LoggerInterface::class);
-
         if (null === $message) {
-            return $logger;
+            return $this->createStub(LoggerInterface::class);
         }
 
+        $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
             ->method('info')
@@ -69,24 +67,25 @@ class SwitchUserListenerTest extends TestCase
         return $logger;
     }
 
-    private function mockTokenStorage(string|null $username = null): TokenStorageInterface&MockObject
+    private function mockTokenStorage(string|null $username = null): TokenStorageInterface
     {
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-
-        if (null !== $username) {
-            $token = $this->createMock(TokenInterface::class);
-            $token
-                ->expects($this->once())
-                ->method('getUserIdentifier')
-                ->willReturn($username)
-            ;
-
-            $tokenStorage
-                ->expects($this->once())
-                ->method('getToken')
-                ->willReturn($token)
-            ;
+        if (null === $username) {
+            return $this->createStub(TokenStorageInterface::class);
         }
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUserIdentifier')
+            ->willReturn($username)
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
 
         return $tokenStorage;
     }

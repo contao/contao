@@ -33,9 +33,9 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub(),
-            $this->createMock(Environment::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Environment::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder->append(['html' => '']);
@@ -52,8 +52,8 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub(),
             $twig,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
@@ -89,7 +89,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('')
         ;
 
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
         $urlGenerator
             ->method('generate')
             ->willReturn('/contao')
@@ -164,7 +164,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('Clear Clipboard')
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $this->createMock(UrlGeneratorInterface::class), $translator);
+        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $this->createStub(UrlGeneratorInterface::class), $translator);
         $builder = $builder->initialize('tl_foo');
         $builder->addClearClipboardButton();
 
@@ -199,8 +199,8 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub([Backend::class => $backendAdapter, Input::class => $this->createAdapterStub(['get'])]),
             $twig,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
@@ -226,12 +226,12 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $builder = new DataContainerGlobalOperationsBuilder(
             $this->createContaoFrameworkStub(),
             $twig,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
-        $builder->addGlobalButtons($this->createMock(DataContainer::class));
+        $builder->addGlobalButtons($this->createStub(DataContainer::class));
 
         $this->assertSame('', (string) $builder);
 
@@ -290,11 +290,11 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             $framework,
             $twig,
             $urlGenerator,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
-        $builder->addGlobalButtons($this->createMock(DataContainer::class));
+        $builder->addGlobalButtons($this->createStub(DataContainer::class));
 
         $this->assertSame('', (string) $builder);
 
@@ -372,10 +372,10 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(Environment::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(Environment::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');

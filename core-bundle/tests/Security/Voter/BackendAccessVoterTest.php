@@ -43,21 +43,21 @@ class BackendAccessVoterTest extends TestCase
 
     public function testAbstainsIfTheAttributeIsContaoUser(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, 'foo', ['contao_foo']));
     }
 
     public function testAbstainsIfTheContaoUserAttributeHasNoProperty(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, 'foo', ['contao_user']));
     }
 
     public function testAbstainsIfTheAttributeIsNotAString(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $attributes = [new Expression('!is_granted("ROLE_MEMBER")')];
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, 'foo', $attributes));
@@ -65,7 +65,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testAbstainsIfThereIsNoContaoUserAttribute(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $attributes = ['foo', 'bar', 'contao.', 'contao_user_name'];
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, 'foo', $attributes));
@@ -113,7 +113,7 @@ class BackendAccessVoterTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
+            ->willReturn($this->createStub(BackendUser::class))
         ;
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, new \stdClass(), ['contao_user.alexf']));
@@ -146,7 +146,7 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($this->createClassWithPropertiesStub(BackendUser::class, $userData))
         ;
 
-        $database = $this->createMock(Database::class);
+        $database = $this->createStub(Database::class);
         $database
             ->method('getChildRecords')
             ->willReturn([])

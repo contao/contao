@@ -33,7 +33,7 @@ class PageRegistryTest extends TestCase
             'urlSuffix' => '.baz',
         ]);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $route = $registry->getRoute($pageModel);
 
         $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
@@ -51,7 +51,7 @@ class PageRegistryTest extends TestCase
             'requireItem' => true,
         ]);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $route = $registry->getRoute($pageModel);
 
         $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
@@ -68,7 +68,7 @@ class PageRegistryTest extends TestCase
             'urlSuffix' => '.baz',
         ]);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $route = $registry->getRoute($pageModel);
 
         $this->assertSame('/foo/bar.baz', $route->getPath());
@@ -85,7 +85,7 @@ class PageRegistryTest extends TestCase
             'alwaysForward' => true,
         ]);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $route = $registry->getRoute($pageModel);
 
         $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
@@ -103,7 +103,7 @@ class PageRegistryTest extends TestCase
             'urlSuffix' => $urlSuffix,
         ]);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('foo', $config);
 
         $route = $registry->getRoute($pageModel);
@@ -201,7 +201,7 @@ class PageRegistryTest extends TestCase
             ->method($this->anything())
         ;
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('foo', new RouteConfig(), $enhancer1);
         $registry->add('bar', new RouteConfig(), $enhancer2);
 
@@ -210,7 +210,7 @@ class PageRegistryTest extends TestCase
 
     public function testReturnsConfigKeys(): void
     {
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('foo', new RouteConfig());
         $registry->add('bar', new RouteConfig());
 
@@ -219,7 +219,7 @@ class PageRegistryTest extends TestCase
 
     public function testGetPathRegex(): void
     {
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('foo', new RouteConfig('', '/foo'));
         $registry->add('bar', new RouteConfig('', '/bar/[a-z]+'));
         $registry->add('baz', new RouteConfig());
@@ -264,7 +264,7 @@ class PageRegistryTest extends TestCase
     public function testSupportsContentCompositionReturnsTrueForUnknownType(): void
     {
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foo']);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
 
         $this->assertTrue($registry->supportsContentComposition($pageModel));
 
@@ -278,7 +278,7 @@ class PageRegistryTest extends TestCase
         $fooModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foo']);
         $barModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'bar']);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('foo', new RouteConfig(), null, false);
         $registry->add('bar', new RouteConfig());
 
@@ -298,7 +298,7 @@ class PageRegistryTest extends TestCase
             ->willReturn(true)
         ;
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('foo', new RouteConfig(), null, $page);
 
         $this->assertTrue($registry->supportsContentComposition($pageModel));
@@ -387,7 +387,7 @@ class PageRegistryTest extends TestCase
     {
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foobar']);
 
-        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry = new PageRegistry($this->createStub(Connection::class));
         $registry->add('foobar', new RouteConfig(false, null, null, []));
 
         $this->assertFalse($registry->isRoutable($pageModel));

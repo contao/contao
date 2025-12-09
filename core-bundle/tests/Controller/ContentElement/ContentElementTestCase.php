@@ -145,29 +145,29 @@ abstract class ContentElementTestCase extends TestCase
         $environment = $this->getEnvironment($loader, $framework);
 
         // Setup container with helper services
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn($asEditorView)
         ;
 
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
             ->willReturn($page)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
-        $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('contao.twig.filesystem_loader', $loader);
         $container->set('contao.twig.interop.context_factory', new ContextFactory($scopeMatcher));
         $container->set('twig', $environment);
         $container->set('contao.framework', $framework);
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
         $container->set('contao.routing.page_finder', $pageFinder);
 
         if ($adjustedContainer) {
@@ -281,7 +281,7 @@ abstract class ContentElementTestCase extends TestCase
     {
         $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')
@@ -292,22 +292,22 @@ abstract class ContentElementTestCase extends TestCase
             '',
             $resourceFinder,
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
         );
 
         return new ContaoFilesystemLoader(
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
             $resourceBasePath,
         );
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -320,7 +320,7 @@ abstract class ContentElementTestCase extends TestCase
             )
         ;
 
-        $packages = $this->createMock(Packages::class);
+        $packages = $this->createStub(Packages::class);
         $packages
             ->method('getUrl')
             ->willReturnCallback(static fn (string $url): string => '/'.$url)
@@ -329,15 +329,15 @@ abstract class ContentElementTestCase extends TestCase
         $environment = new Environment($contaoFilesystemLoader);
         $environment->addExtension(new TranslationExtension($translator));
         $environment->addExtension(new AssetExtension($packages));
-        $environment->addExtension(new RoutingExtension($this->createMock(UrlGeneratorInterface::class)));
+        $environment->addExtension(new RoutingExtension($this->createStub(UrlGeneratorInterface::class)));
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
@@ -349,7 +349,7 @@ abstract class ContentElementTestCase extends TestCase
 
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
-        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
@@ -371,7 +371,7 @@ abstract class ContentElementTestCase extends TestCase
 
     protected function getDefaultStorage(): VirtualFilesystem
     {
-        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage = $this->createStub(VirtualFilesystem::class);
         $storage
             ->method('getPrefix')
             ->willReturn('files')
@@ -467,7 +467,7 @@ abstract class ContentElementTestCase extends TestCase
 
     protected function getDefaultStudio(): Studio
     {
-        $studio = $this->createMock(Studio::class);
+        $studio = $this->createStub(Studio::class);
         $studio
             ->method('createFigureBuilder')
             ->willReturn(new FigureBuilderStub(
@@ -501,7 +501,7 @@ abstract class ContentElementTestCase extends TestCase
             $input,
         );
 
-        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser = $this->createStub(InsertTagParser::class);
         $insertTagParser
             ->method('replace')
             ->willReturnCallback($replaceDemo)

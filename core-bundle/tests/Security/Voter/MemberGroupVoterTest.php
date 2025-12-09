@@ -33,7 +33,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testAbstainsIfTheAttributeIsNotContaoMemberGroup(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, '1', ['contao_foobar']));
     }
@@ -120,7 +120,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testDeniesAccessIfTheTokenIsTwoFactor(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $token

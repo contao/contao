@@ -188,9 +188,9 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
         return $container;
     }

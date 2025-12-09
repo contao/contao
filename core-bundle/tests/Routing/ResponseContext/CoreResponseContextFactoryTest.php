@@ -58,14 +58,14 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
-            new HtmlDecoder($this->createMock(InsertTagParser::class)),
-            $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class),
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(Security::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
+            new HtmlDecoder($this->createStub(InsertTagParser::class)),
+            $this->createStub(RequestStack::class),
+            $this->createStub(InsertTagParser::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
         $factory->createResponseContext();
@@ -81,14 +81,14 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
-            new HtmlDecoder($this->createMock(InsertTagParser::class)),
-            $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class),
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(Security::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
+            new HtmlDecoder($this->createStub(InsertTagParser::class)),
+            $this->createStub(RequestStack::class),
+            $this->createStub(InsertTagParser::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -188,8 +188,8 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
@@ -267,14 +267,14 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(Security::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -295,7 +295,7 @@ class CoreResponseContextFactoryTest extends TestCase
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -306,22 +306,22 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->searchIndexer = '';
         $pageModel->protected = false;
 
-        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser = $this->createStub(InsertTagParser::class);
         $insertTagsParser
             ->method('replaceInline')
             ->willReturnArgument(0)
         ;
 
         $factory = new CoreResponseContextFactory(
-            $this->createMock(ResponseContextAccessor::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
+            $this->createStub(ResponseContextAccessor::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
             $insertTagsParser,
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(Security::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);

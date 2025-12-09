@@ -38,10 +38,10 @@ class JobsListenerTest extends AbstractJobsTestCase
         $listener = new JobsListener(
             $jobs,
             $security,
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(),
             $this->createContaoFrameworkStub(),
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
         );
 
         $operation = $this->getOperationForJob($job);
@@ -69,10 +69,10 @@ class JobsListenerTest extends AbstractJobsTestCase
         $listener = new JobsListener(
             $jobs,
             $security,
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(),
             $this->createContaoFrameworkStub(),
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
         );
 
         $operation = $this->getOperationForJob($job);
@@ -123,7 +123,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         $listener = new JobsListener(
             $jobs,
             $security,
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(),
             $this->createContaoFrameworkStub(),
             $twig,
@@ -133,7 +133,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             'attachments',
             ['label' => 'attachments', 'title' => 'attachments'],
             ['uuid' => $job->getUuid()],
-            $this->createMock(DataContainer::class),
+            $this->createStub(DataContainer::class),
         );
 
         $listener->onAttachmentsCallback($operation);
@@ -150,12 +150,12 @@ class JobsListenerTest extends AbstractJobsTestCase
     public function testInvokeWithoutRequest(): void
     {
         $listener = new JobsListener(
-            $this->createMock(Jobs::class),
-            $this->createMock(Security::class),
-            $this->createMock(Connection::class),
+            $this->createStub(Jobs::class),
+            $this->createStub(Security::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(),
             $this->createContaoFrameworkStub(),
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -166,12 +166,12 @@ class JobsListenerTest extends AbstractJobsTestCase
     public function testInvokeWithoutUser(): void
     {
         $listener = new JobsListener(
-            $this->createMock(Jobs::class),
+            $this->createStub(Jobs::class),
             $this->mockSecurity(),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(Request::create('/')),
             $this->createContaoFrameworkStub(),
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -184,12 +184,12 @@ class JobsListenerTest extends AbstractJobsTestCase
         $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
-            $this->createMock(Jobs::class),
+            $this->createStub(Jobs::class),
             $this->mockSecurity(42),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
             $framework,
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -213,12 +213,12 @@ class JobsListenerTest extends AbstractJobsTestCase
         $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
         $listener = new JobsListener(
-            $this->createMock(Jobs::class),
+            $this->createStub(Jobs::class),
             $this->mockSecurity(42),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
             $framework,
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
         );
 
         $listener->onLoadCallback();
@@ -265,8 +265,8 @@ class JobsListenerTest extends AbstractJobsTestCase
 
         $listener = new JobsListener(
             $jobs,
-            $this->createMock(Security::class),
-            $this->createMock(Connection::class),
+            $this->createStub(Security::class),
+            $this->createStub(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
             $framework,
             $twig,
@@ -282,7 +282,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             'Kevin Jones',
         ];
 
-        $columnsNew = $listener->onLabelCallback($row, 'label', $this->createMock(DC_Table::class), $columns);
+        $columnsNew = $listener->onLabelCallback($row, 'label', $this->createStub(DC_Table::class), $columns);
 
         $this->assertSame('the resulting twig output', $columnsNew[2]);
     }
@@ -293,7 +293,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             'attachments',
             ['label' => 'attachments', 'title' => 'attachments'],
             ['uuid' => $job->getUuid()],
-            $this->createMock(DataContainer::class),
+            $this->createStub(DataContainer::class),
         );
     }
 

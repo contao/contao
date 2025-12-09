@@ -35,7 +35,7 @@ class UserAdminFieldListenerTest extends TestCase
             ->method('getUser')
         ;
 
-        $dataContainer = $this->createMock(DataContainer::class);
+        $dataContainer = $this->createStub(DataContainer::class);
 
         $listener = new UserAdminFieldListener($security);
         $palette = $listener('foo,bar;{admin_legend},admin;disable', $dataContainer);

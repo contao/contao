@@ -18,7 +18,7 @@ use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -41,7 +41,7 @@ class SearchIndexSubscriberTest extends TestCase
 {
     public function testName(): void
     {
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
+        $subscriber = new SearchIndexSubscriber($this->createStub(IndexerInterface::class), $this->getTranslator());
         $this->assertSame('search-index', $subscriber->getName());
     }
 
@@ -82,7 +82,7 @@ class SearchIndexSubscriberTest extends TestCase
             $queue->add($escargot->getJobId(), $foundOnUri);
         }
 
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
+        $subscriber = new SearchIndexSubscriber($this->createStub(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
         $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
@@ -175,14 +175,14 @@ class SearchIndexSubscriberTest extends TestCase
         $escargot = Escargot::create(new BaseUriCollection([new Uri('https://contao.org')]), new InMemoryQueue());
         $escargot = $escargot->withLogger($logger);
 
-        $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
+        $subscriber = new SearchIndexSubscriber($this->createStub(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
         $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
         $decision = $subscriber->needsContent(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $response,
-            $this->createMock(ChunkInterface::class),
+            $this->createStub(ChunkInterface::class),
         );
 
         $this->assertSame($expectedDecision, $decision);
@@ -271,7 +271,7 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->onLastChunk(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $this->mockResponse(true, 200, 'https://contao.org', $searchIndexerJson),
-            $this->createMock(ChunkInterface::class),
+            $this->createStub(ChunkInterface::class),
         );
 
         $previousResult = null;
@@ -506,7 +506,7 @@ class SearchIndexSubscriberTest extends TestCase
     {
         $headers = $asHtml ? ['content-type' => ['text/html']] : [];
 
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
         $response
             ->method('getHeaders')
             ->willReturn($headers)
@@ -539,9 +539,9 @@ class SearchIndexSubscriberTest extends TestCase
         return $response;
     }
 
-    private function getTranslator(): TranslatorInterface&MockObject
+    private function getTranslator(): TranslatorInterface&Stub
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Foobar')

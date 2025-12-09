@@ -37,9 +37,9 @@ class RootPageDependentSelectListenerTest extends TestCase
     public function testDoesNotAddWizardWhenNoValuesSet(): void
     {
         $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
@@ -60,8 +60,8 @@ class RootPageDependentSelectListenerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration('/directory/project'));
 
         $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
             $translator,
         );
 
@@ -79,9 +79,9 @@ class RootPageDependentSelectListenerTest extends TestCase
     public function testDoesNotSaveUnserializableData(): void
     {
         $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame('foobar', $listener->saveCallback('foobar'));
@@ -93,8 +93,8 @@ class RootPageDependentSelectListenerTest extends TestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -125,8 +125,8 @@ class RootPageDependentSelectListenerTest extends TestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -168,8 +168,8 @@ class RootPageDependentSelectListenerTest extends TestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame(

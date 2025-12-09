@@ -192,13 +192,13 @@ class RobotsTxtListenerTest extends TestCase
             ))
         ;
 
-        $record = $this->createMock(Record::class);
+        $record = $this->createStub(Record::class);
         $record
             ->method('getDirectiveList')
             ->willReturn($directiveList)
         ;
 
-        $file = $this->createPartialMock(File::class, ['getRecords']);
+        $file = $this->createStub(File::class);
         $file
             ->method('getRecords')
             ->willReturn([$record])

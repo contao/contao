@@ -51,7 +51,7 @@ class AbstractFragmentControllerTest extends TestCase
 
     public function testCreateAndRenderModifiedFragmentTemplate(): void
     {
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with('@Contao/modified/template.html.twig', ['some' => 'data'])
@@ -75,7 +75,7 @@ class AbstractFragmentControllerTest extends TestCase
     {
         $preBuiltResponse = new Response();
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with('@Contao/foo/bar.html.twig', [])
@@ -102,7 +102,7 @@ class AbstractFragmentControllerTest extends TestCase
 
     private function getFragmentController(string $defaultTemplateName, Environment|null $twig = null): object
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
             ->with("@Contao/$defaultTemplateName.html.twig")
@@ -110,7 +110,7 @@ class AbstractFragmentControllerTest extends TestCase
         ;
 
         if (!$twig) {
-            $twig = $this->createMock(Environment::class);
+            $twig = $this->createStub(Environment::class);
             $twig
                 ->method('render')
                 ->with("@Contao/$defaultTemplateName.html.twig", ['some' => 'data'])

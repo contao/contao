@@ -32,7 +32,7 @@ class LightboxResultTest extends TestCase
     #[DataProvider('provideInvalidConfigurations')]
     public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl(ImageInterface|string|null $resource, string|null $url): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
 
         $this->expectException(\InvalidArgumentException::class);
 
@@ -74,11 +74,11 @@ class LightboxResultTest extends TestCase
 
         $pageFinder = new PageFinder(
             $framework,
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -88,7 +88,7 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
             ->method('get')
             ->willReturnMap([
@@ -128,11 +128,11 @@ class LightboxResultTest extends TestCase
 
         $pageFinder = new PageFinder(
             $framework,
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -142,7 +142,7 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
             ->method('get')
             ->willReturnMap([
@@ -159,7 +159,7 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $framework = $this->createContaoFrameworkStub();
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -169,13 +169,13 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
                 ['contao.image.studio', $studio],
-                ['contao.routing.page_finder', $this->createMock(PageFinder::class)],
+                ['contao.routing.page_finder', $this->createStub(PageFinder::class)],
             ])
         ;
 
@@ -186,7 +186,7 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -211,7 +211,7 @@ class LightboxResultTest extends TestCase
 
     public function testHasNoImage(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->assertFalse($lightboxResult->hasImage());
@@ -221,7 +221,7 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -246,7 +246,7 @@ class LightboxResultTest extends TestCase
 
     public function testGetImageThrowsIfNoImageWasSet(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->expectException(\RuntimeException::class);
@@ -289,7 +289,7 @@ class LightboxResultTest extends TestCase
 
     public function testGetLinkHrefForUrl(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->assertSame('foo://bar', $lightboxResult->getLinkHref());
@@ -297,7 +297,7 @@ class LightboxResultTest extends TestCase
 
     public function testGetGroupIdentifierIfExplicitlySet(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar', null, '12345');
 
         $this->assertSame('12345', $lightboxResult->getGroupIdentifier());
@@ -305,7 +305,7 @@ class LightboxResultTest extends TestCase
 
     public function testGroupIdentifierIsEmptyIfNotExplicitlySet(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->assertSame('', $lightboxResult->getGroupIdentifier());
@@ -316,7 +316,7 @@ class LightboxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
         $resizeOptions = new ResizeOptions();
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio

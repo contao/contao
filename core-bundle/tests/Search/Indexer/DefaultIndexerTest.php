@@ -56,7 +56,7 @@ class DefaultIndexerTest extends TestCase
             $this->expectExceptionMessage($expectedMessage);
         }
 
-        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $indexProtected);
+        $indexer = new DefaultIndexer($framework, $this->createStub(Connection::class), $indexProtected);
         $indexer->index($document);
     }
 
@@ -211,7 +211,7 @@ class DefaultIndexerTest extends TestCase
 
     public function testDeletesADocument(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $searchAdapter = $this->createAdapterMock(['removeEntry']);
         $searchAdapter

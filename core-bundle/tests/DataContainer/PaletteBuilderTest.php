@@ -21,6 +21,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
@@ -65,7 +66,7 @@ class PaletteBuilderTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo'] = $dca;
 
-        $dataContainer = $this->createMock(DC_Table::class);
+        $dataContainer = $this->createStub(DC_Table::class);
         $dataContainer
             ->method('getCurrentRecord')
             ->with(42, 'tl_foo')
@@ -85,7 +86,7 @@ class PaletteBuilderTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([Input::class => $inputAdapter]);
-        $paletteBuilder = new PaletteBuilder($framework, $this->createMock(RequestStack::class), $this->createMock(Security::class), $this->createMock(Connection::class));
+        $paletteBuilder = new PaletteBuilder($framework, $this->createStub(RequestStack::class), $this->createStub(Security::class), $this->createStub(Connection::class));
 
         $this->assertSame($expected, $paletteBuilder->getPalette('tl_foo', 42, $dataContainer));
 
@@ -230,9 +231,9 @@ class PaletteBuilderTest extends TestCase
 
         $paletteBuilder = new PaletteBuilder(
             $this->createContaoFrameworkStub(),
-            $this->createMock(RequestStack::class),
-            $this->createMock(Security::class),
-            $this->createMock(Connection::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Security::class),
+            $this->createStub(Connection::class),
         );
 
         $this->assertSame('foo', $paletteBuilder->getPalette('tl_foo', 0, $dataContainer));
@@ -245,7 +246,7 @@ class PaletteBuilderTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo'] = $dca;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->willReturn($isGranted)
@@ -610,15 +611,15 @@ class PaletteBuilderTest extends TestCase
         return $requestStack;
     }
 
-    private function mockConnectionWithTableColumns(array $tableColumns): Connection&MockObject
+    private function mockConnectionWithTableColumns(array $tableColumns): Connection&Stub
     {
-        $schemaManager = $this->createMock(MySQLSchemaManager::class);
+        $schemaManager = $this->createStub(MySQLSchemaManager::class);
         $schemaManager
             ->method('listTableColumns')
             ->willReturn(array_flip($tableColumns))
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

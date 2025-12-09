@@ -40,7 +40,7 @@ class BackupManagerTest extends ContaoTestCase
 
         $this->vfs = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
     }
 
@@ -387,8 +387,8 @@ class BackupManagerTest extends ContaoTestCase
 
     private function getBackupManager(Connection|null $connection = null, DumperInterface|null $dumper = null, RetentionPolicyInterface|null $retentionPolicy = null): BackupManager
     {
-        $connection ??= $this->createMock(Connection::class);
-        $dumper ??= $this->createMock(DumperInterface::class);
+        $connection ??= $this->createStub(Connection::class);
+        $dumper ??= $this->createStub(DumperInterface::class);
         $retentionPolicy ??= new RetentionPolicy(5);
 
         return new BackupManager($connection, $dumper, $this->vfs, ['foobar'], $retentionPolicy);

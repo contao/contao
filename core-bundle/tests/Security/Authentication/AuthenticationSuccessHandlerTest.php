@@ -119,7 +119,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($this->createStub(UserInterface::class))
         ;
 
         $handler = $this->getHandler();
@@ -130,7 +130,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     public function testUsesTheUrlOfThePage(): void
     {
-        $model = $this->createMock(PageModel::class);
+        $model = $this->createStub(PageModel::class);
 
         $adapter = $this->createAdapterMock(['findFirstActiveByMemberGroups']);
         $adapter
@@ -160,7 +160,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
@@ -201,7 +201,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
@@ -240,7 +240,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
@@ -273,7 +273,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
@@ -385,13 +385,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $user = $this->createPartialMock(FrontendUser::class, ['save']);
-
         $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
+            ->willReturn($this->createStub(FrontendUser::class))
         ;
 
         $token
@@ -421,7 +419,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createPartialMock(BackendUser::class, ['save']))
+            ->willReturn($this->createStub(BackendUser::class))
         ;
 
         $token
@@ -436,13 +434,13 @@ class AuthenticationSuccessHandlerTest extends TestCase
     private function getHandler(ContaoFramework|null $framework = null, LoggerInterface|null $logger = null, bool $checkRequest = false, ContentUrlGenerator|null $urlGenerator = null): AuthenticationSuccessHandler
     {
         $framework ??= $this->createContaoFrameworkStub();
-        $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
-        $firewallMap = $this->createMock(FirewallMap::class);
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        $urlGenerator ??= $this->createMock(ContentUrlGenerator::class);
-        $logger ??= $this->createMock(LoggerInterface::class);
+        $trustedDeviceManager = $this->createStub(TrustedDeviceManagerInterface::class);
+        $firewallMap = $this->createStub(FirewallMap::class);
+        $tokenStorage = $this->createStub(TokenStorageInterface::class);
+        $urlGenerator ??= $this->createStub(ContentUrlGenerator::class);
+        $logger ??= $this->createStub(LoggerInterface::class);
 
-        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner = $this->createStub(UriSigner::class);
         $uriSigner
             ->method('checkRequest')
             ->willReturn($checkRequest)

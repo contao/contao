@@ -170,7 +170,7 @@ class OptInTest extends TestCase
         $memberAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
-            ->willReturn(new Collection([$this->createMock(MemberModel::class)], 'tl_member'))
+            ->willReturn(new Collection([$this->createStub(MemberModel::class)], 'tl_member'))
         ;
 
         $adapters = [

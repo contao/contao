@@ -26,7 +26,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent('page', 42);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -91,7 +91,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateAnyPreviewUrlIfTheFrameworkIsNotInitialized(string $do): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)
@@ -99,7 +99,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 42);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -110,7 +110,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -119,7 +119,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfThereIsNoId(string $do): void
     {
-        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer = $this->createStub(DcaUrlAnalyzer::class);
         $dcaUrlAnalyzer
             ->method('getCurrentTableId')
             ->willReturn(['tl_article', null])
@@ -127,7 +127,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 0);
 
-        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());

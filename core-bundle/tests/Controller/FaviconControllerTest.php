@@ -44,7 +44,7 @@ class FaviconControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(CacheTagManager::class));
+        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createStub(CacheTagManager::class));
         $controller($request);
     }
 
@@ -69,7 +69,7 @@ class FaviconControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(CacheTagManager::class));
+        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createStub(CacheTagManager::class));
         $controller($request);
     }
 

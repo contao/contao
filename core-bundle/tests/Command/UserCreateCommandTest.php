@@ -57,7 +57,7 @@ class UserCreateCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $question = $this->createMock(QuestionHelper::class);
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturn('j.doe')
@@ -74,7 +74,7 @@ class UserCreateCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $question = $this->createMock(QuestionHelper::class);
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturn('John Doe')
@@ -91,7 +91,7 @@ class UserCreateCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $question = $this->createMock(QuestionHelper::class);
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturn('12345678')
@@ -152,17 +152,17 @@ class UserCreateCommandTest extends TestCase
 
     private function getCommand(Connection|null $connection = null, string|null $password = null): UserCreateCommand
     {
-        $connection ??= $this->createMock(Connection::class);
+        $connection ??= $this->createStub(Connection::class);
         $password ??= '12345678';
 
-        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
+        $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher
             ->method('hash')
             ->with($password)
             ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
         ;
 
-        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
+        $passwordHasherFactory = $this->createStub(PasswordHasherFactoryInterface::class);
         $passwordHasherFactory
             ->method('getPasswordHasher')
             ->with(BackendUser::class)
@@ -175,7 +175,7 @@ class UserCreateCommandTest extends TestCase
             ->willReturn(null, null)
         ;
 
-        $locales = $this->createMock(Locales::class);
+        $locales = $this->createStub(Locales::class);
         $locales
             ->method('getEnabledLocaleIds')
             ->willReturn(['en', 'de', 'ru'])

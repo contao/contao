@@ -24,7 +24,7 @@ class RedirectControllerTest extends TestCase
 {
     public function testAddsTheHeader(): void
     {
-        $response = $this->createMock(RedirectResponse::class);
+        $response = $this->createStub(RedirectResponse::class);
 
         $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
@@ -51,7 +51,7 @@ class RedirectControllerTest extends TestCase
 
     public function testDoesNotAddTheHeaderForInsecureRequess(): void
     {
-        $response = $this->createMock(RedirectResponse::class);
+        $response = $this->createStub(RedirectResponse::class);
 
         $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
@@ -77,7 +77,7 @@ class RedirectControllerTest extends TestCase
 
     public function testDoesNotAddTheHeaderWithoutPageModel(): void
     {
-        $response = $this->createMock(RedirectResponse::class);
+        $response = $this->createStub(RedirectResponse::class);
 
         $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
@@ -100,7 +100,8 @@ class RedirectControllerTest extends TestCase
 
     public function testDoesNotAddTheHeaderIfRootPageUsesSSL(): void
     {
-        $response = $this->createMock(RedirectResponse::class);
+        $response = $this->createStub(RedirectResponse::class);
+
         $response->headers = $this->createMock(ResponseHeaderBag::class);
         $response->headers
             ->expects($this->never())

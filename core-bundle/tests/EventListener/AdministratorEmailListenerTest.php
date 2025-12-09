@@ -63,7 +63,7 @@ class AdministratorEmailListenerTest extends TestCase
 
     public function testShowsMessageWithoutLinkIfSettingsModuleIsDisallowed(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')
@@ -95,7 +95,7 @@ class AdministratorEmailListenerTest extends TestCase
             $framework = $this->createContaoFrameworkStub([Config::class => $configAdapter]);
         }
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnMap([
@@ -104,14 +104,14 @@ class AdministratorEmailListenerTest extends TestCase
             ])
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturn('https://example.com')
         ;
 
         if (!$security) {
-            $security = $this->createMock(Security::class);
+            $security = $this->createStub(Security::class);
             $security
                 ->method('isGranted')
                 ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')

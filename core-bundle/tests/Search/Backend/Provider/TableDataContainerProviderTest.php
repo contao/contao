@@ -49,12 +49,12 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
     {
         $provider = new TableDataContainerProvider(
             $this->createContaoFrameworkStub(),
-            $this->createMock(ResourceFinder::class),
-            $this->createMock(Connection::class),
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(DcaUrlAnalyzer::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(Connection::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -125,10 +125,10 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $framework,
             $resourceFinder,
             $connection,
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(DcaUrlAnalyzer::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

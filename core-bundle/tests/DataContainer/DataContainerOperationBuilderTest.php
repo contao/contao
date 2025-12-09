@@ -53,8 +53,8 @@ class DataContainerOperationBuilderTest extends TestCase
         $builder = new DataContainerOperationsBuilder(
             $this->createContaoFrameworkStub(),
             $twig,
-            $this->createMock(Security::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(UrlGeneratorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
@@ -124,8 +124,8 @@ class DataContainerOperationBuilderTest extends TestCase
         $builder = new DataContainerOperationsBuilder(
             $this->createContaoFrameworkStub(),
             $twig,
-            $this->createMock(Security::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(UrlGeneratorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
@@ -157,8 +157,8 @@ class DataContainerOperationBuilderTest extends TestCase
         $builder = new DataContainerOperationsBuilder(
             $this->createContaoFrameworkStub(),
             $twig,
-            $this->createMock(Security::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(UrlGeneratorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');

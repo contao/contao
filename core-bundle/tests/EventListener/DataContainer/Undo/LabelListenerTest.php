@@ -62,7 +62,7 @@ class LabelListenerTest extends TestCase
             ->willReturn($row['preview'])
         ;
 
-        $dc = $this->createMock(DC_Table::class);
+        $dc = $this->createStub(DC_Table::class);
         $listener = new LabelListener($framework, $twig);
 
         $this->assertSame('<result>', $listener($row, '', $dc));
@@ -99,7 +99,7 @@ class LabelListenerTest extends TestCase
             ->willReturn('<result>')
         ;
 
-        $dc = $this->createMock(DC_Table::class);
+        $dc = $this->createStub(DC_Table::class);
         $listener = new LabelListener($framework, $twig);
 
         $this->assertSame('<result>', $listener($row, '', $dc));

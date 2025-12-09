@@ -169,7 +169,7 @@ class AbstractLayoutPageControllerTest extends TestCase
 
     private function getContainerWithDefaultConfiguration(bool $existingResponseContext = false, array $pageModelAttributes = []): ContainerInterface
     {
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with('@Contao/layout/default.html.twig', ['some' => 'data'])
@@ -216,7 +216,7 @@ class AbstractLayoutPageControllerTest extends TestCase
 
         $pageFinder = new PageFinder(
             $framework,
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
@@ -267,13 +267,13 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->with('foo_densities')
         ;
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('isPreviewMode')
             ->willReturn(false)
         ;
 
-        $tagManager = $this->createMock(CacheTagManager::class);
+        $tagManager = $this->createStub(CacheTagManager::class);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('twig', $twig);

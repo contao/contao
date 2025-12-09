@@ -131,7 +131,7 @@ class BackendFavoritesListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($this->createStub(UserInterface::class))
         ;
 
         $requestStack = new RequestStack([new Request()]);
@@ -160,7 +160,7 @@ class BackendFavoritesListenerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
         $redirect = null;
 
         try {
@@ -186,7 +186,7 @@ class BackendFavoritesListenerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
         $listener->redirectBack($dataContainer);
     }
 
@@ -203,7 +203,7 @@ class BackendFavoritesListenerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
         $listener->redirectBack($dataContainer);
     }
 }

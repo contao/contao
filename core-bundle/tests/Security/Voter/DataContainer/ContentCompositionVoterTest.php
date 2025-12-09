@@ -30,7 +30,7 @@ class ContentCompositionVoterTest extends TestCase
     public function testSupportsAttributesAndTypes(): void
     {
         $framework = $this->createContaoFrameworkStub();
-        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry = $this->createStub(PageRegistry::class);
 
         $voter = new ContentCompositionVoter($framework, $pageRegistry);
 
@@ -45,7 +45,7 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageModelIsNotFound(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
         $pageAdapter = $this->createAdapterMock(['findById']);
@@ -72,7 +72,7 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageDoesNotSupportContentComposition(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
         $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
@@ -107,7 +107,7 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageLayoutIsNotFound(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
         $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
@@ -152,7 +152,7 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageLayoutHasNoArticleModule(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
         $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, ['modules' => serialize([])]);
@@ -199,7 +199,7 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testAbstainsIfPageLayoutHasArticleModule(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
         $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, ['modules' => serialize([['mod' => 0]])]);

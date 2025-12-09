@@ -20,7 +20,7 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\Candidates;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +33,8 @@ class Route404ProviderTest extends TestCase
     {
         $provider = new Route404Provider(
             $this->createContaoFrameworkStub(),
-            $this->createMock(Candidates::class),
-            $this->createMock(PageRegistry::class),
+            $this->createStub(Candidates::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $this->expectException(RouteNotFoundException::class);
@@ -54,8 +54,8 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Candidates::class),
-            $this->createMock(PageRegistry::class),
+            $this->createStub(Candidates::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $result = $provider->getRoutesByNames(['foo']);
@@ -101,7 +101,7 @@ class Route404ProviderTest extends TestCase
             ->method('getCandidates')
         ;
 
-        $pageRegistry = new PageRegistry($this->createMock(Connection::class));
+        $pageRegistry = new PageRegistry($this->createStub(Connection::class));
 
         $provider = new Route404Provider(
             $framework,
@@ -145,7 +145,7 @@ class Route404ProviderTest extends TestCase
         $provider = new Route404Provider(
             $framework,
             $candidates,
-            $this->createMock(PageRegistry::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $this->assertCount(0, $provider->getRouteCollectionForRequest($request));
@@ -175,7 +175,7 @@ class Route404ProviderTest extends TestCase
         $provider = new Route404Provider(
             $framework,
             $candidates,
-            $this->createMock(PageRegistry::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $this->assertCount(0, $provider->getRouteCollectionForRequest($request));
@@ -202,12 +202,12 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
-        $candidates = $this->createMock(Candidates::class);
+        $candidates = $this->createStub(Candidates::class);
 
         $provider = new Route404Provider(
             $framework,
             $candidates,
-            $this->createMock(PageRegistry::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -247,12 +247,12 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
-        $candidates = $this->createMock(Candidates::class);
+        $candidates = $this->createStub(Candidates::class);
 
         $provider = new Route404Provider(
             $framework,
             $candidates,
-            $this->createMock(PageRegistry::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -305,12 +305,12 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/', $languages);
-        $candidates = $this->createMock(Candidates::class);
+        $candidates = $this->createStub(Candidates::class);
 
         $provider = new Route404Provider(
             $framework,
             $candidates,
-            $this->createMock(PageRegistry::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -382,8 +382,8 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Candidates::class),
-            $this->createMock(PageRegistry::class),
+            $this->createStub(Candidates::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -417,8 +417,8 @@ class Route404ProviderTest extends TestCase
 
         $provider = new Route404Provider(
             $framework,
-            $this->createMock(Candidates::class),
-            $this->createMock(PageRegistry::class),
+            $this->createStub(Candidates::class),
+            $this->createStub(PageRegistry::class),
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -426,9 +426,9 @@ class Route404ProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    private function mockRequestWithPath(string $path, array $languages = ['en']): Request&MockObject
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request&Stub
     {
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $request
             ->method('getPathInfo')
             ->willReturn($path)
