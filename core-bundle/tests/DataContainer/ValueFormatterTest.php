@@ -657,17 +657,11 @@ class ValueFormatterTest extends TestCase
 
     private function mockConnection(): Connection&MockObject
     {
-        $databasePlatform = $this->createMock(AbstractPlatform::class);
-        $databasePlatform
-            ->method('quoteSingleIdentifier')
-            ->willReturnCallback(static fn ($v) => '`'.$v.'`')
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getDatabasePlatform')
-            ->willReturn($databasePlatform)
+            ->method('quoteSingleIdentifier')
+            ->willReturnCallback(static fn ($v) => '`'.$v.'`')
         ;
 
         return $connection;

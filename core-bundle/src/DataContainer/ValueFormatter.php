@@ -16,6 +16,7 @@ use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FilesModel;
@@ -376,7 +377,7 @@ class ValueFormatter implements ResetInterface
     {
         // Cannot use isset() because the value can be NULL
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
-            $dbField = $this->connection->getDatabasePlatform()->quoteSingleIdentifier($field);
+            $dbField = $this->quoteIdentifier($field);
             $value = $this->connection->fetchOne("SELECT $dbField FROM $table WHERE id=?", [$id]);
 
             $this->foreignValueCache[$table][$field][$id] = false === $value ? $id : $value;
@@ -422,5 +423,15 @@ class ValueFormatter implements ResetInterface
         }
 
         return null;
+    }
+
+    private function quoteIdentifier(string $identifier): string
+    {
+        // Quoted already or not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
+        if (!preg_match('/^[A-Za-z0-9_$.]+$/', $identifier)) {
+            return $identifier;
+        }
+
+        return $this->connection->quoteSingleIdentifier($identifier);
     }
 }
