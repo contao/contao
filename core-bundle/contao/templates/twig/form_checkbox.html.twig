@@ -22,7 +22,7 @@
         {% for option in getOptions.invoke() %}
             {% if option.type == 'group_start' %}
                 <fieldset>
-                <legend>{{ option.label }}</legend>
+                <legend>{{ option.label|raw }}</legend>
             {% endif %}
 
             {% if option.type == 'option' %}
@@ -34,7 +34,7 @@
                         .set('value', option.value)
                         .set('checked', option.checked, option.checked)
                         .mergeWith(option.attributes)
-                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label }}</label></span>
+                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|raw }}</label></span>
             {% endif %}
 
             {% if option.type == 'group_end' %}
