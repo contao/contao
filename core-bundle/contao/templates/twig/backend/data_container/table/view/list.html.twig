@@ -27,7 +27,13 @@
                         </div>
                     {% endif %}
 
-                    <table class="tl_listing{{ showColumns ? ' showColumns' }}{{ pickerFieldType ? ' picker unselectable' }}">
+                    {% set table_attributes = attrs()
+                        .addClass('tl_listing')
+                        .addClass('showColumns', showColumns)
+                        .addClass('picker unselectable', pickerFieldType)
+                    %}
+                    {# todo: check pickerFieldType values #}
+                    <table{{ table_attributes }}>
                         {% if not showColumns %}
                             {% block table %}
                                 {% for row in rows ?? [] %}
@@ -36,10 +42,22 @@
                                             <th colspan="2" class="{{ row.groups.class }}">{{ row.groups.name }}</th>
                                         </tr>
                                     {% endif %}
-                                    <tr class="hover-row{{ row.isDraft ? ' draft' }}" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">
+                                    {% set row_attributes = attrs()
+                                        .addClass('hover-row')
+                                        .addClass('draft', row.isDraft)
+                                        .set('data-controller', 'contao--deeplink contao--operations-menu')
+                                        .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
+                                    %}
+                                    <tr{{ row_attributes }}>
                                         {% if row.labels ?? false %}
                                             {% for label in row.labels %}
-                                                <td colspan="{{ row.colspan }}" class="tl_file_list col_{{ label.key }}{{ label.isFirstOrderBy ? ' ordered_by' }}">{{ label.value|raw }}</td>
+                                                {% set col_attributes = attrs()
+                                                    .set('colspan', row.colspan)
+                                                    .addClass('tl_file_list')
+                                                    .addClass("col_#{label.key}")
+                                                    .addClass('ordered_by', label.isFirstOrderBy)
+                                                %}
+                                                <td{{ col_attributes }}>{{ label.value|raw }}</td>
                                             {% endfor %}
                                         {% else %}
                                             <td class="tl_file_list">
@@ -51,7 +69,18 @@
                                             </td>
                                         {% endif %}
                                         {% if isSelecting %}
-                                            <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_{{ row.id }}" class="tl_tree_checkbox" data-contao--check-all-target="input" data-action="contao--check-all#toggleInput" value="{{ row.id }}"></td>
+                                            <td class="tl_file_list tl_right_nowrap">
+                                                {% set input_attributes = attrs()
+                                                    .set('type', 'checkbox')
+                                                    .set('name', 'IDS[]')
+                                                    .set('id', "ids_#{row.id}")
+                                                    .addClass('tl_tree_checkbox')
+                                                    .set('data-contao--check-all-target', 'input')
+                                                    .set('data-action', 'contao--check-all#toggleInput')
+                                                    .set('value', row.id)
+                                                %}
+                                                <input{{ input_attributes }}>
+                                            </td>
                                         {% else %}
                                             <td class="tl_file_list tl_right_nowrap">{{ row.buttons|raw }}{{ row.pickerField|raw }}</td>
                                         {% endif %}
@@ -62,7 +91,12 @@
                             <thead>
                             <tr>
                                 {% for field in fields %}
-                                    <th class="tl_folder_tlist col_{{ field.name }}{{ field.isFirstOrderBy ? ' ordered_by' }}">{{ field.label }}</th>
+                                    {% set head_attributes = attrs()
+                                        .addClass('tl_folder_tlist')
+                                        .addClass("col_#{field.name}")
+                                        .addClass('ordered_by', field.isFirstOrderBy)
+                                    %}
+                                    <th{{ head_attributes }}>{{ field.label }}</th>
                                 {% endfor %}
                                 <th class="tl_folder_tlist tl_right_nowrap"></th>
                             </tr>
