@@ -11,10 +11,12 @@ use Contao\CoreBundle\Twig\Studio\Operation\AbstractRenameVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
+#[AllowMockObjectsWithoutExpectations]
 class RenameVariantOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideContextsAndIfAllowedToExecute')]

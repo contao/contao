@@ -9,10 +9,12 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
+#[AllowMockObjectsWithoutExpectations]
 class DeleteOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]

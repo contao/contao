@@ -9,11 +9,13 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\SaveOperation;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Source;
 
+#[AllowMockObjectsWithoutExpectations]
 class SaveOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
