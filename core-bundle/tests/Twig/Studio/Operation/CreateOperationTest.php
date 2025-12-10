@@ -9,12 +9,10 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\CreateOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-#[AllowMockObjectsWithoutExpectations]
 class CreateOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
@@ -35,7 +33,7 @@ class CreateOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -59,7 +57,7 @@ class CreateOperationTest extends AbstractOperationTestCase
     #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
     public function testCreateUserTemplate(string|null $themeSlug, string $path): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderMock();
         $loader
             ->expects($this->once())
             ->method('warmUp')
@@ -73,7 +71,7 @@ class CreateOperationTest extends AbstractOperationTestCase
             ->with($path, 'new template content')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -84,7 +82,7 @@ class CreateOperationTest extends AbstractOperationTestCase
             ->willReturn('create_result.stream')
         ;
 
-        $cacheInvalidator = $this->mockCacheInvalidator();
+        $cacheInvalidator = $this->createMock(CacheInvalidator::class);
         $cacheInvalidator
             ->expects($this->once())
             ->method('invalidateCache')

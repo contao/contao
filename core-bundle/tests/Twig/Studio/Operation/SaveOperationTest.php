@@ -9,13 +9,11 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\SaveOperation;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Source;
 
-#[AllowMockObjectsWithoutExpectations]
 class SaveOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
@@ -36,7 +34,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -67,7 +65,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->with($path, '<updated code>')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -96,7 +94,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createStub(Environment::class);
 
         $operation = $this->getSaveOperation($storage, $twig);
         $context = $this->getOperationContext('content_element/existing_user_template');

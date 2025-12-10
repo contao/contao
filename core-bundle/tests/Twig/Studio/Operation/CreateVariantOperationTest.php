@@ -9,12 +9,10 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractCreateVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-#[AllowMockObjectsWithoutExpectations]
 class CreateVariantOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideContextsAndIfAllowedToExecute')]
@@ -56,7 +54,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
 
     public function testStreamDialogWhenCreatingVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderStub();
         $loader
             ->method('exists')
             ->willReturnCallback(
@@ -92,7 +90,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -128,7 +126,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -151,7 +149,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
 
     public function testCreateVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderMock();
         $loader
             ->expects($this->once())
             ->method('warmUp')
@@ -165,7 +163,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
             ->with('prefix/foo/my_variant.html.twig', 'new template content')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -180,7 +178,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
             $loader,
             $storage,
             $twig,
-            $this->mockTemplateSkeletonFactory('@Contao/prefix/foo.html.twig'),
+            $this->createTemplateSkeletonFactoryStub('@Contao/prefix/foo.html.twig'),
         );
 
         $response = $operation->execute(

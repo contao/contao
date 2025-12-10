@@ -11,12 +11,10 @@ use Contao\CoreBundle\Twig\Studio\Operation\AbstractRenameVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-#[AllowMockObjectsWithoutExpectations]
 class RenameVariantOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideContextsAndIfAllowedToExecute')]
@@ -68,7 +66,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
 
     public function testStreamDialogWhenRenamingVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderStub();
         $loader
             ->method('exists')
             ->willReturnCallback(
@@ -104,7 +102,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -140,7 +138,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -163,7 +161,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
 
     public function testRenameVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderMock();
         $loader
             ->expects($this->once())
             ->method('warmUp')
@@ -177,7 +175,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
             ->with('prefix/foo/my_variant.html.twig', 'prefix/foo/my_new_variant.html.twig')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -199,7 +197,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
             )
         ;
 
-        $cacheInvalidator = $this->mockCacheInvalidator();
+        $cacheInvalidator = $this->createMock(CacheInvalidator::class);
         $cacheInvalidator
             ->expects($this->once())
             ->method('invalidateCache')
@@ -210,7 +208,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
             $loader,
             $storage,
             $twig,
-            $this->mockTemplateSkeletonFactory('@Contao/prefix/foo.html.twig'),
+            $this->createTemplateSkeletonFactoryStub('@Contao/prefix/foo.html.twig'),
             $connection,
             $cacheInvalidator,
         );
