@@ -24,10 +24,8 @@ use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransport;
 #[AsDoctrineListener('postGenerateSchema')]
 class DoctrineSchemaListener
 {
-    public function __construct(
-        private readonly DcaSchemaProvider $provider,
-        private readonly ContainerInterface $messengerTransportLocator,
-    ) {
+    public function __construct(private readonly DcaSchemaProvider $provider)
+    {
     }
 
     /**
@@ -36,19 +34,5 @@ class DoctrineSchemaListener
     public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
         $this->provider->appendToSchema($event->getSchema());
-
-        foreach (['contao_prio_high', 'contao_prio_normal', 'contao_prio_low', 'contao_failure'] as $transportName) {
-            if (!$this->messengerTransportLocator->has($transportName)) {
-                continue;
-            }
-
-            $transport = $this->messengerTransportLocator->get($transportName);
-
-            if (!$transport instanceof DoctrineTransport) {
-                continue;
-            }
-
-            $transport->configureSchema($event->getSchema(), $event->getEntityManager()->getConnection(), static fn () => false);
-        }
     }
 }

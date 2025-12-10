@@ -44,7 +44,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
             $this->mockDoctrineRegistry(),
         );
 
-        $listener = new DoctrineSchemaListener($dcaSchemaProvider, $this->createMock(ContainerInterface::class));
+        $listener = new DoctrineSchemaListener($dcaSchemaProvider);
         $listener->postGenerateSchema($event);
 
         $this->assertTrue($schema->hasTable('tl_files'));
