@@ -27,14 +27,12 @@ class FormatterRuntimeTest extends TestCase
             ->expects($this->exactly(5))
             ->method('trans')
             ->willReturnCallback(
-                static function (string $id): string {
-                    return match ($id) {
-                        'MSC.decimalSeparator' => '.',
-                        'MSC.thousandsSeparator' => ',',
-                        'UNITS.0' => 'Byte',
-                        'UNITS.1' => 'KiB',
-                        default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
-                    };
+                static fn (string $id): string => match ($id) {
+                    'MSC.decimalSeparator' => '.',
+                    'MSC.thousandsSeparator' => ',',
+                    'UNITS.0' => 'Byte',
+                    'UNITS.1' => 'KiB',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
                 },
             )
         ;

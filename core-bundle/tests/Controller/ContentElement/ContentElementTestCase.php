@@ -161,13 +161,11 @@ abstract class ContentElementTestCase extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                static function (string $id): string {
-                    return match ($id) {
-                        'MSC.decimalSeparator' => '.',
-                        'MSC.thousandsSeparator' => ',',
-                        'UNITS.0' => 'Byte',
-                        default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
-                    };
+                static fn (string $id): string => match ($id) {
+                    'MSC.decimalSeparator' => '.',
+                    'MSC.thousandsSeparator' => ',',
+                    'UNITS.0' => 'Byte',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
                 },
             )
         ;
