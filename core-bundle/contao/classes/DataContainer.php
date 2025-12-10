@@ -446,7 +446,7 @@ abstract class DataContainer extends Backend
 		}
 
 		/** @var class-string<Widget> $strClass */
-		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
+		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? ''] ?? null;
 
 		// Return if the widget class does not exist
 		if (!class_exists($strClass))
