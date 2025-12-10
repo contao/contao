@@ -126,13 +126,27 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
     public function testAddsShareLinkToToolbar(): void
     {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->willReturnMap([
+                [
+                    'contao_backend',
+                    ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'rt' => 'csrf', 'nb' => '1'],
+                    '/_contao/preview/1',
+                ],
+                ['contao_backend_switch', '/contao/preview_switch'],
+            ])
+        ;
+
         $controller = new BackendPreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createStub(Connection::class),
             $this->mockSecurity(true),
             $this->getTwigMock(),
-            $this->mockRouter(true),
+            $router,
             $this->mockTokenManager(),
             $this->mockTranslator(),
         );
@@ -324,30 +338,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    private function mockRouter(bool $canShare = false): RouterInterface
+    private function mockRouter(): RouterInterface&Stub
     {
-        if ($canShare) {
-            $router = $this->createMock(RouterInterface::class);
-            $router
-                ->expects($this->exactly(2))
-                ->method('generate')
-                ->willReturnMap([
-                    [
-                        'contao_backend',
-                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'rt' => 'csrf', 'nb' => '1'],
-                        '/_contao/preview/1',
-                    ],
-                    ['contao_backend_switch', '/contao/preview_switch'],
-                ])
-            ;
-        } else {
-            $router = $this->createStub(RouterInterface::class);
-            $router
-                ->method('generate')
-                ->with('contao_backend_switch')
-                ->willReturn('/contao/preview_switch')
-            ;
-        }
+        $router = $this->createStub(RouterInterface::class);
+        $router
+            ->method('generate')
+            ->with('contao_backend_switch')
+            ->willReturn('/contao/preview_switch')
+        ;
 
         return $router;
     }
@@ -427,7 +425,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $tokenManager;
     }
 
-    private function mockTranslator(): TranslatorInterface
+    private function mockTranslator(): TranslatorInterface&Stub
     {
         $translator = $this->createStub(TranslatorInterface::class);
         $translator

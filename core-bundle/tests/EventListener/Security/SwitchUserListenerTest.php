@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,7 @@ class SwitchUserListenerTest extends TestCase
         ;
 
         $event = new SwitchUserEvent(new Request(), $this->createStub(BackendUser::class));
-        $listener = new SwitchUserListener($tokenStorage, $this->mockLogger());
+        $listener = new SwitchUserListener($tokenStorage, $this->createStub(LoggerInterface::class));
 
         $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The token storage did not contain a token.');
@@ -51,12 +52,8 @@ class SwitchUserListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockLogger(string|null $message = null): LoggerInterface
+    private function mockLogger(string $message): LoggerInterface&MockObject
     {
-        if (null === $message) {
-            return $this->createStub(LoggerInterface::class);
-        }
-
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
@@ -67,12 +64,8 @@ class SwitchUserListenerTest extends TestCase
         return $logger;
     }
 
-    private function mockTokenStorage(string|null $username = null): TokenStorageInterface
+    private function mockTokenStorage(string $username): TokenStorageInterface&MockObject
     {
-        if (null === $username) {
-            return $this->createStub(TokenStorageInterface::class);
-        }
-
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->once())

@@ -20,6 +20,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -193,7 +194,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         unset($GLOBALS['TL_DCA']['tl_module']['fields']);
     }
 
-    private function mockGetRootPages(): Connection
+    private function mockGetRootPages(): Connection&MockObject
     {
         $result = $this->createMock(Result::class);
         $result
@@ -223,7 +224,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         return $connection;
     }
 
-    private function mockGetModules(): Connection
+    private function mockGetModules(): Connection&MockObject
     {
         $result = $this->createMock(Result::class);
         $result

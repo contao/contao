@@ -147,10 +147,8 @@ abstract class ContaoTestCase extends TestCase
      *
      * A Config adapter with the default Contao configuration will be added
      * automatically if no Config adapter is given.
-     *
-     * @return ContaoFramework&MockObject
      */
-    protected function createContaoFrameworkMock(array $adapters = [], array $instances = []): ContaoFramework
+    protected function createContaoFrameworkMock(array $adapters = [], array $instances = []): ContaoFramework&MockObject
     {
         return $this->addAdaptersAndInstances($this->createMock(ContaoFramework::class), $adapters, $instances);
     }
@@ -160,10 +158,8 @@ abstract class ContaoTestCase extends TestCase
      *
      * A Config adapter with the default Contao configuration will be added
      * automatically if no Config adapter is given.
-     *
-     * @return ContaoFramework&Stub
      */
-    protected function createContaoFrameworkStub(array $adapters = [], array $instances = []): ContaoFramework
+    protected function createContaoFrameworkStub(array $adapters = [], array $instances = []): ContaoFramework&Stub
     {
         return $this->addAdaptersAndInstances($this->createStub(ContaoFramework::class), $adapters, $instances);
     }
@@ -185,20 +181,16 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates an adapter mock object with the given methods.
-     *
-     * @return Adapter&MockObject
      */
-    protected function createAdapterMock(array $methods): Adapter
+    protected function createAdapterMock(array $methods): Adapter&MockObject
     {
         return $this->createMock($this->createAdapterClass($methods));
     }
 
     /**
      * Creates an adapter stub object with the given methods.
-     *
-     * @return Adapter&Stub
      */
-    protected function createAdapterStub(array $methods): Adapter
+    protected function createAdapterStub(array $methods): Adapter&Stub
     {
         return $this->createStub($this->createAdapterClass($methods));
     }
@@ -220,10 +212,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates a configured adapter mock object with the given methods and return values.
-     *
-     * @return Adapter&MockObject
      */
-    protected function createConfiguredAdapterMock(array $configuration): Adapter
+    protected function createConfiguredAdapterMock(array $configuration): Adapter&MockObject
     {
         $adapter = $this->createAdapterMock(array_keys($configuration));
 
@@ -239,10 +229,8 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Creates a configured adapter stub object with the given methods and return values.
-     *
-     * @return Adapter&Stub
      */
-    protected function createConfiguredAdapterStub(array $configuration): Adapter
+    protected function createConfiguredAdapterStub(array $configuration): Adapter&Stub
     {
         $adapter = $this->createAdapterStub(array_keys($configuration));
 
@@ -314,7 +302,7 @@ abstract class ContaoTestCase extends TestCase
     /**
      * Mocks a token storage with a Contao user.
      */
-    protected function mockTokenStorage(string $class): TokenStorageInterface
+    protected function mockTokenStorage(string $class): TokenStorageInterface&Stub
     {
         if (!is_a($class, User::class, true)) {
             throw new \InvalidArgumentException(\sprintf('Class "%s" is not a Contao\User class', $class));
@@ -460,12 +448,7 @@ abstract class ContaoTestCase extends TestCase
         return $fqcn;
     }
 
-    /**
-     * @param (ContaoFramework&MockObject)|(ContaoFramework&Stub) $framework
-     *
-     * @return (ContaoFramework&MockObject)|(ContaoFramework&Stub)
-     */
-    private function addAdaptersAndInstances(ContaoFramework $framework, $adapters, $instances): ContaoFramework
+    private function addAdaptersAndInstances(MockObject|Stub $framework, $adapters, $instances): MockObject|Stub
     {
         $this->addConfigAdapter($adapters);
 

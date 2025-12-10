@@ -502,7 +502,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    private function mockResponse(bool $asHtml, int $statusCode = 200, string $url = 'https://contao.org', string|null $searchIndexerJson = null): ResponseInterface
+    private function mockResponse(bool $asHtml, int $statusCode = 200, string $url = 'https://contao.org', string|null $searchIndexerJson = null): ResponseInterface&Stub
     {
         $headers = $asHtml ? ['content-type' => ['text/html']] : [];
 

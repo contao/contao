@@ -23,7 +23,7 @@ use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\System;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -163,7 +163,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container
+    private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): ContainerBuilder
     {
         if (!isset($frameworkAdapters[Input::class])) {
             $frameworkAdapters[Input::class] = new Adapter(Input::class);

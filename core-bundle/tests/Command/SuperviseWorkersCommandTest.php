@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
@@ -172,7 +173,7 @@ class SuperviseWorkersCommandTest extends TestCase
         return $converted;
     }
 
-    private function mockMessengerTransporter(int $messageCount, bool $hasAutoscaling): MessageCountAwareInterface
+    private function mockMessengerTransporter(int $messageCount, bool $hasAutoscaling): MessageCountAwareInterface&MockObject
     {
         $transport = $this->createMock(MessageCountAwareInterface::class);
         $transport

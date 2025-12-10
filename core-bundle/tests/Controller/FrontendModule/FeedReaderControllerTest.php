@@ -79,7 +79,7 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createStub(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createStub(ResponseInterface::class), url: $feedUrl))
+            ->willReturn(new Result($this->createStub(Document::class), $feed, response: $this->createStub(ResponseInterface::class), url: $feedUrl, modifiedSince: new \DateTime()))
         ;
 
         $cache = new NullAdapter();
@@ -196,7 +196,7 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createStub(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createStub(ResponseInterface::class), url: $feedUrl))
+            ->willReturn(new Result($this->createStub(Document::class), $feed, response: $this->createStub(ResponseInterface::class), url: $feedUrl, modifiedSince: new \DateTime()))
         ;
 
         $cache = new NullAdapter();
@@ -266,7 +266,7 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createStub(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createStub(ResponseInterface::class), url: $feedUrl))
+            ->willReturn(new Result($this->createStub(Document::class), $feed, response: $this->createStub(ResponseInterface::class), url: $feedUrl, modifiedSince: new \DateTime()))
         ;
 
         $cache = new NullAdapter();

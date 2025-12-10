@@ -42,7 +42,7 @@ class ContaoStrategyTest extends TestCase
             $this->mockAccessDecisionStrategy(true),
             $this->mockAccessDecisionStrategy(false),
             new RequestStack(),
-            $this->mockFirewallMap(null),
+            $this->createStub(FirewallMap::class),
         );
 
         $accessDecisionManager->decide($this->createStub(\Traversable::class));
@@ -56,7 +56,7 @@ class ContaoStrategyTest extends TestCase
             $this->mockAccessDecisionStrategy(true),
             $this->mockAccessDecisionStrategy(false),
             $requestStack,
-            $this->mockFirewallMap(null),
+            $this->createStub(FirewallMap::class),
         );
 
         $accessDecisionManager->decide($this->createStub(\Traversable::class));
@@ -102,22 +102,14 @@ class ContaoStrategyTest extends TestCase
         return $manager;
     }
 
-    private function mockFirewallMap(string|null $context): FirewallMap
+    private function mockFirewallMap(string $context): FirewallMap&MockObject
     {
-        if (null === $context) {
-            $map = $this->createStub(FirewallMap::class);
-            $map
-                ->method('getFirewallConfig')
-                ->willReturn(null)
-            ;
-        } else {
-            $map = $this->createMock(FirewallMap::class);
-            $map
-                ->expects($this->once())
-                ->method('getFirewallConfig')
-                ->willReturn(new FirewallConfig($context, '', null, true, false, null, $context))
-            ;
-        }
+        $map = $this->createMock(FirewallMap::class);
+        $map
+            ->expects($this->once())
+            ->method('getFirewallConfig')
+            ->willReturn(new FirewallConfig($context, '', null, true, false, null, $context))
+        ;
 
         return $map;
     }

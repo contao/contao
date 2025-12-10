@@ -18,6 +18,7 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -124,7 +125,7 @@ class RootPageDependentSelectTest extends TestCase
         $this->assertSame($minifiedExpectedOutput, $widget->generate());
     }
 
-    private function mockPageModel(array $properties): PageModel
+    private function mockPageModel(array $properties): PageModel&Stub
     {
         $model = $this->createClassWithPropertiesStub(PageModel::class);
 

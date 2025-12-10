@@ -21,6 +21,7 @@ use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
@@ -40,7 +41,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         );
     }
 
-    protected function mockSecurity(int|null $userId = null): Security
+    protected function mockSecurity(int|null $userId = null): Security&MockObject
     {
         $userMock = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 

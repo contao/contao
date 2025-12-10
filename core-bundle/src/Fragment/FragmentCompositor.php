@@ -81,6 +81,6 @@ class FragmentCompositor
      */
     public function shouldPreload(string $identifier): bool
     {
-        return ($this->preload[$identifier] ?? null) === true;
+        return true === ($this->preload[$identifier] ?? null);
     }
 }

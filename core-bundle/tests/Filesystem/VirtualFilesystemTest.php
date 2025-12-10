@@ -25,6 +25,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -970,7 +971,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($value, $filesystem->$method('path2', $accessFlags));
     }
 
-    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MountManager
+    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MountManager&MockObject
     {
         $mountManager = $this->createMock(MountManager::class);
 

@@ -27,6 +27,7 @@ use League\Flysystem\FilesystemReader;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\UriInterface;
 
 class MountManagerTest extends TestCase
@@ -624,7 +625,7 @@ class MountManagerTest extends TestCase
         return (new MountManager())->mount($adapter);
     }
 
-    private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
+    private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter&MockObject
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
         $adapter
@@ -635,7 +636,7 @@ class MountManagerTest extends TestCase
         return $adapter;
     }
 
-    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter
+    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter&MockObject
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
 

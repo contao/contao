@@ -70,7 +70,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $this->createStub(TranslatorInterface::class),
-            $this->mockConnection(),
+            $this->createStub(Connection::class),
             $this->mockPageRegistry(),
             $this->mockRouter(),
             new UrlMatcher(),
@@ -199,7 +199,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $this->createStub(TranslatorInterface::class),
-            $this->mockConnection(),
+            $this->createStub(Connection::class),
             $pageRegistry,
             $this->mockRouter($throwParametersException ? false : $currentRoute),
             new UrlMatcher(),
@@ -267,7 +267,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $slug,
             $translator,
-            $this->mockConnection(),
+            $this->createStub(Connection::class),
             $pageRegistry,
             $this->mockRouter($throwParametersException ? false : $currentRoute),
             new UrlMatcher(),
@@ -1053,7 +1053,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createStub(Slug::class),
             $this->mockTranslator(),
-            $this->mockConnection(true),
+            $this->mockConnection(),
             $pageRegistry,
             $this->mockRouter($route),
             new UrlMatcher(),
@@ -1204,7 +1204,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createStub(Slug::class),
             $translator,
-            $this->mockConnection(true),
+            $this->mockConnection(),
             new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(3),
             new UrlMatcher(),
@@ -1304,7 +1304,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createStub(Slug::class),
             $this->createStub(TranslatorInterface::class),
-            $this->mockConnection(true),
+            $this->mockConnection(),
             new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(2),
             new UrlMatcher(),
@@ -1466,7 +1466,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createStub(Slug::class),
             $this->mockTranslator(),
-            $this->mockConnection(),
+            $this->createStub(Connection::class),
             new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(1),
             new UrlMatcher(),
@@ -1566,7 +1566,7 @@ class PageUrlListenerTest extends TestCase
             $framework,
             $this->createStub(Slug::class),
             $translator,
-            $this->mockConnection(),
+            $this->createStub(Connection::class),
             new PageRegistry($this->createStub(Connection::class)),
             $this->mockRouter(3),
             new UrlMatcher(),
@@ -1700,29 +1700,25 @@ class PageUrlListenerTest extends TestCase
         return $return;
     }
 
-    private function mockConnection(bool $prefixCheck = false): Connection
+    private function mockConnection(): Connection&MockObject
     {
-        if ($prefixCheck) {
-            $connection = $this->createMock(Connection::class);
-            $connection
-                ->expects($this->once())
-                ->method('fetchOne')
-                ->with(
-                    <<<'SQL'
-                        SELECT COUNT(*)
-                        FROM tl_page
-                        WHERE
-                            urlPrefix = :urlPrefix
-                            AND dns = :dns
-                            AND id != :rootId
-                            AND type = 'root'
-                        SQL,
-                )
-                ->willReturn(0)
-            ;
-        } else {
-            $connection = $this->createStub(Connection::class);
-        }
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with(
+                <<<'SQL'
+                    SELECT COUNT(*)
+                    FROM tl_page
+                    WHERE
+                        urlPrefix = :urlPrefix
+                        AND dns = :dns
+                        AND id != :rootId
+                        AND type = 'root'
+                    SQL,
+            )
+            ->willReturn(0)
+        ;
 
         return $connection;
     }

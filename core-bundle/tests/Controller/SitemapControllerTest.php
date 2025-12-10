@@ -919,7 +919,7 @@ class SitemapControllerTest extends TestCase
         return $container;
     }
 
-    private function mockPage(array $data): PageModel
+    private function mockPage(array $data): PageModel&MockObject
     {
         $page = $this->createClassWithPropertiesMock(PageModel::class, $data);
         $page

@@ -541,6 +541,7 @@ class TokenCheckerTest extends TestCase
      */
     private function mockUser(string $class): User
     {
+        /** @var User $user */
         $user = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
 
         $data = new \ReflectionProperty($user, 'arrData');

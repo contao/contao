@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class PageRegistryTest extends TestCase
 {
@@ -413,7 +414,7 @@ class PageRegistryTest extends TestCase
         $this->assertEmpty($registry->getUrlPrefixes());
     }
 
-    private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection
+    private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
         $connection
