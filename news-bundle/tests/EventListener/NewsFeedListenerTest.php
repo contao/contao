@@ -98,6 +98,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'news_feed',
             'newsArchives' => serialize([1, 2]),
             'feedFeatured' => $feedFeatured,
             'maxFeedItems' => 0,
@@ -250,6 +251,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'news_feed',
             'feedSource' => $feedSource,
             'imgSize' => serialize([100, 100, 'crop']),
         ]);
