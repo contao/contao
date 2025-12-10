@@ -31,6 +31,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -59,7 +60,7 @@ class FigureBuilderTest extends TestCase
     {
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST']);
 
-        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
 
         parent::tearDown();
     }
