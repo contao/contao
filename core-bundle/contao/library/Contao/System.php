@@ -617,7 +617,7 @@ abstract class System
 			$intSize /= 1024;
 		}
 
-		return static::getFormattedNumber($intSize, $intDecimals) . ' ' . $GLOBALS['TL_LANG']['UNITS'][$i];
+		return static::getFormattedNumber($intSize, $intDecimals) . ' ' . static::getContainer()->get('translator')->trans('UNITS.' . $i, array(), 'contao_default');
 	}
 
 	/**
@@ -630,7 +630,12 @@ abstract class System
 	 */
 	public static function getFormattedNumber($varNumber, $intDecimals=2)
 	{
-		return number_format(round($varNumber, $intDecimals), $intDecimals, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']);
+		return number_format(
+			round($varNumber, $intDecimals),
+			$intDecimals,
+			static::getContainer()->get('translator')->trans('MSC.decimalSeparator', array(), 'contao_default'),
+			static::getContainer()->get('translator')->trans('MSC.thousandsSeparator', array(), 'contao_default'),
+		);
 	}
 
 	/**
