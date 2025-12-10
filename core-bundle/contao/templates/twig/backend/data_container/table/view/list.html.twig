@@ -1,26 +1,31 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set view_attributes = attrs()
-    .set('data-controller', 'contao--limit-height', limitHeight)
-    .set('data-contao--limit-height-max-value', limitHeight, limitHeight)
-    .set('data-contao--limit-height-expand-value', 'MSC.expandNode'|trans, limitHeight)
-    .set('data-contao--limit-height-collapse-value', 'MSC.collapseNode'|trans, limitHeight)
-    .set('data-contao--limit-height-expand-all-value', 'DCA.expandNodes.0'|trans, limitHeight)
-    .set('data-contao--limit-height-expand-all-title-value', 'DCA.expandNodes.1'|trans, limitHeight)
-    .set('data-contao--limit-height-collapse-all-value', 'DCA.collapseNodes.0'|trans, limitHeight)
-    .set('data-contao--limit-height-collapse-all-title-value', 'DCA.collapseNodes.1'|trans, limitHeight)
+    .set('data-controller', 'contao--limit-height', limit_height)
+    .set('data-contao--limit-height-max-value', limit_height, limit_height)
+    .set('data-contao--limit-height-expand-value', 'MSC.expandNode'|trans, limit_height)
+    .set('data-contao--limit-height-collapse-value', 'MSC.collapseNode'|trans, limit_height)
+    .set('data-contao--limit-height-expand-all-value', 'DCA.expandNodes.0'|trans, limit_height)
+    .set('data-contao--limit-height-expand-all-title-value', 'DCA.expandNodes.1'|trans, limit_height)
+    .set('data-contao--limit-height-collapse-all-value', 'DCA.collapseNodes.0'|trans, limit_height)
+    .set('data-contao--limit-height-collapse-all-title-value', 'DCA.collapseNodes.1'|trans, limit_height)
 %}
 <div{{ view_attributes }}>
     {{ message|raw }}
     {{ operations|raw }}
 
-    {% if isEmpty %}
-        <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
-    {% else %}
-        {% if not isSelecting %}
+    {% if records|length %}
+        {% if not as_select %}
             {% block list %}
-                <div class="tl_listing_container list_view" id="tl_listing" data-controller="contao--check-all" {{ pickerAttribute }}>
-                    {% if isSelecting or pickerFieldType == 'checkbox' %}
+                {% set listing_attributes = attrs()
+                    .addClass(['tl_listing_container', 'list_view'])
+                    .set('id', 'tl_listing')
+                    .set('data-controller', 'contao--check-all')
+                    .set('data-picker-value', picker.value|default, as_picker)
+                %}
+                <div{{ listing_attributes }}>
+                    {% if as_select or (as_picker and picker.type == 'checkbox') %}
+                        {# Add a "select all" checkbox #}
                         <div class="tl_select_trigger">
                             <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
                             <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
@@ -29,85 +34,99 @@
 
                     {% set table_attributes = attrs()
                         .addClass('tl_listing')
-                        .addClass('showColumns', showColumns)
-                        .addClass('picker unselectable', pickerFieldType)
+                        .addClass('showColumns', show_columns)
+                        .addClass(['picker', 'unselectable'], as_picker)
                     %}
-                    {# todo: check pickerFieldType values #}
                     <table{{ table_attributes }}>
-                        {% if not showColumns %}
-                            {% block table %}
-                                {% for row in rows ?? [] %}
-                                    {% if row.groups ?? false %}
-                                        <tr>
-                                            <th colspan="2" class="{{ row.groups.class }}">{{ row.groups.name }}</th>
-                                        </tr>
-                                    {% endif %}
-                                    {% set row_attributes = attrs()
-                                        .addClass('hover-row')
-                                        .addClass('draft', row.isDraft)
-                                        .set('data-controller', 'contao--deeplink contao--operations-menu')
-                                        .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
-                                    %}
-                                    <tr{{ row_attributes }}>
-                                        {% if row.labels ?? false %}
-                                            {% for label in row.labels %}
-                                                {% set col_attributes = attrs()
-                                                    .set('colspan', row.colspan)
-                                                    .addClass('tl_file_list')
-                                                    .addClass("col_#{label.key}")
-                                                    .addClass('ordered_by', label.isFirstOrderBy)
-                                                %}
-                                                <td{{ col_attributes }}>{{ label.value|raw }}</td>
-                                            {% endfor %}
-                                        {% else %}
-                                            <td class="tl_file_list">
-                                                {% if row.hasLimitedHeight ?? false %}
-                                                    <div data-contao--limit-height-target="node">{{ row.label }}</div>
-                                                {% else %}
-                                                    {{ row.label ?? '' }}
-                                                {% endif %}
-                                            </td>
-                                        {% endif %}
-                                        {% if isSelecting %}
-                                            <td class="tl_file_list tl_right_nowrap">
-                                                {% set input_attributes = attrs()
-                                                    .set('type', 'checkbox')
-                                                    .set('name', 'IDS[]')
-                                                    .set('id', "ids_#{row.id}")
-                                                    .addClass('tl_tree_checkbox')
-                                                    .set('data-contao--check-all-target', 'input')
-                                                    .set('data-action', 'contao--check-all#toggleInput')
-                                                    .set('value', row.id)
-                                                %}
-                                                <input{{ input_attributes }}>
-                                            </td>
-                                        {% else %}
-                                            <td class="tl_file_list tl_right_nowrap">{{ row.buttons|raw }}{{ row.pickerField|raw }}</td>
-                                        {% endif %}
-                                    </tr>
-                                {% endfor %}
-                            {% endblock %}
-                        {% else %}
+                        {% if table_headers|length %}
                             <thead>
-                            <tr>
-                                {% for field in fields %}
-                                    {% set head_attributes = attrs()
-                                        .addClass('tl_folder_tlist')
-                                        .addClass("col_#{field.name}")
-                                        .addClass('ordered_by', field.isFirstOrderBy)
-                                    %}
-                                    <th{{ head_attributes }}>{{ field.label }}</th>
-                                {% endfor %}
-                                <th class="tl_folder_tlist tl_right_nowrap"></th>
-                            </tr>
+                                <tr>
+                                    {% for name, label in table_headers %}
+                                        {% set table_header_attributes = attrs()
+                                            .addClass('tl_folder_tlist')
+                                            .addClass("col_#{name}")
+                                            .addClass('ordered_by', name == order_by)
+                                        %}
+                                        <th{{ table_header_attributes }}>{{ label }}</th>
+                                    {% endfor %}
+                                    <th class="tl_folder_tlist tl_right_nowrap"></th>
+                                </tr>
                             </thead>
-                            <tbody>
-                            {{ block('table') }}
-                            </tbody>
                         {% endif %}
+
+                        <tbody>
+                            {% for record in records %}
+                                {# Group header #}
+                                {% if record.group_header is defined %}
+                                    <tr>
+                                        {% set group_header_attributes = attrs()
+                                            .set('colspan', 2)
+                                            .addClass('tl_folder_tlist', loop.first)
+                                            .addClass('tl_folder_list', not loop.first)
+                                        %}
+                                        <th{{ group_header_attributes }}>{{ record.group_header }}</th>
+                                    </tr>
+                                {% endif %}
+
+                                {# Record #}
+                                {% set row_attributes = attrs()
+                                    .addClass('draft', record.is_draft)
+                                    .addClass('hover-row')
+                                    .set('data-controller', 'contao--deeplink contao--operations-menu')
+                                    .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
+                                %}
+                                <tr{{ row_attributes }}>
+                                    {% if record.columns is defined %}
+                                        {# Record displayed as multiple columns #}
+                                        {% for name, label in record.columns %}
+                                            {% set col_attributes = attrs()
+                                                .set('colspan', record.columns_colspan)
+                                                .addClass('tl_file_list')
+                                                .addClass("col_#{name}")
+                                                .addClass('ordered_by', name == order_by)
+                                            %}
+                                            <td{{ col_attributes }}>{{ label|raw }}</td>
+                                        {% endfor %}
+                                    {% else %}
+                                        {# Record displayed as a single column #}
+                                        <td class="tl_file_list">
+                                            {% set label_attributes = attrs()
+                                                .set('data-contao--limit-height-target', 'node', limit_height)
+                                            %}
+                                            <div{{ label_attributes }}>{{ record.label|raw }}</div>
+                                        </td>
+                                    {% endif %}
+
+                                    {# Right column #}
+                                    <td class="tl_file_list tl_right_nowrap">
+                                        {% if as_select %}
+                                            {# Only show a checkbox in select mode #}
+                                            {% set input_attributes = attrs()
+                                                .set('type', 'checkbox')
+                                                .set('name', 'IDS[]')
+                                                .set('id', "ids_#{record.id}")
+                                                .addClass('tl_tree_checkbox')
+                                                .set('data-contao--check-all-target', 'input')
+                                                .set('data-action', 'contao--check-all#toggleInput')
+                                                .set('value', record.id)
+                                            %}
+                                            <input{{ input_attributes }}>
+                                        {% else %}
+                                            {# Display operation buttons and an optional picker input field by default #}
+                                            {{ record.buttons|raw }}
+
+                                            {% if as_picker %}
+                                                {{ record.picker_input_field|raw }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
 
-                    {% if pickerFieldType == 'radio' %}
+                    {% if as_picker and picker.type == 'radio' %}
+                        {# Add an input to reset picker radio buttons #}
                         <div class="tl_radio_reset">
                             <label for="tl_radio_reset" class="tl_radio_label">
                                 {{ 'MSC.resetSelected'|trans }}
@@ -119,7 +138,8 @@
                 {{ pagination|default|raw }}
             {% endblock %}
         {% else %}
-            <form id="tl_select" class="tl_form{{ isSelecting ? ' unselectable' }}" method="post" novalidate>
+            {# Wrap listing in a form for select mode #}
+            <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
                 <div class="tl_formbody_edit">
                     <input type="hidden" name="FORM_SUBMIT" value="tl_select">
                     <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
@@ -129,5 +149,7 @@
                 {{ buttons|raw }}
             </form>
         {% endif %}
+    {% else %}
+        <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
     {% endif %}
 </div>

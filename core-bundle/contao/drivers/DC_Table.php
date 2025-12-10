@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\ArrayTree;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
@@ -372,17 +373,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	private function render(string $component, array $parameters): string
 	{
+		$defaultParameters = array(
+			'table' => $this->table,
+			'is_upload_form' => $this->blnUploadable,
+			'form_onsubmit' => $this->onsubmit,
+			'error' => $this->noReload,
+			'as_select' => Input::get('act') === 'select',
+			'as_picker' => (bool) $this->strPickerFieldType,
+		);
+
+		if ($defaultParameters['as_picker'])
+		{
+			$defaultParameters['picker'] = array(
+				'value' => (new HtmlAttributes($this->getPickerValueAttribute()))['data-picker-value'] ?? '',
+				'type' => $this->strPickerFieldType,
+			);
+		}
+
 		return System::getContainer()
 			->get('twig')
 			->render(
 				"@Contao/backend/data_container/table/$component.html.twig",
-				array(
-					'table' => $this->table,
-					'is_upload_form' => $this->blnUploadable,
-					'form_onsubmit' => $this->onsubmit,
-					'error' => $this->noReload,
-					...$parameters
-				)
+				array(...$defaultParameters, ...$parameters),
 			)
 		;
 	}
@@ -4644,21 +4656,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
-        $parameters = [
-			'message' => Message::generate(),
-            'operations' => $operations,
-            'isEmpty' => $objRow->numRows < 1,
-        ];
+		$parameters = array();
+		$records = array();
 
-		// List records
-        if ($objRow->numRows >= 1)
+		if ($objRow->numRows)
 		{
 			$result = $objRow->fetchAllAssoc();
-
-            $parameters['isSelecting'] = Input::get('act') == 'select';
-            $parameters['pickerAttribute'] = $this->getPickerValueAttribute();
-            $parameters['pickerFieldType'] = $this->strPickerFieldType;
-            $parameters['showColumns'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null;
 
 			// Automatically add the "order by" field as last column if we do not have group headers
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
@@ -4687,9 +4690,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Generate the table header if the "show columns" option is active
+			$parameters['table_headers'] = array();
+
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
 			{
-                $arrFields = [];
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
 					if (str_contains($f, ':'))
@@ -4697,29 +4701,33 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						list($f) = explode(':', $f, 2);
 					}
 
-                    $arrFields[] = [
-                        'name' => $f,
-                        'isFirstOrderBy' => $f == $firstOrderBy,
-                        'label' => $GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'][0] ?? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? $f
-                    ];
+					$parameters['table_headers'][$f] = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? null) ?
+						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'][0] :
+						($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? $f)
+					;
 				}
-
-                $parameters['fields'] = $arrFields;
 			}
 
 			// Process result and add label and buttons
 			$remoteCur = false;
-			$groupclass = 'tl_folder_tlist';
 
-            $arrRows = [];
-            foreach ($result as $key => $row)
+			foreach ($result as $row)
 			{
-                $arrRows[$key] = [];
-
 				// Improve performance for $dc->getCurrentRecord($id);
 				static::setCurrentRecordCache($row['id'], $this->strTable, $row);
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
+
+				$record = array(
+					'id' => $row['id'],
+					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
+					'buttons' => $this->generateButtons($row, $this->strTable, $this->root),
+				);
+
+				if ($this->strPickerFieldType)
+				{
+					$record['picker_input_field'] = $this->getPickerInputField($row['id']);
+				}
 
 				$this->current[] = $row['id'];
 				$label = $this->generateRecordLabel($row, $this->strTable);
@@ -4738,67 +4746,44 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row);
 						$remoteCur = $remoteNew;
 
-                        $arrRows[$key]['groups'] = [
-                            'name' => $group,
-                            'class' => $groupclass
-                        ];
-
-						$groupclass = 'tl_folder_list';
+						$record['group_header'] = $group;
 					}
 				}
 
-                $arrRows[$key]['isDraft'] = (string) ($row['tstamp'] ?? null);
-
-				$colspan = 1;
-
-				// Handle strings and arrays
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
+				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false)
 				{
-					$label = \is_array($label) ? implode(' ', $label) : $label;
-				}
-				elseif (!\is_array($label))
-				{
-					$label = array($label);
-					$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
-				}
+					$colspan = 1;
 
-                $arrRows[$key]['colspan'] = $colspan;
+					if (!\is_array($label))
+					{
+						$label = array($label);
+						$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
+					}
 
-				// Show columns
-				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
-				{
-                    $arrLabels = [];
+					$record['columns'] = array();
+					$record['columns_colspan'] = $colspan;
+
 					foreach ($label as $j=>$arg)
 					{
 						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
+						$name = explode(':', $field, 2)[0];
 						$value = (string) $arg !== '' ? $arg : '-';
 
-                        $arrLabels[] =[
-                            'key' => explode(':', $field, 2)[0],
-                            'isFirstOrderBy' => $field == $firstOrderBy,
-                            'value' => $value
-                        ];
+						$record['columns'][$name] = $value;
 					}
-                    $arrRows[$key]['labels'] = $arrLabels;
 				}
 				else
 				{
-                    $arrRows[$key]['hasLimitedHeight'] = $limitHeight;
-                    $arrRows[$key]['label'] = $label;
+					$record['label'] = \is_array($label) ? implode(' ', $label) : $label;
 				}
 
-				// Buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
-                $arrRows[$key]['id'] = $row['id'];
-                $arrRows[$key]['buttons'] = $this->generateButtons($row, $this->strTable, $this->root);
-                $arrRows[$key]['pickerField'] = $this->strPickerFieldType ? $this->getPickerInputField($row['id']) : '';
+				$records[] = $record;
 			}
-
-            $parameters['rows'] = $arrRows;
 
 			// Add another panel at the end of the page
 			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 			{
-                $parameters['pagination'] = $this->paginationMenu();
+				$parameters['pagination'] = $this->paginationMenu();
 			}
 
 			// Close the form
@@ -4806,15 +4791,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
 
-                $parameters['buttons'] = $strButtons;
+				$parameters['buttons'] = $strButtons;
 			}
 		}
 
-		$parameters['limitHeight'] = $limitHeight;
+		$parameters['message'] = Message::generate();
+		$parameters['operations'] = $operations;
+		$parameters['records'] = $records;
+		$parameters['order_by'] = $firstOrderBy;
+		$parameters['limit_height'] = (int) $limitHeight;
+		$parameters['show_columns'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false;
 
-		return System::getContainer()
-			->get('twig')
-			->render('@Contao/backend/data_container/table/view/list.html.twig', $parameters);
+		return $this->render('view/list', $parameters);
 	}
 
 	/**
