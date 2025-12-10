@@ -31,7 +31,7 @@ class ContaoMailerTest extends TestCase
 {
     public function testSetsTransportForRequest(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->mailerTransport = 'foobar';
 
         $request = new Request();
@@ -39,7 +39,7 @@ class ContaoMailerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $transport = $this->createMock(TransportInterface::class);
+        $transport = $this->createStub(TransportInterface::class);
         $mailer = new Mailer($transport);
 
         $availableTransports = new AvailableTransports();
@@ -56,7 +56,7 @@ class ContaoMailerTest extends TestCase
 
     public function testSetsFrom(): void
     {
-        $transport = $this->createMock(TransportInterface::class);
+        $transport = $this->createStub(TransportInterface::class);
         $mailer = new Mailer($transport);
 
         $email = new Email();
@@ -76,7 +76,7 @@ class ContaoMailerTest extends TestCase
 
     public function testSetsFromForTransport(): void
     {
-        $transport = $this->createMock(TransportInterface::class);
+        $transport = $this->createStub(TransportInterface::class);
         $mailer = new Mailer($transport);
 
         $availableTransports = new AvailableTransports();
@@ -99,7 +99,7 @@ class ContaoMailerTest extends TestCase
 
     public function testSetsFromReturnPathAndSenderForTransport(): void
     {
-        $transport = $this->createMock(TransportInterface::class);
+        $transport = $this->createStub(TransportInterface::class);
         $mailer = new Mailer($transport);
 
         $availableTransports = new AvailableTransports();
@@ -124,7 +124,7 @@ class ContaoMailerTest extends TestCase
 
     public function testLeavesEnvelopeUntouched(): void
     {
-        $transport = $this->createMock(TransportInterface::class);
+        $transport = $this->createStub(TransportInterface::class);
         $mailer = new Mailer($transport);
 
         $availableTransports = new AvailableTransports();

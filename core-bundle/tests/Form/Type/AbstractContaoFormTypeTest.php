@@ -26,8 +26,8 @@ class AbstractContaoFormTypeTest extends TestCase
         $formType = new class() extends AbstractContaoFormType {};
 
         $container = new ContainerBuilder();
-        $container->set('contao.csrf.token_manager', $this->createMock(ContaoCsrfTokenManager::class));
-        $container->set('parameter_bag', $this->createMock(ParameterBagInterface::class));
+        $container->set('contao.csrf.token_manager', $this->createStub(ContaoCsrfTokenManager::class));
+        $container->set('parameter_bag', $this->createStub(ParameterBagInterface::class));
 
         $optionsResolver = $this->createMock(OptionsResolver::class);
         $optionsResolver

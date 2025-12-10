@@ -37,7 +37,7 @@ class HtmlDecoderTest extends TestCase
     {
         parent::setUp();
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('hasFrontendUser')
             ->willReturn(false)
@@ -45,7 +45,7 @@ class HtmlDecoderTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $tokenChecker);
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
 
         System::setContainer($container);
     }
@@ -62,7 +62,7 @@ class HtmlDecoderTest extends TestCase
     #[DataProvider('getInputEncodedToPlainText')]
     public function testInputEncodedToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $parser->addSubscription(new InsertTagSubscription($this->createDateInsertTag(), '__invoke', 'date', null, true, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email', null, true, false));
 
@@ -98,7 +98,7 @@ class HtmlDecoderTest extends TestCase
     #[DataProvider('getHtmlToPlainText')]
     public function testHtmlToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $parser->addSubscription(new InsertTagSubscription($this->createDateInsertTag(), '__invoke', 'date', null, true, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email', null, true, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
@@ -131,12 +131,12 @@ class HtmlDecoderTest extends TestCase
 
     private function createDateInsertTag(): DateInsertTag
     {
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
         $dateAdapter
             ->method('parse')
             ->willReturnCallback(static fn (string $argument) => $argument)
         ;
 
-        return new DateInsertTag($this->mockContaoFramework([Date::class => $dateAdapter]));
+        return new DateInsertTag($this->createContaoFrameworkStub([Date::class => $dateAdapter]));
     }
 }

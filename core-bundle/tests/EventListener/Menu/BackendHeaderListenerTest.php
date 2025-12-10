@@ -27,7 +27,7 @@ class BackendHeaderListenerTest extends TestCase
 {
     public function testBuildsTheHeaderMenu(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->id = 1;
         $user->name = 'Foo Bar';
         $user->username = 'foo';
@@ -40,7 +40,7 @@ class BackendHeaderListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(
@@ -54,7 +54,7 @@ class BackendHeaderListenerTest extends TestCase
             )
         ;
 
-        $systemMessages = $this->mockAdapter(['getSystemMessages']);
+        $systemMessages = $this->createAdapterMock(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())
             ->method('getSystemMessages')
@@ -68,7 +68,7 @@ class BackendHeaderListenerTest extends TestCase
             $security,
             $router,
             $this->getTranslator(),
-            $this->mockContaoFramework([Backend::class => $systemMessages]),
+            $this->createContaoFrameworkStub([Backend::class => $systemMessages]),
         );
 
         $listener($event);
@@ -159,7 +159,7 @@ class BackendHeaderListenerTest extends TestCase
 
     public function testDoesNotBuildTheHeaderMenuIfNoUserIsGiven(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -177,8 +177,8 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(ContaoFramework::class),
         );
 
         $listener($event);
@@ -190,7 +190,7 @@ class BackendHeaderListenerTest extends TestCase
 
     public function testDoesNotBuildTheHeaderMenuIfTheNameDoesNotMatch(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -208,8 +208,8 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(ContaoFramework::class),
         );
 
         $listener($event);
@@ -221,7 +221,7 @@ class BackendHeaderListenerTest extends TestCase
 
     private function getTranslator(): TranslatorInterface
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $id): string => $id)

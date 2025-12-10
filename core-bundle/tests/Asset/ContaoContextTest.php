@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Asset;
 
 use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
@@ -33,7 +32,7 @@ class ContaoContextTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST']);
 
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class, System::class, Config::class]);
 
@@ -161,7 +160,7 @@ class ContaoContextTest extends TestCase
     public function testReadsTheSslConfigurationFromTheRequest(): void
     {
         $request = new Request();
-        $request->attributes = $this->createMock(ParameterBag::class);
+        $request->attributes = $this->createStub(ParameterBag::class);
 
         $requestStack = new RequestStack([$request]);
 
@@ -185,28 +184,21 @@ class ContaoContextTest extends TestCase
 
     private function getPageWithDetails(): PageModel
     {
-        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
-
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('database_connection', $connection);
-        $container->set('contao.resource_finder', $finder);
-        $container->setParameter('kernel.project_dir', $this->getFixturesDir());
+        System::setContainer($this->getContainerWithFixtures());
 
-        System::setContainer($container);
-
-        $page = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
+        $page = new PageModel();
         $page->type = 'root';
         $page->fallback = true;
         $page->staticPlugins = '';

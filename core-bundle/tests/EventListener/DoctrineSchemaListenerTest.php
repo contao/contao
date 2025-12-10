@@ -34,7 +34,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
         );
 
         $schema = new Schema();
-        $event = new GenerateSchemaEventArgs($this->createMock(EntityManagerInterface::class), $schema);
+        $event = new GenerateSchemaEventArgs($this->createStub(EntityManagerInterface::class), $schema);
 
         $this->assertFalse($schema->hasTable('tl_files'));
 
