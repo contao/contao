@@ -114,4 +114,7 @@ return (new Configuration())
     // This package is required by cmsig/seal-loupe-adapter and may therefore be a
     // shadow dependency.
     ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
+
+    // We set up doctrine messenger transports via the skeleton config in the managed edition.
+    ->ignoreErrorsOnPackage('symfony/doctrine-messenger', [ErrorType::UNUSED_DEPENDENCY])
 ;
