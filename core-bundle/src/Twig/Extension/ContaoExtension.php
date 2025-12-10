@@ -182,7 +182,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
                         if ('Contao' === ($parts[0] ?? null)) {
                             $candidates = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
-                            $args[2] = $candidates[$this->filesystemLoader->getCurrentThemeSlug()] ?? $candidates[''];
+                            $args[2] = $candidates[$this->filesystemLoader->getCurrentThemeSlug() ?? ''] ?? $candidates[''];
                         }
                     }
 
