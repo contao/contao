@@ -301,8 +301,21 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Mocks a token storage with a Contao user.
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createTokenStorageStub() instead.
      */
     protected function mockTokenStorage(string $class): TokenStorageInterface&Stub
+    {
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockTokenStorage()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createTokenStorageStub()" instead.');
+
+        return $this->createTokenStorageStub($class);
+    }
+
+    /**
+     * Creates a token storage stub with a Contao user.
+     */
+    protected function createTokenStorageStub(string $class): TokenStorageInterface&Stub
     {
         if (!is_a($class, User::class, true)) {
             throw new \InvalidArgumentException(\sprintf('Class "%s" is not a Contao\User class', $class));

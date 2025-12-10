@@ -20,11 +20,13 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\EmptyInsertTag;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\Model;
 use Contao\Model\MetadataTrait;
 use Contao\System;
+use Contao\TemplateLoader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -47,9 +49,16 @@ class MetadataTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANGUAGE']);
 
-        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
+        $this->resetStaticProperties([
+            Config::class,
+            ContaoFramework::class,
+            DcaExtractor::class,
+            DcaLoader::class,
+            System::class,
+            TemplateLoader::class,
+        ]);
 
         parent::tearDown();
     }

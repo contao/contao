@@ -19,11 +19,13 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
 use Contao\Environment;
 use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
+use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
@@ -38,9 +40,16 @@ class ContaoFrameworkTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_LANGUAGE']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_LANG'], $GLOBALS['TL_TEST'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([System::class, ContaoFramework::class, Registry::class]);
+        $this->resetStaticProperties([
+            Config::class,
+            ContaoFramework::class,
+            DcaExtractor::class,
+            Registry::class,
+            System::class,
+            TemplateLoader::class,
+        ]);
 
         ini_restore('intl.default_locale');
 

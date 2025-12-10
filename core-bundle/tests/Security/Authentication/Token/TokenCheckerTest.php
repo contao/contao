@@ -145,7 +145,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(FrontendUser::class),
+            $this->createTokenStorageStub(FrontendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $this->createStub(Connection::class),
@@ -166,7 +166,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $this->createTokenStorageStub(BackendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $this->createStub(Connection::class),
@@ -203,7 +203,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(FrontendUser::class),
+            $this->createTokenStorageStub(FrontendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $connection,
@@ -288,7 +288,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$this->createStub(Request::class)]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $this->createTokenStorageStub(BackendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $this->createStub(Connection::class),
@@ -323,7 +323,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $this->createTokenStorageStub(BackendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $connection,
@@ -364,7 +364,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $this->createTokenStorageStub(BackendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $this->createStub(Connection::class),
@@ -394,7 +394,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
-            $this->mockTokenStorage(FrontendUser::class),
+            $this->createTokenStorageStub(FrontendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $this->createStub(Connection::class),
@@ -430,7 +430,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $this->createTokenStorageStub(BackendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $this->createStub(Connection::class),
@@ -476,7 +476,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $this->createTokenStorageStub(BackendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $this->createStub(Connection::class),
@@ -520,7 +520,7 @@ class TokenCheckerTest extends TestCase
         $tokenChecker = new TokenChecker(
             new RequestStack([$request]),
             $this->mockFirewallMapWithConfigContext('contao_backend'),
-            $this->mockTokenStorage(BackendUser::class),
+            $this->createTokenStorageStub(BackendUser::class),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter(),
             $connection,

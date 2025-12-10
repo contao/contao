@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Cache;
 
 use Contao\ArticleModel;
+use Contao\Config;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Event\InvalidateCacheTagsEvent;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
@@ -20,6 +21,8 @@ use Contao\CoreBundle\Tests\Fixtures\Entity\Author;
 use Contao\CoreBundle\Tests\Fixtures\Entity\BlogPost;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Comment;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Tag;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
@@ -36,7 +39,16 @@ class CacheTagManagerTest extends DoctrineTestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
+
+        $this->resetStaticProperties([
+            [AnnotationRegistry::class, ['failedToAutoload']],
+            Config::class,
+            DcaExtractor::class,
+            DcaLoader::class,
+            DocParser::class,
+            System::class,
+        ]);
 
         parent::tearDown();
     }

@@ -508,7 +508,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             $router ?? $this->createStub(RouterInterface::class),
             $uriSigner ?? $this->createStub(UriSigner::class),
             $pageFinder,
-            $tokenStorage ?? $this->mockTokenStorage(FrontendUser::class),
+            $tokenStorage ?? $this->createTokenStorageStub(FrontendUser::class),
             $pageRegistry ?? $this->createStub(PageRegistry::class),
             $httpKernel ?? $this->createStub(HttpKernelInterface::class),
             $requestStack ?? $this->createStub(RequestStack::class),

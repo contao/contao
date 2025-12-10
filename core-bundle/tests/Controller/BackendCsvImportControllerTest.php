@@ -39,7 +39,7 @@ class BackendCsvImportControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST']);
 
         $this->resetStaticProperties([System::class, Config::class]);
 
