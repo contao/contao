@@ -376,7 +376,11 @@ class ValueFormatter implements ResetInterface
     {
         // Cannot use isset() because the value can be NULL
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
-            $dbField = $this->connection->getDatabasePlatform()->quoteSingleIdentifier($field);
+            $dbField = $field;
+            if (preg_match('/^[A-Za-z0-9_$]+$/', $field)) {
+                $dbField = $this->connection->getDatabasePlatform()->quoteSingleIdentifier($field);
+            }
+
             $value = $this->connection->fetchOne("SELECT $dbField FROM $table WHERE id=?", [$id]);
 
             $this->foreignValueCache[$table][$field][$id] = false === $value ? $id : $value;
