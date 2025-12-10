@@ -13,11 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FileUpload;
@@ -25,13 +23,9 @@ use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\Stub;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportControllerTest extends TestCase
@@ -40,14 +34,7 @@ class BackendCsvImportControllerTest extends TestCase
     {
         parent::setUp();
 
-        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('session', new Session(new MockArraySessionStorage()));
-        $container->set('contao.resource_finder', $finder);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithFixtures());
     }
 
     protected function tearDown(): void

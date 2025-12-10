@@ -763,7 +763,7 @@ class FigureBuilderTest extends TestCase
     #[DataProvider('provideMetadataAutoFetchCases')]
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
-        $container = $this->getContainerWithContaoConfiguration();
+        $container = $this->getContainerWithFixtures();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
@@ -778,7 +778,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+        $filesModel = new FilesModel();
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -1000,10 +1000,21 @@ class FigureBuilderTest extends TestCase
     #[DataProvider('provideUuidMetadataAutoFetchCases')]
     public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|array|string|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
     {
-        if (\is_array($resource)) {
-            $getFilesModel = function (array $metaData, string|null $uuid) use ($resource) {
-                $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+        $currentPage = $this->createClassWithPropertiesStub(PageModel::class);
+        $currentPage->language = 'en';
+        $currentPage->rootFallbackLanguage = 'de';
 
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $currentPage);
+
+        $container = $this->getContainerWithFixtures();
+        $container->get('request_stack')->push($request);
+
+        System::setContainer($container);
+
+        if (\is_array($resource)) {
+            $getFilesModel = static function (array $metaData, string|null $uuid) use ($resource) {
+                $filesModel = new FilesModel();
                 $filesModel->setRow([
                     'type' => 'file',
                     'path' => $resource[0],
@@ -1016,18 +1027,6 @@ class FigureBuilderTest extends TestCase
 
             $resource = $getFilesModel($resource[1], $resource[2] ?? null);
         }
-
-        $container = $this->getContainerWithContaoConfiguration();
-        System::setContainer($container);
-
-        $currentPage = $this->createClassWithPropertiesStub(PageModel::class);
-        $currentPage->language = 'en';
-        $currentPage->rootFallbackLanguage = 'de';
-
-        $request = Request::create('https://localhost');
-        $request->attributes->set('pageModel', $currentPage);
-
-        $container->get('request_stack')->push($request);
 
         (new DcaLoader('tl_files'))->load();
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['title' => ''];

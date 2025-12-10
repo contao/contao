@@ -329,23 +329,14 @@ class ContaoFrameworkTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('database_connection', $connection);
-
         $framework = $this->getFramework();
-        $framework->setContainer($container);
+        $framework->setContainer($this->getContainerWithFixtures());
         $framework->initialize();
 
         Environment::set('scriptFilename', 'bar');
         Input::setUnusedRouteParameters(['foo']);
 
-        $model = $this
-            ->getMockBuilder(PageModel::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['onRegister'])
-            ->getMock()
-        ;
-
+        $model = new PageModel();
         $model->id = 1;
 
         $registry = Registry::getInstance();

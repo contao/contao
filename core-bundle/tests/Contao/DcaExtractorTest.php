@@ -13,15 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
-use Doctrine\DBAL\Connection;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -31,22 +28,7 @@ class DcaExtractorTest extends TestCase
     {
         parent::setUp();
 
-        $connection = $this->createStub(Connection::class);
-        $connection
-            ->method('getParams')
-            ->willReturn([])
-        ;
-
-        $fixturesDir = $this->getFixturesDir();
-        $finder = new ResourceFinder(Path::join($fixturesDir, 'vendor/contao/test-bundle/Resources/contao'));
-        $locator = new FileLocator(Path::join($fixturesDir, 'vendor/contao/test-bundle/Resources/contao'));
-
-        $container = $this->getContainerWithContaoConfiguration($fixturesDir);
-        $container->set('database_connection', $connection);
-        $container->set('contao.resource_finder', $finder);
-        $container->set('contao.resource_locator', $locator);
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithFixtures());
     }
 
     protected function tearDown(): void

@@ -22,6 +22,7 @@ use Contao\CoreBundle\Tests\Fixtures\Entity\Comment;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Tag;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use Contao\System;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -120,9 +121,11 @@ class CacheTagManagerTest extends DoctrineTestCase
 
     public function testGetTagForModelInstance(): void
     {
+        System::setContainer($this->getContainerWithFixtures());
+
         $cacheTagManager = $this->getCacheTagManager($this->createStub(CacheInvalidator::class));
 
-        $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
+        $page = new PageModel();
         $page->id = 5;
 
         $this->assertSame('contao.db.tl_page.5', $cacheTagManager->getTagForModelInstance($page));
@@ -201,10 +204,12 @@ class CacheTagManagerTest extends DoctrineTestCase
 
     public function testGetPageTags(): void
     {
-        $page1 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
+        System::setContainer($this->getContainerWithFixtures());
+
+        $page1 = new PageModel();
         $page1->id = 5;
 
-        $page2 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
+        $page2 = new PageModel();
         $page2->id = 6;
 
         $modelCollection = new Collection([$page1, $page2], 'tl_page');
@@ -216,6 +221,8 @@ class CacheTagManagerTest extends DoctrineTestCase
 
     public function testDelegatesToResponseTagger(): void
     {
+        System::setContainer($this->getContainerWithFixtures());
+
         $responseTagger = $this->createMock(ResponseTagger::class);
         $matcher = $this->exactly(5);
 
@@ -237,7 +244,7 @@ class CacheTagManagerTest extends DoctrineTestCase
 
         $post = (new BlogPost())->setId(1);
 
-        $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
+        $page = new PageModel();
         $page->id = 2;
 
         $cacheTagManager = $this->getCacheTagManager($this->createStub(CacheInvalidator::class), $responseTagger);
@@ -250,6 +257,8 @@ class CacheTagManagerTest extends DoctrineTestCase
 
     public function testDelegatesToCacheInvalidator(): void
     {
+        System::setContainer($this->getContainerWithFixtures());
+
         $matcher = $this->exactly(5);
 
         $expected = [
@@ -271,7 +280,7 @@ class CacheTagManagerTest extends DoctrineTestCase
 
         $post = (new BlogPost())->setId(1);
 
-        $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
+        $page = new PageModel();
         $page->id = 2;
 
         $cacheTagManager = $this->getCacheTagManager($cacheTagInvalidator);

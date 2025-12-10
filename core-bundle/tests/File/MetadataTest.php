@@ -123,8 +123,13 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromContentModel(): void
     {
-        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
+        $container = $this->getContainerWithFixtures();
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
+        System::setContainer($container);
+
+        $model = new ContentModel();
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
@@ -148,8 +153,9 @@ class MetadataTest extends TestCase
 
     public function testDoesNotCreateMetadataContainerFromContentModelIfOverwriteIsDisabled(): void
     {
-        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
+        System::setContainer($this->getContainerWithFixtures());
 
+        $model = new ContentModel();
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
@@ -162,8 +168,13 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromFilesModel(): void
     {
-        $model = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+        $container = $this->getContainerWithFixtures();
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
+        System::setContainer($container);
+
+        $model = new FilesModel();
         $model->setRow([
             'id' => 100,
             'name' => 'test',

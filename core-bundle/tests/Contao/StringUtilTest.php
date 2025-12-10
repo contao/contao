@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -27,15 +26,10 @@ use Contao\Model;
 use Contao\Model\Registry;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -566,26 +560,8 @@ class StringUtilTest extends TestCase
 
     public function testInsertTagToSrc(): void
     {
-        $schemaManager = $this->createStub(AbstractSchemaManager::class);
-        $schemaManager
-            ->method('introspectSchema')
-            ->willReturn(new Schema())
-        ;
-
-        $connection = $this->createStub(Connection::class);
-        $connection
-            ->method('createSchemaManager')
-            ->willReturn($schemaManager)
-        ;
-
-        $container = System::getContainer();
-        $container->set('database_connection', $connection);
-
-        $finder = new ResourceFinder(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
-        $container->set('contao.resource_finder', $finder);
-
-        $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
-        $container->set('contao.resource_locator', $locator);
+        $container = $this->getContainerWithFixtures();
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files'] = [];
         $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;

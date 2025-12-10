@@ -18,6 +18,7 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\User;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -25,6 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -107,6 +109,17 @@ abstract class ContaoTestCase extends TestCase
         $container = new ContainerBuilder();
         $container->merge($cachedContainers[$projectDir]);
         $container->set('parameter_bag', new ContainerBag($container));
+
+        return $container;
+    }
+
+    protected function getContainerWithFixtures(): ContainerBuilder
+    {
+        $fixturesDir = $this->getFixturesDir();
+
+        $container = $this->getContainerWithContaoConfiguration($fixturesDir);
+        $container->set('database_connection', $this->createStub(Connection::class));
+        $container->setParameter('contao.resources_paths', Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
 
         return $container;
     }
