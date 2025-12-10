@@ -189,6 +189,7 @@ class OptInTest extends TestCase
     {
         $properties = [
             'confirmedOn' => 0,
+            'removeOn' => strtotime('-2 days'),
         ];
 
         $token = $this->createClassWithPropertiesMock(OptInModel::class, $properties);
@@ -199,6 +200,46 @@ class OptInTest extends TestCase
 
         $token
             ->expects($this->once())
+            ->method('delete')
+        ;
+
+        $optInAdapter = $this->createAdapterMock(['findExpiredTokens']);
+        $optInAdapter
+            ->expects($this->once())
+            ->method('findExpiredTokens')
+            ->willReturn([$token])
+        ;
+
+        $modelAdapter = $this->createAdapterMock(['getClassFromTable']);
+        $modelAdapter
+            ->expects($this->never())
+            ->method('getClassFromTable')
+        ;
+
+        $adapters = [
+            OptInModel::class => $optInAdapter,
+            Model::class => $modelAdapter,
+        ];
+
+        $framework = $this->createContaoFrameworkStub($adapters);
+        (new OptIn($framework))->purgeTokens();
+    }
+
+    public function testKeepsUnconfirmedTokensForTwoAdditionalDays(): void
+    {
+        $properties = [
+            'confirmedOn' => 0,
+            'removeOn' => strtotime('-2 days +1 minute'),
+        ];
+
+        $token = $this->createClassWithPropertiesMock(OptInModel::class, $properties);
+        $token
+            ->expects($this->never())
+            ->method('getRelatedRecords')
+        ;
+
+        $token
+            ->expects($this->never())
             ->method('delete')
         ;
 

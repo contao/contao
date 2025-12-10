@@ -404,9 +404,7 @@ abstract class ContaoTestCase extends TestCase
                     continue;
                 }
 
-                $defaultValue = $property->getDefaultValue();
-
-                if (!$property->hasDefaultValue() || $property->getValue() === $defaultValue) {
+                if (!$property->hasDefaultValue() || $property->getValue() === ($defaultValue = $property->getDefaultValue())) {
                     continue;
                 }
 

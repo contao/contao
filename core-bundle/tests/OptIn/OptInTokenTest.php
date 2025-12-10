@@ -56,8 +56,7 @@ class OptInTokenTest extends TestCase
     public function testConfirmsAToken(): void
     {
         $model = $this->createClassWithPropertiesMock(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
 
         $model
             ->expects($this->once())
@@ -75,8 +74,7 @@ class OptInTokenTest extends TestCase
     {
         $related = $this->createClassWithPropertiesMock(OptInModel::class);
         $related->token = 'reg-first';
-        $related->createdOn = time();
-        $related->confirmedOn = 0;
+        $related->removeOn = strtotime('+24 hours');
 
         $related
             ->expects($this->once())
@@ -101,8 +99,7 @@ class OptInTokenTest extends TestCase
 
         $model = $this->createClassWithPropertiesMock(OptInModel::class);
         $model->token = 'reg-second';
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
 
         $model
             ->expects($this->once())
@@ -121,8 +118,7 @@ class OptInTokenTest extends TestCase
     {
         $related = $this->createClassWithPropertiesMock(OptInModel::class);
         $related->token = 'reg-first';
-        $related->createdOn = time();
-        $related->confirmedOn = 0;
+        $related->removeOn = strtotime('+24 hours');
 
         $related
             ->expects($this->never())
@@ -147,8 +143,7 @@ class OptInTokenTest extends TestCase
 
         $model = $this->createClassWithPropertiesMock(OptInModel::class);
         $model->token = 'reg-second';
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
 
         $model
             ->expects($this->once())
@@ -179,8 +174,7 @@ class OptInTokenTest extends TestCase
     public function testDoesNotConfirmAnExpiredToken(): void
     {
         $model = $this->createClassWithPropertiesStub(OptInModel::class);
-        $model->createdOn = strtotime('-1 day');
-        $model->confirmedOn = 0;
+        $model->removeOn = time();
 
         $token = $this->getToken($model);
 
@@ -193,8 +187,7 @@ class OptInTokenTest extends TestCase
     public function testSendsATokenViaEmail(): void
     {
         $model = $this->createClassWithPropertiesMock(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
         $model->emailSubject = '';
         $model->emailText = '';
 
@@ -239,8 +232,7 @@ class OptInTokenTest extends TestCase
     public function testDoesNotSendAnExpiredTokenViaEmail(): void
     {
         $model = $this->createClassWithPropertiesStub(OptInModel::class);
-        $model->createdOn = strtotime('-1 day');
-        $model->confirmedOn = 0;
+        $model->removeOn = time();
 
         $token = $this->getToken($model);
 
@@ -253,8 +245,7 @@ class OptInTokenTest extends TestCase
     public function testRequiresSubjectAndTextToSendToken(): void
     {
         $model = $this->createClassWithPropertiesMock(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
         $model->emailSubject = '';
         $model->emailText = '';
 
@@ -274,8 +265,7 @@ class OptInTokenTest extends TestCase
     public function testDoesNotRequireSubjectAndTextToResendToken(): void
     {
         $model = $this->createClassWithPropertiesMock(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
         $model->emailSubject = 'Subject';
         $model->emailText = 'Text';
 
