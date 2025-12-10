@@ -33,7 +33,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testAbstainsIfTheAttributeIsNotContaoMemberGroup(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, '1', ['contao_foobar']));
     }
@@ -64,7 +64,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testDeniesAccessIfTheUserIsNotInGroups(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => '2']);
+        $user = $this->createClassWithPropertiesMock(FrontendUser::class, ['groups' => '2']);
         $user
             ->expects($this->never())
             ->method('isMemberOf')
@@ -82,7 +82,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testGrantsAccessIfTheUserIsInGroups(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => [1, 2, 3]]);
+        $user = $this->createClassWithPropertiesMock(FrontendUser::class, ['groups' => [1, 2, 3]]);
         $user
             ->expects($this->never())
             ->method('isMemberOf')
@@ -102,7 +102,7 @@ class MemberGroupVoterTest extends TestCase
     {
         $ids = [1, 2, 3, 4];
 
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => $ids]);
+        $user = $this->createClassWithPropertiesMock(FrontendUser::class, ['groups' => $ids]);
         $user
             ->expects($this->never())
             ->method('isMemberOf')
@@ -120,7 +120,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testDeniesAccessIfTheTokenIsTwoFactor(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $token

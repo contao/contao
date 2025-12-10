@@ -16,7 +16,7 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -156,7 +156,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $subscriber->setEscargot($escargot);
         $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
-        $decision = $subscriber->needsContent($crawlUri, $response, $this->createMock(ChunkInterface::class));
+        $decision = $subscriber->needsContent($crawlUri, $response, $this->createStub(ChunkInterface::class));
 
         $this->assertSame($expectedDecision, $decision);
 
@@ -359,9 +359,9 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface&MockObject
+    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface&Stub
     {
-        $response = $this->createMock(ResponseInterface::class);
+        $response = $this->createStub(ResponseInterface::class);
         $response
             ->method('getStatusCode')
             ->willReturn($statusCode)
@@ -391,9 +391,9 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         return $response;
     }
 
-    private function mockTranslator(): TranslatorInterface&MockObject
+    private function mockTranslator(): TranslatorInterface&Stub
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Foobar')

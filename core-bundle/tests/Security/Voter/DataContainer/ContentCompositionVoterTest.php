@@ -29,8 +29,8 @@ class ContentCompositionVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
 
         $voter = new ContentCompositionVoter($framework, $pageRegistry);
 
@@ -45,10 +45,10 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageModelIsNotFound(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -56,7 +56,7 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -72,16 +72,16 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageDoesNotSupportContentComposition(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->never())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -89,7 +89,7 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -107,16 +107,16 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageLayoutIsNotFound(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -124,14 +124,14 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
             LayoutModel::class => $layoutAdapter,
         ]);
@@ -152,18 +152,18 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testDeniesAccessIfPageLayoutHasNoArticleModule(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize([])]);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, ['modules' => serialize([])]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -171,14 +171,14 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
             LayoutModel::class => $layoutAdapter,
         ]);
@@ -199,18 +199,18 @@ class ContentCompositionVoterTest extends TestCase
 
     public function testAbstainsIfPageLayoutHasArticleModule(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new CreateAction('tl_article', ['pid' => 42]);
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize([['mod' => 0]])]);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, ['modules' => serialize([['mod' => 0]])]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
         ;
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')
@@ -218,14 +218,14 @@ class ContentCompositionVoterTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
             LayoutModel::class => $layoutAdapter,
         ]);

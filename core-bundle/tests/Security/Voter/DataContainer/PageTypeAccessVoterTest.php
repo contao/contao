@@ -31,8 +31,8 @@ class PageTypeAccessVoterTest extends TestCase
     public function testSupport(): void
     {
         $voter = new PageTypeAccessVoter(
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(Connection::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(Connection::class),
         );
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
@@ -58,7 +58,7 @@ class PageTypeAccessVoterTest extends TestCase
             ->method($this->anything())
         ;
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $subject = new ReadAction('tl_page', []);
 
         $voter = new PageTypeAccessVoter($decisionManager, $connection);
@@ -70,7 +70,7 @@ class PageTypeAccessVoterTest extends TestCase
     #[DataProvider('decidesAccessOnPageTypeInActionProvider')]
     public function testDecidesAccessOnPageTypeInAction(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $types, int $expected): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $decisions = [];
 
         foreach ($types as $type => $decision) {
@@ -84,7 +84,7 @@ class PageTypeAccessVoterTest extends TestCase
             ->willReturnMap($decisions)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $voter = new PageTypeAccessVoter($decisionManager, $connection);
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.'tl_page']);
@@ -140,9 +140,9 @@ class PageTypeAccessVoterTest extends TestCase
     #[DataProvider('errorPagesAreOnlyAllowedInRootPageProvider')]
     public function testErrorPagesAreOnlyAllowedInRootPage(CreateAction|UpdateAction $subject, array|null $rootIds, array|null $rootTypes, int $expected): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
-        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $decisionManager = $this->createStub(AccessDecisionManagerInterface::class);
         $decisionManager
             ->method('decide')
             ->willReturn(true)
@@ -282,15 +282,15 @@ class PageTypeAccessVoterTest extends TestCase
     #[DataProvider('rootPageMustBeAtTopLevelProvider')]
     public function testOnlyRootPageMustBeAtTopLevel(CreateAction|UpdateAction $subject, int $expected): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
-        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $decisionManager = $this->createStub(AccessDecisionManagerInterface::class);
         $decisionManager
             ->method('decide')
             ->willReturn(true)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $voter = new PageTypeAccessVoter($decisionManager, $connection);
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.'tl_page']);

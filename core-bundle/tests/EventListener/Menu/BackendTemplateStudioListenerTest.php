@@ -34,10 +34,10 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
             ->method('isGranted')
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
         $translator = $this->getTranslator();
-        $event = $this->createMock(MenuEvent::class);
+        $event = $this->createStub(MenuEvent::class);
 
         $listener = new BackendTemplateStudioListener($security, $router, $requestStack, $translator, false);
         $listener($event);
@@ -52,7 +52,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         ;
 
         $security = $this->getSecurity(false);
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
         $translator = $this->getTranslator();
 
@@ -82,7 +82,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         ;
 
         $security = $this->getSecurity(true);
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
         $translator = $this->getTranslator();
 
@@ -118,7 +118,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         ;
 
         $security = $this->getSecurity(true);
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
         $translator = $this->getTranslator();
 
@@ -154,7 +154,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         ;
 
         $security = $this->getSecurity(true);
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $requestStack = new RequestStack();
         $translator = $this->getTranslator();
 
@@ -172,7 +172,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
 
         $event = new MenuEvent($nodeFactory, $mainMenu);
         $security = $this->getSecurity(true);
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $translator = $this->getTranslator();
 
         $request = new Request();
@@ -214,7 +214,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
 
     private function getTranslator(): TranslatorInterface
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $id): string => $id)

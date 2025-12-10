@@ -21,7 +21,7 @@ class DeferBlockReferenceNodeTest extends TestCase
 {
     public function testCompilesCode(): void
     {
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
 
         $node = new DeferredBlockReferenceNode('__deferred_foo', 0);
         $node->compile($compiler);
