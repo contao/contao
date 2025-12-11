@@ -683,7 +683,7 @@ class Database
 		$connection = System::getContainer()->get('database_connection');
 
 		// Backwards-compatibility for doctrine/dbal < 4.3
-		if (!\method_exists($connection, 'quoteSingleIdentifier'))
+		if (!method_exists($connection, 'quoteSingleIdentifier'))
 		{
 			return $connection->quoteIdentifier($strName);
 		}
