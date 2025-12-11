@@ -36,14 +36,14 @@
 #}
 
 {% trans_default_domain 'contao_default' %}
-{% use "@Contao/component/_pagination.html.twig" %}
+{% use '@Contao/component/_pagination.html.twig' %}
 
 {% block list_component %}
     {% set list = list|default(_context) %}
     {% set tag_name = list.tag_name|default('ul') %}
 
     {# Set defaults for the various display modes #}
-    {% set number_of_items = list.items|length  %}
+    {% set number_of_items = list.items|length %}
     {% set randomize_order = list.randomize_order|default %}
     {% set limit_elements = list.limit|default(0) > 0 %}
     {% set limit = list.limit|default(number_of_items) %}
@@ -78,7 +78,7 @@
 
     {% if not pagination|default and (randomize_order or add_pagination or limit_elements) %}
         {% block list_script %}
-            {% add "list_script" to body %}
+            {% add 'list_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
                     .mergeWith(script_attributes|default)

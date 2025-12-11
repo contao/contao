@@ -27,8 +27,8 @@
 
         <meta name="robots" content="{{ response_context.head.metaRobots }}">
         <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
-        {% for metaTag in response_context.head.metaTags %}
-            <meta{{ metaTag }}>
+        {% for meta_tag in response_context.head.metaTags %}
+            <meta{{ meta_tag }}>
         {% endfor %}
 
         {% if page['enableCanonical'] -%}

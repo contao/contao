@@ -137,7 +137,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     /**
      * Generate file preview images on the fly for a content model (default Contao
-     * controller behaviour).
+     * controller behavior).
      *
      * @return \Generator<Figure>
      */

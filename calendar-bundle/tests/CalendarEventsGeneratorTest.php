@@ -17,6 +17,7 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -32,10 +33,10 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
     public function testReturnsEmptyIfNoCalendars(): void
     {
         $generator = new CalendarEventsGenerator(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $events = $generator->getAllEvents([], new \DateTimeImmutable(), new \DateTimeImmutable('9999-12-31 23:59:59'));
@@ -48,7 +49,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         $rangeStart = new \DateTimeImmutable();
         $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59');
 
-        $calendarEventsAdapter = $this->mockAdapter(['findCurrentByPid']);
+        $calendarEventsAdapter = $this->createAdapterMock(['findCurrentByPid']);
         $calendarEventsAdapter
             ->expects($this->once())
             ->method('findCurrentByPid')
@@ -57,10 +58,10 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         ;
 
         $generator = new CalendarEventsGenerator(
-            $this->mockContaoFramework([CalendarEventsModel::class => $calendarEventsAdapter]),
-            $this->createMock(PageFinder::class),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createContaoFrameworkStub([CalendarEventsModel::class => $calendarEventsAdapter]),
+            $this->createStub(PageFinder::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $events = $generator->getAllEvents([1864], $rangeStart, $rangeEnd);
@@ -74,11 +75,11 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         $rangeStart = new \DateTimeImmutable();
         $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59');
 
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, $record);
+        $eventModel = $this->createClassWithPropertiesStub(CalendarEventsModel::class, $record);
 
         $collection = new Collection([$eventModel], CalendarEventsModel::getTable());
 
-        $calendarEventsAdapter = $this->mockAdapter(['findCurrentByPid']);
+        $calendarEventsAdapter = $this->createAdapterMock(['findCurrentByPid']);
         $calendarEventsAdapter
             ->expects($this->once())
             ->method('findCurrentByPid')
@@ -86,33 +87,33 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ->willReturn($collection)
         ;
 
-        $calendarModel = $this->createMock(CalendarModel::class);
+        $calendarModel = $this->createStub(CalendarModel::class);
 
-        $calendarAdapter = $this->mockAdapter(['findById']);
+        $calendarAdapter = $this->createAdapterMock(['findById']);
         $calendarAdapter
             ->expects($this->atLeastOnce())
             ->method('findById')
             ->willReturn($calendarModel)
         ;
 
-        $templateAdapter = $this->mockAdapter(['once']);
+        $templateAdapter = $this->createAdapterMock(['once']);
         $templateAdapter
             ->expects('default' !== ($record['source'] ?? null) ? $this->never() : $this->atLeast(2))
             ->method('once')
             ->willReturn(static fn () => true)
         ;
 
-        $contaoFramework = $this->mockContaoFramework(
+        $contaoFramework = $this->createContaoFrameworkStub(
             [
                 CalendarEventsModel::class => $calendarEventsAdapter,
                 CalendarModel::class => $calendarAdapter,
-                Controller::class => $this->mockAdapter([]),
-                ContentModel::class => $this->mockAdapter([]),
+                Controller::class => $this->createStub(Adapter::class),
+                ContentModel::class => $this->createStub(Adapter::class),
                 Template::class => $templateAdapter,
             ],
         );
 
-        $page = $this->mockClassWithProperties(PageModel::class, ['dateFormat']);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, ['dateFormat']);
         $page->dateFormat = 'Y-m-d';
         $page->timeFormat = 'H:i';
         $page->datimFormat = 'Y-m-d H:i';
@@ -124,7 +125,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -140,7 +141,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         $generator = new CalendarEventsGenerator(
             $contaoFramework,
             $pageFinder,
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContentUrlGenerator::class),
             $translator,
         );
 

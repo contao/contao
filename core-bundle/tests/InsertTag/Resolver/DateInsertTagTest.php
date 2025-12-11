@@ -16,13 +16,13 @@ class DateInsertTagTest extends ContaoTestCase
     #[DataProvider('expiresAtProvider')]
     public function testExpiresAt(array $formats, \DateTimeImmutable|null $expectedExpiresAt): void
     {
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
         $dateAdapter
             ->method('parse')
             ->willReturn('parsed')
         ;
 
-        $insertTag = new DateInsertTag($this->mockContaoFramework([Date::class => $dateAdapter]));
+        $insertTag = new DateInsertTag($this->createContaoFrameworkStub([Date::class => $dateAdapter]));
 
         foreach ($formats as $format) {
             $result = $insertTag(new ResolvedInsertTag('date', new ResolvedParameters([$format]), []));

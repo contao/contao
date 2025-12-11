@@ -1,9 +1,9 @@
-{% extends "@Contao/block_searchable.html.twig" %}
+{% extends '@Contao/block_searchable.html.twig' %}
 
 {% block content %}
 
     {{ comments|join|raw }}
     {{ pagination|default|raw }}
-    {% include "@Contao/mod_comment_form" %}
+    {{ include('@Contao/mod_comment_form') }}
 
 {% endblock %}

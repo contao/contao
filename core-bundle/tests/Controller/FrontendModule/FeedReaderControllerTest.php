@@ -53,9 +53,9 @@ class FeedReaderControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $this->container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
         $this->container->set('monolog.logger.contao.error', new NullLogger());
-        $this->container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $this->container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
         System::setContainer($this->container);
     }
@@ -79,12 +79,12 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createMock(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createMock(ResponseInterface::class), url: $feedUrl))
+            ->willReturn(new Result($this->createStub(Document::class), $feed, response: $this->createStub(ResponseInterface::class), url: $feedUrl, modifiedSince: new \DateTime()))
         ;
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -121,7 +121,7 @@ class FeedReaderControllerTest extends TestCase
             ->willReturn($feed)
         ;
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -152,7 +152,7 @@ class FeedReaderControllerTest extends TestCase
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -196,12 +196,12 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createMock(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createMock(ResponseInterface::class), url: $feedUrl))
+            ->willReturn(new Result($this->createStub(Document::class), $feed, response: $this->createStub(ResponseInterface::class), url: $feedUrl, modifiedSince: new \DateTime()))
         ;
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -266,12 +266,12 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createMock(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createMock(ResponseInterface::class), url: $feedUrl))
+            ->willReturn(new Result($this->createStub(Document::class), $feed, response: $this->createStub(ResponseInterface::class), url: $feedUrl, modifiedSince: new \DateTime()))
         ;
 
         $cache = new NullAdapter();
 
-        $model = $this->mockClassWithProperties(ModuleModel::class, [
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, [
             'id' => 42,
             'rss_feed' => $feedUrl,
             'rss_cache' => 3600,
@@ -330,9 +330,9 @@ class FeedReaderControllerTest extends TestCase
 
     private function getController(FeedIo $feedIo, CacheInterface $cache, RequestStack $requestStack, LoggerInterface|null $logger = null, ContainerInterface|null $container = null, PaginationFactoryInterface|null $paginationFactory = null): FeedReaderController
     {
-        $logger ??= $this->createMock(LoggerInterface::class);
+        $logger ??= $this->createStub(LoggerInterface::class);
 
-        $paginationFactory ??= $this->createMock(PaginationFactoryInterface::class);
+        $paginationFactory ??= $this->createStub(PaginationFactoryInterface::class);
 
         $controller = new FeedReaderController($feedIo, $logger, $cache, $paginationFactory);
         $controller->setFragmentOptions(['template' => 'frontend_module/feed_reader']);
@@ -343,7 +343,7 @@ class FeedReaderControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, callable|null $assertTwigContext = null): ContainerBuilder
     {
-        $loader = $this->createMock(ContaoFilesystemLoader::class);
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('exists')
             ->willReturn(true)
@@ -356,7 +356,7 @@ class FeedReaderControllerTest extends TestCase
             )
         ;
 
-        $twig = $this->createMock(TwigEnvironment::class);
+        $twig = $this->createStub(TwigEnvironment::class);
 
         if ($assertTwigContext) {
             $twig
@@ -376,12 +376,12 @@ class FeedReaderControllerTest extends TestCase
         }
 
         $this->container->set('contao.twig.filesystem_loader', $loader);
-        $this->container->set('contao.twig.interop.context_factory', new ContextFactory($this->createMock(ScopeMatcher::class)));
+        $this->container->set('contao.twig.interop.context_factory', new ContextFactory($this->createStub(ScopeMatcher::class)));
         $this->container->set('twig', $twig);
-        $this->container->set('contao.framework', $this->mockContaoFramework());
+        $this->container->set('contao.framework', $this->createContaoFrameworkStub());
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
-        $this->container->set('cache.system', $this->createMock(CacheInterface::class));
-        $this->container->set('translator', $this->createMock(TranslatorInterface::class));
+        $this->container->set('cache.system', $this->createStub(CacheInterface::class));
+        $this->container->set('translator', $this->createStub(TranslatorInterface::class));
 
         if ($requestStack instanceof RequestStack) {
             $this->container->set('request_stack', $requestStack);

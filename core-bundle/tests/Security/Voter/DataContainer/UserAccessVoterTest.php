@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\UserAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -224,12 +225,12 @@ class UserAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $decision);
     }
 
-    private function mockToken(UserInterface|array|null $user = null): TokenInterface&MockObject
+    private function mockToken(UserInterface|array|null $user = null): TokenInterface&Stub
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         if (\is_array($user)) {
-            $user = $this->mockClassWithProperties(BackendUser::class, $user);
+            $user = $this->createClassWithPropertiesStub(BackendUser::class, $user);
         }
 
         $token
@@ -240,9 +241,9 @@ class UserAccessVoterTest extends TestCase
         return $token;
     }
 
-    private function mockAccessDecisionManager(TokenInterface $token, bool $allowModule = true, bool $isAdmin = false): AccessDecisionManagerInterface&MockObject
+    private function mockAccessDecisionManager(TokenInterface $token, bool $allowModule = true, bool $isAdmin = false): AccessDecisionManagerInterface&Stub
     {
-        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager = $this->createStub(AccessDecisionManagerInterface::class);
         $accessDecisionManager
             ->method('decide')
             ->willReturnMap([
