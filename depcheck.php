@@ -22,6 +22,7 @@ use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
+use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
@@ -35,6 +36,7 @@ return (new Configuration())
         InvalidListener::class,
         LegacyModule::class,
         LoupeAdapter::class,
+        Mysql::class,
         MySQL57Platform::class,
         SchemaAlterTableRenameColumnEventArgs::class,
         'SensitiveParameter',
@@ -112,4 +114,7 @@ return (new Configuration())
     // This package is required by cmsig/seal-loupe-adapter and may therefore be a
     // shadow dependency.
     ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
+
+    // We set up doctrine messenger transports via the skeleton config in the managed edition.
+    ->ignoreErrorsOnPackage('symfony/doctrine-messenger', [ErrorType::UNUSED_DEPENDENCY])
 ;

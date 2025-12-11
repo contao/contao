@@ -13,7 +13,7 @@
                 {# Leaf #}
                 {% block navigate_button %}
                     {% with {identifier: node.identifier} %}
-                        {% embed('@Contao/backend/template_studio/_template_identifier_button.html.twig') %}
+                        {% embed '@Contao/backend/template_studio/_template_identifier_button.html.twig' %}
                             {% block inner %}
                                 {{ backend_icon('code.svg') }}
                                 <span{{ attrs().addClass('user', node.hasUserTemplate) }}>{{ identifier }}</span>

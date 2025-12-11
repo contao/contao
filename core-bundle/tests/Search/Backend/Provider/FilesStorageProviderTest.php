@@ -37,11 +37,11 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
     public function testSupports(): void
     {
         $provider = new FilesStorageProvider(
-            $this->createMock(VirtualFilesystem::class),
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
@@ -57,15 +57,15 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
         $filesystem = new VirtualFilesystem(
             (new MountManager())->mount($adapter),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $provider = new FilesStorageProvider(
             $filesystem,
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
@@ -85,7 +85,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
     public function testUpdateIndexSince(): void
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
             ->with('', true)
@@ -96,20 +96,20 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
+        $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
         );
 
         $provider = new FilesStorageProvider(
             $filesystem,
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
@@ -126,7 +126,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
     public function testLimitToDocumentIds(): void
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
             ->with('', true)
@@ -137,20 +137,20 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
+        $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
         );
 
         $provider = new FilesStorageProvider(
             $filesystem,
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
@@ -181,25 +181,25 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ];
         }
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->willReturnMap($returnMap)
         ;
 
         $provider = new FilesStorageProvider(
-            $this->createMock(VirtualFilesystem::class),
+            $this->createStub(VirtualFilesystem::class),
             $security,
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
         $allowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'foo']);
         $disallowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'bar']);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertTrue($provider->isDocumentGranted($token, $allowedDocument));
         $this->assertFalse($provider->isDocumentGranted($token, $disallowedDocument));
@@ -216,10 +216,10 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         ;
 
         $provider = new FilesStorageProvider(
-            $this->createMock(VirtualFilesystem::class),
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
             $translator,
             'files',
         );
@@ -237,11 +237,11 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
     public function testGetFacetLabelForTag(string $tag, string $expected): void
     {
         $provider = new FilesStorageProvider(
-            $this->createMock(VirtualFilesystem::class),
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 

@@ -40,8 +40,8 @@ class CombinedFileDumperTest extends TestCase
 
     public function testFailsIfTheHeaderIsInvalid(): void
     {
-        $filesystem = $this->createMock(Filesystem::class);
-        $loader = $this->createMock(PhpFileLoader::class);
+        $filesystem = $this->createStub(Filesystem::class);
+        $loader = $this->createStub(PhpFileLoader::class);
         $dumper = new CombinedFileDumper($filesystem, $loader, $this->getTempDir());
 
         $this->expectException('InvalidArgumentException');

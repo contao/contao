@@ -1,7 +1,7 @@
-{% trans_default_domain "contao_default" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
-{% add "moo_mediabox" to stylesheets %}
+{% add 'moo_mediabox' to stylesheets %}
     {% with {file: 'assets/tablesort/css/tablesort.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 

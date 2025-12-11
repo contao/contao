@@ -24,7 +24,7 @@
             {% endif %}
 
             {% block widget_groups %}
-                {% include "@Contao/backend/data_container/table/edit/_widget_groups.html.twig" with {root: box.widget_groups_tree} %}
+                {{ include('@Contao/backend/data_container/table/edit/_widget_groups.html.twig', {root: box.widget_groups_tree}) }}
             {% endblock %}
         </fieldset>
     {% endblock %}

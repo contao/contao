@@ -27,7 +27,7 @@ abstract class AbstractAccessVoterTestCase extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
@@ -60,7 +60,7 @@ abstract class AbstractAccessVoterTestCase extends TestCase
     #[DataProvider('votesProvider')]
     public function testVotes(array $current, array $decisions, bool $accessGranted, string $actionClass = ReadAction::class): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         foreach ($decisions as &$decision) {
             array_unshift($decision, $token);

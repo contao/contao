@@ -1,4 +1,4 @@
-{% extends "@Contao/block_unsearchable.html.twig" %}
+{% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
 
@@ -16,7 +16,7 @@
                         {% endif %}
 
                         {% if faq.addImage %}
-                            {% include "@Contao/image.html.twig" with faq %}
+                            {{ include('@Contao/image.html.twig', faq) }}
                         {% endif %}
 
                         {% if faq.addBefore %}

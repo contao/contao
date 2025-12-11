@@ -39,7 +39,7 @@ class ApplicationTest extends ContaoTestCase
 
     public function testReturnsConfiguredPluginLoader(): void
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader = $this->createStub(PluginLoader::class);
 
         $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
@@ -78,7 +78,7 @@ class ApplicationTest extends ContaoTestCase
 
     public function testReturnsConfiguredManagerConfig(): void
     {
-        $managerConfig = $this->createMock(ManagerConfig::class);
+        $managerConfig = $this->createStub(ManagerConfig::class);
 
         $application = $this->getApplication();
         $application->setManagerConfig($managerConfig);

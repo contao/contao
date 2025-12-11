@@ -37,10 +37,11 @@ echo $container->getParameter('kernel.cache_dir'); // will output "/tmp/var/cach
 
 ## Mocking the Contao framework
 
-The `mockContaoFramework)` method mocks an initialized Contao framework.
+The `createContaoFrameworkMock()` and `createContaoFrameworkStub()` methods create a mock or stab of an initialized
+Contao framework.
 
 ```php
-$framework = $this->mockContaoFramework();
+$framework = $this->createContaoFrameworkMock();
 $framework
     ->expect($this->atLeastOnce())
     ->method('initialize')
@@ -50,7 +51,7 @@ $framework
 The method automatically adds a Config adapter with the Contao settings:
 
 ```php
-$framework = $this->mockContaoFramework();
+$framework = $this->createContaoFrameworkStub();
 $config = $framework->getAdapter(Contao\Config::class);
 
 echo $config->get('datimFormat'); // will output "'Y-m-d H:i'"
@@ -64,40 +65,40 @@ $adapters = [
     Contao\Encryption::class => $encryptionAdapter,
 ];
 
-$framework = $this->mockContaoFramework($adapters);
+$framework = $this->createContaoFrameworkStub($adapters);
 ```
 
 The given Config adapter will overwrite the default Config adapter.
 
 ## Mocking an adapter
 
-The `mockAdapter()` method will mock an adapter with the given methods.
+The `createAdapterMock()` and `createAdapterStub()` methods will create an adapter mock or stub with the given methods.
 
 ```php
-$adapter = $this->mockAdapter(['findById']);
+$adapter = $this->createAdapterStub(['findById']);
 $adapter
     ->method('findById')
     ->willReturn($model)
 ;
 
-$framework = $this->mockContaoFramework([Contao\FilesModel::class => $adapter]);
+$framework = $this->createContaoFrameworkStub([Contao\FilesModel::class => $adapter]);
 ```
 
 Adapters with a simple return value like above can be further simplified:
 
 ```php
-$adapter = $this->mockConfiguredAdapter(['findById' => $model]);
+$adapter = $this->createConfiguredAdapterStub(['findById' => $model]);
 ```
 
 This code does exactly the same as the code above.
 
 ## Mocking a class with magic properties
 
-The `mockClassWithProperties()` method mocks a class that uses magic `__set()` and `__get()` methods to manage
-properties.
+The `createClassWithPropertiesMock()` and `createClassWithPropertiesStub()` methods will create a mock or stub of a
+class that uses magic `__set()` and `__get()` methods to manage properties.
 
 ```php
-$mock = $this->mockClassWithProperties(Contao\PageModel::class);
+$mock = $this->createClassWithPropertiesStub(Contao\PageModel::class);
 $mock->id = 2;
 $mock->title = 'Home';
 
@@ -112,27 +113,18 @@ $properties = [
     'title' => 'Home',
 ];
 
-$mock = $this->mockClassWithProperties(Contao\PageModel::class, $properties);
+$mock = $this->createClassWithPropertiesStub(Contao\PageModel::class, $properties);
 
 echo $mock->title; // will output "Home"
 ```
 
-If you need to call a method of the original class, you can pass the method name as third argument. The resulting mock
-object will be a partial mock object without the given method(s).
-
-```php
-$mock = $this->mockClassWithProperties(Contao\PageModel::class, [], ['getTable']);
-$mock->id = 2;
-
-echo $mock->getTable(); // will call the original method
-```
-
 ## Mocking a token storage
 
-The `mockTokenStorage()` mocks a token storage with a token returning either a Contao back end or front end user.
+The `createTokenStorageStub()` creates a token storage mock with a token returning either a Contao back end or front
+end user.
 
 ```php
-$tokenStorage = $this->mockTokenStorage(Contao\BackendUser::class);
+$tokenStorage = $this->createTokenStorageStub(Contao\BackendUser::class);
 $user = $tokenStorage->getToken()->getUser();
 ```
 
