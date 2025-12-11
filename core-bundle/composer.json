@@ -114,7 +114,6 @@
         "symfony/dependency-injection": "^7.4",
         "symfony/deprecation-contracts": "^3.0",
         "symfony/doctrine-bridge": "^7.4",
-        "symfony/doctrine-messenger": "^7.4",
         "symfony/dom-crawler": "^7.4",
         "symfony/event-dispatcher": "^7.4",
         "symfony/event-dispatcher-contracts": "^3.0",
