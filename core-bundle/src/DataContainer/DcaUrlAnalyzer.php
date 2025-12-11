@@ -122,7 +122,7 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string}>
+     * @return list<array{url: string, label: string, treeTrail: list<array{url: string, label: string}>|null, treeSiblings: list<array{url: string, label: string, active: bool}>|null}>
      */
     private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail): array
     {
