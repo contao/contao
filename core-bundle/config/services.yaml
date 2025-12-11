@@ -658,6 +658,7 @@ services:
             - '@security.helper'
             - '@contao.filesystem.virtual.job-attachments'
             - '@router'
+            - '@messenger.bus.default'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
