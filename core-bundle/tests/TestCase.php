@@ -34,7 +34,7 @@ abstract class TestCase extends ContaoTestCase
      */
     protected function mockScopeMatcher(): ScopeMatcher
     {
-        return new ScopeMatcher(new BackendMatcher(), new FrontendMatcher(), $this->createMock(RequestStack::class));
+        return new ScopeMatcher(new BackendMatcher(), new FrontendMatcher(), $this->createStub(RequestStack::class));
     }
 
     /**

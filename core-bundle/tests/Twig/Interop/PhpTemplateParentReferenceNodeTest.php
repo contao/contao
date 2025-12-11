@@ -21,7 +21,7 @@ class PhpTemplateParentReferenceNodeTest extends TestCase
 {
     public function testCompilesParentReferenceCode(): void
     {
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
 
         (new PhpTemplateParentReferenceNode())->compile($compiler);
 

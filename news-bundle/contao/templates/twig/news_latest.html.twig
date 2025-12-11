@@ -5,7 +5,7 @@
     {% endblock %}
 
     {% if addImage %}
-        {% include "@Contao/image.html.twig" %}
+        {{ include('@Contao/image.html.twig') }}
     {% endif %}
 
     <h2>{{ linkHeadline|sanitize_html('contao') }}</h2>

@@ -37,7 +37,7 @@ class StripQueryParametersSubscriberTest extends TestCase
     public function testQueryParametersAreStrippedCorrectly(array $parameters, array $expectedParameters, array $allowList = [], array $removeFromDenyList = []): void
     {
         $request = Request::create('/', 'GET', $parameters);
-        $event = new CacheEvent($this->createMock(CacheInvalidation::class), $request);
+        $event = new CacheEvent($this->createStub(CacheInvalidation::class), $request);
 
         $subscriber = new StripQueryParametersSubscriber($allowList);
         $subscriber->removeFromDenyList($removeFromDenyList);

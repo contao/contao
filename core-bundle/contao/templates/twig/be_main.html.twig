@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" -%}
+{% trans_default_domain 'contao_default' -%}
 
 {%- set rootAttributes = attrs()
     .set('lang', language)
@@ -15,6 +15,11 @@
     .set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
     .set('data-contao--toggle-state-active-class', 'active')
     .mergeWith(bodyAttributes|default)
+-%}
+
+{%- set containerAttributes = attrs()
+    .addClass(containerClass)
+    .mergeWith(containerAttributes|default)
 -%}
 
 <!DOCTYPE html>
@@ -75,14 +80,14 @@
         </header>
 
         {% block header_outlets %}
-            {% include "@Contao/backend/component/message/_outlet.html.twig" %}
-            {% include "@Contao/backend/component/dialog/_outlet.html.twig" %}
+            {{ include('@Contao/backend/component/message/_outlet.html.twig') }}
+            {{ include('@Contao/backend/component/dialog/_outlet.html.twig') }}
         {% endblock %}
     {% endif %}
 {% endblock %}
 
 {% block container %}
-    <div id="container">
+    <div id="container"{{ containerAttributes }}>
 
         {% block left %}
             {% if not isPopup %}

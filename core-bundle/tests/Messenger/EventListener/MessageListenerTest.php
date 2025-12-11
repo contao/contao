@@ -34,7 +34,7 @@ class MessageListenerTest extends TestCase
             ->method('error')
         ;
 
-        $listener = new MessageListener($logger, $this->createMock(Connection::class));
+        $listener = new MessageListener($logger, $this->createStub(Connection::class));
         $listener->onWorkerMessageFailed($event);
     }
 
@@ -49,13 +49,13 @@ class MessageListenerTest extends TestCase
             ->with('Message "stdClass" failed: "error!"')
         ;
 
-        $listener = new MessageListener($logger, $this->createMock(Connection::class));
+        $listener = new MessageListener($logger, $this->createStub(Connection::class));
         $listener->onWorkerMessageFailed($event);
     }
 
     public function testClosesDoctrineConnectionWhenIdle(): void
     {
-        $event = new WorkerRunningEvent($this->createMock(Worker::class), true);
+        $event = new WorkerRunningEvent($this->createStub(Worker::class), true);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -63,13 +63,13 @@ class MessageListenerTest extends TestCase
             ->method('close')
         ;
 
-        $listener = new MessageListener($this->createMock(LoggerInterface::class), $connection);
+        $listener = new MessageListener($this->createStub(LoggerInterface::class), $connection);
         $listener->onWorkerRunning($event);
     }
 
     public function testDoesNotCloseDoctrineConnectionWhenNotIdle(): void
     {
-        $event = new WorkerRunningEvent($this->createMock(Worker::class), false);
+        $event = new WorkerRunningEvent($this->createStub(Worker::class), false);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -77,7 +77,7 @@ class MessageListenerTest extends TestCase
             ->method('close')
         ;
 
-        $listener = new MessageListener($this->createMock(LoggerInterface::class), $connection);
+        $listener = new MessageListener($this->createStub(LoggerInterface::class), $connection);
         $listener->onWorkerRunning($event);
     }
 }

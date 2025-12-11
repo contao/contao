@@ -57,7 +57,7 @@ class BackendMain extends Backend
 		$user = BackendUser::getInstance();
 
 		// Password change required
-		if ($user->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		if ($user->pwChange && !$authorizationChecker->isGranted('IS_IMPERSONATOR'))
 		{
 			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}

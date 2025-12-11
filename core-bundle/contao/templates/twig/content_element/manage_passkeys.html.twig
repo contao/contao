@@ -1,8 +1,8 @@
-{% extends "@Contao/content_element/_base.html.twig" %}
-{% use "@Contao/component/_list.html.twig" %}
-{% trans_default_domain "contao_default" %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+{% use '@Contao/component/_list.html.twig' %}
+{% trans_default_domain 'contao_default' %}
 
-{% set passkeyConfig = {
+{% set passkey_config = {
     unsupported: 'ERR.passkeysUnsupported'|trans,
     attestationFailure: 'ERR.passkeyAttestationFailure'|trans,
     requestUrl: path('webauthn.controller.creation.request.contao_frontend_add_authenticator'),
@@ -12,7 +12,7 @@
 
 {% set attributes = attrs()
     .set('data-passkey-create')
-    .set('data-passkey-config', passkeyConfig|json_encode)
+    .set('data-passkey-config', passkey_config|json_encode)
     .mergeWith(attributes|default)
 %}
 
@@ -63,7 +63,7 @@
 
 {% block script %}
     {% if not as_editor_view %}
-        {% add "passkey_create" to head %}
+        {% add 'passkey_create' to head %}
             <script src="{{ asset('passkey_create.js', 'contao_core') }}" async></script>
         {% endadd %}
     {% endif %}

@@ -12,9 +12,9 @@
     {% endif %}
 
     {% if message|default %}
-        {% include "@Contao/form_message.html.twig" %}
+        {{ include('@Contao/form_message.html.twig') }}
     {% else %}
-        {% include "@Contao/form_inline.html.twig" %}
+        {{ include('@Contao/form_inline.html.twig') }}
     {% endif %}
 
 </div>

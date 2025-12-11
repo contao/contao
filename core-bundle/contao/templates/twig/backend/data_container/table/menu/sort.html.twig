@@ -1,0 +1,20 @@
+{% trans_default_domain 'contao_default' %}
+
+<div class="tl_sorting tl_subpanel">
+    {% embed '@Contao/backend/data_container/table/menu/_select.html.twig' with {
+        name: 'tl_sort',
+        title: 'MSC.sortBy'|trans,
+    } %}
+        {% trans_default_domain 'contao_default' %}
+
+        {% block option %}
+            {% if option.order == 'ASC' %}
+                <option{{ option_attributes.set('aria-label', 'MSC.list_orderBy'|trans(["#{option.label} #{'MSC.ascending'|trans}"])) }}>{{ option.label }} ↑</option>
+            {% elseif option.order == 'DESC' %}
+                <option{{ option_attributes.set('aria-label', 'MSC.list_orderBy'|trans(["#{option.label} #{'MSC.descending'|trans}"])) }}>{{ option.label }} ↓</option>
+            {% else %}
+                <option{{ option_attributes }}>{{ option.label }}</option>
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+</div>

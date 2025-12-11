@@ -57,7 +57,7 @@ class CountriesTest extends TestCase
 
     public function testGetsCountryNamesTranslated(): void
     {
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->willReturnCallback(
@@ -69,7 +69,7 @@ class CountriesTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getCatalogue')
             ->with('de')
@@ -182,10 +182,10 @@ class CountriesTest extends TestCase
     private function getCountriesService(Translator|null $translator = null, array $configCountries = []): Countries
     {
         if (!$translator) {
-            $translator = $this->createMock(Translator::class);
+            $translator = $this->createStub(Translator::class);
             $translator
                 ->method('getCatalogue')
-                ->willReturn($this->createMock(MessageCatalogueInterface::class))
+                ->willReturn($this->createStub(MessageCatalogueInterface::class))
             ;
         }
 

@@ -27,6 +27,11 @@ export default class extends Controller {
         }
     }
 
+    disconnect() {
+        clearTimeout(this.#timer);
+        this.#timer = null;
+    }
+
     enable() {
         clearTimeout(this.#timer);
         this.#poll();

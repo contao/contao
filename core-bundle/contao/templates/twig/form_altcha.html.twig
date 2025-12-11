@@ -1,6 +1,6 @@
-{% extends "@Contao/form_row.html.twig" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
-{% trans_default_domain "contao_default" %}
+{% extends '@Contao/form_row.html.twig' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
+{% trans_default_domain 'contao_default' %}
 
 {% block label %}
     {% if this.label %}
@@ -19,11 +19,11 @@
     {% if not this.canUseAltcha %}
         <p class="error">{{ 'ERR.altchaInsecureConnection'|trans }}</p>
     {% else %}
-        {% add "altcha" to stylesheets %}
-            {% with {file: asset('css/altcha.min.css', 'contao-components/altcha') } %}{{ block('stylesheet_component') }}{% endwith %}
+        {% add 'altcha' to stylesheets %}
+            {% with {file: asset('css/altcha.min.css', 'contao-components/altcha')} %}{{ block('stylesheet_component') }}{% endwith %}
         {% endadd %}
 
-        {% add "altcha" to body %}
+        {% add 'altcha' to body %}
             <script src="{{ asset('js/altcha.min.js', 'contao-components/altcha') }}" type="module"></script>
         {% endadd %}
 

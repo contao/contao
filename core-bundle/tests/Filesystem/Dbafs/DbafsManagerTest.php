@@ -22,6 +22,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -148,7 +149,7 @@ class DbafsManagerTest extends TestCase
 
     public function testHasResource(): void
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
@@ -196,7 +197,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(new FilesystemItem(true, 'bar', 123450))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
+        $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -219,7 +220,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(new FilesystemItem(true, 'bar', 0, 1024))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
+        $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -242,7 +243,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(new FilesystemItem(true, 'bar', 0, 0, 'image/png'))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
+        $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -553,12 +554,12 @@ class DbafsManagerTest extends TestCase
      */
     private function getDbafsManager(EventDispatcherInterface|null $eventDispatcher = null): DbafsManager
     {
-        return new DbafsManager($eventDispatcher ?? $this->createMock(EventDispatcherInterface::class));
+        return new DbafsManager($eventDispatcher ?? $this->createStub(EventDispatcherInterface::class));
     }
 
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
             ->with($path, $deep)
@@ -573,9 +574,9 @@ class DbafsManagerTest extends TestCase
         return $dbafs;
     }
 
-    private function getDbafsWithProperties(int $featureFlags): DbafsInterface&MockObject
+    private function getDbafsWithProperties(int $featureFlags): DbafsInterface&Stub
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getSupportedFeatures')
             ->willReturn($featureFlags)
@@ -589,7 +590,7 @@ class DbafsManagerTest extends TestCase
      */
     private function getDbafsCoveringUuids(array $mapping): DbafsInterface
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getPathFromUuid')
             ->willReturnCallback(
@@ -610,7 +611,7 @@ class DbafsManagerTest extends TestCase
 
     private function getDbafsWithExtraMetadata(string $path, ExtraMetadata $extraMetadata): DbafsInterface
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecord')
             ->with($path)

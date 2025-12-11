@@ -474,8 +474,8 @@ class InspectorTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($storage, $environment),
             ),
         );
@@ -541,8 +541,8 @@ class InspectorTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $filesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($storage, $environment),
             ),
         );
@@ -552,7 +552,7 @@ class InspectorTest extends TestCase
 
     private function getContaoFilesystemLoader(array $templates): ContaoFilesystemLoader
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
             ->willReturnCallback(
