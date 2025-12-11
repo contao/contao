@@ -20,6 +20,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormatterRuntimeTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([
+            System::class,
+        ]);
+
+        parent::tearDown();
+    }
+
     public function testDelegatesCalls(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
