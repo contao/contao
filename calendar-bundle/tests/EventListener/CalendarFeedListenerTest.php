@@ -124,7 +124,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
     }
 
     #[DataProvider('getFeedSource')]
-    public function testTransformsEventsToFeedItems(string $feedSource, array $title, array $content): void
+    public function testTransformsEventsToFeedItems(string $feedSource, string $title, string $teaser, string $content, string $expectedFeedTitle, string $expectedFeedContent): void
     {
         $imageDir = Path::join($this->getTempDir(), 'files');
 
@@ -171,17 +171,20 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn($image)
         ;
 
+        $isDetail = 'source_text' === $feedSource;
+
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
             ->method('replaceInline')
-            ->willReturn($content[0])
+            ->willReturn($isDetail ? $content : $teaser)
         ;
 
         $element = $this->createStub(ContentModel::class);
 
-        $contentModel = $this->createAdapterStub(['findPublishedByPidAndTable']);
+        $contentModel = $this->createAdapterMock(['findPublishedByPidAndTable']);
         $contentModel
+            ->expects($this->exactly($isDetail ? 1 : 0))
             ->method('findPublishedByPidAndTable')
             ->with(42, 'tl_calendar_events')
             ->willReturn(new Collection([$element], 'tl_calendar_events'))
@@ -190,8 +193,8 @@ class CalendarFeedListenerTest extends ContaoTestCase
         $eventModel = $this->createClassWithPropertiesStub(CalendarEventsModel::class, [
             'id' => 42,
             'startTime' => 1656578758,
-            'title' => $title[0],
-            'teaser' => $content[0],
+            'title' => $title,
+            'teaser' => $teaser,
             'addImage' => true,
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => 1,
@@ -201,10 +204,19 @@ class CalendarFeedListenerTest extends ContaoTestCase
 
         $environment = $this->createAdapterStub(['set', 'get']);
 
-        $controller = $this->createAdapterStub(['getContentElement', 'convertRelativeUrls']);
+        $controller = $this->createAdapterMock(['getContentElement', 'convertRelativeUrls']);
         $controller
+            ->expects($this->exactly($isDetail ? 1 : 0))
+            ->method('getContentElement')
+            ->with($element)
+            ->willReturn($content)
+        ;
+
+        $controller
+            ->expects($this->once())
             ->method('convertRelativeUrls')
-            ->willReturn($content[0])
+            ->with($isDetail ? $content : $teaser)
+            ->willReturn($isDetail ? $content : $teaser)
         ;
 
         $filesModel = $this->createAdapterMock(['findMultipleByUuids']);
@@ -276,11 +288,11 @@ class CalendarFeedListenerTest extends ContaoTestCase
 
         $item = $event->getItem();
 
-        $this->assertSame(date('Y-m-d', $eventModel->startTime).' '.$title[1], $item->getTitle());
+        $this->assertSame(date('Y-m-d', $eventModel->startTime).' '.$expectedFeedTitle, $item->getTitle());
         $this->assertSame(1656578758, $item->getLastModified()->getTimestamp());
         $this->assertSame('https://example.org/news/example-title', $item->getLink());
         $this->assertSame('1cfcaaf3-79b2-515d-89aa-819773585f11', $item->getPublicId());
-        $this->assertSame($content[1], $item->getContent());
+        $this->assertSame($expectedFeedContent, $item->getContent());
         $this->assertSame('Jane Doe', $item->getAuthor()->getName());
         $this->assertCount(2, $item->getMedias());
 
@@ -298,14 +310,20 @@ class CalendarFeedListenerTest extends ContaoTestCase
     {
         yield 'Teaser' => [
             'source_teaser',
-            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
-            ['Example teaser &#40;Episode 1&#41;', 'Example teaser &#40;Episode 1&#41;'],
+            'Example title &#40;Episode 1&#41;',
+            'Example teaser &#40;Episode 1&#41;',
+            'Example content &#40;Episode 1&#41;',
+            'Example title (Episode 1)',
+            'Example teaser &#40;Episode 1&#41;',
         ];
 
         yield 'Text' => [
             'source_text',
-            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
-            ['Example content &#40;Episode 1&#41;', 'Example content &#40;Episode 1&#41;'],
+            'Example title &#40;Episode 1&#41;',
+            'Example teaser &#40;Episode 1&#41;',
+            'Example content &#40;Episode 1&#41;',
+            'Example title (Episode 1)',
+            'Example content &#40;Episode 1&#41;',
         ];
     }
 }
