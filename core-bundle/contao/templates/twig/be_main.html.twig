@@ -64,7 +64,7 @@
 <a class="invisible show-on-focus" href="#main" data-turbo="false">{{ 'MSC.skipToContent'|trans }}</a>
 
 {% block header %}
-    {% if not isPopup %}
+    {% if not renderMainOnly %}
         <header id="header">
             <div class="inner">
                 <h1>
@@ -90,7 +90,7 @@
     <div id="container"{{ containerAttributes }}>
 
         {% block left %}
-            {% if not isPopup %}
+            {% if not renderMainOnly %}
                 <aside id="left" data-contao--toggle-state-target="controls">
                     {{ menu|raw }}
                     <div class="version">
@@ -103,6 +103,7 @@
         {% endblock %}
 
         {% block main %}
+        <turbo-frame id="contao-main" target="_top">
             <main id="main" aria-labelledby="main_headline">
                 <h1 id="main_headline">{{ headline|raw }}</h1>
                 <div class="content">
@@ -119,6 +120,7 @@
                     {% endblock %}
                 </div>
             </main>
+        </turbo-frame>
         {% endblock %}
 
     </div>
