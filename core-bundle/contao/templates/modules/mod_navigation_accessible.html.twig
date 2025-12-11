@@ -12,8 +12,8 @@
             let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
             if (typeof accessibleNavObserver === 'undefined') {
                 const accessibleNavObserver = new ResizeObserver(() => {
-                    document.body.classList.toggle('nav-is-desktop', window.innerWidth >= window.accessibleNavBreakpoint)
-                    document.body.classList.toggle('nav-is-mobile', window.innerWidth < window.accessibleNavBreakpoint)
+                    document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
+                    document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
                 }).observe(document.body);
             }
         </script>
