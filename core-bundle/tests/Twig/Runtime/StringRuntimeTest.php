@@ -21,7 +21,7 @@ class StringRuntimeTest extends TestCase
 {
     public function testDelegatesCalls(): void
     {
-        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil = $this->createAdapterMock(['encodeEmail']);
         $stringUtil
             ->expects($this->once())
             ->method('encodeEmail')
@@ -29,7 +29,7 @@ class StringRuntimeTest extends TestCase
             ->willReturn('encoded email')
         ;
 
-        $framework = $this->mockContaoFramework([StringUtil::class => $stringUtil]);
+        $framework = $this->createContaoFrameworkStub([StringUtil::class => $stringUtil]);
 
         $htmlDecoder = $this->createMock(HtmlDecoder::class);
         $htmlDecoder

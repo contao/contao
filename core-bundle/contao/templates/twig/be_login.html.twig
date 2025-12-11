@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" -%}
+{% trans_default_domain 'contao_default' -%}
 
 <!DOCTYPE html>
 <html lang="{{ language }}" data-turbo="false">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </form>
-            {% include "@Contao/backend/chrome/login_menu.html.twig" %}
+            {{ include('@Contao/backend/chrome/login_menu.html.twig') }}
         </main>
         {{ messages|raw }}
         <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>

@@ -315,14 +315,14 @@ class AbstractBackendControllerTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
 
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
             ->with('ROLE_USER')
             ->willReturn(true)
         ;
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->willReturnCallback(
@@ -353,7 +353,7 @@ class AbstractBackendControllerTest extends TestCase
             )
         ;
 
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
             ->willReturn(true)
@@ -368,20 +368,20 @@ class AbstractBackendControllerTest extends TestCase
 
         $requestStack = new RequestStack([$request ?? new Request(server: $_SERVER)]);
 
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(true)
         ;
 
         $container->set('security.authorization_checker', $authorizationChecker);
-        $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('database_connection', $this->createMock(Connection::class));
-        $container->set('session', $this->createMock(Session::class));
+        $container->set('security.token_storage', $this->createStub(TokenStorageInterface::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+        $container->set('database_connection', $this->createStub(Connection::class));
+        $container->set('session', $this->createStub(Session::class));
         $container->set('twig', $twig);
         $container->set('contao.twig.filesystem_loader', $filesystemLoader);
-        $container->set('router', $this->createMock(RouterInterface::class));
+        $container->set('router', $this->createStub(RouterInterface::class));
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
 

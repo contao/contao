@@ -46,9 +46,9 @@ class LinkInsertTagTest extends TestCase
         $this->expectExceptionMessage('Missing parameters for link insert tag.');
 
         $listener = new LinkInsertTag(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(TokenChecker::class),
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(ContentUrlGenerator::class),
         );
 
         /** @var ResolvedInsertTag $tag */
@@ -60,26 +60,26 @@ class LinkInsertTagTest extends TestCase
     #[DataProvider('getConvertedInsertTags')]
     public function testReplacedInsertTag(string $insertTag, string|false $expected, OutputType $outputType): void
     {
-        $page1 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page1 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page1->alias = 'foobar';
         $page1->title = 'Foobar';
         $page1->pageTitle = 'Foobar Meta';
 
-        $page2 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page2 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page2->alias = 'moobar';
         $page2->title = 'Moobar';
         $page2->target = true;
 
-        $page3 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page3 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page3->alias = 'koobar';
         $page3->title = 'Koobar';
         $page3->cssClass = 'koobar';
 
-        $page4 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page4 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page4->alias = 'index';
         $page4->title = 'Index';
 
-        $pageAdapter = $this->mockAdapter(['findByIdOrAlias']);
+        $pageAdapter = $this->createAdapterStub(['findByIdOrAlias']);
         $pageAdapter
             ->method('findByIdOrAlias')
             ->willReturnMap([
@@ -91,9 +91,9 @@ class LinkInsertTagTest extends TestCase
             ])
         ;
 
-        $contaoFramework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $contaoFramework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
-        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator = $this->createStub(ContentUrlGenerator::class);
         $contentUrlGenerator
             ->method('generate')
             ->willReturnCallback(
@@ -118,7 +118,7 @@ class LinkInsertTagTest extends TestCase
 
         $listener = new LinkInsertTag(
             $contaoFramework,
-            $this->createMock(TokenChecker::class),
+            $this->createStub(TokenChecker::class),
             $contentUrlGenerator,
         );
 
@@ -178,9 +178,9 @@ class LinkInsertTagTest extends TestCase
         ;
 
         $listener = new LinkInsertTag(
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ContaoFramework::class),
             $tokenChecker,
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContentUrlGenerator::class),
         );
 
         /** @var ResolvedInsertTag $tag */
@@ -200,11 +200,11 @@ class LinkInsertTagTest extends TestCase
             ->willReturn(true)
         ;
 
-        $loginPage = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $loginPage = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $loginPage->alias = '/login';
         $loginPage->title = 'Login';
 
-        $pageAdapter = $this->mockAdapter(['findByIdOrAlias']);
+        $pageAdapter = $this->createAdapterMock(['findByIdOrAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByIdOrAlias')
@@ -212,10 +212,10 @@ class LinkInsertTagTest extends TestCase
             ->willReturn($loginPage)
         ;
 
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, ['loginPage']);
+        $frontendUser = $this->createClassWithPropertiesStub(FrontendUser::class, ['loginPage']);
         $frontendUser->loginPage = '1701';
 
-        $contaoFramework = $this->mockContaoFramework([PageModel::class => $pageAdapter], [FrontendUser::class => $frontendUser]);
+        $contaoFramework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter], [FrontendUser::class => $frontendUser]);
 
         $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
         $contentUrlGenerator
@@ -242,9 +242,9 @@ class LinkInsertTagTest extends TestCase
     private function getInsertTagParser(): InsertTagParser
     {
         return new InsertTagParser(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(FragmentHandler::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(FragmentHandler::class),
             (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
         );
     }

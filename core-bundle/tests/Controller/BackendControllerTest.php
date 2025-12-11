@@ -45,7 +45,7 @@ class BackendControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('router', $router);
 
@@ -69,7 +69,7 @@ class BackendControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
         $container->set('router', $router);
 
         $controller = new BackendController();
@@ -82,13 +82,13 @@ class BackendControllerTest extends TestCase
 
     public function testReturnsAResponseInThePickerActionMethod(): void
     {
-        $picker = $this->createMock(PickerInterface::class);
+        $picker = $this->createStub(PickerInterface::class);
         $picker
             ->method('getCurrentUrl')
             ->willReturn('/foobar')
         ;
 
-        $builder = $this->createMock(PickerBuilderInterface::class);
+        $builder = $this->createStub(PickerBuilderInterface::class);
         $builder
             ->method('create')
             ->willReturn($picker)
@@ -126,7 +126,7 @@ class BackendControllerTest extends TestCase
 
     public function testDoesNotReturnAResponseInThePickerActionMethodIfThePickerContextIsUnsupported(): void
     {
-        $builder = $this->createMock(PickerBuilderInterface::class);
+        $builder = $this->createStub(PickerBuilderInterface::class);
         $builder
             ->method('create')
             ->willReturn(null)
@@ -151,7 +151,7 @@ class BackendControllerTest extends TestCase
     #[DataProvider('provideErrorTemplateScenarios')]
     public function testRendersFallbackRoute(bool $legacyTemplateExists, string $expectedTemplate): void
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
             ->with('@ContaoCore/Error/backend.html.twig')

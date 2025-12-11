@@ -1,7 +1,7 @@
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {# Add the handorgel style sheet #}
-{% add "swipe" to stylesheets %}
+{% add 'swipe' to stylesheets %}
     {% with {file: 'assets/swipe/css/swipe.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 

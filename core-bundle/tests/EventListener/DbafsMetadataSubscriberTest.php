@@ -83,14 +83,14 @@ class DbafsMetadataSubscriberTest extends TestCase
 
     public function testSetsMetadataBagDefaultLocales(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->language = 'fr';
         $pageModel->rootFallbackLanguage = 'de';
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
             ->willReturn($request)
@@ -169,7 +169,7 @@ class DbafsMetadataSubscriberTest extends TestCase
     private function getDbafsMetadataSubscriber(RequestStack|null $requestStack = null): DbafsMetadataSubscriber
     {
         return new DbafsMetadataSubscriber(
-            $requestStack ?? $this->createMock(RequestStack::class),
+            $requestStack ?? $this->createStub(RequestStack::class),
         );
     }
 

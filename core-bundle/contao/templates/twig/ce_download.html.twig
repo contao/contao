@@ -1,10 +1,10 @@
-{% extends "@Contao/block_searchable.html.twig" %}
+{% extends '@Contao/block_searchable.html.twig' %}
 
 {% block content %}
 
     {% if previews %}
         {% for preview in previews %}
-            {% include "@Contao/image.html.twig" with preview.getLegacyTemplateData() %}
+            {{ include('@Contao/image.html.twig', preview.getLegacyTemplateData()) }}
         {% endfor %}
     {% endif %}
 

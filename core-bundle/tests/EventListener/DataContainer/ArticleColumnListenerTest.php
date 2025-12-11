@@ -31,14 +31,14 @@ class ArticleColumnListenerTest extends TestCase
             slots: ['foo', 'bar'],
         );
 
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->with('@Contao/layout/foo.html.twig')
             ->willReturn($templateInformation)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
@@ -47,39 +47,39 @@ class ArticleColumnListenerTest extends TestCase
 
         $pageModel->layout = 2;
 
-        $articleModel = $this->createMock(ArticleModel::class);
+        $articleModel = $this->createStub(ArticleModel::class);
         $articleModel
             ->method('getRelated')
             ->with('pid')
             ->willReturn($pageModel)
         ;
 
-        $articleAdapter = $this->mockAdapter(['findById']);
+        $articleAdapter = $this->createAdapterStub(['findById']);
         $articleAdapter
             ->method('findById')
             ->with(1)
             ->willReturn($articleModel)
         ;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->type = 'modern';
         $layoutModel->template = 'layout/foo';
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
             ->with(2)
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             ArticleModel::class => $articleAdapter,
             LayoutModel::class => $layoutAdapter,
         ]);
 
         $articleColumnListener = new ArticleColumnListener($inspector, $framework);
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;
 
         $this->assertSame(
@@ -105,7 +105,7 @@ class ArticleColumnListenerTest extends TestCase
 
     public function testDoesNotSetSlotOptionsForLegacyLayouts(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
@@ -114,39 +114,39 @@ class ArticleColumnListenerTest extends TestCase
 
         $pageModel->layout = 2;
 
-        $articleModel = $this->createMock(ArticleModel::class);
+        $articleModel = $this->createStub(ArticleModel::class);
         $articleModel
             ->method('getRelated')
             ->with('pid')
             ->willReturn($pageModel)
         ;
 
-        $articleAdapter = $this->mockAdapter(['findById']);
+        $articleAdapter = $this->createAdapterStub(['findById']);
         $articleAdapter
             ->method('findById')
             ->with(1)
             ->willReturn($articleModel)
         ;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->type = 'default';
         $layoutModel->template = 'fe_page';
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
             ->with(2)
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             ArticleModel::class => $articleAdapter,
             LayoutModel::class => $layoutAdapter,
         ]);
 
-        $articleColumnListener = new ArticleColumnListener($this->createMock(Inspector::class), $framework);
+        $articleColumnListener = new ArticleColumnListener($this->createStub(Inspector::class), $framework);
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;
 
         $this->assertSame(

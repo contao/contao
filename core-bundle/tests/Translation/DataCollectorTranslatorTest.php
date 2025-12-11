@@ -79,7 +79,7 @@ class DataCollectorTranslatorTest extends TestCase
 
     public function testServiceIsResetable(): void
     {
-        $originalTranslator = $this->createMock(SymfonyDataCollectorTranslator::class);
+        $originalTranslator = $this->createStub(SymfonyDataCollectorTranslator::class);
         $originalTranslator
             ->method('getCollectedMessages')
             ->willReturn([])

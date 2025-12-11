@@ -29,7 +29,7 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('foo/bar');
 
         // Create template
-        $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
+        $template = $fragmentController->doCreateTemplate($this->createClassWithPropertiesStub(Model::class));
         $this->assertSame('foo/bar', $template->getName());
         $this->assertEmpty($template->getData());
 
@@ -51,7 +51,7 @@ class AbstractFragmentControllerTest extends TestCase
 
     public function testCreateAndRenderModifiedFragmentTemplate(): void
     {
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with('@Contao/modified/template.html.twig', ['some' => 'data'])
@@ -61,7 +61,7 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('original/template', $twig);
 
         // Create and modify template
-        $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
+        $template = $fragmentController->doCreateTemplate($this->createClassWithPropertiesStub(Model::class));
         $template->setName('modified/template');
         $template->set('some', 'data');
 
@@ -75,7 +75,7 @@ class AbstractFragmentControllerTest extends TestCase
     {
         $preBuiltResponse = new Response();
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with('@Contao/foo/bar.html.twig', [])
@@ -85,7 +85,7 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('foo/bar', $twig);
 
         // GGet original response with rendered content via fragment template
-        $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
+        $template = $fragmentController->doCreateTemplate($this->createClassWithPropertiesStub(Model::class));
         $response = $template->getResponse($preBuiltResponse);
 
         $this->assertSame($preBuiltResponse, $response);
@@ -102,7 +102,7 @@ class AbstractFragmentControllerTest extends TestCase
 
     private function getFragmentController(string $defaultTemplateName, Environment|null $twig = null): object
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
             ->with("@Contao/$defaultTemplateName.html.twig")
@@ -110,7 +110,7 @@ class AbstractFragmentControllerTest extends TestCase
         ;
 
         if (!$twig) {
-            $twig = $this->createMock(Environment::class);
+            $twig = $this->createStub(Environment::class);
             $twig
                 ->method('render')
                 ->with("@Contao/$defaultTemplateName.html.twig", ['some' => 'data'])

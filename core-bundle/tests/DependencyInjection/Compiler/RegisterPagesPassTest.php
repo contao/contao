@@ -258,7 +258,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.routing.page_registry', $this->createMock(Definition::class));
+        $container->setDefinition('contao.routing.page_registry', $this->createStub(Definition::class));
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
