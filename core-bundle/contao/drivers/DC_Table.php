@@ -370,6 +370,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 	}
 
+	/**
+	 * @internal
+	 */
 	protected function render(string $component, array $parameters): string
 	{
 		return System::getContainer()
