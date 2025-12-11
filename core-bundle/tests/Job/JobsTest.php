@@ -15,8 +15,12 @@ namespace Contao\CoreBundle\Tests\Job;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Job\Status;
+use Contao\CoreBundle\Messenger\Message\JobIdAwareMessageInterface;
+use Contao\CoreBundle\Messenger\Message\JobIdAwareMessageTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Clock\MockClock;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class JobsTest extends AbstractJobsTestCase
 {
@@ -121,6 +125,28 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertNotContains($uuid2, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
         $this->assertNotContains($uuid3, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
         $this->assertContains($uuid4, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
+    }
+
+    public function testDispatchJob(): void
+    {
+        $message = new class() implements JobIdAwareMessageInterface {
+            use JobIdAwareMessageTrait;
+        };
+
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($message)
+            ->willReturn(new Envelope($message))
+        ;
+
+        $jobs = $this->getJobs($this->mockSecurity(42), messageBus: $messageBus);
+
+        $job = $jobs->createUserJob('my-type');
+        $jobs->dispatchJob($message, $job);
+
+        $this->assertSame($message->getJobId(), $job->getUuid());
     }
 
     public function testStatusOfChildrenUpdatesParentJobStatus(): void
