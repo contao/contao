@@ -47,7 +47,7 @@ class TemplateTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
     }

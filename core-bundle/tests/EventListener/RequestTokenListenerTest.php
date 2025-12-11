@@ -83,7 +83,7 @@ class RequestTokenListenerTest extends TestCase
     #[DataProvider('getAttributeAndRequest')]
     public function testValidatesTheRequestTokenDependingOnTheRequest(bool $setAttribute, bool|null $tokenCheck, bool $isContaoRequest, bool $isValidToken): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isContaoRequest')
             ->willReturn($isContaoRequest)
@@ -133,7 +133,7 @@ class RequestTokenListenerTest extends TestCase
 
     public function testFailsIfTheRequestTokenIsInvalid(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isContaoRequest')
             ->willReturn(true)
@@ -175,8 +175,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenUponNonPostRequests(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = Request::create('/account.html');
         $request->setMethod('GET');
@@ -202,8 +202,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = $this->createPostRequest();
 
@@ -229,8 +229,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenUponPreflightedRequests(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = $this->createPostRequest('text/xml'); // Content-Type requiring preflighted request
 
@@ -255,8 +255,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = $this->createPostRequest();
 
@@ -290,7 +290,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = $this->createPostRequest();
 
@@ -315,8 +315,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenIfNotAMainRequest(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $event = $this->createMock(RequestEvent::class);
         $event
@@ -367,7 +367,7 @@ class RequestTokenListenerTest extends TestCase
 
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isContaoRequest')
             ->willReturn(true)
@@ -384,7 +384,7 @@ class RequestTokenListenerTest extends TestCase
             ->method('canSkipTokenValidation')
             ->willReturnCallback(
                 function () {
-                    $tokenManager = new ContaoCsrfTokenManager($this->createMock(RequestStack::class), 'csrf_', new UriSafeTokenGenerator(), $this->createMock(TokenStorageInterface::class));
+                    $tokenManager = new ContaoCsrfTokenManager($this->createStub(RequestStack::class), 'csrf_', new UriSafeTokenGenerator(), $this->createStub(TokenStorageInterface::class));
 
                     return $tokenManager->canSkipTokenValidation(...\func_get_args());
                 },

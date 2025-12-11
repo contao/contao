@@ -237,7 +237,7 @@ class Inspector
         /** @var list<string> $slots */
         $slots = [];
 
-        $isIgnoredBlock = static function (string $block, array $data) use (&$blocksToIgnore, &$blocksToKeep): bool {
+        $isIgnoredBlock = static function (string $block, array $data) use (&$blocksToKeep, &$blocksToIgnore): bool {
             $iterateNesting = static function (callable $test) use ($block, $data) {
                 $currentBlock = $block;
 

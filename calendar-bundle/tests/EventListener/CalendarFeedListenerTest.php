@@ -57,14 +57,14 @@ class CalendarFeedListenerTest extends ContaoTestCase
     #[DataProvider('featured')]
     public function testFetchesEventsFromCalendars(string $feedFeatured, bool|null $featuredOnly): void
     {
-        $insertTags = $this->createMock(InsertTagParser::class);
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $cacheTags = $this->createMock(CacheTagManager::class);
-        $eventModel = $this->createMock(CalendarEventsModel::class);
-        $normalCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 1, 'protected' => 0]);
-        $protectedCalendar = $this->mockClassWithProperties(CalendarModel::class, ['id' => 2, 'protected' => 1]);
+        $insertTags = $this->createStub(InsertTagParser::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
+        $cacheTags = $this->createStub(CacheTagManager::class);
+        $eventModel = $this->createStub(CalendarEventsModel::class);
+        $normalCalendar = $this->createClassWithPropertiesStub(CalendarModel::class, ['id' => 1, 'protected' => 0]);
+        $protectedCalendar = $this->createClassWithPropertiesStub(CalendarModel::class, ['id' => 2, 'protected' => 1]);
 
-        $calendarAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $calendarAdapter = $this->createAdapterMock(['findMultipleByIds']);
         $calendarAdapter
             ->expects($this->once())
             ->method('findMultipleByIds')
@@ -72,19 +72,19 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(new Collection([$normalCalendar, $protectedCalendar], 'tl_calendar'))
         ;
 
-        $framework = $this->mockContaoFramework(
+        $framework = $this->createContaoFrameworkStub(
             [
                 CalendarModel::class => $calendarAdapter,
             ],
             [
-                ModuleModel::class => $this->createMock(ModuleModel::class),
-                ModuleEventlist::class => $this->createMock(ModuleEventlist::class),
+                ModuleModel::class => $this->createStub(ModuleModel::class),
+                ModuleEventlist::class => $this->createStub(ModuleEventlist::class),
             ],
         );
 
-        $feed = $this->createMock(Feed::class);
-        $request = $this->createMock(Request::class);
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $feed = $this->createStub(Feed::class);
+        $request = $this->createStub(Request::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
 
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker
@@ -93,7 +93,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(false)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'eventCalendars' => serialize([1, 2]),
             'feedFeatured' => $feedFeatured,
             'maxFeedItems' => 0,
@@ -124,7 +124,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
     }
 
     #[DataProvider('getFeedSource')]
-    public function testTransformsEventsToFeedItems(string $feedSource, array $title, array $content): void
+    public function testTransformsEventsToFeedItems(string $feedSource, string $title, string $teaser, string $content, string $expectedFeedTitle, string $expectedFeedContent): void
     {
         $imageDir = Path::join($this->getTempDir(), 'files');
 
@@ -140,7 +140,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ;
         }
 
-        $image = $this->createMock(ImageInterface::class);
+        $image = $this->createStub(ImageInterface::class);
         $image
             ->method('getUrl')
             ->willReturnOnConsecutiveCalls(
@@ -165,36 +165,36 @@ class CalendarFeedListenerTest extends ContaoTestCase
             )
         ;
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturn($image)
         ;
 
+        $isDetail = 'source_text' === $feedSource;
+
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
             ->method('replaceInline')
-            ->willReturn($content[0])
+            ->willReturn($isDetail ? $content : $teaser)
         ;
 
-        $element = $this->mockClassWithProperties(ContentModel::class, [
-            'pid' => 42,
-            'ptable' => 'tl_calendar_events',
-        ]);
+        $element = $this->createStub(ContentModel::class);
 
-        $contentModel = $this->mockAdapter(['findPublishedByPidAndTable']);
+        $contentModel = $this->createAdapterMock(['findPublishedByPidAndTable']);
         $contentModel
+            ->expects($this->exactly($isDetail ? 1 : 0))
             ->method('findPublishedByPidAndTable')
             ->with(42, 'tl_calendar_events')
             ->willReturn(new Collection([$element], 'tl_calendar_events'))
         ;
 
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, [
+        $eventModel = $this->createClassWithPropertiesStub(CalendarEventsModel::class, [
             'id' => 42,
             'startTime' => 1656578758,
-            'title' => $title[0],
-            'teaser' => $content[0],
+            'title' => $title,
+            'teaser' => $teaser,
             'addImage' => true,
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => 1,
@@ -202,47 +202,56 @@ class CalendarFeedListenerTest extends ContaoTestCase
             'author' => 1,
         ]);
 
-        $environment = $this->mockAdapter(['set', 'get']);
+        $environment = $this->createAdapterStub(['set', 'get']);
 
-        $controller = $this->mockAdapter(['getContentElement', 'convertRelativeUrls']);
+        $controller = $this->createAdapterMock(['getContentElement', 'convertRelativeUrls']);
         $controller
-            ->method('convertRelativeUrls')
-            ->willReturn($content[0])
+            ->expects($this->exactly($isDetail ? 1 : 0))
+            ->method('getContentElement')
+            ->with($element)
+            ->willReturn($content)
         ;
 
-        $filesModel = $this->mockAdapter(['findMultipleByUuids']);
+        $controller
+            ->expects($this->once())
+            ->method('convertRelativeUrls')
+            ->with($isDetail ? $content : $teaser)
+            ->willReturn($isDetail ? $content : $teaser)
+        ;
+
+        $filesModel = $this->createAdapterMock(['findMultipleByUuids']);
         $filesModel
             ->expects($this->once())
             ->method('findMultipleByUuids')
             ->willReturn(
                 new Collection(
                     [
-                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/foo.jpg']),
-                        $this->mockClassWithProperties(FilesModel::class, ['path' => 'files/bar.jpg']),
+                        $this->createClassWithPropertiesStub(FilesModel::class, ['path' => 'files/foo.jpg']),
+                        $this->createClassWithPropertiesStub(FilesModel::class, ['path' => 'files/bar.jpg']),
                     ],
                     'tl_files',
                 ),
             )
         ;
 
-        $userModel = $this->mockClassWithProperties(UserModel::class, ['name' => 'Jane Doe']);
+        $userModel = $this->createClassWithPropertiesStub(UserModel::class, ['name' => 'Jane Doe']);
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         System::setContainer($container);
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Environment::class => $environment,
             Controller::class => $controller,
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
-            UserModel::class => $this->mockConfiguredAdapter(['findById' => $userModel]),
+            UserModel::class => $this->createConfiguredAdapterStub(['findById' => $userModel]),
         ]);
 
         $framework->setContainer($container);
 
-        $feed = $this->createMock(Feed::class);
-        $cacheTags = $this->createMock(CacheTagManager::class);
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $feed = $this->createStub(Feed::class);
+        $cacheTags = $this->createStub(CacheTagManager::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -252,12 +261,12 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn('https://example.org/news/example-title')
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'feedSource' => $feedSource,
             'imgSize' => serialize([100, 100, 'crop']),
         ]);
 
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $baseUrl = 'example.org';
 
         $eventData = $eventModel->row();
@@ -279,11 +288,11 @@ class CalendarFeedListenerTest extends ContaoTestCase
 
         $item = $event->getItem();
 
-        $this->assertSame(date('Y-m-d', $eventModel->startTime).' '.$title[1], $item->getTitle());
+        $this->assertSame(date('Y-m-d', $eventModel->startTime).' '.$expectedFeedTitle, $item->getTitle());
         $this->assertSame(1656578758, $item->getLastModified()->getTimestamp());
         $this->assertSame('https://example.org/news/example-title', $item->getLink());
         $this->assertSame('1cfcaaf3-79b2-515d-89aa-819773585f11', $item->getPublicId());
-        $this->assertSame($content[1], $item->getContent());
+        $this->assertSame($expectedFeedContent, $item->getContent());
         $this->assertSame('Jane Doe', $item->getAuthor()->getName());
         $this->assertCount(2, $item->getMedias());
 
@@ -301,14 +310,20 @@ class CalendarFeedListenerTest extends ContaoTestCase
     {
         yield 'Teaser' => [
             'source_teaser',
-            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
-            ['Example teaser &#40;Episode 1&#41;', 'Example teaser &#40;Episode 1&#41;'],
+            'Example title &#40;Episode 1&#41;',
+            'Example teaser &#40;Episode 1&#41;',
+            'Example content &#40;Episode 1&#41;',
+            'Example title (Episode 1)',
+            'Example teaser &#40;Episode 1&#41;',
         ];
 
         yield 'Text' => [
             'source_text',
-            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
-            ['Example content &#40;Episode 1&#41;', 'Example content &#40;Episode 1&#41;'],
+            'Example title &#40;Episode 1&#41;',
+            'Example teaser &#40;Episode 1&#41;',
+            'Example content &#40;Episode 1&#41;',
+            'Example title (Episode 1)',
+            'Example content &#40;Episode 1&#41;',
         ];
     }
 }

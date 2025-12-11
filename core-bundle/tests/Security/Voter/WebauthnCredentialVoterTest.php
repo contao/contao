@@ -36,8 +36,8 @@ class WebauthnCredentialVoterTest extends TestCase
 
     public function testAbstainsIfTheAttributeIsNotWebauthnCredentialOwnership(): void
     {
-        $token = $this->createMock(TokenInterface::class);
-        $credential = $this->createMock(WebauthnCredential::class);
+        $token = $this->createStub(TokenInterface::class);
+        $credential = $this->createStub(WebauthnCredential::class);
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
@@ -47,7 +47,7 @@ class WebauthnCredentialVoterTest extends TestCase
 
     public function testAbstainsIfTheSubjectIsNotWebauthnCredential(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
@@ -64,7 +64,7 @@ class WebauthnCredentialVoterTest extends TestCase
             ->willReturn(null)
         ;
 
-        $credential = $this->createMock(WebauthnCredential::class);
+        $credential = $this->createStub(WebauthnCredential::class);
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
@@ -74,8 +74,8 @@ class WebauthnCredentialVoterTest extends TestCase
 
     public function testDeniesAccessIfTokenIsTwoFactor(): void
     {
-        $token = $this->createMock(TwoFactorTokenInterface::class);
-        $credential = $this->createMock(WebauthnCredential::class);
+        $token = $this->createStub(TwoFactorTokenInterface::class);
+        $credential = $this->createStub(WebauthnCredential::class);
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,

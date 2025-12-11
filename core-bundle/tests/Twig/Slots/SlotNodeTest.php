@@ -23,7 +23,7 @@ class SlotNodeTest extends TestCase
 {
     public function testCompilesCode(): void
     {
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
 
         $node = new SlotNode(
             'foo',

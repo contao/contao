@@ -40,13 +40,13 @@ class SwitchUserOperationTest extends TestCase
             ->method('hide')
         ;
 
-        $listener = new SwitchUserOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchUserOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 
     public function testOperationIsDisabledForCurrentUser(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
             ->with('id')
@@ -79,20 +79,20 @@ class SwitchUserOperationTest extends TestCase
             ->method('disable')
         ;
 
-        $listener = new SwitchUserOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchUserOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 
     public function testOperationIsDisabledIfCurrentUserIsImpersonating(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
             ->with('id')
             ->willReturn(21)
         ;
 
-        $originalUser = $this->createMock(BackendUser::class);
+        $originalUser = $this->createStub(BackendUser::class);
         $originalUser
             ->method('__get')
             ->with('id')
@@ -145,7 +145,7 @@ class SwitchUserOperationTest extends TestCase
             ->method('disable')
         ;
 
-        $listener = new SwitchUserOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchUserOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 

@@ -592,7 +592,7 @@ class ContaoCoreExtensionTest extends TestCase
             'contao.general',
         ];
 
-        $monologExtension = $this->createMock(Extension::class);
+        $monologExtension = $this->createStub(Extension::class);
         $monologExtension
             ->method('getAlias')
             ->willReturn('monolog')

@@ -33,7 +33,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->method('delete')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -63,7 +63,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->method('delete')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -87,7 +87,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
     #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
     public function testDeleteUserTemplate(string|null $themeSlug, string $path): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderMock();
         $loader
             ->expects($this->once())
             ->method('warmUp')
@@ -101,7 +101,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->with($path)
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -112,7 +112,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->willReturn('delete_result.stream')
         ;
 
-        $cacheInvalidator = $this->mockCacheInvalidator();
+        $cacheInvalidator = $this->createMock(CacheInvalidator::class);
         $cacheInvalidator
             ->expects($this->once())
             ->method('invalidateCache')

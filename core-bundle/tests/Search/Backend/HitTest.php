@@ -21,7 +21,7 @@ class HitTest extends TestCase
 {
     public function testHit(): void
     {
-        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder = $this->createStub(FigureBuilder::class);
 
         $hit = (new Hit(new Document('42', 'type', 'searchable'), 'title', 'https://example.com'))
             ->withContext('context')

@@ -42,7 +42,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
     public function testWritesIdeAutoCompletionFile(): void
     {
-        $loader = $this->createMock(ContaoFilesystemLoader::class);
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('getInheritanceChains')
             ->willReturn([
@@ -129,10 +129,10 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
     private function getContaoFilesystemLoaderWarmer(ContaoFilesystemLoader|null $filesystemLoader = null, string|null $environment = null, Filesystem|null $filesystem = null): ContaoFilesystemLoaderWarmer
     {
         return new ContaoFilesystemLoaderWarmer(
-            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
+            $filesystemLoader ?? $this->createStub(ContaoFilesystemLoader::class),
             '/cache',
             $environment ?? 'prod',
-            $filesystem ?? $this->createMock(Filesystem::class),
+            $filesystem ?? $this->createStub(Filesystem::class),
         );
     }
 }
