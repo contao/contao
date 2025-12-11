@@ -196,9 +196,9 @@ class TableDataContainerProvider implements ProviderInterface
             static fn (array $config): bool => isset($config['search']) && true === $config['search'],
         );
 
-        // Only select the rows we need to make sure we're not transferring the entire
-        // database when indexing
+        // Only select the rows we need so we don't transfer the entire database when indexing
         $select = array_unique(['id', ...array_keys($searchableFields)]);
+
         $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
         if ($reindexConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
