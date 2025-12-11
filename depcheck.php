@@ -111,10 +111,9 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
 
-    // This package is required by cmsig/seal-loupe-adapter and may therefore be a
-    // shadow dependency.
-    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
-
     // We set up doctrine messenger transports via the skeleton config in the managed edition.
     ->ignoreErrorsOnPackage('symfony/doctrine-messenger', [ErrorType::UNUSED_DEPENDENCY])
+
+    // We want to control the version of Loupe we support in contao/loupe-bridge.
+    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::UNUSED_DEPENDENCY])
 ;
