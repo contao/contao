@@ -98,7 +98,10 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack());
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (array $defaultOptions) => $mockClient;
+
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
         $factory->addSubscriber($subscriber1);
 
         $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
@@ -121,7 +124,10 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack());
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (array $defaultOptions) => $mockClient;
+
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();
