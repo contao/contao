@@ -30,7 +30,7 @@ class FormAltcha extends Widget
 	/**
 	 * @var string
 	 */
-	protected $prefix = 'widget widget-altcha';
+	protected $strPrefix = 'widget widget-altcha';
 
 	/**
 	 * Use the raw request data.
