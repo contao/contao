@@ -95,13 +95,13 @@ class PluginTest extends TestCase
             ->method('load')
         ;
 
-        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $resolver = $this->createStub(LoaderResolverInterface::class);
         $resolver
             ->method('resolve')
             ->willReturn($loader)
         ;
 
         $plugin = new Plugin();
-        $plugin->getRouteCollection($resolver, $this->createMock(KernelInterface::class));
+        $plugin->getRouteCollection($resolver, $this->createStub(KernelInterface::class));
     }
 }

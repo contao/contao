@@ -89,7 +89,7 @@ class FragmentTemplateTest extends TestCase
                     'bool' => false,
                     'string' => '',
                     'array' => [],
-                    default => $this->createMock($name),
+                    default => $this->createStub($name),
                 };
             },
             $parent->getMethod($method)->getParameters(),

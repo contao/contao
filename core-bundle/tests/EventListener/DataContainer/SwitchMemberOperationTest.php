@@ -25,7 +25,7 @@ class SwitchMemberOperationTest extends TestCase
 {
     public function testOperationIsHiddenIfUserIsNotABackendUser(): void
     {
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -40,13 +40,13 @@ class SwitchMemberOperationTest extends TestCase
             ->method('hide')
         ;
 
-        $listener = new SwitchMemberOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 
     public function testOperationIsHiddenIfAllowedMemberGroupsIsNull(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
             ->willReturnMap([
@@ -68,13 +68,13 @@ class SwitchMemberOperationTest extends TestCase
             ->method('hide')
         ;
 
-        $listener = new SwitchMemberOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 
     public function testOperationIsHiddenIfAllowedMemberGroupsIsEmpty(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
             ->willReturnMap([
@@ -96,13 +96,13 @@ class SwitchMemberOperationTest extends TestCase
             ->method('hide')
         ;
 
-        $listener = new SwitchMemberOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 
     public function testOperationIsDisabledIfMemberCannotLogin(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
             ->willReturnMap([
@@ -128,13 +128,13 @@ class SwitchMemberOperationTest extends TestCase
             ->method('disable')
         ;
 
-        $listener = new SwitchMemberOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 
     public function testOperationIsDisabledIfMemberHasNoUsername(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
             ->willReturnMap([
@@ -160,13 +160,13 @@ class SwitchMemberOperationTest extends TestCase
             ->method('disable')
         ;
 
-        $listener = new SwitchMemberOperationListener($security, $this->createMock(UrlGeneratorInterface::class));
+        $listener = new SwitchMemberOperationListener($security, $this->createStub(UrlGeneratorInterface::class));
         $listener($operation);
     }
 
     public function testReplacesOperationUrl(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
             ->willReturnMap([

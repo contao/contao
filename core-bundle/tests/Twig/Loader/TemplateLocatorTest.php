@@ -71,7 +71,7 @@ class TemplateLocatorTest extends TestCase
 
     public function testIgnoresTableNotFoundExceptions(): void
     {
-        $exception = new TableNotFoundException($this->createMock(LegacyDriverException::class), null);
+        $exception = new TableNotFoundException($this->createStub(LegacyDriverException::class), null);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -82,8 +82,8 @@ class TemplateLocatorTest extends TestCase
 
         $locator = new TemplateLocator(
             '',
-            $this->createMock(ResourceFinder::class),
-            $this->createMock(ThemeNamespace::class),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(ThemeNamespace::class),
             $connection,
         );
 
@@ -92,7 +92,7 @@ class TemplateLocatorTest extends TestCase
 
     public function testIgnoresConnectionExceptions(): void
     {
-        $exception = new ConnectionException($this->createMock(LegacyDriverException::class), null);
+        $exception = new ConnectionException($this->createStub(LegacyDriverException::class), null);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -103,8 +103,8 @@ class TemplateLocatorTest extends TestCase
 
         $locator = new TemplateLocator(
             '',
-            $this->createMock(ResourceFinder::class),
-            $this->createMock(ThemeNamespace::class),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(ThemeNamespace::class),
             $connection,
         );
 
@@ -124,8 +124,8 @@ class TemplateLocatorTest extends TestCase
 
         $locator = new TemplateLocator(
             '',
-            $this->createMock(ResourceFinder::class),
-            $this->createMock(ThemeNamespace::class),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(ThemeNamespace::class),
             $connection,
         );
 
@@ -249,13 +249,13 @@ class TemplateLocatorTest extends TestCase
 
     private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $paths = []): TemplateLocator
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
             ->willReturn($themePaths)
         ;
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')

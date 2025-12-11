@@ -312,7 +312,7 @@ class DefaultOperationsListener
     {
         $versionIds = null;
 
-        return function (DataContainerOperation $operation) use ($table, &$versionIds): void {
+        return function (DataContainerOperation $operation) use (&$versionIds, $table): void {
             if (null === $versionIds) {
                 $versionIds = $this->connection->fetchFirstColumn(
                     'SELECT pid, COUNT(*) AS total FROM tl_version WHERE fromTable=? GROUP BY pid HAVING total > 1',

@@ -21,6 +21,7 @@ use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
@@ -36,13 +37,13 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
 
         $this->vfs = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
     }
 
-    protected function mockSecurity(int|null $userId = null): Security
+    protected function mockSecurity(int|null $userId = null): Security&MockObject
     {
-        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $userMock = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -74,9 +75,9 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
 
         return new Jobs(
             $connection,
-            $security ?? $this->createMock(Security::class),
+            $security ?? $this->createStub(Security::class),
             $this->vfs,
-            $router ?? $this->createMock(RouterInterface::class),
+            $router ?? $this->createStub(RouterInterface::class),
             $clock,
         );
     }
