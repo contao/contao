@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\Backend\FavoriteController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Twig\Markup\SafeHtmlVariable;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -246,7 +247,7 @@ class BackendMain extends Backend
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
 		$data['isPopup'] = Input::get('popup');
-		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
+		$data['learnMore'] = SafeHtmlVariable::create(\sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>'));
 		$data['containerClass'] = BackendUser::getInstance()->backendWidth;
 
 		$twig = $container->get('twig');
