@@ -26,7 +26,7 @@ class SchemaOrgRuntimeTest extends TestCase
         $manager = new JsonLdManager($context);
         $context->add($manager);
 
-        $accessor = $this->createMock(ResponseContextAccessor::class);
+        $accessor = $this->createStub(ResponseContextAccessor::class);
         $accessor
             ->method('getResponseContext')
             ->willReturn($context)

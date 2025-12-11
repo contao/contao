@@ -47,7 +47,7 @@ class InputTest extends TestCase
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.sanitizer.allowed_url_protocols', ['http', 'https', 'mailto', 'tel']);
         $container->set('request_stack', new RequestStack());
-        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
+        $container->set('contao.routing.scope_matcher', $this->createStub(ScopeMatcher::class));
 
         System::setContainer($container);
     }

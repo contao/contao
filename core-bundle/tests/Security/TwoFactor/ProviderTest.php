@@ -23,13 +23,13 @@ class ProviderTest extends TestCase
 {
     public function testDoesNotBeginAuthenticationWithAnInvalidUser(): void
     {
-        $authenticator = $this->createMock(Authenticator::class);
+        $authenticator = $this->createStub(Authenticator::class);
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($this->createStub(UserInterface::class))
         ;
 
         $provider = new Provider($authenticator);
@@ -39,9 +39,9 @@ class ProviderTest extends TestCase
 
     public function testDoesNotBeginAuthenticationIfTwoFactorIsDisabled(): void
     {
-        $authenticator = $this->createMock(Authenticator::class);
+        $authenticator = $this->createStub(Authenticator::class);
 
-        $user = $this->mockClassWithProperties(User::class);
+        $user = $this->createClassWithPropertiesStub(User::class);
         $user->useTwoFactor = false;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
@@ -58,9 +58,9 @@ class ProviderTest extends TestCase
 
     public function testBeginsAuthenticationIfTwoFactorIsEnabled(): void
     {
-        $authenticator = $this->createMock(Authenticator::class);
+        $authenticator = $this->createStub(Authenticator::class);
 
-        $user = $this->mockClassWithProperties(User::class);
+        $user = $this->createClassWithPropertiesStub(User::class);
         $user->useTwoFactor = true;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
@@ -77,7 +77,7 @@ class ProviderTest extends TestCase
 
     public function testDoesNotValidateTheAuthenticationCodeIfTheUserIsInvalid(): void
     {
-        $authenticator = $this->createMock(Authenticator::class);
+        $authenticator = $this->createStub(Authenticator::class);
         $provider = new Provider($authenticator);
 
         $this->assertFalse($provider->validateAuthenticationCode(new \stdClass(), ''));
@@ -85,7 +85,7 @@ class ProviderTest extends TestCase
 
     public function testDoesNotValidateTheAuthenticationCodeIfTheCodeIsInvalid(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createStub(User::class);
 
         $authenticator = $this->createMock(Authenticator::class);
         $authenticator
@@ -102,7 +102,7 @@ class ProviderTest extends TestCase
 
     public function testValidatesTheAuthenticationCode(): void
     {
-        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => true]);
+        $user = $this->createClassWithPropertiesStub(User::class, ['useTwoFactor' => true]);
 
         $authenticator = $this->createMock(Authenticator::class);
         $authenticator
@@ -119,7 +119,7 @@ class ProviderTest extends TestCase
 
     public function testThrowsAnExceptionWhenTryingToGetTheFormRenderer(): void
     {
-        $authenticator = $this->createMock(Authenticator::class);
+        $authenticator = $this->createStub(Authenticator::class);
         $provider = new Provider($authenticator);
 
         $this->expectException('RuntimeException');

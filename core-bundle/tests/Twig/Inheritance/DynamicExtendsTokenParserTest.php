@@ -27,7 +27,7 @@ class DynamicExtendsTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicExtendsTokenParser($this->createMock(ContaoFilesystemLoader::class));
+        $tokenParser = new DynamicExtendsTokenParser($this->createStub(ContaoFilesystemLoader::class));
 
         $this->assertSame('extends', $tokenParser->getTag());
     }
@@ -35,7 +35,7 @@ class DynamicExtendsTokenParserTest extends TestCase
     #[DataProvider('provideSources')]
     public function testHandlesContaoExtends(string $code, string ...$expectedStrings): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllDynamicParentsByThemeSlug')
             ->willReturnCallback(
@@ -56,7 +56,7 @@ class DynamicExtendsTokenParserTest extends TestCase
             )
         ;
 
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicExtendsTokenParser($filesystemLoader));
 
         $source = new Source(
@@ -109,14 +109,14 @@ class DynamicExtendsTokenParserTest extends TestCase
 
     public function testFailsWhenExtendingAnInvalidTemplate(): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllDynamicParentsByThemeSlug')
             ->with('foo', $this->anything())
             ->willThrowException(new \LogicException('Template not found in hierarchy.'))
         ;
 
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicExtendsTokenParser($filesystemLoader));
 
         // Use a conditional expression here, so that we can test rethrowing exceptions
@@ -134,10 +134,10 @@ class DynamicExtendsTokenParserTest extends TestCase
     #[DataProvider('provideSourcesWithErrors')]
     public function testValidatesTokenStream(string $code, string $expectedException): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
 
         $environment->addTokenParser(new DynamicExtendsTokenParser(
-            $this->createMock(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoFilesystemLoader::class),
         ));
 
         $source = new Source(

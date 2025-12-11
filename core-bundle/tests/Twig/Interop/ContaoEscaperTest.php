@@ -85,8 +85,8 @@ class ContaoEscaperTest extends TestCase
         HookHelper::registerHook('replaceInsertTags', $this->executeReplaceInsertTagsCallback(...));
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 

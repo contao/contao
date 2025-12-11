@@ -24,26 +24,15 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    private Security&MockObject $security;
-
-    private DefaultOperationsListener $listener;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         unset($GLOBALS['TL_DCA']);
-
-        $controllerAdapter = $this->mockAdapter(['loadDataContainer']);
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
-
-        $this->security = $this->createMock(Security::class);
-        $this->listener = new DefaultOperationsListener($framework, $this->security, $this->createMock(Connection::class));
     }
 
     protected function tearDown(): void
@@ -65,7 +54,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -93,7 +82,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -122,7 +111,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -148,7 +137,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -184,7 +173,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -219,7 +208,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -255,7 +244,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -288,7 +277,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -312,7 +301,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -337,7 +326,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -365,7 +354,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -395,7 +384,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -422,7 +411,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -450,7 +439,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -478,7 +467,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -501,7 +490,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -524,7 +513,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -548,7 +537,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -571,7 +560,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -600,7 +589,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -611,13 +600,8 @@ class DefaultOperationsListenerTest extends TestCase
     #[DataProvider('checkPermissionsProvider')]
     public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array|null $newRecord = null): void
     {
-        $GLOBALS['TL_DCA']['tl_foo'] = $dca;
-
-        ($this->listener)('tl_foo');
-
-        $operation = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'][$name];
-
-        $this->security
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
             ->method('isGranted')
             ->with(
@@ -642,7 +626,13 @@ class DefaultOperationsListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $config = new DataContainerOperation($name, $operation, $record, $this->createMock(DataContainer::class));
+        $GLOBALS['TL_DCA']['tl_foo'] = $dca;
+
+        ($this->getListener($security))('tl_foo');
+
+        $operation = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'][$name];
+
+        $config = new DataContainerOperation($name, $operation, $record, $this->createStub(DataContainer::class));
         $operation['button_callback']($config);
     }
 
@@ -743,5 +733,15 @@ class DefaultOperationsListenerTest extends TestCase
         } else {
             $this->assertArrayNotHasKey('button_callback', $operation);
         }
+    }
+
+    private function getListener(Security|null $security = null): DefaultOperationsListener
+    {
+        $security ??= $this->createStub(Security::class);
+
+        $controllerAdapter = $this->createAdapterStub(['loadDataContainer']);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
+
+        return new DefaultOperationsListener($framework, $security, $this->createStub(Connection::class));
     }
 }

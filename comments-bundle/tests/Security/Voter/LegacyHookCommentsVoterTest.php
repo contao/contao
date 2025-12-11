@@ -33,7 +33,7 @@ class LegacyHookCommentsVoterTest extends TestCase
 
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new LegacyHookCommentsVoter($this->mockContaoFramework());
+        $voter = new LegacyHookCommentsVoter($this->createContaoFrameworkStub());
 
         $this->assertTrue($voter->supportsAttribute(ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT));
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_comments'));
@@ -45,9 +45,9 @@ class LegacyHookCommentsVoterTest extends TestCase
     {
         unset($GLOBALS['TL_HOOKS']['isAllowedToEditComment']);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
-        $voter = new LegacyHookCommentsVoter($this->mockContaoFramework());
+        $voter = new LegacyHookCommentsVoter($this->createContaoFrameworkStub());
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, ['source' => 'tl_foo', 'parent' => 42], [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT]));
     }
@@ -63,7 +63,7 @@ class LegacyHookCommentsVoterTest extends TestCase
             },
         );
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $voter = $this->getVoter();
 
@@ -76,7 +76,7 @@ class LegacyHookCommentsVoterTest extends TestCase
 
         HookHelper::registerHook('isAllowedToEditComment', static fn () => '');
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $voter = $this->getVoter();
 
@@ -85,12 +85,12 @@ class LegacyHookCommentsVoterTest extends TestCase
 
     private function getVoter(): LegacyHookCommentsVoter
     {
-        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter = $this->createAdapterStub(['importStatic']);
         $systemAdapter
             ->method('importStatic')
             ->willReturnArgument(0)
         ;
 
-        return new LegacyHookCommentsVoter($this->mockContaoFramework([System::class => $systemAdapter]));
+        return new LegacyHookCommentsVoter($this->createContaoFrameworkStub([System::class => $systemAdapter]));
     }
 }
