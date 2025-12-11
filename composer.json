@@ -165,7 +165,7 @@
         "symfony/var-dumper": "^7.4",
         "symfony/web-profiler-bundle": "^7.4",
         "symfony/yaml": "^7.4",
-        "terminal42/escargot": "^1.6",
+        "terminal42/escargot": "^1.6.3",
         "terminal42/service-annotation-bundle": "^1.1",
         "tijsverkoyen/css-to-inline-styles": "^2.0",
         "toflar/cronjob-supervisor": "^2.0",
