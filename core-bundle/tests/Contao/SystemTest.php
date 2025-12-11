@@ -37,7 +37,6 @@ class SystemTest extends TestCase
             'MSC.thousandsSeparator' => '',
         ];
 
-        $container = $this->getContainerWithContaoConfiguration();
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
@@ -51,7 +50,10 @@ class SystemTest extends TestCase
                 },
             )
         ;
+
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('translator', $translator);
+
         System::setContainer($container);
 
         $number = '12004.34564';

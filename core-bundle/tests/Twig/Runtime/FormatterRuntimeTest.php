@@ -22,9 +22,7 @@ class FormatterRuntimeTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([
-            System::class,
-        ]);
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -48,6 +46,7 @@ class FormatterRuntimeTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('translator', $translator);
+
         System::setContainer($container);
 
         $framework = $this->createMock(ContaoFramework::class);
