@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SystemTest extends TestCase
 {
@@ -31,11 +32,31 @@ class SystemTest extends TestCase
 
     public function testFormatsANumber(): void
     {
-        $number = '12004.34564';
+        $translations = [
+            'MSC.decimalSeparator' => '.',
+            'MSC.thousandsSeparator' => '',
+        ];
 
-        // Override the settings
-        $GLOBALS['TL_LANG']['MSC']['decimalSeparator'] = '.';
-        $GLOBALS['TL_LANG']['MSC']['thousandsSeparator'] = '';
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(
+                static function (string $id) use (&$translations): string {
+                    if (isset($translations[$id])) {
+                        return $translations[$id];
+                    }
+
+                    throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id));
+                },
+            )
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('translator', $translator);
+
+        System::setContainer($container);
+
+        $number = '12004.34564';
 
         $numbers = [
             '12004',
@@ -51,7 +72,7 @@ class SystemTest extends TestCase
         }
 
         // Override the thousands separator
-        $GLOBALS['TL_LANG']['MSC']['thousandsSeparator'] = ',';
+        $translations['MSC.thousandsSeparator'] = ',';
 
         $numbers = [
             '12,004',
