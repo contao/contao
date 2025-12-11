@@ -115,7 +115,7 @@ class NewsFeedListenerTest extends ContaoTestCase
     /**
      * @dataProvider getFeedSource
      */
-    public function testTransformsArticlesToFeedItems(string $feedSource, array $headline, array $content): void
+    public function testTransformsArticlesToFeedItems(string $feedSource, string $headline, string $teaser, string $content, string $expectedFeedTitle, string $expectedFeedContent): void
     {
         $imageDir = Path::join($this->getTempDir(), 'files');
 
@@ -162,20 +162,20 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn($image)
         ;
 
+        $isDetail = 'source_text' === $feedSource;
+
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
             ->method('replaceInline')
-            ->willReturn($content[0])
+            ->willReturn($isDetail ? $content : $teaser)
         ;
 
-        $element = $this->mockClassWithProperties(ContentModel::class, [
-            'pid' => 42,
-            'ptable' => 'tl_news',
-        ]);
+        $element = $this->createStub(ContentModel::class);
 
         $contentModel = $this->mockAdapter(['findPublishedByPidAndTable']);
         $contentModel
+            ->expects($this->exactly($isDetail ? 1 : 0))
             ->method('findPublishedByPidAndTable')
             ->with(42, 'tl_news')
             ->willReturn(new Collection([$element], 'tl_news'))
@@ -184,8 +184,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $article = $this->mockClassWithProperties(NewsModel::class, [
             'id' => 42,
             'date' => 1656578758,
-            'headline' => $headline[0],
-            'teaser' => $content[0],
+            'headline' => $headline,
+            'teaser' => $teaser,
             'addImage' => true,
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => serialize(['binary_uuid2']),
@@ -195,8 +195,17 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $controller = $this->mockAdapter(['getContentElement', 'convertRelativeUrls']);
         $controller
+            ->expects($this->exactly($isDetail ? 1 : 0))
+            ->method('getContentElement')
+            ->with($element)
+            ->willReturn($content)
+        ;
+
+        $controller
+            ->expects($this->once())
             ->method('convertRelativeUrls')
-            ->willReturn($content[0])
+            ->with($isDetail ? $content : $teaser)
+            ->willReturn($isDetail ? $content : $teaser)
         ;
 
         $filesModel = $this->mockAdapter(['findMultipleByUuids']);
@@ -256,11 +265,11 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $item = $event->getItem();
 
-        $this->assertSame($headline[1], $item->getTitle());
+        $this->assertSame($expectedFeedTitle, $item->getTitle());
         $this->assertSame(1656578758, $item->getLastModified()->getTimestamp());
         $this->assertSame('https://example.org/news/example-title', $item->getLink());
         $this->assertSame('https://example.org/news/example-title', $item->getPublicId());
-        $this->assertSame($content[1], $item->getContent());
+        $this->assertSame($expectedFeedContent, $item->getContent());
         $this->assertSame('Jane Doe', $item->getAuthor()->getName());
         $this->assertCount(2, $item->getMedias());
 
@@ -278,14 +287,20 @@ class NewsFeedListenerTest extends ContaoTestCase
     {
         yield 'Teaser' => [
             'source_teaser',
-            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
-            ['Example teaser &#40;Episode 1&#41;', 'Example teaser &#40;Episode 1&#41;'],
+            'Example title &#40;Episode 1&#41;',
+            'Example teaser &#40;Episode 1&#41;',
+            'Example content &#40;Episode 1&#41;',
+            'Example title (Episode 1)',
+            'Example teaser &#40;Episode 1&#41;',
         ];
 
         yield 'Text' => [
             'source_text',
-            ['Example title &#40;Episode 1&#41;', 'Example title (Episode 1)'],
-            ['Example content &#40;Episode 1&#41;', 'Example content &#40;Episode 1&#41;'],
+            'Example title &#40;Episode 1&#41;',
+            'Example teaser &#40;Episode 1&#41;',
+            'Example content &#40;Episode 1&#41;',
+            'Example title (Episode 1)',
+            'Example content &#40;Episode 1&#41;',
         ];
     }
 }
