@@ -659,9 +659,10 @@ class ValueFormatterTest extends TestCase
     private function mockConnection(): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
+
         $connection
             ->expects($this->once())
-            ->method('quoteSingleIdentifier')
+            ->method(\method_exists(Connection::class, 'quoteSingleIdentifier') ? 'quoteSingleIdentifier' : 'quoteIdentifier')
             ->willReturnCallback(static fn ($v) => '`'.$v.'`')
         ;
 

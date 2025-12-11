@@ -680,6 +680,14 @@ class Database
 			return $strName;
 		}
 
-		return System::getContainer()->get('database_connection')->quoteIdentifier($strName);
+		$connection = System::getContainer()->get('database_connection');
+
+		// Backwards-compatibility for doctrine/dbal < 4.3
+		if (!\method_exists($connection, 'quoteSingleIdentifier'))
+		{
+			return $connection->quoteIdentifier($strName);
+		}
+
+		return $connection->quoteSingleIdentifier($strName);
 	}
 }
