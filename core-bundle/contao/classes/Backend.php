@@ -415,36 +415,9 @@ abstract class Backend extends Controller
 
 			$this->Template->headline = '';
 
-			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail(withTreeTrail: true) as list('url' => $linkUrl, 'label' => $linkLabel, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings))
+			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
 			{
-				if ($treeTrail)
-				{
-					$this->Template->headline .= ' <span>🌍';
-					$this->Template->headline .= '<ul>';
-
-					foreach (array_reverse($treeTrail) as list('url' => $treeLinkUrl, 'label' => $treeLinkLabel))
-					{
-						$this->Template->headline .= \sprintf('<li><a href="%s">%s</a></li>', StringUtil::specialchars($treeLinkUrl), StringUtil::specialchars($treeLinkLabel));
-					}
-					$this->Template->headline .= '</ul>';
-					$this->Template->headline .= '</span>';
-				}
-
-				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
-
-				if ($treeSiblings)
-				{
-					$this->Template->headline .= '<ul>';
-
-					foreach ($treeSiblings as list('url' => $siblingLinkUrl, 'label' => $siblingLinkLabel, 'active' => $siblingLinkActive))
-					{
-						$this->Template->headline .= \sprintf('<li><a href="%s"%s>%s</a></li>', StringUtil::specialchars($siblingLinkUrl), $siblingLinkActive ? ' class="tl_label"' : '', StringUtil::specialchars($siblingLinkLabel));
-					}
-
-					$this->Template->headline .= '</ul>';
-				}
-
-				$this->Template->headline .= '</span>';
+				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
 			}
 
 			$do = Input::get('do');
