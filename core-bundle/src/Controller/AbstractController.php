@@ -21,7 +21,6 @@ use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\PageModel;
-use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +36,6 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['contao.routing.content_url_generator'] = ContentUrlGenerator::class;
         $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
         $services['event_dispatcher'] = EventDispatcherInterface::class;
-        $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
         $services['contao.cache.tag_manager'] = CacheTagManager::class;
 
