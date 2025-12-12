@@ -243,7 +243,7 @@ class BackendMain extends Backend
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
 		$data['title'] = StringUtil::specialchars(preg_replace('/^\s*›\s*|\s*›\s*$/u', '', strip_tags(preg_replace('/<span.*?>/', ' › ', $data['title'] ?? ''))));
 		$data['host'] = Backend::getDecodedHostname();
-		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
+		$data['charset'] = $container->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
 		$data['isPopup'] = Input::get('popup');
 		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
@@ -256,7 +256,7 @@ class BackendMain extends Backend
 		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled));
 
 		$request = $container->get('request_stack')->getMainRequest();
-		$data['toggleFavorites'] = System::getContainer()->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, array('target_path' => $request->getRequestUri())));
+		$data['toggleFavorites'] = $container->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, array('target_path' => $request->getRequestUri())));
 
 		return $data;
 	}
