@@ -22,9 +22,8 @@ class Plugin implements ExtensionPluginInterface
 {
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
-        switch ($extensionName) {
-            case 'contao':
-                return $this->addDefaultBackendSearchProvider($extensionConfigs);
+        if ('contao' == $extensionName) {
+            return $this->addDefaultBackendSearchProvider($extensionConfigs);
         }
 
         return $extensionConfigs;

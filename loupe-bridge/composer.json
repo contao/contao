@@ -1,6 +1,6 @@
 {
     "name": "contao/loupe-bridge",
-    "description": "Bridges the Contao Open Source CMS with SEAL and Loupe",
+    "description": "Bridges Contao with SEAL and Loupe",
     "license": "LGPL-3.0-or-later",
     "type": "contao-bundle",
     "authors": [
@@ -40,14 +40,14 @@
             "Contao\\LoupeBridge\\": "src/"
         }
     },
-    "extra": {
-        "contao-manager-plugin": "Contao\\LoupeBridge\\ContaoManager\\Plugin"
-    },
     "config": {
         "allow-plugins": {
             "contao-components/installer": false,
             "contao/manager-plugin": true,
             "php-http/discovery": false
         }
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\LoupeBridge\\ContaoManager\\Plugin"
     }
 }
