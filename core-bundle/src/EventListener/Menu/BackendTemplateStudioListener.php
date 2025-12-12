@@ -66,6 +66,7 @@ class BackendTemplateStudioListener
             ->setUri($this->router->generate('contao_template_studio'))
             ->setLinkAttribute('class', 'navigation template-studio')
             ->setLinkAttribute('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
+            // FIXME: Use ->query, ->request or ->attributes
             ->setCurrent(BackendTemplateStudioController::class === $request->get('_controller'))
         ;
 

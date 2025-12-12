@@ -77,6 +77,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
         }
 
+        // FIXME: Use ->query, ->request or ->attributes
         $enable = 'enable' === $request->get('2fa');
 
         if (!$user->useTwoFactor && $pageModel->enforceTwoFactor) {
