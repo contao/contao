@@ -7,15 +7,17 @@
 %}
 
 {% block content %}
-    <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
-        let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
-        if (typeof accessibleNavObserver === 'undefined') {
-            const accessibleNavObserver = new ResizeObserver(() => {
-                document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
-                document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
-            }).observe(document.body);
-        }
-    </script>
+    {% block navigation_script_variables %}
+        <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+            let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
+            if (typeof accessibleNavObserver === 'undefined') {
+                const accessibleNavObserver = new ResizeObserver(() => {
+                    document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
+                    document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
+                }).observe(document.body);
+            }
+        </script>
+    {% endblock %}
     <!-- indexer::stop -->
     <div{{ wrapper_attributes }}>
         {% block toggle %}
