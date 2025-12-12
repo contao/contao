@@ -247,7 +247,7 @@ class BackendMain extends Backend
 		$data['host'] = Backend::getDecodedHostname();
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
-		$data['isPopup'] = $request->query->has('popup');
+		$data['isPopup'] = $request->query->get('popup');
 		$data['renderMainOnly'] = $renderMainOnly;
 		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 		$data['containerClass'] = BackendUser::getInstance()->backendWidth;
