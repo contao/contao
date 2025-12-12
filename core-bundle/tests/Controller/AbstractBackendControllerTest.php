@@ -111,7 +111,7 @@ class AbstractBackendControllerTest extends TestCase
             'getLocaleString' => $this->anything(),
             'getDateString' => $this->anything(),
             'as_editor_view' => true,
-            'toggleFavorites' => '#fragment'
+            'toggleFavorites' => '#fragment',
         ];
 
         $container = $this->getContainerWithDefaultConfiguration($expectedContext);
@@ -187,7 +187,7 @@ class AbstractBackendControllerTest extends TestCase
             'getLocaleString' => self::anything(),
             'getDateString' => self::anything(),
             'as_editor_view' => true,
-            'toggleFavorites' => '#fragment'
+            'toggleFavorites' => '#fragment',
         ];
 
         $customContext = [
