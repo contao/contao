@@ -320,6 +320,7 @@ class FileTree extends Widget
           "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
+            AjaxRequest.displayBox(Contao.lang.loading + \' …\');
             new Request.Contao({
               evalScripts: false,
               onSuccess: function(txt, json) {
@@ -328,6 +329,7 @@ class FileTree extends Widget
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", true, true);
                 $("ctrl_' . $this->strId . '").dispatchEvent(evt);
+                AjaxRequest.hideBox();
               }
             }).post({"action":"reloadFiletree", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '"});
           }
