@@ -38,8 +38,8 @@ class Cron
     private array $cronJobs = [];
 
     /**
-     * @param \Closure(): CronJobRepository      $repository
-     * @param \Closure(): EntityManagerInterface $entityManager
+     * @param \Closure():CronJobRepository      $repository
+     * @param \Closure():EntityManagerInterface $entityManager
      */
     public function __construct(
         private readonly \Closure $repository,

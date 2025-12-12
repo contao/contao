@@ -166,7 +166,7 @@ class RowWizard extends Widget
 			}
 		}
 
-		$header = $rows = array();
+		$header = $footer = $rows = array();
 
 		for ($i = 0, $c = \count($this->varValue); $i < $c; ++$i)
 		{
@@ -251,7 +251,7 @@ class RowWizard extends Widget
 	}
 
 	/**
-	 * @return array{0: Widget|null, 1: array<mixed>}
+	 * @return array{0: Widget|null, 1: array}
 	 */
 	private function prepareWidget(string $key, mixed $value, array $options, int $increment): array
 	{

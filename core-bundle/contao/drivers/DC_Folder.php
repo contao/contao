@@ -1175,7 +1175,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					throw new ResponseException(new Response('', 201));
 				}
 
-				// Do not purge the html folder (see #2898)
+				// Do not purge the HTML folder (see #2898)
 				if (Input::post('uploadNback') !== null && !$objUploader->hasResized())
 				{
 					Message::reset();
