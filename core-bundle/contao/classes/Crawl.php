@@ -15,6 +15,7 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Contao\CoreBundle\Exception\ResponseException;
 use Monolog\Handler\GroupHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -281,13 +282,13 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$handlers = array();
 
 		// Create the general debug handler
-		$debugHandler = new CrawlCsvLogHandler($debugLogPath, Logger::DEBUG);
+		$debugHandler = new CrawlCsvLogHandler($debugLogPath, Level::Debug);
 		$handlers[] = $debugHandler;
 
 		// Create the subscriber specific info handlers
 		foreach ($factory->getSubscribers($activeSubscribers) as $subscriber)
 		{
-			$subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Logger::INFO);
+			$subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($subscriber->getName(), $jobId), Level::Info);
 			$subscriberHandler->setFilterSource(\get_class($subscriber));
 			$handlers[] = $subscriberHandler;
 		}
