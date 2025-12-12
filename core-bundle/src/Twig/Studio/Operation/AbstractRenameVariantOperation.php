@@ -64,7 +64,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
     {
         $services = parent::getSubscribedServices();
 
-        $services['database_connection'] = '?'.Connection::class;
+        $services['database_connection'] = Connection::class;
 
         return $services;
     }
