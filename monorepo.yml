@@ -53,6 +53,9 @@ repositories:
             81df735ec6aa9333baef09459f610bd3847ab946: bb713b10ef98dcaf52395e2cef8f4b7f682faec5
             a06d4de66922982fcadc9ee4a2b6d71a21171753: 51c69f1089e0f39fb6bfd7fb71cf2430ef5bde01
 
+    loupe-bridge:
+        url: https://github.com/contao/loupe-bridge.git
+
     maker-bundle:
         url: https://github.com/contao/maker-bundle.git
 
