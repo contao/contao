@@ -72,14 +72,14 @@ abstract class AbstractLayoutPageController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.routing.page_finder'] = '?'.PageFinder::class;
-        $services['contao.routing.response_context_accessor'] = '?'.ResponseContextAccessor::class;
-        $services['contao.routing.response_context_factory'] = '?'.CoreResponseContextFactory::class;
-        $services['contao.security.token_checker'] = '?'.TokenChecker::class;
-        $services['contao.image.picture_factory'] = '?'.PictureFactoryInterface::class;
-        $services['contao.image.preview_factory'] = '?'.PreviewFactory::class;
-        $services['contao.assets.assets_context'] = '?'.ContaoContext::class;
-        $services['contao.twig.defer.renderer'] = '?'.Renderer::class;
+        $services['contao.routing.page_finder'] = PageFinder::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
+        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
+        $services['contao.security.token_checker'] = TokenChecker::class;
+        $services['contao.image.picture_factory'] = PictureFactoryInterface::class;
+        $services['contao.image.preview_factory'] = PreviewFactory::class;
+        $services['contao.assets.assets_context'] = ContaoContext::class;
+        $services['contao.twig.defer.renderer'] = Renderer::class;
 
         return $services;
     }
