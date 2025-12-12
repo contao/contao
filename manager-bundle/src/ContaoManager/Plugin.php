@@ -34,7 +34,6 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
-use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Pdo\Mysql;
@@ -211,7 +210,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
                 }
 
-                return $this->addDefaultBackendSearchProvider($extensionConfigs);
+                return $extensionConfigs;
 
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
@@ -481,46 +480,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $extensionConfigs[] = [
             'mailer' => [
                 'dsn' => '%env(MAILER_DSN)%',
-            ],
-        ];
-
-        return $extensionConfigs;
-    }
-
-    /**
-     * Dynamically configures the back end search adapter if none was configured and
-     * the system supports it.
-     */
-    private function addDefaultBackendSearchProvider(array $extensionConfigs): array
-    {
-        foreach ($extensionConfigs as $config) {
-            // Back end search has been disabled
-            if (false === ($config['backend_search'] ?? null) || false === ($config['backend_search']['enabled'] ?? null)) {
-                return $extensionConfigs;
-            }
-
-            // Configured a custom adapter (e.g. MeiliSearch or whatever)
-            if (isset($config['backend_search']['dsn'])) {
-                return $extensionConfigs;
-            }
-        }
-
-        if (!class_exists(LoupeFactory::class)) {
-            return $extensionConfigs;
-        }
-
-        $loupeFactory = new LoupeFactory();
-
-        // Older versions of Loupe did not require dependencies in the composer.json
-        // directly. There, we need to check if Loupe is supported. In newer versions of
-        // Loupe, this is ensured by Composer requirements.
-        if (method_exists($loupeFactory, 'isSupported') && !$loupeFactory->isSupported()) {
-            return $extensionConfigs;
-        }
-
-        $extensionConfigs[] = [
-            'backend_search' => [
-                'dsn' => 'loupe://%kernel.project_dir%/var/loupe',
             ],
         ];
 
