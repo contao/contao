@@ -157,7 +157,7 @@ abstract class ContentElementTestCase extends TestCase
             ->willReturn($page)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
