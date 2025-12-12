@@ -105,10 +105,10 @@
         {% block main %}
             <main id="main" aria-labelledby="main_headline">
                 {% block main_headline %}
-                <h1 id="main_headline">
-                    {{ headline|raw }}
-                    {{ toggleFavorites|raw }}
-                </h1>
+                    <h1 id="main_headline">
+                        {{ headline|raw }}
+                        {{ toggleFavorites|raw }}
+                    </h1>
                 {% endblock %}
                 <div class="content">
                     {% if pickerMenu|default %}
