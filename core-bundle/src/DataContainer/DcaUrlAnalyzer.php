@@ -481,6 +481,7 @@ class DcaUrlAnalyzer
                 'url' => $this->router->generate('contao_backend', [...$query, 'pn' => (int) $row['id']]),
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
             ];
+
             $id = (int) $row['pid'];
         }
 
