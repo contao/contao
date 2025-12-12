@@ -452,7 +452,6 @@ window.AjaxRequest =
 		overlay.set({
 			'styles': {
 				'display': 'block',
-				'top': scroll.y + 'px'
 			}
 		});
 
