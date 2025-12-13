@@ -292,17 +292,17 @@ class ModuleSearch extends Module
 				continue;
 			}
 
-			$figure = $this->buildFigureFromId($v['https://schema.org/primaryImageOfPage']['@id'] ?? null, $result['url']);
+			$figureMeta = new Metadata(array_filter(array(
+				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
+				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
+				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
+			)));
+
+			$figure = $this->buildFigureFromId($v['https://schema.org/primaryImageOfPage']['@id'] ?? null, $result['url'], $figureMeta);
 
 			if (!$figure)
 			{
 				$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
-
-				$figureMeta = new Metadata(array_filter(array(
-					Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
-					Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
-					Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
-				)));
 
 				$figure = System::getContainer()->get('contao.image.studio')->createFigureBuilder()
 					->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls)
@@ -325,7 +325,7 @@ class ModuleSearch extends Module
 		}
 	}
 
-	private function buildFigureFromId(string|null $id, string $url): Figure|null
+	private function buildFigureFromId(string|null $id, string $url, Metadata|null $metadata): Figure|null
 	{
 		if (!$id || !str_starts_with($id, '#/schema/image/'))
 		{
@@ -342,6 +342,7 @@ class ModuleSearch extends Module
 		return System::getContainer()->get('contao.image.studio')->createFigureBuilder()
 			->fromUuid($uuid)
 			->setSize($this->imgSize)
+			->setMetadata($metadata)
 			->setLinkHref($url)
 			->buildIfResourceExists();
 	}
