@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -286,31 +287,34 @@ class ModuleSearch extends Module
 
 		foreach ($meta as $v)
 		{
-			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl']))
+			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl']) && !isset($v['https://schema.org/primaryImageOfPage']['@id']))
 			{
 				continue;
 			}
 
-			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+			$figure = $this->buildFigureFromId($v['https://schema.org/primaryImageOfPage']['@id'] ?? null, $result['url']);
 
-			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
-
-			$figureMeta = new Metadata(array_filter(array(
-				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
-				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
-				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
-			)));
-
-			$figure = $figureBuilder
-				->setSize($this->imgSize)
-				->setMetadata($figureMeta)
-				->setLinkHref($result['url'])
-				->buildIfResourceExists();
-
-			if (null === $figure)
+			if (!$figure)
 			{
-				continue;
+				$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
+				$figureMeta = new Metadata(array_filter(array(
+					Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
+					Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
+					Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
+				)));
+
+				$figure = System::getContainer()->get('contao.image.studio')->createFigureBuilder()
+					->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls)
+					->setSize($this->imgSize)
+					->setMetadata($figureMeta)
+					->setLinkHref($result['url'])
+					->buildIfResourceExists();
+
+				if (null === $figure)
+				{
+					continue;
+				}
 			}
 
 			$template->hasImage = true;
@@ -319,5 +323,26 @@ class ModuleSearch extends Module
 
 			return;
 		}
+	}
+
+	private function buildFigureFromId(string|null $id, string $url): Figure|null
+	{
+		if (!$id || !str_starts_with($id, '#/schema/image/'))
+		{
+			return null;
+		}
+
+		$uuid = substr($id, \strlen('#/schema/image/'));
+
+		if (!Validator::isStringUuid($uuid))
+		{
+			return null;
+		}
+
+		return System::getContainer()->get('contao.image.studio')->createFigureBuilder()
+			->fromUuid($uuid)
+			->setSize($this->imgSize)
+			->setLinkHref($url)
+			->buildIfResourceExists();
 	}
 }
