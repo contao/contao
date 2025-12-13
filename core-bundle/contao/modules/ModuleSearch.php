@@ -325,7 +325,7 @@ class ModuleSearch extends Module
 		}
 	}
 
-	private function buildFigureFromId(string|null $id, string $url, Metadata|null $metadata): Figure|null
+	private function buildFigureFromId(string|null $id, string $url, Metadata $metadata): Figure|null
 	{
 		if (!$id || !str_starts_with($id, '#/schema/image/'))
 		{
