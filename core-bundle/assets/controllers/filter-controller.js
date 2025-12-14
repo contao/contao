@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    #filterMap = new Map()
+    #filterMap = new Map();
 
     static targets = ['count', 'filter'];
 
@@ -18,7 +18,7 @@ export default class extends Controller {
         let value = filter.value ?? null;
 
         if (!value && filter.classList.contains('tl_select_wrapper')) {
-            let name = `tl_${filter.firstElementChild.name}`;
+            const name = `tl_${filter.firstElementChild.name}`;
             value = filter.firstElementChild?.value;
 
             // The select filters use their name as their default value
@@ -41,7 +41,7 @@ export default class extends Controller {
 
     updateCount(el) {
         let target = el.currentTarget;
-        let value = target.value;
+        const value = target.value;
 
         if (!this.#filterMap.has(target)) {
             // Could be wrapped by choices
@@ -63,7 +63,7 @@ export default class extends Controller {
         let count = 0;
 
         for (const value of this.#filterMap.values()) {
-            if (!!value) {
+            if (value) {
                 count++;
             }
         }
