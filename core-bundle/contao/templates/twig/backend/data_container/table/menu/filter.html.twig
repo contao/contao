@@ -8,7 +8,9 @@
             name: filter.name,
             options: filter.options,
             active: filter.active,
-            select_attributes: attrs().set('data-placeholder', filter.placeholder),
+            title: filter.placeholder,
+            select_wrapper_attributes: attrs().set('data-contao--filter-target', 'filter'),
+            select_attributes: attrs().set('data-action', 'contao--filter#updateCount'),
         }) }}
     {% endfor %}
 </div>

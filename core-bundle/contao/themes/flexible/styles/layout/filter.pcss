@@ -81,16 +81,32 @@
 }
 
 .filter_apply {
-    background-image: url("icons/filter-apply.svg");
+    background-image: var(--icon-filter);
 }
 
 .filter_reset {
-    background-image: url("icons/filter-reset.svg");
+    background-image: var(--icon-filter--active);
 }
 
 .filter_reset[disabled] {
     opacity: .6;
     cursor: not-allowed;
+}
+
+[data-contao--filter-target="count"] {
+    font-size: .6rem;
+    color: var(--text);
+    background: var(--nav-current);
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16px;
+    width: 16px;
+
+    &:empty {
+        display: none;
+    }
 }
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
@@ -129,7 +145,7 @@
         z-index: 2;
         bottom: 0;
         background: var(--content-bg);
-        width: 280px;
+        width: max(280px, 65vw);
         transform: translateX(280px);
         visibility: hidden;
         transition: transform .2s ease, visibility .2s ease;

@@ -22,6 +22,15 @@
     .mergeWith(containerAttributes|default)
 -%}
 
+{%- set mainAttributes = attrs()
+    .addClass('bmain')
+    .set('aria-labelledby', 'main_headline')
+    .set('data-controller', 'contao--toggle-state contao--filter')
+    .set('data-action', 'keydown.esc@document->contao--toggle-state#close')
+    .set('data-contao--toggle-state-active-class', 'filter-active')
+    .mergeWith(mainAttributes|default)
+-%}
+
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
 <head>
@@ -103,14 +112,14 @@
         {% endblock %}
 
         {% block main %}
-            <main id="main" aria-labelledby="main_headline">
+            <main id="main"{{ mainAttributes }}>
                 {% block main_headline %}
                     <h1 id="main_headline">
                         {{ headline|raw }}
                         {{ toggleFavorites|raw }}
                     </h1>
                 {% endblock %}
-                <div class="content">
+                <div class="content" data-contao--toggle-state-target="controls">
                     {% if pickerMenu|default %}
                         <div id="picker-menu">
                             {{ pickerMenu|raw }}

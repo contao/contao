@@ -27,10 +27,9 @@ $this->containerAttributes = $this
 
 $this->mainAttributes = $this
     ->attrs($this->attributes)
-    ->set('id', 'main')
     ->addClass('be_main')
     ->set('aria-labelledby', 'main_headline')
-    ->set('data-controller', 'contao--toggle-state')
+    ->set('data-controller', 'contao--toggle-state contao--filter')
     ->set('data-action', 'keydown.esc@document->contao--toggle-state#close')
     ->set('data-contao--toggle-state-active-class', 'filter-active')
     ->mergeWith($this->mainAttributes)
@@ -117,7 +116,7 @@ $this->mainAttributes = $this
       <?php $this->endblock(); ?>
 
       <?php $this->block('main'); ?>
-        <main<?= $this->mainAttributes ?>>
+        <main id="main"<?= $this->mainAttributes ?>>
           <?php $this->block('main_headline'); ?>
             <h1 id="main_headline">
               <?= $this->headline ?>

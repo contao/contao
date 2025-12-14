@@ -2469,10 +2469,10 @@
         <source>Collapse all nodes</source>
       </trans-unit>
       <trans-unit id="DCA.toggleFilter.0">
-        <source>Toggle filter</source>
+        <source>Filter</source>
       </trans-unit>
       <trans-unit id="DCA.toggleFilter.1">
-        <source>Expand the filter panel</source>
+        <source>Show the filters</source>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>

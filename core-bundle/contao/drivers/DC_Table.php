@@ -5539,7 +5539,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'options' => array(
 					array(
 						'value' => 'tl_' . $field,
-						'label' => '---',
+						'label' => '-',
 						'selected' => false,
 					),
 					...$options,
