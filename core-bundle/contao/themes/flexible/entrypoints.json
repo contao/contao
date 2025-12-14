@@ -2,47 +2,47 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/backend.css"
+        "/system/themes/flexible/backend.cbc5c24d.css"
       ]
     },
     "confirm": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/confirm.css"
+        "/system/themes/flexible/confirm.f6c5ed63.css"
       ]
     },
     "conflict": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/conflict.css"
+        "/system/themes/flexible/conflict.d8e42f88.css"
       ]
     },
     "diff": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/diff.css"
+        "/system/themes/flexible/diff.fab7002c.css"
       ]
     },
     "help": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/help.css"
+        "/system/themes/flexible/help.be1da566.css"
       ]
     },
     "login": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/login.css"
+        "/system/themes/flexible/login.b17996a9.css"
       ]
     },
     "popup": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/popup.css"
+        "/system/themes/flexible/popup.7c219cb6.css"
       ]
     },
     "tinymce": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/tinymce.css"
+        "/system/themes/flexible/tinymce.ccadfafb.css"
       ]
     },
     "tinymce-dark": {
       "css": [
-        "https://localhost:8080/core-bundle/contao/themes/flexible/tinymce-dark.css"
+        "/system/themes/flexible/tinymce-dark.cd40a4bf.css"
       ]
     }
   }
