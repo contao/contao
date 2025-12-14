@@ -22,7 +22,7 @@
         .content:has(>.content-filter),
         .content > .tree-view:has(>.content-filter) {
             display: grid;
-            grid-template-columns: auto var(--filter-width, 240px);
+            grid-template-columns: calc(100% - var(--filter-width, 240px)) var(--filter-width, 240px);
             grid-template-areas: "listing filter";
 
             > .content-filter {
@@ -31,6 +31,11 @@
 
             > *:not(.content-filter, .operations) {
                 grid-area: listing;
+
+                /* Do not autogrow ultra long <tables> */
+                .list_view {
+                    overflow-x: auto;
+                }
             }
 
             > .operations, > #picker-menu {
@@ -42,11 +47,6 @@
                 grid-template-areas: "top filter"
                                      "listing filter";
             }
-        }
-
-        /* Do not autogrow ultra long <tables> */
-        .content-inner {
-            overflow-x: auto;
         }
     }
 }
