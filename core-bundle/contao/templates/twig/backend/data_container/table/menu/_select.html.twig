@@ -1,0 +1,24 @@
+{% if title is defined %}
+    <label for="{{ name }}"><strong>{{ title }}:</strong></label>
+{% endif %}
+
+<div class="tl_select_wrapper" data-controller="contao--choices">
+    {% set select_attributes = attrs()
+        .set('name', name)
+        .set('id', name)
+        .addClass('tl_select')
+        .addClass('active', active|default)
+        .mergeWith(select_attributes|default)
+    %}
+    <select{{ select_attributes }}>
+        {% for option in options %}
+            {% set option_attributes = attrs()
+                .set('value', option.value)
+                .set('selected', option.selected)
+            %}
+            {% block option %}
+                <option{{ option_attributes }}>{{ option.label }}</option>
+            {% endblock %}
+        {% endfor %}
+    </select>
+</div>

@@ -49,13 +49,13 @@ class BackendSearchTest extends TestCase
     {
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
-            $this->createMock(EngineInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(MessageBusInterface::class),
-            $this->createMock(Jobs::class),
+            $this->createStub(Security::class),
+            $this->createStub(EngineInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(MessageBusInterface::class),
+            $this->createStub(Jobs::class),
             $this->createWebworkerWithCliRunning(),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $this->assertTrue($backendSearch->isAvailable());
@@ -69,7 +69,7 @@ class BackendSearchTest extends TestCase
             ->withJobId('foobar')
         ;
 
-        $reindexProvider = $this->createMock(SealReindexProvider::class);
+        $reindexProvider = $this->createStub(SealReindexProvider::class);
 
         $engine = $this->createMock(EngineInterface::class);
         $engine
@@ -116,11 +116,11 @@ class BackendSearchTest extends TestCase
         ;
 
         $backendSearch = new BackendSearch(
-            [$this->createMock(ProviderInterface::class)],
-            $this->createMock(Security::class),
+            [$this->createStub(ProviderInterface::class)],
+            $this->createStub(Security::class),
             $engine,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(MessageBusInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(MessageBusInterface::class),
             $jobs,
             $this->createWebworkerWithCliRunning(),
             $reindexProvider,
@@ -142,7 +142,7 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(static fn (ReindexMessage $message): bool => '2024-01-01T00:00:00+00:00' === $message->getReindexConfig()->getUpdateSince()->format(\DateTimeInterface::ATOM) && ['foo' => ['bar']] === $message->getReindexConfig()->getLimitedDocumentIds()->toArray()))
-            ->willReturn(new Envelope($this->createMock(ReindexMessage::class)))
+            ->willReturn(new Envelope($this->createStub(ReindexMessage::class)))
         ;
 
         $jobs = $this->createMock(Jobs::class);
@@ -155,13 +155,13 @@ class BackendSearchTest extends TestCase
 
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
-            $this->createMock(EngineInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(EngineInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
             $messageBus,
             $jobs,
             $this->createWebworkerWithCliRunning(),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $backendSearch->reindex($reindexConfig);
@@ -234,10 +234,10 @@ class BackendSearchTest extends TestCase
             $security,
             $engine,
             $eventDispatcher,
-            $this->createMock(MessageBusInterface::class),
-            $this->createMock(Jobs::class),
+            $this->createStub(MessageBusInterface::class),
+            $this->createStub(Jobs::class),
             $this->createWebworkerWithCliRunning(),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(SealReindexProvider::class),
         );
 
         // Test search without "type" -> should return type facets
@@ -312,7 +312,7 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['type' => ['42']] === $message->getGroupedDocumentIds()->toArray()))
-            ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
+            ->willReturn(new Envelope($this->createStub(DeleteDocumentsMessage::class)))
         ;
 
         $backendSearch = new BackendSearch(
@@ -321,9 +321,9 @@ class BackendSearchTest extends TestCase
             $engine,
             $eventDispatcher,
             $messageBus,
-            $this->createMock(Jobs::class),
+            $this->createStub(Jobs::class),
             $this->createWebworkerWithCliRunning(),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $result = $backendSearch->search(new Query(20, 'search me'));
@@ -350,13 +350,13 @@ class BackendSearchTest extends TestCase
 
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
+            $this->createStub(Security::class),
             $engine,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(MessageBusInterface::class),
-            $this->createMock(Jobs::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(MessageBusInterface::class),
+            $this->createStub(Jobs::class),
             $this->createWebworkerWithCliRunning(),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $backendSearch->deleteDocuments($documentTypesAndIds, false);
@@ -374,18 +374,18 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(static fn (DeleteDocumentsMessage $message) => $documentTypesAndIds->toArray() === $message->getGroupedDocumentIds()->toArray()))
-            ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
+            ->willReturn(new Envelope($this->createStub(DeleteDocumentsMessage::class)))
         ;
 
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
-            $this->createMock(EngineInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(EngineInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
             $messageBus,
-            $this->createMock(Jobs::class),
+            $this->createStub(Jobs::class),
             $this->createWebworkerWithCliRunning(),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $backendSearch->deleteDocuments($documentTypesAndIds);
@@ -393,7 +393,7 @@ class BackendSearchTest extends TestCase
 
     private function createWebworkerWithCliRunning(): WebWorker
     {
-        $webWorker = $this->createMock(WebWorker::class);
+        $webWorker = $this->createStub(WebWorker::class);
         $webWorker
             ->method('hasCliWorkersRunning')
             ->willReturn(true)

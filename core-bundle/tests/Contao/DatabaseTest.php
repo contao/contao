@@ -31,13 +31,13 @@ class DatabaseTest extends ContaoTestCase
 
     public function testTableAndDatabaseCacheDoNotCollide(): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('listTableNames')
             ->willReturn(['samename'])
         ;
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('columnCount')
             ->willReturn(1)
@@ -55,7 +55,7 @@ class DatabaseTest extends ContaoTestCase
             )
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('getDatabase')
             ->willReturn('samename')

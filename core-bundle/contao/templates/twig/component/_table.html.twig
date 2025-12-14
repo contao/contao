@@ -47,8 +47,8 @@
         all directly in the context. Grouping under an object has precedence.
 #}
 
-{% trans_default_domain "contao_default" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {% block table_component %}
     {% set table = table|default(_context) %}
@@ -65,7 +65,7 @@
                See https://github.com/tristen/tablesort for more details. #}
             {% do table_attributes.set(
                 'data-sortable-table',
-                tablesort_option|default({})|merge({descending: sorting.order == 'desc'})|json_encode
+                tablesort_option|default({})|merge({descending: sorting.order == 'desc'})|json_encode,
             ) %}
         {% endif %}
         <table{% block table_attributes %}{{ table_attributes }}{% endblock %}>
@@ -149,7 +149,7 @@
 
     {% block table_script %}
         {% if sorting %}
-            {% add "tablesort_script" to body %}
+            {% add 'tablesort_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
                     .mergeWith(script_attributes|default)
@@ -199,7 +199,7 @@
         {% if sorting %}
             {% set tablesort_css_file = asset('css/tablesort.min.css', 'contao-components/tristen-tablesort') %}
 
-            {% add "tablesort_css" to stylesheets %}
+            {% add 'tablesort_css' to stylesheets %}
                 {% with {file: tablesort_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
             {% endadd %}
         {% endif %}

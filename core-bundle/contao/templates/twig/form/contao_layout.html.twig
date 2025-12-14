@@ -1,5 +1,5 @@
-{% trans_default_domain "contao_default" %}
-{% use "form_div_layout.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% use 'form_div_layout.html.twig' %}
 
 {# Misc #}
 {%- block form_errors -%}
@@ -22,7 +22,7 @@
 {# Labels #}
 {%- block form_label -%}
     {%- if required -%}
-        {% set label_attr = label_attr|merge({'class': 'mandatory'}) %}
+        {% set label_attr = label_attr|merge({class: 'mandatory'}) %}
     {%- endif -%}
 
     {{ parent() }}

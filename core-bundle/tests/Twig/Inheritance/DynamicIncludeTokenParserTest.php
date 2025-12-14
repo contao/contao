@@ -35,7 +35,7 @@ class DynamicIncludeTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicIncludeTokenParser($this->createMock(ContaoFilesystemLoader::class));
+        $tokenParser = new DynamicIncludeTokenParser($this->createStub(ContaoFilesystemLoader::class));
 
         $this->assertSame('include', $tokenParser->getTag());
     }
@@ -43,7 +43,7 @@ class DynamicIncludeTokenParserTest extends TestCase
     #[DataProvider('provideSources')]
     public function testHandlesContaoIncludes(string $code, string ...$expectedStrings): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
             ->willReturnCallback(
@@ -62,7 +62,7 @@ class DynamicIncludeTokenParserTest extends TestCase
             )
         ;
 
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
 
         $source = new Source($code, 'template.html.twig');
@@ -106,11 +106,17 @@ class DynamicIncludeTokenParserTest extends TestCase
             "{% include ['@Contao/missing.html.twig', '@Contao/bar.html.twig'] %}",
             '@Contao/missing.html.twig', '<bar-template>',
         ];
+
+        yield 'optional Contao include, explicitly allowed to fail' => [
+            // If explicitly allowed to be missing, a Contao include must not fail
+            "foo{% include '@Contao/missing.html.twig' ignore missing %}",
+            'foo',
+        ];
     }
 
     public function testHandlesContaoIncludesWithThemeDifferentContexts(): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
             ->with('foo.html.twig')
@@ -132,9 +138,9 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment->addExtension(new ContaoExtension(
             $environment,
             $filesystemLoader,
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         ));
 
         $this->assertSame('<foo-theme>', $environment->render('template.twig'));
@@ -142,14 +148,14 @@ class DynamicIncludeTokenParserTest extends TestCase
 
     public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
             ->with('foo')
             ->willThrowException(new \LogicException('<original message>'))
         ;
 
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
 
         // Use a conditional expression here, so that we can test rethrowing exceptions
@@ -167,8 +173,8 @@ class DynamicIncludeTokenParserTest extends TestCase
     #[DataProvider('provideTokens')]
     public function testParsesArguments(string $source, AbstractExpression|null $variables, bool $only, bool $ignoreMissing): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicIncludeTokenParser($this->createMock(ContaoFilesystemLoader::class)));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($this->createStub(ContaoFilesystemLoader::class)));
 
         $tokenStream = (new Lexer($environment))->tokenize(new Source($source, 'foo.html.twig'));
         $parser = new Parser($environment);

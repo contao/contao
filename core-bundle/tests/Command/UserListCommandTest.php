@@ -34,7 +34,7 @@ class UserListCommandTest extends TestCase
 
     public function testDefinition(): void
     {
-        $command = $this->getCommand($this->createMock(QueryBuilder::class));
+        $command = $this->getCommand($this->createStub(QueryBuilder::class));
 
         $this->assertNotEmpty($command->getDescription());
 
@@ -146,7 +146,7 @@ class UserListCommandTest extends TestCase
 
     private function getCommand(QueryBuilder $queryBuilder): UserListCommand
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createQueryBuilder')
             ->willReturn($queryBuilder)

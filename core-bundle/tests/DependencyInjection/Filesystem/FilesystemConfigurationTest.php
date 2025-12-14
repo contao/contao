@@ -32,7 +32,7 @@ class FilesystemConfigurationTest extends TestCase
 {
     public function testGetContainer(): void
     {
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
         $config = new FilesystemConfiguration($container);
 
         $this->assertSame($container, $config->getContainer());
@@ -193,7 +193,7 @@ class FilesystemConfigurationTest extends TestCase
     public function testRegisterDbafs(): void
     {
         $container = $this->getContainerBuilder();
-        $dbafsDefinition = $this->createMock(Definition::class);
+        $dbafsDefinition = $this->createStub(Definition::class);
 
         $config = new FilesystemConfiguration($container);
         $config->registerDbafs($dbafsDefinition, 'foo/bar');

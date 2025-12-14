@@ -11,7 +11,7 @@ $this->wrapperAttributes = $this
 
 <section<?= $this->wrapperAttributes ?>>
 
-  <div class="<?= $this->toggler ?>"<?php if ($this->headlineStyle): ?> style="<?= $this->headlineStyle ?>"<?php endif; ?>>
+  <div<?= $this->attrs()->addClass($this->toggler)->addStyle($this->headlineStyle) ?>>
     <?= $this->headline ?>
   </div>
 

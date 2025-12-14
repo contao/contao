@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_tl_undo" %}
+{% trans_default_domain 'contao_tl_undo' %}
 
 <div class="tl_undo_header">
     <div class="tstamp">
@@ -21,12 +21,12 @@
 {% if preview is not empty %}
     <div class="tl_undo_preview">
         {% if preview is not iterable %}
-            {{ preview|raw }}
+            {{ preview|sanitize_html('contao') }}
         {% else %}
             <table>
                 <tr>
                     {% for value in preview %}
-                        <td>{{ value|raw }}</td>
+                        <td>{{ value|sanitize_html('contao') }}</td>
                     {% endfor %}
                 </tr>
             </table>

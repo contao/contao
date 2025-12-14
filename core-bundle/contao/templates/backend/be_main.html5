@@ -19,6 +19,12 @@ $this->bodyAttributes = $this
     ->mergeWith($this->bodyAttributes)
 ;
 
+$this->containerAttributes = $this
+    ->attr()
+    ->addClass($this->containerClass)
+    ->mergeWith($this->containerAttributes)
+;
+
 $this->mainAttributes = $this
     ->attrs($this->attributes)
     ->set('id', 'main')
@@ -95,7 +101,7 @@ $this->mainAttributes = $this
   <?php $this->endblock(); ?>
 
   <?php $this->block('container'); ?>
-    <div id="container">
+    <div id="container"<?= $this->containerAttributes ?>>
 
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>

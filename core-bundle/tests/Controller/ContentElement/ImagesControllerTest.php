@@ -25,7 +25,7 @@ class ImagesControllerTest extends ContentElementTestCase
 {
     public function testOutputsSingleImage(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
 
         $paginationFactory = $this->createMock(PaginationFactoryInterface::class);
         $paginationFactory
@@ -60,7 +60,7 @@ class ImagesControllerTest extends ContentElementTestCase
 
     public function testOutputsGallery(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
 
         $paginationFactory = $this->createMock(PaginationFactoryInterface::class);
         $paginationFactory
@@ -108,7 +108,7 @@ class ImagesControllerTest extends ContentElementTestCase
 
     public function testIgnoresInvalidTypes(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
 
         $paginationFactory = $this->createMock(PaginationFactoryInterface::class);
         $paginationFactory
@@ -150,7 +150,7 @@ class ImagesControllerTest extends ContentElementTestCase
 
     public function testDoesNotOutputAnythingWithoutImages(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
 
         $paginationFactory = $this->createMock(PaginationFactoryInterface::class);
         $paginationFactory
@@ -185,7 +185,7 @@ class ImagesControllerTest extends ContentElementTestCase
 
     public function testIgnoresMissingImages(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
 
         $paginationFactory = $this->createMock(PaginationFactoryInterface::class);
         $paginationFactory
@@ -227,7 +227,7 @@ class ImagesControllerTest extends ContentElementTestCase
 
     public function testOutputsPagination(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
 
         $items = [
             new FilesystemItem(true, 'image1.jpg', null, null, 'image/jpeg'),
