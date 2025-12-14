@@ -31,7 +31,7 @@ class BackendMainListenerTest extends TestCase
             ->willReturn($this->getNavigation())
         ;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -110,7 +110,7 @@ class BackendMainListenerTest extends TestCase
 
     public function testDoesNotBuildTheMainMenuIfNoUserIsGiven(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -135,7 +135,7 @@ class BackendMainListenerTest extends TestCase
 
     public function testDoesNotBuildTheMainMenuIfTheNameDoesNotMatch(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)

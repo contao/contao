@@ -24,7 +24,7 @@ class StorageTest extends TestCase
         $item = new CacheItem();
         $item->set(['foo' => ['a']]);
 
-        $adapter = $this->createMock(AdapterInterface::class);
+        $adapter = $this->createStub(AdapterInterface::class);
         $adapter
             ->method('getItem')
             ->with('contao.twig.inspector')

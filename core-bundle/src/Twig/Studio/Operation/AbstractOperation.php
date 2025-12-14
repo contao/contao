@@ -60,12 +60,12 @@ abstract class AbstractOperation extends AbstractController implements Operation
     {
         $services = parent::getSubscribedServices();
 
-        $services['twig'] = '?'.Environment::class;
-        $services['contao.twig.filesystem_loader'] = '?'.ContaoFilesystemLoader::class;
-        $services['contao.filesystem.virtual.user_templates'] = '?'.VirtualFilesystemInterface::class;
-        $services['contao.twig.studio.template_skeleton_factory'] = '?'.TemplateSkeletonFactory::class;
-        $services['contao.twig.finder_factory'] = '?'.FinderFactory::class;
-        $services['contao.twig.studio.cache_invalidator'] = '?'.CacheInvalidator::class;
+        $services['twig'] = Environment::class;
+        $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
+        $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;
+        $services['contao.twig.studio.template_skeleton_factory'] = TemplateSkeletonFactory::class;
+        $services['contao.twig.finder_factory'] = FinderFactory::class;
+        $services['contao.twig.studio.cache_invalidator'] = CacheInvalidator::class;
 
         return $services;
     }

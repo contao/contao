@@ -20,11 +20,13 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\EmptyInsertTag;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\Model;
 use Contao\Model\MetadataTrait;
 use Contao\System;
+use Contao\TemplateLoader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -36,7 +38,7 @@ class MetadataTest extends TestCase
         parent::setUp();
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -47,9 +49,16 @@ class MetadataTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANGUAGE']);
 
-        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
+        $this->resetStaticProperties([
+            Config::class,
+            ContaoFramework::class,
+            DcaExtractor::class,
+            DcaLoader::class,
+            System::class,
+            TemplateLoader::class,
+        ]);
 
         parent::tearDown();
     }
@@ -123,8 +132,13 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromContentModel(): void
     {
-        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
+        $container = $this->getContainerWithFixtures();
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
+        System::setContainer($container);
+
+        $model = new ContentModel();
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
@@ -148,8 +162,9 @@ class MetadataTest extends TestCase
 
     public function testDoesNotCreateMetadataContainerFromContentModelIfOverwriteIsDisabled(): void
     {
-        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
+        System::setContainer($this->getContainerWithFixtures());
 
+        $model = new ContentModel();
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
@@ -162,8 +177,13 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromFilesModel(): void
     {
-        $model = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+        $container = $this->getContainerWithFixtures();
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
+        System::setContainer($container);
+
+        $model = new FilesModel();
         $model->setRow([
             'id' => 100,
             'name' => 'test',

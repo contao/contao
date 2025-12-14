@@ -46,7 +46,7 @@ class ReindexMessageHandlerTest extends TestCase
             )
         ;
 
-        $messageHandler = new ReindexMessageHandler($backendSearch, $this->createMock(Jobs::class));
+        $messageHandler = new ReindexMessageHandler($backendSearch, $this->createStub(Jobs::class));
         $messageHandler($message);
     }
 
@@ -79,7 +79,7 @@ class ReindexMessageHandlerTest extends TestCase
                 }))
         ;
 
-        $messageHandler = new ReindexMessageHandler($this->createMock(BackendSearch::class), $jobs);
+        $messageHandler = new ReindexMessageHandler($this->createStub(BackendSearch::class), $jobs);
         $messageHandler($message);
     }
 }

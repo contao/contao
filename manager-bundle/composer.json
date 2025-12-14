@@ -45,6 +45,7 @@
         "symfony/dependency-injection": "^7.4",
         "symfony/deprecation-contracts": "^3.0",
         "symfony/doctrine-bridge": "^7.4",
+        "symfony/doctrine-messenger": "^7.4",
         "symfony/dotenv": "^7.4",
         "symfony/error-handler": "^7.4",
         "symfony/expression-language": "^7.4",

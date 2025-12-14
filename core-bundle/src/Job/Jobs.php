@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Job;
 use Contao\BackendUser;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Messenger\Message\JobIdAwareMessageInterface;
 use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -16,6 +17,7 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatableMessage;
@@ -30,6 +32,7 @@ class Jobs
         private readonly Security $security,
         private readonly VirtualFilesystemInterface $jobAttachmentsStorage,
         private readonly RouterInterface $router,
+        private readonly MessageBusInterface $messageBus,
         private readonly ClockInterface $clock = new NativeClock(),
     ) {
     }
@@ -47,6 +50,12 @@ class Jobs
         }
 
         return $job->getOwner()->getId() === $userId;
+    }
+
+    public function dispatchJob(JobIdAwareMessageInterface $message, Job $job): void
+    {
+        $message->setJobId($job->getUuid());
+        $this->messageBus->dispatch($message);
     }
 
     public function createJob(string $type): Job

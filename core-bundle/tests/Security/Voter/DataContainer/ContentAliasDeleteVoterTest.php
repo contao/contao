@@ -29,7 +29,7 @@ class ContentAliasDeleteVoterTest extends TestCase
     #[DataProvider('voteProvider')]
     public function testVote(array $aliases, CreateAction|DeleteAction|ReadAction|UpdateAction $action, bool $granted): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchAllKeyValue')
             ->with("SELECT cteAlias, TRUE FROM tl_content WHERE type = 'alias' GROUP BY cteAlias")
@@ -37,7 +37,7 @@ class ContentAliasDeleteVoterTest extends TestCase
         ;
 
         $voter = new ContentAliasDeleteVoter($connection);
-        $result = $voter->vote($this->createMock(TokenInterface::class), $action, [ContaoCorePermissions::DC_PREFIX.$action->getDataSource()]);
+        $result = $voter->vote($this->createStub(TokenInterface::class), $action, [ContaoCorePermissions::DC_PREFIX.$action->getDataSource()]);
 
         $this->assertSame($granted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED, $result);
     }

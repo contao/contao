@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 				'id' => 'primary',
 				'tstamp' => 'index',
 				'token' => 'unique',
-				'removeOn' => 'index'
+				'removeOn,confirmedOn' => 'index'
 			)
 		)
 	),
@@ -207,6 +207,6 @@ class tl_opt_in extends Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : '';
+		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['removeOn'] > time()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : '';
 	}
 }

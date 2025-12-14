@@ -30,8 +30,8 @@ abstract class AbstractBackendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['request_stack'] = '?'.RequestStack::class;
-        $services['contao.twig.interop.context_factory'] = '?'.ContextFactory::class;
+        $services['request_stack'] = RequestStack::class;
+        $services['contao.twig.interop.context_factory'] = ContextFactory::class;
 
         return $services;
     }
