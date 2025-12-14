@@ -7,7 +7,6 @@
     .set('data-controller', 'contao--choices')
     .mergeWith(select_wrapper_attributes|default)
 %}
-
 <div{{ select_wrapper_attributes }}>
     {% set select_attributes = attrs()
         .set('name', name)

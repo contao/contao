@@ -22,14 +22,15 @@
     .mergeWith(containerAttributes|default)
 -%}
 
-{%- set mainAttributes = attrs()
-    .addClass('bmain')
+{% set mainAttributes = attrs()
+    .set('id', 'main')
+    .addClass('be_main')
     .set('aria-labelledby', 'main_headline')
     .set('data-controller', 'contao--toggle-state contao--filter')
     .set('data-action', 'keydown.esc@document->contao--toggle-state#close')
     .set('data-contao--toggle-state-active-class', 'filter-active')
     .mergeWith(mainAttributes|default)
--%}
+%}
 
 <!DOCTYPE html>
 <html{{ rootAttributes }}>

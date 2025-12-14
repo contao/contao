@@ -26,7 +26,8 @@ $this->containerAttributes = $this
 ;
 
 $this->mainAttributes = $this
-    ->attrs($this->attributes)
+    ->attrs()
+    ->set('id', 'main')
     ->addClass('be_main')
     ->set('aria-labelledby', 'main_headline')
     ->set('data-controller', 'contao--toggle-state contao--filter')
