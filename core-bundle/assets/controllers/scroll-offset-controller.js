@@ -127,10 +127,6 @@ export default class extends Controller {
         input.focus();
     }
 
-    autoFocusTargetDisconnected() {
-        this.#autoFocus = false;
-    }
-
     widgetErrorTargetConnected() {
         this.widgetErrorTarget.scrollIntoView({
             behavior: 'smooth',
