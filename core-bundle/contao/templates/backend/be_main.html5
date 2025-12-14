@@ -117,7 +117,7 @@ $this->mainAttributes = $this
       <?php $this->endblock(); ?>
 
       <?php $this->block('main'); ?>
-        <main id="main"<?= $this->mainAttributes ?>>
+        <main<?= $this->mainAttributes ?>>
           <?php $this->block('main_headline'); ?>
             <h1 id="main_headline">
               <?= $this->headline ?>
