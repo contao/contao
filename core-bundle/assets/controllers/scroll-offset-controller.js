@@ -131,7 +131,7 @@ export default class extends Controller {
         this.#autoFocus = false;
     }
 
-    widgetErrorTargetConnected() {x
+    widgetErrorTargetConnected() {
         this.widgetErrorTarget.scrollIntoView({
             behavior: 'smooth',
             block: 'start',
