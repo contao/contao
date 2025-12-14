@@ -4,7 +4,8 @@
     <ul>
         {% for job in jobs %}
             <li>
-                {{ ('jobs.typeLabel.' ~ job.type)|trans }} ({{ job.status.label|trans }} - {{ job.createdAt|date(contao.datim_format) }})
+                {{ include('@Contao/backend/jobs/_progress.html.twig', {progress: job.progress}) }}
+                {{ ('jobs.typeLabel.' ~ job.type)|trans }}
             </li>
         {% endfor %}
     </ul>

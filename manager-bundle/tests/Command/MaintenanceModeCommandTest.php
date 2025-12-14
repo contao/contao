@@ -76,8 +76,8 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
             $twig,
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 
@@ -98,9 +98,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 
@@ -122,9 +122,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class), $filesystem);
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -144,9 +144,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 
@@ -168,9 +168,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 

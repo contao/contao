@@ -34,7 +34,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -65,7 +65,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->with($path, '<updated code>')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -94,7 +94,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createStub(Environment::class);
 
         $operation = $this->getSaveOperation($storage, $twig);
         $context = $this->getOperationContext('content_element/existing_user_template');
@@ -115,7 +115,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ),
         );
 
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->willReturnMap([

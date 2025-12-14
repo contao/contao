@@ -39,9 +39,9 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
     public function testSetsDefaultTypeIfUserHasLimitedAccess(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -49,7 +49,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_module']['fields']['type']['sql']['default'] = 'text';
 
-        $listener = new FrontendModulePermissionsListener($security, $this->createMock(Connection::class));
+        $listener = new FrontendModulePermissionsListener($security, $this->createStub(Connection::class));
         $listener->setDefaultType();
 
         $this->assertSame('navigation', $GLOBALS['TL_DCA']['tl_module']['fields']['type']['default']);
@@ -57,9 +57,9 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
     public function testGetFrontendModuleOptions(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1, 'isAdmin' => false, 'frontendModules' => ['navigation']]);
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -74,7 +74,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new FrontendModulePermissionsListener($security, $this->createMock(Connection::class));
+        $listener = new FrontendModulePermissionsListener($security, $this->createStub(Connection::class));
 
         $this->assertSame(
             [
@@ -87,7 +87,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
 
     public function testFilterFrontendModuleOptions(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, [
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, [
             'id' => 1,
             'isAdmin' => false,
             'frontendModules' => ['navigation'],
@@ -108,7 +108,7 @@ class FrontendModulePermissionsListenerTest extends TestCase
             ])
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchAllAssociative')
             ->willReturn([

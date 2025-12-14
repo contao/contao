@@ -371,7 +371,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 	}
 
-	private function render(string $component, array $parameters): string
+	/**
+	 * @internal
+	 */
+	protected function render(string $component, array $parameters): string
 	{
 		$defaultParameters = array(
 			'table' => $this->table,
@@ -2108,6 +2111,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate = new BackendTemplate('be_conflict');
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
+				$objTemplate->host = Backend::getDecodedHostname();
 				$objTemplate->theme = Backend::getTheme();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
@@ -2245,7 +2249,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
 		}
 
-		$parameters['back_button'] = Input::get('nb')
+		$parameters['global_operations'] = Input::get('nb')
 			? null
 			: System::getContainer()
 				->get('contao.data_container.global_operations_builder')
@@ -2303,7 +2307,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$parameters = array(
 			'ids' => $ids,
 			'add_jump_targets' => \count($ids) < min(Config::get('resultsPerPage') ?? 30, 50),
-			'back_button' => System::getContainer()
+			'global_operations' => System::getContainer()
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton(),
@@ -2666,7 +2670,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters = array(
 			'ids' => $ids,
-			'back_button' => System::getContainer()
+			'global_operations' => System::getContainer()
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton(),

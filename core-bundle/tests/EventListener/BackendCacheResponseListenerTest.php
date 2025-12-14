@@ -29,7 +29,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $response = new Response();
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::SUB_REQUEST,
             $response,
@@ -45,7 +45,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $response = new Response();
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -61,7 +61,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $response = new Response();
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -82,7 +82,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -103,7 +103,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -124,7 +124,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,
