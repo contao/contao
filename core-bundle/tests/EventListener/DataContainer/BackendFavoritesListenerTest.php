@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -52,7 +54,7 @@ class BackendFavoritesListenerTest extends TestCase
         ];
 
         $userId = 2;
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -67,11 +69,10 @@ class BackendFavoritesListenerTest extends TestCase
         $request->query->set('act', 'create');
         $request->query->set('data', base64_encode($url));
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
-        $listener();
+        $listener->enableEditing();
 
         $this->assertFalse($GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable']);
         $this->assertSame([['user = ?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
@@ -94,7 +95,7 @@ class BackendFavoritesListenerTest extends TestCase
         ];
 
         $userId = 2;
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -106,11 +107,10 @@ class BackendFavoritesListenerTest extends TestCase
         $request = new Request();
         $request->query->set('act', 'create');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
-        $listener();
+        $listener->enableEditing();
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable']);
         $this->assertSame([['user = ?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
@@ -131,15 +131,79 @@ class BackendFavoritesListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($this->createStub(UserInterface::class))
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
-        $listener();
+        $listener->enableEditing();
 
         $this->assertSame([['user = ?', 0]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
+    }
+
+    public function testRedirectsBack(): void
+    {
+        $dataContainer = $this->createMock(DataContainer::class);
+        $dataContainer
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'id' => 42,
+                'url' => '/contao?foo=bar',
+            ])
+        ;
+
+        $request = new Request();
+        $request->query->set('return', '1');
+        $request->request->set('saveNclose', '1');
+
+        $requestStack = new RequestStack([$request]);
+
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
+        $redirect = null;
+
+        try {
+            $listener->redirectBack($dataContainer);
+        } catch (RedirectResponseException $redirect) {
+        }
+
+        $this->assertInstanceOf(RedirectResponseException::class, $redirect);
+        $this->assertSame('/contao?foo=bar', $redirect->getResponse()->headers->get('Location'));
+    }
+
+    public function testDoesNotRedirectOnSave(): void
+    {
+        $dataContainer = $this->createMock(DataContainer::class);
+        $dataContainer
+            ->expects($this->never())
+            ->method('getCurrentRecord')
+        ;
+
+        $request = new Request();
+        $request->query->set('return', '1');
+        $request->request->set('save', '1');
+
+        $requestStack = new RequestStack([$request]);
+
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
+        $listener->redirectBack($dataContainer);
+    }
+
+    public function testDoesNotRedirectWithoutReturnParameter(): void
+    {
+        $dataContainer = $this->createMock(DataContainer::class);
+        $dataContainer
+            ->expects($this->never())
+            ->method('getCurrentRecord')
+        ;
+
+        $request = new Request();
+        $request->request->set('saveNclose', '1');
+
+        $requestStack = new RequestStack([$request]);
+
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
+        $listener->redirectBack($dataContainer);
     }
 }

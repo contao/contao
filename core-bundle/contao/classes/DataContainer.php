@@ -454,7 +454,7 @@ abstract class DataContainer extends Backend
 		}
 
 		/** @var class-string<Widget> $strClass */
-		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
+		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? ''] ?? null;
 
 		// Return if the widget class does not exist
 		if (!class_exists($strClass))
@@ -624,11 +624,6 @@ abstract class DataContainer extends Backend
 			$wizard .= Backend::getDcaPickerWizard($arrAttributes['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
 		}
 
-		if (($arrData['inputType'] ?? null) == 'password')
-		{
-			$wizard .= Backend::getTogglePasswordWizard($this->strInputName);
-		}
-
 		// Add a custom wizard
 		if (\is_array($arrData['wizard'] ?? null))
 		{
@@ -708,6 +703,11 @@ abstract class DataContainer extends Backend
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
+			$objTemplate->theme = Backend::getTheme();
+			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
+			$objTemplate->aceType = Backend::getAceType($type);
+			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
+			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 
@@ -744,7 +744,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $strDescription ?? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
 
-		if (!$return || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'password' || !Config::get('showHelp'))
+		if (!$return || !Config::get('showHelp'))
 		{
 			return '';
 		}
@@ -870,7 +870,7 @@ abstract class DataContainer extends Backend
 			{
 				$icon = Controller::addAssetsUrlTo(Image::getPath($config['icon']));
 				$config['attributes']->addStyle("background-image: url('$icon')");
-				$config['class'] = trim($config['class'] . ' header_icon');
+				$config['class'] = trim(($config['class'] ?? '') . ' header_icon');
 			}
 
 			if (\is_array($config['button_callback'] ?? null))
@@ -998,13 +998,12 @@ abstract class DataContainer extends Backend
 		}
 
 		return \sprintf(
-			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>',
+			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" data-contao--check-all-target="input" data-action="focus->contao--scroll-offset#store contao--check-all#toggleInput" %s%s>',
 			$this->strPickerFieldType,
 			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
 			$id,
 			$this->strPickerFieldType,
 			StringUtil::specialchars(($this->objPickerCallback)($value)),
-			'data-action="focus->contao--scroll-offset#store"',
 			$checked,
 			$attributes
 		);
@@ -1318,82 +1317,11 @@ abstract class DataContainer extends Backend
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
 		$args = array();
 
+		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
+
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			if (str_contains($v, ':'))
-			{
-				list($strKey, $strTable) = explode(':', $v, 2);
-				list($strTable, $strField) = explode('.', $strTable, 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
-					->limit(1)
-					->execute($row[$strKey]);
-
-				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
-			}
-			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
-			{
-				$key = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey'], 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-					->limit(1)
-					->execute($row[$v]);
-
-				$args[$k] = $objRef->numRows ? $objRef->value : '';
-			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
-			{
-				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('dateFormat'), $row[$v]) : '-';
-				}
-				elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('timeFormat'), $row[$v]) : '-';
-				}
-				else
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('datimFormat'), $row[$v]) : '-';
-				}
-			}
-			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null)))
-			{
-				$args[$k] = ($row[$v] ?? null) ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-			}
-			elseif (isset($row[$v]))
-			{
-				$row_v = StringUtil::deserialize($row[$v]);
-
-				if (\is_array($row_v))
-				{
-					$args_k = array();
-
-					foreach ($row_v as $option)
-					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
-					}
-
-					$args[$k] = implode(', ', iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($args_k)), false));
-				}
-				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
-				{
-					$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
-				}
-				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
-				{
-					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]];
-				}
-				else
-				{
-					$args[$k] = $row[$v];
-				}
-			}
-			else
-			{
-				$args[$k] = null;
-			}
+			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
 		}
 
 		// Render the label
@@ -1429,11 +1357,11 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($labelConfig['label_callback']))
 				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
 				}
 				elseif (\is_callable($labelConfig['label_callback']))
 				{
-					$label = $labelConfig['label_callback']($row, $label, $this);
+					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
 			else

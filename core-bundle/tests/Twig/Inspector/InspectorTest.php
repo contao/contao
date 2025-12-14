@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Inspector;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\BlockType;
@@ -22,6 +23,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
@@ -32,28 +34,247 @@ use Twig\Source;
 
 class InspectorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        DeferTokenParser::reset();
+
+        parent::tearDown();
+    }
+
     public function testAnalyzesBlocks(): void
     {
         $templates = [
-            'foo.html.twig' => '{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}',
-            'bar.html.twig' => '',
+            '@Contao_specific/foo.html.twig' => '{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}',
+            '@Contao_specific/bar.html.twig' => '',
         ];
 
-        $information = $this->getInspector($templates)->inspectTemplate('foo.html.twig');
+        $information = $this->getInspector($templates)->inspectTemplate('@Contao/foo.html.twig');
 
-        $this->assertSame('foo.html.twig', $information->getName());
+        $this->assertSame('@Contao_specific/foo.html.twig', $information->getName());
         $this->assertSame(['bar', 'foo'], $information->getBlockNames());
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
     }
 
-    public function testAnalyzesSlots(): void
+    public function testHidesVirtualDeferredBlocks(): void
     {
-        $inspector = $this->getInspector([
-            'template.twig' => '{% slot B %}{% endslot %}{% block foo %}{% slot A %}body{% endslot %}{% slot A %}{% endslot %}{% endblock %}',
-        ]);
+        $templates = [
+            '@Contao_specific/foo.html.twig' => '{% defer %}{% block foo %}[…]{% endblock %}{% enddefer %}',
+        ];
 
-        $information = $inspector->inspectTemplate('template.twig');
-        $this->assertSame(['A', 'B'], $information->getSlots());
+        $information = $this->getInspector($templates)->inspectTemplate('@Contao_specific/foo.html.twig');
+
+        $this->assertSame(['foo'], $information->getBlockNames());
+    }
+
+    #[DataProvider('provideSlotScenarios')]
+    public function testAnalyzesSlots(array $templates, array $expectedSlots): void
+    {
+        $inspector = $this->getInspector($templates);
+
+        foreach ($expectedSlots as $template => $expectedSlotsOfTemplate) {
+            $templateInformation = $inspector->inspectTemplate($template);
+            $this->assertSame(
+                $expectedSlotsOfTemplate,
+                $templateInformation->getSlots(),
+                \sprintf('Template "%s" has slots "%s".', $template, implode(', ', $expectedSlotsOfTemplate)),
+            );
+        }
+    }
+
+    public static function provideSlotScenarios(): iterable
+    {
+        yield 'simple' => [
+            [
+                '@Contao_specific/simple.twig' => <<<'SOURCE'
+                    {# Canonical slot #}
+                    {% slot C %}{% endslot %}
+
+                    {# Duplicate definition #}
+                    {% slot A %}{% endslot %}
+                    {% slot A %}{% endslot %}
+
+                    {# Slot with content #}
+                    {% slot B %}…{% endslot %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/simple.twig' => ['A', 'B', 'C'],
+            ],
+        ];
+
+        yield 'inheritance' => [[
+            '@Contao_specific/base.twig' => <<<'SOURCE'
+                {% block all %}
+                    {% block foo %}
+                        {% block foo_inner %}
+                            {% slot B %}{% endslot %}
+                        {% endblock %}
+                    {% endblock %}
+                    {% block bar %}
+                        {% slot C %}{% endslot %}
+                    {% endblock %}
+                    {% slot A %}{% endslot %}
+                {% endblock %}
+                SOURCE,
+
+            '@Contao_specific/canonical_child.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/base.twig" %}
+                SOURCE,
+
+            '@Contao_specific/child1.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/base.twig" %}
+                {% block foo %}
+                    {# removing slot B by overriding foo while adding slot D #}
+                    {% block baz %}
+                        {% slot D %}{% endslot %}
+                    {% endblock %}
+                {% endblock %}
+                {% block bar %}
+                    {# adding slot E #}
+                    {{ parent() }}
+                    {% slot E %}{% endslot %}
+                {% endblock %}
+                SOURCE,
+
+            '@Contao_specific/child2.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/child1.twig" %}
+                {% block foo %}
+                    {{ parent() }}
+                {% endblock %}
+                {% block bar %}
+                    {{ parent() }}
+                    {% slot F %}{% endslot %}
+                {% endblock %}
+                SOURCE,
+        ],
+            [
+                '@Contao_specific/base.twig' => ['A', 'B', 'C'],
+                '@Contao_specific/canonical_child.twig' => ['A', 'B', 'C'],
+                '@Contao_specific/child1.twig' => ['A', 'C', 'D', 'E'],
+                '@Contao_specific/child2.twig' => ['A', 'C', 'D', 'E', 'F'],
+            ],
+        ];
+
+        yield 'complex nesting chain' => [
+            [
+                '@Contao_specific/a.twig' => <<<'SOURCE'
+                    {% block outer1 %}
+                        {% slot X %}{% endslot %}
+                    {% endblock %}
+                    {% block outer2 %}
+                        {% slot Y %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/b.twig' => <<<'SOURCE'
+                    {% extends "@Contao/a.twig" %}
+                    {% block outer1 %}{% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/c.twig' => <<<'SOURCE'
+                    {% extends "@Contao/b.twig" %}
+                    {% block outer1 %}
+                        {{ parent() }}
+                    {% endblock %}
+                    {% block outer2 %}
+                        {% block inner %}{% endblock %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/d.twig' => <<<'SOURCE'
+                    {% extends "@Contao/c.twig" %}
+                    {% block outer2 %}
+                        {{ parent() }}
+                        {% slot Z %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao/a.twig' => ['X', 'Y'],
+                '@Contao/b.twig' => ['Y'],
+                '@Contao/c.twig' => [],
+                '@Contao/d.twig' => ['Z'],
+            ],
+        ];
+
+        yield 'block function' => [
+            [
+                '@Contao_specific/base.twig' => <<<'SOURCE'
+                    {% block outer %}
+                        {% block inner %}
+                            {% slot A %}{% endslot %}
+                        {% endblock %}
+                        {% slot B %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/child.twig' => <<<'SOURCE'
+                    {% extends "@Contao/base.twig" %}
+                    {% block outer %}
+                        {{ block('inner') }}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/child.twig' => ['A'],
+            ],
+        ];
+
+        yield 'block function with intermediate block' => [
+            [
+                '@Contao_specific/base.twig' => <<<'SOURCE'
+                    {% block outer %}
+                        {% block middle %}
+                            {% block inner %}
+                                {% slot A %}{% endslot %}
+                            {% endblock %}
+                        {% endblock %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/child.twig' => <<<'SOURCE'
+                    {% extends "@Contao/base.twig" %}
+                    {% block outer %}
+                        {{ block('middle') }}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/child.twig' => ['A'],
+            ],
+        ];
+
+        yield 'block function referencing different templates' => [
+            [
+                '@Contao_specific/base.twig' => <<<'SOURCE'
+                    {% block outer %}
+                        {% block middle %}
+                            {% block inner %}
+                                {% slot A %}{% endslot %}
+                            {% endblock %}
+                        {% endblock %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/child.twig' => <<<'SOURCE'
+                    {% extends "@Contao/base.twig" %}
+                    {# Removing middle/inner block #}
+                    {% block middle %}{% endblock %}
+
+                    {% block outer %}
+                        {# Referencing block inner from current template #}
+                        {{ block('inner') }}
+                    {% endblock %}
+
+                    {% block inner %}
+                        {% slot B %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+            ],
+            [
+                '@Contao_specific/child.twig' => ['B'],
+            ],
+        ];
     }
 
     public function testAnalyzesUses(): void
@@ -84,9 +305,9 @@ class InspectorTest extends TestCase
     public function testAnalyzeBlockHierarchy(): void
     {
         $templates = [
-            'leaf.twig' => <<<'SOURCE'
-                {% extends "branch.twig" %}
-                {% use "component.twig" with foo as other %}
+            '@Contao_specific/leaf.twig' => <<<'SOURCE'
+                {% extends "@Contao/branch.twig" %}
+                {% use "@Contao/component.twig" with foo as other %}
 
                 {# Overwriting implicit parent block: #}
                 {% block baz %}
@@ -95,8 +316,8 @@ class InspectorTest extends TestCase
 
                 SOURCE,
 
-            'branch.twig' => <<<'SOURCE'
-                {% extends "root.twig" %}
+            '@Contao_specific/branch.twig' => <<<'SOURCE'
+                {% extends "@Contao/root.twig" %}
 
                 {# Enhancing parent block: #}
                 {% block foo %}
@@ -110,7 +331,7 @@ class InspectorTest extends TestCase
                 {% endblock %}
                 SOURCE,
 
-            'root.twig' => <<<'SOURCE'
+            '@Contao_specific/root.twig' => <<<'SOURCE'
                 Prototype block:
                 {% block foo %}{% endblock %}
 
@@ -119,7 +340,7 @@ class InspectorTest extends TestCase
                 {% block baz %}baz{% endblock %}
                 SOURCE,
 
-            'component.twig' => <<<'SOURCE'
+            '@Contao_specific/component.twig' => <<<'SOURCE'
                 {% block component %}
                     {% block foo %}{% endblock %}
                     {% block boo %}{% endblock %}
@@ -130,72 +351,72 @@ class InspectorTest extends TestCase
         $inspector = $this->getInspector($templates);
 
         // Test getting hierarchy of block "foo"
-        $fooHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'foo');
+        $fooHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'foo');
         $this->assertCount(3, $fooHierarchy);
 
-        $this->assertSame('leaf.twig', $fooHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $fooHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::transparent, $fooHierarchy[0]->getType());
         $this->assertSame('foo', $fooHierarchy[0]->getBlockName());
         $this->assertFalse($fooHierarchy[0]->isPrototype());
 
-        $this->assertSame('branch.twig', $fooHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/branch.twig', $fooHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::enhance, $fooHierarchy[1]->getType());
         $this->assertSame('foo', $fooHierarchy[1]->getBlockName());
         $this->assertFalse($fooHierarchy[1]->isPrototype());
 
-        $this->assertSame('root.twig', $fooHierarchy[2]->getTemplateName());
+        $this->assertSame('@Contao_specific/root.twig', $fooHierarchy[2]->getTemplateName());
         $this->assertSame(BlockType::origin, $fooHierarchy[2]->getType());
         $this->assertSame('foo', $fooHierarchy[2]->getBlockName());
         $this->assertTrue($fooHierarchy[2]->isPrototype());
 
         // Test getting hierarchy of block "bar"
-        $barHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'bar');
+        $barHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'bar');
         $this->assertCount(3, $barHierarchy);
 
-        $this->assertSame('leaf.twig', $barHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $barHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::transparent, $barHierarchy[0]->getType());
         $this->assertSame('bar', $barHierarchy[0]->getBlockName());
         $this->assertFalse($barHierarchy[0]->isPrototype());
 
-        $this->assertSame('branch.twig', $barHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/branch.twig', $barHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::overwrite, $barHierarchy[1]->getType());
         $this->assertSame('bar', $barHierarchy[1]->getBlockName());
         $this->assertFalse($barHierarchy[1]->isPrototype());
 
-        $this->assertSame('root.twig', $barHierarchy[2]->getTemplateName());
+        $this->assertSame('@Contao_specific/root.twig', $barHierarchy[2]->getTemplateName());
         $this->assertSame(BlockType::origin, $barHierarchy[2]->getType());
         $this->assertSame('bar', $barHierarchy[2]->getBlockName());
         $this->assertFalse($barHierarchy[2]->isPrototype());
 
         // Test getting hierarchy of block "baz"
-        $bazHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'baz');
+        $bazHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'baz');
         $this->assertCount(3, $bazHierarchy);
 
-        $this->assertSame('leaf.twig', $bazHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $bazHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::overwrite, $bazHierarchy[0]->getType());
         $this->assertSame('baz', $bazHierarchy[0]->getBlockName());
         $this->assertFalse($bazHierarchy[0]->isPrototype());
 
-        $this->assertSame('branch.twig', $bazHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/branch.twig', $bazHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::transparent, $bazHierarchy[1]->getType());
         $this->assertSame('baz', $bazHierarchy[1]->getBlockName());
         $this->assertFalse($bazHierarchy[1]->isPrototype());
 
-        $this->assertSame('root.twig', $bazHierarchy[2]->getTemplateName());
+        $this->assertSame('@Contao_specific/root.twig', $bazHierarchy[2]->getTemplateName());
         $this->assertSame(BlockType::origin, $bazHierarchy[2]->getType());
         $this->assertSame('baz', $bazHierarchy[2]->getBlockName());
         $this->assertFalse($bazHierarchy[2]->isPrototype());
 
         // Test getting hierarchy of block "foo" imported as "other"
-        $otherHierarchy = $inspector->getBlockHierarchy('leaf.twig', 'other');
+        $otherHierarchy = $inspector->getBlockHierarchy('@Contao/leaf.twig', 'other');
         $this->assertCount(2, $otherHierarchy);
 
-        $this->assertSame('leaf.twig', $otherHierarchy[0]->getTemplateName());
+        $this->assertSame('@Contao_specific/leaf.twig', $otherHierarchy[0]->getTemplateName());
         $this->assertSame(BlockType::transparent, $otherHierarchy[0]->getType());
         $this->assertSame('other', $otherHierarchy[0]->getBlockName());
         $this->assertFalse($otherHierarchy[0]->isPrototype());
 
-        $this->assertSame('component.twig', $otherHierarchy[1]->getTemplateName());
+        $this->assertSame('@Contao_specific/component.twig', $otherHierarchy[1]->getTemplateName());
         $this->assertSame(BlockType::origin, $otherHierarchy[1]->getType());
         $this->assertSame('foo', $otherHierarchy[1]->getBlockName());
         $this->assertTrue($otherHierarchy[1]->isPrototype());
@@ -253,8 +474,8 @@ class InspectorTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($storage, $environment),
             ),
         );
@@ -280,7 +501,7 @@ class InspectorTest extends TestCase
         $this->assertSame('@SymfonyBundle/foo.twig', $templateBInformation->getExtends());
     }
 
-    public function testCapturesErrorsWhenFailingToInspect(): void
+    public function testCapturesErrorsWhenTemplateDoesNotExist(): void
     {
         $inspector = $this->getInspector();
 
@@ -302,7 +523,10 @@ class InspectorTest extends TestCase
 
     public function testResolvesManagedNamespace(): void
     {
-        $information = $this->getInspector(['@Contao_specific/foo.html.twig' => '…'])->inspectTemplate('@Contao/foo.html.twig');
+        $information = $this
+            ->getInspector(['@Contao_specific/foo.html.twig' => '…', '@Contao/foo.html.twig' => '…'])
+            ->inspectTemplate('@Contao/foo.html.twig')
+        ;
 
         $this->assertSame('@Contao_specific/foo.html.twig', $information->getName());
     }
@@ -317,8 +541,8 @@ class InspectorTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $filesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($storage, $environment),
             ),
         );
@@ -328,11 +552,11 @@ class InspectorTest extends TestCase
 
     private function getContaoFilesystemLoader(array $templates): ContaoFilesystemLoader
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
             ->willReturnCallback(
-                static fn (string $name): bool => \array_key_exists($name, $templates),
+                static fn (string $name): bool => \array_key_exists(str_replace('@Contao/', '@Contao_specific/', $name), $templates),
             )
         ;
 
@@ -378,6 +602,13 @@ class InspectorTest extends TestCase
             ->method('getFirst')
             ->willReturnCallback(
                 static fn (string $name): string => str_replace('@Contao/', '@Contao_specific/', $name),
+            )
+        ;
+
+        $filesystemLoader
+            ->method('getAllDynamicParentsByThemeSlug')
+            ->willReturnCallback(
+                static fn (string $name): array => ['' => "@Contao_specific/$name"],
             )
         ;
 

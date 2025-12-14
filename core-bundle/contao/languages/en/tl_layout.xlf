@@ -359,6 +359,9 @@
       <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

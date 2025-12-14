@@ -36,14 +36,15 @@
 #}
 
 {% trans_default_domain 'contao_default' %}
+{% use '@Contao/component/_pagination.html.twig' %}
 
 {% block list_component %}
     {% set list = list|default(_context) %}
     {% set tag_name = list.tag_name|default('ul') %}
 
     {# Set defaults for the various display modes #}
-    {% set number_of_items = list.items|length  %}
-    {% set randomize_order = list.randomize_order is defined and list.randomize_order %}
+    {% set number_of_items = list.items|length %}
+    {% set randomize_order = list.randomize_order|default %}
     {% set limit_elements = list.limit|default(0) > 0 %}
     {% set limit = list.limit|default(number_of_items) %}
     {% set items_per_page = list.items_per_page|default(number_of_items) %}
@@ -53,11 +54,13 @@
     {% block list %}
         {# If the list should be shuffled, paginated or limited, add the
            respective data-attributes. #}
-        {% set list_attributes = attrs(list.list_attributes|default)
-            .set('data-list-random', '', randomize_order)
-            .set('data-list-paginate', items_per_page ~ ',' ~ limit, add_pagination or limit_elements)
-        %}
-        <{{ tag_name }}{% block list_attributes %}{{ list_attributes }}{% endblock %}>
+        {% if not pagination|default %}
+            {% set list_attributes = attrs(list.list_attributes|default)
+                .set('data-list-random', '', randomize_order)
+                .set('data-list-paginate', items_per_page ~ ',' ~ limit, add_pagination|default or limit_elements)
+            %}
+        {% endif %}
+        <{{ tag_name }}{% block list_attributes %}{{ list_attributes|default }}{% endblock %}>
         {% for item in list.items %}
             <li{% block list_item_attributes %}{{ attrs(list.item_attributes|default) }}{% endblock %}>
                 {%- block list_item %}
@@ -68,32 +71,14 @@
         </{{ tag_name }}>
     {% endblock %}
 
-    {% if add_pagination %}
-        {% block pagination %}
-            {% set pagination_attributes = attrs(list.pagination_attributes|default)
-                .set('data-pagination')
-                .set('aria-label', 'MSC.pagination'|trans)
-            %}
-            <nav{{ pagination_attributes }}>
-                <ol>
-                    {% for page in range(1, number_of_pages) %}
-                        <li>
-                            {% set link_attributes = attrs()
-                                .set('href', '#')
-                                .set('data-page', page)
-                                .set('title', 'MSC.goToPage'|trans([page]))
-                            %}
-                            <a{{ link_attributes }}>{{ page }}</a>
-                        </li>
-                    {% endfor %}
-                </ol>
-            </nav>
-        {% endblock %}
+    {% if pagination|default or randomize_order or add_pagination or limit_elements %}
+        {% set pagination_attributes = attrs(pagination_attributes|default).set('data-pagination', '', not pagination|default) %}
+        {% with {pagination: pagination|default, number_of_pages: number_of_pages|default} %}{{ block('pagination_component') }}{% endwith %}
     {% endif %}
 
-    {% if randomize_order or add_pagination or limit_elements %}
+    {% if not pagination|default and (randomize_order or add_pagination or limit_elements) %}
         {% block list_script %}
-            {% add "list_script" to body %}
+            {% add 'list_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
                     .mergeWith(script_attributes|default)
@@ -151,4 +136,14 @@
             {% endadd %}
         {% endblock %}
     {% endif %}
+{% endblock %}
+
+{% block pagination_link %}
+    {% if not pagination|default %}
+        {% set link_attributes = attrs()
+            .set('data-page', page)
+            .mergeWith(link_attributes|default)
+        %}
+    {% endif %}
+    {{ parent() }}
 {% endblock %}

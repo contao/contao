@@ -39,6 +39,7 @@ jobs:
               with:
                   ref: ${{ matrix.contao }}
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Node.js
               uses: actions/setup-node@v4

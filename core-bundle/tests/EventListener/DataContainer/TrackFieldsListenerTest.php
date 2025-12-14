@@ -22,7 +22,7 @@ class TrackFieldsListenerTest extends TestCase
 
     public function testAddsTheTextTrackFieldsToThePalette(): void
     {
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'foo.vtt']);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 'foo.vtt']);
 
         $this->assertSame(
             'name,textTrackLanguage,textTrackType,protected,syncExclude;meta',
@@ -32,7 +32,7 @@ class TrackFieldsListenerTest extends TestCase
 
     public function testDoesNotAddTheTextTrackFieldsToThePalette(): void
     {
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'bar.baz']);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 'bar.baz']);
 
         $this->assertSame(self::PALETTE, (new TrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc));
     }

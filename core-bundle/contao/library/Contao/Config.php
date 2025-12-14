@@ -75,6 +75,7 @@ class Config
 
 	private static $arrDeprecated = array
 	(
+		'maxPaginationLinks',
 	);
 
 	private static $arrToBeRemoved = array

@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Doctrine\DBAL\Connection;
@@ -22,7 +30,7 @@ abstract class AbstractDeleteVariantOperation extends DeleteOperation
         return 1 === preg_match('%^'.preg_quote($this->getPrefix(), '%').'/[^/]+/.+$%', $context->getIdentifier());
     }
 
-    public function execute(Request $request, OperationContext $context): Response|null
+    public function execute(Request $request, OperationContext $context): Response
     {
         $response = parent::execute($request, $context);
         $this->migrateDatabaseUsages($context->getIdentifier());

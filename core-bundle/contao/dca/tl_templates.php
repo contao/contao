@@ -362,7 +362,7 @@ class tl_templates extends Backend
 </div>
 </div>
 
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
   <button type="submit" name="create" id="create" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['tl_templates']['newTpl'] . '</button>
 </div>
@@ -488,6 +488,7 @@ class tl_templates extends Backend
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());

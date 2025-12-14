@@ -1,4 +1,4 @@
-{% extends "@WebProfiler/Profiler/layout.html.twig" %}
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block toolbar %}
     {% set icon %}
@@ -82,38 +82,96 @@
 
     <h2>Image resizing and previews</h2>
     <p>
-        Imagine service currently in use: <code>{{ collector.imageChecks.imagine_service }}</code><br>
+        Imagine service in use: <code>{{ collector.imageChecks.imagine_service }}</code><br>
         This can be changed in the <code>contao.image.imagine_service</code> configuration.
     </p>
-    <p>The following image formats are supported on your system.</p>
+    <p>The following image formats are supported on your system:</p>
     <table>
         <thead>
         <tr>
-            <th colspan="3">
-                Image formats
-            </th>
+            <th colspan="3">Image formats</th>
         </tr>
         </thead>
         <tbody>
         {% for format in collector.imageChecks.formats %}
             <tr>
-                <td>
-                    {% if format.supported %}
-                        ✅
-                    {% else %}
-                        🚨
-                    {% endif %}
-                </td>
-                <td>
-                    {{ format.label|upper }}
-                </td>
-                <td>
-                    <code>{{ format.error }}</code>
-                </td>
+                <td>{% if format.supported %}✅{% else %}🚨{% endif %}</td>
+                <td>{{ format.label|upper }}</td>
+                <td>{{ format.error }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    {% if collector.backendSearchChecks|default %}
+        <h2>Back end search</h2>
+        {% if collector.backendSearchChecks.available %}
+            <p>✅ The back end search is available.</p>
+        {% else %}
+            <p>🚨 The back end search is not available.</p>
+        {% endif %}
+        <table>
+            <thead>
+            <tr>
+                <th colspan="2">Requirements</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% if collector.backendSearchChecks.requires_sqlite %}
+                    <tr>
+                        <td>{% if collector.backendSearchChecks.sqlite_supported %}✅{% else %}🚨{% endif %}</td>
+                        <td>
+                            {% if collector.backendSearchChecks.sqlite_supported %}
+                                The following PHP extensions are enabled: {{ collector.backendSearchChecks.sqlite_supported|join(', ') }}
+                            {% else %}
+                                One of the following PHP extensions needs to be enabled: pdo_sqlite, sqlite3
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{% if collector.backendSearchChecks.supervisor_supported %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.supervisor_supported %}
+                            Using the SuperVisor is supported.
+                        {% else %}
+                            Using the SuperVisor is not supported and thus Contao's default messenger queues are not processed automatically.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if not collector.backendSearchChecks.pnctl_disabled %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if not collector.backendSearchChecks.pnctl_disabled %}
+                            The pnctl_* functions are available.
+                        {% else %}
+                            Some pnctl_* functions are disabled in PHP's disable_functions setting.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if collector.backendSearchChecks.cron_running %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.cron_running %}
+                            The contao:cron cronjob is executed minutely on the command line.
+                        {% else %}
+                            The contao:cron cronjob is not executed minutely on the command line and thus Contao's default messenger queues are not processed automatically.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if collector.backendSearchChecks.cli_workers_running %}✅{% else %}🚨{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.cli_workers_running %}
+                            The messenger queues are processed on the command line.
+                        {% else %}
+                            The messenger queues are not processed on the command line.
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
 
     {% if collector.additionaldata %}
         <h2>Other</h2>

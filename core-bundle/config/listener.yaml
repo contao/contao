@@ -19,7 +19,7 @@ services:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
             - '@security.helper'
-            - '@translator'
+            - '@translation.locale_switcher'
 
     contao.listener.backend_noindex:
         class: Contao\CoreBundle\EventListener\BackendNoindexListener
@@ -62,6 +62,12 @@ services:
 
     contao.listener.data_container.accordion:
         class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
+
+    contao.listener.data_container.active_member_groups:
+        class: Contao\CoreBundle\EventListener\DataContainer\ActiveMemberGroupsListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
 
     contao.listener.data_container.article_column:
         class: Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener
@@ -164,10 +170,12 @@ services:
     contao.listener.data_container.jobs:
         class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
         arguments:
+            - '@contao.job.jobs'
             - '@security.helper'
             - '@database_connection'
             - '@request_stack'
             - '@contao.framework'
+            - '@twig'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
@@ -361,7 +369,6 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
-            - '@messenger.receiver_locator'
 
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
@@ -408,7 +415,7 @@ services:
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
-            - '@translator'
+            - '@translation.locale_switcher'
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
 

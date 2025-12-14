@@ -30,6 +30,9 @@ class ContaoSetupCommandTest extends ContaoTestCase
     {
         $this->resetStaticProperties([Terminal::class]);
 
+        $dir = $this->getTempDir();
+        (new Filesystem())->remove([Path::join($dir, '.env'), Path::join($dir, '.env.local')]);
+
         parent::tearDown();
     }
 
@@ -43,7 +46,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     #[DataProvider('provideCommands')]
     public function testExecutesCommands(array $options, array $flags, array $phpFlags = []): void
     {
-        $processes = $this->getProcessMocks();
+        $processes = $this->getProcessMocks(mock: true);
 
         foreach ($processes as $process) {
             $process
@@ -75,7 +78,8 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $memoryLimit = ini_set('memory_limit', '1G');
         $createProcessHandler = $this->getCreateProcessHandler($processes, $commandArguments, $invocationCount);
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', 'secret', $createProcessHandler);
+        $projectDir = $this->getTempDir();
+        $command = new ContaoSetupCommand($projectDir, Path::join($projectDir, 'public'), 'secret', $createProcessHandler);
 
         (new CommandTester($command))->execute([], $options);
 
@@ -125,9 +129,11 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
     public function testThrowsIfCommandFails(): void
     {
+        $projectDir = $this->getTempDir();
+
         $command = new ContaoSetupCommand(
-            'project/dir',
-            'project/dir/public',
+            $projectDir,
+            Path::join($projectDir, 'public'),
             'secret',
             $this->getCreateProcessHandler($this->getProcessMocks(false)),
         );
@@ -142,9 +148,11 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
     public function testDelegatesOutputOfSubProcesses(): void
     {
+        $projectDir = $this->getTempDir();
+
         $command = new ContaoSetupCommand(
-            'project/dir',
-            'project/dir/public',
+            $projectDir,
+            Path::join($projectDir, 'public'),
             'secret',
             $this->getCreateProcessHandler($this->getProcessMocks()),
         );
@@ -170,6 +178,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         if ($existingDotEnvFile) {
             $filesystem->touch($dotEnvFile);
+            $filesystem->touch($dotEnvLocalFile);
         }
 
         $command = new ContaoSetupCommand(
@@ -197,12 +206,15 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         if (!$existingDotEnvFile) {
             $this->assertStringContainsString(
-                '[INFO] An empty .env file was created.',
+                'An empty .env file was created.',
+                $commandTester->getDisplay(),
+            );
+
+            $this->assertStringContainsString(
+                'An empty .env.local file was created.',
                 $commandTester->getDisplay(),
             );
         }
-
-        $filesystem->remove([$dotEnvFile, $dotEnvLocalFile]);
     }
 
     public function testKeepsSymlinkedDotEnv(): void
@@ -264,12 +276,17 @@ class ContaoSetupCommandTest extends ContaoTestCase
         };
     }
 
-    private function getProcessMocks(bool $successful = true): array
+    private function getProcessMocks(bool $successful = true, bool $mock = false): array
     {
         $processes = [];
 
         for ($i = 1; $i <= 8; ++$i) {
-            $process = $this->createMock(Process::class);
+            if ($mock) {
+                $process = $this->createMock(Process::class);
+            } else {
+                $process = $this->createStub(Process::class);
+            }
+
             $process
                 ->method('isSuccessful')
                 ->willReturn($successful)

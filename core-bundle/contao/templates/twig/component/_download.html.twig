@@ -28,7 +28,7 @@
 #}
 
 {% trans_default_domain 'contao_default' %}
-{% use "@Contao/component/_figure.html.twig" %}
+{% use '@Contao/component/_figure.html.twig' %}
 
 {% block download_component %}
     {% set download = download|default(_context) %}
@@ -45,6 +45,9 @@
             .mergeWith(download_link_attributes|default)
         %}
         <a{% block download_link_attributes %}{{ download_link_attributes }}{% endblock %}>
+            {%- if as_editor_view|default -%}
+                {{ file_icon(download.file, '', attrs().addClass('backend-icon')) }}
+            {%- endif -%}
             {%- block download_link_inner %}{{ text }}{% endblock -%}
         </a>
     {% endblock %}

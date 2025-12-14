@@ -2,13 +2,13 @@ import { Controller } from '@hotwired/stimulus';
 import * as Icon from '../modules/icon';
 
 export default class TabsController extends Controller {
+    #activeTab = null;
+
     static values = {
         closeLabel: String,
     };
 
     static targets = ['navigation', 'panel'];
-
-    activeTab = null;
 
     panelTargetConnected(panel) {
         // When the DOM is already set up, just set the panel ID and
@@ -80,11 +80,11 @@ export default class TabsController extends Controller {
         document.getElementById(panel.getAttribute('aria-labelledby'))?.parentElement?.remove();
 
         // Select the first tab/no tab if the current tab was active before closing.
-        if (panel === this.activeTab) {
+        if (panel === this.#activeTab) {
             if (this.hasPanelTarget) {
                 this.selectTab(this.panelTarget);
             } else {
-                this.activeTab = null;
+                this.#activeTab = null;
             }
         }
     }
@@ -115,11 +115,11 @@ export default class TabsController extends Controller {
             selectButton?.parentElement.toggleAttribute('data-active', isTarget);
         }
 
-        this.activeTab = panel;
+        this.#activeTab = panel;
     }
 
     getActiveTab() {
-        return this.activeTab;
+        return this.#activeTab;
     }
 
     getTabs() {

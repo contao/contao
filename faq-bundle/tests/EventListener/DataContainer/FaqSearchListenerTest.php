@@ -27,17 +27,17 @@ class FaqSearchListenerTest extends TestCase
     #[DataProvider('purgeSearchEntryProvider')]
     public function testFaqChanges(string $field, string $newValue, array $recordData, array|null $readerPageSettings, bool $shouldRemoveSearchEntry): void
     {
-        $faqModel = $this->createMock(FaqModel::class);
+        $faqModel = $this->createStub(FaqModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+        $framework = $this->createContaoFrameworkStub([
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faqModel]),
             Search::class => $search,
         ]);
 
@@ -64,7 +64,7 @@ class FaqSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc = $this->createStub(DataContainer::class);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)
@@ -203,17 +203,17 @@ class FaqSearchListenerTest extends TestCase
     #[DataProvider('deleteProvider')]
     public function testOnDelete(array $recordData, bool $shouldRemoveSearchEntry): void
     {
-        $faqModel = $this->createMock(FaqModel::class);
+        $faqModel = $this->createStub(FaqModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+        $framework = $this->createContaoFrameworkStub([
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faqModel]),
             Search::class => $search,
         ]);
 
@@ -231,7 +231,7 @@ class FaqSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $recordData['id']]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => $recordData['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)

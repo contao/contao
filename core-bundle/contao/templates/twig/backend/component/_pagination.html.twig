@@ -1,0 +1,79 @@
+{% trans_default_domain 'contao_default' %}
+
+{% block pagination_component %}
+    {% if pagination.pageCount > 1 %}
+        {% set pagination_attributes = attrs(pagination_attributes|default)
+            .addClass(['pagination', 'pagination-' ~ pagination.queryParameterName])
+            .set('role', 'navigation')
+            .set('aria-label', 'MSC.pagination'|trans)
+        %}
+        <nav{{ pagination_attributes }}>
+            {% block pagination_total %}
+                <p>{{ 'MSC.totalPages'|trans([pagination.current, pagination.pageCount]) }}</p>
+            {% endblock %}
+            <ul>
+                {% block pagination_first %}
+                    {% if pagination.first %}
+                        <li class="first">
+                            {% set first_attributes = attrs()
+                                .set('href', pagination.urlForPage(pagination.first))
+                                .addClass('first')
+                            %}
+                            <a{{ first_attributes }}>{% block pagination_first_label %}{{ 'MSC.first'|trans }}{% endblock %}</a>
+                        </li>
+                    {% endif %}
+                {% endblock %}
+                {% block pagination_previous %}
+                    {% if pagination.previous %}
+                        <li class="previous">
+                            {% set previous_attributes = attrs()
+                                .set('href', pagination.urlForPage(pagination.previous))
+                                .addClass('previous')
+                            %}
+                            <a{{ previous_attributes }}>{% block pagination_previous_label %}{{ 'MSC.previous'|trans }}{% endblock %}</a>
+                        </li>
+                    {% endif %}
+                {% endblock %}
+
+                {% for page in pagination.pages %}
+                    {% block pagination_link %}
+                        <li>
+                            {% set link_attributes = attrs()
+                                .set('href', pagination.urlForPage(page))
+                                .set('aria-label', 'MSC.goToPage'|trans([page]))
+                                .set('aria-current', 'page', pagination.current|default == page)
+                                .addClass('link')
+                                .addClass('active', pagination.current|default == page)
+                                .mergeWith(link_attributes|default)
+                            %}
+                            <a{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</a>
+                        </li>
+                    {% endblock %}
+                {% endfor %}
+
+                {% block pagination_next %}
+                    {% if pagination.next %}
+                        <li class="next">
+                            {% set next_attributes = attrs()
+                                .set('href', pagination.urlForPage(pagination.next))
+                                .addClass('next')
+                            %}
+                            <a{{ next_attributes }}>{% block pagination_next_label %}{{ 'MSC.next'|trans }}{% endblock %}</a>
+                        </li>
+                    {% endif %}
+                {% endblock %}
+                {% block pagination_last %}
+                    {% if pagination.last %}
+                        <li class="last">
+                            {% set last_attributes = attrs()
+                                .set('href', pagination.urlForPage(pagination.last))
+                                .addClass('last')
+                            %}
+                            <a{{ last_attributes }}>{% block pagination_last_label %}{{ 'MSC.last'|trans }}{% endblock %}</a>
+                        </li>
+                    {% endif %}
+                {% endblock %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock %}

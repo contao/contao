@@ -304,10 +304,11 @@ abstract class System
 	 *
 	 * @param boolean $blnEncodeAmpersands If true, ampersands will be encoded
 	 * @param string  $strTable            An optional table name
+	 * @param int     $intLevel            How many levels to go up the trail
 	 *
 	 * @return string The referer URL
 	 */
-	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
+	public static function getReferer($blnEncodeAmpersands=false, $strTable=null, $intLevel=1)
 	{
 		$container = static::getContainer();
 		$return = null;
@@ -326,11 +327,11 @@ abstract class System
 		{
 			if ($isBackend)
 			{
-				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail();
+				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail(limit: $intLevel + 1);
 
-				if ($trail[\count($trail) - 2]['url'] ?? null)
+				if ($trail[\count($trail) - $intLevel - 1]['url'] ?? null)
 				{
-					$return = $trail[\count($trail) - 2]['url'];
+					$return = $trail[\count($trail) - $intLevel - 1]['url'];
 				}
 				elseif (Input::get('do') && Input::get('act'))
 				{
@@ -616,7 +617,7 @@ abstract class System
 			$intSize /= 1024;
 		}
 
-		return static::getFormattedNumber($intSize, $intDecimals) . ' ' . $GLOBALS['TL_LANG']['UNITS'][$i];
+		return static::getFormattedNumber($intSize, $intDecimals) . ' ' . static::getContainer()->get('translator')->trans('UNITS.' . $i, array(), 'contao_default');
 	}
 
 	/**
@@ -629,7 +630,12 @@ abstract class System
 	 */
 	public static function getFormattedNumber($varNumber, $intDecimals=2)
 	{
-		return number_format(round($varNumber, $intDecimals), $intDecimals, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']);
+		return number_format(
+			round($varNumber, $intDecimals),
+			$intDecimals,
+			static::getContainer()->get('translator')->trans('MSC.decimalSeparator', array(), 'contao_default'),
+			static::getContainer()->get('translator')->trans('MSC.thousandsSeparator', array(), 'contao_default'),
+		);
 	}
 
 	/**

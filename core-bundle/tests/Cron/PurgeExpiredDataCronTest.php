@@ -53,13 +53,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ];
         }
 
-        $expectedStatements[] = [
-            'DELETE FROM tl_job WHERE tstamp < :tstamp',
-            ['tstamp' => $mockedTime - 86400],
-            ['tstamp' => Types::INTEGER],
-        ];
-
-        $config = $this->mockAdapter(['get']);
+        $config = $this->createAdapterMock(['get']);
         $config
             ->expects($this->exactly(3))
             ->method('get')
@@ -80,7 +74,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ))
         ;
 
-        $framework = $this->mockContaoFramework([Config::class => $config]);
+        $framework = $this->createContaoFrameworkStub([Config::class => $config]);
 
         $cron = new PurgeExpiredDataCron($framework, $connection, new MockClock('@'.$mockedTime));
         $cron->onHourly();

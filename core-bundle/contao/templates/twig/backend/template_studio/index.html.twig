@@ -1,9 +1,9 @@
-{% trans_default_domain "contao_template_studio" %}
-{% extends '@Contao/be_main.html5' %}
+{% trans_default_domain 'contao_template_studio' %}
+{% extends '@Contao/be_main.html.twig' %}
 
 {% block head %}
     {{ parent() }}
-    <script src="{{ asset('js/ext-code_lens.js',  'contao-components/ace') }}"></script>
+    <script src="{{ asset('js/ext-code_lens.js', 'contao-components/ace') }}"></script>
 {% endblock %}
 
 {% block main %}
@@ -15,7 +15,10 @@
           data-contao--template-studio-block-info-url-value="{{ path('_contao_template_studio_block_info.stream') }}"
     >
         {# Headline #}
-        <h1 id="main_headline">{{ headline }}</h1>
+        <h1 id="main_headline">
+            {{ headline }}
+            {{ render(path('contao_backend_favorites', {target_path: app.request.requestUri})) }}
+        </h1>
 
         <section id="template-studio" class="content chrome">
             <div id="template-studio--nav">
@@ -26,7 +29,7 @@
                             <select name="theme" onchange="this.form.requestSubmit()" class="tl_select">
                                 <option{{ attrs().set('value', '').set('selected', current_theme is null) }}>{{ 'no_theme_context'|trans }}</option>
                                 {% for slug, name in themes %}
-                                    <option{{ attrs().set('value', slug).set('selected', current_theme == slug) }}>{{ name }} [{{ slug}}]</option>
+                                    <option{{ attrs().set('value', slug).set('selected', current_theme == slug) }}>{{ name }} [{{ slug }}]</option>
                                 {% endfor %}
                             </select>
                             <span>{{ 'theme-selector'|trans }}</span>
@@ -36,17 +39,17 @@
 
                 {# Identifier tree #}
                 <div id="template-studio--tree">
-                    {{ include("@Contao/backend/template_studio/tree/_tree.html.twig") }}
+                    {{ include('@Contao/backend/template_studio/tree/_tree.html.twig') }}
                 </div>
             </div>
 
             {# Main editor section with multiple tabs #}
-            {% embed "@Contao/backend/component/tabs/_container.html.twig" with {
+            {% embed '@Contao/backend/component/tabs/_container.html.twig' with {
                 tabs_container_attributes: attrs().set('data-contao--template-studio-target', 'tabs'),
                 id: 'template-studio--tabs',
                 panels_container_id: 'template-studio--tab-panels',
             } %}
-                {% trans_default_domain "contao_template_studio" %}
+                {% trans_default_domain 'contao_template_studio' %}
 
                 {% block initial_content %}
                     <div class="explainer">

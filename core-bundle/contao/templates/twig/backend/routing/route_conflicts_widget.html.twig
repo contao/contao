@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_tl_page" %}
+{% trans_default_domain 'contao_tl_page' %}
 
 <div class="clr widget">
     <h3>{{ 'tl_page.routeConflicts.0'|trans }}</h3>
@@ -19,7 +19,7 @@
                 <tr class="{{ loop.index % 2 ? 'even' : 'odd' }} hover-row">
                     <td colspan="1" class="tl_file_list">{{ conflict.page.id }}</td>
                     <td colspan="1" class="tl_file_list">{{ conflict.page.title }}</td>
-                    <td colspan="1" class="tl_file_list">{{ ('PTY.'~conflict.page.type~'.0')|trans([], 'contao_default') }}</td>
+                    <td colspan="1" class="tl_file_list">{{ ('PTY.' ~ conflict.page.type ~ '.0')|trans([], 'contao_default') }}</td>
                     <td colspan="1" class="tl_file_list">{{ conflict.page.alias }}</td>
                     <td colspan="1" class="tl_file_list">{{ conflict.path|raw }}</td>
                     <td colspan="1" class="tl_file_list">{{ conflict.page.routePriority }}</td>

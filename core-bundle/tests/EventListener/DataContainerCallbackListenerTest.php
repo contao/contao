@@ -27,7 +27,7 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         parent::setUp();
 
-        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['importStatic'])]);
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['importStatic'])]);
 
         $this->listener = new DataContainerCallbackListener($framework);
     }
@@ -234,15 +234,14 @@ class DataContainerCallbackListenerTest extends TestCase
             ->willReturn('foo')
         ;
 
-        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter = $this->createAdapterMock(['importStatic']);
         $systemAdapter
             ->expects($expected ? $this->once() : $this->never())
             ->method('importStatic')
             ->willReturn($testListener)
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
-
+        $framework = $this->createContaoFrameworkStub([System::class => $systemAdapter]);
         $listener = new DataContainerCallbackListener($framework);
 
         $listener->setCallbacks(
@@ -268,7 +267,7 @@ class DataContainerCallbackListenerTest extends TestCase
 
         if ($expected) {
             $this->assertIsCallable($GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]);
-            $this->assertSame('foo', $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]($this->createMock(DataContainer::class)));
+            $this->assertSame('foo', $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]($this->createStub(DataContainer::class)));
         } else {
             $this->assertSame([TestListener::class, 'onClosure'], $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]);
         }

@@ -22,11 +22,12 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @experimental
  */
-class FilesStorageProvider implements ProviderInterface
+class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInterface
 {
     public const TYPE = 'contao.vfs.files';
 
@@ -37,6 +38,7 @@ class FilesStorageProvider implements ProviderInterface
         Security $security,
         private readonly Studio $studio,
         private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
         private readonly string $uploadPath,
     ) {
         $this->permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
@@ -136,5 +138,19 @@ class FilesStorageProvider implements ProviderInterface
         return $this->permissionCheckingFilesStorage->canAccessLocation(
             $document->getMetadata()['path'] ?? '',
         );
+    }
+
+    public function convertTypeToVisibleType(string $type): string
+    {
+        return $this->translator->trans('MSC.file', [], 'contao_default');
+    }
+
+    public function getFacetLabelForTag(string $tag): string
+    {
+        if (!str_starts_with($tag, 'extension:')) {
+            return $tag;
+        }
+
+        return substr($tag, 10);
     }
 }

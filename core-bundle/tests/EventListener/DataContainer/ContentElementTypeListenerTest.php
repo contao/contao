@@ -60,7 +60,7 @@ class ContentElementTypeListenerTest extends TestCase
             )
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => $parentTable, 'currentPid' => $pid]);
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, ['parentTable' => $parentTable, 'currentPid' => $pid]);
 
         $listener = new ContentElementTypeListener($security);
         $options = $listener->getOptions($dataContainer);
@@ -101,7 +101,7 @@ class ContentElementTypeListenerTest extends TestCase
             )
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => 'tl_foo', 'currentPid' => 42]);
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, ['parentTable' => 'tl_foo', 'currentPid' => 42]);
 
         $listener = new ContentElementTypeListener($security);
         $listener->setDefault($dataContainer);

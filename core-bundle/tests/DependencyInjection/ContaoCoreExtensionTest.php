@@ -592,7 +592,7 @@ class ContaoCoreExtensionTest extends TestCase
             'contao.general',
         ];
 
-        $monologExtension = $this->createMock(Extension::class);
+        $monologExtension = $this->createStub(Extension::class);
         $monologExtension
             ->method('getAlias')
             ->willReturn('monolog')
@@ -642,10 +642,11 @@ class ContaoCoreExtensionTest extends TestCase
             ->willReturn($container)
         ;
 
-        $matcher = $this->exactly(3);
+        $matcher = $this->exactly(4);
         $expected = [
             ['upload/path', 'upload/path', 'files'],
             ['var/backups', 'backups', 'backups'],
+            ['var/job-attachments', 'job-attachments', 'job-attachments'],
             ['templates', 'user_templates', 'user_templates'],
         ];
 
