@@ -1,7 +1,7 @@
 {% trans_default_domain 'contao_default' %}
 
 <div class="tl_sorting tl_subpanel">
-    <label for="tl_search"><strong>{{ 'MSC.sortBy'|trans }}:</strong></label>
+    <label for="tl_sort"><strong>{{ 'MSC.sortBy'|trans }}:</strong></label>
     {% embed '@Contao/backend/data_container/table/menu/_select.html.twig' with {
         name: 'tl_sort',
     } %}
