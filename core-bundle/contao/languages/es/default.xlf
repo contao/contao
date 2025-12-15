@@ -409,6 +409,12 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>El ID del elemento %d no se puede insertar aquí porque entra en conflicto con un elemento existente.</target>
       </trans-unit>
+      <trans-unit id="ERR.treeMissingField">
+        <source>Table "%s" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!</source>
+      </trans-unit>
+      <trans-unit id="ERR.treeMissingParent">
+        <source>Table "%s" can not be shown as extended tree, because there is no parent table!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Por favor, suma %d y %d.</target>

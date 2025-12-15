@@ -409,6 +409,12 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>%d kimlikli bileşen var olan bir bileşen ile çakıştığından buraya eklenemez.</target>
       </trans-unit>
+      <trans-unit id="ERR.treeMissingField">
+        <source>Table "%s" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!</source>
+      </trans-unit>
+      <trans-unit id="ERR.treeMissingParent">
+        <source>Table "%s" can not be shown as extended tree, because there is no parent table!</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Lütfen %d ile %d sayılarını toplayın.</target>

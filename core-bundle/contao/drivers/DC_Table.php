@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\ArrayTree;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
@@ -375,17 +376,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function render(string $component, array $parameters): string
 	{
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+
+		$defaultParameters = array(
+			'table' => $this->table,
+			'sorting_mode' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0),
+			'is_upload_form' => $this->blnUploadable,
+			'form_onsubmit' => $this->onsubmit,
+			'error' => $this->noReload,
+			'as_select' => Input::get('act') === 'select',
+			'as_picker' => (bool) $this->strPickerFieldType,
+			'as_clipboard' => null !== $arrClipboard
+		);
+
+		if ($defaultParameters['as_picker'])
+		{
+			$defaultParameters['picker'] = array(
+				'value' => (new HtmlAttributes($this->getPickerValueAttribute()))['data-picker-value'] ?? '',
+				'type' => $this->strPickerFieldType,
+			);
+		}
+
 		return System::getContainer()
 			->get('twig')
 			->render(
 				"@Contao/backend/data_container/table/$component.html.twig",
-				array(
-					'table' => $this->table,
-					'is_upload_form' => $this->blnUploadable,
-					'form_onsubmit' => $this->onsubmit,
-					'error' => $this->noReload,
-					...$parameters
-				)
+				array(...$defaultParameters, ...$parameters),
 			)
 		;
 	}
@@ -3282,6 +3298,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function treeView()
 	{
+		$parameters = array(
+			'records' => array()
+		);
+
 		$table = $this->strTable;
 		$treeClass = 'tl_tree';
 
@@ -3333,15 +3353,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Return if a mandatory field (id, pid, sorting) is missing
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$db->fieldExists('id', $table) || !$db->fieldExists('pid', $table) || !$db->fieldExists('sorting', $table)))
 		{
-			return '
-<p class="tl_empty">Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!</p>';
+			$parameters['error']['tableIsMissingField'] = true;
+			return $this->render('view/tree', $parameters);
 		}
 
 		// Return if there is no parent table
 		if (!$this->ptable && $blnModeTreeExtended)
 		{
-			return '
-<p class="tl_empty">Table "' . $table . '" can not be shown as extended tree, because there is no parent table!</p>';
+			$parameters['error']['tableIsMissingParent'] = true;
+			return $this->render('view/tree', $parameters);
 		}
 
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
@@ -3376,8 +3396,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$operations->append(array('html' => $buttons), true);
 		}
-
-		$return = Message::generate() . $operations;
 
 		$tree = '';
 		$blnHasSorting = $db->fieldExists('sorting', $table);
@@ -3470,29 +3488,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if ($breadcrumb)
 			{
-				$return .= '<div class="tl_listing_container">' . $breadcrumb . '</div>';
+				$parameters['breadcrumb'] = $breadcrumb;
 			}
 
-			return $return . '
-<p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
+			return $this->render('view/tree', $parameters);
 		}
-
-		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-
-		$return .= ((Input::get('act') == 'select') ? '
-<form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . $requestToken . '">' : '') . ($blnClipboard ? '
-<div id="paste_hint">
-  <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
-</div>' : '') . '
-<div class="tl_listing_container tree_view" id="tl_listing" data-controller="contao--check-all"' . $this->getPickerValueAttribute() . '>' . $breadcrumb . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
-<div class="tl_select_trigger">
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
-</div>' : '') . '
-<ul class="tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left"></div> <div class="tl_right">';
 
 		$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 
@@ -3525,38 +3525,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->addNewButton($operations::CREATE_TOP, $this->strTable, 0);
 		}
 
-		// End table
-		$return .= $operations . '</div></li>' . $tree . '
-</ul>' . ($this->strPickerFieldType == 'radio' ? '
-<div class="tl_radio_reset">
-<label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-</div>' : '') . '
-</div>';
+		$parameters['operations'] = Message::generate() . $operations;
+		$parameters['tree_class'] = $treeClass;
+		$parameters['records'] = $tree;
 
 		// Close the form
 		if (Input::get('act') == 'select')
 		{
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
-
-			$return .= '
-</div>
-  ' . $strButtons . '
-</form>';
+			$parameters['buttons'] = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
 		}
 
-		return '<div
-				data-controller="contao--toggle-nodes"
-				data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
-				data-contao--toggle-nodes-toggle-action-value="toggleStructure"
-				data-contao--toggle-nodes-load-action-value="loadStructure"
-				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
-				data-contao--toggle-nodes-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
-				data-contao--toggle-nodes-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
-				data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
-				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
-				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
-			>' . $return . '</div>';
+		return $this->render('view/tree', $parameters);
 	}
 
 	/**

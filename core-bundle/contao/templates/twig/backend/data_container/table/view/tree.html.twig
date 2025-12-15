@@ -1,0 +1,87 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set view_attributes = attrs()
+    .set('data-controller', 'contao--toggle-nodes')
+    .set('data-contao--toggle-nodes-mode-value', sorting_mode)
+    .set('data-contao--toggle-nodes-toggle-action-value', 'toggleStructure')
+    .set('data-contao--toggle-nodes-load-action-value', 'loadStructure')
+    .set('data-contao--toggle-nodes-request-token-value', contao.request_token)
+    .set('data-contao--toggle-nodes-expand-value', 'MSC.expandNode'|trans)
+    .set('data-contao--toggle-nodes-collapse-value', 'MSC.collapseNode'|trans)
+    .set('data-contao--toggle-nodes-expand-all-value', 'DCA.expandNode.0'|trans)
+    .set('data-contao--toggle-nodes-expand-all-title-value', 'DCA.expandNode.1'|trans)
+    .set('data-contao--toggle-nodes-collapse-all-value', 'DCA.collapseNodes.0'|trans)
+    .set('data-contao--toggle-nodes-collapse-all-title-value', 'DCA.collapseNodes.1'|trans)
+%}
+
+<div{{ view_attributes }}>
+    {% if error.tableIsMissingField|default %}
+        <p class="tl_empty">{{ 'ERR.treeMissingField'|trans({'%s': table}) }}</p>
+    {% elseif error.tableIsMissingParent|default %}
+        <p class="tl_empty">{{ 'ERR.treeMissingParent'|trans({'%s': table}) }}</p>
+    {% endif %}
+
+    {% if breadcrumb|default %}
+        <div class="tl_listing_container">{{ breadcrumb }}</div>
+    {% endif %}
+
+    {% if records|length %}
+        {% if not as_select %}
+            {% block list %}
+                {% if as_clipboard %}
+                    <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
+                {% endif %}
+
+                {% set listing_attributes = attrs()
+                    .addClass(['tl_listing_container', 'tree_view'])
+                    .set('id', 'tl_listing')
+                    .set('data-controller', 'contao--check-all')
+                    .set('data-picker-value', picker.value|default, as_picker)
+                %}
+                <div{{ listing_attributes }}>
+                    {{ breadcrumb|default }}
+                    {% if as_select or (as_picker and picker.type == 'checkbox') %}
+                        {# Add a "select all" checkbox #}
+                        <div class="tl_select_trigger">
+                            <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
+                            <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
+                        </div>
+                    {% endif %}
+
+                    {% set tree_attributes = attrs()
+                        .addClass(['tl_listing', tree_class, as_picker and picker.type ? 'picker unselectable'])
+                    %}
+                    <ul{{ tree_attributes }}>
+                        <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+                            <div class="tl_left"></div>
+                            <div class="tl_right">
+                                {{ operations|raw }}
+                            </div>
+                        </li>
+                        {{ records|raw }}
+                    </ul>
+                    {% if as_picker and picker.type == 'radio' %}
+                        {# Add an input to reset picker radio buttons #}
+                        <div class="tl_radio_reset">
+                            <label for="tl_radio_reset" class="tl_radio_label">
+                                {{ 'MSC.resetSelected'|trans }}
+                            </label>
+                            <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
+                        </div>
+                    {% endif %}
+                </div>
+            {% endblock %}
+        {% else %}
+            <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
+                <div class="tl_formbody_edit">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_select">
+                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                    {{ block('list') }}
+                </div>
+
+            </form>
+        {% endif %}
+    {% else %}
+        <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
+    {% endif %}
+</div>
