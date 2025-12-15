@@ -3397,6 +3397,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$parameters['operations'] = Message::generate() . $operations;
+
 		$tree = '';
 		$blnHasSorting = $db->fieldExists('sorting', $table);
 		$arrFound = array();
@@ -3525,7 +3527,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->addNewButton($operations::CREATE_TOP, $this->strTable, 0);
 		}
 
-		$parameters['operations'] = Message::generate() . $operations;
+		$parameters['buttons'] = $operations;
 		$parameters['tree_class'] = $treeClass;
 		$parameters['records'] = $tree;
 
