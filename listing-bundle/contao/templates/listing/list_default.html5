@@ -3,7 +3,7 @@
 <?php
 
 $this->wrapperAttributes = $this
-    ->attr()
+    ->attrs()
     ->addClass(['ce_table', 'listing'])
     ->mergeWith($this->wrapperAttributes)
 ;
