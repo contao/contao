@@ -103,29 +103,29 @@
         {% endblock %}
 
         {% block main %}
-        <turbo-frame id="contao-main" target="_top">
-            <main id="main" aria-labelledby="main_headline">
-                {% block main_headline %}
-                    <h1 id="main_headline">
-                        {{ headline|raw }}
-                        {{ toggleFavorites|raw }}
-                    </h1>
-                {% endblock %}
-                <div class="content">
-                    {% if pickerMenu|default %}
-                        <div id="picker-menu">
-                            {{ pickerMenu|raw }}
-                        </div>
-                    {% endif %}
-                    {% if error|default %}
-                        <p class="tl_gerror">{{ error }}</p>
-                    {% endif %}
-                    {% block main_content %}
-                        {{ main|raw }}
+            <turbo-frame id="contao-main" target="_top">
+                <main id="main" aria-labelledby="main_headline">
+                    {% block main_headline %}
+                        <h1 id="main_headline">
+                            {{ headline|raw }}
+                            {{ toggleFavorites|raw }}
+                        </h1>
                     {% endblock %}
-                </div>
-            </main>
-        </turbo-frame>
+                    <div class="content">
+                        {% if pickerMenu|default %}
+                            <div id="picker-menu">
+                                {{ pickerMenu|raw }}
+                            </div>
+                        {% endif %}
+                        {% if error|default %}
+                            <p class="tl_gerror">{{ error }}</p>
+                        {% endif %}
+                        {% block main_content %}
+                            {{ main|raw }}
+                        {% endblock %}
+                    </div>
+                </main>
+            </turbo-frame>
         {% endblock %}
 
     </div>

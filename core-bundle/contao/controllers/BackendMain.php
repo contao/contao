@@ -239,7 +239,7 @@ class BackendMain extends Backend
 
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
-		$renderMainOnly  = $request->query->has('popup') || $request->headers->get('turbo-frame') === 'contao-main';
+		$renderMainOnly  = $request->query->has('popup') || 'contao-main' === $request->headers->get('turbo-frame');
 
 		$data['theme'] = Backend::getTheme();
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
