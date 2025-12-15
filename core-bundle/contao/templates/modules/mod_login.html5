@@ -3,7 +3,7 @@
 <?php
 
 $this->wrapperAttributes = $this
-    ->attr()
+    ->attrs()
     ->addClass($this->logout ? 'logout' : 'login')
     ->mergeWith($this->wrapperAttributes)
 ;
