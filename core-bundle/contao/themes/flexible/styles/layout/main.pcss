@@ -23,42 +23,51 @@
         .content > .tree-view:has(>.content-filter) {
             display: grid;
             grid-template-columns: calc(100% - var(--filter-width, 240px)) var(--filter-width, 240px);
-            grid-template-areas: "listing filter";
+
+            /*grid-template-areas: "listing filter";
+
 
             > .content-filter {
                 grid-area: filter;
-            }
+            }*/
 
-            > *:not(.content-filter, .operations) {
+            /*> *:not(.content-filter, .operations) {
                 grid-area: listing;
 
-                /* Do not autogrow ultra long <tables> */
+                !* Do not autogrow ultra long <tables> *!
                 .list_view {
                     overflow-x: auto;
                 }
-            }
-
-            > .operations, > #picker-menu {
-                grid-area: top;
-            }
+            }*/
 
             &:has(>.operations, > #picker-menu) {
                 grid-template-rows: auto 1fr;
                 grid-template-areas: "top filter"
                                      "listing filter";
+
+                > *:not(.content-filter, .operations) {
+                    grid-area: listing;
+                }
+
+                > .content-filter {
+                    grid-area: filter;
+                }
+
+                > .operations, > #picker-menu {
+                    grid-area: top;
+                }
             }
         }
     }
 }
 
-.popup #main {
-    float: none;
-    width: auto;
-    max-width: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    display: initial;
+/* Enlarge the popup height */
+html:has(>.popup) {
+    height: 100%;
+
+    body, #container, #main {
+        height: 100%;
+    }
 }
 
 #main .content {
