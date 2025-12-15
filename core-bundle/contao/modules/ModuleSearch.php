@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -286,15 +287,10 @@ class ModuleSearch extends Module
 
 		foreach ($meta as $v)
 		{
-			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl']))
+			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl'], $v['https://schema.org/primaryImageOfPage']['@id']))
 			{
 				continue;
 			}
-
-			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
-
-			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
 
 			$figureMeta = new Metadata(array_filter(array(
 				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
@@ -302,15 +298,25 @@ class ModuleSearch extends Module
 				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
 			)));
 
-			$figure = $figureBuilder
-				->setSize($this->imgSize)
-				->setMetadata($figureMeta)
-				->setLinkHref($result['url'])
-				->buildIfResourceExists();
+			$figure = $this->buildFigureFromId($v['https://schema.org/primaryImageOfPage']['@id'] ?? null, $result['url'], $figureMeta);
 
-			if (null === $figure)
+			if (!$figure)
 			{
-				continue;
+				$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
+				$figure = System::getContainer()
+					->get('contao.image.studio')
+					->createFigureBuilder()
+					->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls)
+					->setSize($this->imgSize)
+					->setMetadata($figureMeta)
+					->setLinkHref($result['url'])
+					->buildIfResourceExists();
+
+				if (null === $figure)
+				{
+					continue;
+				}
 			}
 
 			$template->hasImage = true;
@@ -319,5 +325,29 @@ class ModuleSearch extends Module
 
 			return;
 		}
+	}
+
+	private function buildFigureFromId(string|null $id, string $url, Metadata $metadata): Figure|null
+	{
+		if (!$id || !str_starts_with($id, '#/schema/image/'))
+		{
+			return null;
+		}
+
+		$uuid = substr($id, \strlen('#/schema/image/'));
+
+		if (!Validator::isStringUuid($uuid))
+		{
+			return null;
+		}
+
+		return System::getContainer()
+			->get('contao.image.studio')
+			->createFigureBuilder()
+			->fromUuid($uuid)
+			->setSize($this->imgSize)
+			->setMetadata($metadata)
+			->setLinkHref($url)
+			->buildIfResourceExists();
 	}
 }
