@@ -119,6 +119,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'href' => $this->getNewHref($mode, $pid),
             'label' => $label,
             'title' => $title,
+            'icon' => $GLOBALS['TL_DCA'][$this->table]['list']['operations']['new']['icon'] ?? null,
             'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null))->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
             'method' => 'POST',
             'primary' => true,
