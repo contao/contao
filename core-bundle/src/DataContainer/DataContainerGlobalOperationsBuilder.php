@@ -40,12 +40,6 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
     public function __toString(): string
     {
-        $this->operations[] = [
-            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--filter-target="count"></sup></button>',
-            'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
-            'primary' => true,
-        ];
-
         $operations = $this->cleanOperations();
 
         if (!$operations) {
