@@ -1,6 +1,4 @@
-{% if title is defined %}
-    <label for="{{ name }}">{{ title }}</label>
-{% endif %}
+<label for="{{ name }}">{{ title }}</label>
 
 {% set select_wrapper_attributes = attrs()
     .addClass('tl_select_wrapper')

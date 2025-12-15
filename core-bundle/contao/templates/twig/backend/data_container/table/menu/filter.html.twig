@@ -1,7 +1,7 @@
 {% trans_default_domain 'contao_default' %}
 
-<div class="tl_filter tl_subpanel">
-    <strong>{{ 'MSC.filter'|trans }}:</strong>
+<fieldset class="tl_filter tl_subpanel">
+    <legend>{{ 'MSC.filter'|trans }}</legend>
 
     {% for filter in filters %}
         {{ include('@Contao/backend/data_container/table/menu/_select.html.twig', {
@@ -13,4 +13,4 @@
             select_attributes: attrs().set('data-action', 'contao--filter#updateCount'),
         }) }}
     {% endfor %}
-</div>
+</fieldset>
