@@ -120,14 +120,6 @@ class DefaultGlobalOperationsListener
             ];
         }
 
-        $operations += [
-            'toggleFilter' => [
-                'button_callback' => static fn (DataContainerOperation $operation) => $operation->setHtml('<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$GLOBALS['TL_LANG']['DCA']['toggleFilter'][0].'<sup data-contao--filter-target="count"></sup></button>'),
-                'listAttributes' => ' style="display:none"',
-                'primary' => true,
-            ],
-        ];
-
         if ($canEdit || $canCopy || $canDelete || ($canSort && ($isParentMode || $isTreeMode || $isExtendedTreeMode))) {
             $operations += [
                 'all' => [
@@ -139,6 +131,14 @@ class DefaultGlobalOperationsListener
                 ],
             ];
         }
+
+        $operations += [
+            'toggleFilter' => [
+                'button_callback' => static fn (DataContainerOperation $operation) => $operation->setHtml('<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$GLOBALS['TL_LANG']['DCA']['toggleFilter'][0].'<sup data-contao--filter-target="count"></sup></button>'),
+                'listAttributes' => ' style="display:none"',
+                'primary' => true,
+            ],
+        ];
 
         return $operations;
     }
