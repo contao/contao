@@ -56,6 +56,7 @@
             align-items: start;
             column-gap: var(--main-panel-gap, 10px);
             grid-template-columns: calc(100% - var(--main-panel-gap, 10px) - var(--filter-width, 240px)) var(--filter-width, 240px);
+            min-height: 100%;
 
             &:has(>.operations, > #picker-menu) {
                 grid-template-rows: auto 1fr;
