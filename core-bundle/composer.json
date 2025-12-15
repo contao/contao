@@ -156,7 +156,7 @@
         "terminal42/service-annotation-bundle": "^1.1",
         "toflar/cronjob-supervisor": "^2.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.18",
+        "twig/twig": "^3.21",
         "ua-parser/uap-php": "^3.9",
         "web-auth/webauthn-lib": "^5.0",
         "web-auth/webauthn-stimulus": "^5.0",
