@@ -3527,7 +3527,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->addNewButton($operations::CREATE_TOP, $this->strTable, 0);
 		}
 
-		$parameters['buttons'] = $operations;
+		$parameters['actions'] = $operations;
 		$parameters['tree_class'] = $treeClass;
 		$parameters['records'] = $tree;
 

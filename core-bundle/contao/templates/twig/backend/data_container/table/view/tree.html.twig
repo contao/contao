@@ -56,9 +56,7 @@
                         <ul{{ tree_attributes }}>
                             <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
                                 <div class="tl_left"></div>
-                                <div class="tl_right">
-                                    {{ buttons|raw }}
-                                </div>
+                                <div class="tl_right">{{ actions|raw }}</div>
                             </li>
                             {{ records|raw }}
                         </ul>
@@ -80,6 +78,7 @@
                         <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                         {{ block('list') }}
                     </div>
+                    {{ buttons|raw }}
                 </form>
             {% endif %}
         {% else %}
