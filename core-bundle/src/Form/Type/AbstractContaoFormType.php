@@ -32,8 +32,8 @@ abstract class AbstractContaoFormType extends AbstractType implements ServiceSub
 
     public static function getSubscribedServices(): array
     {
-        $services['contao.csrf.token_manager'] = '?'.ContaoCsrfTokenManager::class;
-        $services['parameter_bag'] = '?'.ParameterBagInterface::class;
+        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
+        $services['parameter_bag'] = ParameterBagInterface::class;
 
         return $services;
     }

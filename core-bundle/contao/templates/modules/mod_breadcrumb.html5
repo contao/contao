@@ -1,7 +1,7 @@
 <?php
 
 $this->wrapperAttributes = $this
-    ->attr($this->cssID)
+    ->attrs($this->cssID)
     ->addClass([$this->class, 'block'])
     ->addStyle($this->style ?? '')
     ->set('aria-label', $this->trans('MSC.breadcrumbMenu'))

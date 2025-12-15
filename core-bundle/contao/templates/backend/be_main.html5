@@ -1,7 +1,7 @@
 <?php
 
 $this->rootAttributes = $this
-    ->attr()
+    ->attrs()
     ->set('lang', $this->language)
     ->set('data-controller', 'contao--scroll-offset')
     ->set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
@@ -9,7 +9,7 @@ $this->rootAttributes = $this
 ;
 
 $this->bodyAttributes = $this
-    ->attr($this->attributes)
+    ->attrs($this->attributes)
     ->set('id', 'top')
     ->addClass('be_main')
     ->addClass('popup', $this->isPopup)
@@ -20,7 +20,7 @@ $this->bodyAttributes = $this
 ;
 
 $this->containerAttributes = $this
-    ->attr()
+    ->attrs()
     ->addClass($this->containerClass)
     ->mergeWith($this->containerAttributes)
 ;
