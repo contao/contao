@@ -3353,14 +3353,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Return if a mandatory field (id, pid, sorting) is missing
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$db->fieldExists('id', $table) || !$db->fieldExists('pid', $table) || !$db->fieldExists('sorting', $table)))
 		{
-			$parameters['error']['tableIsMissingField'] = true;
+			$parameters['error']['table_is_missing_field'] = true;
 			return $this->render('view/tree', $parameters);
 		}
 
 		// Return if there is no parent table
 		if (!$this->ptable && $blnModeTreeExtended)
 		{
-			$parameters['error']['tableIsMissingParent'] = true;
+			$parameters['error']['table_is_missing_parent'] = true;
 			return $this->render('view/tree', $parameters);
 		}
 

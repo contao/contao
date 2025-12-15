@@ -15,9 +15,9 @@
 %}
 
 <div{{ view_attributes }}>
-    {% if error.tableIsMissingField|default %}
+    {% if error.table_is_missing_field|default %}
         <p class="tl_empty">{{ 'ERR.treeMissingField'|trans({'%s': table}) }}</p>
-    {% elseif error.tableIsMissingParent|default %}
+    {% elseif error.table_is_missing_parent|default %}
         <p class="tl_empty">{{ 'ERR.treeMissingParent'|trans({'%s': table}) }}</p>
     {% endif %}
 
