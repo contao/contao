@@ -1053,7 +1053,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
 			}
 
-			if ($objInsertStmt && $objInsertStmt->affectedRows)
+			if ($objInsertStmt?->affectedRows)
 			{
 				$insertID = $objInsertStmt->insertId;
 
