@@ -26,7 +26,20 @@
     }
 }
 
-@media (width < 768px) {
+.popup #main {
+    .content {
+        height: auto;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .content-inner {
+        border: none;
+    }
+}
+
+@media (width < 992px) {
     #main {
         .content-filter {
             border: 0;
@@ -35,7 +48,7 @@
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     #main {
         .content:has(>.content-filter),
         .content > .tree-view:has(>.content-filter) {
@@ -63,21 +76,4 @@
             }
         }
     }
-}
-
-/* Enlarge the popup height */
-html:has(>.popup) {
-    height: 100%;
-
-    body, #container, #main {
-        height: 100%;
-    }
-}
-
-.popup #main .content {
-    height: auto;
-    padding: 9px 6px 0;
-    margin: 0;
-    border: 0;
-    border-radius: 0;
 }
