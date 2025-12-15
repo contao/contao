@@ -131,11 +131,16 @@
 .tl_submit_panel {
     position: sticky;
     bottom: 0;
-    background: var(--body-bg);
+    background: var(--panel-bg);
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     padding: 15px;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+
+    &.is-sticky {
+        border-radius: 0;
+    }
 }
 
 @media (width < 768px) {
@@ -184,14 +189,19 @@
             background: rgba(0, 0, 0, .7);
         }
     }
+
+    .tl_submit_panel {
+        border-radius: 0;
+    }
 }
 
 @media (min-width: 768px) {
 
     #main {
         .content-filter {
-            border-bottom: 0;
             border-left: 1px solid var(--content-border);
+            position: sticky;
+            top: 15px;
         }
     }
 }
@@ -199,6 +209,7 @@
 @media (min-width: 1280px) {
     :root {
         --filter-width: 300px;
+        --main-panel-gap: 15px;
     }
 
     .tl_submit_panel {
