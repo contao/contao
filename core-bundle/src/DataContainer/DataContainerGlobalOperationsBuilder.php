@@ -40,6 +40,12 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
     public function __toString(): string
     {
+        $this->operations[] = [
+            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--filter-target="count"></sup></button>',
+            'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
+            'primary' => true,
+        ];
+
         $operations = $this->cleanOperations();
 
         if (!$operations) {
@@ -113,7 +119,6 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'href' => $this->getNewHref($mode, $pid),
             'label' => $label,
             'title' => $title,
-            'icon' => $GLOBALS['TL_DCA'][$this->table]['list']['operations']['new']['icon'] ?? null,
             'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null))->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
             'method' => 'POST',
             'primary' => true,
