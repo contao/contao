@@ -513,6 +513,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout']))
+		{
+			$operations->addFilterButton();
+		}
+
 		// Build the tree
 		$return = $this->panel() . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>

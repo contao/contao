@@ -85,6 +85,19 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         return $this;
     }
 
+    public function addFilterButton(): self
+    {
+        $this->ensureInitialized();
+
+        $this->append([
+            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--filter-target="count"></sup></button>',
+            //'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
+            'primary' => true,
+        ]);
+
+        return $this;
+    }
+
     public function addClearClipboardButton(): self
     {
         $this->ensureInitialized();

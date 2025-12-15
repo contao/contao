@@ -3377,6 +3377,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$operations->addFilterButton();
+
 		$return = Message::generate() . $operations;
 
 		$tree = '';
@@ -4056,6 +4058,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$operations->addFilterButton();
+
 		$return = Message::generate() . $operations;
 
 		// Get all details of the parent record
@@ -4648,6 +4652,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$operations->append(array('html' => $buttons), true);
 		}
+
+		$operations->addFilterButton();
 
 		$return = Message::generate() . $operations;
 
