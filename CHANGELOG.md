@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.9] (2025-12-15)
+
+**Fixed issues:**
+
+- [#9098] Fix headline in new box for certain elements ([aschempp])
+- [#9126] Terminate parameters in the Altcha salt ([zoglo])
+- [#9119] Fix using the deprecated `Template::attr()` method ([aschempp])
+- [#9100] Wrap the accesible navigation script variables inside a block ([zoglo])
+- [#9072] Improve the performance of the table data container provider ([Toflar])
+- [#9102] Fix incorrect property naming in `FormAltcha` ([lukasbableck])
+- [#9093] Fix the missing `disconnect()` in the `jobs-controller.js` ([Toflar])
+- [#9088] Improve the `CalendarFeedListenerTest` ([fritzmg])
+- [#9069] Allow confirming opt-in tokens as long as they are valid ([leofeyer])
+
 ## [5.6.8] (2025-12-04)
 
 **Fixed issues:**
@@ -287,6 +301,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.9]: https://github.com/contao/contao/releases/tag/5.6.9
 [5.6.8]: https://github.com/contao/contao/releases/tag/5.6.8
 [5.6.7]: https://github.com/contao/contao/releases/tag/5.6.7
 [5.6.6]: https://github.com/contao/contao/releases/tag/5.6.6
@@ -528,4 +543,13 @@ This project adheres to [Semantic Versioning].
 [#9048]: https://github.com/contao/contao/pull/9048
 [#9050]: https://github.com/contao/contao/pull/9050
 [#9068]: https://github.com/contao/contao/pull/9068
+[#9069]: https://github.com/contao/contao/pull/9069
+[#9072]: https://github.com/contao/contao/pull/9072
 [#9080]: https://github.com/contao/contao/pull/9080
+[#9088]: https://github.com/contao/contao/pull/9088
+[#9093]: https://github.com/contao/contao/pull/9093
+[#9098]: https://github.com/contao/contao/pull/9098
+[#9100]: https://github.com/contao/contao/pull/9100
+[#9102]: https://github.com/contao/contao/pull/9102
+[#9119]: https://github.com/contao/contao/pull/9119
+[#9126]: https://github.com/contao/contao/pull/9126
