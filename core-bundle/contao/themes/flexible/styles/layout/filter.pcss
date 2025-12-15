@@ -147,7 +147,7 @@
     .content-filter {
         position: absolute;
         inset: 0 0 auto auto;
-        z-index: 2;
+        z-index: 4; /* higher z-index than tl_formbody_submit */
         bottom: 0;
         background: var(--content-bg);
         width: max(280px, 65vw);
@@ -187,6 +187,7 @@
             position: absolute;
             inset: 0;
             background: rgba(0, 0, 0, .7);
+            z-index: 3; /* higher z-index than tl_formbody_submit */
         }
     }
 
