@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
@@ -38,7 +39,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
 
     public function parse(Token $token): IncludeNode
     {
-        $nameExpression = $this->parser->getExpressionParser()->parseExpression();
+        $nameExpression = $this->parser->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
         // Handle Contao includes
@@ -69,7 +70,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         $variables = null;
 
         if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
-            $variables = $this->parser->getExpressionParser()->parseExpression();
+            $variables = $this->parser->parseExpression();
         }
 
         $only = false;
@@ -86,7 +87,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     /**
      * Returns a Node if the given $node should be replaced, null otherwise.
      */
-    private function traverseAndAdjustTemplateNames(Node $node, bool $ignoreMissing): Node|null
+    private function traverseAndAdjustTemplateNames(Node $node, bool $ignoreMissing): AbstractExpression|null
     {
         if (!$node instanceof ConstantExpression) {
             foreach ($node as $name => $child) {

@@ -1163,7 +1163,7 @@ abstract class DataContainer extends Backend
 </div>';
 
 		$return = '
-<form class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main">
 <button type="button" class="close" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['close']) . '" aria-controls="content-filter" data-action="contao--toggle-state#close">×</button>
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
@@ -1347,17 +1347,6 @@ abstract class DataContainer extends Backend
 				elseif (\is_callable($labelConfig['label_callback']))
 				{
 					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
-				}
-			}
-			elseif ($mode === self::MODE_PARENT)
-			{
-				if (\is_array($labelConfig['label_callback']))
-				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
-				}
-				elseif (\is_callable($labelConfig['label_callback']))
-				{
-					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
 			else
