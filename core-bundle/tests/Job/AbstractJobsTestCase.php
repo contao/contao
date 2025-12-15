@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 abstract class AbstractJobsTestCase extends ContaoTestCase
@@ -55,7 +56,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         return $security;
     }
 
-    protected function getJobs(Security|null $security = null, ClockInterface $clock = new NativeClock(), RouterInterface|null $router = null): Jobs
+    protected function getJobs(Security|null $security = null, ClockInterface $clock = new NativeClock(), RouterInterface|null $router = null, MessageBusInterface|null $messageBus = null): Jobs
     {
         $connection = $this->createInMemorySQLiteConnection(
             [
@@ -78,6 +79,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
             $security ?? $this->createStub(Security::class),
             $this->vfs,
             $router ?? $this->createStub(RouterInterface::class),
+            $messageBus ?? $this->createStub(MessageBusInterface::class),
             $clock,
         );
     }

@@ -157,6 +157,19 @@ abstract class ContentElementTestCase extends TestCase
             ->willReturn($page)
         ;
 
+        $translator = $this->createStub(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(
+                static fn (string $id): string => match ($id) {
+                    'MSC.decimalSeparator' => '.',
+                    'MSC.thousandsSeparator' => ',',
+                    'UNITS.0' => 'Byte',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
+                },
+            )
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
         $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
@@ -169,6 +182,7 @@ abstract class ContentElementTestCase extends TestCase
         $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
         $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
         $container->set('contao.routing.page_finder', $pageFinder);
+        $container->set('translator', $translator);
 
         if ($adjustedContainer) {
             $container->merge($adjustedContainer);
@@ -530,14 +544,6 @@ abstract class ContentElementTestCase extends TestCase
 
     protected function getDefaultFramework(array $nestedFragments = []): ContaoFramework
     {
-        $GLOBALS['TL_LANG'] = [
-            'MSC' => [
-                'decimalSeparator' => '.',
-                'thousandsSeparator' => ',',
-            ],
-            'UNITS' => ['Byte'],
-        ];
-
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
