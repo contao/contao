@@ -304,7 +304,9 @@ class ModuleSearch extends Module
 			{
 				$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
 
-				$figure = System::getContainer()->get('contao.image.studio')->createFigureBuilder()
+				$figure = System::getContainer()
+					->get('contao.image.studio')
+					->createFigureBuilder()
 					->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls)
 					->setSize($this->imgSize)
 					->setMetadata($figureMeta)
@@ -339,7 +341,9 @@ class ModuleSearch extends Module
 			return null;
 		}
 
-		return System::getContainer()->get('contao.image.studio')->createFigureBuilder()
+		return System::getContainer()
+			->get('contao.image.studio')
+			->createFigureBuilder()
 			->fromUuid($uuid)
 			->setSize($this->imgSize)
 			->setMetadata($metadata)
