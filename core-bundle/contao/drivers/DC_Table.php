@@ -5593,7 +5593,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$pagination = System::getContainer()->get('contao.pagination.factory')->create($paginationConfig);
 
-		return System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
+		return System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination, 'form_submit' => 'tl_pagination'));
 	}
 
 	/**
