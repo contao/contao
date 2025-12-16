@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao\Database;
 
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Util\DatabaseUtil;
 use Contao\Database\Statement;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -105,17 +106,19 @@ class StatementTest extends TestCase
         ;
 
         $connection
-            ->method(method_exists(Connection::class, 'quoteSingleIdentifier') ? 'quoteSingleIdentifier' : 'quoteIdentifier')
-            ->willReturnArgument(0)
-        ;
-
-        $connection
             ->method('getDatabasePlatform')
             ->willReturn($this->createStub(AbstractPlatform::class))
         ;
 
+        $databaseUtil = $this->createMock(DatabaseUtil::class);
+        $databaseUtil
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
         $container = new Container();
         $container->set('database_connection', $connection);
+        $container->set('contao.database_util', $databaseUtil);
 
         System::setContainer($container);
 
