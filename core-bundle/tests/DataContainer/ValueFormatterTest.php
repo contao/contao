@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DataContainer;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Util\DatabaseUtil;
 use Contao\DataContainer;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
@@ -63,6 +64,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(DatabaseUtil::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -224,6 +226,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(DatabaseUtil::class),
             $translator,
         );
 
@@ -328,6 +331,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(DatabaseUtil::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -350,7 +354,7 @@ class ValueFormatterTest extends TestCase
             Config::class => $configAdapter,
         ]);
 
-        $connection = $this->mockConnection();
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -358,9 +362,17 @@ class ValueFormatterTest extends TestCase
             ->willReturn('bar')
         ;
 
+        $databaseUtil = $this->createMock(DatabaseUtil::class);
+        $databaseUtil
+            ->expects($this->once())
+            ->method('quoteIdentifier')
+            ->willReturnCallback(static fn ($v) => '`'.$v.'`')
+        ;
+
         $valueFormatter = new ValueFormatter(
             $framework,
             $connection,
+            $databaseUtil,
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -392,6 +404,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(DatabaseUtil::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -538,6 +551,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(DatabaseUtil::class),
             $translator,
         );
 
@@ -654,17 +668,5 @@ class ValueFormatterTest extends TestCase
                 ['value' => '176468900', 'label' => '1975'],
             ],
         ];
-    }
-
-    private function mockConnection(): Connection&MockObject
-    {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method(method_exists(Connection::class, 'quoteSingleIdentifier') ? 'quoteSingleIdentifier' : 'quoteIdentifier')
-            ->willReturnCallback(static fn ($v) => '`'.$v.'`')
-        ;
-
-        return $connection;
     }
 }

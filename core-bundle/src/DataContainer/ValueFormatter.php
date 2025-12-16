@@ -16,6 +16,7 @@ use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\DatabaseUtil;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FilesModel;
@@ -41,6 +42,7 @@ class ValueFormatter implements ResetInterface
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Connection $connection,
+        private readonly DatabaseUtil $databaseUtil,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -376,7 +378,7 @@ class ValueFormatter implements ResetInterface
     {
         // Cannot use isset() because the value can be NULL
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
-            $dbField = $this->quoteIdentifier($field);
+            $dbField = $this->databaseUtil->quoteIdentifier($field);
             $value = $this->connection->fetchOne("SELECT $dbField FROM $table WHERE id=?", [$id]);
 
             $this->foreignValueCache[$table][$field][$id] = false === $value ? $id : $value;
@@ -422,26 +424,5 @@ class ValueFormatter implements ResetInterface
         }
 
         return null;
-    }
-
-    private function quoteIdentifier(string $identifier): string
-    {
-        // Quoted already or not an identifier
-        if (!preg_match('/^[A-Za-z0-9_$.]+$/', $identifier)) {
-            return $identifier;
-        }
-
-        // Backwards-compatibility for doctrine/dbal < 4.3
-        if (!method_exists(Connection::class, 'quoteSingleIdentifier')) {
-            return $this->connection->quoteIdentifier($identifier);
-        }
-
-        if (str_contains($identifier, '.')) {
-            trigger_deprecation('contao/core-bundle', '5.7', 'Passing a dot-separated identifier is deprecated. Quote each part of a qualified name instead.');
-
-            return implode('.', array_map($this->connection->quoteSingleIdentifier(...), explode('.', $identifier)));
-        }
-
-        return $this->connection->quoteSingleIdentifier($identifier);
     }
 }
