@@ -280,6 +280,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@contao.database_util'
             - '@translator'
         tags:
             - { name: kernel.reset, method: reset }
