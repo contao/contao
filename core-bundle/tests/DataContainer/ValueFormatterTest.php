@@ -20,7 +20,6 @@ use Contao\DataContainer;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValueFormatterTest extends TestCase

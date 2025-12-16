@@ -24,8 +24,16 @@ class DatabaseUtilTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method(method_exists(Connection::class, 'quoteSingleIdentifier') ? 'quoteSingleIdentifier' : 'quoteIdentifier')
-            ->willReturnCallback(fn ($v) => "`$v`");
+            ->method('quoteIdentifier')
+            ->willReturnCallback(static fn ($v) => implode('.', array_map(static fn ($vv) => "`$vv`", explode('.', $identifier))))
+        ;
+
+        if (method_exists(Connection::class, 'quoteSingleIdentifier')) {
+            $connection
+                ->method('quoteSingleIdentifier')
+                ->willReturnCallback(static fn ($v) => "`$v`")
+            ;
+        }
 
         $util = new DatabaseUtil($connection);
 
