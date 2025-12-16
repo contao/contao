@@ -14,13 +14,8 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\DatabaseUtil;
-use Contao\CoreBundle\Util\ProcessUtil;
 use Doctrine\DBAL\Connection;
-use GuzzleHttp\Promise\Is;
-use GuzzleHttp\Promise\RejectionException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Process\Process;
 
 class DatabaseUtilTest extends TestCase
 {
