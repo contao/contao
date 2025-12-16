@@ -35,12 +35,12 @@ class BackendCacheResponseListener
         $request = $event->getRequest();
         $response = $event->getResponse();
 
+        // Requests with "Accept: text/vnd.turbo-stream.html, text/html" might return a
+        // different response body than "Accept: text/html" (#9128)
+        $response->headers->set('Vary', 'Accept');
+
         if ($request->headers->has('x-turbo-request-id') && $request->isMethodCacheable() && Response::HTTP_OK === $response->getStatusCode()) {
             $response->headers->set('Cache-Control', 'private, max-age='.$this->turboMaxAge.', must-revalidate');
-
-            // Requests with "Accept: text/vnd.turbo-stream.html, text/html" might return a
-            // different response body than "Accept: text/html" (#9128)
-            $response->headers->set('Vary', 'Accept');
 
             return;
         }
