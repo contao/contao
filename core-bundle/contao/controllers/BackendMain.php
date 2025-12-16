@@ -158,8 +158,6 @@ class BackendMain extends Backend
 			$response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
 		}
 
-		$response->headers->set('Vary', 'Accept');
-
 		return $response;
 	}
 
