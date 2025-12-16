@@ -432,7 +432,7 @@ class ValueFormatter implements ResetInterface
         }
 
         // Backwards-compatibility for doctrine/dbal < 4.3
-        if (!method_exists($this->connection, 'quoteSingleIdentifier')) {
+        if (!method_exists(Connection::class, 'quoteSingleIdentifier')) {
             return $this->connection->quoteIdentifier($identifier);
         }
 
