@@ -426,8 +426,7 @@ class ValueFormatter implements ResetInterface
 
     private function quoteIdentifier(string $identifier): string
     {
-        // Quoted already or not an identifier (AbstractPlatform::quoteIdentifier()
-        // handles table.column so also allow . here)
+        // Quoted already or not an identifier
         if (!preg_match('/^[A-Za-z0-9_$.]+$/', $identifier)) {
             return $identifier;
         }
@@ -435,6 +434,12 @@ class ValueFormatter implements ResetInterface
         // Backwards-compatibility for doctrine/dbal < 4.3
         if (!method_exists($this->connection, 'quoteSingleIdentifier')) {
             return $this->connection->quoteIdentifier($identifier);
+        }
+
+        if (str_contains($identifier, '.')) {
+            trigger_deprecation('contao/core-bundle', '5.7', 'Passing a dot-separated identifier is deprecated. Quote each part of a qualified name instead.');
+
+            return implode('.', array_map($this->connection->quoteSingleIdentifier(...), explode('.', $identifier)));
         }
 
         return $this->connection->quoteSingleIdentifier($identifier);

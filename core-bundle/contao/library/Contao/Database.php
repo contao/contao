@@ -692,7 +692,7 @@ class Database
 
 		if (str_contains($strName, '.'))
 		{
-			trigger_deprecation('contao/core-bundle', '5.7', 'Passing a dot-separated identifier is deprecated. Use %s individually for each part of a qualified name instead.', __METHOD__, __METHOD__);
+			trigger_deprecation('contao/core-bundle', '5.7', 'Passing a dot-separated name is deprecated. Use %s individually for each part of a qualified name instead.', __METHOD__);
 
 			return implode('.', array_map($connection->quoteSingleIdentifier(...), explode('.', $strName)));
 		}
