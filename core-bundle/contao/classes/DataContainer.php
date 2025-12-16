@@ -1168,7 +1168,7 @@ abstract class DataContainer extends Backend
 		}
 
 		$return = '
-<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
@@ -1351,17 +1351,6 @@ abstract class DataContainer extends Backend
 				elseif (\is_callable($labelConfig['label_callback']))
 				{
 					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
-				}
-			}
-			elseif ($mode === self::MODE_PARENT)
-			{
-				if (\is_array($labelConfig['label_callback']))
-				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
-				}
-				elseif (\is_callable($labelConfig['label_callback']))
-				{
-					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
 			else

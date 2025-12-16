@@ -37,7 +37,7 @@ class SystemTest extends TestCase
             'MSC.thousandsSeparator' => '',
         ];
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(

@@ -14,10 +14,10 @@ class MyTest extends ContaoTestCase
 }
 ```
 
-## Mocking the Symfony container
+## Symfony container
 
-The `getContainerWithContaoConfiguration()` method mocks a Symfony container with the default configuration of the
-Contao core extension.
+The `getContainerWithContaoConfiguration()` method creates a Symfony container builder object with the default
+configuration of the Contao core extension.
 
 ```php
 $container = $this->getContainerWithContaoConfiguration();
@@ -35,10 +35,10 @@ echo $container->getParameter('kernel.root_dir'); // will output "/tmp/app"
 echo $container->getParameter('kernel.cache_dir'); // will output "/tmp/var/cache"
 ```
 
-## Mocking the Contao framework
+## Contao framework
 
-The `createContaoFrameworkMock()` and `createContaoFrameworkStub()` methods create a mock or stab of an initialized
-Contao framework.
+The `createContaoFrameworkMock()` and `createContaoFrameworkStub()` methods create a mock or stub object of an
+initialized Contao framework.
 
 ```php
 $framework = $this->createContaoFrameworkMock();
@@ -68,11 +68,12 @@ $adapters = [
 $framework = $this->createContaoFrameworkStub($adapters);
 ```
 
-The given Config adapter will overwrite the default Config adapter.
+A given Config adapter will overwrite the default Config adapter.
 
-## Mocking an adapter
+## Adapters
 
-The `createAdapterMock()` and `createAdapterStub()` methods will create an adapter mock or stub with the given methods.
+The `createAdapterMock()` and `createAdapterStub()` methods will create an adapter mock or stub object with the given
+methods.
 
 ```php
 $adapter = $this->createAdapterStub(['findById']);
@@ -92,10 +93,10 @@ $adapter = $this->createConfiguredAdapterStub(['findById' => $model]);
 
 This code does exactly the same as the code above.
 
-## Mocking a class with magic properties
+## Classes with magic properties
 
-The `createClassWithPropertiesMock()` and `createClassWithPropertiesStub()` methods will create a mock or stub of a
-class that uses magic `__set()` and `__get()` methods to manage properties.
+The `createClassWithPropertiesMock()` and `createClassWithPropertiesStub()` methods will create a mock or stub object of
+a class that uses magic `__set()` and `__get()` methods to manage properties.
 
 ```php
 $mock = $this->createClassWithPropertiesStub(Contao\PageModel::class);
@@ -105,7 +106,7 @@ $mock->title = 'Home';
 echo $mock->title; // will output "Home"
 ```
 
-If the class to be mocked is read-only, you can optionally pass the properties as constructor argument:
+If the class is read-only, you can optionally pass the properties as constructor argument:
 
 ```php
 $properties = [
@@ -118,17 +119,17 @@ $mock = $this->createClassWithPropertiesStub(Contao\PageModel::class, $propertie
 echo $mock->title; // will output "Home"
 ```
 
-## Mocking a token storage
+## Token storage
 
-The `createTokenStorageStub()` creates a token storage mock with a token returning either a Contao back end or front
-end user.
+The `createTokenStorageStub()` creates a token storage stub object with a token returning either a Contao back end or
+front end user.
 
 ```php
 $tokenStorage = $this->createTokenStorageStub(Contao\BackendUser::class);
 $user = $tokenStorage->getToken()->getUser();
 ```
 
-## Using a temporary directory
+## Temporary directory
 
 The `getTempDir()` method creates a temporary directory based on the test class name and returns its path.
 
