@@ -135,6 +135,25 @@ class BackendCacheResponseListenerTest extends TestCase
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }
 
+    public function testSetsVaryHeader(): void
+    {
+        $response = new Response();
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+
+        $event = new ResponseEvent(
+            $this->createStub(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+
+        $this->assertSame('Accept, Turbo-Frame', $response->headers->get('Vary'));
+    }
+
     private function createScopeMatcher(bool $isBackendMainRequest): ScopeMatcher
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
