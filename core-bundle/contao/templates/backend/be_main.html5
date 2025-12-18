@@ -54,9 +54,11 @@ $this->containerAttributes = $this
     <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>" data-turbo-track="reload"></script>
-    <script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
-    <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
-    <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+    <?php $this->block('ace_assets'); ?>
+      <script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+      <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+      <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+    <?php $this->endblock(); ?>
     <script src="<?= $this->asset('js/dropzone.min.js', 'contao-components/dropzone') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('backend.js', 'contao_core') ?>" data-turbo-track="reload"></script>
     <script><?= $this->getDateString() ?></script>

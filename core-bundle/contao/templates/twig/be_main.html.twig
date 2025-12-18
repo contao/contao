@@ -108,7 +108,7 @@
                     {% block main_headline %}
                         <h1 id="main_headline">
                             {{ headline|raw }}
-                            {{ toggleFavorites|raw }}
+                            {{ toggleFavorites|default|raw }}
                         </h1>
                     {% endblock %}
                     <div class="content">
