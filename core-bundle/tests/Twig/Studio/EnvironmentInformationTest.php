@@ -27,7 +27,7 @@ class EnvironmentInformationTest extends TestCase
 {
     public function testGetEnvironmentInformation(): void
     {
-        $tokenParser = $this->createMock(TokenParserInterface::class);
+        $tokenParser = $this->createStub(TokenParserInterface::class);
         $tokenParser
             ->method('getTag')
             ->willReturn('if')
@@ -43,7 +43,7 @@ class EnvironmentInformationTest extends TestCase
                 throw new \RuntimeException('Not implemented');
             }
 
-            public function getTag()
+            public function getTag(): string
             {
                 return 'region';
             }
@@ -54,7 +54,7 @@ class EnvironmentInformationTest extends TestCase
             }
         };
 
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
         $environment
             ->method('getTokenParsers')
             ->willReturn([$tokenParser, $tokenParserWithEndTag])
