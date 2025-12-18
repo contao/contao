@@ -4,7 +4,7 @@
     {% set page_count = pagination|default ? pagination.pageCount : number_of_pages %}
     {% if page_count > 1 %}
         {% set pagination_attributes = attrs(pagination_attributes|default)
-            .addClass('pagination', not as_editor_view)
+            .addClass('pagination', not as_editor_view|default)
             .set('role', 'navigation')
             .set('aria-label', 'MSC.pagination'|trans)
         %}
