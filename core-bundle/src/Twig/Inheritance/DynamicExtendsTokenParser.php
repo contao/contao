@@ -50,7 +50,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
             throw new SyntaxError('Cannot use "extends" in a macro.', $token->getLine(), $stream->getSourceContext());
         }
 
-        $expr = $this->parser->getExpressionParser()->parseExpression();
+        $expr = $this->parser->parseExpression();
         $sourcePath = $stream->getSourceContext()->getPath();
 
         // Handle Contao extends
