@@ -77,6 +77,7 @@ class Inspector
             $data['parent'],
             $data['uses'],
             $error,
+            $data['deprecations'],
         );
     }
 
@@ -113,30 +114,39 @@ class Inspector
         $addBlock($baseTemplate, $blockName, $data['blocks'][$blockName] ?? []);
 
         // Search used templates
-        $blockImportedViaUse = false;
-        $searchQueue = [...$data['uses']];
+        $searchUsedTemplates = function (array $data) use ($blockName, $addBlock) {
+            $searchQueue = [...$data['uses']];
+            $blockImportedViaUse = false;
 
-        while ([$currentTemplate, $currentOverwrites] = array_pop($searchQueue)) {
-            $currentData = $this->getData($currentTemplate);
+            while ([$currentTemplate, $currentOverwrites] = array_pop($searchQueue)) {
+                $currentData = $this->getData($currentTemplate);
 
-            foreach ($currentData['blocks'] as $name => $properties) {
-                $importedName = $currentOverwrites[$name] ?? $name;
+                foreach ($currentData['blocks'] as $name => $properties) {
+                    $importedName = $currentOverwrites[$name] ?? $name;
 
-                if ($importedName === $blockName) {
-                    $blockImportedViaUse = true;
-                    $addBlock($currentTemplate, $name, $properties);
+                    if ($importedName === $blockName) {
+                        $blockImportedViaUse = true;
+                        $addBlock($currentTemplate, $name, $properties);
+                    }
                 }
+
+                $searchQueue = [...$searchQueue, ...$currentData['uses']];
             }
 
-            $searchQueue = [...$searchQueue, ...$currentData['uses']];
-        }
+            return $blockImportedViaUse;
+        };
 
         // Walk up the inheritance tree
-        if (!$blockImportedViaUse) {
+        if (!$searchUsedTemplates($data)) {
             $currentData = $data;
 
             while ($parent = ($currentData['parent'] ?? false)) {
                 $currentData = $this->getData($parent);
+
+                if ($searchUsedTemplates($currentData)) {
+                    break;
+                }
+
                 $addBlock($parent, $blockName, $currentData['blocks'][$blockName] ?? []);
             }
         }

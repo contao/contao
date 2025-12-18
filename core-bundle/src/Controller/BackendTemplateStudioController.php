@@ -19,12 +19,15 @@ use Contao\CoreBundle\Twig\Inspector\BlockInformation;
 use Contao\CoreBundle\Twig\Inspector\BlockType;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
+use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
+use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,6 +60,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         private readonly ThemeNamespace $themeNamespace,
         private readonly OperationContextFactory $operationContextFactory,
         private readonly Autocomplete $autocomplete,
+        private readonly EnvironmentInformation $environmentInformation,
         private readonly Connection $connection,
         iterable $operations,
     ) {
@@ -85,6 +89,7 @@ class BackendTemplateStudioController extends AbstractBackendController
             'tree' => $this->generateTree(),
             'themes' => $availableThemes,
             'current_theme' => $themeContext,
+            'environment_information' => $this->environmentInformation->getData(),
         ]);
     }
 
@@ -173,11 +178,28 @@ class BackendTemplateStudioController extends AbstractBackendController
             $source = $this->loader->getSourceContext($logicalName);
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
             $isComponent = $templateInformation->isComponent();
+            $isLegacyTemplate = str_ends_with($logicalName, '.html5');
+
+            $getLegacyTemplateCode = static function (string $identifier): string {
+                $template = new class($identifier) extends Template {
+                    public function getCode(): string
+                    {
+                        $path = $this->getTemplatePath($this->strTemplate, $this->strFormat);
+
+                        return @file_get_contents($path) ?: '(Template not found)';
+                    }
+                };
+
+                return $template->getCode();
+            };
+
+            $templateNameInformation = $this->getTemplateNameInformation($logicalName);
 
             $template = [
-                ...$this->getTemplateNameInformation($logicalName),
+                ...$templateNameInformation,
                 'path' => $source->getPath(),
-                'code' => $source->getCode(),
+                'code' => $isLegacyTemplate ? $getLegacyTemplateCode($templateNameInformation['identifier']) : $source->getCode(),
+                'type' => $isLegacyTemplate ? 'php' : $templateNameInformation['extension'],
                 'is_origin' => $i === $numTemplates - 1,
                 'is_component' => $isComponent,
                 'relation' => [
@@ -186,7 +208,7 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'not_analyzable' => false,
                 ],
                 'annotations' => $canEdit && 0 === $i
-                    ? $this->getAnnotations($logicalName, $templateInformation->getError())
+                    ? $this->getAnnotations($logicalName, $templateInformation)
                     : [],
             ];
 
@@ -350,11 +372,11 @@ class BackendTemplateStudioController extends AbstractBackendController
         }
 
         $logicalName = $this->loader->getFirst($identifier);
-        $error = $this->inspector->inspectTemplate($logicalName)->getError();
+        $templateInformation = $this->inspector->inspectTemplate($logicalName);
 
         return $this->render('@Contao/backend/template_studio/editor/annotations.stream.html.twig', [
             'identifier' => $identifier,
-            'annotations' => $this->getAnnotations($logicalName, $error),
+            'annotations' => $this->getAnnotations($logicalName, $templateInformation),
         ]);
     }
 
@@ -471,33 +493,39 @@ class BackendTemplateStudioController extends AbstractBackendController
         ];
     }
 
-    private function getAnnotations(string $logicalName, Error|null $error): array
+    private function getAnnotations(string $logicalName, TemplateInformation $templateInformation): array
     {
         $data = [
             'autocomplete' => $this->autocomplete->getCompletions($logicalName),
+            'deprecations' => $templateInformation->getDeprecations(),
         ];
 
+        $error = $templateInformation->getError();
+
         $getRootError = static function (\Throwable $e) use (&$getRootError): \Throwable {
-            return (!($previous = $e->getPrevious())) ? $e : $getRootError($previous);
+            $previous = $e->getPrevious();
+
+            return $previous instanceof Error ? $getRootError($previous) : $e;
         };
 
         if ($error instanceof SyntaxError) {
-            $rootError = $getRootError($error);
+            $error = $getRootError($error);
+            $message = $error instanceof SyntaxError ? $error->getRawMessage() : $error->getMessage();
 
             $data['error'] = [
-                'line' => $rootError instanceof SyntaxError ? $rootError->getLine() : 1,
-                'message' => "Syntax Error\n\n{$rootError->getMessage()}",
+                'line' => $error->getLine() > 0 ? $error->getLine() : 1,
+                'message' => "Syntax Error\n\n{$message}",
             ];
         } elseif ($error instanceof LoaderError) {
             $data['error'] = [
-                'line' => 1,
-                'message' => "Loader Error\n\n{$error->getMessage()}",
+                'line' => $error->getLine() > 0 ? $error->getLine() : 1,
+                'message' => "Loader Error\n\n{$error->getRawMessage()}",
             ];
         } elseif ($error instanceof RuntimeError) {
             $data['error'] = [
                 'type' => 'warning',
-                'line' => $error->getLine(),
-                'message' => "Runtime Error\n\n{$error->getMessage()}",
+                'line' => $error->getLine() > 0 ? $error->getLine() : 1,
+                'message' => "Runtime Error\n\n{$error->getRawMessage()}",
             ];
         }
 

@@ -1,19 +1,21 @@
 {% trans_default_domain 'contao_template_studio' %}
 {% extends '@Contao/be_main.html.twig' %}
 
-{% block head %}
-    {{ parent() }}
-    <script src="{{ asset('js/ext-code_lens.js', 'contao-components/ace') }}"></script>
-{% endblock %}
+{# Remove global ace assets #}
+{% block ace_assets %}{% endblock %}
 
 {% block main %}
-    <main id="main"
-          aria-labelledby="main_headline"
-          data-controller="contao--template-studio"
-          data-action="contao--color-scheme:change@window->contao--template-studio#colorChange"
-          data-contao--template-studio-follow-url-value="{{ path('_contao_template_studio_follow.stream') }}"
-          data-contao--template-studio-block-info-url-value="{{ path('_contao_template_studio_block_info.stream') }}"
-    >
+    {% set template_studio_attrs = attrs()
+        .set('id', 'main')
+        .set('aria-labelledby', 'main_headline')
+        .set('data-controller', 'contao--template-studio')
+        .set('data-action', 'contao--color-scheme:change@window->contao--template-studio#colorChange')
+        .set('data-contao--template-studio-follow-url-value', path('_contao_template_studio_follow.stream'))
+        .set('data-contao--template-studio-block-info-url-value', path('_contao_template_studio_block_info.stream'))
+        .set('data-twig-environment', environment_information|json_encode)
+        .mergeWith(template_studio_attrs|default)
+    %}
+    <main{{ template_studio_attrs }}>
         {# Headline #}
         <h1 id="main_headline">
             {{ headline }}
