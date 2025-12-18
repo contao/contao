@@ -1,6 +1,6 @@
 {
   "backend.css": "/bundles/contaocore/backend.7d34d0ac.css",
-  "backend.js": "/bundles/contaocore/backend.c682f06a.js",
+  "backend.js": "/bundles/contaocore/backend.ff9ae040.js",
   "navigation.css": "/bundles/contaocore/navigation.54bbedc9.css",
   "navigation.js": "/bundles/contaocore/navigation.742f2632.js",
   "passkey_login.js": "/bundles/contaocore/passkey_login.6dc9446a.js",
@@ -14,9 +14,5 @@
   "images/new.svg": "/bundles/contaocore/images/new.4a644136.svg",
   "images/search--dark.svg": "/bundles/contaocore/images/search--dark.e8865bb3.svg",
   "images/search.svg": "/bundles/contaocore/images/search.2790d213.svg",
-  "images/ok.svg": "/bundles/contaocore/images/ok.e4034c11.svg",
-  "images/clouds-2.png": "/bundles/contaocore/images/clouds-2.dd4e7166.png",
-  "images/clouds-1.png": "/bundles/contaocore/images/clouds-1.d2f008c7.png",
-  "images/twilight-1.png": "/bundles/contaocore/images/twilight-1.6fc3fd6a.png",
-  "images/twilight-2.png": "/bundles/contaocore/images/twilight-2.c4a4b812.png"
+  "images/ok.svg": "/bundles/contaocore/images/ok.e4034c11.svg"
 }
