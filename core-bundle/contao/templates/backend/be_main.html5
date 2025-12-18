@@ -28,7 +28,6 @@ $this->containerAttributes = $this
 $this->mainAttributes = $this
     ->attrs()
     ->set('id', 'main')
-    ->addClass('be_main')
     ->set('aria-labelledby', 'main_headline')
     ->set('data-controller', 'contao--toggle-state contao--filter')
     ->set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
