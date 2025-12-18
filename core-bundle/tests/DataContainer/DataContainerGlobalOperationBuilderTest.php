@@ -130,6 +130,44 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ];
     }
 
+    public function testAddFilterButton(): void
+    {
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(static fn (array $parameters) => isset($parameters['operations'])
+                    && 1 === \count($parameters['operations'])
+                    && ' style="display: none;"' === (string) $parameters['operations'][0]['listAttributes']
+                    && true === $parameters['operations'][0]['primary'],
+                ),
+            )
+            ->willReturn('')
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('DCA.toggleFilter.0', [], 'contao_default')
+            ->willReturn('Filter')
+        ;
+
+        $builder = new DataContainerGlobalOperationsBuilder(
+            $this->createContaoFrameworkStub(),
+            $twig,
+            $this->createStub(UrlGeneratorInterface::class),
+            $translator,
+        );
+
+        $builder = $builder->initialize('tl_foo');
+        $builder->addFilterButton();
+
+        $this->assertSame('', (string) $builder);
+    }
+
     public function testAddClearClipboardButton(): void
     {
         $backendAdapter = $this->createAdapterMock(['addToUrl']);
