@@ -52,6 +52,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		}
 
 		$template = new BackendTemplate('be_crawl');
+		$template->message = Message::generateUnwrapped(self::class);
 		$template->subscribersWidget = $subscribersWidget;
 		$template->maxDepthWidget = $maxDepthWidget;
 		$template->memberWidget = $memberWidget;
@@ -90,8 +91,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			$job = $jobs->createJob('crawl');
 			$jobs->dispatchJob(new CrawlMessage($subscribers, $maxDepth, $headers), $job);
 
-			// TODO: translation
-			Message::addConfirmation('Yo! Check the jobs framework!', self::class);
+			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['confirmJobAdded'], self::class);
 
 			$this->reload();
 		}

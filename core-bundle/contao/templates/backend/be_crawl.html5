@@ -1,5 +1,9 @@
-
 <div id="tl_crawl" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
+  <?php if ($this->message): ?>
+    <div class="tl_message">
+      <?= $this->message ?>
+    </div>
+  <?php endif; ?>
 
   <h2 class="sub_headline sub_headline_index"><?= $this->trans('tl_maintenance.crawler') ?></h2>
     <form class="tl_form" action="" method="post">

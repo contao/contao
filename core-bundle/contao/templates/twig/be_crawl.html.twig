@@ -1,7 +1,11 @@
 {% trans_default_domain 'contao_default' %}
 
 <div id="tl_crawl" class="maintenance_{{ isActive ? 'active' : 'inactive' }}">
-
+    {% if message|default %}
+        <div class="tl_message">
+            {{ message|raw }}
+        </div>
+    {% endif %}
     <h2 class="sub_headline sub_headline_index">{{ 'tl_maintenance.crawler'|trans }}</h2>
         <form class="tl_form" action="" method="post">
             <div class="tl_formbody_edit">
