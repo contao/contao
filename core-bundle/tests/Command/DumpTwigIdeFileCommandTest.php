@@ -28,7 +28,10 @@ class DumpTwigIdeFileCommandTest extends TestCase
         $tester->execute([]);
 
         $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
-        $this->assertStringContainsString('The namespace lookup file was written to "var/build/contao-ide/ide-twig.json".', $tester->getDisplay());
+        $this->assertStringContainsString(
+            'The namespace lookup file was written to "var/build/contao-ide/ide-twig.json".',
+            $this->getNormalizedDisplay($tester),
+        );
     }
 
     public function testWritesFileToCustomLocation(): void
@@ -39,10 +42,13 @@ class DumpTwigIdeFileCommandTest extends TestCase
         $tester->execute(['dir' => 'foo']);
 
         $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
-        $this->assertStringContainsString('The namespace lookup file was written to "foo/ide-twig.json".', $tester->getDisplay());
+        $this->assertStringContainsString(
+            'The namespace lookup file was written to "foo/ide-twig.json".',
+            $this->getNormalizedDisplay($tester),
+        );
     }
 
-    protected function getCommand(string $expectedWriteDir): DumpTwigIdeFileCommand
+    private function getCommand(string $expectedWriteDir): DumpTwigIdeFileCommand
     {
         $namespaceLookupFileGenerator = $this->createMock(NamespaceLookupFileGenerator::class);
         $namespaceLookupFileGenerator
@@ -56,5 +62,12 @@ class DumpTwigIdeFileCommandTest extends TestCase
             '/project/var/build',
             '/project',
         );
+    }
+
+    private function getNormalizedDisplay(CommandTester $tester): string
+    {
+        $output = str_replace(PHP_EOL, '', $tester->getDisplay());
+
+        return preg_replace('/  +/', ' ', $output);
     }
 }
