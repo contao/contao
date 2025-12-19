@@ -333,7 +333,7 @@ class tl_user_group extends Backend
 		}
 
 		$currentRecord = $dc->getCurrentRecord();
-		$modules = $currentRecord ? StringUtil::deserialize($currentRecord['modules'] ?? null) : [];
+		$modules = $currentRecord ? StringUtil::deserialize($currentRecord['modules'] ?? null) : array();
 
 		// Unset the template editor unless the user is an administrator or has been granted access to the template editor
 		if ($currentRecord && !BackendUser::getInstance()->isAdmin && (!is_array($modules) || !in_array('tpl_editor', $modules)) && ($key = array_search('tpl_editor', $arrModules['design'])) !== false)
