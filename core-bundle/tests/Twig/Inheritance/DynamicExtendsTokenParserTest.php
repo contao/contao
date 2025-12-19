@@ -17,6 +17,7 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
@@ -125,8 +126,8 @@ class DynamicExtendsTokenParserTest extends TestCase
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Template not found in hierarchy.');
+        $this->expectException(LoaderError::class);
+        $this->expectExceptionMessage('Template not found in hierarchy. Optional templates are only supported in array notation at line 1.');
 
         $parser->parse($tokenStream);
     }

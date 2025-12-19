@@ -1065,7 +1065,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
 			}
 
-			if ($objInsertStmt && $objInsertStmt->affectedRows)
+			if ($objInsertStmt?->affectedRows)
 			{
 				$insertID = $objInsertStmt->insertId;
 
@@ -3389,6 +3389,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$operations->addFilterButton();
+
 		$return = Message::generate() . $operations;
 
 		$tree = '';
@@ -3557,6 +3559,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return '<div
+				class="tree-view"
 				data-controller="contao--toggle-nodes"
 				data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
 				data-contao--toggle-nodes-toggle-action-value="toggleStructure"
@@ -4066,6 +4069,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$operations->append(array('html' => $buttons), true);
 		}
+
+		$operations->addFilterButton();
 
 		$return = Message::generate() . $operations;
 
@@ -4659,6 +4664,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$operations->append(array('html' => $buttons), true);
 		}
+
+		$operations->addFilterButton();
 
 		$parameters = array();
 		$records = array();
@@ -5496,7 +5503,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'options' => array(
 					array(
 						'value' => 'tl_' . $field,
-						'label' => '---',
+						'label' => '-',
 						'selected' => false,
 					),
 					...$options,

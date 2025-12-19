@@ -1146,34 +1146,29 @@ abstract class DataContainer extends Backend
 
 		$return = '';
 		$intTotal = \count($arrPanels);
-		$intLast = $intTotal - 1;
 
 		for ($i=0; $i<$intTotal; $i++)
 		{
-			$submit = '';
-
-			if ($i == $intLast)
-			{
-				$submit = '
-<div class="tl_submit_panel tl_subpanel">
-  <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
-</div>';
-			}
-
 			$return .= '
 <div class="tl_panel">
-  ' . $arrPanels[$i] . $submit . '
+  ' . $arrPanels[$i] . '
 </div>';
 		}
 
+		$submit = '
+<div class="tl_submit_panel tl_subpanel" data-controller="contao--sticky-observer">
+  <button name="filter" id="filter" class="tl_submit filter_apply">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
+  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_submit filter_reset">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
+</div>';
+
 		$return = '
-<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main">
+<button type="button" class="close" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['close']) . '" aria-controls="content-filter" data-action="contao--toggle-state#close">×</button>
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
   ' . $return . '
-</div>
+</div>' . $submit . '
 </form>';
 
 		return $return;
@@ -1351,17 +1346,6 @@ abstract class DataContainer extends Backend
 				elseif (\is_callable($labelConfig['label_callback']))
 				{
 					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
-				}
-			}
-			elseif ($mode === self::MODE_PARENT)
-			{
-				if (\is_array($labelConfig['label_callback']))
-				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
-				}
-				elseif (\is_callable($labelConfig['label_callback']))
-				{
-					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
 			else
