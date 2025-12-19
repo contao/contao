@@ -2351,8 +2351,8 @@
       <trans-unit id="MSC.field">
         <source>Field</source>
       </trans-unit>
-      <trans-unit id="MSC.term">
-        <source>Term</source>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
