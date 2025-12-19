@@ -1394,8 +1394,6 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.cache_dir%'
-            - '%kernel.environment%'
 
     contao.twig.finder_factory:
         class: Contao\CoreBundle\Twig\Finder\FinderFactory
@@ -1424,6 +1422,17 @@ services:
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
+
+    contao.twig.ide.namespace_lookup_file_generator:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator
+        arguments:
+            - '@contao.twig.filesystem_loader'
+
+    contao.twig.ide.namespace_lookup_file_warmer:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileWarmer
+        arguments:
+            - '@contao.twig.ide.namespace_lookup_file_generator'
+            - '%kernel.environment%'
 
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime

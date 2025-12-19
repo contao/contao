@@ -15,8 +15,6 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ContaoFilesystemLoaderWarmerTest extends TestCase
 {
@@ -40,99 +38,10 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         $filesystemLoaderWarmer->warmUp();
     }
 
-    public function testWritesIdeAutoCompletionFile(): void
-    {
-        $loader = $this->createStub(ContaoFilesystemLoader::class);
-        $loader
-            ->method('getInheritanceChains')
-            ->willReturn([
-                'a' => [
-                    '/templates/a.html.twig' => '@Contao_Global/a.html.twig',
-                    '/contao/templates/a.html.twig' => '@Contao_App/a.html.twig',
-                ],
-                'b' => [
-                    '/templates/b.html.twig' => '@Contao_Global/b.html.twig',
-                ],
-                'foo/c' => [
-                    '/templates/foo/c.html.twig' => '@Contao_Global/foo/c.html.twig',
-                ],
-                'bar/d' => [
-                    '/vendor/demo/bar/d.html.twig' => '@Contao_DemoBundle/bar/d.html.twig',
-                ],
-            ])
-        ;
-
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('dumpFile')
-            ->with(
-                '/cache/contao/ide-twig.json',
-                $this->callback(
-                    function (string $json): bool {
-                        $expectedData = [
-                            'namespaces' => [
-                                ['namespace' => 'Contao', 'path' => '../../templates'],
-                                ['namespace' => 'Contao_Global', 'path' => '../../templates'],
-                                ['namespace' => 'Contao', 'path' => '../../contao/templates'],
-                                ['namespace' => 'Contao_App', 'path' => '../../contao/templates'],
-                                ['namespace' => 'Contao', 'path' => '../../vendor/demo'],
-                                ['namespace' => 'Contao_DemoBundle', 'path' => '../../vendor/demo'],
-                            ],
-                        ];
-
-                        $this->assertJson($json);
-                        $this->assertSame($expectedData, json_decode($json, true, 512, JSON_THROW_ON_ERROR));
-
-                        return true;
-                    },
-                ),
-            )
-        ;
-
-        $warmer = $this->getContaoFilesystemLoaderWarmer($loader, 'dev', $filesystem);
-        $warmer->warmUp();
-    }
-
-    public function testDoesNotWriteAutoCompletionFileInProd(): void
-    {
-        $loader = $this->createMock(ContaoFilesystemLoader::class);
-        $loader
-            ->expects($this->never())
-            ->method('getInheritanceChains')
-        ;
-
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->never())
-            ->method('dumpFile')
-        ;
-
-        $warmer = $this->getContaoFilesystemLoaderWarmer($loader, 'prod', $filesystem);
-        $warmer->warmUp();
-    }
-
-    public function testToleratesFailingWritesWhenWritingIdeAutoCompletionFile(): void
-    {
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->expects($this->once())
-            ->method('dumpFile')
-            ->with('/cache/contao/ide-twig.json', $this->anything())
-            ->willThrowException(new IOException('write fail'))
-        ;
-
-        $warmer = $this->getContaoFilesystemLoaderWarmer(null, 'dev', $filesystem);
-        $warmer->warmUp();
-    }
-
-    private function getContaoFilesystemLoaderWarmer(ContaoFilesystemLoader|null $filesystemLoader = null, string|null $environment = null, Filesystem|null $filesystem = null): ContaoFilesystemLoaderWarmer
+    private function getContaoFilesystemLoaderWarmer(ContaoFilesystemLoader|null $filesystemLoader = null): ContaoFilesystemLoaderWarmer
     {
         return new ContaoFilesystemLoaderWarmer(
             $filesystemLoader ?? $this->createStub(ContaoFilesystemLoader::class),
-            '/cache',
-            $environment ?? 'prod',
-            $filesystem ?? $this->createStub(Filesystem::class),
         );
     }
 }
