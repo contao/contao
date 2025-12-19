@@ -22,7 +22,7 @@
         {% for option in getOptions.invoke() %}
             {% if option.type == 'group_start' %}
                 <fieldset>
-                <legend>{{ option.label|raw }}</legend>
+                <legend>{{ option.label|insert_tag_raw|raw }}</legend>
             {% endif %}
 
             {% if option.type == 'option' %}

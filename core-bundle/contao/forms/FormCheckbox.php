@@ -179,7 +179,7 @@ class FormCheckbox extends Widget
 				$arrOptions[] = array
 				(
 					'type'  => 'group_start',
-					'label' => StringUtil::specialchars($arrOption['label'] ?? '')
+					'label' => $arrOption['label'] ?? '',
 				);
 
 				$blnHasGroups = true;
