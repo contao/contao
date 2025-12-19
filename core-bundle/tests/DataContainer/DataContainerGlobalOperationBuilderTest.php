@@ -149,10 +149,15 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('trans')
-            ->with('DCA.toggleFilter.0', [], 'contao_default')
-            ->willReturn('Filter')
+            ->willReturnCallback(
+                static fn (string $id): string => match ($id) {
+                    'DCA.toggleFilter.0' => 'Filter',
+                    'DCA.toggleFilter.1' => 'Show the filters',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
+                },
+            )
         ;
 
         $builder = new DataContainerGlobalOperationsBuilder(
