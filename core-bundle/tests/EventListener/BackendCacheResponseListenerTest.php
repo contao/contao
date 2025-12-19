@@ -151,7 +151,7 @@ class BackendCacheResponseListenerTest extends TestCase
 
         (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
 
-        $this->assertSame('Accept, Turbo-Frame', $response->headers->get('Vary'));
+        $this->assertSame(['Accept', 'Turbo-Frame'], $response->getVary());
     }
 
     private function createScopeMatcher(bool $isBackendMainRequest): ScopeMatcher
