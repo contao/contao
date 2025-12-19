@@ -435,7 +435,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         }
 
         $prefixTree = [];
-        $legacyNodes = [];
+        $notPrefixed = [];
 
         foreach ($this->getFinder() as $identifier => $extension) {
             $parts = explode('/', $identifier);
@@ -460,9 +460,9 @@ class BackendTemplateStudioController extends AbstractBackendController
                 }
             };
 
-            // Group legacy templates under their own key
-            if ($this->isLegacyIdentifier($identifier)) {
-                $legacyNodes[$identifier] = [$leaf];
+            // Group templates without prefix under their own key
+            if (!str_contains($identifier, '/')) {
+                $notPrefixed[$identifier] = [$leaf];
                 continue;
             }
 
@@ -482,7 +482,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         };
 
         $sortRecursive($prefixTree);
-        ksort($legacyNodes);
+        ksort($notPrefixed);
 
         return array_filter([
             // Apply opinionated ordering by explicitly placing keys of the prefix tree
@@ -491,8 +491,8 @@ class BackendTemplateStudioController extends AbstractBackendController
             'frontend_module' => [],
             'component' => [],
             ...$prefixTree,
-            // Append legacy nodes to the end under a virtual "legacy" key
-            '' => $legacyNodes,
+            // Append nodes without prefix to the end under a virtual key
+            '' => $notPrefixed,
         ]);
     }
 
