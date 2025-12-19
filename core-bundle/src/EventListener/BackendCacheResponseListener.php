@@ -36,7 +36,7 @@ class BackendCacheResponseListener
         $response = $event->getResponse();
 
         // Vary on Accept and Turbo-Frame (#9128)
-        $response->headers->set('Vary', 'Accept, Turbo-Frame');
+        $response->setVary(array_unique([...$response->getVary(), 'Accept', 'Turbo-Frame']));
 
         if ($request->headers->has('x-turbo-request-id') && $request->isMethodCacheable() && Response::HTTP_OK === $response->getStatusCode()) {
             $response->headers->set('Cache-Control', 'private, max-age='.$this->turboMaxAge.', must-revalidate');
