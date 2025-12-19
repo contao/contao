@@ -21,7 +21,7 @@ class NamespaceLookupFileGeneratorTest extends TestCase
 {
     public function testWritesFile(): void
     {
-        $loader = $this->createMock(ContaoFilesystemLoader::class);
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('getInheritanceChains')
             ->willReturn([

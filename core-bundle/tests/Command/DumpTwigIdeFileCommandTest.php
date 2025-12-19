@@ -28,6 +28,7 @@ class DumpTwigIdeFileCommandTest extends TestCase
         $tester->execute([]);
 
         $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+
         $this->assertStringContainsString(
             'The namespace lookup file was written to "var/build/contao-ide/ide-twig.json".',
             $this->getNormalizedDisplay($tester),
@@ -42,6 +43,7 @@ class DumpTwigIdeFileCommandTest extends TestCase
         $tester->execute(['dir' => 'foo']);
 
         $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+
         $this->assertStringContainsString(
             'The namespace lookup file was written to "foo/ide-twig.json".',
             $this->getNormalizedDisplay($tester),

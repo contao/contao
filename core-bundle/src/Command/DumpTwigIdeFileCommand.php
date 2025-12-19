@@ -44,9 +44,7 @@ class DumpTwigIdeFileCommand extends Command
             $this->projectDir,
         );
 
-        $this
-            ->addArgument('dir', InputArgument::OPTIONAL, 'Target path relative to the project directory.', $defaultDir)
-        ;
+        $this->addArgument('dir', InputArgument::OPTIONAL, 'Target path relative to the project directory.', $defaultDir);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

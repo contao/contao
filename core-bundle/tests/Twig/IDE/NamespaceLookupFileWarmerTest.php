@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\Twig\IDE;
 
 use Contao\CoreBundle\Tests\TestCase;
@@ -55,7 +63,7 @@ class NamespaceLookupFileWarmerTest extends TestCase
 
         $this
             ->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator, 'prod')
-            ->warmUp('/var/cache', null)
+            ->warmUp('/var/cache')
         ;
     }
 
@@ -77,7 +85,7 @@ class NamespaceLookupFileWarmerTest extends TestCase
     private function getNamespaceLookupFileWarmer(NamespaceLookupFileGenerator|null $namespaceLookupFileGenerator = null, string $environment = 'dev'): NamespaceLookupFileWarmer
     {
         return new NamespaceLookupFileWarmer(
-            $namespaceLookupFileGenerator ?? $this->createMock(NamespaceLookupFileGenerator::class),
+            $namespaceLookupFileGenerator ?? $this->createStub(NamespaceLookupFileGenerator::class),
             $environment,
         );
     }
