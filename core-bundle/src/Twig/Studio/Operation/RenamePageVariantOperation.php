@@ -18,10 +18,15 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudio
  * @experimental
  */
 #[AsOperationForTemplateStudioElement]
-class CreateLayoutVariantOperation extends AbstractCreateVariantOperation
+class RenamePageVariantOperation extends AbstractRenameVariantOperation
 {
     protected function getPrefix(): string
     {
-        return 'layout';
+        return 'page';
+    }
+
+    protected function getDatabaseReferencesThatShouldBeMigrated(): array
+    {
+        return ['tl_layout.template'];
     }
 }

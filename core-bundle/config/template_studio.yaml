@@ -42,7 +42,7 @@ services:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateFrontendModuleVariantOperation
 
     contao.twig.studio.create_layout_variant_operation:
-        class: Contao\CoreBundle\Twig\Studio\Operation\CreateLayoutVariantOperation
+        class: Contao\CoreBundle\Twig\Studio\Operation\CreatePageVariantOperation
 
     contao.twig.studio.create_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateOperation
@@ -62,7 +62,7 @@ services:
         class: Contao\CoreBundle\Twig\Studio\Operation\RenameFrontendModuleVariantOperation
 
     contao.twig.studio.rename_layout_variant_operation:
-        class: Contao\CoreBundle\Twig\Studio\Operation\RenameLayoutVariantOperation
+        class: Contao\CoreBundle\Twig\Studio\Operation\RenamePageVariantOperation
 
     contao.twig.studio.save_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\SaveOperation

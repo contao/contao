@@ -452,7 +452,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         $sortRecursive($prefixTree);
 
         // Apply opinionated ordering
-        return ['layout' => [], 'content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
+        return ['page' => [], 'content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
     }
 
     /**
