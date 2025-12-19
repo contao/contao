@@ -1146,7 +1146,6 @@ abstract class DataContainer extends Backend
 
 		$return = '';
 		$intTotal = \count($arrPanels);
-		$intLast = $intTotal - 1;
 
 		for ($i=0; $i<$intTotal; $i++)
 		{
@@ -1158,8 +1157,8 @@ abstract class DataContainer extends Backend
 
 		$submit = '
 <div class="tl_submit_panel tl_subpanel" data-controller="contao--sticky-observer">
-  <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
+  <button name="filter" id="filter" class="tl_submit filter_apply">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
+  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_submit filter_reset">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
 </div>';
 
 		$return = '
