@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Twig\IDE\NamespaceLookupFileGenerator;
-use Contao\CoreBundle\Twig\IDE\NamespaceLookupFileWarmer;
+use Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator;
+use Contao\CoreBundle\Twig\Ide\NamespaceLookupFileWarmer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
     name: 'contao:dump-twig-ide-file',
     description: 'Dumps an "ide-twig.json" namespace lookup file that allows IDEs to understand the Contao template hierarchy.',
 )]
-class DumpTwigIDEFileCommand extends Command
+class DumpTwigIdeFileCommand extends Command
 {
     public function __construct(
         private readonly NamespaceLookupFileGenerator $namespaceLookupFileGenerator,

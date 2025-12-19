@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Command;
 
-use Contao\CoreBundle\Command\DumpTwigIDEFileCommand;
+use Contao\CoreBundle\Command\DumpTwigIdeFileCommand;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\IDE\NamespaceLookupFileGenerator;
+use Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class DumpTwigIDEFileCommandTest extends TestCase
+class DumpTwigIdeFileCommandTest extends TestCase
 {
     public function testWritesFileAtDefaultLocation(): void
     {
@@ -42,7 +42,7 @@ class DumpTwigIDEFileCommandTest extends TestCase
         $this->assertStringContainsString('The namespace lookup file was written to "foo/ide-twig.json".', $tester->getDisplay());
     }
 
-    protected function getCommand(string $expectedWriteDir): DumpTwigIDEFileCommand
+    protected function getCommand(string $expectedWriteDir): DumpTwigIdeFileCommand
     {
         $namespaceLookupFileGenerator = $this->createMock(NamespaceLookupFileGenerator::class);
         $namespaceLookupFileGenerator
@@ -51,7 +51,7 @@ class DumpTwigIDEFileCommandTest extends TestCase
             ->with($expectedWriteDir)
         ;
 
-        return new DumpTwigIDEFileCommand(
+        return new DumpTwigIdeFileCommand(
             $namespaceLookupFileGenerator,
             '/project/var/build',
             '/project',

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Twig\IDE;
+namespace Contao\CoreBundle\Twig\Ide;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\IDE;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\IDE\NamespaceLookupFileGenerator;
+use Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Symfony\Component\Filesystem\Filesystem;
 

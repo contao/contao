@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\IDE;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\IDE\NamespaceLookupFileGenerator;
-use Contao\CoreBundle\Twig\IDE\NamespaceLookupFileWarmer;
+use Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator;
+use Contao\CoreBundle\Twig\Ide\NamespaceLookupFileWarmer;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 class NamespaceLookupFileWarmerTest extends TestCase

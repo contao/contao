@@ -74,7 +74,7 @@ services:
             - '@contao.twig.inspector'
 
     contao.command.dump_twig_ide_file:
-        class: Contao\CoreBundle\Command\DumpTwigIDEFileCommand
+        class: Contao\CoreBundle\Command\DumpTwigIdeFileCommand
         arguments:
             - '@contao.twig.ide.namespace_lookup_file_generator'
             - '%kernel.build_dir%'

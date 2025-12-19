@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Twig\IDE;
+namespace Contao\CoreBundle\Twig\Ide;
 
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Path;

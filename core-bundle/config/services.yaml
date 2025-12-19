@@ -1424,12 +1424,12 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
 
     contao.twig.ide.namespace_lookup_file_generator:
-        class: Contao\CoreBundle\Twig\IDE\NamespaceLookupFileGenerator
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator
         arguments:
             - '@contao.twig.filesystem_loader'
 
     contao.twig.ide.namespace_lookup_file_warmer:
-        class: Contao\CoreBundle\Twig\IDE\NamespaceLookupFileWarmer
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileWarmer
         arguments:
             - '@contao.twig.ide.namespace_lookup_file_generator'
             - '%kernel.environment%'
