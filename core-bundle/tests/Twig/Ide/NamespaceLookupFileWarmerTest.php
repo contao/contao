@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Twig\IDE;
+namespace Contao\CoreBundle\Tests\Twig\Ide;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator;
