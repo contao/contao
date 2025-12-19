@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\Input;
+use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -90,7 +91,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->ensureInitialized();
 
         $this->append([
-            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--filter-target="count"></sup></button>',
+            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="'.StringUtil::specialchars($this->translator->trans('DCA.toggleFilter.1', [], 'contao_default')).'">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--filter-target="count"></sup></button>',
             'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
             'primary' => true,
         ]);
