@@ -414,10 +414,18 @@ abstract class Backend extends Controller
 			$container = System::getContainer();
 
 			$this->Template->headline = '';
+			$twig = $container->get('twig');
 
-			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
+			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail(withTreeTrail: true) as list('url' => $linkUrl, 'label' => $linkLabel, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings))
 			{
-				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
+				$this->Template->headline .= $twig->render(
+					'@Contao/backend/data_container/headline.html.twig', [
+						'link_url' => $linkUrl,
+						'link_label' => $linkLabel,
+						'tree_trail' => $treeTrail,
+						'tree_siblings' => $treeSiblings,
+					]
+				);
 			}
 
 			$do = Input::get('do');
