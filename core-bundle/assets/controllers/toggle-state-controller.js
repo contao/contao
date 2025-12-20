@@ -7,6 +7,10 @@ export default class extends Controller {
     static classes = ['active', 'inactive'];
 
     connect() {
+        if (!this.hasControlsTarget || !this.hasControllerTarget) {
+            return;
+        }
+
         if (!this.controlsTarget.id) {
             this.controlsTarget.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
         }
@@ -36,7 +40,7 @@ export default class extends Controller {
     }
 
     documentClick(event) {
-        if (this.controllerTarget.contains(event.target) || this.controlsTarget.contains(event.target)) {
+        if (!this.hasControllerTarget || this.controllerTarget.contains(event.target) || this.controlsTarget.contains(event.target)) {
             return;
         }
 
