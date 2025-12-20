@@ -67,6 +67,6 @@ export default class extends Controller {
     }
 
     #poll() {
-        this.#turboStreamConnection.get(this.pendingJobsUrlValue, null, true);
+        this.#turboStreamConnection.get(this.pendingJobsUrlValue, {range: this.#pollInterval}, true);
     }
 }

@@ -102,6 +102,25 @@ class Jobs
         return $this->queryWithQueryBuilder($qb);
     }
 
+    /**
+     * Find all jobs that were created in the last $offset seconds and/or are
+     * still not completed, yet.
+     *
+     * @return array<Job>
+     */
+    public function findActive(int $offset): array
+    {
+        $results = $this->connection->executeQuery(
+            'SELECT * FROM tl_job WHERE pid = 0 AND tstamp >= ? OR status != ? ORDER BY tstamp',
+            [time() - $offset, Status::completed->value],
+        );
+
+        return array_map(
+            $this->databaseRowToDto(...),
+            $results->fetchAllAssociative(),
+        );
+    }
+
     public function getByUuid(string $uuid): Job|null
     {
         $jobData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE uuid=?', [$uuid]);

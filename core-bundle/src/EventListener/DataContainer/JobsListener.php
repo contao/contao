@@ -47,7 +47,8 @@ class JobsListener
             return $columns;
         }
 
-        $columns[2] = $this->twig->render('@Contao/backend/jobs/_progress.html.twig', ['progress' => $job->getProgress()]);
+        $columns[2] = $this->twig->render('@Contao/backend/jobs/_progress.html.twig', ['job' => $job]);
+        $columns[3] = $this->twig->render('@Contao/backend/jobs/_status.html.twig', ['job' => $job]);
 
         return $columns;
     }

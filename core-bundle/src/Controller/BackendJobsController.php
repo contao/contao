@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Job\Jobs;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -32,10 +33,10 @@ class BackendJobsController extends AbstractBackendController
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
-    public function latestJobsAction(): Response
+    public function latestJobsAction(Request $request): Response
     {
         return $this->render('@Contao/backend/jobs/show_running_jobs.stream.html.twig', [
-            'jobs' => $this->jobs->findMyNewOrPending(),
+            'jobs' => $this->jobs->findActive($request->query->getInt('range')),
         ]);
     }
 

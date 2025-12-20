@@ -1,9 +1,40 @@
+{% trans_default_domain 'contao_jobs' %}
+
+{% set my_active_jobs = jobs|filter(
+    job => job.status != enum('Contao\\CoreBundle\\Job\\Status').completed and (job.owner.id == app.user.id or job.owner.isSystem),
+) %}
+
+{# Update user related jobs list in the header #}
 <turbo-stream action="update" target="running-jobs">
     <template>
-        {{ include('@Contao/backend/jobs/_list.html.twig', {
-            list_attributes: attrs()
-                .set('data-jobs', jobs|length)
-                .set('data-contao--jobs-target', 'list'),
-        }) }}
+        {% set list_attributes = attrs()
+            .set('data-jobs', my_active_jobs|length)
+            .set('data-contao--jobs-target', 'list')
+        %}
+        <div{{ list_attributes }}>
+            <ul>
+                {% for job in my_active_jobs %}
+                    <li>
+                        {{ include('@Contao/backend/jobs/_progress.html.twig') }}
+                        {{ ('jobs.typeLabel.' ~ job.type)|trans }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     </template>
 </turbo-stream>
+
+{# Update status columns #}
+{% for job in jobs %}
+    <turbo-stream action="update" targets="[data-job-progress='{{ job.uuid }}']">
+        <template>
+            {{ include('@Contao/backend/jobs/_progress.html.twig') }}
+        </template>
+    </turbo-stream>
+
+    <turbo-stream action="update" targets="[data-job-status='{{ job.uuid }}']">
+        <template>
+            {{ include('@Contao/backend/jobs/_status.html.twig') }}
+        </template>
+    </turbo-stream>
+{% endfor %}
