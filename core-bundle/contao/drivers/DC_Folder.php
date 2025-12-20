@@ -2664,17 +2664,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->setPanelState($active);
 
 		return '
-    <div class="tl_search tl_subpanel">
-      <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
+    <fieldset class="tl_search tl_subpanel">
+      <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
+      <label for="search_type">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
       <div class="tl_select_wrapper" data-controller="contao--choices">
-      	  <label for="search_type">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
           <select id="search_type" name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
 			' . implode("\n", $options) . '
           </select>
       </div>
-      <label for="search_term">' . $GLOBALS['TL_LANG']['MSC']['term'] . '</label>
+      <label for="search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
       <input id="search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '" data-contao--filter-target="filter" data-action="contao--filter#updateCount">
-    </div>';
+    </fieldset>';
 	}
 
 	/**
