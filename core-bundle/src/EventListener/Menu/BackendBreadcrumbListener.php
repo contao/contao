@@ -49,16 +49,16 @@ readonly class BackendBreadcrumbListener
             $trail = $path['treeTrail'] ?? [];
             $siblings = $path['treeSiblings'] ?? [];
 
-            if (count($trail) > 0) {
+            if (\count($trail) > 0) {
                 $current = array_pop($trail);
 
-                if (count($trail) > 0) {
-                    $collapsedPath = $factory->createItem('collapsed_path_' . $index);
+                if ($trail !== []) {
+                    $collapsedPath = $factory->createItem('collapsed_path_'.$index);
 
                     foreach ($trail as $j => $item) {
                         $collapsedPath->addChild('collapsed_path_'.$j, [
                             'label' => $item['label'],
-                            'uri'   => $item['url'],
+                            'uri' => $item['url'],
                         ]);
                     }
 
@@ -66,7 +66,7 @@ readonly class BackendBreadcrumbListener
                 }
 
                 $currentTrail = $factory
-                    ->createItem('current_trail_' . $index)
+                    ->createItem('current_trail_'.$index)
                     ->setLabel($current['label'])
                     ->setUri($current['url'])
                     ->setExtra('translation_domain', false)
@@ -76,17 +76,17 @@ readonly class BackendBreadcrumbListener
             }
 
             $currentPath = $factory
-                ->createItem('current_path_' . $index)
+                ->createItem('current_path_'.$index)
                 ->setLabel($path['label'])
                 ->setUri($path['url'])
                 ->setExtra('translation_domain', false)
             ;
 
-            if (count($siblings) > 0) {
+            if (\count($siblings) > 0) {
                 foreach ($siblings as $j => $sibling) {
                     $siblingPath['label'] = $sibling['label'];
 
-                    if ($sibling['active'] !== true) {
+                    if (!$sibling['active']) {
                         $siblingPath['uri'] = $sibling['url'];
                     }
 
