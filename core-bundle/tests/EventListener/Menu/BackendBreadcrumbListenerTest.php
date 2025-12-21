@@ -101,7 +101,7 @@ class BackendBreadcrumbListenerTest extends TestCase
                     1 => [
                         'url' => '/contao?do=article&table=tl_article&pn=2',
                         'label' => 'Homepage',
-                    ]
+                    ],
                 ],
                 'treeSiblings' => [
                     0 => [
