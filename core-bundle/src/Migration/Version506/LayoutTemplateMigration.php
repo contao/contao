@@ -20,7 +20,6 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Twig\Environment;
 
 class LayoutTemplateMigration extends AbstractMigration
 {
@@ -28,7 +27,6 @@ class LayoutTemplateMigration extends AbstractMigration
         private readonly Connection $connection,
         private readonly ContaoFilesystemLoader $filesystemLoader,
         private readonly Filesystem $filesystem,
-        private readonly Environment $twig,
     ) {
     }
 
@@ -80,7 +78,6 @@ class LayoutTemplateMigration extends AbstractMigration
                 );
 
                 $this->filesystem->remove($oldPath);
-                $this->twig->removeCache($oldPath);
             } catch (IOException) {
                 $error = true;
             }

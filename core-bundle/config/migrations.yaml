@@ -100,7 +100,6 @@ services:
             - '@database_connection'
             - '@contao.twig.filesystem_loader'
             - '@filesystem'
-            - '@twig'
 
     contao.migration.version_506.search_indexer_settings:
         class: Contao\CoreBundle\Migration\Version506\SearchIndexerSettingsMigration
