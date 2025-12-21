@@ -52,7 +52,7 @@ readonly class BackendBreadcrumbListener
             if (\count($trail) > 0) {
                 $current = array_pop($trail);
 
-                if ($trail !== []) {
+                if ([] !== $trail) {
                     $collapsedPath = $factory->createItem('collapsed_path_'.$index);
 
                     foreach ($trail as $j => $item) {
@@ -82,16 +82,14 @@ readonly class BackendBreadcrumbListener
                 ->setExtra('translation_domain', false)
             ;
 
-            if (\count($siblings) > 0) {
-                foreach ($siblings as $j => $sibling) {
-                    $siblingPath['label'] = $sibling['label'];
+            foreach ($siblings as $j => $sibling) {
+                $siblingPath['label'] = $sibling['label'];
 
-                    if (!$sibling['active']) {
-                        $siblingPath['uri'] = $sibling['url'];
-                    }
-
-                    $currentPath->addChild('collapsed_path_'.$j, $siblingPath);
+                if (!$sibling['active']) {
+                    $siblingPath['uri'] = $sibling['url'];
                 }
+
+                $currentPath->addChild('collapsed_path_'.$j, $siblingPath);
             }
 
             $tree->addChild($currentPath);
