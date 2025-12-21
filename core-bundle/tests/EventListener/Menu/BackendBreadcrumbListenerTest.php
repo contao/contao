@@ -88,7 +88,7 @@ class BackendBreadcrumbListenerTest extends TestCase
                 'url' => '/contao?do=article&table=tl_article',
                 'label' => 'Articles',
                 'treeTrail' => null,
-                'treeSiblings' => null
+                'treeSiblings' => null,
             ],
             1 => [
                 'url' => '/contao?do=article&table=tl_content',
@@ -96,33 +96,33 @@ class BackendBreadcrumbListenerTest extends TestCase
                 'treeTrail' => [
                     0 => [
                         'url' => '/contao?do=article&table=tl_article&pn=1',
-                        'label' => 'Website name'
+                        'label' => 'Website name',
                     ],
                     1 => [
                         'url' => '/contao?do=article&table=tl_article&pn=2',
-                        'label' => 'Homepage'
+                        'label' => 'Homepage',
                     ]
                 ],
                 'treeSiblings' => [
                     0 => [
                         'url' => '/contao?do=article&id=1&table=tl_content',
                         'label' => 'Content One',
-                        'active' => true
+                        'active' => true,
                     ],
                     1 => [
                         'url' => '/contao?do=article&id=2&table=tl_content',
                         'label' => 'Content Two',
-                        'active' => false
+                        'active' => false,
                     ],
                     2 => [
                         'url' => '/contao?do=article&id=3&table=tl_content',
                         'label' => 'Content Three',
-                        'active' => false
+                        'active' => false,
                     ],
                     3 => [
                         'url' => '/contao?do=article&id=4&table=tl_content',
                         'label' => 'Content Four',
-                        'active' => false
+                        'active' => false,
                     ],
                 ],
             ],
