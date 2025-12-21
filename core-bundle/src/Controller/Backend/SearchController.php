@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Controller;
+namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Query;
@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Attribute\Route;
     methods: ['GET', 'POST'],
     condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
 )]
-class BackendSearchController extends AbstractBackendController
+class SearchController extends AbstractBackendController
 {
     public function __construct(
         private readonly Security $security,

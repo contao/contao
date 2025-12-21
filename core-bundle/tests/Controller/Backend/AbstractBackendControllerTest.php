@@ -10,11 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Controller\AbstractBackendController;
+use Contao\CoreBundle\Controller\Backend\AbstractBackendController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;

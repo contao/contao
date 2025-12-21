@@ -47,7 +47,7 @@ services:
             - '@translator'
             - '%kernel.project_dir%'
 
-    Contao\CoreBundle\Controller\BackendJobsController:
+    Contao\CoreBundle\Controller\Backend\JobsController:
         arguments:
             - '@contao.job.jobs'
         tags:
