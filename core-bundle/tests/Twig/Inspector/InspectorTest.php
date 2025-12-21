@@ -94,7 +94,7 @@ class InspectorTest extends TestCase
                     {% slot A %}{% endslot %}
 
                     {# Slot with content #}
-                    {% slot B %}…{% endslot %}
+                    {% slot B %}…{{ slot() }}…{% endslot %}
                     SOURCE,
             ],
             [
