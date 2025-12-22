@@ -13,6 +13,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
@@ -171,6 +172,7 @@ class BackendTemplateStudioControllerTest extends TestCase
             $this->createStub(ThemeNamespace::class),
             $this->createStub(OperationContextFactory::class),
             $this->createStub(Autocomplete::class),
+            $this->createStub(EnvironmentInformation::class),
             $connection,
             [$fooOperation],
         );

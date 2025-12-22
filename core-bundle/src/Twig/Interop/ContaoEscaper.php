@@ -44,8 +44,8 @@ final class ContaoEscaper
     }
 
     /**
-     * This implementation is a clone of Twig's html_attr escape strategy but decodes
-     * entities beforehand.
+     * This implementation is a clone of Twig's "html_attr" escape strategy but
+     * decodes entities beforehand.
      *
      * @see twig_escape_filter
      */

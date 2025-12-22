@@ -31,6 +31,7 @@ use PhpParser\Node\Stmt\InlineHTML;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
@@ -94,18 +95,18 @@ class PhpFileLoader extends Loader
                     }
 
                     if ([] === $node->declares) {
-                        return NodeTraverser::REMOVE_NODE;
+                        return NodeVisitor::REMOVE_NODE;
                     }
                 }
 
                 // Drop any inline HTML
                 if ($node instanceof InlineHTML) {
-                    return NodeTraverser::REMOVE_NODE;
+                    return NodeVisitor::REMOVE_NODE;
                 }
 
                 // Drop legacy access check
                 if ($this->matchLegacyCheck($node)) {
-                    return NodeTraverser::REMOVE_NODE;
+                    return NodeVisitor::REMOVE_NODE;
                 }
 
                 return null;
