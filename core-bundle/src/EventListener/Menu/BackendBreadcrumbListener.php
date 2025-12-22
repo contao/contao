@@ -45,7 +45,7 @@ readonly class BackendBreadcrumbListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
 
-        foreach ($this->dcaUrlAnalyzer->getTrail(withTreeTrail: true) as $level => list('label' => $label, 'url' => $url, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings)) {
+        foreach ($this->dcaUrlAnalyzer->getTrail(withTreeTrail: true) as $level => ['label' => $label, 'url' => $url, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings]) {
             $current = $factory
                 ->createItem('current_'.$level)
                 ->setLabel($label)
@@ -59,7 +59,7 @@ readonly class BackendBreadcrumbListener
                 if ([] !== $treeTrail) {
                     $ancestorTrail = $factory->createItem('ancestor_trail_'.$level);
 
-                    foreach ($treeTrail as $trailLevel => list('label' => $label, 'url' => $url)) {
+                    foreach ($treeTrail as $trailLevel => ['label' => $label, 'url' => $url]) {
                         $ancestorTrail->addChild('ancestor_trail_'.$trailLevel, [
                             'label' => $label,
                             'uri' => $url,
@@ -81,7 +81,7 @@ readonly class BackendBreadcrumbListener
 
             foreach (($treeSiblings ?? []) as $i => list('url' => $url, 'label' => $label, 'active' => $active)) {
                 $sibling = [
-                    'label' => $label
+                    'label' => $label,
                 ];
 
                 if (!$active) {
