@@ -24,7 +24,7 @@ class BackendBreadcrumbListenerTest extends TestCase
 {
     public function testBuildsTheBreadcrumbMenu(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
 
         $security = $this->createMock(Security::class);
         $security
@@ -102,7 +102,7 @@ class BackendBreadcrumbListenerTest extends TestCase
 
     public function testDoesNotBuildTheBreadcrumbMenuIfTreeNameIsWrong(): void
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = $this->createStub(BackendUser::class);
 
         $security = $this->createMock(Security::class);
         $security
