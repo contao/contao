@@ -117,7 +117,7 @@
                     {% block main_headline %}
                         <h1 id="main_headline">
                             {{ headline|raw }}
-                            {{ toggleFavorites|default|raw }}
+                            {{ include('@Contao/backend/component/_favorites.html.twig') }}
                         </h1>
                     {% endblock %}
                     <div class="content" data-contao--toggle-state-target="controls">

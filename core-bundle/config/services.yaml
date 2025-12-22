@@ -696,6 +696,15 @@ services:
         arguments:
             - '@contao.menu.matcher'
 
+    contao.messenger.crawl_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\CrawlMessageHandler
+        arguments:
+            - '@contao.crawl.escargot.factory'
+            - '@contao.job.jobs'
+            - '@messenger.bus.default'
+            - '%kernel.project_dir%'
+            - '%contao.backend.crawl_concurrency%'
+
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
         arguments:
