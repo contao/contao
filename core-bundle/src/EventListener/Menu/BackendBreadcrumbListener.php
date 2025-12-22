@@ -79,7 +79,7 @@ readonly class BackendBreadcrumbListener
                 $tree->addChild($ancestor);
             }
 
-            foreach ($treeSiblings as $i => list('url' => $url, 'label' => $label, 'active' => $active)) {
+            foreach (($treeSiblings ?? []) as $i => list('url' => $url, 'label' => $label, 'active' => $active)) {
                 $sibling = [
                     'label' => $label
                 ];
