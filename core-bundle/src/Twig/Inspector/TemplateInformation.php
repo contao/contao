@@ -35,6 +35,7 @@ final class TemplateInformation
         private readonly string|null $extends = null,
         private readonly array $uses = [],
         private readonly Error|null $error = null,
+        private readonly array $deprecations = [],
     ) {
     }
 
@@ -104,5 +105,13 @@ final class TemplateInformation
     public function hasValidInformation(): bool
     {
         return !$this->error || $this->error instanceof RuntimeError;
+    }
+
+    /**
+     * @return list<array{line: int, message: string}>
+     */
+    public function getDeprecations(): array
+    {
+        return $this->deprecations;
     }
 }

@@ -245,7 +245,7 @@ class BackendMain extends Backend
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
 		$data['title'] = StringUtil::specialchars(preg_replace('/^\s*›\s*|\s*›\s*$/u', '', strip_tags(preg_replace('/<span.*?>/', ' › ', $data['title'] ?? ''))));
 		$data['host'] = Backend::getDecodedHostname();
-		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
+		$data['charset'] = $container->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
 		$data['isPopup'] = $request->query->get('popup');
 		$data['renderMainOnly'] = $renderMainOnly;
@@ -257,6 +257,9 @@ class BackendMain extends Backend
 
 		$data['menu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/main_menu.html.twig') : '';
 		$data['headerMenu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled)) : '';
+
+		$request = $container->get('request_stack')->getMainRequest();
+		$data['toggleFavorites'] = $container->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, array('target_path' => $request->getRequestUri())));
 
 		return $data;
 	}
