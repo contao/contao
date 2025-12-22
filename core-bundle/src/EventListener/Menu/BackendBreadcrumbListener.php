@@ -78,7 +78,7 @@ readonly class BackendBreadcrumbListener
                 ->setExtra('translation_domain', false)
             ;
 
-            if ($treeSiblings === null) {
+            if (null === $treeSiblings) {
                 $current->setUri($url);
             } elseif (\count($treeSiblings) > 1) {
                 foreach ($treeSiblings as $i => ['url' => $sibling_url, 'label' => $sibling_label, 'active' => $sibling_active]) {
