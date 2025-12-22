@@ -280,7 +280,7 @@ class tl_newsletter_recipients extends Backend
 		$objRecipient = NewsletterRecipientsModel::findById($dc->id);
 		$hashedEmail = md5($objRecipient->email);
 
-		if (NewsletterDenyListModel::findByHashAndPid($hashedEmail, $objRecipient->pid) === null)
+		if (!NewsletterDenyListModel::findByHashAndPid($hashedEmail, $objRecipient->pid))
 		{
 			$objDenyList = new NewsletterDenyListModel();
 			$objDenyList->pid = $objRecipient->pid;
