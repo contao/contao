@@ -10,7 +10,7 @@
             active: filter.active,
             title: filter.placeholder,
             select_wrapper_attributes: attrs().set('data-contao--filter-target', 'filter'),
-            select_attributes: attrs().set('data-action', 'contao--filter#updateCount'),
+            select_attributes: attrs().set('data-action', 'contao--filter#updateCount').set('onchange', 'this.form.requestSubmit()'),
         }) }}
     {% endfor %}
 </fieldset>
