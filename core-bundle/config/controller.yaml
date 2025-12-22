@@ -36,7 +36,7 @@ services:
         arguments:
             - '@contao.altcha'
 
-    Contao\CoreBundle\Controller\BackendController: ~
+    Contao\CoreBundle\Controller\Backend\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
         public: true
@@ -53,7 +53,7 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\BackendPreviewController:
+    Contao\CoreBundle\Controller\Backend\PreviewController:
         arguments:
             - '%contao.preview_script%'
             - '@contao.security.frontend_preview_authenticator'
@@ -64,7 +64,7 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\BackendPreviewSwitchController:
+    Contao\CoreBundle\Controller\Backend\PreviewSwitchController:
         arguments:
             - '@contao.security.frontend_preview_authenticator'
             - '@contao.security.token_checker'

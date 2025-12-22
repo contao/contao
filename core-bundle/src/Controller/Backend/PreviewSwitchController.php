@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Controller;
+namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
@@ -39,7 +39,7 @@ use Twig\Error\Error as TwigError;
  * - Process the switch action (i.e. log in a specific front end user)
  */
 #[Route('%contao.backend.route_prefix%/preview_switch', name: 'contao_backend_switch', defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false])]
-class BackendPreviewSwitchController
+class PreviewSwitchController
 {
     public function __construct(
         private readonly FrontendPreviewAuthenticator $previewAuthenticator,
