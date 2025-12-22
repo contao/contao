@@ -1,41 +1,44 @@
 
 <div id="tl_crawl" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
+
+  <h2 class="sub_headline sub_headline_index"><?= $this->trans('tl_maintenance.crawler') ?></h2>
+
   <?php if ($this->message): ?>
     <div class="tl_message">
       <?= $this->message ?>
     </div>
   <?php endif; ?>
 
-  <h2 class="sub_headline sub_headline_index"><?= $this->trans('tl_maintenance.crawler') ?></h2>
-    <form class="tl_form" action="" method="post">
-      <div class="tl_formbody_edit">
-        <input type="hidden" name="trigger_crawl" value="true">
-        <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-        <fieldset class="tl_tbox">
-          <div class="widget">
-            <?= $this->subscribersWidget->parse() ?>
-            <?php if (!$this->subscribersWidget->hasErrors()): ?>
-              <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlSubscribers.1') ?></p>
-            <?php endif; ?>
-          </div>
-          <div class="widget w50">
-            <?= $this->maxDepthWidget->parse() ?>
-            <?php if (!$this->maxDepthWidget->hasErrors()): ?>
-              <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlDepth.1') ?></p>
-            <?php endif; ?>
-          </div>
-          <?php if ($this->memberWidget): ?>
-            <div class="widget w50 clr">
-              <?= $this->memberWidget->parse() ?>
-              <?php if (!$this->memberWidget->hasErrors()): ?>
-                <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlMember.1') ?></p>
-              <?php endif; ?>
-            </div>
+  <form class="tl_form" action="" method="post">
+    <div class="tl_formbody_edit">
+      <input type="hidden" name="trigger_crawl" value="true">
+      <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+      <fieldset class="tl_tbox">
+        <div class="widget">
+          <?= $this->subscribersWidget->parse() ?>
+          <?php if (!$this->subscribersWidget->hasErrors()): ?>
+            <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlSubscribers.1') ?></p>
           <?php endif; ?>
-        </fieldset>
-      </div>
-      <div class="tl_submit_container">
-        <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
-      </div>
-    </form>
+        </div>
+        <div class="widget w50">
+          <?= $this->maxDepthWidget->parse() ?>
+          <?php if (!$this->maxDepthWidget->hasErrors()): ?>
+            <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlDepth.1') ?></p>
+          <?php endif; ?>
+        </div>
+        <?php if ($this->memberWidget): ?>
+          <div class="widget w50 clr">
+            <?= $this->memberWidget->parse() ?>
+            <?php if (!$this->memberWidget->hasErrors()): ?>
+              <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlMember.1') ?></p>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
+      </fieldset>
+    </div>
+    <div class="tl_submit_container">
+      <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
+    </div>
+  </form>
+
 </div>

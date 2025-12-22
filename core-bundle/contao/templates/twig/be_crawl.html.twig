@@ -1,41 +1,45 @@
 {% trans_default_domain 'contao_default' %}
 
 <div id="tl_crawl" class="maintenance_{{ isActive ? 'active' : 'inactive' }}">
+
+    <h2 class="sub_headline sub_headline_index">{{ 'tl_maintenance.crawler'|trans }}</h2>
+
     {% if message|default %}
         <div class="tl_message">
             {{ message|raw }}
         </div>
     {% endif %}
-    <h2 class="sub_headline sub_headline_index">{{ 'tl_maintenance.crawler'|trans }}</h2>
-        <form class="tl_form" action="" method="post">
-            <div class="tl_formbody_edit">
-                <input type="hidden" name="trigger_crawl" value="true">
-                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-                <fieldset class="tl_tbox">
-                    <div class="widget">
-                        {{ subscribersWidget.parse()|raw }}
-                        {% if not subscribersWidget.hasErrors() %}
-                            <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlSubscribers.1'|trans }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="widget w50">
-                        {{ maxDepthWidget.parse()|raw }}
-                        {% if not maxDepthWidget.hasErrors() %}
-                            <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlDepth.1'|trans }}</p>
-                        {% endif %}
-                    </div>
-                    {% if memberWidget|default %}
-                        <div class="widget w50 clr">
-                            {{ memberWidget.parse()|raw }}
-                            {% if not memberWidget.hasErrors() %}
-                                <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlMember.1'|trans }}</p>
-                            {% endif %}
-                        </div>
+
+    <form class="tl_form" action="" method="post">
+        <div class="tl_formbody_edit">
+            <input type="hidden" name="trigger_crawl" value="true">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            <fieldset class="tl_tbox">
+                <div class="widget">
+                    {{ subscribersWidget.parse()|raw }}
+                    {% if not subscribersWidget.hasErrors() %}
+                        <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlSubscribers.1'|trans }}</p>
                     {% endif %}
-                </fieldset>
-            </div>
-            <div class="tl_submit_container">
-                <button type="submit" class="tl_submit">{{ 'tl_maintenance.startCrawling'|trans }}</button>
-            </div>
-        </form>
+                </div>
+                <div class="widget w50">
+                    {{ maxDepthWidget.parse()|raw }}
+                    {% if not maxDepthWidget.hasErrors() %}
+                        <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlDepth.1'|trans }}</p>
+                    {% endif %}
+                </div>
+                {% if memberWidget|default %}
+                    <div class="widget w50 clr">
+                        {{ memberWidget.parse()|raw }}
+                        {% if not memberWidget.hasErrors() %}
+                            <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlMember.1'|trans }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </fieldset>
+        </div>
+        <div class="tl_submit_container">
+            <button type="submit" class="tl_submit">{{ 'tl_maintenance.startCrawling'|trans }}</button>
+        </div>
+    </form>
+
 </div>
