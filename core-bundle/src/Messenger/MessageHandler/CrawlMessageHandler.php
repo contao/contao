@@ -18,6 +18,7 @@ use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
 use Monolog\Handler\GroupHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -61,6 +62,7 @@ class CrawlMessageHandler
                 $message->subscribers,
                 ['headers' => $message->headers],
             );
+
             $escargotJobId = $escargot->getJobId();
             $job = $job->withMetadata(['escargotJobId' => $escargotJobId]);
             $this->jobs->persist($job);
@@ -113,12 +115,12 @@ class CrawlMessageHandler
         $handlers = [];
 
         // Create the general debug handler
-        $debugHandler = new CrawlCsvLogHandler($this->getDebugLogPath($job), Logger::DEBUG);
+        $debugHandler = new CrawlCsvLogHandler($this->getDebugLogPath($job), Level::Debug);
         $handlers[] = $debugHandler;
 
         // Create the subscriber specific info handlers
         foreach ($this->factory->getSubscribers($activeSubscribers) as $subscriber) {
-            $subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($job, $subscriber->getName()), Logger::INFO);
+            $subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($job, $subscriber->getName()), Level::Info);
             $subscriberHandler->setFilterSource($subscriber::class);
             $handlers[] = $subscriberHandler;
         }

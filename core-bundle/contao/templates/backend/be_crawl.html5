@@ -1,3 +1,4 @@
+
 <div id="tl_crawl" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
   <?php if ($this->message): ?>
     <div class="tl_message">

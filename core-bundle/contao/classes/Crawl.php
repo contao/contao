@@ -29,7 +29,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	 */
 	public function isActive()
 	{
-		return Input::post('trigger_crawl');
+		return (bool) Input::post('trigger_crawl');
 	}
 
 	/**
@@ -60,6 +60,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		if ($this->isActive() && $this->valid)
 		{
+			$headers = array();
 			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
 			if ($memberWidget?->value)
@@ -81,7 +82,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			else
 			{
 				$objAuthenticator->removeFrontendAuthentication();
-				$headers = array();
 			}
 
 			$subscribers = $subscribersWidget->value;
