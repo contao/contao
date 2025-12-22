@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FrontendUser;
 use Contao\LayoutModel;
@@ -32,10 +31,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
     private Security&MockObject $security;
+
+    private UrlGeneratorInterface&MockObject $urlGenerator;
 
     private array $pageRecord = [
         'id' => 17,
@@ -50,6 +52,9 @@ class ContentCompositionListenerTest extends TestCase
         parent::setUp();
 
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
+
+        $this->security = $this->createMock(Security::class);
+        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     }
 
     protected function tearDown(): void
@@ -110,7 +115,7 @@ class ContentCompositionListenerTest extends TestCase
         $operation = $this->createMock(DataContainerOperation::class);
         $operation
             ->expects($this->once())
-            ->method('disable')
+            ->method('hide')
         ;
 
         $operation
@@ -165,7 +170,7 @@ class ContentCompositionListenerTest extends TestCase
         $operation = $this->createMock(DataContainerOperation::class);
         $operation
             ->expects($this->once())
-            ->method('disable')
+            ->method('hide')
         ;
 
         $operation
@@ -186,6 +191,13 @@ class ContentCompositionListenerTest extends TestCase
             ->method('isGranted')
             ->with('contao_user.modules', 'article')
             ->willReturn(true)
+        ;
+
+        $this->urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend', ['do' => 'article', 'pn' => 17])
+            ->willReturn('/contao?do=article&pn=17')
         ;
 
         $page = $this->mockPageWithRow();
@@ -217,18 +229,21 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $operation = new DataContainerOperation(
-            'articles',
-            ['href' => 'do=article'],
-            $this->pageRecord,
-            $this->createStub(DataContainer::class),
-        );
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
+            ->expects($this->once())
+            ->method('setUrl')
+            ->with('/contao?do=article&pn=17')
+        ;
+
+        $operation
+            ->expects($this->once())
+            ->method('getRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $listener = $this->getListener($framework, pageRegistry: $pageRegistry);
         $listener->renderPageArticlesOperation($operation);
-
-        $this->assertSame('do=article&amp;pn=17', $operation['href']);
-        $this->assertNull($operation->getHtml());
     }
 
     public function testRendersArticlesOperationIfPageLayoutIsNotFound(): void
@@ -239,6 +254,13 @@ class ContentCompositionListenerTest extends TestCase
             ->method('isGranted')
             ->with('contao_user.modules', 'article')
             ->willReturn(true)
+        ;
+
+        $this->urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend', ['do' => 'article', 'pn' => 17])
+            ->willReturn('/contao?do=article&pn=17')
         ;
 
         $page = $this->mockPageWithRow();
@@ -266,18 +288,21 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $operation = new DataContainerOperation(
-            'articles',
-            ['href' => 'do=article'],
-            $this->pageRecord,
-            $this->createStub(DataContainer::class),
-        );
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
+            ->expects($this->once())
+            ->method('setUrl')
+            ->with('/contao?do=article&pn=17')
+        ;
+
+        $operation
+            ->expects($this->once())
+            ->method('getRecord')
+            ->willReturn($this->pageRecord)
+        ;
 
         $listener = $this->getListener($framework, pageRegistry: $pageRegistry);
         $listener->renderPageArticlesOperation($operation);
-
-        $this->assertSame('do=article&amp;pn=17', $operation['href']);
-        $this->assertNull($operation->getHtml());
     }
 
     public function testDoesNotGenerateArticleWithoutCurrentRecord(): void
@@ -1062,6 +1087,6 @@ class ContentCompositionListenerTest extends TestCase
         $connection ??= $this->createStub(Connection::class);
         $requestStack ??= $this->createStub(RequestStack::class);
 
-        return new ContentCompositionListener($framework, $this->security, $pageRegistry, $connection, $requestStack);
+        return new ContentCompositionListener($framework, $this->security, $pageRegistry, $connection, $requestStack, $this->urlGenerator);
     }
 }
