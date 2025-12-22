@@ -36,7 +36,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -112,7 +111,6 @@ class AbstractBackendControllerTest extends TestCase
             'getLocaleString' => $this->anything(),
             'getDateString' => $this->anything(),
             'as_editor_view' => true,
-            'toggleFavorites' => '#fragment',
         ];
 
         $container = $this->getContainerWithDefaultConfiguration($expectedContext);
@@ -189,7 +187,6 @@ class AbstractBackendControllerTest extends TestCase
             'getLocaleString' => self::anything(),
             'getDateString' => self::anything(),
             'as_editor_view' => true,
-            'toggleFavorites' => '#fragment',
         ];
 
         $customContext = [
@@ -377,12 +374,6 @@ class AbstractBackendControllerTest extends TestCase
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(true)
-        ;
-
-        $fragmentHandler = $this->createStub(FragmentHandler::class);
-        $fragmentHandler
-            ->method('render')
-            ->willReturn('#fragment')
         ;
 
         $container->set('security.authorization_checker', $authorizationChecker);
