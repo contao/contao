@@ -46,13 +46,10 @@ use Twig\Error\SyntaxError;
 class BackendTemplateStudioController extends AbstractBackendController
 {
     /**
-     * @var array<string, OperationInterface>
+     * @var array<string, list<OperationInterface>>
      */
     private array $operations;
 
-    /**
-     * @param iterable<string, OperationInterface> $operations
-     */
     public function __construct(
         private readonly ContaoFilesystemLoader $loader,
         private readonly FinderFactory $finder,
@@ -62,9 +59,18 @@ class BackendTemplateStudioController extends AbstractBackendController
         private readonly Autocomplete $autocomplete,
         private readonly EnvironmentInformation $environmentInformation,
         private readonly Connection $connection,
-        iterable $operations,
+        iterable $taggedOperations,
     ) {
-        $this->operations = $operations instanceof \Traversable ? iterator_to_array($operations) : $operations;
+        $operationsByName = [];
+
+        foreach ($taggedOperations as $operation) {
+            $name = $operation->getName();
+            $operationsByName[$name] = [$operation, ...$operationsByName[$name] ?? []];
+        }
+
+        ksort($operationsByName);
+
+        $this->operations = $operationsByName;
     }
 
     #[Route(
@@ -163,7 +169,15 @@ class BackendTemplateStudioController extends AbstractBackendController
         $operationNames = array_keys(
             array_filter(
                 $this->operations,
-                static fn (OperationInterface $operation) => $operation->canExecute($operationContext),
+                static function (array $candidates) use ($operationContext) {
+                    foreach ($candidates as $candidate) {
+                        if ($candidate->canExecute($operationContext)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                },
             ),
         );
 
@@ -393,7 +407,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function operation(Request $request, string $identifier, #[MapQueryParameter('operation')] string $operationName): Response
     {
-        if (null === ($operation = ($this->operations[$operationName] ?? null)) || !$this->isAllowedIdentifier($identifier)) {
+        if (null === ($candidates = ($this->operations[$operationName] ?? null)) || !$this->isAllowedIdentifier($identifier)) {
             return new Response(
                 'Cannot execute given operation for the given template identifier.',
                 Response::HTTP_FORBIDDEN,
@@ -402,7 +416,15 @@ class BackendTemplateStudioController extends AbstractBackendController
 
         $operationContext = $this->getOperationContext($identifier);
 
-        $result = $operation->execute($request, $operationContext);
+        $result = null;
+
+        foreach ($candidates as $candidate) {
+            if ($candidate->canExecute($operationContext)) {
+                $result = $candidate->execute($request, $operationContext);
+
+                break;
+            }
+        }
 
         // Operations can either stream their own intermediary steps, a custom result or
         // nothing at all - in which case we stream a default result.
