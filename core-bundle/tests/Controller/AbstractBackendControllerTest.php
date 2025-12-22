@@ -386,7 +386,6 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('router', $this->createStub(RouterInterface::class));
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
-        $container->set('fragment.handler', $fragmentHandler);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 

@@ -11,11 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Controller\Backend\FavoriteController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /**
  * Main back end controller.
