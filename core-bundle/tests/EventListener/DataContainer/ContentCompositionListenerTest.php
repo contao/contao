@@ -649,7 +649,7 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $dc = $this->createStub(DC_Table::class);
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class, ['table' => 'tl_page']);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($this->pageRecord)
