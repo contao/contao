@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Controller\Backend\AbstractBackendController as BaseController;
+
 trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\CoreBundle\Controller\AbstractBackendController" is deprecated and will no longer work in Contao 6. Use "Contao\CoreBundle\Controller\Backend\AbstractBackendController" instead.');
 
 /**
  * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
  *             use Contao\CoreBundle\Controller\Backend\AbstractBackendController instead.
  */
-class AbstractBackendController extends Backend\AbstractBackendController
+class AbstractBackendController extends BaseController
 {
 }
