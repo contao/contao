@@ -513,8 +513,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout']))
+		{
+			$operations->addFilterButton();
+		}
+
 		// Build the tree
-		$return = $this->panel() . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
+		$return = $this->panel() . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
@@ -572,6 +577,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		;
 
 		return '<div
+				class="tree-view"
 				data-controller="contao--toggle-nodes"
 				data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 				data-contao--toggle-nodes-load-action-value="loadFileManager"
@@ -2661,12 +2667,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
       <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+      	  <label for="search_type">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
+          <select id="search_type" name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
 			' . implode("\n", $options) . '
           </select>
       </div>
-      <span>=</span>
-      <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
+      <label for="search_term">' . $GLOBALS['TL_LANG']['MSC']['term'] . '</label>
+      <input id="search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '" data-contao--filter-target="filter" data-action="contao--filter#updateCount">
     </div>';
 	}
 
