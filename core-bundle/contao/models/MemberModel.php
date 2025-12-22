@@ -211,9 +211,9 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn>? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
-								 ->execute($strEmail, self::getRegistrationExpirationTime());
+								 ->execute($strEmail, time());
 
 		if ($objResult->numRows < 1)
 		{
@@ -231,7 +231,7 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Find registrations that have not been activated for more than 24 hours
+	 * Find registrations that have not been confirmed while the opt-in token was valid
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
@@ -242,8 +242,8 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
-								 ->execute(self::getRegistrationExpirationTime());
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
+								 ->execute(time());
 
 		if ($objResult->numRows < 1)
 		{
@@ -254,7 +254,7 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Find an expired registration by e-mail address that has not been activated for more than 24 hours
+	 * Find an expired registration by e-mail address that has not been confirmed while the opt-in token was valid
 	 *
 	 * @param string $strEmail The e-mail address to find the expired registration for
 	 *
@@ -265,9 +265,9 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
-								 ->execute($strEmail, self::getRegistrationExpirationTime());
+								 ->execute($strEmail, time());
 
 		if ($objResult->numRows < 1)
 		{
@@ -282,15 +282,5 @@ class MemberModel extends Model
 		}
 
 		return new static($objResult);
-	}
-
-	/**
-	 * Return the expiration time for registrations
-	 *
-	 * @return string
-	 */
-	private static function getRegistrationExpirationTime(): string
-	{
-		return strtotime('-' . System::getContainer()->getParameter('contao.registration.expiration') . ' days');
 	}
 }

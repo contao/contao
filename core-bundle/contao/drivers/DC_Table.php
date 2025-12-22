@@ -370,7 +370,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 	}
 
-	private function render(string $component, array $parameters): string
+	/**
+	 * @internal
+	 */
+	protected function render(string $component, array $parameters): string
 	{
 		return System::getContainer()
 			->get('twig')
@@ -1050,7 +1053,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
 			}
 
-			if ($objInsertStmt && $objInsertStmt->affectedRows)
+			if ($objInsertStmt?->affectedRows)
 			{
 				$insertID = $objInsertStmt->insertId;
 
@@ -2096,6 +2099,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate = new BackendTemplate('be_conflict');
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
+				$objTemplate->host = Backend::getDecodedHostname();
 				$objTemplate->theme = Backend::getTheme();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
@@ -2233,7 +2237,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
 		}
 
-		$parameters['back_button'] = Input::get('nb')
+		$parameters['global_operations'] = Input::get('nb')
 			? null
 			: System::getContainer()
 				->get('contao.data_container.global_operations_builder')
@@ -2291,7 +2295,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$parameters = array(
 			'ids' => $ids,
 			'add_jump_targets' => \count($ids) < min(Config::get('resultsPerPage') ?? 30, 50),
-			'back_button' => System::getContainer()
+			'global_operations' => System::getContainer()
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton(),
@@ -2654,7 +2658,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters = array(
 			'ids' => $ids,
-			'back_button' => System::getContainer()
+			'global_operations' => System::getContainer()
 				->get('contao.data_container.global_operations_builder')
 				->initialize($this->strTable)
 				->addBackButton(),
@@ -3373,6 +3377,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$operations->addFilterButton();
+
 		$return = Message::generate() . $operations;
 
 		$tree = '';
@@ -3541,6 +3547,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return '<div
+				class="tree-view"
 				data-controller="contao--toggle-nodes"
 				data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
 				data-contao--toggle-nodes-toggle-action-value="toggleStructure"
@@ -4050,6 +4057,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$operations->append(array('html' => $buttons), true);
 		}
+
+		$operations->addFilterButton();
 
 		$return = Message::generate() . $operations;
 
@@ -4644,6 +4653,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$operations->addFilterButton();
+
 		$return = Message::generate() . $operations;
 
 		// Return "no records found" message
@@ -4875,7 +4886,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
-			$strField = Input::post('tl_field', true);
+			$strField = Input::post('tl_search', true);
 			$strKeyword = ltrim(Input::postRaw('tl_value'), '*');
 
 			if ($strField && !\in_array($strField, $searchFields, true))
@@ -4964,7 +4975,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
 			}
 
-			$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options_sorter[$option_label . '_' . $field] = array(
+				'label' => $option_label,
+				'value' => $field,
+				'selected' => ($session['search'][$this->strTable]['field'] ?? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['defaultSearchField'] ?? null) == $field,
+			);
 		}
 
 		// Sort by option values
@@ -4984,17 +4999,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->setPanelState($active);
 
-		return '
-<div class="tl_search tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-' . implode("\n", $options_sorter) . '
-</select>
-</div>
-<span>=</span>
-<input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
-</div>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/search.html.twig', array(
+				'options' => array_values($options_sorter),
+				'active' => $active,
+				'value' => $session['search'][$this->strTable]['value'] ?? '',
+			))
+		;
 	}
 
 	/**
@@ -5088,24 +5100,27 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$sortKey = $options_label . '|ASC';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
-				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['ascending']);
-				$options_label .= ' ↑';
+				$order = 'ASC';
 			}
 			elseif (str_ends_with($value, ' DESC'))
 			{
 				$sortKey = $options_label . '|DESC';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
-				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['descending']);
-				$options_label .= ' ↓';
+				$order = 'DESC';
 			}
 			else
 			{
 				$sortKey = $options_label;
 				$sessionValue = str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? '');
-				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label);
+				$order = null;
 			}
 
-			$options_sorter[$sortKey] = '  <option value="' . StringUtil::specialchars($value) . '"' . (((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue) ? ' selected="selected"' : '') . ' aria-label="' . $aria_label . '">' . $options_label . '</option>';
+			$options_sorter[$sortKey] = array(
+				'label' => $options_label,
+				'value' => $value,
+				'selected' => (!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue,
+				'order' => $order,
+			);
 		}
 
 		// Sort by option values
@@ -5121,15 +5136,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
 		});
 
-		return '
-<div class="tl_sorting tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<div class="tl_select_wrapper"" data-controller="contao--choices">
-<select name="tl_sort" id="tl_sort" class="tl_select">
-' . implode("\n", $options_sorter) . '
-</select>
-</div>
-</div>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/sort.html.twig', array(
+				'options' => array_values($options_sorter),
+			))
+		;
 	}
 
 	/**
@@ -5145,7 +5157,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session = $objSessionBag->all();
 
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
-		$fields = '';
+
+		$active = false;
+		$options = array();
 
 		// Set limit from user input
 		if (\in_array(Input::post('FORM_SUBMIT'), array('tl_filters', 'tl_filters_limit')))
@@ -5214,8 +5228,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$session['filter'][$filter]['limit'] = Config::get('maxResultsPerPage');
 			}
 
-			$options = '';
-
 			// Build options
 			if ($this->total > 0)
 			{
@@ -5238,14 +5250,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$upper_limit = $this->total;
 					}
 
-					$options .= '
-  <option value="' . $this_limit . '"' . Widget::optionSelected($this->limit, $this_limit) . '>' . ($i*Config::get('resultsPerPage')+1) . ' - ' . $upper_limit . '</option>';
+					$options[] = array(
+						'label' => ($i * Config::get('resultsPerPage') + 1) . ' - ' . $upper_limit,
+						'value' => $this_limit,
+						'selected' => $this->limit === $this_limit,
+					);
 				}
 
 				if (!$blnIsMaxResultsPerPage)
 				{
-					$options .= '
-  <option value="all"' . Widget::optionSelected($this->limit, null) . '>' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</option>';
+					$options[] = array(
+						'label' => $GLOBALS['TL_LANG']['MSC']['filterAll'],
+						'value' => 'all',
+						'selected' => $this->limit === null,
+					);
 				}
 			}
 
@@ -5265,19 +5283,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$this->setPanelState($active);
 			}
-
-			$fields = '
-<div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.requestSubmit()">
-  ' . $options . '
-</select>
-</div> ';
 		}
 
-		return '
-<div class="tl_limit tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['showOnly'] . ':</strong> ' . $fields . '
-</div>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/limit.html.twig', array(
+				'active' => $active,
+				'options' => $options,
+			))
+		;
 	}
 
 	/**
@@ -5291,7 +5305,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
-		$fields = '';
 		$sortingFields = array();
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
@@ -5415,6 +5428,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Add sorting options
+		$filters = array();
+
 		foreach ($sortingFields as $field)
 		{
 			$arrValues = array();
@@ -5509,38 +5524,43 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->setPanelState($active);
 
-			// Begin select menu
-			$fields .= '
-<div class="tl_select_wrapper" data-controller="contao--choices">
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '">
-  <option value="tl_' . $field . '">---</option>';
-
 			if ($objFields->numRows)
 			{
 				$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
-				$options = $valueFormatter->formatFilterOptions($this->strTable, $field, $objFields->fetchEach($field), $this);
-
-				$fields .= "\n" . implode("\n", array_map(
-					static fn (array $option) => \sprintf(
-						'  <option value="%s"%s>%s</option>',
-						StringUtil::specialchars($option['value']),
-						(isset($session['filter'][$filter][$field]) && $option['value'] == $session['filter'][$filter][$field]) ? ' selected="selected"' : '',
-						StringUtil::specialchars($option['label'] ?: '-')
+				$options = array_map(
+					static fn (array $option): array => array(
+						...$option,
+						'selected' => isset($session['filter'][$filter][$field]) && $option['value'] == $session['filter'][$filter][$field],
 					),
-					$options
-				));
+					$valueFormatter->formatFilterOptions($this->strTable, $field, $objFields->fetchEach($field), $this)
+				);
+			}
+			else
+			{
+				$options = array();
 			}
 
-			// End select menu
-			$fields .= '
-</select>
-</div> ';
+			$filters[] = array(
+				'name' => $field,
+				'options' => array(
+					array(
+						'value' => 'tl_' . $field,
+						'label' => '-',
+						'selected' => false,
+					),
+					...$options,
+				),
+				'active' => $active,
+				'placeholder' => \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null),
+			);
 		}
 
-		return '
-<div class="tl_filter tl_subpanel">
-<strong>' . $GLOBALS['TL_LANG']['MSC']['filter'] . ':</strong> ' . $fields . '
-</div>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/table/menu/filter.html.twig', array(
+				'filters' => $filters,
+			))
+		;
 	}
 
 	/**

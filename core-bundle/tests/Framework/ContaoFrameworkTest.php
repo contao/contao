@@ -19,15 +19,17 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
 use Contao\Environment;
 use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
+use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -38,9 +40,16 @@ class ContaoFrameworkTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_LANGUAGE']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_LANG'], $GLOBALS['TL_TEST'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([System::class, ContaoFramework::class, Registry::class]);
+        $this->resetStaticProperties([
+            Config::class,
+            ContaoFramework::class,
+            DcaExtractor::class,
+            Registry::class,
+            System::class,
+            TemplateLoader::class,
+        ]);
 
         ini_restore('intl.default_locale');
 
@@ -317,35 +326,26 @@ class ContaoFrameworkTest extends TestCase
 
     public function testDelegatesTheResetCalls(): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('database_connection', $connection);
-
         $framework = $this->getFramework();
-        $framework->setContainer($container);
+        $framework->setContainer($this->getContainerWithFixtures());
         $framework->initialize();
 
         Environment::set('scriptFilename', 'bar');
         Input::setUnusedRouteParameters(['foo']);
 
-        $model = $this
-            ->getMockBuilder(PageModel::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['onRegister'])
-            ->getMock()
-        ;
-
+        $model = new PageModel();
         $model->id = 1;
 
         $registry = Registry::getInstance();
@@ -398,11 +398,11 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
-     * @return Adapter<Config>&MockObject
+     * @return Adapter<Config>&Stub
      */
-    private function mockConfigAdapter(): Adapter&MockObject
+    private function mockConfigAdapter(): Adapter&Stub
     {
-        $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
+        $config = $this->createAdapterStub(['preload', 'isComplete', 'getInstance', 'get']);
         $config
             ->method('isComplete')
             ->willReturn(true)

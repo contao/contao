@@ -41,10 +41,10 @@ class LogEmailMessageListenerTest extends TestCase
             ->text('Test')
         ;
 
-        $sentMessage = new SentMessage($emailMessage, $this->createMock(Envelope::class));
+        $sentMessage = new SentMessage($emailMessage, $this->createStub(Envelope::class));
         $event = new SentMessageEvent($sentMessage);
 
-        $listener = new LogEmailMessageListener($emailLogger, $this->createMock(LoggerInterface::class));
+        $listener = new LogEmailMessageListener($emailLogger, $this->createStub(LoggerInterface::class));
         $listener->onSentMessageEvent($event);
     }
 
@@ -67,7 +67,7 @@ class LogEmailMessageListenerTest extends TestCase
 
         $event = new FailedMessageEvent($emailMessage, new \Exception());
 
-        $listener = new LogEmailMessageListener($this->createMock(LoggerInterface::class), $errorLogger);
+        $listener = new LogEmailMessageListener($this->createStub(LoggerInterface::class), $errorLogger);
         $listener->onFailedMessagEvent($event);
     }
 }

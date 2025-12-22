@@ -3,7 +3,7 @@
 <?php
 
 $this->wrapperAttributes = $this
-    ->attr()
+    ->attrs()
     ->addClass('two-factor')
     ->mergeWith($this->wrapperAttributes)
 ;

@@ -37,7 +37,7 @@ class StringResolverTest extends TestCase
         $requestStack = new RequestStack();
         $requestContext = new RequestContext();
         $urlHelper = new UrlHelper($requestStack, $requestContext);
-        $content = $this->mockClassWithProperties(ArticleModel::class);
+        $content = $this->createClassWithPropertiesStub(ArticleModel::class);
 
         $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
         $result = $resolver->resolve($content);

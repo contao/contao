@@ -37,15 +37,15 @@ class SlotTokenParserTest extends TestCase
     #[DataProvider('provideSources')]
     public function testOutputsSlots(array $context, string $code, string $expectedOutput): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

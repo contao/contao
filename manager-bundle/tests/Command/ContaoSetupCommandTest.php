@@ -46,7 +46,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     #[DataProvider('provideCommands')]
     public function testExecutesCommands(array $options, array $flags, array $phpFlags = []): void
     {
-        $processes = $this->getProcessMocks();
+        $processes = $this->getProcessMocks(mock: true);
 
         foreach ($processes as $process) {
             $process
@@ -276,12 +276,17 @@ class ContaoSetupCommandTest extends ContaoTestCase
         };
     }
 
-    private function getProcessMocks(bool $successful = true): array
+    private function getProcessMocks(bool $successful = true, bool $mock = false): array
     {
         $processes = [];
 
         for ($i = 1; $i <= 8; ++$i) {
-            $process = $this->createMock(Process::class);
+            if ($mock) {
+                $process = $this->createMock(Process::class);
+            } else {
+                $process = $this->createStub(Process::class);
+            }
+
             $process
                 ->method('isSuccessful')
                 ->willReturn($successful)

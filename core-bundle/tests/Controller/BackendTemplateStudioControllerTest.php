@@ -13,6 +13,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
+use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
@@ -102,7 +103,7 @@ class BackendTemplateStudioControllerTest extends TestCase
      */
     private function getBackendTemplatedStudioController(Environment|null $twig = null, Request|null $request = null): BackendTemplateStudioController
     {
-        $loader = $this->createMock(ContaoFilesystemLoader::class);
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('getInheritanceChains')
             ->willReturn([
@@ -121,16 +122,16 @@ class BackendTemplateStudioControllerTest extends TestCase
         $finder = new Finder(
             $loader,
             new ThemeNamespace(),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
-        $finderFactory = $this->createMock(FinderFactory::class);
+        $finderFactory = $this->createStub(FinderFactory::class);
         $finderFactory
             ->method('create')
             ->willReturn($finder)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchAllAssociative')
             ->willReturnCallback(
@@ -162,15 +163,16 @@ class BackendTemplateStudioControllerTest extends TestCase
         $controller = new BackendTemplateStudioController(
             $loader,
             $finderFactory,
-            $this->createMock(Inspector::class),
-            $this->createMock(ThemeNamespace::class),
-            $this->createMock(OperationContextFactory::class),
-            $this->createMock(Autocomplete::class),
+            $this->createStub(Inspector::class),
+            $this->createStub(ThemeNamespace::class),
+            $this->createStub(OperationContextFactory::class),
+            $this->createStub(Autocomplete::class),
+            $this->createStub(EnvironmentInformation::class),
             $connection,
             ['foo_operation' => $fooOperation],
         );
 
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
             ->willReturn(true)
@@ -179,11 +181,11 @@ class BackendTemplateStudioControllerTest extends TestCase
         $requestStack = new RequestStack([$request ?? new Request()]);
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('security.token_storage', $this->createStub(TokenStorageInterface::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('database_connection', $connection);
-        $container->set('twig', $twig ?? $this->createMock(Environment::class));
+        $container->set('twig', $twig ?? $this->createStub(Environment::class));
         $container->set('request_stack', $requestStack);
 
         $controller->setContainer($container);

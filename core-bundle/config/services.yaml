@@ -233,6 +233,7 @@ services:
             - '@contao.translation.translator'
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
+            - '@database_connection'
 
     contao.data_container.global_operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder
@@ -658,6 +659,7 @@ services:
             - '@security.helper'
             - '@contao.filesystem.virtual.job-attachments'
             - '@router'
+            - '@messenger.bus.default'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -1392,8 +1394,6 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.cache_dir%'
-            - '%kernel.environment%'
 
     contao.twig.finder_factory:
         class: Contao\CoreBundle\Twig\Finder\FinderFactory
@@ -1422,6 +1422,17 @@ services:
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
+
+    contao.twig.ide.namespace_lookup_file_generator:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator
+        arguments:
+            - '@contao.twig.filesystem_loader'
+
+    contao.twig.ide.namespace_lookup_file_warmer:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileWarmer
+        arguments:
+            - '@contao.twig.ide.namespace_lookup_file_generator'
+            - '%kernel.environment%'
 
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime

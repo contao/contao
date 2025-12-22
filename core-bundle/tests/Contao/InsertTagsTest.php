@@ -43,11 +43,11 @@ class InsertTagsTest extends TestCase
         HookHelper::registerHook('replaceInsertTags', $this->replaceInsertTagsHook(...));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
-        $container->set('contao.framework', $this->createMock(ContaoFramework::class));
+        $container->set('contao.framework', $this->createStub(ContaoFramework::class));
 
         System::setContainer($container);
     }
@@ -287,7 +287,7 @@ class InsertTagsTest extends TestCase
 
         $this->setContainerWithContaoConfiguration(['contao.image.studio.figure_renderer' => $figureRenderer]);
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'figure', null, true, false));
 
         $output = $insertTagParser->replaceInline($input);
@@ -391,7 +391,7 @@ class InsertTagsTest extends TestCase
 
         $this->setContainerWithContaoConfiguration(['contao.image.studio.figure_renderer' => $figureRenderer]);
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'figure', null, true, false));
 
         $output = $insertTagParser->replaceInline($input);
@@ -421,7 +421,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), null, $allowedTags);
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class), null, $allowedTags);
 
         $output = (string) (new InsertTags())->replaceInternal($source, false, $insertTagParser);
 
@@ -501,7 +501,7 @@ class InsertTagsTest extends TestCase
         $reflectionClass = new \ReflectionClass(InsertTags::class);
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $insertTags);
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class), $insertTags);
         $insertTagParser->addFlagCallback('attr', new StringUtilFlag(), 'attr');
         $insertTagParser->addFlagCallback('urlattr', new StringUtilFlag(), 'urlattr');
 
@@ -716,7 +716,7 @@ class InsertTagsTest extends TestCase
     #[DataProvider('languageInsertTagsProvider')]
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $translatorLocale = 'en'): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('getLocale')
             ->willReturn($translatorLocale)
@@ -725,7 +725,7 @@ class InsertTagsTest extends TestCase
         $reflectionClass = new \ReflectionClass(InsertTags::class);
 
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $insertTags);
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class), $insertTags);
 
         System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
 
@@ -1000,7 +1000,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
 
         System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
 
@@ -1016,7 +1016,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
@@ -1030,7 +1030,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $output = $insertTagParser->replaceInline('{{infinite-try-catch::1}}');
 
         $this->assertSame('[{]infinite-try-catch::66[}]', $output);
@@ -1042,7 +1042,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
@@ -1056,7 +1056,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTag = '{{'.str_repeat('a', (int) \ini_get('pcre.backtrack_limit') * 2).'::replaced}}';
 
         $this->assertSame(
@@ -1069,7 +1069,7 @@ class InsertTagsTest extends TestCase
     {
         InsertTags::reset();
 
-        $resourceLocator = $this->createMock(FileLocatorInterface::class);
+        $resourceLocator = $this->createStub(FileLocatorInterface::class);
         $resourceLocator
             ->method('locate')
             ->willReturn([])
@@ -1077,7 +1077,7 @@ class InsertTagsTest extends TestCase
 
         System::getContainer()->set('contao.resource_locator', $resourceLocator);
 
-        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTag = '{{'.str_repeat('a', 1024).'::replaced}}';
 
         $backtrackLimit = \ini_get('pcre.backtrack_limit');
@@ -1136,7 +1136,7 @@ class InsertTagsTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
 
         foreach ($configuration as $name => $value) {
             $container->set($name, $value);
