@@ -81,6 +81,47 @@ class BackendBreadcrumbListenerTest extends TestCase
         $this->assertSame('/contao?do=article&id=2&table=tl_content', $siblings['collapsed_path_1']->getUri());
     }
 
+    public function testDoesNotBuildTheBreadcrumbMenuIfNoUserIsGiven(): void
+    {
+        $security = $this->createStub(Security::class);
+        $security
+            ->method('getUser')
+            ->willReturn(null)
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('breadcrumbMenu'));
+
+        $listener = new BackendBreadcrumbListener($security, $this->createStub(DcaUrlAnalyzer::class));
+        $listener($event);
+
+        $tree = $event->getTree();
+
+        $this->assertCount(0, $tree->getChildren());
+    }
+
+    public function testDoesNotBuildTheBreadcrumbMenuIfTreeNameIsWrong(): void
+    {
+        $user = $this->createMock(BackendUser::class);
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('foo'));
+
+        $listener = new BackendBreadcrumbListener($security, $this->createStub(DcaUrlAnalyzer::class));
+        $listener($event);
+
+        $tree = $event->getTree();
+
+        $this->assertNotSame('breadcrumbMenu', $tree->getName());
+    }
+
     private function getTreeTrail(): array
     {
         return [
