@@ -205,7 +205,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
         }
 
         return new CrawlMessageHandler(
-            $factory ?? $this->createMock(Factory::class),
+            $factory ?? $this->createStub(Factory::class),
             $jobs,
             $messageBus,
             'project-dir',
