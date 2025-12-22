@@ -46,23 +46,16 @@ readonly class BackendBreadcrumbListener
         $tree = $event->getTree();
 
         foreach ($this->dcaUrlAnalyzer->getTrail(withTreeTrail: true) as $level => ['label' => $label, 'url' => $url, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings]) {
-            $current = $factory
-                ->createItem('current_'.$level)
-                ->setLabel($label)
-                ->setUri($url)
-                ->setExtra('translation_domain', false)
-            ;
-
             if (\count($treeTrail ?? []) > 0) {
                 $nearestAncestor = array_pop($treeTrail);
 
                 if ([] !== $treeTrail) {
                     $ancestorTrail = $factory->createItem('ancestor_trail_'.$level);
 
-                    foreach ($treeTrail as $trailLevel => ['label' => $label, 'url' => $url]) {
+                    foreach ($treeTrail as $trailLevel => ['label' => $trail_label, 'url' => $trail_url]) {
                         $ancestorTrail->addChild('ancestor_trail_'.$trailLevel, [
-                            'label' => $label,
-                            'uri' => $url,
+                            'label' => $trail_label,
+                            'uri' => $trail_url,
                         ]);
                     }
 
@@ -79,16 +72,27 @@ readonly class BackendBreadcrumbListener
                 $tree->addChild($ancestor);
             }
 
-            foreach (($treeSiblings ?? []) as $i => ['url' => $url, 'label' => $label, 'active' => $active]) {
-                $sibling = [
-                    'label' => $label,
-                ];
+            $current = $factory
+                ->createItem('current_'.$level)
+                ->setLabel($label)
+                ->setExtra('translation_domain', false)
+            ;
 
-                if (!$active) {
-                    $sibling['uri'] = $url;
+            if ($treeSiblings === null) {
+                $current->setUri($url);
+            } elseif (\count($treeSiblings) > 1) {
+                foreach ($treeSiblings as $i => ['url' => $sibling_url, 'label' => $sibling_label, 'active' => $sibling_active]) {
+                    $sibling = [
+                        'label' => $sibling_label,
+                        'uri' => $sibling_url,
+                    ];
+
+                    if ($sibling_active) {
+                        unset($sibling['uri']);
+                    }
+
+                    $current->addChild('sibling_'.$i, $sibling);
                 }
-
-                $current->addChild('sibling_'.$i, $sibling);
             }
 
             $tree->addChild($current);
