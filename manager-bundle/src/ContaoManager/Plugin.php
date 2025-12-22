@@ -34,9 +34,9 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
-use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Pdo\Mysql;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -210,7 +210,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
                 }
 
-                return $this->addDefaultBackendSearchProvider($extensionConfigs);
+                return $extensionConfigs;
 
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
@@ -260,10 +260,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
+        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined
-        if (isset($options[\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+        if (isset($options[$key])) {
             return $extensionConfigs;
         }
 
@@ -277,7 +278,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            $key => false,
                         ],
                     ],
                 ],
@@ -368,7 +369,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Skip if driver is not supported
-        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver ?? ''] ?? null)) {
             return $extensionConfigs;
         }
 
@@ -479,43 +480,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $extensionConfigs[] = [
             'mailer' => [
                 'dsn' => '%env(MAILER_DSN)%',
-            ],
-        ];
-
-        return $extensionConfigs;
-    }
-
-    /**
-     * Dynamically configures the back end search adapter if none was configured and
-     * the system supports it.
-     */
-    private function addDefaultBackendSearchProvider(array $extensionConfigs): array
-    {
-        foreach ($extensionConfigs as $config) {
-            // Back end search has been disabled
-            if (false === ($config['backend_search'] ?? null) || false === ($config['backend_search']['enabled'] ?? null)) {
-                return $extensionConfigs;
-            }
-
-            // Configured a custom adapter (e.g. MeiliSearch or whatever)
-            if (isset($config['backend_search']['dsn'])) {
-                return $extensionConfigs;
-            }
-        }
-
-        if (!class_exists(LoupeFactory::class)) {
-            return $extensionConfigs;
-        }
-
-        $loupeFactory = new LoupeFactory();
-
-        if (!$loupeFactory->isSupported()) {
-            return $extensionConfigs;
-        }
-
-        $extensionConfigs[] = [
-            'backend_search' => [
-                'dsn' => 'loupe://%kernel.project_dir%/var/loupe',
             ],
         ];
 

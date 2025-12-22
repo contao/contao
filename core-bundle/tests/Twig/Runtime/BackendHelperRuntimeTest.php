@@ -22,7 +22,7 @@ class BackendHelperRuntimeTest extends TestCase
 {
     public function testDelegatesCallsForIcon(): void
     {
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -30,7 +30,7 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('icon HTML')
         ;
 
-        $framework = $this->mockContaoFramework([Image::class => $imageAdapter]);
+        $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
         $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->icon(
             'icon.svg', 'alt', (new HtmlAttributes())->set('foo', 'bar'),
@@ -39,7 +39,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsDefaultIconForNoMimeType(): void
     {
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -47,16 +47,16 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('icon HTML')
         ;
 
-        $framework = $this->mockContaoFramework([Image::class => $imageAdapter]);
+        $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
         $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $this->createMock(FilesystemItem::class), 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+            $this->createStub(FilesystemItem::class), 'alt', (new HtmlAttributes())->set('foo', 'bar'),
         ));
     }
 
     public function testReturnsIconForMimeType(): void
     {
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -64,7 +64,7 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('icon HTML')
         ;
 
-        $framework = $this->mockContaoFramework([Image::class => $imageAdapter]);
+        $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
         $fileitem = $this->createMock(FilesystemItem::class);
         $fileitem
@@ -84,7 +84,7 @@ class BackendHelperRuntimeTest extends TestCase
 
     public function testReturnsDefaultIconForMissingRegisteredMimeType(): void
     {
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -92,7 +92,7 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('icon HTML')
         ;
 
-        $framework = $this->mockContaoFramework([Image::class => $imageAdapter]);
+        $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
         $fileitem = $this->createMock(FilesystemItem::class);
         $fileitem

@@ -31,8 +31,8 @@ class ContentElementNestingVoterTest extends TestCase
     public function testVoter(): void
     {
         $voter = new ContentElementNestingVoter(
-            $this->createMock(Connection::class),
-            $this->createMock(FragmentCompositor::class),
+            $this->createStub(Connection::class),
+            $this->createStub(FragmentCompositor::class),
         );
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
@@ -42,7 +42,7 @@ class ContentElementNestingVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
@@ -66,7 +66,7 @@ class ContentElementNestingVoterTest extends TestCase
     #[DataProvider('nestedElementsProvider')]
     public function testNestedElements(CreateAction|DeleteAction|ReadAction|UpdateAction $action, string|false $databaseResult, bool $supportsNesting, bool $isGranted): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->with('SELECT type FROM tl_content WHERE id = ?', [42])
@@ -82,7 +82,7 @@ class ContentElementNestingVoterTest extends TestCase
         ;
 
         $voter = new ContentElementNestingVoter($connection, $fragmentCompositor);
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(
             $isGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED,

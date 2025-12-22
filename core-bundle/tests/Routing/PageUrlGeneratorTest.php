@@ -33,7 +33,7 @@ class PageUrlGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $provider = $this->createMock(RouteProviderInterface::class);
+        $provider = $this->createStub(RouteProviderInterface::class);
 
         $this->pageRegistry = $this->createMock(PageRegistry::class);
         $this->generator = new PageUrlGenerator($provider, $this->pageRegistry);
@@ -41,7 +41,7 @@ class PageUrlGeneratorTest extends TestCase
 
     public function testGeneratesThePageRoute(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 17,
             'alias' => 'foobar',
             'type' => 'foo',
@@ -73,7 +73,7 @@ class PageUrlGeneratorTest extends TestCase
 
     public function testReplacesTheRoutePathForTheIndexRouteWithoutParameters(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 17,
             'alias' => 'index',
             'type' => 'regular',
@@ -105,7 +105,7 @@ class PageUrlGeneratorTest extends TestCase
 
     public function testReplacesTheRoutePathForTheIndexRouteWithEmptyParameters(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 17,
             'alias' => 'index',
             'type' => 'regular',
@@ -137,7 +137,7 @@ class PageUrlGeneratorTest extends TestCase
 
     public function testDoesNotReplaceTheRoutePathForTheIndexRouteWithParameters(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 17,
             'alias' => 'index',
             'type' => 'regular',
@@ -169,7 +169,7 @@ class PageUrlGeneratorTest extends TestCase
 
     public function testDoesNotReplaceTheRoutePathForTheIndexRouteWithDefaultParameters(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 17,
             'alias' => 'index',
             'type' => 'regular',
@@ -201,7 +201,7 @@ class PageUrlGeneratorTest extends TestCase
 
     public function testThrowsRouteParametersExceptionOnMissingParameters(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 17,
             'alias' => 'foo',
             'type' => 'regular',

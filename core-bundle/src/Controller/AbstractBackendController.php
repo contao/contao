@@ -16,6 +16,7 @@ use Contao\Ajax;
 use Contao\BackendMain;
 use Contao\BackendTemplate;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Environment;
 use Contao\Input;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,8 @@ abstract class AbstractBackendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['request_stack'] = '?'.RequestStack::class;
+        $services['request_stack'] = RequestStack::class;
+        $services['contao.twig.interop.context_factory'] = ContextFactory::class;
 
         return $services;
     }
@@ -43,26 +45,35 @@ abstract class AbstractBackendController extends AbstractController
      */
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
-        $getBackendContext = static fn () => (new class() extends BackendMain {
-            public function __invoke(): array
-            {
-                $this->Template = new BackendTemplate('be_main');
-                $this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'].' '.ContaoCoreBundle::getVersion();
+        $getBackendContext = function () {
+            $template = (new class() extends BackendMain {
+                public function __invoke(): BackendTemplate
+                {
+                    // Create an empty template, so that the template engine's parse() method won't
+                    // do anything
+                    $this->Template = new BackendTemplate();
+                    $this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'].' '.ContaoCoreBundle::getVersion();
 
-                // Handle ajax request
-                if (Input::post('action') && Environment::get('isAjaxRequest')) {
-                    $this->objAjax = new Ajax(Input::post('action'));
-                    $this->objAjax->executePreActions();
+                    // Handle Ajax request
+                    if (Input::post('action') && Environment::get('isAjaxRequest')) {
+                        $this->objAjax = new Ajax(Input::post('action'));
+                        $this->objAjax->executePreActions();
+                    }
+
+                    $this->Template->setData($this->compileTemplateData($this->Template->getData()));
+
+                    // Make sure the compile function is executed that adds additional context (see #4224)
+                    $this->Template->getResponse();
+
+                    return $this->Template;
                 }
+            })();
 
-                $this->Template->setData($this->compileTemplateData($this->Template->getData()));
-
-                // Make sure the compile function is executed that adds additional context (see #4224)
-                $this->Template->getResponse();
-
-                return $this->Template->getData();
-            }
-        })();
+            return $this->container
+                ->get('contao.twig.interop.context_factory')
+                ->fromContaoTemplate($template)
+            ;
+        };
 
         $request = $this->getCurrentRequest();
 

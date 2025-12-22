@@ -1,23 +1,25 @@
-{% trans_default_domain "contao_template_studio" %}
-{% extends '@Contao/be_main.html5' %}
+{% trans_default_domain 'contao_template_studio' %}
+{% extends '@Contao/be_main.html.twig' %}
 
-{% block head %}
-    {{ parent() }}
-    <script src="{{ asset('js/ext-code_lens.js',  'contao-components/ace') }}"></script>
-{% endblock %}
+{# Remove global ace assets #}
+{% block ace_assets %}{% endblock %}
 
 {% block main %}
-    <main id="main"
-          aria-labelledby="main_headline"
-          data-controller="contao--template-studio"
-          data-action="contao--color-scheme:change@window->contao--template-studio#colorChange"
-          data-contao--template-studio-follow-url-value="{{ path('_contao_template_studio_follow.stream') }}"
-          data-contao--template-studio-block-info-url-value="{{ path('_contao_template_studio_block_info.stream') }}"
-    >
+    {% set template_studio_attrs = attrs()
+        .set('id', 'main')
+        .set('aria-labelledby', 'main_headline')
+        .set('data-controller', 'contao--template-studio')
+        .set('data-action', 'contao--color-scheme:change@window->contao--template-studio#colorChange')
+        .set('data-contao--template-studio-follow-url-value', path('_contao_template_studio_follow.stream'))
+        .set('data-contao--template-studio-block-info-url-value', path('_contao_template_studio_block_info.stream'))
+        .set('data-twig-environment', environment_information|json_encode)
+        .mergeWith(template_studio_attrs|default)
+    %}
+    <main{{ template_studio_attrs }}>
         {# Headline #}
         <h1 id="main_headline">
             {{ headline }}
-            {{ render(path('contao_backend_favorites', { target_path: app.request.requestUri })) }}
+            {{ include('@Contao/backend/component/_favorites.html.twig') }}
         </h1>
 
         <section id="template-studio" class="content chrome">
@@ -29,7 +31,7 @@
                             <select name="theme" onchange="this.form.requestSubmit()" class="tl_select">
                                 <option{{ attrs().set('value', '').set('selected', current_theme is null) }}>{{ 'no_theme_context'|trans }}</option>
                                 {% for slug, name in themes %}
-                                    <option{{ attrs().set('value', slug).set('selected', current_theme == slug) }}>{{ name }} [{{ slug}}]</option>
+                                    <option{{ attrs().set('value', slug).set('selected', current_theme == slug) }}>{{ name }} [{{ slug }}]</option>
                                 {% endfor %}
                             </select>
                             <span>{{ 'theme-selector'|trans }}</span>
@@ -39,17 +41,17 @@
 
                 {# Identifier tree #}
                 <div id="template-studio--tree">
-                    {{ include("@Contao/backend/template_studio/tree/_tree.html.twig") }}
+                    {{ include('@Contao/backend/template_studio/tree/_tree.html.twig') }}
                 </div>
             </div>
 
             {# Main editor section with multiple tabs #}
-            {% embed "@Contao/backend/component/tabs/_container.html.twig" with {
+            {% embed '@Contao/backend/component/tabs/_container.html.twig' with {
                 tabs_container_attributes: attrs().set('data-contao--template-studio-target', 'tabs'),
                 id: 'template-studio--tabs',
                 panels_container_id: 'template-studio--tab-panels',
             } %}
-                {% trans_default_domain "contao_template_studio" %}
+                {% trans_default_domain 'contao_template_studio' %}
 
                 {% block initial_content %}
                     <div class="explainer">

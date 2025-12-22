@@ -15,15 +15,18 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Constraint\IsAnything;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -78,6 +81,7 @@ class AbstractBackendControllerTest extends TestCase
             'dashboard' => 'dashboard',
             'home' => 'home',
             'learnMore' => 'learn more',
+            'containerClass' => null,
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -97,10 +101,16 @@ class AbstractBackendControllerTest extends TestCase
             'home' => 'home',
             'isPopup' => null,
             'learnMore' => 'learn more',
+            'containerClass' => null,
             'menu' => '<menu>',
+            'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
             'foo' => 'bar',
+            'Template' => $this->anything(),
+            'getLocaleString' => $this->anything(),
+            'getDateString' => $this->anything(),
+            'as_editor_view' => true,
         ];
 
         $container = $this->getContainerWithDefaultConfiguration($expectedContext);
@@ -138,6 +148,7 @@ class AbstractBackendControllerTest extends TestCase
             'dashboard' => 'dashboard',
             'home' => 'home',
             'learnMore' => 'learn more',
+            'containerClass' => null,
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -167,9 +178,15 @@ class AbstractBackendControllerTest extends TestCase
             'home' => 'home',
             'isPopup' => null,
             'learnMore' => 'learn more',
+            'containerClass' => null,
             'menu' => '<menu>',
+            'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
+            'Template' => self::anything(),
+            'getLocaleString' => self::anything(),
+            'getDateString' => self::anything(),
+            'as_editor_view' => true,
         ];
 
         $customContext = [
@@ -219,7 +236,7 @@ class AbstractBackendControllerTest extends TestCase
         ];
 
         $requestAcceptingTurboStreams = new Request(server: ['HTTP_HOST' => 'localhost']);
-        $requestAcceptingTurboStreams->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
+        $requestAcceptingTurboStreams->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
         yield 'regular request accepting turbo stream' => [
             clone $requestAcceptingTurboStreams,
@@ -286,8 +303,7 @@ class AbstractBackendControllerTest extends TestCase
         $request = new Request();
         $request->setSession(new Session($sessionStorage));
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $container = new ContainerBuilder();
         $container->set('request_stack', $requestStack);
@@ -301,19 +317,29 @@ class AbstractBackendControllerTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
 
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
             ->with('ROLE_USER')
             ->willReturn(true)
         ;
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->willReturnCallback(
                 function (string $template, array $context) use ($expectedContext) {
                     if ('custom_be.html.twig' === $template) {
+                        // Normalize context
+                        foreach ($expectedContext as $key => $value) {
+                            if ($value instanceof IsAnything && null !== ($context[$key] ?? null)) {
+                                $context[$key] = $value;
+                            }
+                        }
+
+                        ksort($expectedContext);
+                        ksort($context);
+
                         $this->assertSame($expectedContext, $context);
                     }
 
@@ -329,17 +355,37 @@ class AbstractBackendControllerTest extends TestCase
             )
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request ?? new Request(server: $_SERVER));
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
+        $filesystemLoader
+            ->method('getFirst')
+            ->willReturnCallback(
+                static fn (string $identifier) => "templates/$identifier.html5",
+            )
+        ;
+
+        $requestStack = new RequestStack([$request ?? new Request(server: $_SERVER)]);
+
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $scopeMatcher
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
 
         $container->set('security.authorization_checker', $authorizationChecker);
-        $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('database_connection', $this->createMock(Connection::class));
-        $container->set('session', $this->createMock(Session::class));
+        $container->set('security.token_storage', $this->createStub(TokenStorageInterface::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+        $container->set('database_connection', $this->createStub(Connection::class));
+        $container->set('session', $this->createStub(Session::class));
         $container->set('twig', $twig);
-        $container->set('router', $this->createMock(RouterInterface::class));
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
+        $container->set('router', $this->createStub(RouterInterface::class));
         $container->set('request_stack', $requestStack);
+        $container->set('contao.routing.scope_matcher', $scopeMatcher);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 

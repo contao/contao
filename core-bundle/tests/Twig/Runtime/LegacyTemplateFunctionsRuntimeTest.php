@@ -64,6 +64,6 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
 
     private function getRuntime(): LegacyTemplateFunctionsRuntime
     {
-        return new LegacyTemplateFunctionsRuntime($this->mockContaoFramework());
+        return new LegacyTemplateFunctionsRuntime($this->createContaoFrameworkStub());
     }
 }

@@ -28,7 +28,7 @@ class WebauthnRouteListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', $requestRoute);
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $routes = [
@@ -58,7 +58,7 @@ class WebauthnRouteListenerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', $requestRoute);
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $routes = [

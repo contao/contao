@@ -15,9 +15,13 @@ use Twig\TwigFunction;
 
 /**
  * @internal
+ *
+ * @phpstan-type Completion array{caption?: string, snippet?: string, value?: string, meta: string, type: string, score: int}
  */
 class Autocomplete
 {
+    private const SCORE_OFFSET = 1000;
+
     /**
      * @var list<string>
      */
@@ -83,7 +87,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return list<Completion>
      */
     public function getCompletions(string $logicalName): array
     {
@@ -93,7 +97,7 @@ class Autocomplete
             $templateInformation = null;
         }
 
-        $completions = [
+        $completions = array_filter([
             $this->getCompletionForExtendsTag(
                 $templateInformation,
                 ContaoTwigUtil::getIdentifier($logicalName),
@@ -102,20 +106,26 @@ class Autocomplete
             ...$this->getCompletionsForUseTags($templateInformation),
             ...$this->getCompletionsForBlocks($templateInformation),
             ...$this->getCompletionsForDefaultMarkup(),
-        ];
+        ]);
 
-        return array_values(array_filter($completions));
+        foreach ($completions as &$completion) {
+            // Offset completion scores, so that they are higher than the local completions
+            // by default.
+            $completion['score'] = self::SCORE_OFFSET + $completion['score'];
+        }
+
+        return array_values($completions);
     }
 
     /**
-     * @return array<string, mixed>
+     * @return Completion|null
      */
-    private function getCompletionForExtendsTag(TemplateInformation|null $templateInformation, string $identifier, string $extension): array
+    private function getCompletionForExtendsTag(TemplateInformation|null $templateInformation, string $identifier, string $extension): array|null
     {
         $currentExtends = $templateInformation?->getExtends();
 
         if ($currentExtends && ContaoTwigUtil::getIdentifier($currentExtends) === $identifier) {
-            return [];
+            return null;
         }
 
         return [
@@ -128,7 +138,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return list<Completion>
      */
     private function getCompletionsForUseTags(TemplateInformation|null $templateInformation): array
     {
@@ -175,7 +185,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return list<Completion>
      */
     private function getCompletionsForBlocks(TemplateInformation|null $templateInformation): array
     {
@@ -192,7 +202,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return list<Completion>
      */
     private function getCompletionsForDefaultMarkup(): array
     {

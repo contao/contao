@@ -34,7 +34,7 @@ class FallbackRecordLabelListenerTest extends TestCase
 
     public function testIgnoresOtherIdentifiers(): void
     {
-        $listener = new FallbackRecordLabelListener($this->createMock(TranslatorStub::class));
+        $listener = new FallbackRecordLabelListener($this->createStub(TranslatorStub::class));
         $listener($event = new DataContainerRecordLabelEvent('contao.something.tl_foo.123', ['id' => 123]));
 
         $this->assertNull($event->getLabel());
@@ -45,7 +45,7 @@ class FallbackRecordLabelListenerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
         (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
 
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->with('tl_foo.edit.1', 'contao_tl_foo')
@@ -79,7 +79,7 @@ class FallbackRecordLabelListenerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
         (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
 
-        $translator = $this->createMock(TranslatorStub::class);
+        $translator = $this->createStub(TranslatorStub::class);
 
         $listener = new FallbackRecordLabelListener($translator);
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B &amp; B)</span>']));

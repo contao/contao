@@ -24,7 +24,7 @@ class PluginTest extends TestCase
 {
     public function testReturnsTheBundleConfiguration(): void
     {
-        $config = (new Plugin())->getBundles($this->createMock(ParserInterface::class))[0];
+        $config = (new Plugin())->getBundles($this->createStub(ParserInterface::class))[0];
 
         $plugins = [
             ContaoCalendarBundle::class,

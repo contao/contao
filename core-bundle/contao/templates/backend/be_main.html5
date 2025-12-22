@@ -1,7 +1,7 @@
 <?php
 
 $this->rootAttributes = $this
-    ->attr()
+    ->attrs()
     ->set('lang', $this->language)
     ->set('data-controller', 'contao--scroll-offset')
     ->set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
@@ -9,7 +9,7 @@ $this->rootAttributes = $this
 ;
 
 $this->bodyAttributes = $this
-    ->attr($this->attributes)
+    ->attrs($this->attributes)
     ->set('id', 'top')
     ->addClass('be_main')
     ->addClass('popup', $this->isPopup)
@@ -17,6 +17,22 @@ $this->bodyAttributes = $this
     ->set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
     ->set('data-contao--toggle-state-active-class', 'active')
     ->mergeWith($this->bodyAttributes)
+;
+
+$this->containerAttributes = $this
+    ->attrs()
+    ->addClass($this->containerClass)
+    ->mergeWith($this->containerAttributes)
+;
+
+$this->mainAttributes = $this
+    ->attrs()
+    ->set('id', 'main')
+    ->set('aria-labelledby', 'main_headline')
+    ->set('data-controller', 'contao--toggle-state contao--filter')
+    ->set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+    ->set('data-contao--toggle-state-active-class', 'filter-active')
+    ->mergeWith($this->mainAttributes)
 ;
 
 ?>
@@ -48,9 +64,11 @@ $this->bodyAttributes = $this
     <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>" data-turbo-track="reload"></script>
-    <script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
-    <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
-    <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+    <?php $this->block('ace_assets'); ?>
+      <script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+      <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+      <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+    <?php $this->endblock(); ?>
     <script src="<?= $this->asset('js/dropzone.min.js', 'contao-components/dropzone') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('backend.js', 'contao_core') ?>" data-turbo-track="reload"></script>
     <script><?= $this->getDateString() ?></script>
@@ -61,7 +79,7 @@ $this->bodyAttributes = $this
   <a class="invisible show-on-focus" href="#main" data-turbo="false"><?= $this->trans('MSC.skipToContent') ?></a>
 
   <?php $this->block('header'); ?>
-    <?php if (!$this->isPopup): ?>
+    <?php if (!$this->renderMainOnly): ?>
       <header id="header">
         <div class="inner">
           <h1>
@@ -84,10 +102,10 @@ $this->bodyAttributes = $this
   <?php $this->endblock(); ?>
 
   <?php $this->block('container'); ?>
-    <div id="container">
+    <div id="container"<?= $this->containerAttributes ?>>
 
       <?php $this->block('left'); ?>
-        <?php if (!$this->isPopup): ?>
+        <?php if (!$this->renderMainOnly): ?>
           <aside id="left" data-contao--toggle-state-target="controls">
             <?= $this->menu ?>
             <div class="version">
@@ -100,27 +118,29 @@ $this->bodyAttributes = $this
       <?php $this->endblock(); ?>
 
       <?php $this->block('main'); ?>
-        <main id="main" aria-labelledby="main_headline">
-          <?php $this->block('main_headline'); ?>
-            <h1 id="main_headline">
-              <?= $this->headline ?>
-              <?= $this->toggleFavorites ?>
-            </h1>
-          <?php $this->endblock(); ?>
-          <div class="content">
-            <?php if ($this->pickerMenu): ?>
-              <div id="picker-menu">
-                <?= $this->pickerMenu ?>
-              </div>
-            <?php endif; ?>
-            <?php if ($this->error): ?>
-              <p class="tl_gerror"><?= $this->error ?></p>
-            <?php endif; ?>
-            <?php $this->block('main_content'); ?>
-              <?= $this->main ?>
+        <turbo-frame id="contao-main" target="_top">
+          <main<?= $this->mainAttributes ?>>
+            <?php $this->block('main_headline'); ?>
+              <h1 id="main_headline">
+                <?= $this->headline ?>
+                <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
+              </h1>
             <?php $this->endblock(); ?>
-          </div>
-        </main>
+            <div class="content" data-contao--toggle-state-target="controls">
+              <?php if ($this->pickerMenu): ?>
+                <div id="picker-menu">
+                  <?= $this->pickerMenu ?>
+                </div>
+              <?php endif; ?>
+              <?php if ($this->error): ?>
+                <p class="tl_gerror"><?= $this->error ?></p>
+              <?php endif; ?>
+              <?php $this->block('main_content'); ?>
+                <?= $this->main ?>
+              <?php $this->endblock(); ?>
+            </div>
+          </main>
+        </turbo-frame>
       <?php $this->endblock(); ?>
 
     </div>

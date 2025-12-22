@@ -1,6 +1,6 @@
 {# Show a message #}
-{% embed "@Contao/backend/component/message/add_message.stream.html.twig" with {success: true} %}
-    {% trans_default_domain "contao_template_studio" %}
+{% embed '@Contao/backend/component/message/add_message.stream.html.twig' with {success: true} %}
+    {% trans_default_domain 'contao_template_studio' %}
 
     {% block content %}
         {% set identifier_token -%}
@@ -12,7 +12,7 @@
 
 {% if full_reload %}
     {# Reopen the current tab #}
-    {{ render(path('_contao_template_studio_editor_tab.stream', {identifier: identifier})) }}
+    {{ render(path('_contao_template_studio_editor_tab.stream', {identifier})) }}
 {% else %}
     {# Reload annotations #}
     {{ render(path('_contao_template_studio_annotations_data.stream', {identifier})) }}

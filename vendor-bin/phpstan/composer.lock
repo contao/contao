@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.32",
+            "version": "2.1.33",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e126cad1e30a99b137b8ed75a85a676450ebb227",
-                "reference": "e126cad1e30a99b137b8ed75a85a676450ebb227",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9e800e6bee7d5bd02784d4c6069b48032d16224f",
+                "reference": "9e800e6bee7d5bd02784d4c6069b48032d16224f",
                 "shasum": ""
             },
             "require": {
@@ -57,20 +57,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-11T15:18:17+00:00"
+            "time": "2025-12-05T10:24:31+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "2.0.8",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "2fe9fbeceaf76dd1ebaa7bbbb25e2fb5e59db2fe"
+                "reference": "8d61a5854e7497d95bc85188e13537e99bd7aae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/2fe9fbeceaf76dd1ebaa7bbbb25e2fb5e59db2fe",
-                "reference": "2fe9fbeceaf76dd1ebaa7bbbb25e2fb5e59db2fe",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/8d61a5854e7497d95bc85188e13537e99bd7aae7",
+                "reference": "8d61a5854e7497d95bc85188e13537e99bd7aae7",
                 "shasum": ""
             },
             "require": {
@@ -108,22 +108,22 @@
             "description": "PHPUnit extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.8"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.10"
             },
-            "time": "2025-11-11T07:55:22+00:00"
+            "time": "2025-12-06T11:15:39+00:00"
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "2.0.8",
+            "version": "2.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "8820c22d785c235f69bb48da3d41e688bc8a1796"
+                "reference": "24d8c157aa483141b0579d705ef0aac9e1b95436"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/8820c22d785c235f69bb48da3d41e688bc8a1796",
-                "reference": "8820c22d785c235f69bb48da3d41e688bc8a1796",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/24d8c157aa483141b0579d705ef0aac9e1b95436",
+                "reference": "24d8c157aa483141b0579d705ef0aac9e1b95436",
                 "shasum": ""
             },
             "require": {
@@ -136,7 +136,7 @@
             },
             "require-dev": {
                 "php-parallel-lint/php-parallel-lint": "^1.2",
-                "phpstan/phpstan-phpunit": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0.8",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^9.6",
                 "psr/container": "1.1.2",
@@ -179,9 +179,9 @@
             "description": "Symfony Framework extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/2.0.8"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/2.0.9"
             },
-            "time": "2025-09-07T06:55:50+00:00"
+            "time": "2025-11-29T11:17:28+00:00"
         },
         {
             "name": "slam/phpstan-extensions",

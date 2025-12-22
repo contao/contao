@@ -289,7 +289,7 @@ class DebugContaoTwigCommandTest extends TestCase
 
     private function getCommand(ContaoFilesystemLoader|null $filesystemLoader = null): DebugContaoTwigCommand
     {
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->willReturnCallback(
@@ -304,7 +304,7 @@ class DebugContaoTwigCommandTest extends TestCase
         ;
 
         return new DebugContaoTwigCommand(
-            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
+            $filesystemLoader ?? $this->createStub(ContaoFilesystemLoader::class),
             new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance'),
             $inspector,

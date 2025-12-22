@@ -28,7 +28,7 @@ class PageCommentsVoter extends AbstractCommentsVoter
 
     protected function supportsSource(string $source): bool
     {
-        return 'tl_calendar_events' === $source;
+        return 'tl_page' === $source;
     }
 
     protected function hasAccess(TokenInterface $token, string $source, int $parent): bool
@@ -39,6 +39,6 @@ class PageCommentsVoter extends AbstractCommentsVoter
         );
 
         // Do not check whether the page is mounted (see #5174)
-        return false !== $page && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_PAGE], $page);
+        return false !== $page && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_PAGE], $parent);
     }
 }
