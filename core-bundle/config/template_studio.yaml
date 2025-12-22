@@ -21,7 +21,7 @@ services:
             - '@contao.twig.studio.autocomplete'
             - '@contao.twig.studio.environment_information'
             - '@database_connection'
-            - !tagged_iterator { tag: contao.operation.template_studio_element, index_by: name }
+            - !tagged_iterator { tag: contao.operation.template_studio_element }
 
     contao.twig.studio.autocomplete:
         class: Contao\CoreBundle\Twig\Studio\Autocomplete
@@ -44,6 +44,15 @@ services:
 
     contao.twig.studio.create_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateOperation
+
+    contao.twig.studio.delete_content_element_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteContentElementVariantOperation
+
+    contao.twig.studio.delete_frontend_module_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteFrontendModuleVariantOperation
+
+    contao.twig.studio.delete_layout_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteLayoutVariantOperation
 
     contao.twig.studio.delete_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
