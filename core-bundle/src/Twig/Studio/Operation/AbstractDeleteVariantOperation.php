@@ -75,8 +75,14 @@ abstract class AbstractDeleteVariantOperation extends DeleteOperation
 
     private function migrateDatabaseUsages(string $from): void
     {
-        $to = $this->shouldSetDatabaseValueToDefaultWhenMigrating() && 1 === preg_match('%^('.preg_quote($this->getPrefix(), '%').'/[^/]+)/%', $from, $matches)
-            ? $matches[1] : '';
+        $to = '';
+
+        if (
+            $this->shouldSetDatabaseValueToDefaultWhenMigrating()
+            && 1 === preg_match('%^('.preg_quote($this->getPrefix(), '%').'/[^/]+)/%', $from, $matches)
+        ) {
+            $to = $matches[1];
+        }
 
         $connection = $this->container->get('database_connection');
 
