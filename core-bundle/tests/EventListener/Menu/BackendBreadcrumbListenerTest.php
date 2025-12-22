@@ -54,31 +54,31 @@ class BackendBreadcrumbListenerTest extends TestCase
 
         $this->assertCount(4, $children);
         $this->assertSame(
-            ['current_path_0', 'collapsed_path_1', 'current_trail_1', 'current_path_1'],
+            ['current_0', 'ancestor_trail_1', 'ancestor_1', 'current_1'],
             array_keys($children),
         );
 
-        $collapsedChildren = $children['collapsed_path_1']->getChildren();
+        $collapsedChildren = $children['ancestor_trail_1']->getChildren();
 
-        $this->assertSame(['collapsed_path_0'], array_keys($collapsedChildren));
-        $this->assertSame('Website name', $collapsedChildren['collapsed_path_0']->getLabel());
-        $this->assertSame('/contao?do=article&table=tl_article&pn=1', $collapsedChildren['collapsed_path_0']->getUri());
+        $this->assertSame(['ancestor_trail_0'], array_keys($collapsedChildren));
+        $this->assertSame('Website name', $collapsedChildren['ancestor_trail_0']->getLabel());
+        $this->assertSame('/contao?do=article&table=tl_article&pn=1', $collapsedChildren['ancestor_trail_0']->getUri());
 
-        $this->assertSame('Homepage', $children['current_trail_1']->getLabel());
-        $this->assertSame('/contao?do=article&table=tl_article&pn=2', $children['current_trail_1']->getUri());
-        $this->assertSame(['translation_domain' => false], $children['current_trail_1']->getExtras());
+        $this->assertSame('Homepage', $children['ancestor_1']->getLabel());
+        $this->assertSame('/contao?do=article&table=tl_article&pn=2', $children['ancestor_1']->getUri());
+        $this->assertSame(['translation_domain' => false], $children['ancestor_1']->getExtras());
 
-        $this->assertSame('Content One', $children['current_path_1']->getLabel());
-        $this->assertSame('/contao?do=article&table=tl_content', $children['current_path_1']->getUri());
-        $this->assertSame(['translation_domain' => false], $children['current_path_1']->getExtras());
+        $this->assertSame('Content One', $children['current_1']->getLabel());
+        $this->assertSame('/contao?do=article&table=tl_content', $children['current_1']->getUri());
+        $this->assertSame(['translation_domain' => false], $children['current_1']->getExtras());
 
-        $siblings = $children['current_path_1']->getChildren();
+        $siblings = $children['current_1']->getChildren();
 
-        $this->assertSame('Content One', $siblings['collapsed_path_0']->getLabel());
-        $this->assertNull($siblings['collapsed_path_0']->getUri());
+        $this->assertSame('Content One', $siblings['sibling_0']->getLabel());
+        $this->assertNull($siblings['sibling_0']->getUri());
 
-        $this->assertSame('Content Two', $siblings['collapsed_path_1']->getLabel());
-        $this->assertSame('/contao?do=article&id=2&table=tl_content', $siblings['collapsed_path_1']->getUri());
+        $this->assertSame('Content Two', $siblings['sibling_1']->getLabel());
+        $this->assertSame('/contao?do=article&id=2&table=tl_content', $siblings['sibling_1']->getUri());
     }
 
     public function testDoesNotBuildTheBreadcrumbMenuIfNoUserIsGiven(): void

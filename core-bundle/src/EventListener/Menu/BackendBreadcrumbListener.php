@@ -45,54 +45,53 @@ readonly class BackendBreadcrumbListener
         $factory = $event->getFactory();
         $tree = $event->getTree();
 
-        foreach ($this->dcaUrlAnalyzer->getTrail(withTreeTrail: true) as $index => $path) {
-            $trail = $path['treeTrail'] ?? [];
-            $siblings = $path['treeSiblings'] ?? [];
-
-            if (\count($trail) > 0) {
-                $current = array_pop($trail);
-
-                if ([] !== $trail) {
-                    $collapsedPath = $factory->createItem('collapsed_path_'.$index);
-
-                    foreach ($trail as $j => $item) {
-                        $collapsedPath->addChild('collapsed_path_'.$j, [
-                            'label' => $item['label'],
-                            'uri' => $item['url'],
-                        ]);
-                    }
-
-                    $tree->addChild($collapsedPath);
-                }
-
-                $currentTrail = $factory
-                    ->createItem('current_trail_'.$index)
-                    ->setLabel($current['label'])
-                    ->setUri($current['url'])
-                    ->setExtra('translation_domain', false)
-                ;
-
-                $tree->addChild($currentTrail);
-            }
-
-            $currentPath = $factory
-                ->createItem('current_path_'.$index)
-                ->setLabel($path['label'])
-                ->setUri($path['url'])
+        foreach ($this->dcaUrlAnalyzer->getTrail(withTreeTrail: true) as $level => list('label' => $label, 'url' => $url, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings)) {
+            $current = $factory
+                ->createItem('current_'.$level)
+                ->setLabel($label)
+                ->setUri($url)
                 ->setExtra('translation_domain', false)
             ;
 
-            foreach ($siblings as $j => $sibling) {
-                $siblingPath['label'] = $sibling['label'];
+            if (\count($treeTrail ?? []) > 0) {
+                $nearestAncestor = array_pop($treeTrail);
 
-                if (!$sibling['active']) {
-                    $siblingPath['uri'] = $sibling['url'];
+                if ([] !== $treeTrail) {
+                    $ancestorTrail = $factory->createItem('ancestor_trail_'.$level);
+
+                    foreach ($treeTrail as $trailLevel => list('label' => $label, 'url' => $url)) {
+                        $ancestorTrail->addChild('ancestor_trail_'.$trailLevel, [
+                            'label' => $label,
+                            'uri' => $url,
+                        ]);
+                    }
+
+                    $tree->addChild($ancestorTrail);
                 }
 
-                $currentPath->addChild('collapsed_path_'.$j, $siblingPath);
+                $ancestor = $factory
+                    ->createItem('ancestor_'.$level)
+                    ->setLabel($nearestAncestor['label'])
+                    ->setUri($nearestAncestor['url'])
+                    ->setExtra('translation_domain', false)
+                ;
+
+                $tree->addChild($ancestor);
             }
 
-            $tree->addChild($currentPath);
+            foreach ($treeSiblings as $i => list('url' => $url, 'label' => $label, 'active' => $active)) {
+                $sibling = [
+                    'label' => $label
+                ];
+
+                if (!$active) {
+                    $sibling['uri'] = $url;
+                }
+
+                $current->addChild('sibling_'.$i, $sibling);
+            }
+
+            $tree->addChild($current);
         }
     }
 }
