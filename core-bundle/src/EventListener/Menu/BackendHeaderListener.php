@@ -106,11 +106,13 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showProfile', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" data-contao--toggle-state-active-title-value="'.$this->translator->trans('MSC.hideProfile', [], 'contao_default').'" data-contao--toggle-state-inactive-title-value="'.$this->translator->trans('MSC.showProfile', [], 'contao_default').'">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showProfile', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
             ->setAttribute('data-controller', 'contao--toggle-state')
             ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
             ->setAttribute('data-contao--toggle-state-active-class', 'active')
+            ->setAttribute('data-contao--toggle-state-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
+            ->setAttribute('data-contao--toggle-state-inactive-title-value=', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
@@ -161,7 +163,7 @@ class BackendHeaderListener
 
         $burger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" data-contao--toggle-state-active-title-value="'.$this->translator->trans('MSC.hideMainNavigation', [], 'contao_default').'" data-contao--toggle-state-inactive-title-value="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
