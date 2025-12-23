@@ -283,7 +283,7 @@ jobs:
               uses: ramsey/composer-install@v3
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --fail-on-phpunit-notice
 
             - name: Run the functional tests with PDO MySQL
               run: vendor/bin/phpunit --testsuite=functional
@@ -347,7 +347,7 @@ jobs:
                   composer-options: --ignore-platform-req=php+
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --fail-on-phpunit-notice
 
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional

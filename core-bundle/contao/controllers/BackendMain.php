@@ -11,11 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Controller\Backend\FavoriteController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 /**
  * Main back end controller.
@@ -103,9 +101,6 @@ class BackendMain extends Backend
 		}
 
 		$this->Template->main = '';
-
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-		$this->Template->toggleFavorites = System::getContainer()->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, array('target_path' => $request->getRequestUri())));
 
 		// Ajax request
 		if (Input::post('action') && Environment::get('isAjaxRequest'))
@@ -257,9 +252,6 @@ class BackendMain extends Backend
 
 		$data['menu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/main_menu.html.twig') : '';
 		$data['headerMenu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled)) : '';
-
-		$request = $container->get('request_stack')->getMainRequest();
-		$data['toggleFavorites'] = $container->get('fragment.handler')->render(new ControllerReference(FavoriteController::class, array('target_path' => $request->getRequestUri())));
 
 		return $data;
 	}

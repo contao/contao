@@ -2210,6 +2210,9 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
       </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+      </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
       </trans-unit>

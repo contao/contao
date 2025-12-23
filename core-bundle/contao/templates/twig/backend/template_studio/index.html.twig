@@ -35,7 +35,7 @@
                     <rect width="10" height="8" x="7" y="8" rx="1"/>
                 </svg>
             </button>
-            {{ render(path('contao_backend_favorites', {target_path: app.request.requestUri})) }}
+            {{ include('@Contao/backend/component/_favorites.html.twig') }}
         </h1>
 
         <section id="template-studio" class="content chrome" data-contao--template-studio-target="content">
