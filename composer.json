@@ -166,7 +166,7 @@
         "symfony/var-dumper": "^7.4",
         "symfony/web-profiler-bundle": "^7.4",
         "symfony/yaml": "^7.4",
-        "terminal42/escargot": "^1.6",
+        "terminal42/escargot": "^1.6.3",
         "terminal42/service-annotation-bundle": "^1.1",
         "tijsverkoyen/css-to-inline-styles": "^2.0",
         "toflar/cronjob-supervisor": "^2.0",
@@ -346,7 +346,7 @@
         "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze",
         "rector": "@php vendor-bin/rector/vendor/bin/rector",
         "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids",
-        "twig-cs-fixer": "@php vendor-bin/twig-cs-fixer/vendor/bin/twig-cs-fixer fix",
-        "unit-tests": "@php vendor/bin/phpunit"
+        "twig-cs-fixer": "@php vendor-bin/twig-cs-fixer/vendor/bin/twig-cs-fixer fix -v",
+        "unit-tests": "@php vendor/bin/phpunit --fail-on-phpunit-notice"
     }
 }

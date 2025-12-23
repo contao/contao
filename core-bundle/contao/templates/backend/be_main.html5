@@ -25,6 +25,16 @@ $this->containerAttributes = $this
     ->mergeWith($this->containerAttributes)
 ;
 
+$this->mainAttributes = $this
+    ->attrs()
+    ->set('id', 'main')
+    ->set('aria-labelledby', 'main_headline')
+    ->set('data-controller', 'contao--toggle-state contao--filter')
+    ->set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+    ->set('data-contao--toggle-state-active-class', 'filter-active')
+    ->mergeWith($this->mainAttributes)
+;
+
 ?>
 <!DOCTYPE html>
 <html<?= $this->rootAttributes ?>>
@@ -109,14 +119,14 @@ $this->containerAttributes = $this
 
       <?php $this->block('main'); ?>
         <turbo-frame id="contao-main" target="_top">
-          <main id="main" aria-labelledby="main_headline">
+          <main<?= $this->mainAttributes ?>>
             <?php $this->block('main_headline'); ?>
               <h1 id="main_headline">
                 <?= $this->headline ?>
-                <?= $this->toggleFavorites ?>
+                <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
               </h1>
             <?php $this->endblock(); ?>
-            <div class="content">
+            <div class="content" data-contao--toggle-state-target="controls">
               <?php if ($this->pickerMenu): ?>
                 <div id="picker-menu">
                   <?= $this->pickerMenu ?>

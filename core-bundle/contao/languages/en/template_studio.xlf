@@ -59,6 +59,18 @@
       <trans-unit id="operation.rename_frontend_module_variant.1">
         <source>Rename the %s variant template</source>
       </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
+        <source>Rename the %s variant template</source>
+      </trans-unit>
       <trans-unit id="message.create.success">
         <source>Your template for %s was created.</source>
       </trans-unit>
