@@ -106,7 +106,7 @@ class SlotTokenParserTest extends TestCase
         $environment = $this->getConfiguredEnvironment($code);
 
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessageMatches('/Slot "foo" defines template content but is missing a call to the "slot\(\)" function/');
+        $this->expectExceptionMessageMatches('/Slot "foo" adds template content but does not call the "slot\(\)" function/');
 
         $environment->render('template.html.twig', []);
     }
