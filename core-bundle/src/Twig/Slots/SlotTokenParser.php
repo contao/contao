@@ -42,7 +42,7 @@ final class SlotTokenParser extends AbstractTokenParser
         $body = $this->parser->subparse($this->decideForFork(...));
 
         $throwMissingSlotFunctionError = static function () use ($nameToken, $token, $stream): void {
-            throw new SyntaxError(\sprintf('Slot "%s" defines template content but is missing a call to the "slot()" function.', $nameToken->getValue()), $token->getLine(), $stream->getSourceContext());
+            throw new SyntaxError(\sprintf('Slot "%s" adds template content but does not call the "slot()" function.', $nameToken->getValue()), $token->getLine(), $stream->getSourceContext());
         };
 
         if ($body->count()) {
