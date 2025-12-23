@@ -37,8 +37,6 @@ class ContentCompositionListenerTest extends TestCase
 {
     private Security&MockObject $security;
 
-    private UrlGeneratorInterface&MockObject $urlGenerator;
-
     private array $pageRecord = [
         'id' => 17,
         'alias' => 'foo/bar',
@@ -54,7 +52,6 @@ class ContentCompositionListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
 
         $this->security = $this->createMock(Security::class);
-        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     }
 
     protected function tearDown(): void
@@ -66,7 +63,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotRenderThePageArticlesOperationIfUserDoesNotHaveAccess(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -86,7 +82,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testRendersDisabledArticlesOperationIfPageTypeDoesNotSupportComposition(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -130,7 +125,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testRendersDisabledArticlesOperationIfPageLayoutDoesNotHaveArticles(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -185,7 +179,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testRendersArticlesOperationIfProviderSupportsCompositionAndPageLayoutHasArticles(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -193,7 +186,8 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $this->urlGenerator
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend', ['do' => 'article', 'pn' => 17])
@@ -242,13 +236,12 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $listener = $this->getListener($framework, pageRegistry: $pageRegistry);
+        $listener = $this->getListener($framework, pageRegistry: $pageRegistry, urlGenerator: $urlGenerator);
         $listener->renderPageArticlesOperation($operation);
     }
 
     public function testRendersArticlesOperationIfPageLayoutIsNotFound(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -256,7 +249,8 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $this->urlGenerator
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend', ['do' => 'article', 'pn' => 17])
@@ -301,13 +295,12 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $listener = $this->getListener($framework, pageRegistry: $pageRegistry);
+        $listener = $this->getListener($framework, pageRegistry: $pageRegistry, urlGenerator: $urlGenerator);
         $listener->renderPageArticlesOperation($operation);
     }
 
     public function testDoesNotGenerateArticleWithoutCurrentRecord(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -340,7 +333,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleWithoutCurrentRequest(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -373,7 +365,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleWithoutBackendUser(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -394,7 +385,6 @@ class ContentCompositionListenerTest extends TestCase
 
         $user = $this->createClassWithPropertiesStub(FrontendUser::class, ['id' => 1]);
 
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->atLeastOnce())
             ->method('getUser')
@@ -419,7 +409,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfRequestDoesNotHaveASession(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -448,7 +437,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfPageTitleIsEmpty(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -489,7 +477,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfProviderDoesNotSupportContentComposition(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -530,7 +517,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfLayoutDoesNotHaveArticles(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -582,7 +568,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleWithoutNewRecords(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -634,7 +619,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfCurrentPageIsNotInNewRecords(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -686,7 +670,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfPageAlreadyHasArticle(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->never())
             ->method('isGranted')
@@ -751,7 +734,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfPermissionIsDenied(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -818,7 +800,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testGenerateArticleForNewPage(): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -898,7 +879,6 @@ class ContentCompositionListenerTest extends TestCase
     #[DataProvider('moduleConfigProvider')]
     public function testUsesTheLayoutColumnForNewArticle(array $modules, string $expectedColumn): void
     {
-        $this->security = $this->createMock(Security::class);
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -1080,13 +1060,14 @@ class ContentCompositionListenerTest extends TestCase
         return $page;
     }
 
-    private function getListener(ContaoFramework|null $framework = null, PageRegistry|null $pageRegistry = null, Connection|null $connection = null, RequestStack|null $requestStack = null): ContentCompositionListener
+    private function getListener(ContaoFramework|null $framework = null, PageRegistry|null $pageRegistry = null, Connection|null $connection = null, RequestStack|null $requestStack = null, UrlGeneratorInterface|null $urlGenerator = null): ContentCompositionListener
     {
         $framework ??= $this->createContaoFrameworkStub([PageModel::class => $this->createAdapterStub(['findById'])]);
         $pageRegistry ??= $this->createStub(PageRegistry::class);
         $connection ??= $this->createStub(Connection::class);
         $requestStack ??= $this->createStub(RequestStack::class);
+        $urlGenerator ??= $this->createStub(UrlGeneratorInterface::class);
 
-        return new ContentCompositionListener($framework, $this->security, $pageRegistry, $connection, $requestStack, $this->urlGenerator);
+        return new ContentCompositionListener($framework, $this->security, $pageRegistry, $connection, $requestStack, $urlGenerator);
     }
 }

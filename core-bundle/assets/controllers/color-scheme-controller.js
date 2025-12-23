@@ -71,7 +71,6 @@ export default class extends Controller {
 
         const label = this.i18nValue[prefersDark() ? 'light' : 'dark'];
 
-        this.labelTarget.title = label;
         this.labelTarget.innerText = label;
     }
 }

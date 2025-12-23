@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
+use Contao\CoreBundle\Controller\Backend\PreviewSwitchController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -36,11 +36,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-class BackendPreviewSwitchControllerTest extends TestCase
+class PreviewSwitchControllerTest extends TestCase
 {
     public function testExitsOnNonAjaxRequest(): void
     {
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createStub(Connection::class),
@@ -78,7 +78,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->willReturn($loader)
         ;
 
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createStub(Connection::class),
@@ -140,7 +140,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ])
         ;
 
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createStub(Connection::class),
@@ -176,7 +176,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $frontendPreviewAuthenticator,
             $this->mockTokenChecker($username),
             $this->createStub(Connection::class),
@@ -213,7 +213,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
     public function testReturnsErrorWithInvalidUsername(): void
     {
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createStub(Connection::class),
@@ -263,7 +263,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->willReturn(new MySQLPlatform())
         ;
 
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $connection,
@@ -292,7 +292,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
     public function testExitsAsUnauthenticatedUser(): void
     {
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createStub(Connection::class),
@@ -316,7 +316,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
     public function testExitsAsUnauthorizedUser(): void
     {
-        $controller = new BackendPreviewSwitchController(
+        $controller = new PreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createStub(Connection::class),
