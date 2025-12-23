@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -62,18 +61,9 @@ class PageModelTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
-        $virtualFieldHandler = $this->createStub(VirtualFieldHandler::class);
-        $virtualFieldHandler
-            ->method('expandFields')
-            ->willReturnCallback(
-                static fn (array $record) => $record,
-            )
-        ;
-
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
-        $container->set('contao.data_container.virtual_field_handler', $virtualFieldHandler);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 

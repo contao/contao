@@ -198,8 +198,13 @@ abstract class Model
 				}
 			}
 
+			$container = System::getContainer();
+
 			// Expand virtual fields
-			$this->arrData = System::getContainer()->get('contao.data_container.virtual_field_handler')->expandFields($this->arrData, $this->getTable());
+			if ($container->has('contao.data_container.virtual_field_handler'))
+			{
+				$this->arrData = $container->get('contao.data_container.virtual_field_handler')->expandFields($this->arrData, $this->getTable());
+			}
 		}
 	}
 

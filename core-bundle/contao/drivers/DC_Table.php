@@ -265,9 +265,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return $currentRecord;
 		}
 
-		$table = $table ?: $this->strTable;
-
-		return System::getContainer()->get('contao.data_container.virtual_field_handler')->expandFields($currentRecord, $table);
+		return System::getContainer()->get('contao.data_container.virtual_field_handler')->expandFields($currentRecord, $table ?: $this->strTable);
 	}
 
 	/**

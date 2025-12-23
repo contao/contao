@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
@@ -49,18 +48,9 @@ class ModelTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
-        $virtualFieldHandler = $this->createStub(VirtualFieldHandler::class);
-        $virtualFieldHandler
-            ->method('expandFields')
-            ->willReturnCallback(
-                static fn (array $record) => $record,
-            )
-        ;
-
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.doctrine.schema_provider', $schemaProvider);
-        $container->set('contao.data_container.virtual_field_handler', $virtualFieldHandler);
         System::setContainer($container);
     }
 
