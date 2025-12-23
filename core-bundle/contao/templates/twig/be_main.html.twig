@@ -25,9 +25,6 @@
 {% set mainAttributes = attrs()
     .set('id', 'main')
     .set('aria-labelledby', 'main_headline')
-    .set('data-controller', 'contao--toggle-state contao--filter')
-    .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-    .set('data-contao--toggle-state-active-class', 'filter-active')
     .mergeWith(mainAttributes|default)
 %}
 
@@ -120,7 +117,7 @@
                             {{ include('@Contao/backend/component/_favorites.html.twig') }}
                         </h1>
                     {% endblock %}
-                    <div class="content" data-contao--toggle-state-target="controls">
+                    <div class="content">
                         {% if pickerMenu|default %}
                             <div id="picker-menu">
                                 {{ pickerMenu|raw }}

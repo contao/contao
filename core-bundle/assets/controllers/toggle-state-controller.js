@@ -5,6 +5,12 @@ export default class extends Controller {
 
     static targets = ['controller', 'controls'];
     static classes = ['active', 'inactive'];
+    static values = {
+        activeLabel: String,
+        inactiveLabel: String,
+        activeTitle: String,
+        inactiveTitle: String,
+    };
 
     connect() {
         if (!this.hasControlsTarget || !this.hasControllerTarget) {
@@ -63,6 +69,18 @@ export default class extends Controller {
 
         if (this.hasInactiveClass) {
             this.controlsTarget.classList.toggle(this.inactiveClass, !state);
+        }
+
+        if (state && this.hasActiveLabelValue) {
+            this.controllerTarget.innerText = this.activeLabelValue;
+        } else if (!state && this.hasInactiveLabelValue) {
+            this.controllerTarget.innerText = this.inactiveLabelValue;
+        }
+
+        if (state && this.hasActiveTitleValue) {
+            this.controllerTarget.title = this.activeTitleValue;
+        } else if (!state && this.hasInactiveTitleValue) {
+            this.controllerTarget.innerText = this.inactiveTitleValue;
         }
     }
 }

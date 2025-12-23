@@ -1,4 +1,20 @@
-{{ panel|raw }}
-<div class="content-inner">
-    {{ view|raw }}
+{% trans_default_domain 'contao_default' %}
+{% set attributes = attrs().addClass('tl_show_all') %}
+{% if panel is not empty %}
+    {% do attributes
+        .set('data-controller', 'contao--toggle-state contao--filter')
+        .set('data-contao--toggle-state-target', 'controls')
+        .set('data-contao--toggle-state-active-class', 'filter-active')
+        .set('data-contao--toggle-state-active-label-value', 'DCA.toggleFilter.2'|trans)
+        .set('data-contao--toggle-state-active-title-value', 'DCA.toggleFilter.3'|trans)
+        .set('data-contao--toggle-state-inactive-label-value', 'DCA.toggleFilter.0'|trans)
+        .set('data-contao--toggle-state-inactive-title-value', 'DCA.toggleFilter.1'|trans)
+        .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+    %}
+{% endif %}
+<div{{ attributes }}>
+    {{ panel|raw }}
+    <div class="content-inner">
+        {{ view|raw }}
+    </div>
 </div>

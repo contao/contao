@@ -29,9 +29,6 @@ $this->mainAttributes = $this
     ->attrs()
     ->set('id', 'main')
     ->set('aria-labelledby', 'main_headline')
-    ->set('data-controller', 'contao--toggle-state contao--filter')
-    ->set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-    ->set('data-contao--toggle-state-active-class', 'filter-active')
     ->mergeWith($this->mainAttributes)
 ;
 
@@ -126,7 +123,7 @@ $this->mainAttributes = $this
                 <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
               </h1>
             <?php $this->endblock(); ?>
-            <div class="content" data-contao--toggle-state-target="controls">
+            <div class="content">
               <?php if ($this->pickerMenu): ?>
                 <div id="picker-menu">
                   <?= $this->pickerMenu ?>

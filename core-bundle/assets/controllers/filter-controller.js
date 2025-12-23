@@ -3,7 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     #filterMap = new Map();
 
-    static targets = ['count', 'filter'];
+    static targets = ['count', 'panel', 'filter'];
 
     connect() {
         if (this.hasCountTarget) {
