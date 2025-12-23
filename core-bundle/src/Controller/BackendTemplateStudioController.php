@@ -220,7 +220,9 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'shadowed' => $shadowed,
                     'warning' => false,
                     'not_analyzable' => false,
-                    'legacy_pair' => $this->isLegacyIdentifier($templateNameInformation['identifier']) && 'Contao_Global' !== $templateNameInformation['namespace'],
+                    'legacy_pair' => !str_contains($templateNameInformation['identifier'], '/')
+                        && $this->loader->exists("@Contao/{$templateNameInformation['identifier']}.html5")
+                        && 'Contao_Global' !== $templateNameInformation['namespace'],
                 ],
                 'annotations' => $canEdit && 0 === $i
                     ? $this->getAnnotations($logicalName, $templateInformation)
@@ -515,11 +517,6 @@ class BackendTemplateStudioController extends AbstractBackendController
             // Append nodes without prefix to the end under a virtual key
             '' => $notPrefixed,
         ]);
-    }
-
-    private function isLegacyIdentifier(string $identifier): bool
-    {
-        return !str_contains($identifier, '/') && $this->loader->exists("@Contao/$identifier.html5");
     }
 
     /**
