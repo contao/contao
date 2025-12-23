@@ -1,4 +1,4 @@
-import { Controller } from '@hotwired/stimulus';
+import {Controller} from '@hotwired/stimulus';
 
 const prefersDark = () => {
     const prefersDark = localStorage.getItem('contao--prefers-dark');
@@ -53,15 +53,13 @@ export default class extends Controller {
         }
 
         setColorScheme();
+        this.setLabel();
 
         this.dispatch('change', {
             detail: {
                 mode: isDark ? 'dark' : 'light',
             },
         });
-
-        // Change the label after the dropdown is hidden
-        setTimeout(this.setLabel, 300);
     }
 
     setLabel() {
