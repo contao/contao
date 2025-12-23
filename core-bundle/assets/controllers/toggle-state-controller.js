@@ -45,8 +45,8 @@ export default class extends Controller {
 
     documentClick(event) {
         if (
-            this.controllerTargets.filter(t => t.contains(event.target)).length > 0
-            || this.controlsTarget.contains(event.target)
+            this.controllerTargets.filter((t) => t.contains(event.target)).length > 0 ||
+            this.controlsTarget.contains(event.target)
         ) {
             return;
         }
@@ -82,6 +82,6 @@ export default class extends Controller {
             } else if (!state && this.hasInactiveLabelValue) {
                 el.innerText = this.inactiveLabelValue;
             }
-        })
+        });
     }
 }
