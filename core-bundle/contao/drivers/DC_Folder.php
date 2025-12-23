@@ -1998,9 +1998,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Return
-		return Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') .
-			System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;
+		return Message::generate()
+			. ($this->noReload ? '<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '')
+			. System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton()
+			. $return;
 	}
 
 	/**
