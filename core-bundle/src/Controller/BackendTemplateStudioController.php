@@ -496,7 +496,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         $sortRecursive($prefixTree);
 
         // Apply opinionated ordering
-        return ['content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
+        return ['page' => [], 'content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
     }
 
     /**
@@ -536,7 +536,7 @@ class BackendTemplateStudioController extends AbstractBackendController
 
             $data['error'] = [
                 'line' => $error->getLine() > 0 ? $error->getLine() : 1,
-                'message' => "Syntax Error\n\n{$message}",
+                'message' => "Syntax Error\n\n$message",
             ];
         } elseif ($error instanceof LoaderError) {
             $data['error'] = [

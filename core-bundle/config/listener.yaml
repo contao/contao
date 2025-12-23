@@ -90,6 +90,7 @@ services:
             - '@contao.routing.page_registry'
             - '@database_connection'
             - '@request_stack'
+            - '@router'
 
     contao.listener.data_container.content_element_type:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
