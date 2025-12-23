@@ -220,6 +220,9 @@ class TemplateStudioController extends AbstractBackendController
                     'shadowed' => $shadowed,
                     'warning' => false,
                     'not_analyzable' => false,
+                    'legacy_pair' => !str_contains($templateNameInformation['identifier'], '/')
+                        && $this->loader->exists("@Contao/{$templateNameInformation['identifier']}.html5")
+                        && 'Contao_Global' !== $templateNameInformation['namespace'],
                 ],
                 'annotations' => $canEdit && 0 === $i
                     ? $this->getAnnotations($logicalName, $templateInformation)
@@ -454,6 +457,7 @@ class TemplateStudioController extends AbstractBackendController
         }
 
         $prefixTree = [];
+        $notPrefixed = [];
 
         foreach ($this->getFinder() as $identifier => $extension) {
             $parts = explode('/', $identifier);
@@ -478,6 +482,12 @@ class TemplateStudioController extends AbstractBackendController
                 }
             };
 
+            // Group templates without prefix under their own key
+            if (!str_contains($identifier, '/')) {
+                $notPrefixed[$identifier] = [$leaf];
+                continue;
+            }
+
             $node = [...$node, $leaf];
         }
 
@@ -494,9 +504,19 @@ class TemplateStudioController extends AbstractBackendController
         };
 
         $sortRecursive($prefixTree);
+        ksort($notPrefixed);
 
-        // Apply opinionated ordering
-        return ['page' => [], 'content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
+        return array_filter([
+            // Apply opinionated ordering by explicitly placing keys of the prefix tree
+            // before merging it
+            'page' => [],
+            'content_element' => [],
+            'frontend_module' => [],
+            'component' => [],
+            ...$prefixTree,
+            // Append nodes without prefix to the end under a virtual key
+            '' => $notPrefixed,
+        ]);
     }
 
     /**
