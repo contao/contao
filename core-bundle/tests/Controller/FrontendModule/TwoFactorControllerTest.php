@@ -241,7 +241,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
 
         $container
             ->get('contao.routing.content_url_generator')
@@ -286,7 +286,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
 
         $controller($request, $module, 'main');
     }
@@ -323,7 +323,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 
@@ -367,7 +367,7 @@ class TwoFactorControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 

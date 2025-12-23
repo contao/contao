@@ -75,6 +75,7 @@ class FavoriteController extends AbstractController
             return $this->redirect($url);
         }
 
+        // FIXME: Use ->query, ->request or ->attributes
         if (!$targetPath = $request->get('target_path')) {
             throw new BadRequestException('Missing target_path in request.');
         }

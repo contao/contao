@@ -74,6 +74,7 @@ class FavoriteControllerTest extends TestCase
         $queries = [[
             'SELECT id FROM tl_favorites WHERE url = :url AND user = :user',
             [
+                // FIXME: Use ->query, ->request or ->attributes
                 'url' => UrlUtil::getNormalizePathAndQuery($request->get('target_path')),
                 'user' => 42,
             ],
@@ -93,6 +94,7 @@ class FavoriteControllerTest extends TestCase
 
         $controller = new FavoriteController($framework, $connection);
 
+        // FIXME: Use ->query, ->request or ->attributes
         $container = $this->getContainer($block, $parameters, $this->mockRouter(false === $currentId || $request->isMethod('POST') ? $request->get('target_path') : null));
         $controller->setContainer($container);
 
