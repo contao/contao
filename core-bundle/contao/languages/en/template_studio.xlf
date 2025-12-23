@@ -14,6 +14,9 @@
       <trans-unit id="no_theme_context">
         <source>Default/None</source>
       </trans-unit>
+      <trans-unit id="not_prefixed">
+        <source>without prefix</source>
+      </trans-unit>
       <trans-unit id="operation.save.0">
         <source>Save</source>
       </trans-unit>
@@ -112,6 +115,9 @@
       </trans-unit>
       <trans-unit id="dialog.rename_variant">
         <source>Please define a new unique name for the variant template %s.</source>
+      </trans-unit>
+      <trans-unit id="editor_tab.relation.legacy_pair">
+        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
       </trans-unit>
       <trans-unit id="editor_tab.relation.not_analyzable">
         <source>The template's relation cannot be analyzed because it contains errors.</source>
