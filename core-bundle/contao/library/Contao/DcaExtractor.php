@@ -95,7 +95,8 @@ class DcaExtractor extends Controller
 	protected $arrVirtualTargets = array();
 
 	/**
-	 * Virtual fields
+	 * Virtual field to target map
+	 * @var array
 	 */
 	protected $arrVirtualFields = array();
 
@@ -285,9 +286,9 @@ class DcaExtractor extends Controller
 	}
 
 	/**
-	 * Returns the virtual fields
+	 * Returns a map of virtual fields to their targets
 	 *
-	 * @return array The virtual fields
+	 * @return array The virtual fields map
 	 */
 	public function getVirtualFields()
 	{

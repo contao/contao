@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
@@ -55,6 +56,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(DcaUrlAnalyzer::class),
             $this->createStub(TranslatorInterface::class),
+            $this->createStub(VirtualFieldHandler::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -121,6 +123,20 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $resourceFinder = new ResourceFinder(Path::join($fixturesDir, 'table-data-container-provider'));
         $locator = new FileLocator(Path::join($fixturesDir, 'table-data-container-provider'));
 
+        $virtualFieldHandler = $this->createStub(VirtualFieldHandler::class);
+        $virtualFieldHandler
+            ->method('expandFields')
+            ->willReturnCallback(
+                static function (array $record): array {
+                    if ($record['jsonData'] ?? null) {
+                        return [...$record, ...json_decode($record['jsonData'], true, flags: JSON_THROW_ON_ERROR)];
+                    }
+
+                    return $record;
+                },
+            )
+        ;
+
         $container = $this->getContainerWithContaoConfiguration($fixturesDir);
         $container->set('contao.resource_finder', $resourceFinder);
         $container->set('contao.resource_locator', $locator);
@@ -135,6 +151,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(DcaUrlAnalyzer::class),
             $this->createStub(TranslatorInterface::class),
+            $virtualFieldHandler,
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

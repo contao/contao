@@ -56,8 +56,6 @@ class ModelTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA']);
-
         $this->resetStaticProperties([Model::class, System::class]);
 
         parent::tearDown();

@@ -208,7 +208,7 @@ class TableDataContainerProvider implements ProviderInterface
         );
 
         // Only select the rows we need so we don't transfer the entire database when indexing
-        $select = array_unique(['id', ...array_keys($searchableFields)]);
+        $select = array_unique(['id', ...array_map(static fn (string $field) => $fieldsConfig[$field]['saveTo'] ?? $field, array_keys($searchableFields))]);
 
         $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
