@@ -22,7 +22,7 @@ use Doctrine\DBAL\Platforms\MySQLPlatform;
  * "saveTo" targets automatically as "virtualTarget". Adds an "sql" definition
  * automatically to virtual field targets.
  */
-#[AsHook('loadDataContainer')]
+#[AsHook('loadDataContainer', priority: -4096)]
 class VirtualFieldsMappingListener
 {
     public function __construct(private readonly string $defaultStorageName = 'jsonData')
