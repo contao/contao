@@ -1,19 +1,17 @@
 {% trans_default_domain 'contao_jobs' %}
 
-{% set my_active_jobs = jobs|filter(
-    job => job.status != enum('Contao\\CoreBundle\\Job\\Status').completed and (job.owner.id == app.user.id or job.owner.isSystem),
-) %}
+{% set running_jobs = jobs|filter(job => not job.isCompleted) %}
 
-{# Update user related jobs list in the header #}
+{# Update jobs list in the header #}
 <turbo-stream action="update" target="running-jobs">
     <template>
         {% set list_attributes = attrs()
-            .set('data-jobs', my_active_jobs|length)
+            .set('data-jobs', running_jobs|length)
             .set('data-contao--jobs-target', 'list')
         %}
         <div{{ list_attributes }}>
             <ul>
-                {% for job in my_active_jobs %}
+                {% for job in running_jobs %}
                     <li>
                         {{ include('@Contao/backend/jobs/_progress.html.twig') }}
                         {{ ('jobs.typeLabel.' ~ job.type)|trans }}

@@ -2,7 +2,7 @@
 <xliff version="1.1">
   <file datatype="php" original="contao/languages/en/jobs.php" source-language="en">
     <body>
-      <trans-unit id="jobs.tstamp.0">
+      <trans-unit id="jobs.created_at.0">
         <source>Created at</source>
       </trans-unit>
       <trans-unit id="jobs.progress.0">
@@ -26,7 +26,7 @@
       <trans-unit id="jobs.statusLabel.completed">
         <source>Completed</source>
       </trans-unit>
-      <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
+      <trans-unit id="jobs.type_label.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">

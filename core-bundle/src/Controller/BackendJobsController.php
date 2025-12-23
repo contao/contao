@@ -36,7 +36,7 @@ class BackendJobsController extends AbstractBackendController
     public function latestJobsAction(Request $request): Response
     {
         return $this->render('@Contao/backend/jobs/show_running_jobs.stream.html.twig', [
-            'jobs' => $this->jobs->findActive($request->query->getInt('range')),
+            'jobs' => $this->jobs->findMyRecent($request->query->getInt('range')),
         ]);
     }
 

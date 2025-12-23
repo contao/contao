@@ -103,22 +103,25 @@ class Jobs
     }
 
     /**
-     * Find all jobs that were created in the last $offset seconds and/or are
-     * still not completed, yet.
+     * Similar to findMyNewOrPending() but also includes jobs that were completed in
+     * the last $window seconds.
      *
      * @return array<Job>
      */
-    public function findActive(int $offset): array
+    public function findMyRecent(int $window): array
     {
-        $results = $this->connection->executeQuery(
-            'SELECT * FROM tl_job WHERE pid = 0 AND tstamp >= ? OR status != ? ORDER BY tstamp',
-            [time() - $offset, Status::completed->value],
-        );
+        $qb = $this->buildQueryBuilderForMine();
 
-        return array_map(
-            $this->databaseRowToDto(...),
-            $results->fetchAllAssociative(),
-        );
+        if (!$qb) {
+            return [];
+        }
+
+        $qb->andWhere('j.status IN (:status_running) OR (j.status = :status_completed AND tstamp >= :window_start)');
+        $qb->setParameter('status_running', [Status::new->value, Status::pending->value], ArrayParameterType::STRING);
+        $qb->setParameter('status_completed', Status::completed->value);
+        $qb->setParameter('window_start', time() - $window);
+
+        return $this->queryWithQueryBuilder($qb);
     }
 
     public function getByUuid(string $uuid): Job|null
@@ -198,13 +201,15 @@ class Jobs
                     'type' => StringUtil::specialchars($job->getType()),
                     'status' => $job->getStatus()->value, // No encoding needed, enum
                     'owner' => $job->getOwner()->getId(), // No encoding needed, integer
-                    'tstamp' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
+                    'tstamp' => time(), // No encoding needed, integer
+                    'createdAt' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
                     'public' => $job->isPublic(), // No encoding needed, boolean
                 ],
                 [
                     Types::STRING,
                     Types::STRING,
                     Types::STRING,
+                    Types::INTEGER,
                     Types::INTEGER,
                     Types::INTEGER,
                     Types::BOOLEAN,
@@ -214,6 +219,7 @@ class Jobs
 
         // Update job data
         $row = [];
+        $row['tstamp'] = time(); // No encoding needed, integer
         $row['pid'] = 0; // No encoding needed, integer
         $row['status'] = $job->getStatus()->value; // No encoding needed, enum
 
@@ -266,9 +272,9 @@ class Jobs
         }
 
         $this->connection->executeStatement(
-            'DELETE FROM tl_job WHERE tstamp < :tstamp',
-            ['tstamp' => $this->clock->now()->getTimestamp() - $period],
-            ['tstamp' => Types::INTEGER],
+            'DELETE FROM tl_job WHERE createdAt < :createdAt',
+            ['createdAt' => $this->clock->now()->getTimestamp() - $period],
+            ['createdAt' => Types::INTEGER],
         );
 
         // Cleanup all directories in attachment storage that are not used anymore (also
@@ -355,7 +361,7 @@ class Jobs
         );
         $qb->setParameter('userOwner', $userid, ParameterType::INTEGER);
         $qb->setParameter('systemOwner', Owner::SYSTEM, ParameterType::INTEGER);
-        $qb->orderBy('j.tstamp', 'DESC');
+        $qb->orderBy('j.createdAt', 'DESC');
 
         return $qb;
     }
@@ -415,7 +421,7 @@ class Jobs
     {
         $job = new Job(
             $row['uuid'],
-            \DateTimeImmutable::createFromFormat('U', (string) $row['tstamp']),
+            \DateTimeImmutable::createFromFormat('U', (string) $row['createdAt']),
             Status::from($row['status']),
             StringUtil::decodeEntities($row['type']), // Decode because it's encoded for DC_Table
             new Owner((int) $row['owner']),
