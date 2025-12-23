@@ -80,7 +80,7 @@ export default class extends Controller {
         if (state && this.hasActiveTitleValue) {
             this.controllerTarget.title = this.activeTitleValue;
         } else if (!state && this.hasInactiveTitleValue) {
-            this.controllerTarget.innerText = this.inactiveTitleValue;
+            this.controllerTarget.title = this.inactiveTitleValue;
         }
     }
 }

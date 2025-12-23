@@ -2487,13 +2487,13 @@
         <source>Show filters</source>
       </trans-unit>
       <trans-unit id="DCA.toggleFilter.1">
-        <source>Show the DCA filter panel.</source>
+        <source>Show the DCA filter panel</source>
       </trans-unit>
       <trans-unit id="DCA.toggleFilter.2">
         <source>Hide filters</source>
       </trans-unit>
       <trans-unit id="DCA.toggleFilter.3">
-        <source>Hide the DCA filter panel.</source>
+        <source>Hide the DCA filter panel</source>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
