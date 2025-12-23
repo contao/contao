@@ -13,16 +13,14 @@ export default class extends Controller {
     };
 
     connect() {
-        if (!this.hasControlsTarget || !this.hasControllerTarget) {
-            return;
-        }
-
         if (!this.controlsTarget.id) {
             this.controlsTarget.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
         }
 
-        this.controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
-        this.controllerTarget.setAttribute('aria-expanded', 'false');
+        this.controllerTargets.forEach((controllerTarget) => {
+            controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
+            controllerTarget.setAttribute('aria-expanded', 'false');
+        });
     }
 
     toggle() {
@@ -47,9 +45,8 @@ export default class extends Controller {
 
     documentClick(event) {
         if (
-            !this.hasControllerTarget ||
-            this.controllerTarget.contains(event.target) ||
-            this.controlsTarget.contains(event.target)
+            this.controllerTargets.filter(t => t.contains(event.target)).length > 0
+            || this.controlsTarget.contains(event.target)
         ) {
             return;
         }
@@ -60,9 +57,6 @@ export default class extends Controller {
     #toggleState(state) {
         clearTimeout(this.#closeDelay);
 
-        this.controllerTarget.classList.toggle('active', state);
-        this.controllerTarget.setAttribute('aria-expanded', state);
-
         if (this.hasActiveClass) {
             this.controlsTarget.classList.toggle(this.activeClass, state);
         }
@@ -71,16 +65,21 @@ export default class extends Controller {
             this.controlsTarget.classList.toggle(this.inactiveClass, !state);
         }
 
-        if (state && this.hasActiveLabelValue) {
-            this.controllerTarget.innerText = this.activeLabelValue;
-        } else if (!state && this.hasInactiveLabelValue) {
-            this.controllerTarget.innerText = this.inactiveLabelValue;
-        }
+        this.controllerTargets.forEach((controllerTarget) => {
+            controllerTarget.classList.toggle('active', state);
+            controllerTarget.setAttribute('aria-expanded', state);
 
-        if (state && this.hasActiveTitleValue) {
-            this.controllerTarget.title = this.activeTitleValue;
-        } else if (!state && this.hasInactiveTitleValue) {
-            this.controllerTarget.title = this.inactiveTitleValue;
-        }
+            if (state && this.hasActiveLabelValue) {
+                controllerTarget.innerText = this.activeLabelValue;
+            } else if (!state && this.hasInactiveLabelValue) {
+                controllerTarget.innerText = this.inactiveLabelValue;
+            }
+
+            if (state && this.hasActiveTitleValue) {
+                controllerTarget.title = this.activeTitleValue;
+            } else if (!state && this.hasInactiveTitleValue) {
+                controllerTarget.title = this.inactiveTitleValue;
+            }
+        });
     }
 }
