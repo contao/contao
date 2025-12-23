@@ -137,14 +137,10 @@ class BackendHeaderListener
 
         $colorScheme = $factory
             ->createItem('color-scheme')
+            ->setLabel('<button class="icon-color-scheme" type="button" data-contao--color-scheme-target="label" data-action="contao--color-scheme#toggle:prevent">'.$this->translator->trans('MSC.lightMode', [], 'contao_default').'</button>')
             ->setAttribute('class', 'separator')
-            ->setUri('#')
-            ->setLinkAttribute('class', 'icon-color-scheme')
-            ->setLinkAttribute('title', '') // Required for the tips.js script
-            ->setLinkAttribute('data-controller', 'contao--color-scheme')
-            ->setLinkAttribute('data-action', 'contao--color-scheme#toggle')
-            ->setLinkAttribute('data-contao--color-scheme-target', 'label')
-            ->setLinkAttribute(
+            ->setAttribute('data-controller', 'contao--color-scheme')
+            ->setAttribute(
                 'data-contao--color-scheme-i18n-value',
                 json_encode(
                     [
@@ -154,6 +150,7 @@ class BackendHeaderListener
                     JSON_THROW_ON_ERROR,
                 ),
             )
+            ->setLabelAttribute('class', 'color-scheme')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
         ;

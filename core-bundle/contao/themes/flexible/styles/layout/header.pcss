@@ -70,14 +70,21 @@
     vertical-align: middle;
 }
 
-#tmenu .profile button {
-    position: relative;
-    cursor: pointer;
-    font-size: .875rem;
-    font-weight: 400;
-    border: none;
-    padding-right: 26px;
-    background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
+#tmenu {
+    :is(.profile, .color-scheme) {
+        button {
+            position: relative;
+            cursor: pointer;
+            font-size: .875rem;
+            font-weight: 400;
+            border: none;
+        }
+    }
+
+    .profile button {
+        padding-right: 26px;
+        background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
+    }
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -116,15 +123,23 @@
     }
 }
 
-#tmenu ul.menu_level_1 li a {
-    display: block;
-    color: inherit;
-    padding: 6px 20px 6px 40px;
-    white-space: nowrap;
-}
+#tmenu ul.menu_level_1 li {
+    :is(a, button) {
+        display: block;
+        color: inherit;
+        padding: 6px 20px 6px 40px;
+        white-space: nowrap;
 
-#tmenu ul.menu_level_1 li a:hover {
-    background-color: var(--nav-hover-bg);
+        &:hover {
+            background-color: var(--nav-hover-bg);
+        }
+    }
+
+    button {
+        width: 100%;
+        text-align: left;
+        background-color: transparent;
+    }
 }
 
 #tmenu ul.menu_level_1 .info {
