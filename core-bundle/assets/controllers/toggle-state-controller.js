@@ -3,7 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     #closeDelay = null;
 
-    static targets = ['controller', 'controls'];
+    static targets = ['controller', 'controls', 'label'];
     static classes = ['active', 'inactive'];
     static values = {
         activeLabel: String,
@@ -69,17 +69,19 @@ export default class extends Controller {
             controllerTarget.classList.toggle('active', state);
             controllerTarget.setAttribute('aria-expanded', state);
 
-            if (state && this.hasActiveLabelValue) {
-                controllerTarget.innerText = this.activeLabelValue;
-            } else if (!state && this.hasInactiveLabelValue) {
-                controllerTarget.innerText = this.inactiveLabelValue;
-            }
-
             if (state && this.hasActiveTitleValue) {
                 controllerTarget.title = this.activeTitleValue;
             } else if (!state && this.hasInactiveTitleValue) {
                 controllerTarget.title = this.inactiveTitleValue;
             }
         });
+
+        (this.hasLabelTarget ? this.labelTargets : this.controllerTargets).forEach((el) => {
+            if (state && this.hasActiveLabelValue) {
+                el.innerText = this.activeLabelValue;
+            } else if (!state && this.hasInactiveLabelValue) {
+                el.innerText = this.inactiveLabelValue;
+            }
+        })
     }
 }
