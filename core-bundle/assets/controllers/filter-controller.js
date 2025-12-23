@@ -6,16 +6,10 @@ export default class extends Controller {
     static targets = ['count', 'panel', 'filter'];
 
     connect() {
-        if (this.hasCountTarget) {
-            this.#updateCountNumber();
-        }
+        this.#updateCountNumber();
     }
 
     disconnect() {
-        if (this.hasCountTarget) {
-            this.countTarget.innerText = '';
-        }
-
         this.#filterMap.clear();
     }
 
@@ -73,6 +67,6 @@ export default class extends Controller {
             }
         }
 
-        this.countTarget.innerText = count !== 0 ? count : '';
+        this.countTargets.forEach(el => el.innerText = count !== 0 ? count : '');
     }
 }
