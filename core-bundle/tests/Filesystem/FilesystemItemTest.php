@@ -21,6 +21,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 
 class FilesystemItemTest extends TestCase
@@ -28,7 +29,7 @@ class FilesystemItemTest extends TestCase
     public function testSetAndGetAttributes(): void
     {
         $uuid = Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542');
-        $storage = $this->createMock(VirtualFilesystemInterface::class);
+        $storage = $this->createStub(VirtualFilesystemInterface::class);
 
         $fileItem = new FilesystemItem(
             true,
@@ -99,9 +100,7 @@ class FilesystemItemTest extends TestCase
         $this->assertFalse($fileItem->isSpreadsheet());
     }
 
-    /**
-     * @dataProvider provideSchemaOrgData
-     */
+    #[DataProvider('provideSchemaOrgData')]
     public function testGettingSchemaOrgData(string $path, string|null $mimeType, array $expectedSchema): void
     {
         $fileItem = new FilesystemItem(
@@ -126,9 +125,7 @@ class FilesystemItemTest extends TestCase
         $this->assertSame($expectedSchema, $fileItem->getSchemaOrgData());
     }
 
-    /**
-     * @dataProvider provideProperties
-     */
+    #[DataProvider('provideProperties')]
     public function testPreventAccessingFileAttributesOnDirectories(string $property, string $exception): void
     {
         $item = new FilesystemItem(false, 'foo/bar', 0);

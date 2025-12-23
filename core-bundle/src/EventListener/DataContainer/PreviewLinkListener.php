@@ -24,6 +24,7 @@ use Contao\Message;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\UriSigner;
@@ -43,6 +44,7 @@ class PreviewLinkListener
         private readonly TranslatorInterface $translator,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly UriSigner $uriSigner,
+        private readonly ClockInterface $clock,
         private readonly string $previewScript = '',
     ) {
     }
@@ -75,7 +77,7 @@ class PreviewLinkListener
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy=?', $userId];
+            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy = ?', $userId];
 
             // Check the current action
             switch ((string) $input->get('act')) {
@@ -89,7 +91,7 @@ class PreviewLinkListener
                 case 'deleteAll':
                 case 'overrideAll':
                     $allowedIds = $this->connection->fetchFirstColumn(
-                        'SELECT id FROM tl_preview_link WHERE createdBy=?',
+                        'SELECT id FROM tl_preview_link WHERE createdBy = ?',
                         [$userId],
                     );
 
@@ -104,7 +106,7 @@ class PreviewLinkListener
                 case 'toggle':
                 case 'delete':
                 default:
-                    $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id=?', [$dc->id]);
+                    $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id = ?', [$dc->id]);
 
                     if ($createdBy !== $userId) {
                         throw new AccessDeniedException(\sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
@@ -120,10 +122,12 @@ class PreviewLinkListener
             $GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable'] = false;
         }
 
+        $now = $this->clock->now();
+
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = (string) $input->get('url');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = (bool) $input->get('showUnpublished');
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = time();
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day');
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = $now->getTimestamp();
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day', $now->getTimestamp());
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $userId;
     }
 
@@ -140,9 +144,9 @@ class PreviewLinkListener
             return;
         }
 
-        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id=?', [$dc->id]);
+        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id = ?', [$dc->id]);
 
-        if ($row['expiresAt'] < time()) {
+        if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
             $message->addError($this->translator->trans('tl_preview_link.hintExpired', [], 'contao_tl_preview_link'));
         } elseif (0 === (int) $row['tstamp']) {
             $message->addNew($this->translator->trans('tl_preview_link.hintSave', [], 'contao_tl_preview_link'));
@@ -158,7 +162,7 @@ class PreviewLinkListener
     #[AsCallback(table: 'tl_preview_link', target: 'list.label.label')]
     public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): array
     {
-        if ($row['expiresAt'] < time()) {
+        if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
             foreach ($args as &$arg) {
                 $arg = \sprintf('<span class="tl_gray">%s</span>', $arg);
             }
@@ -172,7 +176,7 @@ class PreviewLinkListener
     #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
     public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
-        if ($row['expiresAt'] < time()) {
+        if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
             return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
         }
 
@@ -187,10 +191,11 @@ class PreviewLinkListener
         $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
 
         return \sprintf(
-            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
+            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($title),
             StringUtil::specialcharsUrl($url),
+            $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'),
             $label ?? $url,
         );
     }

@@ -10,20 +10,44 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use App\Entity\FooEntity;
+use App\EventListener\InvalidListener;
+use App\EventListener\ValidListener;
+use App\FrontendModule\LegacyModule;
+use App\Messenger\UnionTypeMessage;
+use App\Model\FooModel;
 use AppBundle\AppBundle;
+use CmsIg\Seal\Adapter\Loupe\LoupeAdapter;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
+use Doctrine\DBAL\Platforms\MySQL57Platform;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
+use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
 return (new Configuration())
     ->ignoreUnknownClasses([
         AppBundle::class,
-        'Imagick',
+        FooEntity::class,
+        FooModel::class,
         'Gmagick',
+        'Imagick',
+        InvalidListener::class,
+        LegacyModule::class,
+        LoupeAdapter::class,
+        Mysql::class,
+        MySQL57Platform::class,
+        SchemaAlterTableRenameColumnEventArgs::class,
         'SensitiveParameter',
+        ServerInfoAwareConnection::class,
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
+        UnionTypeMessage::class,
+        ValidListener::class,
+        VersionAwarePlatformDriver::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
@@ -49,12 +73,23 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('contao-components/tinymce4', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/tristen-tablesort', [ErrorType::UNUSED_DEPENDENCY])
 
+    // These packages are required for the search integration.
+    ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+
     // The manager plugin is a dev dependency because it is only required in the
     // managed edition.
     ->ignoreErrorsOnPackage('contao/manager-plugin', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
-    // This packages provides the trigger_deprecation() function.
+    // We want to control the version of Loupe we support in contao/loupe-bridge.
+    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::UNUSED_DEPENDENCY])
+
+    // This package provides the trigger_deprecation() function.
     ->ignoreErrorsOnPackage('symfony/deprecation-contracts', [ErrorType::UNUSED_DEPENDENCY])
+
+    // We set up doctrine messenger transports via the skeleton config in the
+    // managed edition.
+    ->ignoreErrorsOnPackage('symfony/doctrine-messenger', [ErrorType::UNUSED_DEPENDENCY])
 
     // This package provides the "sanitize_html" Twig filter.
     ->ignoreErrorsOnPackage('symfony/html-sanitizer', [ErrorType::UNUSED_DEPENDENCY])
@@ -82,12 +117,4 @@ return (new Configuration())
 
     // We only use the assets from the web-auth/webauthn-stimulus package.
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
-
-    // These packages are required for the search integration.
-    ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
-
-    // This package is required by cmsig/seal-loupe-adapter and may therefore be a
-    // shadow dependency.
-    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
 ;

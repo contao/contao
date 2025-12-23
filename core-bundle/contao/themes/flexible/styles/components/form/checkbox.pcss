@@ -1,0 +1,58 @@
+/* Checkboxes */
+.tl_checkbox {
+    margin: 0 1px 0 0;
+}
+
+.tl_tree_checkbox {
+    margin: 1px 1px 1px 0;
+}
+
+/* Checkboxes in Safari are 12x12 instead of 14x14, so increase the margin */
+@supports (hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none) {
+    .tl_tree_checkbox {
+        margin: 2px 2px 2px 1px;
+    }
+}
+
+.tl_checkbox_single_container {
+    margin: 16px 0 0;
+}
+
+.tl_checkbox_single_container label {
+    font-weight: 600;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .tl_checkbox_single_container label {
+        font-weight: 500;
+    }
+}
+
+/* Grouped checkboxes */
+.checkbox_toggler_first {
+    margin-top: 2px;
+}
+
+.checkbox_toggler, .checkbox_toggler_first {
+    font-weight: 600;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .checkbox_toggler, .checkbox_toggler_first {
+        font-weight: 500;
+    }
+}
+
+.checkbox_toggler img, .checkbox_toggler_first img {
+    position: relative;
+    top: -1px;
+    margin-right: 2px;
+}
+
+.checkbox_options {
+    margin: 0 0 3px 21px !important;
+}
+
+.tl_checkbox_container .checkbox_options:last-of-type {
+    margin-bottom: 0 !important;
+}

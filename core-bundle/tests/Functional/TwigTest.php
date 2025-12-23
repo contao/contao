@@ -13,12 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TwigTest extends FunctionalTestCase
 {
-    /**
-     * @dataProvider getSanitizeHtmlFilter
-     */
+    #[DataProvider('getSanitizeHtmlFilter')]
     public function testSanitizeHtmlFilter(string $source, string $expected): void
     {
         $twig = static::getContainer()->get('twig');

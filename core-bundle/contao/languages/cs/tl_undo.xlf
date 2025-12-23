@@ -41,9 +41,17 @@
         <source>Raw data of the undo step</source>
         <target>Čistá data zpětných kroků.</target>
       </trans-unit>
-      <trans-unit id="tl_undo.undo">
+      <trans-unit id="tl_undo.undo.0">
+        <source>Restore</source>
+        <target>Obnovit</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.undo.1">
         <source>Restore element ID %s</source>
         <target>Obnovit element ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.jumpToParent.0">
+        <source>Show origin</source>
+        <target>Zobrazit původ</target>
       </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>

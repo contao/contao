@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine\DBAL\Types;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
 
@@ -39,9 +39,9 @@ class BinaryStringTypeTest extends TestCase
         $fieldDefinition = ['fixed' => true];
 
         $platform = $this
-            ->getMockBuilder(AbstractPlatform::class)
+            ->getMockBuilder(MySQLPlatform::class)
             ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
-            ->getMockForAbstractClass()
+            ->getMock()
         ;
 
         $platform
@@ -63,9 +63,9 @@ class BinaryStringTypeTest extends TestCase
         $fieldDefinition = ['fixed' => false];
 
         $platform = $this
-            ->getMockBuilder(AbstractPlatform::class)
+            ->getMockBuilder(MySQLPlatform::class)
             ->onlyMethods(['getBinaryTypeDeclarationSQL', 'getBlobTypeDeclarationSQL'])
-            ->getMockForAbstractClass()
+            ->getMock()
         ;
 
         $platform
@@ -84,11 +84,16 @@ class BinaryStringTypeTest extends TestCase
 
     public function testReturnsTheCorrectName(): void
     {
-        $this->assertSame(BinaryStringType::NAME, $this->type->getName());
+        $this->assertSame(BinaryStringType::NAME, Type::getTypeRegistry()->lookupName($this->type));
     }
 
     public function testRequiresAnSqlCommentHintForTheCustomType(): void
     {
-        $this->assertTrue($this->type->requiresSQLCommentHint($this->getMockForAbstractClass(AbstractPlatform::class)));
+        if (!method_exists(Type::class, 'requiresSQLCommentHint')) {
+            $this->markTestSkipped('The method requiresSQLCommentHint() does not exist anymore in doctrine/dbal 4.x');
+        }
+
+        /** @phpstan-ignore method.notFound */
+        $this->assertTrue($this->type->requiresSQLCommentHint($this->createStub(MySQLPlatform::class)));
     }
 }

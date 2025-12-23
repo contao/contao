@@ -51,10 +51,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_module', 'listModule')
 		),
 		'label' => array
 		(
+			'fields'                  => array('name', 'type'),
+			'format'                  => '%s <span class="label-info">[%s]</span>',
 			'group_callback'          => array('tl_module', 'getGroupHeader')
 		)
 	),
@@ -85,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC,imgSize,fullsize,useCaption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
-		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'template'                    => '{title_legend},name,headline,type;{template_legend},customTpl,data;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'feed_reader'                 => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
@@ -508,27 +509,35 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'reg_text' => array
 		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-			'load_callback' => array
-			(
-				array('tl_module', 'getActivationDefault')
-			),
+			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 			'sql'                     => "text NULL"
 		),
 		'reg_password' => array
 		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null),
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-			'load_callback'           => array
-			(
-				array('tl_module', 'getPasswordDefault')
-			),
+			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 			'sql'                     => "text NULL"
 		),
 		'data' => array
 		(
-			'inputType'               => 'keyValueWizard',
+			'inputType'               => 'rowWizard',
+			'fields' => array
+			(
+				'key' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_key'],
+					'inputType'       => 'text'
+				),
+				'value' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_value'],
+					'inputType'       => 'text'
+				)
+			),
+			'eval'                    => array('tl_class'=>'w66 clr'),
 			'sql'                     => "text NULL"
 		),
 		'protected' => array
@@ -608,7 +617,7 @@ class tl_module extends Backend
 		{
 			if ($v['eval']['feEditable'] ?? null)
 			{
-				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0];
+				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0] ?? $k;
 			}
 		}
 
@@ -694,52 +703,6 @@ class tl_module extends Backend
 		}
 
 		return $group;
-	}
-
-	/**
-	 * Load the default activation text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getActivationDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : ($GLOBALS['TL_LANG']['tl_module']['emailText'] ?? null);
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Load the default password text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getPasswordDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null);
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * List a front end module
-	 *
-	 * @param array $row
-	 *
-	 * @return string
-	 */
-	public function listModule($row)
-	{
-		return '<div class="tl_content_left">' . $row['name'] . ' <span class="label-info">[' . ($GLOBALS['TL_LANG']['FMD'][$row['type']][0] ?? $row['type']) . ']</span></div>';
 	}
 
 	/**

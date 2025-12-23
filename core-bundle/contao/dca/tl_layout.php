@@ -48,15 +48,20 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_layout', 'listLayout')
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('name'),
+			'format'                  => '%s',
+		),
 	),
 
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head'
+		'__selector__'                => array('type', 'rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
+		'default'                     => '{title_legend},name,type;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head',
+		'modern'                      => '{title_legend},name,type;{image_legend:hide},lightboxSize,defaultImageDensities;{modules_legend},template,modules'
 	),
 
 	// Sub-palettes
@@ -98,6 +103,14 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'type' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('default', 'modern'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
+			'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
+			'sql'                     => array('type'=>'string', 'length'=>7, 'default'=>'default')
 		),
 		'rows' => array
 		(
@@ -186,10 +199,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
-			'options_callback' => static function () {
-				return Controller::getTemplateGroup('fe_');
-			},
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'mandatory' => true, 'chosen'=>true, 'tl_class'=>'w50', 'submitOnChange'=>true),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minifyMarkup' => array
@@ -299,6 +309,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'scripts' => array
 		(
+			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
@@ -345,18 +356,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  */
 class tl_layout extends Backend
 {
-	/**
-	 * List a page layout
-	 *
-	 * @param array $row
-	 *
-	 * @return string
-	 */
-	public function listLayout($row)
-	{
-		return '<div class="tl_content_left">' . $row['name'] . '</div>';
-	}
-
 	/**
 	 * Auto-select layout.css if responsive.css is selected (see #8222)
 	 *

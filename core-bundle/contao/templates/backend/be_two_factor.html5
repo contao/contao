@@ -1,8 +1,4 @@
 
-<div id="tl_buttons">
-  <a href="<?= $this->href ?>" class="header_back" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.backBTTitle')) ?>"><?= $this->trans('MSC.backBT') ?></a>
-</div>
-
 <div class="two-factor">
   <h2 class="sub_headline"><?= $this->trans('MSC.twoFactorAuthentication') ?></h2>
   <?= $this->messages ?>
@@ -27,6 +23,7 @@
         </div>
         <div class="submit_container cf">
           <button type="submit" class="tl_submit"><?= $this->trans('MSC.enable') ?></button>
+          <a href="<?= $this->route('contao_backend', ['do' => 'security']) ?>" class="tl_submit"><?= $this->trans('MSC.cancelBT') ?></a>
         </div>
       </div>
     </form>
@@ -39,6 +36,7 @@
         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
         <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
         <div class="submit_container cf">
+          <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable']) ?>" class="tl_submit"><?= $this->trans('MSC.edit') ?></a>
           <button type="submit" class="tl_submit"><?= $this->trans('MSC.disable') ?></button>
         </div>
       </div>
@@ -111,7 +109,7 @@
   <?php else: ?>
     <p><?= $this->trans('MSC.twoFactorExplain') ?></p>
     <div class="tl_submit_container">
-      <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => $this->ref]) ?>" class="tl_submit"><?= $this->trans('MSC.enable') ?></a>
+      <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable']) ?>" class="tl_submit"><?= $this->trans('MSC.enable') ?></a>
     </div>
   <?php endif; ?>
 </div>
@@ -119,7 +117,7 @@
 <div class="two-factor passkeys">
   <h2 class="sub_headline"><?= $this->trans('MSC.passkeys') ?></h2>
   <p><?= $this->trans('MSC.passkeysDescription') ?></p>
-  <div class="tl_listing_container">
+  <div class="list_passkeys">
     <turbo-frame id="passkeys" data-turbo-action="advance">
       <?php if ($this->credentials): ?>
         <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">
@@ -150,7 +148,7 @@
                   <form method="post">
                     <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.edit')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
+                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.save')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
                   </form>
                 </td>
               </tr>

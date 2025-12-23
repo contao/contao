@@ -1,14 +1,14 @@
 <?php
 
 $this->rootAttributes = $this
-    ->attr()
+    ->attrs()
     ->set('lang', $this->language)
     ->set('dir', 'rtl', $this->isRTL)
     ->mergeWith($this->rootAttributes)
 ;
 
 $this->bodyAttributes = $this
-    ->attr()
+    ->attrs()
     ->set('id', 'top')
     ->addClass($this->class)
     ->setIfExists('onload', $this->onload)
@@ -29,6 +29,9 @@ $this->bodyAttributes = $this
       <meta name="robots" content="<?= $this->robots ?>">
       <meta name="description" content="<?= Contao\StringUtil::substr($this->description, 320) ?>">
       <meta name="generator" content="Contao Open Source CMS">
+      <?php foreach ($this->metaTags ?? [] as $metaTag): ?>
+        <meta<?= $metaTag ?>>
+      <?php endforeach; ?>
     <?php $this->endblock(); ?>
 
     <?php if ($this->canonical): ?>

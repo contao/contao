@@ -20,7 +20,7 @@ class FrontendModuleReferenceTest extends TestCase
 {
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
-        $model = $this->mockClassWithProperties(ModuleModel::class, ['type' => 'foobar']);
+        $model = $this->createClassWithPropertiesStub(ModuleModel::class, ['type' => 'foobar']);
 
         $reference = new FrontendModuleReference($model);
         $this->assertSame(FrontendModuleReference::TAG_NAME.'.foobar', $reference->controller);
@@ -28,7 +28,7 @@ class FrontendModuleReferenceTest extends TestCase
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = $this->createMock(ModuleModel::class);
+        $model = $this->createStub(ModuleModel::class);
 
         $reference = new FrontendModuleReference($model);
         $this->assertSame('main', $reference->attributes['section']);

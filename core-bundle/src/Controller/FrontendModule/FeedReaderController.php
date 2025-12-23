@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
-use Contao\Config;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
+use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
 use Contao\CoreBundle\Twig\FragmentTemplate;
-use Contao\Environment;
 use Contao\ModuleModel;
-use Contao\Pagination;
 use Contao\StringUtil;
 use FeedIo\Feed;
 use FeedIo\Feed\Item;
@@ -37,6 +37,7 @@ class FeedReaderController extends AbstractFrontendModuleController
         private readonly FeedIo $feedIo,
         private readonly LoggerInterface $logger,
         private readonly CacheInterface $cache,
+        private readonly PaginationFactoryInterface $paginationFactory,
     ) {
     }
 
@@ -88,27 +89,19 @@ class FeedReaderController extends AbstractFrontendModuleController
             ),
         );
 
-        usort($elements, static fn (array $a, array $b): int => $a['item']->getLastModified() <=> $b['item']->getLastModified());
+        usort($elements, static fn (array $a, array $b): int => $b['item']->getLastModified() <=> $a['item']->getLastModified());
 
         if ($model->perPage > 0) {
             $param = 'page_r'.$model->id;
-            $page = $request->query->getInt($param, 1);
 
-            // Do not index or cache the page if the page number is outside the range
-            if ($page < 1 || $page > max(ceil(\count($elements) / $model->perPage), 1)) {
-                throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
+            try {
+                $pagination = $this->paginationFactory->create(new PaginationConfig($param, \count($elements), $model->perPage));
+            } catch (PageOutOfRangeException $e) {
+                throw new PageNotFoundException(\sprintf('Page not found: %s', $request->getUri()), previous: $e);
             }
 
-            $config = $this->getContaoAdapter(Config::class);
-
-            // Set limit and offset
-            $offset = ($page - 1) * $model->perPage;
-            $limit = $model->perPage;
-
-            $pagination = new Pagination(\count($elements), $model->perPage, $config->get('maxPaginationLinks'), $param);
-
-            $template->set('pagination', $pagination->generate());
-            $template->set('elements', \array_slice($elements, $offset, $limit));
+            $template->set('pagination', $pagination);
+            $template->set('elements', $pagination->getItemsForPage($elements));
         } else {
             $template->set('pagination', null);
             $template->set('elements', $elements);

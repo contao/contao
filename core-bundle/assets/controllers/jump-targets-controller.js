@@ -3,27 +3,22 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['navigation', 'section'];
 
-    connect () {
-        this.rebuildNavigation();
-        this.connected = true;
-    }
-
-    sectionTargetConnected () {
-        if (!this.connected) {
-            return;
-        }
-
+    sectionTargetConnected() {
         this.rebuildNavigation();
     }
 
-    rebuildNavigation () {
+    sectionTargetDisconnected() {
+        this.rebuildNavigation();
+    }
+
+    rebuildNavigation() {
         if (!this.hasNavigationTarget) {
             return;
         }
 
         const links = document.createElement('ul');
 
-        this.sectionTargets.forEach((el) => {
+        for (const el of this.sectionTargets) {
             const action = document.createElement('button');
             action.innerText = el.getAttribute(`data-${this.identifier}-label-value`);
 
@@ -37,7 +32,7 @@ export default class extends Controller {
             li.append(action);
 
             links.append(li);
-        });
+        }
 
         this.navigationTarget.replaceChildren(links);
     }

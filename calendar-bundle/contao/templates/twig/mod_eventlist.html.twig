@@ -1,0 +1,8 @@
+{% extends '@Contao/block_unsearchable.html.twig' %}
+
+{% block content %}
+
+    {{ events|raw }}
+    {{ pagination|default|raw }}
+
+{% endblock %}

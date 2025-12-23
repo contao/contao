@@ -18,6 +18,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -61,9 +62,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    /**
-     * @dataProvider provideInput
-     */
+    #[DataProvider('provideInput')]
     public function testOutputsHierarchy(array $input, string $expectedOutput): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
@@ -251,9 +250,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    /**
-     * @dataProvider provideThemeOptions
-     */
+    #[DataProvider('provideThemeOptions')]
     public function testIncludesThemeTemplates(array $input, string|null $expectedThemeSlug): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
@@ -292,7 +289,7 @@ class DebugContaoTwigCommandTest extends TestCase
 
     private function getCommand(ContaoFilesystemLoader|null $filesystemLoader = null): DebugContaoTwigCommand
     {
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->willReturnCallback(
@@ -307,7 +304,7 @@ class DebugContaoTwigCommandTest extends TestCase
         ;
 
         return new DebugContaoTwigCommand(
-            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
+            $filesystemLoader ?? $this->createStub(ContaoFilesystemLoader::class),
             new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance'),
             $inspector,

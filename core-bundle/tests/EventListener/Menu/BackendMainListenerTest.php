@@ -18,7 +18,6 @@ use Contao\CoreBundle\EventListener\Menu\BackendMainListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 class BackendMainListenerTest extends TestCase
@@ -32,7 +31,7 @@ class BackendMainListenerTest extends TestCase
             ->willReturn($this->getNavigation())
         ;
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn($user)
@@ -41,7 +40,7 @@ class BackendMainListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
-        $listener = new BackendMainListener($security, new RequestStack(), false);
+        $listener = new BackendMainListener($security);
         $listener($event);
 
         $tree = $event->getTree();
@@ -111,7 +110,7 @@ class BackendMainListenerTest extends TestCase
 
     public function testDoesNotBuildTheMainMenuIfNoUserIsGiven(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -126,7 +125,7 @@ class BackendMainListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
 
-        $listener = new BackendMainListener($security, new RequestStack(), false);
+        $listener = new BackendMainListener($security);
         $listener($event);
 
         $tree = $event->getTree();
@@ -136,7 +135,7 @@ class BackendMainListenerTest extends TestCase
 
     public function testDoesNotBuildTheMainMenuIfTheNameDoesNotMatch(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -151,47 +150,12 @@ class BackendMainListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('root'));
 
-        $listener = new BackendMainListener($security, new RequestStack(), false);
+        $listener = new BackendMainListener($security);
         $listener($event);
 
         $tree = $event->getTree();
 
         $this->assertCount(0, $tree->getChildren());
-    }
-
-    public function testAddsTheTemplateStudioMenuItemToTheMainMenu(): void
-    {
-        $user = $this->createMock(BackendUser::class);
-        $user
-            ->expects($this->once())
-            ->method('navigation')
-            ->willReturn([
-                'design' => [
-                    'label' => 'Layout',
-                    'title' => 'Layout',
-                    'href' => '/',
-                    'class' => 'design-category node-expanded trail',
-                    'modules' => [],
-                ],
-            ])
-        ;
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $nodeFactory = new MenuFactory();
-        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
-
-        $listener = new BackendMainListener($security, new RequestStack(), true);
-        $listener($event);
-
-        $children = $event->getTree()->getChildren()['design']->getChildren();
-
-        $this->assertArrayHasKey('template-studio', $children);
-        $this->assertSame('Template Studio', $children['template-studio']->getLabel());
     }
 
     /**

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\User;
 use Webauthn\Bundle\Repository\PublicKeyCredentialUserEntityRepositoryInterface;
@@ -19,18 +20,37 @@ use Webauthn\PublicKeyCredentialUserEntity;
 
 final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntityRepositoryInterface
 {
-    public function __construct(private readonly ContaoUserProvider $userProvider)
-    {
+    public function __construct(
+        private readonly ContaoUserProvider $backendUserProvider,
+        private readonly ContaoUserProvider $frontendUserProvider,
+        private readonly ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     public function findOneByUsername(string $username): PublicKeyCredentialUserEntity|null
     {
-        return $this->getUserEntity($this->userProvider->loadUserByIdentifier($username));
+        if ($this->scopeMatcher->isBackendRequest()) {
+            return $this->getUserEntity($this->backendUserProvider->loadUserByIdentifier($username));
+        }
+
+        if ($this->scopeMatcher->isFrontendRequest()) {
+            return $this->getUserEntity($this->frontendUserProvider->loadUserByIdentifier($username));
+        }
+
+        return null;
     }
 
     public function findOneByUserHandle(string $userHandle): PublicKeyCredentialUserEntity|null
     {
-        return $this->getUserEntity($this->userProvider->loadUserById((int) $userHandle));
+        if (str_starts_with($userHandle, 'backend.')) {
+            return $this->getUserEntity($this->backendUserProvider->loadUserById((int) substr($userHandle, 8)));
+        }
+
+        if (str_starts_with($userHandle, 'frontend.')) {
+            return $this->getUserEntity($this->frontendUserProvider->loadUserById((int) substr($userHandle, 9)));
+        }
+
+        return null;
     }
 
     private function getUserEntity(User|null $user): PublicKeyCredentialUserEntity|null
@@ -39,6 +59,6 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
             return null;
         }
 
-        return new PublicKeyCredentialUserEntity($user->username, (string) $user->id, $user->name);
+        return new PublicKeyCredentialUserEntity($user->username, $user->getPasskeyUserHandle(), $user->getDisplayName());
     }
 }

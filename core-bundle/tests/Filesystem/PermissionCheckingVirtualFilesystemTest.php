@@ -18,24 +18,23 @@ use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PermissionCheckingVirtualFilesystemTest extends TestCase
 {
-    /**
-     * @dataProvider provideOperationsThatShouldBeDenied
-     */
+    #[DataProvider('provideOperationsThatShouldBeDenied')]
     public function testDeniesAccess(string $operation, array $arguments, array|string $permissionToDeny, string $exception): void
     {
-        $filesStorage = $this->createMock(VirtualFilesystem::class);
+        $filesStorage = $this->createStub(VirtualFilesystem::class);
         $filesStorage
             ->method('getPrefix')
             ->willReturn('files')
         ;
 
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
             ->willReturnCallback(
@@ -229,14 +228,12 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidPaths
-     */
+    #[DataProvider('provideInvalidPaths')]
     public function testDisallowsAccessForInvalidPaths(string $invalidPath, string $expectedMessage): void
     {
         $permissionCheckingVirtualFilesystem = new PermissionCheckingVirtualFilesystem(
-            $this->createMock(VirtualFilesystem::class),
-            $this->createMock(Security::class),
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
         );
 
         $this->assertFalse($permissionCheckingVirtualFilesystem->canAccessLocation($invalidPath));

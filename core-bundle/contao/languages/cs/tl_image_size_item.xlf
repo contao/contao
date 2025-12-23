@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_image_size_item.media.0">
         <source>Media query</source>
-        <target>Druh médii</target>
+        <target>Mediální query</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.media.1">
         <source>Here you can define when to use the image size, e.g. &lt;em&gt;(max-width: 600px)&lt;/em&gt;.</source>
@@ -37,31 +37,27 @@
         <source>Visibility</source>
         <target>Viditelnost</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.new.0">
-        <source>New</source>
-        <target>Nové</target>
-      </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
         <target>Vytvořit nové mediální query</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show">
+      <trans-unit id="tl_image_size_item.show.1">
         <source>Show the details of media query ID %s</source>
         <target>Zobrazit detaily k mediální query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit">
+      <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
         <target>Upravit mediální query %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut">
+      <trans-unit id="tl_image_size_item.cut.1">
         <source>Move media query ID %s</source>
         <target>Přesunout mediální query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy">
-        <source>Duplicate media query ID %s</source>
-        <target>Duplikovat mediální query ID %s</target>
+      <trans-unit id="tl_image_size_item.copy.1">
+        <source>Copy media query ID %s</source>
+        <target>Zkopírovat mediální query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete">
+      <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
         <target>Smazat mediální query ID %s</target>
       </trans-unit>
@@ -76,6 +72,14 @@
       <trans-unit id="tl_image_size_item.toggle.2">
         <source>Activate media query ID %s</source>
         <target>Aktivovat mediální query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.3">
+        <source>Deactivate</source>
+        <target>Deaktivovat</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.4">
+        <source>Activate</source>
+        <target>Aktivovat</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>

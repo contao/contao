@@ -1,0 +1,21 @@
+{% trans_default_domain 'contao_default' %}
+
+{% if error|default %}
+    <div class="serp-preview">
+        <p class="tl_info">{{ 'MSC.noSerpPreview'|trans }}</p>
+    </div>
+{% else %}
+    {% set serp_preview_attributes = attrs()
+        .set('data-controller', 'contao--serp-preview')
+        .set('data-contao--serp-preview-fields-value', fields|json_encode)
+        .set('data-contao--serp-preview-id-value', id)
+        .set('data-contao--serp-preview-trail-value', trail)
+        .set('data-contao--serp-preview-title-tag-value', titleTag)
+        .addClass('serp-preview')
+    %}
+    <div{{ serp_preview_attributes }}>
+        <p data-contao--serp-preview-target="url" class="url"></p>
+        <p data-contao--serp-preview-target="title" class="title"></p>
+        <p data-contao--serp-preview-target="description" class="description"></p>
+    </div>
+{% endif %}

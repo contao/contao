@@ -486,26 +486,26 @@ If you did not request this e-mail, please contact the website administrator.
       <trans-unit id="tl_module.close_delete">
         <source>Irrevocably delete account</source>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
       </trans-unit>
     </body>
   </file>

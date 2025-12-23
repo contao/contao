@@ -16,6 +16,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
 use GuzzleHttp\Promise\Is;
 use GuzzleHttp\Promise\RejectionException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Process\Process;
 
 class ProcessUtilTest extends TestCase
@@ -36,9 +38,7 @@ class ProcessUtilTest extends TestCase
         $this->assertNotEmpty($util->getPhpBinary());
     }
 
-    /**
-     * @dataProvider promiseTestProvider
-     */
+    #[DataProvider('promiseTestProvider')]
     public function testPromise(bool $successful, bool $autostart): void
     {
         $util = new ProcessUtil('bin/console');
@@ -77,7 +77,7 @@ class ProcessUtilTest extends TestCase
         return str_replace(["'", '"'], '', trim(strstr($process->getCommandLine(), ' ')));
     }
 
-    private function mockProcess(bool $isSuccessful, bool $autostart): Process
+    private function mockProcess(bool $isSuccessful, bool $autostart): Process&MockObject
     {
         $process = $this->createMock(Process::class);
         $process

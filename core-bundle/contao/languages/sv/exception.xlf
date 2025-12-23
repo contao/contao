@@ -30,8 +30,8 @@
         <target>Öppna den aktuella loggfilen i &lt;code&gt;var/logs&lt;/code&gt;-katalogen och hitta tillhörande felmeddelande (vanligtvis det sista).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
-        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>Skriptkörningen avbröts, eftersom något inte fungerar korrekt. Själva felmeddelandet döljs av detta meddelande av säkerhetsskäl och finns i den aktuella loggfilen (se ovan). Om du inte förstår felmeddelandet eller inte vet hur du åtgärdar problemet, besök &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaos supportsida&lt;/a&gt;.</target>
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Skriptkörningen avbröts, eftersom något inte fungerar korrekt. Själva felmeddelandet döljs av detta meddelande av säkerhetsskäl och finns i den aktuella loggfilen (se ovan). Om du inte förstår felmeddelandet eller inte vet hur du åtgärdar problemet, besök &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaos supportsida&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -41,17 +41,21 @@
         <source>The request token could not be verified.</source>
         <target>Token kunde inte verifieras.</target>
       </trans-unit>
+      <trans-unit id="XPT.tokenReload">
+        <source>Reload the page</source>
+        <target>Ladda om sidan</target>
+      </trans-unit>
       <trans-unit id="XPT.tokenRetry">
-        <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click here&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
-        <target>&lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;Klicka här&lt;/a&gt; och försök igen. Använd inte bakåtknappen i din webbläsare.</target>
+        <source>Use the button above to reload the page and try again. Do not use the back button of your browser.</source>
+        <target>Använd knappen ovan för att ladda om sidan och försöka igen. Använd inte bakåtknappen i din webbläsare.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainOne">
-        <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
-        <target>Detta felmeddelande visas om det finns en POST-förfrågan utan giltigt autentiserings-token. I Contao 2.10 så har hänvisningskontrollen ersatts av ett token-system. Om problemet kvarstår så kan det bero på en 3:e-partsmodul som inte är kompatibel eller så är din Contao-installation inte uppdaterad på ett korrekt sätt.</target>
+        <source>This error occurs if there is a POST request without a valid request token. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+        <target>Det här felet uppstår om det finns en POST-begäran utan en giltig request-token. Om problemet kvarstår kan det bero på att du använder ett inkompatibelt tredjepartstillägg eller att du inte har uppdaterat din Contao-installation korrekt.</target>
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
-        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
-        <target>För mer information, besök &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaos supportsida&lt;/a&gt;.</target>
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>För mer information, besök &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contaos supportsida&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -21,7 +22,6 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\ArrayParameterType;
 
 /**
@@ -329,7 +329,7 @@ abstract class DataContainer extends Backend
 		switch ($strKey)
 		{
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record has been deprecated and will be removed in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record is deprecated and will be removed in Contao 6.');
 				$this->objActiveRecord = $varValue;
 				break;
 
@@ -350,7 +350,7 @@ abstract class DataContainer extends Backend
 				break;
 
 			default:
-				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones has been deprecated and will no longer work in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones is deprecated and will no longer work in Contao 6.');
 				$this->$strKey = $varValue;
 				break;
 		}
@@ -386,7 +386,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record is deprecated and will be removed in Contao 6. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
 
 				return $this->objActiveRecord;
 
@@ -454,7 +454,7 @@ abstract class DataContainer extends Backend
 		}
 
 		/** @var class-string<Widget> $strClass */
-		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
+		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? ''] ?? null;
 
 		// Return if the widget class does not exist
 		if (!class_exists($strClass))
@@ -596,17 +596,15 @@ abstract class DataContainer extends Backend
 
 			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
-    window.addEvent("domready", function() {
-      new Picker.Date($("ctrl_' . $objWidget->id . '"), {
-        draggable: false,
-        toggle: $("toggle_' . $objWidget->id . '"),
-        format: "' . $format . '",
-        positionOffset: {x:-211,y:-209}' . $time . ',
-        pickerClass: "datepicker_bootstrap",
-        useFadeInOut: !Browser.ie' . $strOnSelect . ',
-        startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
-        titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
-      });
+    new Picker.Date($("ctrl_' . $objWidget->id . '"), {
+      draggable: false,
+      toggle: $("toggle_' . $objWidget->id . '"),
+      format: "' . $format . '",
+      positionOffset: {x:-211,y:-209}' . $time . ',
+      pickerClass: "datepicker_bootstrap",
+      useFadeInOut: !Browser.ie' . $strOnSelect . ',
+      startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
+      titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
     });
   </script>';
 		}
@@ -624,11 +622,6 @@ abstract class DataContainer extends Backend
 		{
 			$arrClasses[] = 'dcapicker';
 			$wizard .= Backend::getDcaPickerWizard($arrAttributes['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
-		}
-
-		if (($arrData['inputType'] ?? null) == 'password')
-		{
-			$wizard .= Backend::getTogglePasswordWizard($this->strInputName);
 		}
 
 		// Add a custom wizard
@@ -710,6 +703,11 @@ abstract class DataContainer extends Backend
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
+			$objTemplate->theme = Backend::getTheme();
+			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
+			$objTemplate->aceType = Backend::getAceType($type);
+			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
+			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 
@@ -730,59 +728,7 @@ abstract class DataContainer extends Backend
   </fieldset>';
 		}
 
-		$strPreview = '';
-
-		// Show a preview image (see #4948)
-		if ($this->strTable == 'tl_files' && $this->strField == 'name' && $this->objActiveRecord !== null && $this->objActiveRecord->type == 'file')
-		{
-			$objFile = new File($this->objActiveRecord->path);
-
-			if ($objFile->isImage)
-			{
-				if (!$objFile->isSvgImage || ($objFile->viewWidth && $objFile->viewHeight))
-				{
-					$container = System::getContainer();
-					$projectDir = $container->getParameter('kernel.project_dir');
-
-					try
-					{
-						$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
-					}
-					catch (\Exception $e)
-					{
-						Message::addError($e->getMessage());
-						$image = Image::getPath('placeholder.svg');
-					}
-				}
-				else
-				{
-					$image = Image::getPath('placeholder.svg');
-				}
-
-				$objImage = new File($image);
-				$ctrl = 'ctrl_preview_' . substr(md5($image), 0, 8);
-
-				$strPreview = '
-<div id="' . $ctrl . '" class="tl_edit_preview">
-  <img src="' . $objImage->dataUri . '" width="' . $objImage->width . '" height="' . $objImage->height . '" alt="">
-</div>';
-
-				// Add the script to mark the important part
-				if (basename($image) !== 'placeholder.svg')
-				{
-					$strPreview .= '<script>Backend.editPreviewWizard($(\'' . $ctrl . '\'));</script>';
-
-					if (Config::get('showHelp'))
-					{
-						$strPreview .= '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG'][$this->strTable]['edit_preview_help'] . '</p>';
-					}
-
-					$strPreview = '<div class="widget">' . $strPreview . '</div>';
-				}
-			}
-		}
-
-		return $strPreview . '
+		return '
 <div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . ($objWidget->hasErrors() ? ' data-contao--scroll-offset-target="widgetError"' : '') . ($blnColorPicker ? ' data-controller="contao--color-picker" data-contao--color-picker-theme-value="monolith"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
 </div>';
 	}
@@ -798,7 +744,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $strDescription ?? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
 
-		if (!$return || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] ?? null) == 'password' || !Config::get('showHelp'))
+		if (!$return || !Config::get('showHelp'))
 		{
 			return '';
 		}
@@ -813,26 +759,18 @@ abstract class DataContainer extends Backend
 	 * @param array $names
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *             use the "contao.data_container.palette_builder" service instead.
 	 */
 	protected function combiner($names)
 	{
-		$return = array('');
-		$names = array_values($names);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
 
-		for ($i=0, $c=\count($names); $i<$c; $i++)
-		{
-			$buffer = array();
-
-			foreach ($return as $k=>$v)
-			{
-				$buffer[] = ($k%2 == 0) ? $v : $v . $names[$i];
-				$buffer[] = ($k%2 == 0) ? $v . $names[$i] : $v;
-			}
-
-			$return = $buffer;
-		}
-
-		return array_filter($return);
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->combiner($names)
+		;
 	}
 
 	/**
@@ -844,20 +782,10 @@ abstract class DataContainer extends Backend
 	 */
 	protected function switchToEdit($id)
 	{
-		$arrKeys = array();
+		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
-		foreach (Input::getKeys() as $strKey)
-		{
-			if (!\in_array($strKey, $arrUnset))
-			{
-				$arrKeys[$strKey] = $strKey . '=' . Input::get($strKey);
-			}
-		}
-
-		$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?' . implode('&', $arrKeys);
-
-		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+		return Backend::addToUrl($strRequest, true, $arrUnset);
 	}
 
 	/**
@@ -926,85 +854,51 @@ abstract class DataContainer extends Backend
 	/**
 	 * Compile global buttons from the table configuration array and return them as HTML
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	protected function generateGlobalButtons()
+	protected function generateGlobalButtons(/* DataContainerGlobalOperationsBuilder $operations */)
 	{
-		if (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] ?? null))
+		$legacyCallback = function (DataContainerOperation $config) {
+			trigger_deprecation('contao/core-bundle', '5.6', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
+
+			if (!\is_array($config['button_callback'] ?? null) && !\is_callable($config['button_callback'] ?? null))
+			{
+				return;
+			}
+
+			if ($config['icon'] ?? null)
+			{
+				$icon = Controller::addAssetsUrlTo(Image::getPath($config['icon']));
+				$config['attributes']->addStyle("background-image: url('$icon')");
+				$config['class'] = trim(($config['class'] ?? '') . ' header_icon');
+			}
+
+			if (\is_array($config['button_callback'] ?? null))
+			{
+				$callback = System::importStatic($config['button_callback'][0]);
+				$config->setHtml($callback->{$config['button_callback'][1]}($config['href'] ?? null, $config['label'], $config['title'], $config['class'] ?? null, (string) $config['attributes'], $this->strTable, $this->root));
+			}
+			elseif (\is_callable($config['button_callback'] ?? null))
+			{
+				$config->setHtml($config['button_callback']($config['href'] ?? null, $config['label'], $config['title'], $config['class'] ?? null, $config['attributes'], $this->strTable, $this->root));
+			}
+		};
+
+		$operations = \func_num_args() ? func_get_arg(0) : null;
+
+		if ($operations instanceof DataContainerGlobalOperationsBuilder)
 		{
-			return '';
+			$operations->addGlobalButtons($this, $legacyCallback);
+
+			return null;
 		}
 
-		$return = '';
+		trigger_deprecation('contao/core-bundle', '5.6', 'Calling DataContainer::generateGlobalButtons without a DataContainerGlobalOperationsBuilder object is deprecated and will no longer work in Contao 6.');
 
-		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
-		{
-			if (!($v['showOnSelect'] ?? null) && Input::get('act') == 'select')
-			{
-				continue;
-			}
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
+		$operations->addGlobalButtons($this, $legacyCallback);
 
-			$v = \is_array($v) ? $v : array($v);
-			$title = $label = $k;
-
-			if (isset($v['label']))
-			{
-				$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
-				$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
-			}
-
-			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
-
-			// Custom icon (see #5541)
-			if ($v['icon'] ?? null)
-			{
-				$v['class'] = trim(($v['class'] ?? '') . ' header_icon');
-
-				// Add the theme path if only the file name is given
-				if (!str_contains($v['icon'], '/'))
-				{
-					$v['icon'] = Image::getPath($v['icon']);
-				}
-
-				$attributes = \sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
-			}
-
-			if (!$label)
-			{
-				$label = $k;
-			}
-
-			if (!$title)
-			{
-				$title = $label;
-			}
-
-			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback'] ?? null))
-			{
-				$return .= System::importStatic($v['button_callback'][0])->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
-				continue;
-			}
-
-			if (\is_callable($v['button_callback'] ?? null))
-			{
-				$return .= $v['button_callback']($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
-				continue;
-			}
-
-			if (!empty($v['route']))
-			{
-				$href = System::getContainer()->get('router')->generate($v['route']);
-			}
-			else
-			{
-				$href = $this->addToUrl($v['href'] ?? '');
-			}
-
-			$return .= '<a href="' . $href . '"' . (isset($v['class']) ? ' class="' . $v['class'] . '"' : '') . ' title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
-		}
-
-		return $return;
+		return (string) $operations;
 	}
 
 	/**
@@ -1104,13 +998,12 @@ abstract class DataContainer extends Backend
 		}
 
 		return \sprintf(
-			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" %s%s%s>',
+			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" data-contao--check-all-target="input" data-action="focus->contao--scroll-offset#store contao--check-all#toggleInput" %s%s>',
 			$this->strPickerFieldType,
 			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
 			$id,
 			$this->strPickerFieldType,
 			StringUtil::specialchars(($this->objPickerCallback)($value)),
-			'data-action="focus->contao--scroll-offset#store"',
 			$checked,
 			$attributes
 		);
@@ -1253,34 +1146,29 @@ abstract class DataContainer extends Backend
 
 		$return = '';
 		$intTotal = \count($arrPanels);
-		$intLast = $intTotal - 1;
 
 		for ($i=0; $i<$intTotal; $i++)
 		{
-			$submit = '';
-
-			if ($i == $intLast)
-			{
-				$submit = '
-<div class="tl_submit_panel tl_subpanel">
-  <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
-</div>';
-			}
-
 			$return .= '
 <div class="tl_panel">
-  ' . $arrPanels[$i] . $submit . '
+  ' . $arrPanels[$i] . '
 </div>';
 		}
 
+		$submit = '
+<div class="tl_submit_panel tl_subpanel" data-controller="contao--sticky-observer">
+  <button name="filter" id="filter" class="tl_submit filter_apply">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
+  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_submit filter_reset">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
+</div>';
+
 		$return = '
-<form class="tl_form has-panels" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main">
+<button type="button" class="close" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['close']) . '" aria-controls="content-filter" data-action="contao--toggle-state#close">×</button>
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
   ' . $return . '
-</div>
+</div>' . $submit . '
 </form>';
 
 		return $return;
@@ -1424,82 +1312,11 @@ abstract class DataContainer extends Backend
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
 		$args = array();
 
+		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
+
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			if (str_contains($v, ':'))
-			{
-				list($strKey, $strTable) = explode(':', $v, 2);
-				list($strTable, $strField) = explode('.', $strTable, 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
-					->limit(1)
-					->execute($row[$strKey]);
-
-				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
-			}
-			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
-			{
-				$key = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey'], 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-					->limit(1)
-					->execute($row[$v]);
-
-				$args[$k] = $objRef->numRows ? $objRef->value : '';
-			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
-			{
-				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('dateFormat'), $row[$v]) : '-';
-				}
-				elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('timeFormat'), $row[$v]) : '-';
-				}
-				else
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('datimFormat'), $row[$v]) : '-';
-				}
-			}
-			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null)))
-			{
-				$args[$k] = ($row[$v] ?? null) ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-			}
-			elseif (isset($row[$v]))
-			{
-				$row_v = StringUtil::deserialize($row[$v]);
-
-				if (\is_array($row_v))
-				{
-					$args_k = array();
-
-					foreach ($row_v as $option)
-					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
-					}
-
-					$args[$k] = implode(', ', iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($args_k)), false));
-				}
-				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
-				{
-					$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
-				}
-				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
-				{
-					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]];
-				}
-				else
-				{
-					$args[$k] = $row[$v];
-				}
-			}
-			else
-			{
-				$args[$k] = null;
-			}
+			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
 		}
 
 		// Render the label
@@ -1531,17 +1348,6 @@ abstract class DataContainer extends Backend
 					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
 				}
 			}
-			elseif ($mode === self::MODE_PARENT)
-			{
-				if (\is_array($labelConfig['label_callback']))
-				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
-				}
-				elseif (\is_callable($labelConfig['label_callback']))
-				{
-					$label = $labelConfig['label_callback']($row, $label, $this);
-				}
-			}
 			else
 			{
 				if (\is_array($labelConfig['label_callback']))
@@ -1556,7 +1362,7 @@ abstract class DataContainer extends Backend
 		}
 		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
-			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
+			$label = Image::getHtml('plain.svg') . ' ' . $label;
 		}
 
 		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))

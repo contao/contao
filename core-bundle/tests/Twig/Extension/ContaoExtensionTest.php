@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -25,17 +26,17 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -83,13 +84,14 @@ class ContaoExtensionTest extends TestCase
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(5, $tokenParsers);
+        $this->assertCount(6, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
         $this->assertInstanceOf(DynamicUseTokenParser::class, $tokenParsers[2]);
         $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[3]);
         $this->assertInstanceOf(SlotTokenParser::class, $tokenParsers[4]);
+        $this->assertInstanceOf(DeferTokenParser::class, $tokenParsers[5]);
     }
 
     public function testAddsTheFunctions(): void
@@ -113,13 +115,14 @@ class ContaoExtensionTest extends TestCase
             'content_url' => [],
             'slot' => [],
             'backend_icon' => ['html'],
+            'file_icon' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
 
         $this->assertCount(\count($expectedFunctions), $functions);
 
-        $node = $this->createMock(Node::class);
+        $node = $this->createStub(Node::class);
 
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
@@ -157,9 +160,12 @@ class ContaoExtensionTest extends TestCase
             'highlight_auto',
             'format_bytes',
             'sanitize_html',
+            'format_number',
             'csp_unsafe_inline_style',
             'csp_inline_styles',
             'encode_email',
+            'input_encoded_to_plain_text',
+            'html_to_plain_text',
             'deserialize',
         ];
 
@@ -183,7 +189,7 @@ class ContaoExtensionTest extends TestCase
             ->willThrowException($methodCalledException)
         ;
 
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
             ->with('foo')
@@ -210,7 +216,7 @@ class ContaoExtensionTest extends TestCase
             ->willThrowException($methodCalledException)
         ;
 
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
             ->with('foo')
@@ -232,7 +238,7 @@ class ContaoExtensionTest extends TestCase
 
     public function testThrowsIfCoreIncludeFunctionIsNotFound(): void
     {
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
         $environment
             ->method('getRuntime')
             ->willReturn(new EscaperRuntime())
@@ -249,10 +255,10 @@ class ContaoExtensionTest extends TestCase
 
         $extension = new ContaoExtension(
             $environment,
-            $this->createMock(ContaoFilesystemLoader::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor(new NullAdapter(), $environment),
+            $this->createStub(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -267,7 +273,7 @@ class ContaoExtensionTest extends TestCase
         $escaperNodeVisitor = $contaoExtension->getNodeVisitors()[0];
 
         $traverser = new NodeTraverser(
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
             [$escaperNodeVisitor],
         );
 
@@ -320,7 +326,7 @@ class ContaoExtensionTest extends TestCase
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -341,7 +347,7 @@ class ContaoExtensionTest extends TestCase
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -374,7 +380,7 @@ class ContaoExtensionTest extends TestCase
 
     public function testRenderLegacyTemplateWithTemplateFunctions(): void
     {
-        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('hasBackendUser')
             ->willReturn(true)
@@ -382,7 +388,7 @@ class ContaoExtensionTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
         $container->set('contao.security.token_checker', $tokenChecker);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -406,9 +412,7 @@ class ContaoExtensionTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    /**
-     * @dataProvider provideTemplateNames
-     */
+    #[DataProvider('provideTemplateNames')]
     public function testDefaultEscaperRules(string $templateName): void
     {
         $extension = $this->getContaoExtension();
@@ -441,8 +445,8 @@ class ContaoExtensionTest extends TestCase
      */
     private function getContaoExtension(Environment|null $environment = null, ContaoFilesystemLoader|null $filesystemLoader = null): ContaoExtension
     {
-        $environment ??= $this->createMock(Environment::class);
-        $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
+        $environment ??= $this->createStub(Environment::class);
+        $filesystemLoader ??= $this->createStub(ContaoFilesystemLoader::class);
 
         $environment
             ->method('getRuntime')
@@ -460,9 +464,9 @@ class ContaoExtensionTest extends TestCase
         return new ContaoExtension(
             $environment,
             $filesystemLoader,
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor(new NullAdapter(), $environment),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
     }
 }

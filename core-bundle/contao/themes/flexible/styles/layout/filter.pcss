@@ -1,0 +1,207 @@
+.tl_panel {
+    &:not(:last-of-type) {
+        padding-bottom: 16px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--content-border);
+    }
+
+    fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
+
+        legend {
+            font-weight: 600;
+            padding: 0;
+
+            @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+.tl_subpanel {
+    letter-spacing: -.31em;
+
+    &:not(:last-child) {
+        padding-bottom: 16px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--content-border);
+    }
+
+    * {
+        letter-spacing: normal;
+    }
+
+    > * {
+        margin: 0;
+    }
+
+    > *:not(label, button, :last-child) {
+        margin-bottom: 10px;
+    }
+
+    > strong,
+    > label:first-child { /* If there is no strong, style the label */
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            font-weight: 500;
+        }
+    }
+
+    label:not(:first-child) {
+        display: inline-block;
+        margin-bottom: 4px;
+        font-size: 13px;
+    }
+
+    :is(select, input, button) {
+        height: 30px;
+    }
+}
+
+.tl_subpanel {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+.tl_filter {
+    box-sizing: border-box;
+}
+
+.tl_search {
+    gap: 0;
+}
+
+[data-contao--filter-target="count"] {
+    font-size: .6rem;
+    color: var(--text);
+    background: var(--nav-current);
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16px;
+    width: 16px;
+
+    &:empty {
+        display: none;
+    }
+}
+
+.tl_panel .active, .tl_panel_bottom .active, #search .active {
+    background-color: var(--active-bg);
+}
+
+.content-filter {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    order: 1;
+    border-bottom: 1px solid var(--content-border);
+
+    .tl_formbody {
+        padding: 14px 0 16px;
+    }
+
+    > .close {
+        display: none;
+    }
+}
+
+.tl_submit_panel {
+    position: sticky;
+    bottom: 0;
+    background: var(--panel-bg);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 10px 15px;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    border-top: 1px solid var(--content-border);
+
+    &.is-sticky {
+        border-radius: 0;
+    }
+
+    .tl_select_wrapper {
+        margin: 0;
+    }
+
+    .tl_submit {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background: var(--form-bg);
+
+        &:hover {
+            background: var(--form-bg-hover);
+        }
+    }
+}
+
+@media (width < 1280px) {
+    .content-filter {
+        position: absolute;
+        inset: 0 0 auto auto;
+        z-index: 4; /* higher z-index than tl_formbody_submit */
+        bottom: 0;
+        background: var(--content-bg);
+        width: 280px;
+        transform: translateX(280px);
+        visibility: hidden;
+        transition: transform .2s ease, visibility .2s ease;
+        will-change: transform, visibility;
+
+        > .close {
+            position: absolute;
+            inset: 12px 12px auto auto;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            border: 0 none;
+            background: transparent;
+            font-size: 30px;
+            line-height: 19px;
+        }
+    }
+
+    li:has(>.header_filter_toggle) {
+        display: initial !important;
+    }
+
+    .content.filter-active {
+        .content-filter {
+            visibility: visible;
+            transform: translateX(0);
+        }
+    }
+
+    .tl_submit_panel {
+        border-radius: 0;
+    }
+}
+
+@media (min-width: 1280px) {
+    #main {
+        .content-filter {
+            border-left: 1px solid var(--content-border);
+            position: sticky;
+            top: 15px;
+            margin-bottom: 15px;
+        }
+    }
+}
+
+@media (min-width: 1440px) {
+    :root {
+        --filter-width: 280px;
+        --main-panel-gap: 15px;
+    }
+}

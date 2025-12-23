@@ -18,6 +18,7 @@ use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class FinderTest extends TestCase
@@ -147,9 +148,7 @@ class FinderTest extends TestCase
         $this->assertSame($expected, iterator_to_array($finder));
     }
 
-    /**
-     * @dataProvider provideRegexCases
-     */
+    #[DataProvider('provideRegexCases')]
     public function testFindWithRegularExpression(string $regex, bool $include, array $expected): void
     {
         $finder = $this->getFinder()
@@ -259,9 +258,28 @@ class FinderTest extends TestCase
         $this->assertSame($expected, $options);
     }
 
+    public function testGetAsTemplateOptionsWithoutDefaultKey(): void
+    {
+        $options = $this->getFinder()
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->excludePartials()
+            ->asTemplateOptions(false)
+        ;
+
+        $expected = [
+            'content_element/text' => 'content_element/text [App, ContaoCore]',
+            'content_element/text/bar' => 'content_element/text/bar [App]',
+            'content_element/text/foo' => 'content_element/text/foo [App]',
+            'content_element/text/foo_bar' => 'content_element/text/foo_bar [App]',
+        ];
+
+        $this->assertSame($expected, $options);
+    }
+
     private function getFinder(array $translations = []): Finder
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturnCallback(
@@ -310,7 +328,7 @@ class FinderTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -330,7 +348,7 @@ class FinderTest extends TestCase
             )
         ;
 
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->willReturnCallback(

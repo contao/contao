@@ -22,6 +22,9 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
@@ -51,10 +54,10 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetCacheKeyWithThemeTemplate(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->templateGroup = 'templates/demo';
 
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
             ->willReturnOnConsecutiveCalls(null, $page)
@@ -112,10 +115,10 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetSourceContextFromThemeTemplate(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->templateGroup = 'templates/my/theme';
 
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
             ->willReturnOnConsecutiveCalls(null, $page)
@@ -190,18 +193,15 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertFalse($loader->exists('@Contao_Theme_my_theme/foo.html.twig'));
     }
 
-    /**
-     * @dataProvider provideTemplateFilemtimeSamples
-     *
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess because filemtime gets mocked
-     */
+    #[DataProvider('provideTemplateFilemtimeSamples')]
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testIsFresh(array $mtimeMappings, bool $isFresh, bool $isThemeContext = false): void
     {
         $pageFinder = null;
 
         if ($isThemeContext) {
-            $page = $this->mockClassWithProperties(PageModel::class, [
+            $page = $this->createClassWithPropertiesStub(PageModel::class, [
                 'templateGroup' => 'templates/my/theme',
             ]);
 
@@ -280,9 +280,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidDynamicParentQueries
-     */
+    #[DataProvider('provideInvalidDynamicParentQueries')]
     public function testGetDynamicParentThrowsIfTemplateCannotBeFound(string $identifier, string $sourcePath, string $expectedException): void
     {
         $loader = $this->getContaoFilesystemLoaderWithPaths(
@@ -322,9 +320,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->getFirst('foo.html.twig');
     }
 
-    /**
-     * @dataProvider provideThemeSlugs
-     */
+    #[DataProvider('provideThemeSlugs')]
     public function testGetInheritanceChains(string|null $themeSlug, array $expectedChains): void
     {
         $loader = $this->getContaoFilesystemLoaderWithPaths(
@@ -377,7 +373,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testThrowsInvalidThemePathExceptionWhenGeneratingSlug(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
             'templateGroup' => 'templates/my_theme',
         ]);
 
@@ -390,9 +386,9 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $loader = new ContaoFilesystemLoader(
             new NullAdapter(),
-            $this->createMock(TemplateLocator::class),
+            $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -407,7 +403,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')
@@ -423,7 +419,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             'templates/my/theme',
         ];
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
             ->willReturn($themePaths)
@@ -440,8 +436,8 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
             $projectDir,
         );
 
@@ -571,10 +567,10 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetCurrentThemeSlug(): void
     {
-        $page1 = $this->mockClassWithProperties(PageModel::class, ['templateGroup' => null]);
-        $page2 = $this->mockClassWithProperties(PageModel::class, ['templateGroup' => 'templates/foo/bar']);
+        $page1 = $this->createClassWithPropertiesStub(PageModel::class, ['templateGroup' => null]);
+        $page2 = $this->createClassWithPropertiesStub(PageModel::class, ['templateGroup' => 'templates/foo/bar']);
 
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
             ->willReturnOnConsecutiveCalls($page1, $page2)
@@ -582,9 +578,9 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $loader = new ContaoFilesystemLoader(
             new NullAdapter(),
-            $this->createMock(TemplateLocator::class),
+            $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -600,7 +596,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $cacheAdapter = new ArrayAdapter();
 
-        $templateLocator1 = $this->createMock(TemplateLocator::class);
+        $templateLocator1 = $this->createStub(TemplateLocator::class);
         $templateLocator1
             ->method('findThemeDirectories')
             ->willReturn([])
@@ -623,8 +619,8 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator1,
             new ThemeNamespace(),
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
             '/',
         );
 
@@ -653,8 +649,8 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator2,
             new ThemeNamespace(),
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
             '/',
         );
 
@@ -665,13 +661,52 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
     }
 
+    public function testNumericNames(): void
+    {
+        $templateLocator = $this->createStub(TemplateLocator::class);
+        $templateLocator
+            ->method('findThemeDirectories')
+            ->willReturn(['2025' => '2025'])
+        ;
+
+        $templateLocator
+            ->method('findResourcesPaths')
+            ->willReturn([])
+        ;
+
+        $templateLocator
+            ->method('findTemplates')
+            ->willReturnMap([
+                ['2025', ['1.html.twig' => '2025/1.html.twig']],
+                ['/templates', ['1.html.twig' => '1.html.twig']],
+            ])
+        ;
+
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            new ThemeNamespace(),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
+            '/',
+        );
+
+        $this->assertSame(
+            [
+                2025 => '@Contao_Theme_2025/1.html.twig',
+                '' => '@Contao_Global/1.html.twig',
+            ],
+            $loader->getAllFirstByThemeSlug('1'),
+        );
+    }
+
     /**
      * @param array<string, string> $templates
      * @param array<string, string> $themeTemplates
      */
     private function getContaoFilesystemLoaderWithTemplates(array $templates, array|null $themeTemplates = null, PageFinder|null $pageFinder = null): ContaoFilesystemLoader
     {
-        $templateLocator = $this->createMock(TemplateLocator::class);
+        $templateLocator = $this->createStub(TemplateLocator::class);
         $templateLocator
             ->method('findThemeDirectories')
             ->willReturn(
@@ -704,8 +739,8 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createMock(ContaoFramework::class),
-            $pageFinder ?? $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $pageFinder ?? $this->createStub(PageFinder::class),
             '/',
         );
     }
@@ -727,13 +762,13 @@ class ContaoFilesystemLoaderTest extends TestCase
             $paths['App'] = Path::join($projectDir, 'contao/templates');
         }
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
             ->willReturn($themePaths)
         ;
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')
@@ -751,8 +786,8 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createMock(ContaoFramework::class),
-            $pageFinder ?? $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );
     }

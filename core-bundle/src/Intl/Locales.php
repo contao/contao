@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Intl;
 
 use Contao\ArrayUtil;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -31,12 +30,11 @@ class Locales
 
     public function __construct(
         private readonly TranslatorInterface&TranslatorBagInterface $translator,
-        private readonly RequestStack $requestStack,
         array $defaultLocales,
         array $defaultEnabledLocales,
         array $configLocales,
         array $configEnabledLocales,
-        private readonly string $defaultLocale,
+        string $defaultLocale,
     ) {
         $this->locales = $this->filterLocales($defaultLocales, $configLocales);
         $this->enabledLocales = $this->filterLocales($defaultEnabledLocales, $configEnabledLocales, $defaultLocale);
@@ -63,9 +61,7 @@ class Locales
      */
     public function getLanguages(string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
-            $displayLocale = $request->getLocale();
-        }
+        $displayLocale ??= $this->translator->getLocale();
 
         return $this->getDisplayNames($this->getLanguageLocaleIds(), $displayLocale, $addNativeSuffix);
     }
@@ -113,9 +109,7 @@ class Locales
      */
     public function getDisplayNames(array $localeIds, string|null $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
-            $displayLocale = $request->getLocale();
-        }
+        $displayLocale ??= $this->translator->getLocale();
 
         $locales = [];
 
@@ -125,7 +119,7 @@ class Locales
             if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_languages')) {
                 $label = $this->translator->trans($langKey, [], 'contao_languages', $displayLocale);
             } else {
-                $label = \Locale::getDisplayName($localeId, $displayLocale ?? $this->defaultLocale);
+                $label = \Locale::getDisplayName($localeId, $displayLocale);
             }
 
             if ($addNativeSuffix) {
@@ -139,7 +133,7 @@ class Locales
             $locales[$localeId] = $label;
         }
 
-        (new \Collator($displayLocale ?? $this->defaultLocale))->asort($locales);
+        (new \Collator($displayLocale))->asort($locales);
 
         return $locales;
     }

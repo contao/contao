@@ -229,7 +229,7 @@ class Automator extends System
 	 */
 	public function purgeRegistrations()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "MemberModel::findExpiredRegistrations()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "MemberModel::findExpiredRegistrations()" instead.', __METHOD__);
 
 		$objMember = MemberModel::findExpiredRegistrations();
 
@@ -254,7 +254,7 @@ class Automator extends System
 	 */
 	public function purgeOptInTokens()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.opt_in" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.opt_in" service instead.', __METHOD__);
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optIn->purgeTokens();
@@ -375,7 +375,7 @@ class Automator extends System
 		$container = System::getContainer();
 
 		$warmer = $container->get('contao.cache.warmer');
-		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
+		$warmer->warmUp($container->getParameter('kernel.cache_dir'), $container->getParameter('kernel.build_dir'));
 
 		System::getContainer()->get('monolog.logger.contao.cron')->info('Generated the internal cache');
 	}

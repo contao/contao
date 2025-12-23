@@ -8,7 +8,7 @@ const prefersDark = () => {
     }
 
     return prefersDark === 'true';
-}
+};
 
 const setColorScheme = () => {
     document.documentElement.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
@@ -23,29 +23,25 @@ export default class extends Controller {
     static values = {
         i18n: {
             type: Object,
-            default: { light: 'Disable dark mode', dark: 'Enable dark mode' }
-        }
+            default: { light: 'Disable dark mode', dark: 'Enable dark mode' },
+        },
     };
 
-    initialize () {
-        this.toggle = this.toggle.bind(this);
+    initialize() {
         this.setLabel = this.setLabel.bind(this);
     }
 
-    connect () {
-        this.element.addEventListener('click', this.toggle);
-
+    connect() {
         this.matchMedia = window.matchMedia('(prefers-color-scheme: dark)');
         this.matchMedia.addEventListener('change', this.setLabel);
         this.setLabel();
     }
 
-    disconnect () {
-        this.element.removeEventListener('click', this.toggle);
+    disconnect() {
         this.matchMedia.removeEventListener('change', this.setLabel);
     }
 
-    toggle (e) {
+    toggle(e) {
         e.preventDefault();
 
         const isDark = !prefersDark();
@@ -60,7 +56,7 @@ export default class extends Controller {
 
         this.dispatch('change', {
             detail: {
-                mode: isDark ? 'dark' : 'light'
+                mode: isDark ? 'dark' : 'light',
             },
         });
 
@@ -68,14 +64,13 @@ export default class extends Controller {
         setTimeout(this.setLabel, 300);
     }
 
-    setLabel () {
+    setLabel() {
         if (!this.hasLabelTarget) {
             return;
         }
 
         const label = this.i18nValue[prefersDark() ? 'light' : 'dark'];
 
-        this.labelTarget.title = label;
         this.labelTarget.innerText = label;
     }
 }

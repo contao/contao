@@ -1,5 +1,5 @@
-{% extends "@Contao/content_element/_base.html.twig" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {#
     The "slider_settings" variable contains the settings for the content slider.
@@ -43,29 +43,29 @@
             {% endblock %}
         </div>
         {% block controls %}
-            {% set button_prev_attributes = attrs()
-                .set('type', 'button')
-                .addClass('swiper-button-prev')
-                .mergeWith(button_prev_attributes|default)
-            %}
-            <button{{ button_prev_attributes }}></button>
-            {% set button_next_attributes = attrs()
-                .set('type', 'button')
-                .addClass('swiper-button-next')
-                .mergeWith(button_next_attributes|default)
-            %}
-            <button{{ button_next_attributes }}></button>
-            {% set pagination_attributes = attrs()
-                .addClass('swiper-pagination')
-                .mergeWith(pagination_attributes|default)
-            %}
-            <div{{ pagination_attributes }}></div>
+            {% if not as_editor_view %}
+                {% set button_prev_attributes = attrs()
+                    .addClass('swiper-button-prev')
+                    .mergeWith(button_prev_attributes|default)
+                %}
+                <div{{ button_prev_attributes }}></div>
+                {% set button_next_attributes = attrs()
+                    .addClass('swiper-button-next')
+                    .mergeWith(button_next_attributes|default)
+                %}
+                <div{{ button_next_attributes }}></div>
+                {% set pagination_attributes = attrs()
+                    .addClass('swiper-pagination')
+                    .mergeWith(pagination_attributes|default)
+                %}
+                <div{{ pagination_attributes }}></div>
+            {% endif %}
         {% endblock %}
     </div>
 {% endblock %}
 
 {% block script %}
-    {% add "swiper_js" to body %}
+    {% add 'swiper_js' to body %}
         {% set script_attributes = attrs()
             .setIfExists('nonce', csp_nonce('script-src'))
             .mergeWith(script_attributes|default)
@@ -97,7 +97,7 @@
 {% endblock %}
 
 {% block style %}
-    {% add "swiper_css" to stylesheets %}
+    {% add 'swiper_css' to stylesheets %}
         {% with {file: swiper_css_file|default(asset('css/swiper-bundle.min.css', 'contao-components/swiper'))} %}
             {{ block('stylesheet_component') }}
         {% endwith %}

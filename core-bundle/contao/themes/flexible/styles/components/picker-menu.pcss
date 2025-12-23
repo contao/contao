@@ -1,0 +1,57 @@
+#picker-menu {
+    padding: 9px 6px 0;
+    border-bottom: 1px solid var(--content-border);
+}
+
+#picker-menu > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#picker-menu li {
+    display: inline-block;
+    padding: 8px 0;
+    background-color: var(--table-even);
+    border: 1px solid var(--content-border);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    position: relative;
+    top: 1px;
+}
+
+#picker-menu li:hover {
+    background-color: var(--panel-bg);
+}
+
+#picker-menu li.current {
+    background-color: var(--panel-bg);
+    border-bottom-color: var(--panel-bg);
+}
+
+#picker-menu a {
+    padding: 3px 12px 3px 32px;
+    background: url("icons/mover.svg") 12px center no-repeat;
+}
+
+#picker-menu a:hover {
+    color: var(--text);
+}
+
+#picker-menu a.pagePicker {
+    background-image: url("icons/pagemounts.svg");
+    background-size: 16px;
+}
+
+#picker-menu a.filePicker {
+    background-image: url("icons/filemounts.svg");
+    background-size: 14px;
+}
+
+#picker-menu a.articlePicker {
+    background-image: url("icons/articles.svg");
+    background-size: 16px;
+}
+
+#picker-menu a.close {
+    background-image: url("icons/back.svg");
+}

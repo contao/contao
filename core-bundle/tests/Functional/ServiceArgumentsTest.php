@@ -118,6 +118,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
                         $this->assertContainsInstanceOf(PsrContainerInterface::class, $typeNames, \sprintf('Argument %s of %s should be %s but found %s.', $i, $serviceId, PsrContainerInterface::class, implode('|', $typeNames)));
                         break;
 
+                    case 'abstract':
+                        // noop
+                        break;
+
                     default:
                         $this->fail(\sprintf('Unknown tagged type "%s" for argument %s ($%s) of service %s.', $parameter->getType(), $i, $parameter->getName(), $serviceId));
                 }
@@ -235,9 +239,9 @@ class ServiceArgumentsTest extends FunctionalTestCase
         }
 
         if ($argument) {
-            $this->addWarning(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
+            $this->fail(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
         } else {
-            $this->addWarning(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
+            $this->fail(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
         }
     }
 

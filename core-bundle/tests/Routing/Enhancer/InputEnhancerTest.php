@@ -17,7 +17,8 @@ use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -26,7 +27,7 @@ class InputEnhancerTest extends TestCase
 {
     public function testReturnsTheDefaultsIfThereIsNoPageModel(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -36,23 +37,20 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance([], Request::create('/'));
     }
 
-    /**
-     * @dataProvider getLocales
-     */
+    #[DataProvider('getLocales')]
     public function testSetsTheLanguageWithUrlPrefix(string $urlPrefix, string $language): void
     {
-        $input = $this->mockAdapter(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects('' !== $urlPrefix ? $this->once() : $this->never())
             ->method('setGet')
             ->with('language', $language)
         ;
 
-        $framework = $this->mockContaoFramework([Input::class => $input]);
+        $framework = $this->createContaoFrameworkStub([Input::class => $input]);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel($language, $urlPrefix),
@@ -72,16 +70,18 @@ class InputEnhancerTest extends TestCase
         yield ['bar', 'en'];
     }
 
-    /**
-     * @dataProvider getParameters
-     */
+    #[DataProvider('getParameters')]
     public function testAddsParameters(string $parameters, array ...$setters): void
     {
-        $input = $this->mockAdapter(['setGet', 'setUnusedRouteParameters']);
+        $matcher = $this->exactly(\count($setters));
+
+        $input = $this->createAdapterMock(['setGet', 'setUnusedRouteParameters']);
         $input
-            ->expects($this->exactly(\count($setters)))
+            ->expects($matcher)
             ->method('setGet')
-            ->withConsecutive(...$setters)
+            ->with($this->callback(
+                static fn (...$parameters) => $setters[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
         ;
 
         $input
@@ -90,11 +90,10 @@ class InputEnhancerTest extends TestCase
             ->with(array_map(static fn ($setter) => $setter[0], $setters))
         ;
 
-        $framework = $this->mockContaoFramework([Input::class => $input]);
+        $framework = $this->createContaoFrameworkStub([Input::class => $input]);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
@@ -116,20 +115,19 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void
     {
-        $input = $this->mockAdapter(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects($this->once())
             ->method('setGet')
         ;
 
-        $framework = $this->mockContaoFramework([Input::class => $input]);
+        $framework = $this->createContaoFrameworkStub([Input::class => $input]);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
-            'pageModel' => $this->createMock(PageModel::class),
+            'pageModel' => $this->createStub(PageModel::class),
             'parameters' => '/foo/bar/foo/bar',
         ];
 
@@ -143,17 +141,16 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionUponParametersInQuery(): void
     {
-        $input = $this->mockAdapter(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects($this->never())
             ->method('setGet')
         ;
 
-        $framework = $this->mockContaoFramework([Input::class => $input]);
+        $framework = $this->createContaoFrameworkStub([Input::class => $input]);
 
         $request = Request::create('/?foo=bar');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
@@ -170,7 +167,7 @@ class InputEnhancerTest extends TestCase
 
     public function testThrowsAnExceptionIfAFragmentKeyIsEmpty(): void
     {
-        $input = $this->mockAdapter(['setGet']);
+        $input = $this->createAdapterMock(['setGet']);
         $input
             ->expects($this->once())
             ->method('setGet')
@@ -179,14 +176,13 @@ class InputEnhancerTest extends TestCase
 
         $adapters = [
             Input::class => $input,
-            Config::class => $this->mockConfiguredAdapter(['get' => false]),
+            Config::class => $this->createConfiguredAdapterStub(['get' => false]),
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         $request = Request::create('/');
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
@@ -201,9 +197,9 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, $request);
     }
 
-    private function mockPageModel(string $language, string $urlPrefix): PageModel&MockObject
+    private function mockPageModel(string $language, string $urlPrefix): PageModel&Stub
     {
-        return $this->mockClassWithProperties(PageModel::class, [
+        return $this->createClassWithPropertiesStub(PageModel::class, [
             'rootLanguage' => $language,
             'urlPrefix' => $urlPrefix,
         ]);

@@ -1,5 +1,5 @@
-{% trans_default_domain "contao_exception" %}
-{% extends "@Contao/error/_layout.html.twig" %}
+{% trans_default_domain 'contao_exception' %}
+{% extends ['@ContaoCore/Error/layout.html.twig', '@Contao/error/_layout.html.twig'] %}
 
 {% block title %}
     {{ statusName }}

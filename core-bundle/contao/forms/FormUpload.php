@@ -87,6 +87,30 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 	}
 
 	/**
+	 * Return a parameter
+	 *
+	 * @param string $strKey The parameter key
+	 *
+	 * @return mixed The parameter value
+	 */
+	public function __get($strKey)
+	{
+		switch ($strKey)
+		{
+			case 'name':
+				if ($this->multipleFiles)
+				{
+					return $this->strName . '[]';
+				}
+
+				return $this->strName;
+
+			default:
+				return parent::__get($strKey);
+		}
+	}
+
+	/**
 	 * Validate the input and set the value
 	 */
 	public function validate()
@@ -109,191 +133,240 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			return;
 		}
 
-		$file = $_FILES[$this->strName];
+		$files = $_FILES[$this->strName];
+		$uploadedFiles = array();
+		$fileCount = \is_array($files['name']) ? \count($files['name']) : 1;
 		$maxlength_kb = $this->getMaximumUploadSize();
 		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
 
-		// Sanitize the filename
-		try
+		if ($fileCount == 1)
 		{
-			$file['name'] = StringUtil::sanitizeFileName($file['name']);
+			foreach ($files as $k => $v)
+			{
+				if (!\is_array($v))
+				{
+					$files[$k] = array($v);
+				}
+			}
 		}
-		catch (\InvalidArgumentException $e)
+
+		if ($fileCount > 1 && !$this->multipleFiles)
 		{
-			$this->addError($GLOBALS['TL_LANG']['ERR']['filename']);
+			$this->addError($GLOBALS['TL_LANG']['ERR']['multipleFilesNotAllowed']);
+			unset($_FILES[$this->strName]);
 
 			return;
 		}
 
-		// Invalid file name
-		if (!Validator::isValidFileName($file['name']))
+		for ($i=0; $i < $fileCount; $i++)
 		{
-			$this->addError($GLOBALS['TL_LANG']['ERR']['filename']);
+			// Sanitize the filename
+			try
+			{
+				$files['name'][$i] = StringUtil::sanitizeFileName($files['name'][$i]);
+			}
+			catch (\InvalidArgumentException $e)
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['filename']);
 
-			return;
-		}
+				return;
+			}
 
-		// File was not uploaded
-		if (!is_uploaded_file($file['tmp_name']))
-		{
-			if ($file['error'] == 1 || $file['error'] == 2)
+			// Invalid file name
+			if (!Validator::isValidFileName($files['name'][$i]))
+			{
+				$this->addError($GLOBALS['TL_LANG']['ERR']['filename']);
+
+				return;
+			}
+
+			// File was not uploaded
+			if (!is_uploaded_file($files['tmp_name'][$i]))
+			{
+				if ($files['error'][$i] == 1 || $files['error'][$i] == 2)
+				{
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
+				}
+				elseif ($files['error'][$i] == 3)
+				{
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $files['name'][$i]));
+				}
+				elseif ($files['error'][$i] > 0)
+				{
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $files['error'][$i], $files['name'][$i]));
+				}
+
+				unset($_FILES[$this->strName]);
+
+				return;
+			}
+
+			// File is too big
+			if ($files['size'][$i] > $maxlength_kb)
 			{
 				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
-			}
-			elseif ($file['error'] == 3)
-			{
-				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $file['name']));
-			}
-			elseif ($file['error'] > 0)
-			{
-				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $file['error'], $file['name']));
-			}
-
-			unset($_FILES[$this->strName]);
-
-			return;
-		}
-
-		// File is too big
-		if ($file['size'] > $maxlength_kb)
-		{
-			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
-			unset($_FILES[$this->strName]);
-
-			return;
-		}
-
-		$objFile = new File($file['name']);
-		$uploadTypes = StringUtil::trimsplit(',', strtolower($this->extensions));
-
-		// File type is not allowed
-		if (!\in_array($objFile->extension, $uploadTypes))
-		{
-			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
-			unset($_FILES[$this->strName]);
-
-			return;
-		}
-
-		if ($arrImageSize = @getimagesize($file['tmp_name']))
-		{
-			$intImageWidth = $this->maxImageWidth ?: Config::get('imageWidth');
-
-			// Image exceeds maximum image width
-			if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
-			{
-				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], $intImageWidth));
 				unset($_FILES[$this->strName]);
 
 				return;
 			}
 
-			$intImageHeight = $this->maxImageHeight ?: Config::get('imageHeight');
+			$objFile = new File($files['name'][$i]);
+			$uploadTypes = StringUtil::trimsplit(',', strtolower($this->extensions));
 
-			// Image exceeds maximum image height
-			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
+			// File type is not allowed
+			if (!\in_array($objFile->extension, $uploadTypes))
 			{
-				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], $intImageHeight));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 				unset($_FILES[$this->strName]);
 
 				return;
 			}
-		}
 
-		// Store the file on the server if enabled
-		if (!$this->hasErrors())
-		{
-			$this->varValue = $_FILES[$this->strName];
-
-			if ($this->storeFile)
+			if ($arrImageSize = @getimagesize($files['tmp_name'][$i]))
 			{
-				$intUploadFolder = $this->uploadFolder;
+				$intImageWidth = $this->maxImageWidth ?: Config::get('imageWidth');
 
-				// Overwrite the upload folder with user's home directory
-				if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+				// Image exceeds maximum image width
+				if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
 				{
-					$user = FrontendUser::getInstance();
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $files['name'][$i], $intImageWidth));
+					unset($_FILES[$this->strName]);
 
-					if ($user->assignDir && $user->homeDir)
-					{
-						$intUploadFolder = $user->homeDir;
-					}
+					return;
 				}
 
-				$objUploadFolder = FilesModel::findByUuid($intUploadFolder);
+				$intImageHeight = $this->maxImageHeight ?: Config::get('imageHeight');
 
-				// The upload folder could not be found
-				if ($objUploadFolder === null)
+				// Image exceeds maximum image height
+				if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 				{
-					throw new \Exception("Invalid upload folder ID $intUploadFolder");
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $files['name'][$i], $intImageHeight));
+					unset($_FILES[$this->strName]);
+
+					return;
 				}
+			}
 
-				$strUploadFolder = $objUploadFolder->path;
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+			// Sanitize SVGs
+			if (\in_array($objFile->extension, array('svg', 'svgz')) && !FileUpload::sanitizeSvg($files['tmp_name'][$i]))
+			{
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], 'Invalid SVG', $files['name'][$i]));
+				unset($_FILES[$this->strName]);
 
-				// Store the file if the upload folder exists
-				if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
+				return;
+			}
+
+			// Store the file on the server if enabled
+			if (!$this->hasErrors())
+			{
+				$this->varValue = $_FILES[$this->strName];
+
+				if ($this->storeFile)
 				{
-					// Do not overwrite existing files
-					if ($this->doNotOverwrite && file_exists($projectDir . '/' . $strUploadFolder . '/' . $file['name']))
+					$intUploadFolder = $this->uploadFolder;
+
+					// Overwrite the upload folder with user's home directory
+					if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 					{
-						$offset = 1;
+						$user = FrontendUser::getInstance();
 
-						$arrAll = Folder::scan($projectDir . '/' . $strUploadFolder, true);
-						$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
-
-						foreach ($arrFiles as $strFile)
+						if ($user->assignDir && $user->homeDir)
 						{
-							if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
+							$intUploadFolder = $user->homeDir;
+						}
+					}
+
+					$objUploadFolder = FilesModel::findByUuid($intUploadFolder);
+
+					// The upload folder could not be found
+					if ($objUploadFolder === null)
+					{
+						throw new \Exception("Invalid upload folder ID $intUploadFolder");
+					}
+
+					$strUploadFolder = $objUploadFolder->path;
+					$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
+					// Store the file if the upload folder exists
+					if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
+					{
+						// Do not overwrite existing files
+						if ($this->doNotOverwrite && file_exists($projectDir . '/' . $strUploadFolder . '/' . $files['name'][$i]))
+						{
+							$offset = 1;
+
+							$arrAll = Folder::scan($projectDir . '/' . $strUploadFolder, true);
+							$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
+
+							foreach ($arrFiles as $strFile)
 							{
-								$strFile = str_replace('.' . $objFile->extension, '', $strFile);
-								$intValue = (int) substr($strFile, strrpos($strFile, '_') + 1);
+								if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
+								{
+									$strFile = str_replace('.' . $objFile->extension, '', $strFile);
+									$intValue = (int) substr($strFile, strrpos($strFile, '_') + 1);
 
-								$offset = max($offset, $intValue);
+									$offset = max($offset, $intValue);
+								}
 							}
+
+							$files['name'][$i] = str_replace($objFile->filename, $objFile->filename . '__' . ++$offset, $files['name'][$i]);
 						}
 
-						$file['name'] = str_replace($objFile->filename, $objFile->filename . '__' . ++$offset, $file['name']);
-					}
+						// Move the file to its destination
+						$filesObj = Files::getInstance();
+						$filesObj->move_uploaded_file($files['tmp_name'][$i], $strUploadFolder . '/' . $files['name'][$i]);
+						$filesObj->chmod($strUploadFolder . '/' . $files['name'][$i], 0666 & ~umask());
 
-					// Move the file to its destination
-					$filesObj = Files::getInstance();
-					$filesObj->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$filesObj->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
+						$strUuid = null;
+						$strFile = $strUploadFolder . '/' . $files['name'][$i];
 
-					$strUuid = null;
-					$strFile = $strUploadFolder . '/' . $file['name'];
-
-					// Generate the DB entries
-					if (Dbafs::shouldBeSynchronized($strFile))
-					{
-						$objModel = FilesModel::findByPath($strFile);
-
-						if ($objModel === null)
+						// Generate the DB entries
+						if (Dbafs::shouldBeSynchronized($strFile))
 						{
-							$objModel = Dbafs::addResource($strFile);
+							$objModel = FilesModel::findByPath($strFile);
+
+							if ($objModel === null)
+							{
+								$objModel = Dbafs::addResource($strFile);
+							}
+
+							$strUuid = StringUtil::binToUuid($objModel->uuid);
+
+							// Update the hash of the target folder
+							Dbafs::updateFolderHashes($strUploadFolder);
 						}
 
-						$strUuid = StringUtil::binToUuid($objModel->uuid);
+						$uploadedFiles[] = array
+						(
+							'name'     => $files['name'][$i],
+							'type'     => $files['type'][$i],
+							'tmp_name' => $projectDir . '/' . $strFile,
+							'error'    => $files['error'][$i],
+							'size'     => $files['size'][$i],
+							'uploaded' => true,
+							'uuid'     => $strUuid
+						);
 
-						// Update the hash of the target folder
-						Dbafs::updateFolderHashes($strUploadFolder);
+						System::getContainer()->get('monolog.logger.contao.files')->info('File "' . $strUploadFolder . '/' . $files['name'][$i] . '" has been uploaded');
 					}
-
-					$this->varValue = array
+				}
+				else
+				{
+					$uploadedFiles[] = array
 					(
-						'name'     => $file['name'],
-						'type'     => $file['type'],
-						'tmp_name' => $projectDir . '/' . $strFile,
-						'error'    => $file['error'],
-						'size'     => $file['size'],
-						'uploaded' => true,
-						'uuid'     => $strUuid
+						'name'     => $files['name'][$i],
+						'type'     => $files['type'][$i],
+						'tmp_name' => $files['tmp_name'][$i],
+						'error'    => $files['error'][$i],
+						'size'     => $files['size'][$i]
 					);
-
-					System::getContainer()->get('monolog.logger.contao.files')->info('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded');
 				}
 			}
+		}
+
+		if (!empty($uploadedFiles))
+		{
+			$this->varValue = ($this->multipleFiles) ? $uploadedFiles : $uploadedFiles[0];
 		}
 
 		unset($_FILES[$this->strName]);

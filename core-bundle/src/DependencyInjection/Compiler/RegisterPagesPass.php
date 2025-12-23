@@ -122,7 +122,7 @@ class RegisterPagesPass implements CompilerPassInterface
         if (isset($attributes['method'])) {
             $definition->setPublic(true);
 
-            return $controller.':'.$attributes['method'];
+            return $controller.'::'.$attributes['method'];
         }
 
         if (($class = $definition->getClass()) && method_exists($class, '__invoke')) {

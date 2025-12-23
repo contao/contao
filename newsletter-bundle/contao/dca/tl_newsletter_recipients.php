@@ -16,6 +16,9 @@ use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
+use Contao\NewsletterDenyListModel;
+use Contao\NewsletterRecipientsModel;
+use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -52,15 +55,32 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'email',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
-			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient')
+		),
+		'label' => array
+		(
+			'fields'                  => array('email'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_newsletter_recipients', 'listRecipient')
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'import' => array
 			(
 				'href'                => 'key=import',
 				'class'               => 'header_css_import'
 			),
+		),
+		'operations' => array
+		(
+			'-',
+			'block' => array
+			(
+				'href'                => 'key=block',
+				'icon'                => 'bundles/contaonewsletter/block.svg',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['tl_newsletter_recipients']['blockConfirm'] ?? null) . '\'))return false"'
+			)
 		)
 	),
 
@@ -99,7 +119,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
 				array('tl_newsletter_recipients', 'checkDenyList')
 			),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>false),
 		),
 		'active' => array
 		(
@@ -127,6 +147,13 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
  */
 class tl_newsletter_recipients extends Backend
 {
+	/**
+	 * Subscribed member start/stop dates cache, grouped by newsletter ID and member email.
+	 *
+	 * @var array<int, array<string, array<string, string>>
+	 */
+	private static array $subscribedMembers = array();
+
 	/**
 	 * Set the recipient status to "added manually" if they are moved to another channel
 	 *
@@ -208,14 +235,61 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		$icon = Image::getPath('member');
-		$icond = Image::getPath('member_');
+		$icond = Image::getPath('member--disabled');
+
+		// Change icon according to start/stop of the associated member (#951)
+		if (!isset(self::$subscribedMembers[$row['pid']]))
+		{
+			self::$subscribedMembers[$row['pid']] = System::getContainer()
+				->get('database_connection')
+				->fetchAllAssociativeIndexed('SELECT r.email, m.start, m.stop FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=?', array($row['pid']));
+		}
+
+		if ($member = self::$subscribedMembers[$row['pid']][$row['email']] ?? null)
+		{
+			$time = Date::floorToMinute();
+
+			if ($member['start'] && $time < $member['start'])
+			{
+				$icon = $icond;
+			}
+			elseif ($member['stop'] && $time >= $member['stop'])
+			{
+				$icon = $icond;
+			}
+		}
 
 		return sprintf(
-			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",
+			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>' . "\n",
 			$row['active'] ? $icon : $icond,
 			$icon,
 			$icond,
 			$label
 		);
+	}
+
+	/**
+	 * Add a recipient to the deny list
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function blockRecipient(DataContainer $dc): void
+	{
+		$referer = $this->getReferer();
+
+		$objRecipient = NewsletterRecipientsModel::findById($dc->id);
+		$hashedEmail = md5($objRecipient->email);
+
+		if (!NewsletterDenyListModel::findByHashAndPid($hashedEmail, $objRecipient->pid))
+		{
+			$objDenyList = new NewsletterDenyListModel();
+			$objDenyList->pid = $objRecipient->pid;
+			$objDenyList->hash = $hashedEmail;
+			$objDenyList->save();
+		}
+
+		$objRecipient->delete();
+
+		$this->redirect($referer);
 	}
 }

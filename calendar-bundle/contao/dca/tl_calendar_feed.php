@@ -25,6 +25,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
 	// Config
@@ -33,6 +34,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'backendSearchIgnore'         => true,
 		'onload_callback' => array
 		(
 			array('tl_calendar_feed', 'checkPermission'),
@@ -80,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'operations' => array
 		(
-			'!edit',
+			'edit',
 			'copy' => array
 			(
 				'href'                => 'act=copy',
@@ -94,7 +96,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_calendar_feed', 'deleteFeed')
 			),
-			'show'
+			'show',
+			'versions',
 		)
 	),
 
@@ -174,13 +177,10 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'feedBase' => array
 		(
+			'default'                 => static fn (): string => Environment::get('base'),
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'load_callback' => array
-			(
-				array('tl_calendar_feed', 'addFeedBase')
-			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'description' => array
@@ -540,23 +540,6 @@ class tl_calendar_feed extends Backend
 		if (in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Add the RSS-feed base URL
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return string
-	 */
-	public function addFeedBase($varValue)
-	{
-		if (!$varValue)
-		{
-			$varValue = Environment::get('base');
 		}
 
 		return $varValue;

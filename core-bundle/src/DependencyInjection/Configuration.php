@@ -23,13 +23,16 @@ use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
 use Imagine\Image\ImageInterface;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @return TreeBuilder<'array'>
+     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('contao');
@@ -58,7 +61,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 6. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
@@ -102,6 +105,16 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('%kernel.project_dir%/bin/console')
                 ->end()
+                ->arrayNode('registration')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->integerNode('expiration')
+                            ->min(1)
+                            ->defaultValue(14)
+                            ->info('The number of days after which unconfirmed registrations expire.')
+                        ->end()
+                    ->end()
+                ->end()
                 ->append($this->addMessengerNode())
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
@@ -123,7 +136,10 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function addMessengerNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addMessengerNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('messenger'))
             ->getRootNode()
@@ -135,6 +151,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Contao provides a way to work on Messenger transports in the web process (kernel.terminate) if there is no real "messenger:consume" worker. You can configure its behavior here.')
                     ->children()
                         ->arrayNode('transports')
+                            ->performNoDeepMerging()
                             ->info('The transports to apply the web worker logic to.')
                             ->scalarPrototype()->end()
                             ->defaultValue([])
@@ -206,7 +223,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addImageNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addImageNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('image'))
             ->getRootNode()
@@ -454,7 +474,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addImagineOptionsNode(bool $withDefaults): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addImagineOptionsNode(bool $withDefaults): ArrayNodeDefinition
     {
         $node = (new TreeBuilder('imagine_options'))
             ->getRootNode()
@@ -532,7 +555,10 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    private function addIntlNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addIntlNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('intl'))
             ->getRootNode()
@@ -591,15 +617,15 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('countries')
-                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country codes.')
+                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country and ISO 3166-2 subdivision codes. Labels can be provided via the translator by setting "CNT.de" for "DE" and "CNT.at9" for "AT-9" for example.')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
-                    ->example(['+DE', '-AT', 'CH'])
+                    ->example(['+DE', '-AT', '+AT-9', 'CH'])
                     ->validate()
                         ->ifTrue(
                             static function (array $countries): bool {
                                 foreach ($countries as $country) {
-                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9]$/', $country)) {
+                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)) {
                                         return true;
                                     }
                                 }
@@ -607,14 +633,17 @@ class Configuration implements ConfigurationInterface
                                 return false;
                             },
                         )
-                        ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
+                        ->thenInvalid('All provided countries must be two uppercase letters optionally followed by a dash and a subdivision code and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
                 ->end()
             ->end()
         ;
     }
 
-    private function addSecurityNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addSecurityNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('security'))
             ->getRootNode()
@@ -641,7 +670,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addSearchNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addSearchNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('search'))
             ->getRootNode()
@@ -672,13 +704,20 @@ class Configuration implements ConfigurationInterface
                             ->info('Enables deleting unsuccessful responses from the index.')
                             ->defaultTrue()
                         ->end()
+                        ->scalarNode('rate_limiter')
+                            ->info('The name of the rate limiter for handling requests. By default, there will be a rate limiter set to 5 minutes.')
+                            ->defaultNull()
+                        ->end()
                     ->end()
                 ->end()
             ->end()
         ;
     }
 
-    private function addBackendSearchNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addBackendSearchNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('backend_search'))
             ->getRootNode()
@@ -696,7 +735,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addCrawlNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addCrawlNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('crawl'))
             ->getRootNode()
@@ -730,12 +772,19 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addMailerNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addMailerNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('mailer'))
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('override_from')
+                    ->info('Overrides the "From" address for any e-mails sent by the mailer, if not otherwise specified by a transport.')
+                    ->defaultNull()
+                ->end()
                 ->arrayNode('transports')
                     ->info('Specifies the mailer transports available for selection within Contao.')
                     ->useAttributeAsKey('name')
@@ -752,7 +801,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addBackendNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addBackendNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('backend'))
             ->getRootNode()
@@ -814,7 +866,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addInsertTagsNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addInsertTagsNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('insert_tags'))
             ->getRootNode()
@@ -830,7 +885,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addBackupNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addBackupNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('backup'))
             ->getRootNode()
@@ -868,7 +926,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addSanitizerNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addSanitizerNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('sanitizer'))
             ->getRootNode()
@@ -895,7 +956,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addCronNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addCronNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('cron'))
             ->getRootNode()
@@ -910,7 +974,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addCspNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addCspNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('csp'))
             ->getRootNode()
@@ -962,7 +1029,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addAltchaNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addAltchaNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('altcha'))
             ->getRootNode()
@@ -987,7 +1057,10 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addTemplateStudioNode(): NodeDefinition
+    /**
+     * @return ArrayNodeDefinition<TreeBuilder<'array'>>
+     */
+    private function addTemplateStudioNode(): ArrayNodeDefinition
     {
         return (new TreeBuilder('template_studio'))
             ->getRootNode()

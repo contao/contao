@@ -141,7 +141,7 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_FRONTEND_MODULES = 'contao_user.themes.modules';
 
     /**
-     * Access is granted if the current user can access the css editor in themes.
+     * Access is granted if the current user can access the CSS editor in themes.
      */
     public const USER_CAN_ACCESS_STYLE_SHEETS = 'contao_user.themes.css';
 
@@ -220,4 +220,9 @@ final class ContaoCorePermissions
      * the table (e.g. "contao_dc.tl_content").
      */
     public const DC_PREFIX = 'contao_dc.';
+
+    /**
+     * Access is granted if the given WebauthnCredential user belongs to the current user.
+     */
+    public const WEBAUTHN_CREDENTIAL_OWNERSHIP = 'contao_webauthn_credential_ownership';
 }

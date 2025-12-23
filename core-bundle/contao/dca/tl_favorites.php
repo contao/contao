@@ -17,9 +17,9 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	'config' => array
 	(
 		'dataContainer'               => DC_Table::class,
-		'enableVersioning'            => true,
 		'notCreatable'                => true,
 		'notCopyable'                 => true,
+		'backendSearchIgnore'         => true,
 		'sql' => array
 		(
 			'keys' => array
@@ -40,7 +40,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'mode'                    => DataContainer::MODE_TREE,
 			'rootPaste'               => true,
 			'showRootTrails'          => true,
-			'icon'                    => 'favorites.svg'
 		),
 		'label' => array
 		(

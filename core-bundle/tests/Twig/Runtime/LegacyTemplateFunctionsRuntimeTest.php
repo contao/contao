@@ -15,13 +15,12 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\FrontendTemplate;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Error\RuntimeError;
 
 class LegacyTemplateFunctionsRuntimeTest extends TestCase
 {
-    /**
-     * @dataProvider provideMethodCalls
-     */
+    #[DataProvider('provideMethodCalls')]
     public function testDelegatesCalls(string $methodName, string $delegatedMethodName): void
     {
         $frontendTemplate = $this->createMock(FrontendTemplate::class);
@@ -45,9 +44,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
         $this->assertSame('output', $runtime->$methodName($context, 'key', 'template'));
     }
 
-    /**
-     * @dataProvider provideMethodCalls
-     */
+    #[DataProvider('provideMethodCalls')]
     public function testThrowsIfTemplateNotInContext(string $methodName, string $delegatedMethodName): void
     {
         $runtime = $this->getRuntime();
@@ -67,6 +64,6 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
 
     private function getRuntime(): LegacyTemplateFunctionsRuntime
     {
-        return new LegacyTemplateFunctionsRuntime($this->mockContaoFramework());
+        return new LegacyTemplateFunctionsRuntime($this->createContaoFrameworkStub());
     }
 }

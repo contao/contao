@@ -20,6 +20,7 @@ use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleArticle;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -38,8 +39,8 @@ class DebugFragmentsCommandTest extends TestCase
     public function testNameAndArguments(): void
     {
         $command = new DebugFragmentsCommand(
-            $this->createMock(FragmentRegistry::class),
-            $this->createMock(ContainerInterface::class),
+            $this->createStub(FragmentRegistry::class),
+            $this->createStub(ContainerInterface::class),
         );
 
         $this->assertSame('debug:fragments', $command->getName());
@@ -47,9 +48,7 @@ class DebugFragmentsCommandTest extends TestCase
         $this->assertEmpty($command->getDefinition()->getOptions());
     }
 
-    /**
-     * @dataProvider commandOutputProvider
-     */
+    #[DataProvider('commandOutputProvider')]
     public function testCommandOutput(array $fragments, string $expectedOutput): void
     {
         $fragmentsRegistry = new FragmentRegistry();

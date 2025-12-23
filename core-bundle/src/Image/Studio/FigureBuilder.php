@@ -20,6 +20,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\InsertTag\InsertTag;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
@@ -56,6 +57,11 @@ class FigureBuilder
      * The resource's file model if applicable.
      */
     private FilesModel|null $filesModel = null;
+
+    /**
+     * The image resource, if given.
+     */
+    private ImageInterface|null $image = null;
 
     /**
      * User defined size configuration.
@@ -205,7 +211,7 @@ class FigureBuilder
     /**
      * Sets the image resource from an absolute or relative path.
      *
-     * @param bool $autoDetectDbafsPaths Set to false to skip searching for a FilesModel
+     * @param bool $autoDetectDbafsPaths Use false to skip searching for a FilesModel
      */
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): self
     {
@@ -291,6 +297,8 @@ class FigureBuilder
      */
     public function fromImage(ImageInterface $image): self
     {
+        $this->image = $image;
+
         return $this->fromPath($image->getPath());
     }
 
@@ -656,7 +664,7 @@ class FigureBuilder
 
         $imageResult = $this->locator
             ->get('contao.image.studio')
-            ->createImage($settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
+            ->createImage($settings->image ?? $settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
         ;
 
         // Define the values via closure to make their evaluation lazy
@@ -718,6 +726,16 @@ class FigureBuilder
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
         $metadata = $this->filesModel->getMetadata(...$locales);
         $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
+
+        foreach ($overwriteMetadata as $key => $value) {
+            if (str_starts_with($value, '{{empty')) {
+                $parsedValue = $this->locator->get('contao.insert_tag.parser')->parse($value);
+
+                if (1 === $parsedValue->count() && $parsedValue->get(0) instanceof InsertTag && 'empty' === $parsedValue->get(0)->getName()) {
+                    $overwriteMetadata[$key] = '';
+                }
+            }
+        }
 
         if ($metadata) {
             return $metadata
@@ -786,18 +804,28 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            if (Path::isAbsolute($target)) {
-                $filePath = Path::canonicalize($target);
-            } else {
-                // URL relative to the project directory
-                $filePath = Path::makeAbsolute(urldecode($target), $this->projectDir);
+            // Check if target is an absolute filesystem path to an existing resource
+            if (Path::isAbsolute($target) && is_file($target)) {
+                return [Path::canonicalize($target), null];
             }
 
-            if (!is_file($filePath)) {
-                $filePath = null;
+            $filePath = urldecode($target);
+
+            // Check if target references a resource relative to the project dir
+            $projectPath = Path::join($this->projectDir, $filePath);
+
+            if (is_file($projectPath)) {
+                return [$projectPath, null];
             }
 
-            return [$filePath, null];
+            // Check if target references a resource relative to the public dir
+            $publicPath = Path::join($this->webDir, $filePath);
+
+            if (is_file($publicPath)) {
+                return [null, $target];
+            }
+
+            return [null, null];
         };
 
         // Use explicitly set href (1) or lightbox resource (2), fall back to using

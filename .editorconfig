@@ -19,6 +19,9 @@ insert_final_newline = false
 [*/contao/**.{css,js,php}]
 indent_style = tab
 
-[*/contao/**.html5]
+[*/contao/**.{html5,xlf}]
 indent_style = space
 indent_size = 2
+
+[core-bundle/assets/scripts/{core,mootao}.js]
+indent_style = tab

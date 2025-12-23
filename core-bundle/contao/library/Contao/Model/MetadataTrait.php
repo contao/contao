@@ -57,6 +57,14 @@ trait MetadataTrait
 
 		unset($data['imageTitle'], $data['imageUrl']);
 
+		foreach ($data as $key => $value)
+		{
+			if ($value === '' || $value === null)
+			{
+				unset($data[$key]);
+			}
+		}
+
 		// Make sure we resolve insert tags pointing to files
 		if (isset($data[Metadata::VALUE_URL]))
 		{

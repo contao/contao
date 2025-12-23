@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -285,6 +286,7 @@ abstract class Module extends Frontend
 
 		$items = array();
 		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
@@ -314,6 +316,12 @@ abstract class Module extends Frontend
 			if ($host !== null)
 			{
 				$objSubpage->domain = $host;
+			}
+
+			// Hide the page if it is only visible to guests
+			if ($objSubpage->guests && $isMember)
+			{
+				continue;
 			}
 
 			$subitems = '';
@@ -508,5 +516,14 @@ abstract class Module extends Frontend
 		}
 
 		return '';
+	}
+
+	/**
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use a page type controller instead.
+	 */
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return false;
 	}
 }

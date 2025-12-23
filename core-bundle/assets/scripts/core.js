@@ -1,3 +1,5 @@
+import * as Icon from "../modules/icon";
+
 /**
  * Provide methods to handle Ajax requests.
  *
@@ -16,7 +18,7 @@ window.AjaxRequest =
 	 */
 	toggleNavigation: function(el, id, url) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var item = $(id),
@@ -52,10 +54,8 @@ window.AjaxRequest =
 	 */
 	toggleStructure: function(el, id, level, mode) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the Stimulus controller instead.');
 		}
-
-		el.blur();
 
 		var item = $(id);
 
@@ -120,11 +120,6 @@ window.AjaxRequest =
 					}
 				}
 
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
 
@@ -151,10 +146,8 @@ window.AjaxRequest =
 	 */
 	toggleFileManager: function(el, id, folder, level) {
 		if (window.console) {
-			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the Stimulus controller instead.');
 		}
-
-		el.blur();
 
 		var item = $(id);
 
@@ -199,11 +192,6 @@ window.AjaxRequest =
 
 				li.inject($(el).getParent('li'), 'after');
 
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
 				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
 
@@ -225,7 +213,6 @@ window.AjaxRequest =
 	 * @param {string} field The field name
 	 */
 	toggleSubpalette: function(el, id, field) {
-		el.blur();
 		var item = $(id);
 
 		if (item) {
@@ -285,11 +272,6 @@ window.AjaxRequest =
 				el.value = 1;
 				el.checked = 'checked';
 
-				// Update the referer ID
-				div.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
 				updateVersionNumber(txt);
 
 				AjaxRequest.hideBox();
@@ -318,12 +300,10 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleField: function(el, rowIcon, iconOnly = false) {
-		el.blur();
-
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div, next, pa, title;
+			div, next, pa, label;
 
 		if (rowIcon && !iconOnly) {
 			// Find the icon depending on the view (tree view, list view, parent view)
@@ -351,7 +331,7 @@ window.AjaxRequest =
 				// Tree view
 				if (!(img instanceof HTMLElement) && img.forEach) {
 					img.forEach((img) => {
-						if (img.nodeName.toLowerCase() == 'img') {
+						if (img instanceof HTMLImageElement) {
 							if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
 								pa = img.getParent('a');
 
@@ -365,7 +345,10 @@ window.AjaxRequest =
 							}
 
 							const newSrc = !published ? img.get('data-icon') : img.get('data-icon-disabled');
-							img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+
+							if (newSrc) {
+								img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+							}
 						}
 					})
 				}
@@ -390,20 +373,26 @@ window.AjaxRequest =
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
-			image.alt = title = !published ? image.get('data-alt') : image.get('data-alt-disabled');
+			image.alt = label = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 
 		if (!published && $(el).get('data-title')) {
-			el.title = title = $(el).get('data-title');
+			el.title = label = $(el).get('data-title');
 		} else if (published && $(el).get('data-title-disabled')) {
-			el.title = title = $(el).get('data-title-disabled');
+			el.title = label = $(el).get('data-title-disabled');
 		}
 
-		if (title) {
+		if (!published && $(el).get('data-label')) {
+			label = $(el).get('data-label');
+		} else if (published && $(el).get('data-label-disabled')) {
+			label = $(el).get('data-label-disabled');
+		}
+
+		if (label) {
 			el.childNodes.forEach((child) => {
 				if (child instanceof Text && child.nodeValue.trim()) {
-					child.replaceWith(new Text(title));
+					child.replaceWith(new Text(label));
 				}
 			});
 		}
@@ -431,8 +420,6 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleCheckboxGroup: function(el, id) {
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -472,7 +459,6 @@ window.AjaxRequest =
 		overlay.set({
 			'styles': {
 				'display': 'block',
-				'top': scroll.y + 'px'
 			}
 		});
 
@@ -622,8 +608,14 @@ window.Backend =
 			'draggable': false,
 			'overlayOpacity': .7,
 			'overlayClick': false,
-			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
-			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
+			'onShow': function() {
+				document.body.setStyle('overflow', 'hidden');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:show'));
+			},
+			'onHide': function() {
+				document.body.setStyle('overflow', 'auto');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:hide'));
+			}
 		});
 		M.addButton(Contao.lang.cancel, 'btn', function() {
 			if (this.buttons[0].hasClass('btn-disabled')) {
@@ -707,7 +699,8 @@ window.Backend =
 
 		var form = $(el) || el;
 		hidden.inject(form, 'bottom');
-		form.submit();
+		form.noValidate = true;
+		form.requestSubmit();
 	},
 
 	/**
@@ -753,6 +746,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	toggleCheckboxGroup: function(el, id) {
+		console.warn('Backend.toggleCheckboxGroup() is deprecated. Please use the Stimulus controllers instead.');
+
 		var cls = $(el).className,
 			status = $(el).checked ? 'checked' : '';
 
@@ -797,6 +792,8 @@ window.Backend =
 	 * @author Martin Auswöger
 	 */
 	makeParentViewSortable: function(ul) {
+		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the Stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -860,20 +857,25 @@ window.Backend =
 
 		list.addEvent('complete', function(el) {
 			if (!list.active) return;
-			var id, pid, req, href;
+			var id, pid, url = new URL(window.location.href);
+
+			url.searchParams.set('rt', Contao.request_token);
+			url.searchParams.set('act', 'cut');
 
 			if (el.getPrevious('li')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getPrevious('li').get('id').replace(/li_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=1&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 1);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			} else if (el.getParent('ul')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getParent('ul').get('id').replace(/ul_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=2&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 2);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			}
 		});
 	},
@@ -886,6 +888,8 @@ window.Backend =
 	 * @param {string} val The value field
 	 */
 	makeMultiSrcSortable: function(id, oid, val) {
+		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the Stimulus controllers instead.');
+
 		var list = new Sortables($(id), {
 			constrain: true,
 			opacity: 0.6
@@ -909,7 +913,7 @@ window.Backend =
 			if (el.hasClass('removable')) {
 				new Element('button', {
 					type: 'button',
-					html: '&times;',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					'class': 'tl_red'
 				}).addEvent('click', function() {
 					var li = el.getParent('li'),
@@ -921,7 +925,7 @@ window.Backend =
 			} else {
 				new Element('button', {
 					type: 'button',
-					html: '&times',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					disabled: true
 				}).inject(el, 'after');
 			}
@@ -1076,6 +1080,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	listWizard: function(id) {
+		console.warn('Backend.listWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var ul = $(id),
 			makeSortable = function(ul) {
 				new Sortables(ul, {
@@ -1378,6 +1384,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	optionsWizard: function(id) {
+		console.warn('Backend.optionsWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1482,6 +1490,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	keyValueWizard: function(id) {
+		console.warn('Backend.keyValueWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1579,6 +1589,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	checkboxWizard: function(id) {
+		console.warn('Backend.checkboxWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var container = $(id).getElement('.sortable'),
 			makeSortable = function(container) {
 				new Sortables(container, {
@@ -1650,93 +1662,6 @@ window.Backend =
 			update();
 			select.addEvent('change', update);
 			select.addEvent('keyup', update);
-		});
-	},
-
-	/**
-	 * Allow toggling checkboxes or radio buttons by clicking a row
-	 *
-	 * @author Kamil Kuzminski
-	 */
-	enableToggleSelect: function() {
-		var container = $('tl_listing'),
-			shiftToggle = function(el) {
-				thisIndex = checkboxes.indexOf(el);
-				startIndex = checkboxes.indexOf(start);
-				from = Math.min(thisIndex, startIndex);
-				to = Math.max(thisIndex, startIndex);
-				status = !!checkboxes[startIndex].checked;
-
-				for (from; from<=to; from++) {
-					checkboxes[from].checked = status;
-				}
-			},
-			clickEvent = function(e) {
-				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
-					limitToggler = $(e.target).getParent('.limit_toggler');
-
-				if (!input || input.get('disabled') || limitToggler !== null) {
-					return;
-				}
-
-				// Radio buttons
-				if (input.type == 'radio') {
-					if (!input.checked) {
-						input.checked = 'checked';
-					}
-
-					return;
-				}
-
-				// Checkboxes
-				if (e.shift && start) {
-					shiftToggle(input);
-				} else {
-					input.checked = input.checked ? '' : 'checked';
-
-					if (input.get('onclick') == 'Backend.toggleCheckboxes(this)') {
-						Backend.toggleCheckboxes(input); // see #6399
-					}
-				}
-
-				start = input;
-			},
-			checkboxes = [], start, thisIndex, startIndex, status, from, to;
-
-		if (container) {
-			checkboxes = container.getElements('input[type="checkbox"]');
-		}
-
-		// Row click
-		$$('.toggle_select').each(function(el) {
-			var boundEvent = el.retrieve('boundEvent');
-
-			if (boundEvent) {
-				el.removeEvent('click', boundEvent);
-			}
-
-			// Do not propagate the form field click events
-			el.getElements('label,input[type="checkbox"],input[type="radio"]').each(function(i) {
-				i.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-
-			boundEvent = clickEvent.bind(el);
-
-			el.addEvent('click', boundEvent);
-			el.store('boundEvent', boundEvent);
-		});
-
-		// Checkbox click
-		checkboxes.each(function(el) {
-			el.addEvent('click', function(e) {
-				if (e.shift && start) {
-					shiftToggle(this);
-				}
-
-				start = this;
-			});
 		});
 	},
 
@@ -1960,93 +1885,6 @@ window.Backend =
 			currentHover = undefined;
 			currentHoverTime = undefined;
 		});
-	},
-
-	/**
-	 * Crawl the website
-	 */
-	crawl: function() {
-		var timeout = 2000,
-			crawl = $('tl_crawl'),
-			progressBar = crawl.getElement('div.progress-bar'),
-			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results'),
-			debugLog = crawl.getElement('p.debug-log');
-
-		function updateData(response) {
-			var total = response.total,
-				done = total - response.pending,
-				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
-				result;
-
-			// Initialize the status bar at 10%
-			if (done < 1 && percentage < 1) {
-				done = 1;
-				percentage = 10;
-				total = 10;
-			}
-
-			progressBar.setStyle('width', percentage + '%');
-			progressBar.set('html', percentage + '%');
-			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + total);
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (!response.finished) {
-				return;
-			}
-
-			progressBar.removeClass('running').addClass('finished');
-			results.removeClass('running').addClass('finished');
-
-			for (result in response.results) {
-				if (response.results.hasOwnProperty(result)) {
-					var summary = results.getElement('.result[data-subscriber="' + result + '"] p.summary'),
-						warning = results.getElement('.result[data-subscriber="' + result + '"] p.warning'),
-						log = results.getElement('.result[data-subscriber="' + result + '"] p.subscriber-log'),
-						subscriberResults = response.results[result],
-						subscriberSummary = subscriberResults.summary;
-
-					if (subscriberResults.warning) {
-						warning.set('html', subscriberResults.warning);
-					}
-
-					if (subscriberResults.hasLog) {
-						log.setStyle('display', 'block');
-					}
-
-					summary.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
-					summary.set('html', subscriberSummary);
-				}
-			}
-		}
-
-		function execRequest(onlyStatusUpdate = false) {
-			new Request({
-				url: window.location.href,
-				headers: {
-					'Only-Status-Update': onlyStatusUpdate
-				},
-				onSuccess: function(responseText) {
-					var response = JSON.decode(responseText);
-
-					updateData(response);
-
-					if (!response.finished) {
-						setTimeout(execRequest, timeout);
-					}
-				}
-			}).send();
-		}
-
-		execRequest(true);
 	}
 };
 
@@ -2133,6 +1971,10 @@ window.Theme =
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupMenuToggle() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		var burger = $('burger');
 		if (!burger) return;
 
@@ -2169,7 +2011,7 @@ window.Theme =
 	 */
 	setupProfileToggle: function() {
 		if (window.console) {
-			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
+			console.warn('Theme.setupProfileToggle() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		var tmenu = $('tmenu');
@@ -2207,8 +2049,11 @@ window.Theme =
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupSplitButtonToggle() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		var toggle = $('sbtog');
-		if (!toggle) return;
 
 		var ul = toggle.getParent('.split-button').getElement('ul'),
 			tab, timer;
@@ -2261,13 +2106,13 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableImageSizeWidgets();
-	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
-	Theme.setupMenuToggle();
-	Theme.setupSplitButtonToggle();
+
+	if ($('sbtog')) {
+		Theme.setupSplitButtonToggle();
+	}
 });
 
 // Resize the table wizard
@@ -2277,9 +2122,5 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.enableImageSizeWidgets();
-	Backend.enableToggleSelect();
-
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 });

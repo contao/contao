@@ -1,0 +1,427 @@
+/* Tablet */
+@media (width < 992px) {
+    #main {
+        width: 100%;
+        flex-shrink: 0;
+        position: relative;
+        transition: transform .2s ease;
+        will-change: transform;
+    }
+
+    #left {
+        visibility: hidden;
+        width: 240px;
+        flex-shrink: 0;
+        margin-left: -240px;
+        transition: transform .2s ease, visibility .2s ease;
+        will-change: transform, visibility;
+    }
+
+    #left.active {
+        visibility: visible;
+        transform: translateX(240px);
+
+        + #contao-main #main {
+            transform: translateX(240px);
+        }
+    }
+
+    #tmenu .burger {
+        display: inline;
+    }
+}
+
+@media (width < 1280px) {
+    #container {
+        overflow-x: clip;
+        width: auto;
+    }
+}
+
+/* Handheld */
+@media (width < 768px) {
+    #header h1 a {
+        min-width: 22px;
+        padding: 12px;
+    }
+
+    #header .app-title {
+        display: none;
+    }
+
+    #header .badge-title {
+        margin-left: 32px;
+    }
+
+    #tmenu > li > a {
+        width: 16px;
+        margin-bottom: -2px;
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+        background-size: 18px !important;
+    }
+
+    #tmenu sup {
+        top: 6px;
+        font-size: .5rem;
+    }
+
+    #tmenu .icon-debug {
+        background: var(--icon-debug) center center no-repeat;
+    }
+
+    #tmenu .icon-preview {
+        background: var(--icon-preview) center center no-repeat;
+    }
+
+    #tmenu .profile button {
+        width: 40px;
+        margin: 0 0 -2px;
+        padding-right: 12px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+        background: url("icons/profile.svg") center center no-repeat;
+        background-size: 18px;
+    }
+
+    #main .content {
+        margin: 0 5px 5px;
+    }
+
+    #main_headline {
+        margin: 13px 0;
+        padding: 0 9px;
+    }
+
+    div.tl_tbox, div.tl_box {
+        position: relative;
+    }
+
+    .tl_content_left {
+        width: 100%;
+        float: none;
+    }
+
+    .showColumns th, .showColumns td {
+        display: block;
+    }
+
+    .showColumns th:empty {
+        display: none;
+    }
+
+    .tl_label {
+        white-space: normal;
+    }
+
+    .list_view .tl_listing img.theme_preview {
+        display: none;
+    }
+
+    input.tl_submit {
+        margin-top: 3px;
+        margin-bottom: 3px;
+        padding-left: 6px !important;
+        padding-right: 7px !important;
+    }
+
+    .tl_listing .tl_left, .tl_show td {
+        word-break: break-word;
+    }
+
+    #tl_breadcrumb li {
+        padding: 3px;
+    }
+
+    #tl_versions {
+        display: none;
+    }
+
+    #tl_buttons > ul, .tl_listing_container, fieldset > .widget-group {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .tl_modulewizard td:first-child {
+        width: 1%;
+    }
+
+    .tl_modulewizard td:first-child .tl_select_wrapper {
+        max-width: 52vw;
+    }
+
+    #paste_hint, .sort_hint {
+        display: none;
+    }
+
+    #tl_maintenance_cache table {
+        width: 100%;
+    }
+
+    #tl_maintenance_cache tr th:last-child, #tl_maintenance_cache tr td:last-child {
+        display: none;
+    }
+
+    .tl_undo_header {
+        grid-template-columns:2fr 3fr;
+    }
+
+    .tl_undo_header div:not(.tstamp, .source) {
+        display: none;
+    }
+
+    .tl_submit_panel {
+        margin-top: 15px;
+        display: flex;
+        gap: 6px;
+    }
+
+    .filter_apply {
+        flex-grow: 1;
+    }
+
+    .passkeys .credential-list td.actions,
+    .passkeys .credential-list td.created {
+        width: auto;
+    }
+}
+
+/* Phones */
+@media (width < 600px) {
+    .tl_metawizard label {
+        width: auto;
+        float: none;
+        font-size: .9em;
+        display: block;
+        margin-top: 3px;
+    }
+
+    .tl_metawizard .tl_text {
+        width: 100%;
+    }
+
+    #header:has(.badge-title) {
+        padding-top: 18px;
+
+        h1 {
+            width: 100%;
+        }
+
+        + #container #left {
+            top: 58px;
+        }
+    }
+
+    #header .badge-title {
+        position: absolute;
+        inset: 0 0 auto;
+        margin: -18px 0 0;
+        border-radius: 0;
+        padding: 3px 5px;
+        background-color: var(--text);
+        color: var(--white);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    html[data-color-scheme="dark"] {
+        #header .badge-title {
+            background-color: var(--invert-text);
+            color: var(--black)
+        }
+    }
+}
+
+@media (width < 480px) {
+    #tmenu .icon-manual {
+        display: none;
+    }
+
+    .tl_modulewizard td:first-child .tl_select_wrapper {
+        max-width: 48vw;
+    }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+
+    .widget-group {
+        --widget-gap-cols: 30px;
+    }
+
+    .w16, .w25, .w33, .w50, .w66, .w75 {
+        --widget-cols: 6;
+    }
+
+    .tip {
+        max-width: 320px;
+    }
+
+    /* Backwards compatibility */
+    :not(.widget-group) > .m12 {
+        margin: 0 15px;
+        padding: 16px 0;
+    }
+
+    :not(.widget-group) > .w50 {
+        width: calc(50% - 30px);
+        float: left;
+        min-height: 80px;
+    }
+
+    .nogrid :not(.widget-group) > :is(.w16, .w25, .w33, .w50, .w66, .w75) {
+        float: none;
+    }
+
+    :not(.widget-group) > .cbx {
+        min-height: 46px;
+    }
+
+    :not(.widget-group) > .cbx.m12 {
+        min-height: 80px;
+        box-sizing: border-box;
+    }
+}
+
+/* Large screens */
+@media (min-width: 1280px) {
+    .w16 {
+        --widget-cols: 2;
+    }
+
+    .w25 {
+        --widget-cols: 3;
+    }
+
+    .w33 {
+        --widget-cols: 4;
+    }
+
+    .w50 {
+        --widget-cols: 6;
+    }
+
+    .w66 {
+        --widget-cols: 8;
+    }
+
+    .w75 {
+        --widget-cols: 9;
+    }
+
+    #sbtog {
+        display: none;
+    }
+
+    .split-button ul {
+        display: inline-flex;
+        clip: initial;
+        height: auto;
+        margin: 0 0 0 -4px;
+        overflow: initial;
+        position: initial;
+        width: auto;
+    }
+
+    .split-button li {
+        margin-left: 4px;
+    }
+}
+
+/* Split button */
+@media (width < 1280px) {
+    .split-button {
+        display: inline-flex;
+    }
+
+    .split-button ul {
+        position: absolute;
+        right: 0;
+        bottom: 20px;
+        min-width: 100%;
+        background: var(--form-bg);
+        border: 1px solid var(--form-border);
+        border-radius: var(--border-radius);
+        box-sizing: border-box;
+        padding: 3px 0;
+        margin-bottom: 1em;
+    }
+
+    .split-button ul button {
+        border: 0;
+        width: 100%;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .split-button ul .tl_submit {
+        margin-top: 0;
+        margin-bottom: 0;
+        background: var(--form-bg);
+    }
+
+    .split-button ul .tl_submit:hover {
+        background: var(--form-button-hover);
+    }
+
+    .split-button ul:before {
+        content: "";
+        display: block;
+        height: 0;
+        width: 0;
+        position: absolute;
+        right: 4px;
+        bottom: -12px;
+        z-index: 89;
+        border: 6px inset transparent;
+        border-top: 6px solid var(--form-bg);
+    }
+
+    .split-button ul:after {
+        content: "";
+        display: block;
+        height: 0;
+        width: 0;
+        position: absolute;
+        right: 3px;
+        bottom: -14px;
+        z-index: 88;
+        border: 7px inset transparent;
+        border-top: 7px solid var(--form-border);
+    }
+
+    .split-button > button[type="submit"] {
+        position: relative;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+
+    .split-button > button[type="button"] {
+        height: 30px;
+        margin: 2px 0;
+        padding: 7px 4px;
+        background: var(--form-bg);
+        border: 1px solid var(--form-border);
+        border-left: 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        box-sizing: border-box;
+        transition: background .2s ease;
+    }
+
+    .split-button > button[type="button"].active, .split-button > button[type="button"]:hover {
+        background: var(--form-button-hover);
+    }
+
+    .split-button > button[type="button"]:focus {
+        outline: none;
+    }
+}
+
+@media (width >= 1280px) {
+    .d-xl-none {
+        display: none;
+    }
+}

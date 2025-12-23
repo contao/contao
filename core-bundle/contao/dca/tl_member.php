@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\Database;
@@ -17,11 +16,8 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FrontendUser;
 use Contao\Image;
-use Contao\MemberGroupModel;
 use Contao\MemberModel;
-use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Request;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
@@ -65,12 +61,12 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'su' => array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_member', 'switchUser')
+				'primary'             => true
 			)
 		)
 	),
@@ -158,7 +154,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'city' => array
 		(
-			'filter'                  => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'text',
@@ -179,7 +174,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
-			'sql'                     => "varchar(2) NOT NULL default ''"
+			'sql'                     => "varchar(6) NOT NULL default ''"
 		),
 		'phone' => array
 		(
@@ -342,12 +337,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	)
 );
 
-// Filter disabled groups in the front end (see #6757)
-if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
-{
-	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');
-}
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -355,27 +344,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
  */
 class tl_member extends Backend
 {
-	/**
-	 * Filter disabled groups
-	 *
-	 * @return array
-	 */
-	public function getActiveGroups()
-	{
-		$arrGroups = array();
-		$objGroup = MemberGroupModel::findAllActive();
-
-		if ($objGroup !== null)
-		{
-			while ($objGroup->next())
-			{
-				$arrGroups[$objGroup->id] = $objGroup->name;
-			}
-		}
-
-		return $arrGroups;
-	}
-
 	/**
 	 * Add an image to each record
 	 *
@@ -411,37 +379,6 @@ class tl_member extends Backend
 		);
 
 		return $args;
-	}
-
-	/**
-	 * Generate a "switch account" button and return it as string
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 *
-	 * @return string
-	 */
-	public function switchUser($row, $href, $label, $title, $icon)
-	{
-		$user = BackendUser::getInstance();
-		$blnCanSwitchUser = $user->isAdmin || (!empty($user->amg) && is_array($user->amg));
-
-		if (!$blnCanSwitchUser)
-		{
-			return '';
-		}
-
-		if (!$row['login'] || !$row['username'] || (!$user->isAdmin && count(array_intersect(StringUtil::deserialize($row['groups'], true), $user->amg)) < 1))
-		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-		}
-
-		$url = System::getContainer()->get('router')->generate('contao_backend_preview', array('user'=>$row['username']));
-
-		return '<a href="' . StringUtil::specialcharsUrl($url) . '" target="_blank" data-turbo-prefetch="false">' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**

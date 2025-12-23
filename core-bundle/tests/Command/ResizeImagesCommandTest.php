@@ -19,7 +19,6 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageInterface;
-use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -47,7 +46,7 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testExecutesWithoutPendingImages(): void
     {
-        $storage = $this->createMock(DeferredImageStorageInterface::class);
+        $storage = $this->createStub(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
             ->willReturn([])
@@ -64,19 +63,19 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testResizesImages(): void
     {
-        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createMock(DeferredImageInterface::class))
+            ->willReturn($this->createStub(DeferredImageInterface::class))
         ;
 
-        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer = $this->createStub(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willReturn($this->createMock(ImageInterface::class))
+            ->willReturn($this->createStub(ImageInterface::class))
         ;
 
-        $storage = $this->createMock(DeferredImageStorageInterface::class);
+        $storage = $this->createStub(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
             ->willReturn(['image1.jpg', 'image2.jpg'])
@@ -95,38 +94,34 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testTimeLimit(): void
     {
-        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createMock(DeferredImageInterface::class))
+            ->willReturn($this->createStub(DeferredImageInterface::class))
         ;
 
-        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer = $this->createStub(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
             ->willReturnCallback(
                 function () {
                     sleep(1);
 
-                    return $this->createMock(ImageInterface::class);
+                    return $this->createStub(ImageInterface::class);
                 },
             )
         ;
 
-        $storage = $this->createMock(DeferredImageStorageInterface::class);
+        $storage = $this->createStub(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
             ->willReturn(['image1.jpg', 'image2.jpg'])
         ;
 
-        ClockMock::withClockMock(1142164800);
-
         $command = $this->getCommand($factory, $resizer, $storage);
         $tester = new CommandTester($command);
         $code = $tester->execute(['--no-sub-process' => true, '--time-limit' => 0.5], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();
-
-        ClockMock::withClockMock(false);
 
         $this->assertSame(0, $code);
         $this->assertMatchesRegularExpression('/image1.jpg/', $display);
@@ -138,10 +133,10 @@ class ResizeImagesCommandTest extends TestCase
     private function getCommand(ImageFactoryInterface|null $factory = null, DeferredResizerInterface|null $resizer = null, DeferredImageStorageInterface|null $storage = null): ResizeImagesCommand
     {
         return new ResizeImagesCommand(
-            $factory ?? $this->createMock(ImageFactoryInterface::class),
-            $resizer ?? $this->createMock(DeferredResizerInterface::class),
+            $factory ?? $this->createStub(ImageFactoryInterface::class),
+            $resizer ?? $this->createStub(DeferredResizerInterface::class),
             Path::join($this->getTempDir(), 'assets/images'),
-            $storage ?? $this->createMock(DeferredImageStorageInterface::class),
+            $storage ?? $this->createStub(DeferredImageStorageInterface::class),
         );
     }
 }

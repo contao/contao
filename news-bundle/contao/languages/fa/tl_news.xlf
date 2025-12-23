@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>اینجا می‌توانید توضیحات متا دلخواه را برای جایگزینی توضیحات پیش‌فرض برگه اضافه کنید.</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>URL کانونیکال</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>در اینجا می‌توانید یک URL کانونیکال سفارشی مانند https://example.com/ تنظیم کنید.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>زیرعنوان</target>
@@ -159,6 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_news.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
+        <target>اینجا می‌توانید متن لینک پیش‌فرض «بیشتر بخوانید...» را رونویسی کنید.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
@@ -184,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>اینجا می‌توانید یک یا چند کلاس را وارد نمایید.</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>غیرفعال کردن دیدگاه‌ها</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>توسط این گزینه می‌توانید امکان دیدگاه دادن به این خبر را غیرفعال سازید.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>آیتم ویژه</target>
@@ -214,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>اگر می‌خواهید از نمایش خبر قبل از تاریخ/ساعت خاصی در وب‌سایت جلوگیری کنید، می توانید آن را در اینجا وارد کنید. در غیر این صورت، قسمت را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -221,6 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>اگر می‌خواهید از نمایش خبر بعد از تاریخ/ساعت خاصی در وب‌سایت جلوگیری کنید، می توانید آن را در اینجا وارد کنید. در غیر این صورت، قسمت را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -270,35 +273,35 @@
         <source>Publish settings</source>
         <target>تنظیمات انتشار</target>
       </trans-unit>
-      <trans-unit id="tl_news.new.0">
-        <source>New</source>
-        <target>جدید</target>
-      </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>ایجاد یک آیتم خبر جدید</target>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
         <target>نمایش جزئیات آیتم خبر شناسه %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>ویرایش آیتم خبر شناسه %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+        <target>المان‌های محتوایی</target>
+      </trans-unit>
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
         <target>ویرایش المان‌های محتوای آیتم خبر شناسه %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
         <target>تکثیر آیتم خبر شناسه %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
         <target>جابجایی آیتم خبری شناسه %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
         <target>حذف آیتم خبری شناسه %s</target>
       </trans-unit>
@@ -314,6 +317,12 @@
         <source>Publish news item ID %s</source>
         <target>انتشار آیتم خبر شناسه %s</target>
       </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Publish</source>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Unpublish</source>
+      </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>ویژه/غیرویژه کردن آیتم شناسه %s</target>
@@ -325,6 +334,12 @@
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
         <target>ویژه کردن آیتم خبر شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

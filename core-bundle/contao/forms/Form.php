@@ -238,7 +238,7 @@ class Form extends Hybrid
 				}
 
 				$objWidget = new $strClass($arrData);
-				$objWidget->required = $objField->mandatory ? true : false;
+				$objWidget->required = $objField->mandatory;
 
 				// HOOK: load form field callback
 				if (isset($GLOBALS['TL_HOOKS']['loadFormField']) && \is_array($GLOBALS['TL_HOOKS']['loadFormField']))
@@ -404,7 +404,10 @@ class Form extends Hybrid
 
 		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
 		// so it can be used on any forward page using the {{form_session_data::<form-field-name>}} insert tag
-		System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
+		if ($this->storeSession)
+		{
+			System::getContainer()->get('request_stack')->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
+		}
 
 		// Send form data via e-mail
 		if ($this->sendViaEmail)
@@ -507,6 +510,7 @@ class Form extends Hybrid
 				// Encode the values (see #6053)
 				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1); });
 
+				// TODO: This template only exists for backwards compatibility and needs to be replaced with a DOM object in Contao 6
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
@@ -529,16 +533,24 @@ class Form extends Hybrid
 			// Attach uploaded files
 			if (!empty($arrFiles))
 			{
-				foreach ($arrFiles as $file)
+				foreach ($arrFiles as $files)
 				{
-					// Add a link to the uploaded file
-					if ($file['uploaded'] ?? null)
+					if (\array_key_exists('name', $files))
 					{
-						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
-						continue;
+						$files = array($files);
 					}
 
-					$email->attachFileFromString(file_get_contents($file['tmp_name']), $file['name'], $file['type']);
+					foreach ($files as $file)
+					{
+						// Add a link to the uploaded file
+						if ($file['uploaded'] ?? null)
+						{
+							$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
+							continue;
+						}
+
+						$email->attachFileFromString(file_get_contents($file['tmp_name']), $file['name'], $file['type']);
+					}
 				}
 			}
 
@@ -588,10 +600,21 @@ class Form extends Hybrid
 			{
 				foreach ($arrFiles as $k=>$v)
 				{
-					if ($v['uploaded'] ?? null)
+					if (\array_key_exists('name', $v))
 					{
-						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
+						if ($v['uploaded'] ?? null)
+						{
+							$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
+							continue;
+						}
 					}
+
+					$arrSet[$k] = serialize(array_map(static function ($file) {
+						if ($file['uploaded'] ?? null)
+						{
+							return StringUtil::stripRootDir($file['tmp_name']);
+						}
+					}, $v));
 				}
 			}
 

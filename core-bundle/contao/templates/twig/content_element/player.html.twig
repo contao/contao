@@ -1,5 +1,5 @@
-{% extends "@Contao/content_element/_base.html.twig" %}
-{% use "@Contao/component/_figure.html.twig" %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+{% use '@Contao/component/_figure.html.twig' %}
 
 {% block content %}
     {% if as_editor_view %}
@@ -24,9 +24,9 @@
             {% do csp_source('media-src', source_attributes.src) %}
             <source{{ source_attributes }}>
         {% endfor %}
-        {% for track_attributes in figure.media.tracks %}
+        {% for track_attributes in figure.media.tracks|default %}
             {% do csp_source('media-src', track_attributes.src) %}
-            <track{{ track_attributes }}/>
+            <track{{ track_attributes }}>
         {% endfor %}
     </{{ figure.media.type }}>
 {% endblock %}

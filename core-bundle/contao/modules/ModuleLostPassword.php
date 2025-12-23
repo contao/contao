@@ -222,7 +222,7 @@ class ModuleLostPassword extends Module
 		// Fallback to default if the class is not defined
 		if (!class_exists($strClass))
 		{
-			$strClass = 'FormPassword';
+			$strClass = FormPassword::class;
 		}
 
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));

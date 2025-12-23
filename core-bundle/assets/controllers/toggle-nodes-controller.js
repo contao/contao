@@ -4,40 +4,35 @@ export default class extends Controller {
     static values = {
         mode: {
             type: Number,
-            default: 5
+            default: 5,
         },
         toggleAction: String,
         loadAction: String,
         requestToken: String,
-        refererId: String,
         expand: String,
         collapse: String,
         expandAll: String,
         expandAllTitle: String,
         collapseAll: String,
         collapseAllTitle: String,
-    }
+    };
 
     static targets = ['operation', 'node', 'toggle', 'child', 'rootChild'];
 
-    operationTargetConnected () {
+    operationTargetConnected() {
         this.updateOperation();
     }
 
-    childTargetConnected () {
+    childTargetConnected() {
         this.updateOperation();
     }
 
-    toggle (event) {
-        event.preventDefault();
-
+    toggle(event) {
         const el = event.currentTarget;
-        el.blur();
-
         this.toggleToggler(el, event.params.id, event.params.level, event.params.folder);
     }
 
-    toggleToggler (el, id, level, folder) {
+    toggleToggler(el, id, level, folder) {
         const item = document.id(id);
 
         if (item && item.style.display === 'none') {
@@ -55,64 +50,61 @@ export default class extends Controller {
         this.updateOperation();
     }
 
-    expandToggler (el) {
+    expandToggler(el) {
         el.classList.add('foldable--open');
 
         if (el.hasAttribute('title')) {
             el.title = this.collapseValue;
         }
 
-        el.getElements('img')?.forEach((image) => {
+        for (const image of el.querySelectorAll('img')) {
             image.alt = this.collapseValue;
-        });
+        }
     }
 
-    collapseToggler (el) {
+    collapseToggler(el) {
         el.classList.remove('foldable--open');
 
         if (el.hasAttribute('title')) {
             el.title = this.expandValue;
         }
 
-        el.getElements('img')?.forEach((image) => {
+        for (const image of el.querySelectorAll('img')) {
             image.alt = this.expandValue;
-        });
+        }
     }
 
-    loadToggler (el, enabled) {
+    loadToggler(el, enabled) {
         el.classList[enabled ? 'add' : 'remove']('foldable--loading');
     }
 
-    showChild (item) {
+    showChild(item) {
         item.style.display = '';
     }
 
-    hideChild (item) {
+    hideChild(item) {
         item.style.display = 'none';
     }
 
-    async fetchChild (el, id, level, folder) {
+    async fetchChild(el, id, level, folder) {
         this.loadToggler(el, true);
 
         const url = new URL(location.href);
-        const search = url.searchParams;
-        search.set('ref', this.refererIdValue);
-        url.search = search.toString();
 
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
             },
             body: new URLSearchParams({
-                'action': this.loadActionValue,
-                'id': id,
-                'level': level,
-                'folder': folder,
-                'state': 1,
-                'REQUEST_TOKEN': this.requestTokenValue
-            })
+                action: this.loadActionValue,
+                id: id,
+                level: level,
+                folder: folder,
+                state: 1,
+                REQUEST_TOKEN: this.requestTokenValue,
+            }),
         });
 
         if (response.ok) {
@@ -125,16 +117,16 @@ export default class extends Controller {
             li.setAttribute(`data-${this.identifier}-target`, level === 0 ? 'child rootChild' : 'child');
 
             const ul = document.createElement('ul');
-            ul.classList.add('level_' + level);
+            ul.classList.add(`level_${level}`);
             ul.innerHTML = txt;
             li.append(ul);
 
             if (this.modeValue === 5) {
                 el.closest('li').after(li);
             } else {
-                let isFolder = false,
-                    parent = el.closest('li'),
-                    next;
+                let isFolder = false;
+                let parent = el.closest('li');
+                let next;
 
                 while (typeOf(parent) === 'element' && parent.tagName === 'LI' && (next = parent.nextElementSibling)) {
                     parent = next;
@@ -161,30 +153,41 @@ export default class extends Controller {
         this.loadToggler(el, false);
     }
 
-    async toggleAll (event) {
-        event.preventDefault();
-
+    async toggleAll(event) {
         const href = event.currentTarget.href;
 
         if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
             this.updateAllState(href, 0);
-            this.toggleTargets.forEach((el) => this.collapseToggler(el));
-            this.childTargets.forEach((item) => item.style.display = 'none');
+
+            for (const el of this.toggleTargets) {
+                this.collapseToggler(el);
+            }
+
+            for (const item of this.childTargets) {
+                item.style.display = 'none';
+            }
         } else {
-            this.childTargets.forEach((el) => el.remove());
-            this.toggleTargets.forEach((el) => this.loadToggler(el, true));
+            for (const el of this.childTargets) {
+                el.remove();
+            }
+
+            for (const el of this.toggleTargets) {
+                this.loadToggler(el, true);
+            }
 
             await this.updateAllState(href, 1);
             const promises = [];
 
-            this.toggleTargets.forEach((el) => {
-                promises.push(this.fetchChild(
-                    el,
-                    el.getAttribute(`data-${this.identifier}-id-param`),
-                    0,
-                    el.getAttribute(`data-${this.identifier}-folder-param`)
-                ));
-            });
+            for (const el of this.toggleTargets) {
+                promises.push(
+                    this.fetchChild(
+                        el,
+                        el.getAttribute(`data-${this.identifier}-id-param`),
+                        0,
+                        el.getAttribute(`data-${this.identifier}-folder-param`),
+                    ),
+                );
+            }
 
             await Promise.all(promises);
         }
@@ -192,45 +195,47 @@ export default class extends Controller {
         this.updateOperation();
     }
 
-    keypress (event) {
+    keypress(event) {
         this.updateOperation(event);
     }
 
-    async updateState (el, id, state) {
+    async updateState(el, id, state) {
         await fetch(location.href, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
             },
             body: new URLSearchParams({
-                'action': this.toggleActionValue,
-                'id': id,
-                'state': state,
-                'REQUEST_TOKEN': this.requestTokenValue
-            })
+                action: this.toggleActionValue,
+                id: id,
+                state: state,
+                REQUEST_TOKEN: this.requestTokenValue,
+            }),
         });
     }
 
-    async updateAllState (href, state) {
+    async updateAllState(href, state) {
         await fetch(`${href}&state=${state}`);
     }
 
-    updateOperation (event) {
+    updateOperation(event) {
         if (!this.hasOperationTarget) {
             return;
         }
 
-        if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
-            this.operationTarget.innerText = this.collapseAllValue;
-            this.operationTarget.title = this.collapseAllTitleValue;
-        } else {
-            this.operationTarget.innerText = this.expandAllValue;
-            this.operationTarget.title = this.expandAllTitleValue;
+        for (const operationTarget of this.operationTargets) {
+            if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
+                operationTarget.innerText = this.collapseAllValue;
+                operationTarget.title = this.collapseAllTitleValue;
+            } else {
+                operationTarget.innerText = this.expandAllValue;
+                operationTarget.title = this.expandAllTitleValue;
+            }
         }
     }
 
-    hasExpandedRoot () {
-        return !!this.rootChildTargets.find((el) => el.style.display !== 'none')
+    hasExpandedRoot() {
+        return !!this.rootChildTargets.find((el) => el.style.display !== 'none');
     }
 }

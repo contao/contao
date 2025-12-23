@@ -1,7 +1,7 @@
-@import '~@simonwep/pickr/dist/themes/monolith.min.css';
+@import "~@simonwep/pickr/dist/themes/monolith.min.css";
 
 /* Positioning inside the widget */
-[data-controller=contao--color-picker] {
+[data-controller="contao--color-picker"] {
     .pickr {
         display: inline-block;
         vertical-align: middle;
@@ -9,7 +9,7 @@
         width: 18px;
         height: 18px;
         border: 1px solid var(--form-border);
-        border-radius: 2px;
+        border-radius: var(--border-radius);
 
         .pcr-button {
             padding: 0;
@@ -17,7 +17,9 @@
             width: 100%;
         }
 
-        .pcr-button, .pcr-button:before, .pcr-button:after {
+        .pcr-button,
+        .pcr-button::before,
+        .pcr-button::after {
             border-radius: 0;
         }
     }

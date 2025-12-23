@@ -29,11 +29,19 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     {
     }
 
-    public function renderModule(int|string $typeOrId, array $data = []): string
+    public function renderModule(array $context, int|string $typeOrId, array $data = []): string
     {
-        $model = $this->getModel(ModuleModel::class, $typeOrId, $data);
+        if ('article' === $typeOrId) {
+            $typeOrId = 0;
+        }
 
-        return $this->framework->getAdapter(Controller::class)->getFrontendModule($model);
+        return $this->framework
+            ->getAdapter(Controller::class)
+            ->getFrontendModule(
+                0 !== $typeOrId ? $this->getModel(ModuleModel::class, $typeOrId, $data) : 0,
+                $context['_slot_name'] ?? 'main',
+            )
+        ;
     }
 
     public function renderContent(ContentElementReference|int|string $typeOrId, array $data = []): string
@@ -69,7 +77,7 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     /**
      * @param class-string<ContentModel|ModuleModel> $class
      */
-    private function getModel(string $class, int|string $typeOrId, array $data = []): ContentModel|ModuleModel
+    private function getModel(string $class, int|string $typeOrId, array $data = []): ContentModel|ModuleModel|null
     {
         if (is_numeric($typeOrId)) {
             /** @var Adapter<ContentModel|ModuleModel> $adapter */
@@ -78,6 +86,10 @@ final class FragmentRuntime implements RuntimeExtensionInterface
         } else {
             $model = $this->framework->createInstance($class);
             $model->type = $typeOrId;
+        }
+
+        if (null === $model) {
+            return null;
         }
 
         foreach ($data as $k => $v) {

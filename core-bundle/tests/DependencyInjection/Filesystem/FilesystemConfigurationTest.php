@@ -22,6 +22,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -31,15 +32,13 @@ class FilesystemConfigurationTest extends TestCase
 {
     public function testGetContainer(): void
     {
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
         $config = new FilesystemConfiguration($container);
 
         $this->assertSame($container, $config->getContainer());
     }
 
-    /**
-     * @dataProvider provideReadOnlyValues
-     */
+    #[DataProvider('provideReadOnlyValues')]
     public function testAddVirtualFilesystem(bool $readOnly): void
     {
         $container = $this->getContainerBuilder();
@@ -114,9 +113,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame('path', $calls[0][1][1]);
     }
 
-    /**
-     * @dataProvider provideMountPaths
-     */
+    #[DataProvider('provideMountPaths')]
     public function testMountAdapterAutoGeneratesId(string $mountPath, string $expectedId): void
     {
         $container = $this->getContainerBuilder();
@@ -147,9 +144,7 @@ class FilesystemConfigurationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFilesystemPaths
-     */
+    #[DataProvider('provideFilesystemPaths')]
     public function testMountLocalAdapterNormalizesPath(string $filesystemPath, string $expected): void
     {
         $container = $this->getContainerBuilder([
@@ -198,7 +193,7 @@ class FilesystemConfigurationTest extends TestCase
     public function testRegisterDbafs(): void
     {
         $container = $this->getContainerBuilder();
-        $dbafsDefinition = $this->createMock(Definition::class);
+        $dbafsDefinition = $this->createStub(Definition::class);
 
         $config = new FilesystemConfiguration($container);
         $config->registerDbafs($dbafsDefinition, 'foo/bar');
@@ -209,9 +204,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame(['register', [$dbafsDefinition, 'foo/bar']], $calls[0]);
     }
 
-    /**
-     * @dataProvider provideUseLastModifiedValues
-     */
+    #[DataProvider('provideUseLastModifiedValues')]
     public function testAddDefaultDbafs(bool $useLastModified): void
     {
         $container = $this->getContainerBuilder();

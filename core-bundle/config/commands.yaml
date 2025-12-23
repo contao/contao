@@ -73,6 +73,13 @@ services:
             - '%kernel.project_dir%'
             - '@contao.twig.inspector'
 
+    contao.command.dump_twig_ide_file:
+        class: Contao\CoreBundle\Command\DumpTwigIdeFileCommand
+        arguments:
+            - '@contao.twig.ide.namespace_lookup_file_generator'
+            - '%kernel.build_dir%'
+            - '%kernel.project_dir%'
+
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
         arguments:
@@ -92,7 +99,6 @@ services:
             - '@database_connection'
             - '@contao.migration.collection'
             - '@contao.doctrine.backup_manager'
-            - '@contao.doctrine.schema_provider'
             - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
 
     contao.command.resize_images:
@@ -109,8 +115,9 @@ services:
         arguments:
             - '@messenger.receiver_locator'
             - '@contao.process_util'
-            - ~
-            - ~
+            - '@database_connection'
+            - !abstract set by ContaoCoreExtension::handleMessengerConfig()
+            - !abstract set by ContaoCoreExtension::handleMessengerConfig()
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand

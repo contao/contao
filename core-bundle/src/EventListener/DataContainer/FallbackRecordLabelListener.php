@@ -43,16 +43,22 @@ class FallbackRecordLabelListener
 
         (new DcaLoader($table))->load();
 
-        if (
-            ($defaultSearchField = $GLOBALS['TL_DCA'][$table]['list']['sorting']['defaultSearchField'] ?? null)
-            && $label = $event->getData()[$defaultSearchField] ?? null
-        ) {
+        $defaultSearchField = $GLOBALS['TL_DCA'][$table]['list']['sorting']['defaultSearchField'] ?? null;
+
+        if ($defaultSearchField && ($label = $event->getData()[$defaultSearchField] ?? null)) {
             $event->setLabel(trim(StringUtil::decodeEntities(strip_tags((string) $label))));
         } else {
             $messageDomain = "contao_$table";
-            $labelKey = $this->translator->getCatalogue()->has("$table.edit", $messageDomain) ? "$table.edit" : 'DCA.edit';
 
-            $event->setLabel($this->translator->trans($labelKey, [$event->getData()['id']], $messageDomain));
+            if ($this->translator->getCatalogue()->has("$table.edit.1", $messageDomain)) {
+                $label = $this->translator->trans("$table.edit.1", [$event->getData()['id']], $messageDomain);
+            } elseif ($this->translator->getCatalogue()->has("$table.edit", $messageDomain)) {
+                $label = $this->translator->trans("$table.edit", [$event->getData()['id']], $messageDomain);
+            } else {
+                $label = $this->translator->trans('DCA.edit.1', [$event->getData()['id']], 'contao_default');
+            }
+
+            $event->setLabel($label);
         }
     }
 }

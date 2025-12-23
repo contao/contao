@@ -3,5 +3,7 @@
         <pre>{{ html }}</pre>
     {% endblock %}
 {% else %}
-    {% block html %}{{ html|default|insert_tag|raw }}{% endblock %}
+    {% block html %}
+        {{- html|default|sanitize_html('contao')|insert_tag_raw -}}
+    {% endblock %}
 {% endif %}

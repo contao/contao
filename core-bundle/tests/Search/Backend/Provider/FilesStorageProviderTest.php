@@ -25,20 +25,23 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
 {
     public function testSupports(): void
     {
         $provider = new FilesStorageProvider(
-            $this->createMock(VirtualFilesystem::class),
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
@@ -54,14 +57,15 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
         $filesystem = new VirtualFilesystem(
             (new MountManager())->mount($adapter),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $provider = new FilesStorageProvider(
             $filesystem,
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
@@ -81,7 +85,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
     public function testUpdateIndexSince(): void
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
             ->with('', true)
@@ -92,23 +96,24 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
+        $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
         );
 
         $provider = new FilesStorageProvider(
             $filesystem,
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
-        $since = new \DateTimeImmutable('1970-01-01 01:00:00');
+        $since = new \DateTimeImmutable('1970-01-01 01:00:00+00:00');
         $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentsNewerThan($since)));
 
         $this->assertCount(1, $documents);
@@ -121,7 +126,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
     public function testLimitToDocumentIds(): void
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
             ->with('', true)
@@ -132,19 +137,20 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
+        $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
         );
 
         $provider = new FilesStorageProvider(
             $filesystem,
-            $this->createMock(Security::class),
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
@@ -160,29 +166,85 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
     public function testIsHitGranted(): void
     {
-        $security = $this->createMock(Security::class);
-        $security
-            ->method('isGranted')
-            ->willReturnMap([
+        $method = new \ReflectionMethod(Security::class, 'isGranted');
+
+        // Backwards compatibility with symfony/security-core <7.3
+        if (2 === $method->getNumberOfParameters()) {
+            $returnMap = [
                 [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', true],
                 [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', false],
-            ])
+            ];
+        } else {
+            $returnMap = [
+                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', null, true],
+                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', null, false],
+            ];
+        }
+
+        $security = $this->createStub(Security::class);
+        $security
+            ->method('isGranted')
+            ->willReturnMap($returnMap)
         ;
 
         $provider = new FilesStorageProvider(
-            $this->createMock(VirtualFilesystem::class),
+            $this->createStub(VirtualFilesystem::class),
             $security,
-            $this->createMock(Studio::class),
-            $this->createMock(RouterInterface::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
             'files',
         );
 
         $allowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'foo']);
         $disallowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'bar']);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertTrue($provider->isDocumentGranted($token, $allowedDocument));
         $this->assertFalse($provider->isDocumentGranted($token, $disallowedDocument));
+    }
+
+    public function testConvertTypeToVisibleType(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('MSC.file', [], 'contao_default')
+            ->willReturn('foobar')
+        ;
+
+        $provider = new FilesStorageProvider(
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $translator,
+            'files',
+        );
+
+        $this->assertSame('foobar', $provider->convertTypeToVisibleType('type'));
+    }
+
+    public static function getFacetLabelForTagProvider(): iterable
+    {
+        yield 'no prefix' => ['pdf', 'pdf'];
+        yield 'strip extension prefix' => ['extension:foobar', 'foobar'];
+    }
+
+    #[DataProvider('getFacetLabelForTagProvider')]
+    public function testGetFacetLabelForTag(string $tag, string $expected): void
+    {
+        $provider = new FilesStorageProvider(
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
+            $this->createStub(Studio::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
+            'files',
+        );
+
+        $this->assertSame($expected, $provider->getFacetLabelForTag($tag));
     }
 }

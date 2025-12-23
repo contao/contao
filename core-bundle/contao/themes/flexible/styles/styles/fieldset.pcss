@@ -1,0 +1,53 @@
+fieldset.tl_tbox, fieldset.tl_box {
+    min-width: 0;
+    margin-top: 5px;
+    padding-top: 0;
+    border-top: none;
+    border-left: 0;
+    border-right: 0;
+    margin-inline: 0;
+}
+
+fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {
+    border-top: 0;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend {
+    box-sizing: border-box;
+    color: var(--legend);
+    padding: 9px 12px 9px 28px;
+    background: url("icons/navcol.svg") 13px 10px no-repeat;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend[onclick] {
+    cursor: pointer;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend:has(> button) {
+    padding: 0;
+    background: none;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend > button {
+    text-align: initial;
+    border: 0 none;
+    line-height: inherit;
+    box-sizing: border-box;
+    padding: 9px 12px 9px 28px;
+    background: transparent url("icons/navcol.svg") 13px 10px no-repeat;
+    cursor: pointer;
+}
+
+fieldset.collapsed {
+    margin-bottom: 0;
+    padding-bottom: 5px;
+}
+
+fieldset.collapsed div {
+    display: none !important;
+}
+
+fieldset.collapsed > legend > button,
+fieldset.collapsed > legend:not(:has(> button)) {
+    background-image: url("icons/navexp.svg");
+}

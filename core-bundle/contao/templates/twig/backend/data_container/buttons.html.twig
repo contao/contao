@@ -1,13 +1,35 @@
-<div class="tl_formbody_submit"{% if right|default %} style="text-align:right"{% endif %}>
+{% set wrapper_attributes = attrs()
+    .addClass('tl_formbody_submit')
+    .addStyle({'text-align': 'right'}, right|default)
+    .set('data-controller', 'contao--sticky-observer')
+%}
+<div{{ wrapper_attributes }}>
     <div class="tl_submit_container">
         {% if buttons|length < 3 %}
             {{ buttons|join(' ')|raw }}
         {% else %}
             {{ buttons[0]|raw }}
-            <div class="split-button">
+            {% set button_wrapper_attributes = attrs()
+                .addClass('split-button')
+                .set('data-controller', 'contao--toggle-state')
+                .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+                .set('data-contao--toggle-state-inactive-class', 'invisible')
+            %}
+            <div{{ button_wrapper_attributes }}>
                 {{ buttons[1]|raw }}
-                <button type="button" id="sbtog">{{ backend_icon('navcol.svg') }}</button>
-                <ul class="invisible">
+                {% set button_attributes = attrs()
+                    .addClass('d-xl-none')
+                    .set('type', 'button')
+                    .set('data-contao--toggle-state-target', 'controller')
+                    .set('data-action', 'contao--toggle-state#toggle:prevent')
+                %}
+                <button{{ button_attributes }} tabindex="-1">{{ backend_icon('navcol.svg') }}</button>
+                <ul
+                    class="invisible"
+                    data-contao--toggle-state-target="controls"
+                    data-action="focusin->contao--toggle-state#open focusout->contao--toggle-state#close"
+                    data-contao--toggle-state-close-delay-param="300"
+                >
                     {% for button in buttons|slice(2) %}
                         <li>{{ button|raw }}</li>
                     {% endfor %}

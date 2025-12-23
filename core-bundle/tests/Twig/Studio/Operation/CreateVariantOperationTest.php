@@ -9,14 +9,13 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractCreateVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-class CreateVariantOperationTest extends AbstractOperationTest
+class CreateVariantOperationTest extends AbstractOperationTestCase
 {
-    /**
-     * @dataProvider provideContextsAndIfAllowedToExecute
-     */
+    #[DataProvider('provideContextsAndIfAllowedToExecute')]
     public function testCanExecute(OperationContext $context, bool $canExecute): void
     {
         $this->assertSame(
@@ -25,37 +24,37 @@ class CreateVariantOperationTest extends AbstractOperationTest
         );
     }
 
-    public function provideContextsAndIfAllowedToExecute(): iterable
+    public static function provideContextsAndIfAllowedToExecute(): iterable
     {
         yield 'arbitrary identifier' => [
-            $this->getOperationContext('bar/foo'),
+            static::getOperationContext('bar/foo'),
             false,
         ];
 
         yield 'identifier matching the prefix' => [
-            $this->getOperationContext('prefix/foo'),
+            static::getOperationContext('prefix/foo'),
             true,
         ];
 
         yield 'nested identifier matching the prefix' => [
-            $this->getOperationContext('prefix/foo/baz'),
+            static::getOperationContext('prefix/foo/baz'),
             false,
         ];
 
         yield 'arbitrary identifier in theme context' => [
-            $this->getOperationContext('bar/foo', 'theme'),
+            static::getOperationContext('bar/foo', 'theme'),
             false,
         ];
 
         yield 'identifier matching the prefix in theme context' => [
-            $this->getOperationContext('prefix/foo', 'theme'),
+            static::getOperationContext('prefix/foo', 'theme'),
             false,
         ];
     }
 
     public function testStreamDialogWhenCreatingVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderStub();
         $loader
             ->method('exists')
             ->willReturnCallback(
@@ -91,7 +90,7 @@ class CreateVariantOperationTest extends AbstractOperationTest
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -127,7 +126,7 @@ class CreateVariantOperationTest extends AbstractOperationTest
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -150,7 +149,7 @@ class CreateVariantOperationTest extends AbstractOperationTest
 
     public function testCreateVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderMock();
         $loader
             ->expects($this->once())
             ->method('warmUp')
@@ -164,7 +163,7 @@ class CreateVariantOperationTest extends AbstractOperationTest
             ->with('prefix/foo/my_variant.html.twig', 'new template content')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -179,7 +178,7 @@ class CreateVariantOperationTest extends AbstractOperationTest
             $loader,
             $storage,
             $twig,
-            $this->mockTemplateSkeletonFactory('@Contao/prefix/foo.html.twig'),
+            $this->createTemplateSkeletonFactoryStub('@Contao/prefix/foo.html.twig'),
         );
 
         $response = $operation->execute(

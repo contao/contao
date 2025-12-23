@@ -97,27 +97,23 @@
         <source>Full articles</source>
         <target>Komplette Beiträge</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.new.0">
-        <source>New</source>
-        <target>Neu</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_feed.new.1">
         <source>Create a new feed</source>
         <target>Einen neuen Feed erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.show">
+      <trans-unit id="tl_calendar_feed.show.1">
         <source>Show the details of feed ID %s</source>
         <target>Details des Feeds ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit">
+      <trans-unit id="tl_calendar_feed.edit.1">
         <source>Edit feed ID %s</source>
         <target>Feed ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy">
+      <trans-unit id="tl_calendar_feed.copy.1">
         <source>Duplicate feed ID %s</source>
         <target>Feed ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete">
+      <trans-unit id="tl_calendar_feed.delete.1">
         <source>Delete feed ID %s</source>
         <target>Feed ID %s löschen</target>
       </trans-unit>

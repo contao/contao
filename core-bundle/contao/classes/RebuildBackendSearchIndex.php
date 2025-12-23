@@ -54,8 +54,12 @@ class RebuildBackendSearchIndex extends Backend implements MaintenanceModuleInte
 
 		if (Input::post('FORM_SUBMIT') == 'tl_rebuild_backend_search' && $backendSearch->isAvailable())
 		{
-			$backendSearch->reindex(new ReindexConfig());
-			Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['backend_search']['confirmation'], self::class);
+			// Drop the entire index as the schema might have changed after an update, etc.
+			$backendSearch->clear();
+			$backendSearch->reindex((new ReindexConfig())->withRequireJob(true));
+
+			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['confirmJobAdded'], self::class);
+
 			$this->reload();
 		}
 

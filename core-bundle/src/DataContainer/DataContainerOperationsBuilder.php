@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\Backend;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
-use Contao\System;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
@@ -26,59 +26,44 @@ use Twig\Environment;
 /**
  * @internal
  */
-class DataContainerOperationsBuilder implements \Stringable
+class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuilder
 {
+    private string $table;
+
     private int|string|null $id = null;
 
-    private array|null $operations = null;
-
     public function __construct(
+        ContaoFramework $framework,
         private readonly Environment $twig,
         private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
+        parent::__construct($framework);
     }
 
     public function __toString(): string
     {
-        if (!$this->operations) {
+        $operations = $this->cleanOperations();
+
+        if (!$operations) {
             return '';
         }
 
         return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
             'id' => $this->id,
-            'operations' => $this->operations,
-            'has_primary' => [] !== array_filter(array_column($this->operations, 'primary'), static fn ($v) => null !== $v),
+            'operations' => $operations,
+            'has_primary' => [] !== array_filter(array_column($operations, 'primary'), static fn ($v) => null !== $v),
+            'globalOperations' => false,
         ]);
     }
 
-    public static function generateBackButton(string|null $href = null): string
+    public function initialize(string $table, int|string|null $id = null): self
     {
-        $href ??= System::getReferer(true);
-
-        return ' <a href="'.$href.'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ';
-    }
-
-    public static function generateClearClipboardButton(): string
-    {
-        return ' <a href="'.Backend::addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ';
-    }
-
-    public static function generateNewButton(string $table, string $href): string
-    {
-        $labelNew = $GLOBALS['TL_LANG'][$table]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
-
-        return ' <a href="'.$href.'" class="header_new" title="'.StringUtil::specialchars($labelNew[1] ?? '').'" accesskey="n" data-action="contao--scroll-offset#store">'.$labelNew[0].'</a> ';
-    }
-
-    public function initialize(int|string|null $id = null): self
-    {
-        if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been initialized.');
-        }
+        $this->ensureNotInitialized();
 
         $builder = clone $this;
         $builder->id = $id;
+        $builder->table = $table;
         $builder->operations = [];
 
         return $builder;
@@ -86,18 +71,27 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize($record['id'] ?? null);
+        $builder = $this->initialize($table, $record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return $this;
+            return $builder;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('new' === $k) {
+                continue;
+            }
+
+            if ('-' === $v) {
+                $builder->addSeparator();
+                continue;
+            }
+
             $v = \is_array($v) ? $v : [$v];
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $builder->operations[] = $operation;
+                $builder->append($operation);
             }
         }
 
@@ -106,20 +100,33 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initializeWithHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize($record['id'] ?? null);
+        $builder = $this->initialize($table, $record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return $this;
+            return $builder;
         }
 
+        $inputAdapter = $this->framework->getAdapter(Input::class);
+
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('new' === $k) {
+                continue;
+            }
+
             // Show edit operation in the header by default (backwards compatibility)
             if ('edit' === $k && !isset($v['showInHeader'])) {
                 $v['showInHeader'] = true;
             }
 
-            if (empty($v['showInHeader']) || ('select' === Input::get('act') && !($v['showOnSelect'] ?? null))) {
+            if (empty($v['showInHeader']) || ('select' === $inputAdapter->get('act') && !($v['showOnSelect'] ?? null))) {
                 continue;
+            }
+
+            if ('edit' === $k) {
+                $v['attributes'] = (new HtmlAttributes($v['attributes'] ?? null))->set(
+                    'onclick',
+                    "Backend.openModalIframe({title:'".str_replace("'", "\\'", \sprintf($v['label'][1] ?? '%s', $record['id']))."', url:this.href+'&popup=1&nb=1'});return false",
+                );
             }
 
             $v = \is_array($v) ? $v : [$v];
@@ -131,79 +138,77 @@ class DataContainerOperationsBuilder implements \Stringable
                 $v['href'] = 'table='.$table;
             }
 
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $builder->operations[] = $operation;
+                $builder->append($operation);
             }
         }
 
         return $builder;
     }
 
-    public function prepend(array $operation): self
+    /**
+     * @param "pasteinto"|"pasteafter"|"pastetop"|"pasteroot" $type
+     */
+    public function addPasteButton(string $type, string $table, string|null $href): self
     {
-        if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been initialized yet.');
+        $icon = match ($type) {
+            'pastetop' => 'pasteafter',
+            'pasteroot' => 'pasteinto',
+            default => $type,
+        };
+
+        [$label, $title] = $this->getLabelAndTitle($table, $type, $this->id);
+
+        if (null === $href) {
+            $this->append([
+                'label' => $label,
+                'icon' => $icon.'--disabled.svg',
+                'primary' => true,
+            ]);
+
+            return $this;
         }
 
-        array_unshift($this->operations, $operation);
+        $this->append([
+            'label' => $label,
+            'title' => $title,
+            'attributes' => new HtmlAttributes('data-action="contao--scroll-offset#store"'),
+            'icon' => $icon.'.svg',
+            'href' => $href,
+            'method' => 'POST',
+            'primary' => !str_starts_with($type, 'pastenew'),
+        ]);
 
         return $this;
     }
 
-    public function append(array $operation): self
+    /**
+     * @param self::CREATE_* $mode
+     */
+    public function addNewButton(string $mode, string $table, int $pid, int|null $id = null): self
     {
-        if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been initialized yet.');
-        }
+        [$label, $title] = $this->getLabelAndTitle($table, 'pastenew'.$mode, $pid);
 
-        $this->operations[] = $operation;
+        $this->append([
+            'label' => $label,
+            'title' => $title,
+            'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null))->set('data-action', 'contao--scroll-offset#store'),
+            'icon' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['icon'] ?? 'new.svg',
+            'href' => $this->getNewHref($mode, $pid, $id),
+            'method' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['method'] ?? 'POST',
+            'primary' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['primary'] ?? false,
+        ]);
 
         return $this;
     }
 
-    private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
+    private function generateOperation(string $name, array $operation, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);
 
-        // Call a custom function instead of using the default button
-        if (\is_array($operation['button_callback'] ?? null)) {
-            $callback = System::importStatic($operation['button_callback'][0]);
-            $ref = new \ReflectionMethod($callback, $operation['button_callback'][1]);
-
-            if (
-                1 === $ref->getNumberOfParameters()
-                && ($type = $ref->getParameters()[0]->getType())
-                && $type instanceof \ReflectionNamedType
-                && DataContainerOperation::class === $type->getName()
-            ) {
-                $callback->{$operation['button_callback'][1]}($config);
-            } else {
-                if (!$legacyCallback) {
-                    throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-                }
-
-                $legacyCallback($config);
-            }
-        } elseif (\is_callable($operation['button_callback'] ?? null)) {
-            $ref = new \ReflectionFunction($operation['button_callback']);
-
-            if (
-                1 === $ref->getNumberOfParameters()
-                && ($type = $ref->getParameters()[0]->getType())
-                && $type instanceof \ReflectionNamedType
-                && DataContainerOperation::class === $type->getName()
-            ) {
-                $operation['button_callback']($config);
-            } else {
-                if (!$legacyCallback) {
-                    throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-                }
-
-                $legacyCallback($config);
-            }
-        }
+        $this->executeButtonCallback($operation['button_callback'] ?? null, $config, $legacyCallback);
 
         if (null !== ($html = $config->getHtml())) {
             if ('' === $html) {
@@ -216,25 +221,48 @@ class DataContainerOperationsBuilder implements \Stringable
             ];
         }
 
-        $isPopup = $this->isPopup($name);
-        $href = $this->generateHref($config, $record, $isPopup);
+        $href = $this->generateHref($config, $record);
 
-        if (false !== ($toggle = $this->handleToggle($config, $table, $record, $operation, $href))) {
+        if (false !== ($toggle = $this->handleToggle($config, $record, $operation, $href))) {
             return $toggle;
         }
 
+        if ('show' === $name) {
+            $config['attributes']->set(
+                'onclick',
+                \sprintf(
+                    "Backend.openModalIframe({title:'%s', url:'%s'});return false",
+                    $config['title'],
+                    $href.(str_contains($href, '?') ? '&' : '?').'popup=1',
+                ),
+            );
+        }
+
+        if (null !== ($config['prefetch'] ?? null)) {
+            $config['attributes']->set('data-turbo-prefetch', $config['prefetch'] ? 'true' : 'false');
+        }
+
+        if ($config['class'] ?? null) {
+            $config['attributes']->addClass($config['class']);
+        }
+
+        // Add the key as CSS class
+        $config['attributes']->addClass($name);
+
         return [
-            'href' => $href,
-            'title' => $config['title'],
-            'popup' => $isPopup,
             'label' => $config['label'],
+            'title' => $config['title'],
             'attributes' => $config['attributes'],
-            'icon' => Image::getHtml($config['icon'], $config['label']),
+            'listAttributes' => $config['listAttributes'],
+            'icon' => $config['icon'],
+            'iconAttributes' => $config['iconAttributes'],
+            'href' => $href,
+            'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,
         ];
     }
 
-    private function generateHref(DataContainerOperation $config, array $record, bool $isPopup): string|null
+    private function generateHref(DataContainerOperation $config, array $record): string|null
     {
         if (null !== $config->getUrl()) {
             return $config->getUrl();
@@ -243,29 +271,20 @@ class DataContainerOperationsBuilder implements \Stringable
         if (!empty($config['route'])) {
             $params = ['id' => $record['id']];
 
-            if ($isPopup) {
-                $params['popup'] = '1';
-            }
-
             return $this->urlGenerator->generate($config['route'], $params);
         }
 
         if (isset($config['href'])) {
-            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($config['prefetch'] ?? false));
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
         }
 
         return null;
     }
 
-    private function isPopup(string $name): bool
-    {
-        return 'show' === $name;
-    }
-
     /**
      * Returns true if this was a toggle operation (which is added to $operations).
      */
-    private function handleToggle(DataContainerOperation $config, string $table, array $record, array $operation, string|null $href): array|false|null
+    private function handleToggle(DataContainerOperation $config, array $record, array $operation, string|null $href): array|false|null
     {
         parse_str(StringUtil::decodeEntities($config['href'] ?? $operation['href'] ?? ''), $params);
 
@@ -276,11 +295,11 @@ class DataContainerOperationsBuilder implements \Stringable
         // Do not generate the toggle icon if the user does not have access to the field
         if (
             (
-                true !== ($GLOBALS['TL_DCA'][$table]['fields'][$params['field']]['toggle'] ?? false)
-                && true !== ($GLOBALS['TL_DCA'][$table]['fields'][$params['field']]['reverseToggle'] ?? false)
+                true !== ($GLOBALS['TL_DCA'][$this->table]['fields'][$params['field']]['toggle'] ?? false)
+                && true !== ($GLOBALS['TL_DCA'][$this->table]['fields'][$params['field']]['reverseToggle'] ?? false)
             ) || (
-                DataContainer::isFieldExcluded($table, $params['field'])
-                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table.'::'.$params['field'])
+                DataContainer::isFieldExcluded($this->table, $params['field'])
+                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->table.'::'.$params['field'])
             )
         ) {
             return null;
@@ -301,22 +320,52 @@ class DataContainerOperationsBuilder implements \Stringable
 
         $state = $record[$params['field']] ? 1 : 0;
 
-        if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$table]['fields'][$params['field']]['reverseToggle'] ?? false)) {
+        if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$this->table]['fields'][$params['field']]['reverseToggle'] ?? false)) {
             $state = $record[$params['field']] ? 0 : 1;
+        }
+
+        if (isset($config['labelEnabled'])) {
+            $labelEnabled = $config['labelEnabled'];
+        } else {
+            $labelEnabled = \is_array($operation['label'] ?? null) && isset($operation['label'][3]) ? $operation['label'][3] : $config['label'];
+        }
+
+        if (isset($config['labelDisabled'])) {
+            $labelDisabled = $config['labelDisabled'];
+        } else {
+            $labelDisabled = \is_array($operation['label'] ?? null) && isset($operation['label'][4]) ? $operation['label'][4] : $config['label'];
         }
 
         if (isset($config['titleDisabled'])) {
             $titleDisabled = $config['titleDisabled'];
         } else {
-            $titleDisabled = \is_array($operation['label']) && isset($operation['label'][2]) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
+            $titleDisabled = \is_array($operation['label'] ?? null) && isset($operation['label'][2]) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
         }
+
+        $attributes = $config['attributes']
+            ->set('data-label', $labelEnabled)
+            ->set('data-label-disabled', $labelDisabled)
+            ->set('data-title', $config['title'])
+            ->set('data-title-disabled', $titleDisabled)
+            ->set('data-action', 'contao--scroll-offset#store')
+            ->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')')
+        ;
+
+        $iconAttributes = (new HtmlAttributes())
+            ->set('data-icon', $icon)
+            ->set('data-icon-disabled', $_icon)
+            ->set('data-state', $state)
+            ->set('data-alt', $config['title'])
+            ->set('data-alt-disabled', $titleDisabled)
+        ;
 
         return [
             'href' => $href,
             'title' => $state ? $config['title'] : $titleDisabled,
-            'label' => $config['label'],
-            'attributes' => ' data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
-            'icon' => Image::getHtml($state ? $icon : $_icon, $state ? $config['title'] : $titleDisabled, 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'" data-alt="'.StringUtil::specialchars($config['title']).'" data-alt-disabled="'.StringUtil::specialchars($titleDisabled).'"'),
+            'label' => $state ? $labelEnabled : $labelDisabled,
+            'attributes' => $attributes,
+            'icon' => $state ? $icon : $_icon,
+            'iconAttributes' => $iconAttributes,
             'primary' => $config['primary'] ?? null,
         ];
     }

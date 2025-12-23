@@ -19,24 +19,23 @@ use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\Input;
 use Contao\System;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DcaUrlAnalyzer
 {
-    private Request $request;
-
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly RequestStack $requestStack,
         private readonly Security $securityHelper,
         private readonly RouterInterface $router,
         private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly RecordLabeler $recordLabeler,
+        private readonly DcaRequestSwitcher $dcaRequestSwitcher,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -45,85 +44,22 @@ class DcaUrlAnalyzer
      */
     public function getCurrentTableId(Request|string|null $request = null): array
     {
-        if (\is_string($request)) {
-            $this->request = Request::create($request);
-        } elseif ($request instanceof Request) {
-            $this->request = $request;
-        } elseif (!$this->request = $this->requestStack->getCurrentRequest()) {
-            throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
-        }
-
-        return $this->findTableAndId();
+        return $this->dcaRequestSwitcher->runWithRequest($request, fn (): array => $this->findTableAndId());
     }
 
     /**
-     * @return list<array{url: string, label: string}>
+     * @return list<array{url: string, label: string, treeTrail: list<array{url: string, label: string}>|null, treeSiblings: list<array{url: string, label: string, active: bool}>|null}>
      */
-    public function getTrail(Request|string|null $request = null): array
+    public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false): array
     {
-        [$table, $id] = $this->getCurrentTableId($request);
-        $do = $this->findGet('do');
+        return $this->dcaRequestSwitcher->runWithRequest(
+            $request,
+            function () use ($limit, $withTreeTrail) {
+                [$table, $id] = $this->findTableAndId();
 
-        if (!$table || !$id) {
-            if (!$do) {
-                return [];
-            }
-
-            return [
-                [
-                    'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
-                    'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
-                ],
-            ];
-        }
-
-        $links = [];
-        $trail = $this->findTrail($table, $id);
-
-        foreach (array_reverse($trail, true) as $index => [$table, $row]) {
-            $this->framework->getAdapter(System::class)->loadLanguageFile($table);
-            (new DcaLoader($table))->load();
-
-            $query = [
-                'do' => $do,
-                'id' => (int) $row['id'],
-            ];
-
-            $childTable = $trail[$index + 1][0] ?? null;
-
-            if ($index === \count($trail) - 1) {
-                if (\in_array($this->findGet('table'), $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
-                    $childTable = $this->findGet('table');
-                }
-
-                if ($this->findGet('act')) {
-                    $query['act'] = $this->findGet('act');
-                }
-            }
-
-            if ($childTable) {
-                $query['table'] = $childTable;
-
-                if ($childTable === $table) {
-                    $query['ptable'] = $table;
-                }
-            } else {
-                $query['table'] = $table;
-                $query['act'] ??= 'edit';
-            }
-
-            $links[] = [
-                'url' => $this->router->generate('contao_backend', $query),
-                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
-            ];
-        }
-
-        $links[] = [
-            'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
-            'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
-        ];
-
-        return array_reverse($links);
+                return $this->doGetTrail($table, $id, $limit, $withTreeTrail);
+            },
+        );
     }
 
     public function getEditUrl(string $table, int $id): string|null
@@ -152,35 +88,147 @@ class DcaUrlAnalyzer
             return null;
         }
 
-        [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
+        $query = $this->dcaRequestSwitcher->runWithRequest(
+            '?'.http_build_query(['do' => $do]),
+            function () use ($table, $id, $do): array {
+                [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
 
-        $query = [
-            'do' => $do,
-            'table' => $table,
-            'ptable' => $ptable === $table ? $ptable : null,
-            'id' => $pid,
-        ];
+                $query = [
+                    'do' => $do,
+                    'table' => $table,
+                    'ptable' => $ptable === $table ? $ptable : null,
+                    'id' => $pid,
+                ];
 
-        (new DcaLoader($table))->load();
-        $currentRecord = $this->getCurrentRecord($id, $table);
+                (new DcaLoader($table))->load();
+                $currentRecord = $this->getCurrentRecord($id, $table);
 
-        // Select the parent node
-        if (
-            \in_array(
-                $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
-                [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
-                true,
-            )
-        ) {
-            $query['pn'] = (int) ($currentRecord['pid'] ?? null);
-        }
+                // Select the parent node
+                if (
+                    \in_array(
+                        $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
+                        [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
+                        true,
+                    )
+                ) {
+                    $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+                }
+
+                return $query;
+            },
+        );
 
         return $this->router->generate('contao_backend', $query);
     }
 
+    /**
+     * @return list<array{url: string, label: string, treeTrail: list<array{url: string, label: string}>|null, treeSiblings: list<array{url: string, label: string, active: bool}>|null}>
+     */
+    private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail): array
+    {
+        $do = $this->findGet('do');
+        $trail = [];
+
+        if ($table && $id) {
+            $trail = $this->findTrail($table, $id, $limit);
+        } elseif (!$do) {
+            return [];
+        }
+
+        $links = [];
+
+        foreach (array_reverse($trail, true) as $index => [$table, $row]) {
+            $this->framework->getAdapter(System::class)->loadLanguageFile($table);
+            (new DcaLoader($table))->load();
+
+            $query = [
+                'do' => $do,
+                'id' => (int) $row['id'],
+            ];
+
+            $childTable = $trail[$index + 1][0] ?? null;
+
+            if ($index === \count($trail) - 1 && \in_array($this->findGet('table'), $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
+                $childTable = $this->findGet('table');
+            }
+
+            if ($childTable) {
+                $query['table'] = $childTable;
+
+                if ($childTable === $table) {
+                    $query['ptable'] = $table;
+                }
+            } else {
+                $query['table'] = $table;
+                $query['act'] = 'edit';
+            }
+
+            if ($index === \count($trail) - 1 && $this->findGet('act')) {
+                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
+                    $links[] = [
+                        'url' => $this->router->generate('contao_backend', [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')]),
+                        'label' => $this->translator->trans(
+                            match ($this->findGet('act')) {
+                                'editAll', 'select' => 'MSC.all.0',
+                                'overrideAll' => 'MSC.all_override.0',
+                                default => throw new \LogicException(),
+                            },
+                            [],
+                            'contao_default',
+                        ),
+                        'treeTrail' => null,
+                        'treeSiblings' => null,
+                    ];
+                } else {
+                    $query['act'] = $this->findGet('act');
+                }
+            }
+
+            $treeTrail = null;
+            $treeSiblings = null;
+
+            if ($withTreeTrail && DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+                $treeTrail = $this->getRootTrail($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? '', (int) ($row['pid'] ?? 0), ['do' => $do, 'table' => $table]);
+                $treeSiblings = $this->getTreeSiblings($table, (int) ($row['pid'] ?? 0), (int) $row['id'], $query);
+            } elseif ($withTreeTrail && DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+                $treeTrail = $this->getRootTrail($table, (int) ($row['pid'] ?? 0), ['do' => $do, 'table' => $table]);
+                $treeSiblings = $this->getTreeSiblings($table, (int) ($row['pid'] ?? 0), (int) $row['id'], $query);
+            }
+
+            $links[] = [
+                'url' => $this->router->generate('contao_backend', $query),
+                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                'treeTrail' => $treeTrail,
+                'treeSiblings' => $treeSiblings,
+            ];
+        }
+
+        $links[] = [
+            'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
+            'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+            'treeTrail' => null,
+            'treeSiblings' => null,
+        ];
+
+        if ($this->findGet('clipboard')) {
+            array_unshift($links, [
+                'url' => $links[0]['url'].(str_contains($links[0]['url'], '?') ? '&' : '?').'clipboard=1',
+                'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
+                'treeTrail' => null,
+                'treeSiblings' => null,
+            ]);
+        }
+
+        if (\count($links) > $limit) {
+            array_splice($links, $limit);
+        }
+
+        return array_reverse($links);
+    }
+
     private function findGet(string $key): string|null
     {
-        $value = $this->framework->getAdapter(Input::class)->findGet($key, $this->request);
+        $value = $this->framework->getAdapter(Input::class)->findGet($key);
 
         return \is_string($value) ? $value : null;
     }
@@ -198,6 +246,9 @@ class DcaUrlAnalyzer
         return null;
     }
 
+    /**
+     * @return array{0: string|null, 1: int|null}
+     */
     private function findTableAndId(): array
     {
         $do = (string) $this->findGet('do');
@@ -226,7 +277,7 @@ class DcaUrlAnalyzer
             return [null, null];
         }
 
-        if (isset($module['callback']) || isset($module[(string) $this->findGet('key')])) {
+        if (isset($module['callback'])) {
             return [$table, null];
         }
 
@@ -234,6 +285,10 @@ class DcaUrlAnalyzer
         $pid = (int) $this->findGet('pid') ?: null;
         $act = $this->findGet('act');
         $mode = $this->findGet('mode');
+
+        if (isset($module[(string) $this->findGet('key')])) {
+            return [$table, $id];
+        }
 
         // For these actions the id parameter refers to the parent record
         if (
@@ -343,8 +398,12 @@ class DcaUrlAnalyzer
         return [$ptable, $pid];
     }
 
-    private function findTrail(string $table, int $id): array
+    private function findTrail(string $table, int $id, int $limit): array
     {
+        if ($limit < 1) {
+            return [];
+        }
+
         $currentRecord = $this->getCurrentRecord($id, $table);
 
         if (!$currentRecord) {
@@ -365,7 +424,7 @@ class DcaUrlAnalyzer
             return [[$table, $currentRecord]];
         }
 
-        return [...$this->findTrail($ptable, $pid), [$table, $currentRecord]];
+        return [...$this->findTrail($ptable, $pid, $limit - 1), [$table, $currentRecord]];
     }
 
     private function getCurrentRecord(int $id, string $table): array|null
@@ -401,5 +460,72 @@ class DcaUrlAnalyzer
         }
 
         return array_keys($modules)[0] ?? null;
+    }
+
+    private function getRootTrail(string $table, int $id, array $query): array|null
+    {
+        if (!$table || !$id) {
+            return null;
+        }
+
+        (new DcaLoader($table))->load();
+
+        if (!($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)) {
+            return null;
+        }
+
+        $links = [];
+
+        while ($id && $row = $this->getCurrentRecord($id, $table)) {
+            $links[] = [
+                'url' => $this->router->generate('contao_backend', [...$query, 'pn' => (int) $row['id']]),
+                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+            ];
+
+            $id = (int) $row['pid'];
+        }
+
+        return array_reverse($links);
+    }
+
+    private function getTreeSiblings(string $table, int $pid, int $id, array $query): array|null
+    {
+        if (!$table || !$pid) {
+            return null;
+        }
+
+        (new DcaLoader($table))->load();
+
+        $tableQuoted = $this->connection->quoteIdentifier($table);
+
+        $rows = $this->connection->fetchAllAssociative(
+            "SELECT id FROM $tableQuoted WHERE pid = ?",
+            [$pid],
+        );
+
+        $rows = array_map(fn ($row) => $this->getCurrentRecord($row['id'], $table), $rows);
+
+        usort(
+            $rows,
+            static function ($a, $b) {
+                if (isset($a['sorting'], $b['sorting'])) {
+                    return $a['sorting'] <=> $b['sorting'] ?: $a['id'] <=> $b['id'];
+                }
+
+                return $a['id'] <=> $b['id'];
+            },
+        );
+
+        $links = [];
+
+        foreach ($rows as $row) {
+            $links[] = [
+                'url' => $this->router->generate('contao_backend', [...$query, 'id' => (int) $row['id']]),
+                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                'active' => (int) $row['id'] === $id,
+            ];
+        }
+
+        return $links;
     }
 }

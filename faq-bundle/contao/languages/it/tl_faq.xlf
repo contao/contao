@@ -81,14 +81,6 @@
         <source>Please choose the files you want to attach.</source>
         <target>Seleziona i file che vuoi allegare.</target>
       </trans-unit>
-      <trans-unit id="tl_faq.noComments.0">
-        <source>Disable comments</source>
-        <target>Disabilita commenti</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.1">
-        <source>Do not allow comments for this particular FAQ.</source>
-        <target>Disabilita i commenti relativa a questa particolare FAQ</target>
-      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
         <target>Pubblica FAQ</target>
@@ -117,39 +109,31 @@
         <source>Enclosures</source>
         <target>Aggiungi file alla notizia</target>
       </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-        <target>Impostazioni avanzate</target>
-      </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
         <target>Impostazione di pubblicazione</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.new.0">
-        <source>New</source>
-        <target>Nuovo</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>Crea una nuova domanda</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show">
+      <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
         <target>Mostra dettagli domanda ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit">
+      <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
         <target>Modifica domanda ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy">
+      <trans-unit id="tl_faq.copy.1">
         <source>Duplicate question ID %s</source>
         <target>Duplica domanda ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut">
+      <trans-unit id="tl_faq.cut.1">
         <source>Move question ID %s</source>
         <target>Sposta domanda ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete">
+      <trans-unit id="tl_faq.delete.1">
         <source>Delete question ID %s</source>
         <target>Elimina domanda ID %s</target>
       </trans-unit>
@@ -159,9 +143,17 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.1">
         <source>Unpublish question ID %s</source>
+        <target>Nascondi domanda ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.2">
         <source>Publish question ID %s</source>
+        <target>Pubblica domanda ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.3">
+        <source>Unpublish</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.4">
+        <source>Publish</source>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

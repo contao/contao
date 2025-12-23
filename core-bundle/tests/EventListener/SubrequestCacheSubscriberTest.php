@@ -76,6 +76,7 @@ class SubrequestCacheSubscriberTest extends TestCase
 
         $mainResponse = new Response();
         $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+
         $subResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
@@ -132,13 +133,13 @@ class SubrequestCacheSubscriberTest extends TestCase
 
     private function onKernelRequest(SubrequestCacheSubscriber $subscriber): void
     {
-        $event = new RequestEvent($this->createMock(Kernel::class), new Request(), HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createStub(Kernel::class), new Request(), HttpKernelInterface::MAIN_REQUEST);
         $subscriber->onKernelRequest($event);
     }
 
     private function onKernelResponse(SubrequestCacheSubscriber $subscriber, Response $response, int $requestType): void
     {
-        $event = new ResponseEvent($this->createMock(Kernel::class), new Request(), $requestType, $response);
+        $event = new ResponseEvent($this->createStub(Kernel::class), new Request(), $requestType, $response);
         $subscriber->onKernelResponse($event);
     }
 }

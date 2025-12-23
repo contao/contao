@@ -18,30 +18,24 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
 class DeprecationsNodeVisitorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testHashHighPriority(): void
     {
         $this->assertSame(10, (new DeprecationsNodeVisitor())->getPriority());
     }
 
-    /**
-     * @group legacy
-     */
     public function testTriggersInsertTagDeprecation(): void
     {
         $templateContent = '<a href="{{ \'{{link_url::9}}\' }}">Test</a>';
         $environment = $this->getEnvironment($templateContent);
 
-        $this->expectDeprecation('%sYou should not rely on insert tags being replaced in the rendered HTML.%s');
+        $this->expectUserDeprecationMessageMatches('/You should not rely on insert tags being replaced in the rendered HTML\./');
 
         $environment->render('template.html.twig');
     }
@@ -55,10 +49,10 @@ class DeprecationsNodeVisitorTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

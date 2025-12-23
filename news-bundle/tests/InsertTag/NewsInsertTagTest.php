@@ -13,147 +13,182 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\InsertTag;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\InsertTag\InsertTagResult;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\NewsBundle\InsertTag\NewsInsertTag;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsInsertTagTest extends ContaoTestCase
 {
-    public function testReplacesTheNewsTags(): void
+    #[DataProvider('replacesNewsTagsProvider')]
+    public function testReplacesTheNewsTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
-        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel = $this->createClassWithPropertiesStub(NewsModel::class);
         $newsModel->headline = '"Foo" is not "bar"';
         $newsModel->teaser = '<p>Foo does not equal bar.</p>';
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $newsModel]),
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(10))
+            ->expects(null === $url ? $this->never() : $this->once())
             ->method('generate')
-            ->withConsecutive(
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-            )
-            ->willReturnOnConsecutiveCalls(
-                'news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-            )
+            ->with($newsModel, [], $referenceType)
+            ->willReturn($url ?? '')
         ;
 
-        $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new NewsInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
+        $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
-        $this->assertSame(
-            '<a href="news/foo-is-not-bar.html">"Foo" is not "bar"</a>',
-            $listener(new ResolvedInsertTag('news', new ResolvedParameters(['2']), []))->getValue(),
-        );
+        $this->assertSame($expectedValue, $result->getValue());
+        $this->assertSame($expectedOutputType, $result->getOutputType());
+    }
 
-        $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
-            $listener(new ResolvedInsertTag('news', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="news/foo-is-not-bar.html">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
-
-        $this->assertSame(
+    public static function replacesNewsTagsProvider(): iterable
+    {
+        yield [
+            'news',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
             'news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2']), []))->getValue(),
-        );
+            '<a href="news/foo-is-not-bar.html">"Foo" is not "bar"</a>',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'news',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
+            OutputType::html,
+        ];
+
+        yield [
+            'news_open',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            '<a href="news/foo-is-not-bar.html">',
+            OutputType::html,
+        ];
+
+        yield [
+            'news_open',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
+
+        yield [
+            'news_open',
+            ['2', 'absolute', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'news_open',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
+        ];
 
-        $this->assertSame(
+        yield [
+            'news_url',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            'news/foo-is-not-bar.html',
+            OutputType::url,
+        ];
+
+        yield [
+            'news_url',
+            ['2', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
+            'http://domain.tld/news/foo-is-not-bar.html',
+            OutputType::url,
+        ];
 
-        $this->assertEquals(
-            new InsertTagResult('"Foo" is not "bar"'),
-            $listener(new ResolvedInsertTag('news_title', new ResolvedParameters(['2']), [])),
-        );
+        yield [
+            'news_url',
+            ['2', 'absolute', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/news/foo-is-not-bar.html',
+            'http://domain.tld/news/foo-is-not-bar.html',
+            OutputType::url,
+        ];
 
-        $this->assertSame(
+        yield [
+            'news_url',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/news/foo-is-not-bar.html',
+            'http://domain.tld/news/foo-is-not-bar.html',
+            OutputType::url,
+        ];
+
+        yield [
+            'news_title',
+            ['2'],
+            null,
+            null,
+            '"Foo" is not "bar"',
+            OutputType::text,
+        ];
+
+        yield [
+            'news_teaser',
+            ['2'],
+            null,
+            null,
             '<p>Foo does not equal bar.</p>',
-            $listener(new ResolvedInsertTag('news_teaser', new ResolvedParameters(['2']), []))->getValue(),
-        );
+            OutputType::html,
+        ];
     }
 
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
     {
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => null]),
         ];
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
+        $listener = new NewsInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['3']), []))->getValue());
     }
 
     public function testReturnsAnEmptyUrlIfTheUrlGeneratorThrowsException(): void
     {
-        $newsModel = $this->mockClassWithProperties(NewsModel::class);
+        $newsModel = $this->createClassWithPropertiesStub(NewsModel::class);
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $newsModel]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => $newsModel]),
         ];
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
             ->willThrowException(new ForwardPageNotFoundException())
         ;
 
-        $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $listener = new NewsInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
 
         $this->assertSame('', $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['4']), []))->getValue());
     }

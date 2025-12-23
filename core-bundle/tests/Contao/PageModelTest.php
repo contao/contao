@@ -31,27 +31,26 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageModelTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -64,7 +63,7 @@ class PageModelTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
@@ -111,7 +110,7 @@ class PageModelTest extends TestCase
 
     public function testFindByPk(): void
     {
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturn(new Result([['id' => 1, 'alias' => 'alias']], ''))
@@ -132,11 +131,7 @@ class PageModelTest extends TestCase
         $this->assertSame('alias', $pageModel->alias);
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider similarAliasProvider
-     */
+    #[DataProvider('similarAliasProvider')]
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
     {
         PageModel::reset();
@@ -145,7 +140,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('execute')
-            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
             ->willReturn(new Result($rootData, ''))
         ;
 
@@ -160,13 +155,13 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('prepare')
-            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id!=?')
+            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id != ?')
             ->willReturn($aliasStatement)
         ;
 
         $this->mockDatabase($database);
 
-        $sourcePage = $this->mockClassWithProperties(PageModel::class, $page);
+        $sourcePage = $this->createClassWithPropertiesStub(PageModel::class, $page);
         $result = PageModel::findSimilarByAlias($sourcePage);
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -287,7 +282,7 @@ class PageModelTest extends TestCase
 
         $this->mockDatabase($database);
 
-        $sourcePage = $this->mockClassWithProperties(PageModel::class, [
+        $sourcePage = $this->createClassWithPropertiesMock(PageModel::class, [
             'id' => 1,
             'alias' => '',
         ]);
@@ -302,9 +297,7 @@ class PageModelTest extends TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * @dataProvider layoutInheritanceParentPagesProvider
-     */
+    #[DataProvider('layoutInheritanceParentPagesProvider')]
     public function testInheritingLayoutFromParentsInLoadDetails(array $parents, int $expectedLayout): void
     {
         $page = new PageModel();
@@ -312,7 +305,7 @@ class PageModelTest extends TestCase
 
         $numberOfParents = \count($parents);
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnCallback(
@@ -374,20 +367,15 @@ class PageModelTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     *
-     * @runInSeparateProcess
-     *
-     * @dataProvider folderUrlProvider
-     */
+    #[DataProvider('folderUrlProvider')]
+    #[RunInSeparateProcess]
     public function testFolderUrlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
     {
         if (!\defined('TL_MODE')) {
             \define('TL_MODE', 'BE');
         }
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($p) => new Result([$p], ''), $databaseResultData))
@@ -445,12 +433,9 @@ class PageModelTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -469,12 +454,9 @@ class PageModelTest extends TestCase
         $this->assertSame('/page', $page->getFrontendUrl());
     }
 
-    /**
-     * @group legacy
-     */
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -495,12 +477,9 @@ class PageModelTest extends TestCase
         $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
     }
 
-    /**
-     * @group legacy
-     */
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getAbsoluteUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;

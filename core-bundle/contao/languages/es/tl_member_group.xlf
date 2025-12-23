@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si desea evitar que el grupo esté activo antes de una fecha/hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
@@ -46,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
         <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si desea evitar que el grupo esté activo después de una fecha/hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
@@ -59,38 +61,49 @@
         <source>Group settings</source>
         <target>Configuración de grupo</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.new.0">
-        <source>New</source>
-        <target>Nuevo</target>
-      </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
         <target>Crear un nuevo grupo de miembros</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.show">
+      <trans-unit id="tl_member_group.show.1">
         <source>Show the details of member group ID %s</source>
         <target>Mostrar los detalles del ID del grupo de miembros %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit">
+      <trans-unit id="tl_member_group.edit.1">
         <source>Edit member group ID %s</source>
         <target>Editar ID de grupo de miembros %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.copy">
+      <trans-unit id="tl_member_group.copy.0">
+        <source>Duplicate</source>
+        <target>Duplicar</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.copy.1">
         <source>Duplicate member group ID %s</source>
         <target>Duplicar ID de grupo de miembros %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.delete">
+      <trans-unit id="tl_member_group.delete.1">
         <source>Delete member group ID %s</source>
         <target>Eliminar ID de grupo de miembros</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.0">
         <source>Activate/deactivate member group</source>
+        <target>Activar/desactivar grupo de miembros</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.1">
         <source>Deactivate member group ID %s</source>
+        <target>Descativar grupo de miembros ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.2">
         <source>Activate member group ID %s</source>
+        <target>Activar grupo de miembros ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.3">
+        <source>Deactivate</source>
+        <target>Desactivar</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.4">
+        <source>Activate</source>
+        <target>Activar</target>
       </trans-unit>
     </body>
   </file>

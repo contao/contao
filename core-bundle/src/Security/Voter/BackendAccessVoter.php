@@ -19,6 +19,7 @@ use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -55,7 +56,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
         return str_starts_with($attribute, 'contao_user.');
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, Vote|null $vote = null): bool
     {
         $user = $token->getUser();
 
@@ -130,6 +131,17 @@ class BackendAccessVoter extends Voter implements ResetInterface
             }
 
             return !empty($this->pagemountsCache[$user->id]) && array_intersect($subject, $this->pagemountsCache[$user->id]);
+        }
+
+        // Additionally check the "disablePermissionChecks" flag for modules
+        if ('modules' === $field) {
+            foreach ($subject as $module) {
+                foreach ($GLOBALS['BE_MOD'] as $modules) {
+                    if ($modules[$module]['disablePermissionChecks'] ?? false) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;

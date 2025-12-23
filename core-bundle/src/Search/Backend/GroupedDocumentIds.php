@@ -20,7 +20,7 @@ final class GroupedDocumentIds
     public function __construct(private array $typeToIds = [])
     {
         foreach ($this->typeToIds as $type => $ids) {
-            if (!\is_string($type) || !\is_array($ids) || array_filter($ids, 'is_string') !== $ids) {
+            if (!\is_string($type) || !\is_array($ids) || array_filter($ids, is_string(...)) !== $ids) {
                 throw new \InvalidArgumentException('Invalid input: Keys must be strings and values must be arrays of strings.');
             }
         }
@@ -97,6 +97,11 @@ final class GroupedDocumentIds
      */
     public function split(int $maxBytes): array
     {
+        // No IDs provided at all, make sure we return ourselves as a chunk
+        if ([] === $this->typeToIds) {
+            return [$this];
+        }
+
         $chunks = [];
         $currentChunk = [];
         $currentSize = 0;

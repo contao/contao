@@ -16,6 +16,7 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -37,8 +38,8 @@ class Cron
     private array $cronJobs = [];
 
     /**
-     * @param \Closure(): CronJobRepository      $repository
-     * @param \Closure(): EntityManagerInterface $entityManager
+     * @param \Closure():CronJobRepository      $repository
+     * @param \Closure():EntityManagerInterface $entityManager
      */
     public function __construct(
         private readonly \Closure $repository,
@@ -127,12 +128,16 @@ class Cron
         $entityManager = ($this->entityManager)();
         $cronJobsToBeRun = [];
 
-        $now = new \DateTimeImmutable();
+        $now = new \DateTime();
+
+        // Return if another cron process is already running
+        try {
+            $repository->lockTable();
+        } catch (LockWaitTimeoutException) {
+            return;
+        }
 
         try {
-            // Lock cron table
-            $repository->lockTable();
-
             // Go through each cron job
             foreach ($cronJobs as $cron) {
                 $interval = $cron->getInterval();
@@ -179,13 +184,13 @@ class Cron
             $entityManager->flush();
         };
 
-        $this->executeCrons($cronJobsToBeRun, $scope, $onSkip);
+        $this->executeCrons($cronJobsToBeRun, $scope, $entityManager, $onSkip);
     }
 
     /**
      * @param array<CronJob> $crons
      */
-    private function executeCrons(array $crons, string $scope, \Closure $onSkip): void
+    private function executeCrons(array $crons, string $scope, EntityManagerInterface $entityManager, \Closure $onSkip): void
     {
         $promises = [];
         $exception = null;
@@ -227,6 +232,9 @@ class Cron
         }
 
         if ($promises) {
+            // Close the DB connection until async promises have completed.
+            $entityManager->getConnection()->close();
+
             Utils::settle($promises)->wait();
         }
 

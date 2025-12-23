@@ -1,16 +1,38 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 // Core bundle assets
 Encore
     .setOutputPath('core-bundle/public/')
-    .setPublicPath('/bundles/contaocore')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public' : '/bundles/contaocore')
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader()
+    .enablePostCssLoader(options => {
+        options.postcssOptions = {
+            plugins: {
+                'postcss-preset-env': {
+                    stage: 2,
+                }
+            }
+        };
+    })
     .addEntry('backend', './core-bundle/assets/backend.js')
+    .addEntry('navigation', './core-bundle/assets/navigation.js')
+    .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
+    .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
+    })
 ;
 
 const jsConfig = Encore.getWebpackConfig();
@@ -20,28 +42,102 @@ Encore.reset();
 // Back end theme "flexible"
 Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
-    .setPublicPath('/system/themes/flexible')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible' : '/system/themes/flexible')
     .setManifestKeyPrefix('')
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .configureCssLoader(config => {
-        config.url = false;
+    .enablePostCssLoader(options => {
+        options.postcssOptions = {
+            plugins: {
+                'postcss-preset-env': {
+                    stage: 2,
+                }
+            }
+        };
     })
-    .cleanupOutputBeforeBuild(config => {
-        config.keep = /(fonts|icons|styles)\//;
+    .configureCssLoader(options => {
+        options.url = false;
     })
-    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
-    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')
-    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/conflict.css')
-    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/diff.css')
-    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/help.css')
-    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/login.css')
-    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/popup.css')
-    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/tinymce.css')
-    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/tinymce-dark.css')
+    .cleanupOutputBeforeBuild(options => {
+        options.keep = /(fonts|icons|styles)\//;
+    })
+    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.pcss')
+    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/pages/confirm.pcss')
+    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/pages/conflict.pcss')
+    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/pages/diff.pcss')
+    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/pages/help.pcss')
+    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/pages/login.pcss')
+    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/pages/popup.pcss')
+    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/light.pcss')
+    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/dark.pcss')
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
+    })
 ;
 
 const themeConfig = Encore.getWebpackConfig();
 
-module.exports = [jsConfig, themeConfig];
+Encore.reset();
+
+// Back end icons
+Encore
+    .setOutputPath('core-bundle/contao/themes/flexible/icons')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible/icons' : '/system/themes/flexible/icons')
+    .setManifestKeyPrefix('')
+    .disableSingleRuntimeChunk()
+    .addPlugin(new ImageMinimizerPlugin({
+        minimizer: {
+            implementation: ImageMinimizerPlugin.svgoMinify,
+            options: {
+                encodeOptions: {
+                    multipass: true,
+                    plugins: [{
+                        name: 'preset-default',
+                        params: {
+                            overrides: {
+                                inlineStyles: {
+                                    onlyMatchedOnce: false,
+                                },
+                                convertPathData: {
+                                    noSpaceAfterFlags: true,
+                                },
+                            },
+                        },
+                    }],
+                },
+            },
+        },
+    }))
+    .copyFiles({
+        from: './core-bundle/contao/themes/flexible/icons',
+        to: '[name].[ext]',
+        pattern: /\.svg$/,
+    })
+    .configureWatchOptions(options => {
+        // Since we overwrite the sources, we need to prevent an endless loop.
+        options.ignored = ['**/core-bundle/contao/themes/flexible/icons'];
+    })
+    .configureDevServerOptions(options => {
+        options.server = {
+            type: 'https',
+            options: {
+                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
+            }
+        };
+        options.allowedHosts = 'all';
+    })
+;
+
+const iconConfig = Encore.getWebpackConfig();
+
+delete themeConfig.devServer;
+delete iconConfig.devServer;
+
+module.exports = [jsConfig, themeConfig, iconConfig];

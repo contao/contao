@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Repository;
 use Contao\CoreBundle\Entity\CronJob;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
@@ -38,11 +40,30 @@ class CronJobRepository extends ServiceEntityRepository
         $this->connection = $connection;
     }
 
+    /**
+     * Locks the tl_cron_job table with a lock wait timeout of only 1 second.
+     *
+     * @throws LockWaitTimeoutException
+     */
     public function lockTable(): void
     {
         $table = $this->getClassMetadata()->getTableName();
 
-        $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
+        $defaultLockTimeout = $this->connection->fetchOne('SELECT @@lock_wait_timeout');
+
+        // Use default lock timeout from MariaDB, if it cannot be retrieved
+        if (false === $defaultLockTimeout) {
+            $defaultLockTimeout = 86400;
+        }
+
+        try {
+            // Set a short lock timeout, so that the next statement throws an exception sooner
+            $this->connection->executeStatement('SET SESSION lock_wait_timeout = 1');
+            $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
+        } finally {
+            // Restore the previous lock timeout
+            $this->connection->executeStatement('SET SESSION lock_wait_timeout = ?', [$defaultLockTimeout], [Types::INTEGER]);
+        }
     }
 
     public function unlockTable(): void

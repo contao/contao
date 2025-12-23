@@ -14,6 +14,7 @@ use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -52,15 +53,12 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		$request = $container->get('request_stack')->getCurrentRequest();
-		$ref = $request->attributes->get('_contao_referer_id');
-		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
+		$return = $container->get('router')->generate('contao_backend', array('do'=>'security'));
 
 		/** @var UriSigner $uriSigner */
 		$uriSigner = $container->get('uri_signer');
-		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref, 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
+		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
 
-		$this->Template->href = $this->getReferer(true);
-		$this->Template->ref = $ref;
 		$this->Template->messages = Message::generateUnwrapped();
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 
@@ -94,10 +92,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $deleteCredentialId);
-					}
+					$this->denyAccessUnlessGranted($credential);
 
 					$credentialRepo->remove($credential);
 				}
@@ -106,10 +101,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot edit credential ID ' . $editCredentialId);
-					}
+					$this->denyAccessUnlessGranted($credential);
 
 					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
 				}
@@ -123,10 +115,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot save credential ID ' . $saveCredentialId);
-					}
+					$this->denyAccessUnlessGranted($credential);
 
 					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
@@ -161,12 +150,6 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function enableTwoFactor(BackendUser $user, $return)
 	{
-		// Return if 2FA is enabled already
-		if ($user->useTwoFactor)
-		{
-			return;
-		}
-
 		$container = System::getContainer();
 		$authenticator = $container->get('contao.security.two_factor.authenticator');
 		$verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];
@@ -225,5 +208,13 @@ class ModuleTwoFactor extends BackendModule
 		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
+	}
+
+	private function denyAccessUnlessGranted(WebauthnCredential $credential): void
+	{
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP, $credential))
+		{
+			throw new AccessDeniedHttpException('Cannot access credential ID ' . $credential->getId());
+		}
 	}
 }

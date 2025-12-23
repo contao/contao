@@ -6,18 +6,18 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractRenameVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-class RenameVariantOperationTest extends AbstractOperationTest
+class RenameVariantOperationTest extends AbstractOperationTestCase
 {
-    /**
-     * @dataProvider provideContextsAndIfAllowedToExecute
-     */
+    #[DataProvider('provideContextsAndIfAllowedToExecute')]
     public function testCanExecute(OperationContext $context, bool $canExecute): void
     {
         $this->assertSame(
@@ -26,47 +26,47 @@ class RenameVariantOperationTest extends AbstractOperationTest
         );
     }
 
-    public function provideContextsAndIfAllowedToExecute(): iterable
+    public static function provideContextsAndIfAllowedToExecute(): iterable
     {
         yield 'arbitrary identifier' => [
-            $this->getOperationContext('bar/foo'),
+            static::getOperationContext('bar/foo'),
             false,
         ];
 
         yield 'identifier matching the prefix' => [
-            $this->getOperationContext('prefix/foo'),
+            static::getOperationContext('prefix/foo'),
             false,
         ];
 
         yield 'matching variant identifier' => [
-            $this->getOperationContext('prefix/foo/my_variant'),
+            static::getOperationContext('prefix/foo/my_variant'),
             true,
         ];
 
         yield 'matching nested variant identifier' => [
-            $this->getOperationContext('prefix/foo/bar/my_variant'),
+            static::getOperationContext('prefix/foo/bar/my_variant'),
             true,
         ];
 
         yield 'arbitrary identifier in theme context' => [
-            $this->getOperationContext('bar/foo', 'theme'),
+            static::getOperationContext('bar/foo', 'theme'),
             false,
         ];
 
         yield 'identifier matching the prefix in theme context' => [
-            $this->getOperationContext('prefix/foo', 'theme'),
+            static::getOperationContext('prefix/foo', 'theme'),
             false,
         ];
 
         yield 'matching variant identifier in theme context' => [
-            $this->getOperationContext('prefix/foo/my_variant', 'theme'),
+            static::getOperationContext('prefix/foo/my_variant', 'theme'),
             false,
         ];
     }
 
     public function testStreamDialogWhenRenamingVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderStub();
         $loader
             ->method('exists')
             ->willReturnCallback(
@@ -102,7 +102,7 @@ class RenameVariantOperationTest extends AbstractOperationTest
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -124,7 +124,7 @@ class RenameVariantOperationTest extends AbstractOperationTest
 
         $response = $operation->execute(
             new Request(),
-            $this->getOperationContext('prefix/foo/new_variant'),
+            static::getOperationContext('prefix/foo/new_variant'),
         );
 
         $this->assertSame('create_or_rename_variant.stream', $response->getContent());
@@ -138,7 +138,7 @@ class RenameVariantOperationTest extends AbstractOperationTest
             ->method('write')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -153,7 +153,7 @@ class RenameVariantOperationTest extends AbstractOperationTest
 
         $response = $operation->execute(
             new Request(request: ['identifier_fragment' => 'my_new_variant']),
-            $this->getOperationContext('prefix/foo/my_variant'),
+            static::getOperationContext('prefix/foo/my_variant'),
         );
 
         $this->assertSame('error.stream', $response->getContent());
@@ -161,7 +161,7 @@ class RenameVariantOperationTest extends AbstractOperationTest
 
     public function testRenameVariantTemplate(): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderMock();
         $loader
             ->expects($this->once())
             ->method('warmUp')
@@ -175,7 +175,7 @@ class RenameVariantOperationTest extends AbstractOperationTest
             ->with('prefix/foo/my_variant.html.twig', 'prefix/foo/my_new_variant.html.twig')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -197,23 +197,31 @@ class RenameVariantOperationTest extends AbstractOperationTest
             )
         ;
 
+        $cacheInvalidator = $this->createMock(CacheInvalidator::class);
+        $cacheInvalidator
+            ->expects($this->once())
+            ->method('invalidateCache')
+            ->with('prefix/foo/my_variant', null)
+        ;
+
         $operation = $this->getRenameVariantOperation(
             $loader,
             $storage,
             $twig,
-            $this->mockTemplateSkeletonFactory('@Contao/prefix/foo.html.twig'),
+            $this->createTemplateSkeletonFactoryStub('@Contao/prefix/foo.html.twig'),
             $connection,
+            $cacheInvalidator,
         );
 
         $response = $operation->execute(
             new Request(request: ['identifier_fragment' => 'my_new_variant']),
-            $this->getOperationContext('prefix/foo/my_variant'),
+            static::getOperationContext('prefix/foo/my_variant'),
         );
 
         $this->assertSame('rename_variant_result.stream', $response->getContent());
     }
 
-    private function getRenameVariantOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null, Connection|null $connection = null): AbstractRenameVariantOperation
+    private function getRenameVariantOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null, Connection|null $connection = null, CacheInvalidator|null $cacheInvalidator = null): AbstractRenameVariantOperation
     {
         $operation = new class() extends AbstractRenameVariantOperation {
             protected function getPrefix(): string
@@ -227,7 +235,7 @@ class RenameVariantOperationTest extends AbstractOperationTest
             }
         };
 
-        $container = $this->getContainer($loader, $storage, $twig, $skeletonFactory);
+        $container = $this->getContainer($loader, $storage, $twig, $skeletonFactory, $cacheInvalidator);
         $container->set('database_connection', $connection);
 
         $operation->setContainer($container);

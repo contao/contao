@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\InsertTag\OutputType;
-use Contao\StringUtil;
-use FOS\HttpCache\ResponseTagger;
+use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @internal Do not use this controller in your code
@@ -31,39 +31,53 @@ class InsertTagsController
 {
     public function __construct(
         private readonly InsertTagParser $insertTagParser,
-        private readonly ResponseTagger|null $responseTagger,
+        private readonly ContaoFramework $framework,
+        private readonly HttpKernelInterface $kernel,
     ) {
     }
 
-    public function renderAction(Request $request, string $insertTag): Response
+    public function renderAction(Request $request, string $insertTag, PageModel|null $pageModel): Response
     {
-        if (!str_starts_with($insertTag, '{{') || !str_ends_with($insertTag, '}}')) {
-            throw new BadRequestHttpException(\sprintf('Invalid insert tag "%s"', $insertTag));
+        $this->framework->initialize();
+
+        $pageModelBefore = $GLOBALS['objPage'] ?? null;
+        $GLOBALS['objPage'] = $pageModel;
+
+        $subRequest = $request->duplicate(
+            [],
+            [],
+            ['_controller' => self::class.'::renderForwardedAction', 'insertTag' => $insertTag, 'pageModel' => $pageModel],
+            null,
+            [],
+            [...$request->server->all(), 'REQUEST_URI' => '/'],
+        );
+
+        try {
+            $response = $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        } finally {
+            if (null === $pageModelBefore) {
+                unset($GLOBALS['objPage']);
+            } else {
+                $GLOBALS['objPage'] = $pageModelBefore;
+            }
         }
 
-        $result = $this->insertTagParser->renderTag(substr($insertTag, 2, -2));
+        return $response;
+    }
 
-        if (OutputType::html === $result->getOutputType()) {
-            $response = new Response($result->getValue());
-        } else {
-            $response = new Response(StringUtil::specialchars($result->getValue()));
-        }
+    /**
+     * The main action forwards to this one with a modified request that has an empty
+     * request URI. This ensures that the internal fragment URL does not get used by
+     * any nested insert tags.
+     */
+    public function renderForwardedAction(string $insertTag): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/html');
+        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
 
-        $response->setPrivate(); // always private
-
-        if ($clientCache = $request->query->getInt('clientCache')) {
-            $response->setMaxAge($clientCache);
-        } else {
-            $response->headers->addCacheControlDirective('no-store');
-        }
-
-        if ($result->getExpiresAt()) {
-            $response->setPublic();
-            $response->setExpires($result->getExpiresAt());
-            $response->headers->removeCacheControlDirective('no-store');
-        }
-
-        $this->responseTagger?->addTags($result->getCacheTags());
+        $response->setPublic();
+        $response->setContent($this->insertTagParser->replaceInline($insertTag));
 
         return $response;
     }

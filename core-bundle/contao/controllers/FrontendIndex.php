@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,11 +55,19 @@ class FrontendIndex extends Frontend
 			$GLOBALS['TL_MOOTOOLS'] ?? array(),
 			$GLOBALS['TL_JQUERY'] ?? array(),
 			$GLOBALS['TL_USER_CSS'] ?? array(),
-			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array()
+			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array(),
+			System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext()
 		);
 
 		try
 		{
+			if (LayoutModel::findById($objPage->layout)?->type === 'modern')
+			{
+				$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+				return System::getContainer()->get(RegularPageController::class)($request);
+			}
+
 			$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
 			$objHandler = new $pageType();
 
@@ -75,8 +84,11 @@ class FrontendIndex extends Frontend
 				$GLOBALS['TL_MOOTOOLS'],
 				$GLOBALS['TL_JQUERY'],
 				$GLOBALS['TL_USER_CSS'],
-				$GLOBALS['TL_FRAMEWORK_CSS']
+				$GLOBALS['TL_FRAMEWORK_CSS'],
+				$responseContext
 			) = $arrBackup;
+
+			System::getContainer()->get('contao.routing.response_context_accessor')->setResponseContext($responseContext);
 
 			throw $e;
 		}

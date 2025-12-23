@@ -20,7 +20,9 @@ use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -55,9 +57,7 @@ class DbafsManagerTest extends TestCase
         $this->assertFalse($manager->match('baz/../foobar'));
     }
 
-    /**
-     * @dataProvider provideInvalidConfigurations
-     */
+    #[DataProvider('provideInvalidConfigurations')]
     public function testValidatesTransitiveProperties(array $paths, string $exception): void
     {
         $manager = $this->getDbafsManager();
@@ -65,43 +65,44 @@ class DbafsManagerTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage($exception);
 
-        foreach ($paths as $path => $dbafsItem) {
+        foreach ($paths as $path => $featureFlags) {
+            $dbafsItem = $this->getDbafsWithProperties($featureFlags);
             $manager->register($dbafsItem, $path);
         }
     }
 
-    public function provideInvalidConfigurations(): iterable
+    public static function provideInvalidConfigurations(): iterable
     {
         yield 'more specific one which does not support last modified should be reported' => [
             [
-                'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
-                'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE),
+                'files' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE,
+                'files/media' => DbafsInterface::FEATURES_NONE,
             ],
             'The transitive feature(s) "last modified" and "file size" must be supported for any DBAFS with a path prefix "files/media", because they are also supported for "files".',
         ];
 
         yield 'should ignore valid configurations in between' => [
             [
-                'abc' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE),
-                'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
-                'abc/def' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
-                'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
+                'abc' => DbafsInterface::FEATURE_FILE_SIZE,
+                'files' => DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
+                'abc/def' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
+                'files/media' => DbafsInterface::FEATURE_MIME_TYPE,
             ],
             'The transitive feature(s) "file size" must be supported for any DBAFS with a path prefix "files/media", because they are also supported for "files".',
         ];
 
         yield 'make sure nested folders work as well' => [
             [
-                'foo' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
-                'foo/bar/baz' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
+                'foo' => DbafsInterface::FEATURE_MIME_TYPE,
+                'foo/bar/baz' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE,
             ],
             'The transitive feature(s) "mime type" must be supported for any DBAFS with a path prefix "foo/bar/baz", because they are also supported for "foo".',
         ];
 
         yield 'adding a less specific one that covers more than the children should be reported' => [
             [
-                'foo/bar' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
-                '' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
+                'foo/bar' => DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
+                '' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
             ],
             'The transitive feature(s) "last modified" must be supported for any DBAFS with a path prefix "foo/bar", because they are also supported for "".',
         ];
@@ -148,7 +149,7 @@ class DbafsManagerTest extends TestCase
 
     public function testHasResource(): void
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
@@ -196,7 +197,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(new FilesystemItem(true, 'bar', 123450))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
+        $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -219,7 +220,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(new FilesystemItem(true, 'bar', 0, 1024))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
+        $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -242,7 +243,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(new FilesystemItem(true, 'bar', 0, 0, 'image/png'))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
+        $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -387,9 +388,7 @@ class DbafsManagerTest extends TestCase
         $manager->setExtraMetadata('foo/bar/baz', $extraMetadata);
     }
 
-    /**
-     * @dataProvider provideListModes
-     */
+    #[DataProvider('provideListModes')]
     public function testListContents(bool $deep): void
     {
         $dbafs1 = $this->getDbafsListingRecords('bar', ['bar', 'baz', 'bar/file1'], $deep);
@@ -555,12 +554,12 @@ class DbafsManagerTest extends TestCase
      */
     private function getDbafsManager(EventDispatcherInterface|null $eventDispatcher = null): DbafsManager
     {
-        return new DbafsManager($eventDispatcher ?? $this->createMock(EventDispatcherInterface::class));
+        return new DbafsManager($eventDispatcher ?? $this->createStub(EventDispatcherInterface::class));
     }
 
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
             ->with($path, $deep)
@@ -575,9 +574,9 @@ class DbafsManagerTest extends TestCase
         return $dbafs;
     }
 
-    private function getDbafsWithProperties(int $featureFlags): DbafsInterface&MockObject
+    private function getDbafsWithProperties(int $featureFlags): DbafsInterface&Stub
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getSupportedFeatures')
             ->willReturn($featureFlags)
@@ -591,7 +590,7 @@ class DbafsManagerTest extends TestCase
      */
     private function getDbafsCoveringUuids(array $mapping): DbafsInterface
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getPathFromUuid')
             ->willReturnCallback(
@@ -612,7 +611,7 @@ class DbafsManagerTest extends TestCase
 
     private function getDbafsWithExtraMetadata(string $path, ExtraMetadata $extraMetadata): DbafsInterface
     {
-        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecord')
             ->with($path)

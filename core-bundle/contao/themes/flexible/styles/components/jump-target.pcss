@@ -1,0 +1,59 @@
+.jump-targets {
+    min-height: 32px;
+    padding-top: 1px;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--content-border);
+    position: sticky;
+    top: 0;
+    z-index: 3; /* Above TinyMCE */
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.jump-targets .inner {
+    overflow-x: scroll;
+    scrollbar-width: none;
+}
+
+.jump-targets .inner::-webkit-scrollbar {
+    display: none;
+}
+
+.jump-targets ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    white-space: nowrap;
+}
+
+.jump-targets li {
+    display: inline-block;
+    padding: 10px;
+    white-space: nowrap;
+    font-size: .75rem;
+}
+
+.jump-targets button {
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.jump-targets:before, .jump-targets:after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.jump-targets:before {
+    border-top-left-radius: var(--border-radius);
+    background: linear-gradient(-90deg, transparent 0, var(--panel-bg) 50%);
+}
+
+.jump-targets:after {
+    right: 0;
+    border-top-right-radius: var(--border-radius);
+    background: linear-gradient(90deg, transparent 0, var(--panel-bg) 50%);
+}

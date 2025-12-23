@@ -6,10 +6,13 @@ namespace Contao\CoreBundle\Twig\Inspector;
 
 use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeDependentExpression;
 use Contao\CoreBundle\Twig\Slots\SlotNode;
-use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
 use Twig\Node\BlockNode;
+use Twig\Node\BlockReferenceNode;
+use Twig\Node\Expression\BlockReferenceExpression;
 use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\ParentExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
@@ -17,6 +20,8 @@ use Twig\Node\PrintNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
 use Twig\Source;
 use Twig\Token;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * @experimental
@@ -24,19 +29,54 @@ use Twig\Token;
 final class InspectorNodeVisitor implements NodeVisitorInterface
 {
     /**
-     * @var list<string>
+     * @var array<string, string|null>
      */
     private array $slots = [];
 
+    /**
+     * Mapping of found block names (keys) to their usage properties (values) in the
+     * form of [0 => <uses parent function>, 1 => <is a prototype block>].
+     *
+     * @var array<string, array{0: bool, 1: bool}>
+     */
     private array $blocks = [];
+
+    /**
+     * List of found blocks that are output via a block reference expressions.
+     *
+     * @var list<string>
+     */
+    private array $calledBlocks = [];
 
     /**
      * @var \WeakMap<Source, list<string>>
      */
     private \WeakMap $prototypeBlocks;
 
+    /**
+     * @var array<string, string>
+     */
+    private array $blockNesting = [];
+
+    private string|null $currentBlock = null;
+
+    /**
+     * @var list<string>|null
+     */
+    private array|null $deprecatedFunctions = null;
+
+    /**
+     * @var list<string>|null
+     */
+    private array|null $deprecatedFilters = null;
+
+    /**
+     * @var list<array{line: int, message: string}>
+     */
+    private array $deprecations = [];
+
     public function __construct(
-        private readonly CacheItemPoolInterface $cachePool,
+        private readonly Storage $storage,
         private readonly Environment $twig,
     ) {
         $this->prototypeBlocks = new \WeakMap();
@@ -44,12 +84,34 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
     public function enterNode(Node $node, Environment $env): Node
     {
-        if ($node instanceof SlotNode) {
-            $this->slots[] = $node->getAttribute('name');
+        if ($node instanceof ModuleNode) {
+            $this->init();
+        } elseif ($node instanceof SlotNode) {
+            $this->slots[$node->getAttribute('name')] = $this->currentBlock;
         } elseif ($node instanceof BlockNode) {
-            $this->blocks[$node->getAttribute('name')] = [false, $this->isPrototype($node)];
-        } elseif ($node instanceof PrintNode && $node->getNode('expr') instanceof ParentExpression) {
-            $this->blocks[array_key_last($this->blocks)][0] = true;
+            $name = $node->getAttribute('name');
+            $this->currentBlock = $name;
+            $this->blocks[$name] = [false, $this->isPrototype($node)];
+        } elseif ($node instanceof BlockReferenceNode) {
+            $this->blockNesting[$node->getAttribute('name')] = $this->currentBlock;
+        } elseif ($node instanceof PrintNode) {
+            $expression = $node->getNode('expr');
+
+            if ($expression instanceof ParentExpression) {
+                $this->blocks[array_key_last($this->blocks)][0] = true;
+            } elseif ($expression instanceof BlockReferenceExpression && null !== ($name = $this->getValue($expression->getNode('name')))) {
+                $this->calledBlocks[] = $name;
+            }
+        } elseif ($node instanceof FunctionExpression && \in_array($name = $node->getAttribute('name'), $this->deprecatedFunctions, true)) {
+            $this->deprecations[] = [
+                'line' => $node->getTemplateLine(),
+                'message' => $this->captureDeprecation(fn () => $this->twig->getFunction($name)->triggerDeprecation()),
+            ];
+        } elseif ($node instanceof FilterExpression && \in_array($name = $node->getAttribute('name'), $this->deprecatedFilters, true)) {
+            $this->deprecations[] = [
+                'line' => $node->getTemplateLine(),
+                'message' => $this->captureDeprecation(fn () => $this->twig->getFilter($name)->triggerDeprecation()),
+            ];
         }
 
         return $node;
@@ -57,6 +119,10 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
     public function leaveNode(Node $node, Environment $env): Node
     {
+        if ($node instanceof BlockNode) {
+            $this->currentBlock = null;
+        }
+
         if (!$node instanceof ModuleNode) {
             return $node;
         }
@@ -93,15 +159,20 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             return $uses;
         };
 
-        $this->persist($node->getSourceContext()->getPath(), [
-            'slots' => array_unique($this->slots),
+        $this->storage->set($node->getSourceContext()->getPath(), [
+            'slots' => $this->slots,
             'blocks' => $this->blocks,
+            'nesting' => $this->blockNesting,
+            'calls' => $this->calledBlocks,
             'parent' => $getParent($node),
             'uses' => $getUses($node),
+            'deprecations' => $this->deprecations,
         ]);
 
         $this->slots = [];
         $this->blocks = [];
+        $this->blockNesting = [];
+        $this->calledBlocks = [];
 
         return $node;
     }
@@ -116,16 +187,31 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         return 128;
     }
 
-    private function persist(string $path, array $data): void
+    private function init(): void
     {
-        $item = $this->cachePool->getItem(Inspector::CACHE_KEY);
+        if (null !== $this->deprecatedFunctions) {
+            return;
+        }
 
-        $entries = $item->get() ?? [];
-        $entries[$path] = $data;
+        $this->deprecatedFunctions = array_values(
+            array_map(
+                static fn (TwigFunction $function): string => $function->getName(),
+                array_filter(
+                    $this->twig->getFunctions(),
+                    static fn (TwigFunction $function): bool => $function->isDeprecated(),
+                ),
+            ),
+        );
 
-        $item->set($entries);
-
-        $this->cachePool->save($item);
+        $this->deprecatedFilters = array_values(
+            array_map(
+                static fn (TwigFilter $filter): string => $filter->getName(),
+                array_filter(
+                    $this->twig->getFilters(),
+                    static fn (TwigFilter $filter): bool => $filter->isDeprecated(),
+                ),
+            ),
+        );
     }
 
     private function isPrototype(BlockNode $block): bool
@@ -174,5 +260,26 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         }
 
         return null;
+    }
+
+    private function captureDeprecation(callable $callable): string
+    {
+        $message = '';
+
+        set_error_handler(
+            static function ($type, $msg) use (&$message) {
+                if (E_USER_DEPRECATED === $type) {
+                    $message = $msg;
+                }
+
+                return false;
+            },
+        );
+
+        $callable();
+
+        restore_error_handler();
+
+        return $message;
     }
 }

@@ -67,6 +67,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $compositor = $container->findDefinition('contao.fragment.compositor');
+        $seenTagAndTypes = [];
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             // If a controller has multiple methods for different fragment types (e.g. a
@@ -79,39 +80,54 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
             $definition = $container->findDefinition((string) $reference);
             $tags = $definition->getTag($tag);
-            $definition->clearTag($tag);
+            $createChildDefinition = \count($tags) > 1;
+
+            // When creating child definitions, we clear the tag on the original service
+            if ($createChildDefinition) {
+                $definition->clearTag($tag);
+            }
 
             foreach ($tags as $attributes) {
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
                 $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
-
                 $identifier = \sprintf('%s.%s', $tag, $attributes['type']);
-                $serviceId = 'contao.fragment._'.$identifier;
 
-                // Skip redefinition of services that already exist
-                if ($container->has($serviceId)) {
+                if ($createChildDefinition) {
+                    $serviceId = 'contao.fragment._'.$identifier;
+                    $controllerDefinition = new ChildDefinition((string) $reference);
+                    $controllerDefinition->setTags($definition->getTags());
+                    $controllerReference = new Reference($serviceId);
+                    $container->setDefinition($serviceId, $controllerDefinition);
+                } else {
+                    $controllerDefinition = $definition;
+                    $controllerReference = $reference;
+                }
+
+                // Can only have one service per tag and type (highest priority wins)
+                if (\in_array($identifier, $seenTagAndTypes, true)) {
+                    $controllerDefinition->clearTag($tag);
                     continue;
                 }
 
-                $childDefinition = new ChildDefinition((string) $reference);
-                $childDefinition->setPublic(true);
+                $seenTagAndTypes[] = $identifier;
 
-                $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
+                $controllerDefinition->setPublic(true);
+                $config = $this->getFragmentConfig($container, $controllerReference, $attributes);
 
                 $attributes['priority'] ??= 0;
                 $attributes['template'] ??= substr($tag, 7).'/'.$attributes['type'];
                 $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
-                    $preHandlers[$identifier] = new Reference($serviceId);
+                    $preHandlers[$identifier] = $controllerReference;
                 }
 
                 if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
-                    $childDefinition->addMethodCall('setFragmentOptions', [$attributes]);
+                    $controllerDefinition->addMethodCall('setFragmentOptions', [$attributes]);
                 }
 
-                if (!$childDefinition->hasMethodCall('setContainer') && is_a($definition->getClass(), AbstractController::class, true)) {
-                    $childDefinition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
+                if (!$controllerDefinition->hasMethodCall('setContainer') && is_a($definition->getClass(), AbstractController::class, true)) {
+                    $controllerDefinition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
@@ -120,8 +136,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);
                 }
 
-                $childDefinition->setTags($definition->getTags());
-                $container->setDefinition($serviceId, $childDefinition);
+                if (!empty($attributes['shouldPreload'])) {
+                    trigger_deprecation('contao/core-bundle', '5.3', 'Using the fragment attribute "shouldPreload" is deprecated and will no longer work in Contao 6. Use a page type controller instead.');
+
+                    $compositor->addMethodCall('addPreload', [$identifier]);
+                }
 
                 if ($this->globalsKey && $this->proxyClass) {
                     if (!isset($attributes['category'])) {
@@ -164,7 +183,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
         // Support a specific method on the controller
         if (isset($attributes['method'])) {
-            $controller .= ':'.$attributes['method'];
+            $controller .= '::'.$attributes['method'];
         }
 
         return $controller;

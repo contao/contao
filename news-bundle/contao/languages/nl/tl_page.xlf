@@ -1,0 +1,53 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="tl_page.newsArchives.0">
+        <source>News archives</source>
+        <target>Nieuws archieven</target>
+      </trans-unit>
+      <trans-unit id="tl_page.newsArchives.1">
+        <source>Here you can choose the news archives to be included in the feed.</source>
+        <target>Kies hier de nieuws archieven welke opgenomen dienen te worden in de feed.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.0">
+        <source>Export settings</source>
+        <target>Export instellingen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.1">
+        <source>Here you can choose what will be exported.</source>
+        <target>Kies wat geëxporteerd moet worden.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.0">
+        <source>Featured items</source>
+        <target>Gekenmerkte berichten</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.1">
+        <source>Here you can choose how featured items are handled.</source>
+        <target>Kies hoe gekenmerkte nieuwsberichten behandeld moeten worden.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.archives_legend">
+        <source>News archives</source>
+        <target>Nieuws archieven</target>
+      </trans-unit>
+      <trans-unit id="tl_page.source_teaser">
+        <source>Teasers only</source>
+      </trans-unit>
+      <trans-unit id="tl_page.source_text">
+        <source>Full stories</source>
+        <target>Volledige bijdragen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.all_items">
+        <source>Show all items</source>
+        <target>Toon alle items</target>
+      </trans-unit>
+      <trans-unit id="tl_page.featured">
+        <source>Show featured items only</source>
+        <target>Alleen uitgelichte items weergeven</target>
+      </trans-unit>
+      <trans-unit id="tl_page.unfeatured">
+        <source>Skip featured items</source>
+        <target>Uitgelichte items overslaan</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

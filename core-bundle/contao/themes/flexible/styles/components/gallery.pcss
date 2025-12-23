@@ -1,0 +1,25 @@
+ul.sgallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    grid-auto-rows: 75px;
+    gap: 4px;
+    padding: 1px 0;
+}
+
+ul.sgallery:empty {
+    padding: 0;
+}
+
+ul.sgallery li {
+    min-width: 100px;
+    min-height: 75px;
+    margin: 0;
+    padding: 0;
+    background: var(--form-button);
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}

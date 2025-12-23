@@ -14,38 +14,41 @@ namespace Contao\CoreBundle\Tests\Twig\Inspector;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeDependentExpression;
-use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
+use Twig\Node\BlockNode;
+use Twig\Node\BlockReferenceNode;
 use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Nodes;
+use Twig\NodeTraverser;
 use Twig\Source;
+use Twig\Token;
+use Twig\TokenStream;
 
 class InspectorNodeVisitorTest extends TestCase
 {
     public function testHasLowPriority(): void
     {
         $inspectorNodeVisitor = new InspectorNodeVisitor(
-            new NullAdapter(),
-            $this->createMock(Environment::class),
+            $this->createStub(Storage::class),
+            $this->createStub(Environment::class),
         );
 
         $this->assertSame(128, $inspectorNodeVisitor->getPriority());
     }
 
-    /**
-     * @dataProvider provideReferenceExpressions
-     */
+    #[DataProvider('provideReferenceExpressions')]
     public function testAnalyzesParent(AbstractExpression $parentExpression, string|null $expectedName): void
     {
-        $arrayAdapter = new ArrayAdapter();
-        $environment = $this->createMock(Environment::class);
+        $storage = new Storage(new ArrayAdapter());
+        $environment = $this->createStub(Environment::class);
 
         $moduleNode = new ModuleNode(
             new BodyNode(),
@@ -57,19 +60,17 @@ class InspectorNodeVisitorTest extends TestCase
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
         );
 
-        (new InspectorNodeVisitor($arrayAdapter, $environment))->leaveNode($moduleNode, $environment);
+        (new InspectorNodeVisitor($storage, $environment))->leaveNode($moduleNode, $environment);
 
-        $item = $arrayAdapter->getItem(Inspector::CACHE_KEY);
-        $this->assertSame($expectedName, $item->get()['path/to/template.html.twig']['parent']);
+        $data = $storage->get('path/to/template.html.twig');
+        $this->assertSame($expectedName, $data['parent']);
     }
 
-    /**
-     * @dataProvider provideReferenceExpressions
-     */
+    #[DataProvider('provideReferenceExpressions')]
     public function testAnalyzesUses(AbstractExpression $useExpression, string|null $expectedName): void
     {
-        $arrayAdapter = new ArrayAdapter();
-        $environment = $this->createMock(Environment::class);
+        $storage = new Storage(new ArrayAdapter());
+        $environment = $this->createStub(Environment::class);
 
         $moduleNode = new ModuleNode(
             new BodyNode(),
@@ -83,10 +84,10 @@ class InspectorNodeVisitorTest extends TestCase
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
         );
 
-        (new InspectorNodeVisitor($arrayAdapter, $environment))->leaveNode($moduleNode, $environment);
+        (new InspectorNodeVisitor($storage, $environment))->leaveNode($moduleNode, $environment);
 
-        $item = $arrayAdapter->getItem(Inspector::CACHE_KEY);
-        $this->assertSame($expectedName, $item->get()['path/to/template.html.twig']['uses'][0][0] ?? null);
+        $data = $storage->get('path/to/template.html.twig');
+        $this->assertSame($expectedName, $data['uses'][0][0] ?? null);
     }
 
     public static function provideReferenceExpressions(): iterable
@@ -105,5 +106,66 @@ class InspectorNodeVisitorTest extends TestCase
             new class() extends AbstractExpression {},
             null,
         ];
+    }
+
+    public function testAnalyzesBlockNesting(): void
+    {
+        $storage = new Storage(new ArrayAdapter());
+
+        $environment = $this->createStub(Environment::class);
+        $environment
+            ->method('tokenize')
+            ->willReturn(new TokenStream([new Token(Token::EOF_TYPE, null, 0)]))
+        ;
+
+        $moduleNode = new ModuleNode(
+            new BodyNode([
+                new BlockReferenceNode('foo', 0),
+            ]),
+            null,
+            new Nodes([
+                'foo' => new BodyNode([
+                    new BlockNode(
+                        'foo',
+                        new Nodes([
+                            new BlockReferenceNode('bar', 0),
+                        ]),
+                        0,
+                    ),
+                ]),
+                'bar' => new BodyNode([
+                    new BlockNode(
+                        'bar',
+                        new Nodes([
+                            new BlockReferenceNode('baz', 0),
+                        ]),
+                        0,
+                    ),
+                ]),
+                'baz' => new BodyNode([
+                    new BlockNode('baz', new EmptyNode(), 0),
+                ]),
+            ]),
+            new EmptyNode(),
+            new EmptyNode(),
+            null,
+            new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
+        );
+
+        $inspectorNodeVisitor = new InspectorNodeVisitor($storage, $environment);
+
+        $nodeTraverser = new NodeTraverser($environment, [$inspectorNodeVisitor]);
+        $nodeTraverser->traverse($moduleNode);
+
+        $data = $storage->get('path/to/template.html.twig');
+
+        $this->assertSame(
+            [
+                'foo' => null,
+                'bar' => 'foo',
+                'baz' => 'bar',
+            ],
+            $data['nesting'],
+        );
     }
 }

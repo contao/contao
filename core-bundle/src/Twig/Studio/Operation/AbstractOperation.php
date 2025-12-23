@@ -9,6 +9,7 @@ use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,6 +65,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;
         $services['contao.twig.studio.template_skeleton_factory'] = TemplateSkeletonFactory::class;
         $services['contao.twig.finder_factory'] = FinderFactory::class;
+        $services['contao.twig.studio.cache_invalidator'] = CacheInvalidator::class;
 
         return $services;
     }
@@ -93,6 +95,11 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->container->get('contao.twig.finder_factory')->create();
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     protected function userTemplateExists(OperationContext $context): bool
     {
         // Check if the first template in the chain is a custom template from the
@@ -106,9 +113,12 @@ abstract class AbstractOperation extends AbstractController implements Operation
         };
     }
 
-    protected function getName(): string
+    protected function invalidateTemplateCache(OperationContext $context): void
     {
-        return $this->name;
+        $this->container
+            ->get('contao.twig.studio.cache_invalidator')
+            ->invalidateCache($context->getIdentifier(), $context->getThemeSlug())
+        ;
     }
 
     protected function refreshTemplateHierarchy(): void

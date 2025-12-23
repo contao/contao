@@ -10,8 +10,13 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\KeyValueWizard" is deprecated and will no longer work in Contao 6. Use the RowWizard instead.');
+
 /**
  * Provide methods to handle key value pairs.
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use the RowWizard instead.
  *
  * @property integer $maxlength
  */
@@ -102,56 +107,17 @@ class KeyValueWizard extends Widget
 	 */
 	public function generate()
 	{
-		$arrButtons = array('copy', 'delete', 'drag');
-
 		// Make sure there is at least an empty array
 		if (!\is_array($this->varValue) || empty($this->varValue[0]))
 		{
 			$this->varValue = array(array(''));
 		}
 
-		// Begin the table
-		$return = '<table id="ctrl_' . $this->strId . '" class="tl_key_value_wizard">
-  <thead>
-    <tr>
-      <th>' . ($this->keyLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_key']) . '</th>
-      <th>' . ($this->valueLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_value']) . '</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody class="sortable">';
-
-		// Add fields
-		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
-		{
-			$return .= '
-    <tr>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][key]" id="' . $this->strId . '_key_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['key'] ?? '') . '"' . $this->getAttributes() . '></td>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][value]" id="' . $this->strId . '_value_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['value'] ?? '') . '"' . $this->getAttributes() . '></td>';
-
-			// Add row buttons
-			$return .= '
-      <td class="tl_right">';
-
-			foreach ($arrButtons as $button)
-			{
-				if ($button == 'drag')
-				{
-					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
-				}
-				else
-				{
-					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['ow_' . $button]) . '</button>';
-				}
-			}
-
-			$return .= '</td>
-    </tr>';
-		}
-
-		return $return . '
-  </tbody>
-  </table>
-  <script>Backend.keyValueWizard("ctrl_' . $this->strId . '")</script>';
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/key_value_wizard.html.twig', array(
+			'id' => $this->strId,
+			'keyLabel' => $this->keyLabel,
+			'valueLabel' => $this->valueLabel,
+			'rows' => $this->varValue,
+		));
 	}
 }

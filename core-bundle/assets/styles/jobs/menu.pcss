@@ -1,0 +1,71 @@
+[data-controller="contao--jobs"] {
+    #running-jobs {
+        display: none;
+
+        li {
+            line-height: normal;
+
+            &:not(:last-child) {
+                padding-bottom: 3px;
+            }
+        }
+    }
+
+    sup {
+        pointer-events: none;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    &:has([data-contao--jobs-target="count"]:empty) #running-jobs {
+        display: none;
+    }
+
+    /* Show an overlay on hover if there is at least one running job. */
+    &:hover #running-jobs {
+        display: flex;
+        position: absolute;
+        top: calc(100% + 5px);
+        right: 0;
+        width: max-content;
+        padding: 15px 20px;
+        color: var(--text);
+        background-color: var(--content-bg);
+        border: 1px solid var(--content-border);
+        box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
+
+        /* Higher z-index than jump-targets navigation */
+        z-index: 4;
+
+        &::before {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 0;
+            height: 0;
+            right: 9px;
+            top: -14px;
+            border: 7px solid transparent;
+            border-bottom-color: var(--content-bg);
+        }
+
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            top: -6px;
+            right: 11px;
+            border-top: 1px solid var(--content-border);
+            border-right: 1px solid var(--content-border);
+            transform: rotateZ(-45deg);
+        }
+
+        .jobs-progress {
+            display: inline-block;
+        }
+    }
+}

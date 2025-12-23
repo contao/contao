@@ -12,20 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
-use Contao\CoreBundle\Routing\AbstractPageRouteProvider;
+use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Routing\Route;
 
 class AbstractPageRouteProviderTest extends TestCase
 {
-    /**
-     * @dataProvider compareRoutesProvider
-     */
+    #[DataProvider('compareRoutesProvider')]
     public function testCompareRoutes(Route $a, Route $b, array|null $languages, int $expected): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
+        if ($a->hasDefault('pageModel')) {
+            $a->setDefault('pageModel', $this->mockPageModel(...$a->getDefault('pageModel')));
+        }
+
+        if ($b->hasDefault('pageModel')) {
+            $b->setDefault('pageModel', $this->mockPageModel(...$b->getDefault('pageModel')));
+        }
+
+        $instance = $this->createStub(RouteProvider::class);
         $class = new \ReflectionClass($instance);
 
         if (null !== $languages) {
@@ -39,7 +46,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function compareRoutesProvider(): iterable
+    public static function compareRoutesProvider(): iterable
     {
         yield 'Sorts route with host higher' => [
             new Route('', [], [], [], 'www.example.com'),
@@ -63,215 +70,213 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield 'Sorts route higher if it is fallback and no languages match' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en', true)]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en', true]]),
+            new Route('', ['pageModel' => ['de']]),
             null,
             -1,
         ];
 
         yield 'Sorts route lower if it is not fallback and no languages match' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de', true)]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de', true]]),
             null,
             1,
         ];
 
         yield 'Sorts route higher if it matches a preferred language' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de']]),
             ['en'],
             -1,
         ];
 
         yield 'Sorts route lower if it does not match a preferred language' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de']]),
             ['de'],
             1,
         ];
 
         yield 'Sorts route higher if preferred language has higher priority' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de']]),
             ['en', 'de'],
             -1,
         ];
 
         yield 'Sorts route lower lower if preferred language has lower priority' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de']]),
             ['de', 'en'],
             1,
         ];
 
         yield 'Sorts route higher if preferred language has higher priority with region' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
+            new Route('', ['pageModel' => ['en-US']]),
+            new Route('', ['pageModel' => ['de-CH']]),
             ['en-US', 'de-CH'],
             -1,
         ];
 
         yield 'Sorts route lower lower if preferred language has lower priority with region' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
+            new Route('', ['pageModel' => ['en-US']]),
+            new Route('', ['pageModel' => ['de-CH']]),
             ['de-CH', 'en-US'],
             1,
         ];
 
         yield 'Sorts route by preferred language if region does not match' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de']]),
             ['de-CH', 'en-US'],
             1,
         ];
 
         yield 'Sorts route by preferred language if one region matches' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de']]),
             ['de-CH', 'en-US', 'en'],
             1,
         ];
 
         yield 'Sorts route by language (1)' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
+            new Route('', ['pageModel' => ['de-CH']]),
+            new Route('', ['pageModel' => ['en-US']]),
             ['en', 'de'],
             1,
         ];
 
         yield 'Sorts route by language (2)' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
+            new Route('', ['pageModel' => ['de-CH']]),
+            new Route('', ['pageModel' => ['en-US']]),
             ['de', 'en'],
             -1,
         ];
 
         yield 'Sorts route by language (3)' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
+            new Route('', ['pageModel' => ['de-CH']]),
+            new Route('', ['pageModel' => ['en-US']]),
             ['de', 'en-US'],
             -1,
         ];
 
         yield 'Sorts route by language (4)' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
+            new Route('', ['pageModel' => ['de']]),
+            new Route('', ['pageModel' => ['en-US']]),
             ['en', 'de'],
             1,
         ];
 
         yield 'Sorts route by language (5)' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
+            new Route('', ['pageModel' => ['de']]),
+            new Route('', ['pageModel' => ['en-US']]),
             ['en', 'de', 'en-US'],
             -1,
         ];
 
         yield 'Sorts route by language (6)' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
-            new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
+            new Route('', ['pageModel' => ['de-CH']]),
+            new Route('', ['pageModel' => ['en-US']]),
             ['en-GB', 'de', 'en-US'],
             -1,
         ];
 
         yield 'Sorts route by language (7)' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de-DE')]),
+            new Route('', ['pageModel' => ['de-CH']]),
+            new Route('', ['pageModel' => ['de-DE']]),
             ['de-AT', 'de-CH'],
             -1,
         ];
 
         yield 'Sorts route by route priority' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de', false, false, 128, 1)]),
-            new Route('', ['pageModel' => $this->mockPageModel('de', false, false, 128, 10)]),
+            new Route('', ['pageModel' => ['de', false, false, 128, 1]]),
+            new Route('', ['pageModel' => ['de', false, false, 128, 10]]),
             ['de', 'de'],
             1,
         ];
 
         yield 'Sorts route with required parameters first (1)' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
+            new Route('/foo{!parameters}', ['pageModel' => ['de']], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => ['de']], ['parameters' => '(/.+?)?']),
             ['de', 'de'],
             -1,
         ];
 
         yield 'Sorts route with required parameters first (2)' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => ['de']], ['parameters' => '(/.+?)?']),
+            new Route('/foo{!parameters}', ['pageModel' => ['de']], ['parameters' => '/.+?']),
             ['de', 'de'],
             1,
         ];
 
         yield 'Ignores required parameters with equal requirement' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => ['de']], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => ['de']], ['parameters' => '/.+?']),
             ['de', 'de'],
             0,
         ];
 
         yield 'Sorts route by root page priority' => [
-            new Route('', ['pageModel' => $this->mockPageModel('de-CH', false, false, 256)]),
-            new Route('', ['pageModel' => $this->mockPageModel('de-DE', false, false, 100)]),
+            new Route('', ['pageModel' => ['de-CH', false, false, 256]]),
+            new Route('', ['pageModel' => ['de-DE', false, false, 100]]),
             ['de', 'en-US'],
             1,
         ];
 
         yield 'Sorts route lower if it is a root page' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('', ['pageModel' => $this->mockPageModel('de', false, true)]),
+            new Route('', ['pageModel' => ['en']]),
+            new Route('', ['pageModel' => ['de', false, true]]),
             null,
             -1,
         ];
 
         yield 'Sorts route higher if it is not a root page' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en', false, true)]),
-            new Route('', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('', ['pageModel' => ['en', false, true]]),
+            new Route('', ['pageModel' => ['de']]),
             null,
             1,
         ];
 
         yield 'Sorting is undefined if both are root page' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en', false, true)]),
-            new Route('', ['pageModel' => $this->mockPageModel('de', false, true)]),
+            new Route('', ['pageModel' => ['en', false, true]]),
+            new Route('', ['pageModel' => ['de', false, true]]),
             null,
             0,
         ];
 
         yield 'Sorts by number of slashes in path (1)' => [
-            new Route('/foo/bar', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('/bar', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('/foo/bar', ['pageModel' => ['en']]),
+            new Route('/bar', ['pageModel' => ['de']]),
             null,
             -1,
         ];
 
         yield 'Sorts by number of slashes in path (2)' => [
-            new Route('/foo', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('/bar/foo', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('/foo', ['pageModel' => ['en']]),
+            new Route('/bar/foo', ['pageModel' => ['de']]),
             null,
             1,
         ];
 
         yield 'Sorts by number of slashes in path (3)' => [
-            new Route('/foo/bar/baz', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('/bar/foo/baz/x', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('/foo/bar/baz', ['pageModel' => ['en']]),
+            new Route('/bar/foo/baz/x', ['pageModel' => ['de']]),
             null,
             1,
         ];
 
         yield 'Sorts by path string if it has the same number of slashes' => [
-            new Route('/foo/bar/baz', ['pageModel' => $this->mockPageModel('en')]),
-            new Route('/bar/foo/baz', ['pageModel' => $this->mockPageModel('de')]),
+            new Route('/foo/bar/baz', ['pageModel' => ['en']]),
+            new Route('/bar/foo/baz', ['pageModel' => ['de']]),
             null,
             1,
         ];
     }
 
-    /**
-     * @dataProvider ordersRoutesByPreferredLanguages
-     */
+    #[DataProvider('ordersRoutesByPreferredLanguages')]
     public function testOrdersRoutesByPreferredLanguages(array $pageLanguages, array $preferredLanguages, array $expected): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
+        $instance = $this->createStub(RouteProvider::class);
         $class = new \ReflectionClass($instance);
 
         $method = $class->getMethod('convertLanguagesForSorting');
@@ -379,12 +384,10 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider convertLanguageForSortingProvider
-     */
+    #[DataProvider('convertLanguageForSortingProvider')]
     public function testConvertLanguagesForSorting(array $languages, array $expected): void
     {
-        $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
+        $instance = $this->createStub(RouteProvider::class);
 
         $class = new \ReflectionClass($instance);
         $method = $class->getMethod('convertLanguagesForSorting');
@@ -426,9 +429,9 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
     }
 
-    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128, int $routePriority = 0): PageModel&MockObject
+    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128, int $routePriority = 0): PageModel&Stub
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->type = $root ? 'root' : 'regular';
         $pageModel->rootLanguage = $language;
         $pageModel->rootIsFallback = $fallback;

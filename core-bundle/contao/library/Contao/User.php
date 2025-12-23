@@ -38,6 +38,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string            $email
  * @property string            $language
  * @property string            $backendTheme
+ * @property integer           $backendWidth
  * @property string            $uploader
  * @property boolean           $showHelp
  * @property boolean           $thumbnails
@@ -118,6 +119,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Authentication hash
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strHash;
 
@@ -130,6 +132,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Cookie name
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strCookie;
 
@@ -293,7 +296,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function isMemberOf($ids)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
 
 		// Filter non-numeric values
 		$ids = array_filter((array) $ids, static function ($val) { return (string) (int) $val === (string) $val; });
@@ -339,11 +342,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public static function loadUserBy(string $column, mixed $value): self|null
 	{
-		if (!System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			return null;
-		}
-
 		$user = new static();
 
 		// Load the user object
@@ -456,5 +454,15 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		return true;
+	}
+
+	public function getDisplayName(): string
+	{
+		throw new \BadMethodCallException(\sprintf('%s not implemented in %s.', __FUNCTION__, self::class));
+	}
+
+	public function getPasskeyUserHandle(): string
+	{
+		throw new \BadMethodCallException(\sprintf('%s not implemented in %s.', __FUNCTION__, self::class));
 	}
 }

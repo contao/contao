@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -27,23 +26,16 @@ use Contao\Model;
 use Contao\Model\Registry;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 class StringUtilTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,9 +47,9 @@ class StringUtilTest extends TestCase
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('request_stack', new RequestStack());
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
     }
@@ -93,9 +85,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo123', StringUtil::generateAlias('foo123'));
     }
 
-    /**
-     * @dataProvider getBase32
-     */
+    #[DataProvider('getBase32')]
     public function testEncodeDecodeBase32(string $binary, string $base32): void
     {
         $this->assertSame($base32, StringUtil::encodeBase32($binary));
@@ -158,9 +148,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('00011111', StringUtil::encodeBase32(StringUtil::decodeBase32('oO0iLIl1')));
     }
 
-    /**
-     * @dataProvider getBase32Invalid
-     */
+    #[DataProvider('getBase32Invalid')]
     public function testThrowsForInvalidBase32(string $invalid): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -231,6 +219,12 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir($this->getFixturesDir());
     }
 
+    public function testDecodesEntities(): void
+    {
+        $this->assertSame("10\u{a0}€", StringUtil::decodeEntities('10&nbsp;€'));
+        $this->assertSame(['sum' => "10\u{a0}€"], StringUtil::decodeEntities(['sum' => '10&nbsp;€']));
+    }
+
     public function testHandlesFalseyValuesWhenDecodingEntities(): void
     {
         $this->assertSame('0', StringUtil::decodeEntities(0));
@@ -240,9 +234,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('', StringUtil::decodeEntities(null));
     }
 
-    /**
-     * @dataProvider trimsplitProvider
-     */
+    #[DataProvider('trimsplitProvider')]
     public function testSplitsAndTrimsStrings(string $pattern, string $string, array $expected): void
     {
         $this->assertSame($expected, StringUtil::trimsplit($pattern, $string));
@@ -287,9 +279,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getRevertInputEncoding
-     */
+    #[DataProvider('getRevertInputEncoding')]
     public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
@@ -314,9 +304,7 @@ class StringUtilTest extends TestCase
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
     }
 
-    /**
-     * @dataProvider validEncodingsProvider
-     */
+    #[DataProvider('validEncodingsProvider')]
     public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string|null $fromEncoding = null): void
     {
         $prevSubstituteCharacter = mb_substitute_character();
@@ -331,7 +319,7 @@ class StringUtilTest extends TestCase
         mb_substitute_character($prevSubstituteCharacter);
     }
 
-    public function validEncodingsProvider(): iterable
+    public static function validEncodingsProvider(): iterable
     {
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
@@ -424,9 +412,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getAddBasePathData
-     */
+    #[DataProvider('getAddBasePathData')]
     public function testAddsTheBasePath(string $expected, string $data): void
     {
         $this->assertSame($expected, StringUtil::addBasePath($data));
@@ -450,9 +436,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getRemoveBasePathData
-     */
+    #[DataProvider('getRemoveBasePathData')]
     public function testRemovesTheBasePath(string $expected, string $data): void
     {
         $this->assertSame($expected, StringUtil::removeBasePath($data));
@@ -476,9 +460,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider numberToStringProvider
-     */
+    #[DataProvider('numberToStringProvider')]
     public function testNumberToString(float|int $source, string $expected, int|null $precision = null): void
     {
         $this->assertSame($expected, StringUtil::numberToString($source, $precision));
@@ -507,9 +489,7 @@ class StringUtilTest extends TestCase
         yield [1.23456, '1.2', 2];
     }
 
-    /**
-     * @dataProvider numberToStringFailsProvider
-     */
+    #[DataProvider('numberToStringFailsProvider')]
     public function testNumberToStringFails(float|int $source, string $exception, int|null $precision = null): void
     {
         $this->expectException($exception);
@@ -580,26 +560,8 @@ class StringUtilTest extends TestCase
 
     public function testInsertTagToSrc(): void
     {
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
-        $schemaManager
-            ->method('introspectSchema')
-            ->willReturn(new Schema())
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('createSchemaManager')
-            ->willReturn($schemaManager)
-        ;
-
-        $container = System::getContainer();
-        $container->set('database_connection', $connection);
-
-        $finder = new ResourceFinder(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
-        $container->set('contao.resource_finder', $finder);
-
-        $locator = new FileLocator(Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
-        $container->set('contao.resource_locator', $locator);
+        $container = $this->getContainerWithFixtures();
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files'] = [];
         $GLOBALS['TL_MODELS']['tl_files'] = FilesModel::class;
@@ -625,5 +587,77 @@ class StringUtilTest extends TestCase
             'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
             StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
         );
+    }
+
+    #[DataProvider('basicEntitiesProvider')]
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
+    {
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
+        $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
+    }
+
+    public static function basicEntitiesProvider(): iterable
+    {
+        yield 'String value' => [
+            'foo&amp;bar&ZeroWidthSpace;baz',
+            'foo[&]bar[zwsp]baz',
+        ];
+
+        yield 'InputUnit field' => [
+            [
+                'unit' => 'h2',
+                'value' => '&lt;strong&gt; and &lsqb;-&rsqb;',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '[lt]strong[gt] and [lsqb]-[rsqb]',
+            ],
+        ];
+
+        yield 'KeyValue wizard' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10&nbsp;€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con&shy;tao',
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10[nbsp]€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con[-]tao',
+                ],
+            ],
+        ];
+
+        yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+        ];
     }
 }

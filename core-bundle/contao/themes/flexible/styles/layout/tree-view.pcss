@@ -1,0 +1,133 @@
+/* Tree view */
+.tl_folder_top {
+    min-height: 18px;
+    padding: 6px;
+    border-bottom: 1px solid var(--border);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    background: var(--table-header);
+}
+
+.tl_folder_top .tl_right .operations img {
+    position: relative;
+    top: 1px;
+}
+
+.tl_folder {
+    padding: calc(var(--row-padding) - 1px) 6px;
+    border-bottom: 1px solid var(--border);
+    background: var(--table-header);
+}
+
+.tl_folder.tl_folder_dropping, .tl_folder_top.tl_folder_dropping {
+    background-color: var(--drag-bg) !important;
+    color: var(--text) !important;
+}
+
+.tl_folder.tl_folder_dropping a, .tl_folder_top.tl_folder_dropping a {
+    color: inherit;
+}
+
+.tl_listing .drag-handle {
+    align-self: flex-start;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.tl_listing .tl_left {
+    flex-grow: 1;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;
+    min-height: 18px;
+}
+
+.tl_listing .tl_left.tl_left_dragging {
+    position: absolute;
+    background: var(--drag-bg);
+    border-radius: 10px;
+    color: var(--text);
+    padding: 5px 10px !important;
+    margin-left: 0;
+    text-indent: 0;
+    white-space: nowrap;
+}
+
+.tl_listing .tl_left.tl_left_dragging .preview-image, .tl_listing .tl_left.tl_left_dragging a img {
+    display: none;
+}
+
+.tl_listing .tl_left.tl_left_dragging a, .tl_listing .tl_left.tl_left_dragging .tl_gray {
+    color: inherit;
+}
+
+.tl_listing_dragging .hover-div:not(.tl_folder):hover {
+    background-color: transparent !important;
+}
+
+.tl_listing .tl_left a:hover {
+    color: var(--text);
+}
+
+.tl_listing .tl_left img:not(.preview-image, .preview-important) {
+    margin-top: -3px;
+}
+
+.tl_file_manager .preview-image {
+    max-width: 100px;
+    max-height: 75px;
+    width: auto;
+    height: auto;
+    margin: 3px 0 2px 22px;
+    border-radius: var(--border-radius);
+}
+
+.tl_file_manager .preview-important {
+    max-width: 80px;
+    max-height: 60px;
+    width: auto;
+    height: auto;
+    margin: 3px 0 2px 0;
+    vertical-align: bottom;
+    border-radius: var(--border-radius);
+}
+
+.tl_listing .tl_right {
+    padding: 0 0 0 9px;
+    white-space: nowrap;
+}
+
+.tl_folder .tl_right {
+    padding-top: 1px;
+}
+
+@-moz-document url-prefix() {
+    .tl_listing .tl_right {
+        padding-top: 0;
+    }
+}
+
+.tl_listing, .tl_listing ul {
+    margin: 0;
+    padding: 0;
+}
+
+.tl_listing li {
+    display: flex;
+    margin: 0;
+    list-style-type: none;
+}
+
+.tl_listing li.parent {
+    display: inline;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+label.tl_change_selected {
+    margin-right: 2px;
+    color: var(--gray);
+    font-size: .75rem;
+}

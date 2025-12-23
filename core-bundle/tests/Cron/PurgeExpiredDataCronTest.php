@@ -17,17 +17,15 @@ use Contao\CoreBundle\Cron\PurgeExpiredDataCron;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
-use Symfony\Bridge\PhpUnit\ClockMock;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Clock\MockClock;
 
 class PurgeExpiredDataCronTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider cleanupLogsAndUndoProvider
-     */
+    #[DataProvider('cleanupLogsAndUndoProvider')]
     public function testCleanupLogsAndUndo(int $undoPeriod, int $logPeriod, int $versionPeriod): void
     {
         $mockedTime = 1142164800;
-        ClockMock::withClockMock($mockedTime);
 
         $expectedStatements = [];
 
@@ -55,27 +53,31 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ];
         }
 
-        $config = $this->mockAdapter(['get']);
+        $config = $this->createAdapterMock(['get']);
         $config
             ->expects($this->exactly(3))
             ->method('get')
-            ->withConsecutive(['undoPeriod'], ['logPeriod'], ['versionPeriod'])
-            ->willReturn($undoPeriod, $logPeriod, $versionPeriod)
+            ->willReturnMap([
+                ['undoPeriod', $undoPeriod],
+                ['logPeriod', $logPeriod],
+                ['versionPeriod', $versionPeriod],
+            ])
         ;
 
         $connection = $this->createMock(Connection::class);
+        $matcher = $this->exactly(\count($expectedStatements));
         $connection
-            ->expects($this->exactly(\count($expectedStatements)))
+            ->expects($matcher)
             ->method('executeStatement')
-            ->withConsecutive(...$expectedStatements)
+            ->with($this->callback(
+                static fn (...$parameters): bool => $expectedStatements[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
         ;
 
-        $framework = $this->mockContaoFramework([Config::class => $config]);
+        $framework = $this->createContaoFrameworkStub([Config::class => $config]);
 
-        $cron = new PurgeExpiredDataCron($framework, $connection);
+        $cron = new PurgeExpiredDataCron($framework, $connection, new MockClock('@'.$mockedTime));
         $cron->onHourly();
-
-        ClockMock::withClockMock(false);
     }
 
     public static function cleanupLogsAndUndoProvider(): iterable

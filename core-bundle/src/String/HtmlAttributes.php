@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\String;
 
+use Contao\StringUtil;
+
 /**
  * @implements \IteratorAggregate<string, string>
- * @implements \ArrayAccess<string, string|int|bool|\Stringable|null>
+ * @implements \ArrayAccess<string, \Stringable|bool|float|int|string|null>
  */
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
@@ -26,7 +28,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     private bool $doubleEncoding = false;
 
     /**
-     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+     * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
     public function __construct(self|iterable|string|null $attributes = null)
     {
@@ -49,7 +51,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+     * @param iterable<string, \Stringable|bool|float|int|string|null>|string|self|null $attributes
      */
     public function mergeWith(self|iterable|string|null $attributes = null, mixed $condition = true): self
     {
@@ -58,11 +60,11 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         // Merge values if possible, set them otherwise
-        $mergeSet = function (string $name, \Stringable|bool|int|string|null $value): void {
+        $mergeSet = function (string $name, \Stringable|bool|float|int|string|null $value): void {
             if ('class' === $name) {
-                $this->addClass($value);
+                $this->addClass((string) $value);
             } elseif ('style' === $name) {
-                $this->addStyle($value);
+                $this->addStyle((string) $value);
             } else {
                 $this->set($name, $value);
             }
@@ -94,10 +96,18 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      */
-    public function set(string $name, \Stringable|bool|int|string|null $value = true, mixed $condition = true): self
+    public function set(string $name, \Stringable|bool|float|int|string|null $value = true, mixed $condition = true): self
     {
         if (!$this->test($condition)) {
             return $this;
+        }
+
+        if (\is_float($value)) {
+            try {
+                $value = StringUtil::numberToString($value);
+            } catch (\InvalidArgumentException) {
+                $value = false;
+            }
         }
 
         $name = strtolower($name);
@@ -128,7 +138,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * Set the property $name to $value if the value is truthy.
      */
-    public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
+    public function setIfExists(string $name, \Stringable|bool|float|int|string|null $value): self
     {
         if ($this->test($value)) {
             $this->set($name, $value);
@@ -222,7 +232,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<int|string, string> $styles
+     * @param string|list<string>|array<string, string|int|float|bool|null> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {
@@ -230,14 +240,25 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
+        $stylesToRemove = [];
+
         if (\is_array($styles)) {
             foreach ($styles as $prop => $value) {
                 if (\is_string($prop)) {
-                    $styles[$prop] = "$prop:$value";
+                    if ('' === (string) $value) {
+                        $stylesToRemove[] = $prop;
+                        unset($styles[$prop]);
+                    } else {
+                        $styles[$prop] = "$prop:$value";
+                    }
                 }
             }
 
             $styles = implode(';', $styles);
+        }
+
+        if ($stylesToRemove) {
+            $this->removeStyle($stylesToRemove);
         }
 
         $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles)];
@@ -494,7 +515,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             :                                       # Colon
         /ixs';
 
-        preg_match_all($declarationRegex, $styles, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+        $stylesDecoded = $styles;
+
+        if (false === $this->doubleEncoding) {
+            $stylesDecoded = html_entity_decode($stylesDecoded, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+        }
+
+        preg_match_all($declarationRegex, $stylesDecoded, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         $result = [];
 
@@ -503,8 +530,22 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 // Spacing according to https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration
                 $property = trim(substr($match[0], 0, -1), " \n\r\t\v\f");
                 $value = trim(substr($declaration, \strlen($match[0])), " \n\r\t\v\f");
-                $result[$this->decodeStyleProperty($match[1])][] = "$property: $value;";
+                $propertyDecoded = $this->decodeStyleProperty($match[1]);
+
+                $result[$propertyDecoded][] = match (true) {
+                    '' === $value && !str_starts_with($propertyDecoded, '--') => '',
+                    default => "$property: $value;",
+                };
             }
+        }
+
+        if (false === $this->doubleEncoding && $stylesDecoded !== $styles) {
+            array_walk_recursive(
+                $result,
+                static function (&$value): void {
+                    $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+                },
+            );
         }
 
         return $result;
@@ -536,6 +577,6 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     {
         // Serialize styles according to
         // https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration-block
-        return implode(' ', array_merge(...array_values($styles)));
+        return implode(' ', array_filter(array_merge(...array_values($styles))));
     }
 }

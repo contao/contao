@@ -23,26 +23,16 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DefaultOperationsListenerTest extends TestCase
 {
-    private Security&MockObject $security;
-
-    private DefaultOperationsListener $listener;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         unset($GLOBALS['TL_DCA']);
-
-        $controllerAdapter = $this->mockAdapter(['loadDataContainer']);
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
-
-        $this->security = $this->createMock(Security::class);
-        $this->listener = new DefaultOperationsListener($framework, $this->security, $this->createMock(Connection::class));
     }
 
     protected function tearDown(): void
@@ -56,6 +46,7 @@ class DefaultOperationsListenerTest extends TestCase
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -63,16 +54,17 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsChildrenOperationsWithChildTable(): void
@@ -80,6 +72,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'ctable' => ['tl_bar'],
             ],
             'list' => [
@@ -89,17 +82,18 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'children', 'copy', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'children', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['children'], 'table=tl_bar', 'children.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsOperationsWithParentTable(): void
@@ -107,6 +101,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'ptable' => ['tl_bar'],
             ],
             'list' => [
@@ -116,23 +111,25 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsOperationsInTreeMode(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_TREE,
@@ -140,24 +137,26 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
         $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;children=1', 'copychildren.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsToggleOperationIfThereIsOneToggleField(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -174,23 +173,25 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['toggle'], 'act=toggle&amp;field=published', 'visible.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testAddsToggleOperationIfThereIsOneReverseToggleField(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -207,23 +208,25 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'toggle', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['toggle'], 'act=toggle&amp;field=featured', 'visible.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testDoesNotAddToggleOperationIfThereAreMultipleToggleField(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -241,21 +244,23 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
+        $this->assertOperation($operations['versions'], 'act=edit&versions=1', 'diff.svg', true);
     }
 
     public function testExpandsNamedOperations(): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -272,7 +277,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -283,6 +288,7 @@ class DefaultOperationsListenerTest extends TestCase
     public function testManuallySortOperations(): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -295,7 +301,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -306,6 +312,7 @@ class DefaultOperationsListenerTest extends TestCase
     public function testAppendsCustomOperationsToDefaults(): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -319,17 +326,18 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show', 'foo'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions', 'foo'], array_keys($operations));
     }
 
     public function testKeepsPositionForNamedOperations(): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -346,7 +354,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -358,6 +366,7 @@ class DefaultOperationsListenerTest extends TestCase
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -375,7 +384,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -387,6 +396,7 @@ class DefaultOperationsListenerTest extends TestCase
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -401,7 +411,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -413,6 +423,7 @@ class DefaultOperationsListenerTest extends TestCase
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
+            'config' => ['enableVersioning' => true],
             'list' => [
                 'sorting' => [
                     'mode' => DataContainer::MODE_SORTED,
@@ -428,7 +439,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -436,7 +447,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('edit', $operations);
         $this->assertArrayHasKey('show', $operations);
         $this->assertArrayHasKey('foo', $operations);
-        $this->assertArrayNotHasKey('primary', $operations['edit']);
+        $this->assertArrayHasKey('primary', $operations['edit']);
         $this->assertTrue($operations['show']['primary']);
         $this->assertArrayNotHasKey('primary', $operations['foo']);
     }
@@ -446,6 +457,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'notEditable' => true,
             ],
             'list' => [
@@ -455,7 +467,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -468,6 +480,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'notCopyable' => true,
             ],
             'list' => [
@@ -477,12 +490,12 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'delete', 'show', 'versions'], array_keys($operations));
     }
 
     public function testDoesNotAddCopyOperationIfTableIsClosed(): void
@@ -490,6 +503,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'closed' => true,
             ],
             'list' => [
@@ -499,12 +513,12 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'delete', 'show', 'versions'], array_keys($operations));
     }
 
     public function testDoesNotAddCutOperationIfTableIsNotSortable(): void
@@ -512,6 +526,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'ptable' => 'tl_bar',
                 'notSortable' => true,
             ],
@@ -522,12 +537,12 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'versions'], array_keys($operations));
     }
 
     public function testDoesNotAddDeleteOperationIfTableIsNotDeletable(): void
@@ -535,6 +550,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'notDeletable' => true,
             ],
             'list' => [
@@ -544,12 +560,12 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'show', 'versions'], array_keys($operations));
     }
 
     public function testAlwaysAddsChildrenAndShowOperation(): void
@@ -557,6 +573,7 @@ class DefaultOperationsListenerTest extends TestCase
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
+                'enableVersioning' => true,
                 'closed' => true,
                 'notCreatable' => true,
                 'notEditable' => true,
@@ -572,7 +589,7 @@ class DefaultOperationsListenerTest extends TestCase
             ],
         ];
 
-        ($this->listener)('tl_foo');
+        ($this->getListener())('tl_foo');
 
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
@@ -580,18 +597,11 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['children', 'show'], array_keys($operations));
     }
 
-    /**
-     * @dataProvider checkPermissionsProvider
-     */
+    #[DataProvider('checkPermissionsProvider')]
     public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array|null $newRecord = null): void
     {
-        $GLOBALS['TL_DCA']['tl_foo'] = $dca;
-
-        ($this->listener)('tl_foo');
-
-        $operation = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'][$name];
-
-        $this->security
+        $security = $this->createMock(Security::class);
+        $security
             ->expects($this->once())
             ->method('isGranted')
             ->with(
@@ -616,7 +626,13 @@ class DefaultOperationsListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $config = new DataContainerOperation($name, $operation, $record, $this->createMock(DataContainer::class));
+        $GLOBALS['TL_DCA']['tl_foo'] = $dca;
+
+        ($this->getListener($security))('tl_foo');
+
+        $operation = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'][$name];
+
+        $config = new DataContainerOperation($name, $operation, $record, $this->createStub(DataContainer::class));
         $operation['button_callback']($config);
     }
 
@@ -717,5 +733,15 @@ class DefaultOperationsListenerTest extends TestCase
         } else {
             $this->assertArrayNotHasKey('button_callback', $operation);
         }
+    }
+
+    private function getListener(Security|null $security = null): DefaultOperationsListener
+    {
+        $security ??= $this->createStub(Security::class);
+
+        $controllerAdapter = $this->createAdapterStub(['loadDataContainer']);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
+
+        return new DefaultOperationsListener($framework, $security, $this->createStub(Connection::class));
     }
 }

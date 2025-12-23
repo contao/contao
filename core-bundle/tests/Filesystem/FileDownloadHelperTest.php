@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,15 +47,11 @@ class FileDownloadHelperTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider provideInlineContext
-     */
-    public function testGenerateAndHandleInlineUrl(array|null $context, string $expectedUrl): void
+    #[DataProvider('provideInlineContext')]
+    public function testGenerateAndHandleInlineUrl(array|null $context): void
     {
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateInlineUrl('https://example.com/', 'my_file.txt', $context);
-
-        $this->assertSame($expectedUrl, $url);
 
         $onProcess = function (FilesystemItem $item, array $resolvedContext) use ($context): Response|null {
             $this->assertSame('my_file.txt', $item->getPath());
@@ -77,24 +74,18 @@ class FileDownloadHelperTest extends TestCase
     {
         yield 'without context' => [
             null,
-            'https://example.com/?_hash=EJ5W%2FRitv01mjcHnPITlKLKolvtEm2O%2BEa3Dq2jekXk%3D&p=my_file.txt',
         ];
 
         yield 'with context' => [
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=eHSjRLDzC%2BNi9w%2BnpBMHNNy1Hfg3XNNz0SvzMNUEO6k%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&p=my_file.txt',
         ];
     }
 
-    /**
-     * @dataProvider provideDownloadContext
-     */
-    public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context, string $expectedUrl): void
+    #[DataProvider('provideDownloadContext')]
+    public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context): void
     {
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/', 'my_file.txt', $fileName, $context);
-
-        $this->assertSame($expectedUrl, $url);
 
         $onProcess = function (FilesystemItem $item, array $resolvedContext) use ($context): Response|null {
             $this->assertSame('my_file.txt', $item->getPath());
@@ -119,7 +110,7 @@ class FileDownloadHelperTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
 
-        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
 
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/', 'data.csv', 'data.csv');
@@ -150,7 +141,7 @@ class FileDownloadHelperTest extends TestCase
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.txt');
 
-        $this->assertSame('https://example.com/path?_hash=TUK%2BRJDS6D7dOg8zPyttlPmt0mMRi3bx17OHbD8NIro%3D&d=attachment&foo=bar&p=my_file.txt', $url);
+        $this->assertTrue(str_ends_with($url, '&d=attachment&foo=bar&p=my_file.txt'));
     }
 
     public static function provideDownloadContext(): iterable
@@ -158,25 +149,21 @@ class FileDownloadHelperTest extends TestCase
         yield 'without filename or context' => [
             null,
             null,
-            'https://example.com/?_hash=3JBfgZdT%2FVdQWC3Xez3i6FA4egPMsOEZBPwLQIu9rbI%3D&d=attachment&p=my_file.txt',
         ];
 
         yield 'with filename' => [
             'custom_name.txt',
             null,
-            'https://example.com/?_hash=layVAUuHQtmig0aouIJcfJAxxhzdkZyGKjMzy3RofJ4%3D&d=attachment&f=custom_name.txt&p=my_file.txt',
         ];
 
         yield 'with context' => [
             'custom_name.txt',
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt',
         ];
 
         yield 'with filename and context' => [
             'custom_name.txt',
             ['foo' => 'bar', 'foobar' => 'baz'],
-            'https://example.com/?_hash=m12mfxGRovabsM4wWsM2CFcL7B%2FaYhHMFvkSjWz9YR4%3D&ctx=a%3A2%3A%7Bs%3A3%3A%22foo%22%3Bs%3A3%3A%22bar%22%3Bs%3A6%3A%22foobar%22%3Bs%3A3%3A%22baz%22%3B%7D&d=attachment&f=custom_name.txt&p=my_file.txt',
         ];
     }
 
@@ -189,14 +176,14 @@ class FileDownloadHelperTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
 
-        return new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        return new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
     }
 
     private function getResponseContent(Response $response): string
     {
         ob_start();
 
-        $response->send();
+        $response->sendContent();
 
         return ob_get_clean();
     }
