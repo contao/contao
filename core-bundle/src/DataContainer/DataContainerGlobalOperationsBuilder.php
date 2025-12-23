@@ -91,7 +91,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->ensureInitialized();
 
         $this->append([
-            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="'.StringUtil::specialchars($this->translator->trans('DCA.toggleFilter.1', [], 'contao_default')).'"><span data-contao--toggle-state-target="label">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'</span><sup data-contao--filter-target="count"></sup></button>',
+            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent contao--operations-menu#close" title="'.StringUtil::specialchars($this->translator->trans('DCA.toggleFilter.1', [], 'contao_default')).'"><span data-contao--toggle-state-target="label">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'</span><sup data-contao--filter-target="count"></sup></button>',
             'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
             'primary' => true,
         ]);

@@ -54,6 +54,7 @@
                 .set('title', operation.title|default, ((menu or show_labels) and operation.title|default != operation.label|default))
                 .addClass('has-icon', operation.icon|default)
             %}
+            {% do operation_attributes.set('data-action', operation_attributes['data-action']|default('')~' contao--operations-menu#close') %}
             {% if operation.method|default('GET') != 'GET' %}
                 <form action="{{ operation.href }}" method="POST">
                     {% if operation.method != 'POST' %}<input type="hidden" name="_method" value="{{ operation.method }}">{% endif %}

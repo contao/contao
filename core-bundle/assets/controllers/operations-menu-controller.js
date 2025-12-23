@@ -74,6 +74,16 @@ export default class OperationsMenuController extends Controller {
         this.setPosition(event);
     }
 
+    close(event) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
+            return;
+        }
+
+        if (this.$menu.elements.submenuToggles[0].isOpen) {
+            this.$menu.elements.submenuToggles[0].close();
+        }
+    }
+
     setPosition(event) {
         const offset = 2; // border-width that is excluded from getBoundingClientRect
 
