@@ -2673,7 +2673,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
           </select>
       </div>
       <label for="search_term">' . $GLOBALS['TL_LANG']['MSC']['term'] . '</label>
-      <input id="search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '" data-contao--filter-target="filter" data-action="contao--filter#updateCount">
+      <input id="search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </div>';
 	}
 
