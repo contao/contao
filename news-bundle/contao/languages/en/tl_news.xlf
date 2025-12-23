@@ -263,6 +263,9 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
       </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

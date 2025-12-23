@@ -52,6 +52,8 @@ class WebWorkerTest extends TestCase
 
             /**
              * @param string $message
+             *
+             * @throws void
              */
             public function log($level, $message, array $context = []): void
             {
@@ -154,7 +156,7 @@ class WebWorkerTest extends TestCase
     private function triggerWebWorker(): void
     {
         $this->eventDispatcher->dispatch(new TerminateEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             new Request(),
             new Response(),
         ));
@@ -181,12 +183,12 @@ class WebWorkerTest extends TestCase
     private function createConsumeCommand(): void
     {
         $receiverLocator = new Container();
-        $receiverLocator->set('transport-1', $this->createMock(ReceiverInterface::class));
-        $receiverLocator->set('transport-2', $this->createMock(ReceiverInterface::class));
-        $receiverLocator->set('transport-3', $this->createMock(ReceiverInterface::class));
+        $receiverLocator->set('transport-1', $this->createStub(ReceiverInterface::class));
+        $receiverLocator->set('transport-2', $this->createStub(ReceiverInterface::class));
+        $receiverLocator->set('transport-3', $this->createStub(ReceiverInterface::class));
 
         $this->command = new ConsumeMessagesCommand(
-            $this->createMock(RoutableMessageBus::class),
+            $this->createStub(RoutableMessageBus::class),
             $receiverLocator,
             $this->eventDispatcher,
             $this->logger,

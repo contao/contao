@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set fieldset_attributes = attrs()
     .set('data-controller', 'contao--sortable contao--check-all')
@@ -19,7 +19,7 @@
     <input type="hidden" name="{{ name }}" value="">
     {% if options is not empty %}
         <span class="fixed">
-            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-contao--check-all-target="source" data-action="contao--check-all#update contao--scroll-offset#store">
+            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
             <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
         </span>
         {% for option in options %}
@@ -32,7 +32,7 @@
                     .set('value', option.value|default)
                     .set('checked', true, option.checked|default)
                     .set('data-contao--check-all-target', 'input')
-                    .set('data-action', 'focus->contao--scroll-offset#store')
+                    .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
                     .mergeWith(attributes)
                 %}
                 <input{{ input_attributes }}>
@@ -43,7 +43,7 @@
                     .set('data-action', 'keydown->contao--sortable#move')
                     .addClass('drag-handle')
                 %}
-                <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
 
                 {% set label_attributes = attrs()
                     .set('for', "opt_#{id}_#{loop.index0}")

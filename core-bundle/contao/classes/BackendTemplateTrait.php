@@ -20,7 +20,7 @@ trait BackendTemplateTrait
 	 *
 	 * @return string
 	 */
-	protected function getLocaleString()
+	public function getLocaleString()
 	{
 		$container = System::getContainer();
 
@@ -56,7 +56,7 @@ trait BackendTemplateTrait
 	 *
 	 * @return string
 	 */
-	protected function getDateString()
+	public function getDateString()
 	{
 		return
 			'Locale.define("en-US","Date",{'

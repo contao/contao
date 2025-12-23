@@ -22,9 +22,9 @@ class PageResolverTest extends TestCase
 {
     public function testAbstainsIfContentIsNotAPageModel(): void
     {
-        $content = $this->mockClassWithProperties(ArticleModel::class);
+        $content = $this->createClassWithPropertiesStub(ArticleModel::class);
 
-        $resolver = new PageResolver($this->mockContaoFramework());
+        $resolver = new PageResolver($this->createContaoFrameworkStub());
         $result = $resolver->resolve($content);
 
         $this->assertNull($result);
@@ -32,26 +32,26 @@ class PageResolverTest extends TestCase
 
     public function testAbstainsIfContentPageModelIsNotRedirectOrForward(): void
     {
-        $resolver = new PageResolver($this->mockContaoFramework());
+        $resolver = new PageResolver($this->createContaoFrameworkStub());
 
-        $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular']);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'regular']);
         $result = $resolver->resolve($content);
         $this->assertNull($result);
 
-        $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'root']);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'root']);
         $result = $resolver->resolve($content);
         $this->assertNull($result);
 
-        $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'foobar']);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'foobar']);
         $result = $resolver->resolve($content);
         $this->assertNull($result);
     }
 
     public function testReturnsRedirectUrl(): void
     {
-        $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'redirect', 'url' => 'https://example.com/']);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'redirect', 'url' => 'https://example.com/']);
 
-        $resolver = new PageResolver($this->mockContaoFramework());
+        $resolver = new PageResolver($this->createContaoFrameworkStub());
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());
@@ -61,18 +61,18 @@ class PageResolverTest extends TestCase
 
     public function testRedirectsToJumpToOfForwardPage(): void
     {
-        $content = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'type' => 'forward', 'jumpTo' => 43]);
-        $jumpTo = $this->mockClassWithProperties(PageModel::class, ['id' => 43]);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'forward', 'jumpTo' => 43]);
+        $jumpTo = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 43]);
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(43)
             ->willReturn($jumpTo)
         ;
 
-        $resolver = new PageResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
+        $resolver = new PageResolver($this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());
@@ -81,10 +81,10 @@ class PageResolverTest extends TestCase
 
     public function testRedirectsToFirstSubpageForwardPage(): void
     {
-        $content = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'type' => 'forward', 'jumpTo' => 0]);
-        $jumpTo = $this->mockClassWithProperties(PageModel::class);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'forward', 'jumpTo' => 0]);
+        $jumpTo = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $pageAdapter = $this->mockAdapter(['findFirstPublishedRegularByPid']);
+        $pageAdapter = $this->createAdapterMock(['findFirstPublishedRegularByPid']);
         $pageAdapter
             ->expects($this->once())
             ->method('findFirstPublishedRegularByPid')
@@ -92,7 +92,7 @@ class PageResolverTest extends TestCase
             ->willReturn($jumpTo)
         ;
 
-        $resolver = new PageResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
+        $resolver = new PageResolver($this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());

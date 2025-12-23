@@ -29,7 +29,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $response = new Response();
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::SUB_REQUEST,
             $response,
@@ -45,7 +45,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $response = new Response();
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -61,7 +61,7 @@ class BackendCacheResponseListenerTest extends TestCase
         $response = new Response();
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -78,10 +78,11 @@ class BackendCacheResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
+
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -98,10 +99,11 @@ class BackendCacheResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
+
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -118,10 +120,11 @@ class BackendCacheResponseListenerTest extends TestCase
 
         $request = new Request();
         $request->setMethod(Request::METHOD_POST);
+
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -130,6 +133,26 @@ class BackendCacheResponseListenerTest extends TestCase
         (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
 
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
+    }
+
+    public function testSetsVaryHeader(): void
+    {
+        $response = new Response();
+        $response->setVary('Origin');
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+
+        $event = new ResponseEvent(
+            $this->createStub(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+
+        $this->assertSame(['Origin', 'Accept', 'Turbo-Frame'], $response->getVary());
     }
 
     private function createScopeMatcher(bool $isBackendMainRequest): ScopeMatcher

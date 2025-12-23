@@ -90,18 +90,16 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertFalse($authenticator->isInteractive());
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $authenticator = $this->getContaoLoginAuthenticator(requestStack: $requestStack);
 
         $this->assertFalse($authenticator->isInteractive());
 
         $request = new Request();
-        $request->attributes->set('pageModel', $this->createMock(PageModel::class));
+        $request->attributes->set('pageModel', $this->createStub(PageModel::class));
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $authenticator = $this->getContaoLoginAuthenticator(requestStack: $requestStack);
 
@@ -112,7 +110,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
     {
         $request = new Request();
         $exception = new AuthenticationException();
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $failureHandler = $this->createMock(AuthenticationFailureHandlerInterface::class);
         $failureHandler
@@ -144,14 +142,14 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(
             PostAuthenticationToken::class,
-            $authenticator->createToken($this->createMock(Passport::class), 'firewall'),
+            $authenticator->createToken($this->createStub(Passport::class), 'firewall'),
         );
 
         $badge = $this->createMock(TwoFactorCodeCredentials::class);
         $badge
             ->expects($this->once())
             ->method('getTwoFactorToken')
-            ->willReturn($this->createMock(TwoFactorToken::class))
+            ->willReturn($this->createStub(TwoFactorToken::class))
         ;
 
         $passport = $this->createMock(Passport::class);
@@ -176,7 +174,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $twoFactorToken
             ->expects($this->once())
             ->method('getAuthenticatedToken')
-            ->willReturn($this->createMock(PostAuthenticationToken::class))
+            ->willReturn($this->createStub(PostAuthenticationToken::class))
         ;
 
         $badge = $this->createMock(TwoFactorCodeCredentials::class);
@@ -207,7 +205,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $tokenStorage
             ->expects($this->once())
             ->method('getToken')
-            ->willReturn($this->createMock(TwoFactorTokenInterface::class))
+            ->willReturn($this->createStub(TwoFactorTokenInterface::class))
         ;
 
         $twoFactorAuthenticator = $this->createMock(TwoFactorAuthenticator::class);
@@ -215,7 +213,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             ->expects($this->once())
             ->method('authenticate')
             ->with($request)
-            ->willReturn($this->createMock(Passport::class))
+            ->willReturn($this->createStub(Passport::class))
         ;
 
         $authenticator = $this->getContaoLoginAuthenticator(
@@ -241,7 +239,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $request->request->set('password', 'kevinjones');
         $request->setSession($session);
 
-        $token = $this->createMock(UsernamePasswordToken::class);
+        $token = $this->createStub(UsernamePasswordToken::class);
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
@@ -251,7 +249,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         ;
 
         $authenticator = $this->getContaoLoginAuthenticator(
-            userProvider: $this->createMock(ContaoUserProvider::class),
+            userProvider: $this->createStub(ContaoUserProvider::class),
             tokenStorage: $tokenStorage,
             options: ['enable_csrf' => true],
         );
@@ -378,7 +376,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         );
 
         $request = Request::create('https://example.com/foo/bar');
-        $request->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8', true);
+        $request->headers->set('Accept', 'text/vnd.turbo-stream.html');
 
         $response = $authenticator->start($request);
 
@@ -396,7 +394,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $responseException
             ->expects($this->once())
             ->method('getResponse')
-            ->willReturn($this->createMock(RedirectResponse::class))
+            ->willReturn($this->createStub(RedirectResponse::class))
         ;
 
         $this->assertStartsTheAuthenticationProcessOnCurrentPage($responseException);
@@ -404,7 +402,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
     public function assertStartsTheAuthenticationProcessOnCurrentPage(ResponseException|null $exception): void
     {
-        $pageModel = $this->createMock(PageModel::class);
+        $pageModel = $this->createStub(PageModel::class);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -429,7 +427,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             $httpKernel
                 ->expects($this->once())
                 ->method('handle')
-                ->willReturn($this->createMock(RedirectResponse::class))
+                ->willReturn($this->createStub(RedirectResponse::class))
             ;
         } else {
             $httpKernel
@@ -440,7 +438,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         }
 
         $authenticator = $this->getContaoLoginAuthenticator(
-            userProvider: $this->createMock(ContaoUserProvider::class),
+            userProvider: $this->createStub(ContaoUserProvider::class),
             errorPage: $pageModel,
             pageRegistry: $pageRegistry,
             httpKernel: $httpKernel,
@@ -472,11 +470,11 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $httpKernel
             ->expects($this->never())
             ->method('handle')
-            ->willReturn($this->createMock(RedirectResponse::class))
+            ->willReturn($this->createStub(RedirectResponse::class))
         ;
 
         $authenticator = $this->getContaoLoginAuthenticator(
-            userProvider: $this->createMock(ContaoUserProvider::class),
+            userProvider: $this->createStub(ContaoUserProvider::class),
             pageRegistry: $pageRegistry,
             httpKernel: $httpKernel,
             options: ['enable_csrf' => true],
@@ -490,82 +488,33 @@ class ContaoLoginAuthenticatorTest extends TestCase
      */
     private function getContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, PageModel|null $errorPage = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = [], Environment|null $twig = null): ContaoLoginAuthenticator
     {
-        $pageFinder = $this->createMock(PageFinder::class);
-        $pageFinder
-            ->expects($errorPage ? $this->once() : $this->any())
-            ->method('findFirstPageOfTypeForRequest')
-            ->with($this->isInstanceOf(Request::class), 'error_401')
-            ->willReturn($errorPage)
-        ;
+        if ($errorPage) {
+            $pageFinder = $this->createMock(PageFinder::class);
+            $pageFinder
+                ->expects($this->once())
+                ->method('findFirstPageOfTypeForRequest')
+                ->with($this->isInstanceOf(Request::class), 'error_401')
+                ->willReturn($errorPage)
+            ;
+        } else {
+            $pageFinder = $this->createStub(PageFinder::class);
+        }
 
         return new ContaoLoginAuthenticator(
-            $userProvider ?? $this->mockUserProvider(),
-            $successHandler ?? $this->mockSuccessHandler(),
-            $failureHandler ?? $this->mockFailureHandler(),
+            $userProvider ?? $this->createStub(UserProviderInterface::class),
+            $successHandler ?? $this->createStub(AuthenticationSuccessHandlerInterface::class),
+            $failureHandler ?? $this->createStub(AuthenticationFailureHandlerInterface::class),
             $scopeMatcher ?? $this->mockScopeMatcher(),
-            $router ?? $this->mockRouter(),
-            $uriSigner ?? $this->mockUriSigner(),
+            $router ?? $this->createStub(RouterInterface::class),
+            $uriSigner ?? $this->createStub(UriSigner::class),
             $pageFinder,
-            $tokenStorage ?? $this->mockTokenStorage(FrontendUser::class),
-            $pageRegistry ?? $this->mockPageRegistry(),
-            $httpKernel ?? $this->mockHttpKernel(),
-            $requestStack ?? $this->mockRequestStack(),
-            $twoFactorAuthenticator ?? $this->mockTwoFactorAuthenticator(),
+            $tokenStorage ?? $this->createTokenStorageStub(FrontendUser::class),
+            $pageRegistry ?? $this->createStub(PageRegistry::class),
+            $httpKernel ?? $this->createStub(HttpKernelInterface::class),
+            $requestStack ?? $this->createStub(RequestStack::class),
+            $twoFactorAuthenticator ?? $this->createStub(TwoFactorAuthenticator::class),
             $options,
-            $twig ?? $this->mockTwig(),
+            $twig ?? $this->createStub(Environment::class),
         );
-    }
-
-    /**
-     * @return UserProviderInterface<UserInterface>
-     */
-    private function mockUserProvider(): UserProviderInterface
-    {
-        return $this->createMock(UserProviderInterface::class);
-    }
-
-    private function mockSuccessHandler(): AuthenticationSuccessHandlerInterface
-    {
-        return $this->createMock(AuthenticationSuccessHandlerInterface::class);
-    }
-
-    private function mockFailureHandler(): AuthenticationFailureHandlerInterface
-    {
-        return $this->createMock(AuthenticationFailureHandlerInterface::class);
-    }
-
-    private function mockRouter(): RouterInterface
-    {
-        return $this->createMock(RouterInterface::class);
-    }
-
-    private function mockUriSigner(): UriSigner
-    {
-        return $this->createMock(UriSigner::class);
-    }
-
-    private function mockPageRegistry(): PageRegistry
-    {
-        return $this->createMock(PageRegistry::class);
-    }
-
-    private function mockHttpKernel(): HttpKernelInterface
-    {
-        return $this->createMock(HttpKernelInterface::class);
-    }
-
-    private function mockRequestStack(): RequestStack
-    {
-        return $this->createMock(RequestStack::class);
-    }
-
-    private function mockTwoFactorAuthenticator(): TwoFactorAuthenticator
-    {
-        return $this->createMock(TwoFactorAuthenticator::class);
-    }
-
-    private function mockTwig(): Environment
-    {
-        return $this->createMock(Environment::class);
     }
 }

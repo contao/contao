@@ -138,19 +138,19 @@ class NewsPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        $model = $this->mockClassWithProperties(NewsArchiveModel::class);
+        $model = $this->createClassWithPropertiesStub(NewsArchiveModel::class);
         $model->id = 1;
 
-        $news = $this->createMock(NewsModel::class);
+        $news = $this->createStub(NewsModel::class);
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findById' => $model]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $news]),
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub(['findById' => $model]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -165,11 +165,11 @@ class NewsPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -181,16 +181,16 @@ class NewsPickerProviderTest extends ContaoTestCase
 
     public function testDoesNotAddTableAndIdIfThereIsNoModel(): void
     {
-        $news = $this->createMock(NewsModel::class);
+        $news = $this->createStub(NewsModel::class);
         $config = new PickerConfig('link', [], '{{news_url::1}}', 'newsPicker');
 
         $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $news]),
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $news]),
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -209,7 +209,7 @@ class NewsPickerProviderTest extends ContaoTestCase
             ->willReturn($accessGranted ?? false)
         ;
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
+        $menuFactory = $this->createStub(FactoryInterface::class);
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -225,13 +225,13 @@ class NewsPickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('News picker')

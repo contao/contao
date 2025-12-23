@@ -33,8 +33,8 @@ class SearchIndexListenerTest extends TestCase
     public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete): void
     {
         $dispatchCount = (int) $index + (int) $delete;
-        $messenger = $this->createMock(MessageBusInterface::class);
 
+        $messenger = $this->createMock(MessageBusInterface::class);
         $messenger
             ->expects($this->exactly($dispatchCount))
             ->method('dispatch')
@@ -49,7 +49,7 @@ class SearchIndexListenerTest extends TestCase
             ->willReturnCallback(static fn (SearchIndexMessage $message) => new Envelope($message))
         ;
 
-        $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
+        $event = new TerminateEvent($this->createStub(HttpKernelInterface::class), $request, $response);
 
         $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $features);
         $listener($event);
@@ -75,7 +75,7 @@ class SearchIndexListenerTest extends TestCase
             ->willReturnCallback(static fn (SearchIndexMessage $message) => new Envelope($message))
         ;
 
-        $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
+        $event = new TerminateEvent($this->createStub(HttpKernelInterface::class), $request, $response);
         $listener = new SearchIndexListener($messenger, '_fragment', '/contao', SearchIndexListener::FEATURE_INDEX);
 
         // Should index (total expected count: 1)
@@ -108,7 +108,7 @@ class SearchIndexListenerTest extends TestCase
     public static function getRequestResponse(): iterable
     {
         yield 'Should index because the response was successful and contains ld+json information' => [
-            Request::create('/foobar'),
+            Request::create('/contao-likes-to-index-things'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"","protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             true,
@@ -157,6 +157,14 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be skipped because it is a contao backend request' => [
             Request::create('/contao?do=article'),
+            new Response(),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        yield 'Should be skipped because it is a web profiler request' => [
+            Request::create('/_wdt/123'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,

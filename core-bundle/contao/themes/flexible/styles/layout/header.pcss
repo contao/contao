@@ -109,11 +109,11 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity .3s ease, visibility .3s ease;
-}
 
-#tmenu .active ul.menu_level_1 {
-    opacity: 1;
-    visibility: visible;
+    &.active {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
 #tmenu ul.menu_level_1 li a {

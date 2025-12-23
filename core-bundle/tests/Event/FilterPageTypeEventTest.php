@@ -20,7 +20,7 @@ class FilterPageTypeEventTest extends TestCase
 {
     public function testReturnsDataContainer(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $event = new FilterPageTypeEvent([], $dc);
 
         $this->assertSame($dc, $event->getDataContainer());
@@ -28,7 +28,7 @@ class FilterPageTypeEventTest extends TestCase
 
     public function testReturnsOptionsWithNumericKeys(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $event = new FilterPageTypeEvent(['foo' => 'bar'], $dc);
 
         $this->assertSame(['bar'], $event->getOptions());
@@ -36,7 +36,7 @@ class FilterPageTypeEventTest extends TestCase
 
     public function testCanAddOption(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $event = new FilterPageTypeEvent([], $dc);
 
         $this->assertSame([], $event->getOptions());
@@ -48,7 +48,7 @@ class FilterPageTypeEventTest extends TestCase
 
     public function testDoesNotAddDuplicateOptions(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $event = new FilterPageTypeEvent(['foo'], $dc);
 
         $this->assertSame(['foo'], $event->getOptions());
@@ -60,7 +60,7 @@ class FilterPageTypeEventTest extends TestCase
 
     public function testCanSetOptions(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $event = new FilterPageTypeEvent(['foo'], $dc);
 
         $this->assertSame(['foo'], $event->getOptions());
@@ -72,7 +72,7 @@ class FilterPageTypeEventTest extends TestCase
 
     public function testCanRemoveOption(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $event = new FilterPageTypeEvent(['foo'], $dc);
 
         $this->assertSame(['foo'], $event->getOptions());
@@ -84,7 +84,7 @@ class FilterPageTypeEventTest extends TestCase
 
     public function testIgnoresMissingWhenRemovingOptions(): void
     {
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $event = new FilterPageTypeEvent(['foo'], $dc);
 
         $this->assertSame(['foo'], $event->getOptions());

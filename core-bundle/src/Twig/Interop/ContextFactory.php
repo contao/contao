@@ -12,13 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
+use Contao\BackendTemplate;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Template;
 
-/**
- * @experimental
- */
 final class ContextFactory
 {
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
+    {
+    }
+
     /**
      * Creates a Twig template context from a Template object.
      *
@@ -28,8 +31,17 @@ final class ContextFactory
     {
         $context = $this->fromData($template->getData());
 
+        if (!isset($context['as_editor_view'])) {
+            $context['as_editor_view'] = $this->scopeMatcher->isBackendRequest();
+        }
+
         if (!isset($context['Template'])) {
             $context['Template'] = $template;
+        }
+
+        if ($template instanceof BackendTemplate) {
+            $context['getLocaleString'] = $this->getCallableWrapper($template->getLocaleString(...));
+            $context['getDateString'] = $this->getCallableWrapper($template->getDateString(...));
         }
 
         return $context;
@@ -45,6 +57,8 @@ final class ContextFactory
             function (&$value): void {
                 if ($value instanceof \Closure) {
                     $value = $this->getCallableWrapper($value);
+                } elseif ($value instanceof \stdClass) {
+                    $value = $this->getIterableStdClass($value);
                 }
             },
         );
@@ -93,6 +107,10 @@ final class ContextFactory
 
         if (!isset($context['this'])) {
             $context['this'] = $object;
+        }
+
+        if (!isset($context['as_editor_view'])) {
+            $context['as_editor_view'] = $this->scopeMatcher->isBackendRequest();
         }
 
         return $context;
@@ -157,6 +175,27 @@ final class ContextFactory
             public function invoke(mixed ...$args): mixed
             {
                 return $this(...$args);
+            }
+        };
+    }
+
+    private function getIterableStdClass(\stdClass $value): \stdClass
+    {
+        return new class($value) extends \stdClass implements \IteratorAggregate {
+            public function __construct(\stdClass $data)
+            {
+                /** @phpstan-ignore foreach.nonIterable */
+                foreach ($data as $key => $value) {
+                    $this->$key = $value;
+                }
+            }
+
+            /**
+             * @return \ArrayIterator<array-key, mixed>
+             */
+            public function getIterator(): \ArrayIterator
+            {
+                return new \ArrayIterator((array) $this);
             }
         };
     }

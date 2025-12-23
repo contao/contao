@@ -1,0 +1,8 @@
+{% set wrapperAttributes = attrs()
+    .addClass([this.prefix, 'explanation', this.class|default])
+    .mergeWith(wrapperAttributes|default)
+%}
+
+<div{{ wrapperAttributes }}>
+    {{ this.text|sanitize_html('contao')|encode_email|csp_inline_styles }}
+</div>

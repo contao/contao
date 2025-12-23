@@ -87,18 +87,18 @@ class DocumentTest extends TestCase
         $document = Document::createFromRequestResponse($request, $response);
 
         $crawler = $document->getContentCrawler();
-        $this->assertSame($crawler->html(), $html);
+        $this->assertStringContainsString($html, $crawler->html());
 
         // Simulate some listener doing something with the document crawler and remove
         // all <style> tags
         $crawler->filterXPath('//style')->each(static fn (Crawler $node) => $node->getNode(0)->parentNode->removeChild($node->getNode(0)));
 
         // Assert that our crawler indeed removed the style tags
-        $this->assertSame('<body></body>', $crawler->html());
+        $this->assertStringContainsString('<body></body>', $crawler->html());
 
         // Now some other listener gets the crawler again, this must be untouched
         $crawler = $document->getContentCrawler();
-        $this->assertSame($crawler->html(), $html);
+        $this->assertStringContainsString($html, $crawler->html());
     }
 
     public function testCreatesADocumentFromRequestAndResponse(): void

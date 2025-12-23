@@ -1,0 +1,8 @@
+{% extends isRandomOrder|default ? '@Contao/block_unsearchable.html.twig' : '@Contao/block_searchable.html.twig' %}
+
+{% block content %}
+
+    {{ images|raw }}
+    {{ pagination|default|raw }}
+
+{% endblock %}

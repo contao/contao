@@ -1,4 +1,4 @@
-.pagination {
+.tl_pagination {
     display: flow-root;
     background: var(--panel-bg);
     margin-bottom: 18px;
@@ -7,29 +7,36 @@
     padding: 12px 15px;
 }
 
-.pagination ul {
+.tl_pagination ul {
     width: 60%;
     float: right;
     text-align: right;
 }
 
-.pagination p {
+.tl_pagination p {
     width: 30%;
     float: left;
     margin-bottom: 0;
 }
 
-.pagination li {
+.tl_pagination li {
     display: inline;
     padding-left: 3px;
 }
 
-.pagination .active {
+.tl_pagination button {
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.tl_pagination .active {
     color: var(--gray);
 }
 
-.pagination-lp {
+.tl_pagination-lp {
     margin-bottom: 0;
     border-bottom: 0;
     padding: 15px 12px;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
 }
