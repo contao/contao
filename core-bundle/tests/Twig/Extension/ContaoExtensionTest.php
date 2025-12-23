@@ -122,7 +122,7 @@ class ContaoExtensionTest extends TestCase
 
         $this->assertCount(\count($expectedFunctions), $functions);
 
-        $node = $this->createMock(Node::class);
+        $node = $this->createStub(Node::class);
 
         foreach ($functions as $function) {
             $this->assertInstanceOf(TwigFunction::class, $function);
@@ -164,6 +164,8 @@ class ContaoExtensionTest extends TestCase
             'csp_unsafe_inline_style',
             'csp_inline_styles',
             'encode_email',
+            'input_encoded_to_plain_text',
+            'html_to_plain_text',
             'deserialize',
         ];
 
@@ -187,7 +189,7 @@ class ContaoExtensionTest extends TestCase
             ->willThrowException($methodCalledException)
         ;
 
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
             ->with('foo')
@@ -214,7 +216,7 @@ class ContaoExtensionTest extends TestCase
             ->willThrowException($methodCalledException)
         ;
 
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
             ->with('foo')
@@ -236,7 +238,7 @@ class ContaoExtensionTest extends TestCase
 
     public function testThrowsIfCoreIncludeFunctionIsNotFound(): void
     {
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
         $environment
             ->method('getRuntime')
             ->willReturn(new EscaperRuntime())
@@ -253,10 +255,10 @@ class ContaoExtensionTest extends TestCase
 
         $extension = new ContaoExtension(
             $environment,
-            $this->createMock(ContaoFilesystemLoader::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+            $this->createStub(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -271,7 +273,7 @@ class ContaoExtensionTest extends TestCase
         $escaperNodeVisitor = $contaoExtension->getNodeVisitors()[0];
 
         $traverser = new NodeTraverser(
-            $this->createMock(Environment::class),
+            $this->createStub(Environment::class),
             [$escaperNodeVisitor],
         );
 
@@ -324,7 +326,7 @@ class ContaoExtensionTest extends TestCase
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -345,7 +347,7 @@ class ContaoExtensionTest extends TestCase
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
         );
 
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -378,7 +380,7 @@ class ContaoExtensionTest extends TestCase
 
     public function testRenderLegacyTemplateWithTemplateFunctions(): void
     {
-        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('hasBackendUser')
             ->willReturn(true)
@@ -386,7 +388,7 @@ class ContaoExtensionTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
         $container->set('contao.security.token_checker', $tokenChecker);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -443,8 +445,8 @@ class ContaoExtensionTest extends TestCase
      */
     private function getContaoExtension(Environment|null $environment = null, ContaoFilesystemLoader|null $filesystemLoader = null): ContaoExtension
     {
-        $environment ??= $this->createMock(Environment::class);
-        $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
+        $environment ??= $this->createStub(Environment::class);
+        $filesystemLoader ??= $this->createStub(ContaoFilesystemLoader::class);
 
         $environment
             ->method('getRuntime')
@@ -462,9 +464,9 @@ class ContaoExtensionTest extends TestCase
         return new ContaoExtension(
             $environment,
             $filesystemLoader,
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
     }
 }

@@ -49,10 +49,10 @@ class DeprecationsNodeVisitorTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

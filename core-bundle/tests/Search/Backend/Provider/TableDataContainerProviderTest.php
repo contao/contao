@@ -48,13 +48,13 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
     public function testSupports(): void
     {
         $provider = new TableDataContainerProvider(
-            $this->mockContaoFramework(),
-            $this->createMock(ResourceFinder::class),
-            $this->createMock(Connection::class),
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(DcaUrlAnalyzer::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(Connection::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -115,7 +115,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             ],
         );
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $fixturesDir = $this->getFixturesDir();
         $resourceFinder = new ResourceFinder(Path::join($fixturesDir, 'table-data-container-provider'));
@@ -131,10 +131,10 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $framework,
             $resourceFinder,
             $connection,
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(DcaUrlAnalyzer::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

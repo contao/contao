@@ -18,6 +18,7 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -41,7 +42,7 @@ class RootPageDependentSelectTest extends TestCase
             $this->mockPageModel(['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr']),
         ];
 
-        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -57,11 +58,10 @@ class RootPageDependentSelectTest extends TestCase
             ->willReturn('Choose module for "%s"')
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $pageAdapter]));
+        $container->set('contao.framework', $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
         $container->set('translator', $translator);
         $container->set('request_stack', $requestStack);
 
@@ -125,9 +125,9 @@ class RootPageDependentSelectTest extends TestCase
         $this->assertSame($minifiedExpectedOutput, $widget->generate());
     }
 
-    private function mockPageModel(array $properties): PageModel
+    private function mockPageModel(array $properties): PageModel&Stub
     {
-        $model = $this->mockClassWithProperties(PageModel::class);
+        $model = $this->createClassWithPropertiesStub(PageModel::class);
 
         foreach ($properties as $key => $property) {
             $model->$key = $property;

@@ -328,6 +328,7 @@ class FileTree extends Widget
           "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
+            AjaxRequest.displayBox(Contao.lang.loading + \' …\');
             new Request.Contao({
               evalScripts: false,
               onSuccess: function(txt, json) {
@@ -336,6 +337,7 @@ class FileTree extends Widget
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", true, true);
                 $("ctrl_' . $this->strId . '").dispatchEvent(evt);
+                AjaxRequest.hideBox();
               }
             }).post({"action":"reloadFiletree", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '"});
           }
@@ -423,7 +425,7 @@ class FileTree extends Widget
 
 			$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
-			$buffer = \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strInfo, $strClass);
+			$buffer = \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], StringUtil::specialcharsAttribute($strInfo), $strClass);
 		}
 		else
 		{

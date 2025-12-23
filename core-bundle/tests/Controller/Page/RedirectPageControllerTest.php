@@ -26,7 +26,7 @@ class RedirectPageControllerTest extends TestCase
     #[DataProvider('getRedirectPages')]
     public function testRedirectsToUrl(string $redirect, string $url, string $redirectUrl): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'redirect' => $redirect,
             'url' => $url,
         ]);

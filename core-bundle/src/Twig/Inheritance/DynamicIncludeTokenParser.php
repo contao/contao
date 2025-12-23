@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Twig\Error\LoaderError;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
@@ -38,11 +40,11 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
 
     public function parse(Token $token): IncludeNode
     {
-        $nameExpression = $this->parser->getExpressionParser()->parseExpression();
+        $nameExpression = $this->parser->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
         // Handle Contao includes
-        if ($contaoNameExpression = $this->traverseAndAdjustTemplateNames($nameExpression)) {
+        if ($contaoNameExpression = $this->traverseAndAdjustTemplateNames($nameExpression, $ignoreMissing)) {
             $nameExpression = $contaoNameExpression;
         }
 
@@ -69,7 +71,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         $variables = null;
 
         if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
-            $variables = $this->parser->getExpressionParser()->parseExpression();
+            $variables = $this->parser->parseExpression();
         }
 
         $only = false;
@@ -86,21 +88,21 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     /**
      * Returns a Node if the given $node should be replaced, null otherwise.
      */
-    private function traverseAndAdjustTemplateNames(Node $node): Node|null
+    private function traverseAndAdjustTemplateNames(Node $node, bool $ignoreMissing): AbstractExpression|null
     {
         if (!$node instanceof ConstantExpression) {
             foreach ($node as $name => $child) {
                 try {
-                    if ($adjustedNode = $this->traverseAndAdjustTemplateNames($child)) {
+                    if ($adjustedNode = $this->traverseAndAdjustTemplateNames($child, $ignoreMissing)) {
                         $node->setNode((string) $name, $adjustedNode);
                     }
 
-                    $this->traverseAndAdjustTemplateNames($child);
-                } catch (\LogicException $e) {
+                    $this->traverseAndAdjustTemplateNames($child, $ignoreMissing);
+                } catch (LoaderError $e) {
                     // Allow missing templates if they are listed in an array like "{% include
                     // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
-                        throw $e;
+                        throw new LoaderError('Optional templates are only supported in array notation.', $node->getTemplateLine(), $node->getSourceContext(), $e);
                     }
                 }
             }
@@ -118,7 +120,11 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         try {
             $allFirstByThemeSlug = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
         } catch (\LogicException $e) {
-            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
+            if ($ignoreMissing) {
+                return null;
+            }
+
+            throw new LoaderError($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', $node->getTemplateLine(), $node->getSourceContext(), $e);
         }
 
         return new RuntimeThemeDependentExpression($allFirstByThemeSlug);

@@ -90,6 +90,7 @@ services:
             - '@contao.routing.page_registry'
             - '@database_connection'
             - '@request_stack'
+            - '@router'
 
     contao.listener.data_container.content_element_type:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
@@ -369,7 +370,6 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
-            - '@messenger.receiver_locator'
 
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener

@@ -19,7 +19,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +72,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response = new Response('<html><head></head><body></body></html>');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -97,7 +97,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(false),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -122,7 +122,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(false),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -147,7 +147,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/xml');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -172,7 +172,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Disposition', 'attachment; filename=test.html');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -198,7 +198,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(true, false, 'html', $hasSession),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -237,7 +237,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(true, false, 'html', $hasSession),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -278,7 +278,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -303,7 +303,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(true, true),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -328,7 +328,7 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(true, false, 'json'),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
@@ -354,13 +354,13 @@ class PreviewToolbarListenerTest extends TestCase
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
 
         $event = new ResponseEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response,
         );
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
             ->with('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig')
@@ -397,9 +397,9 @@ class PreviewToolbarListenerTest extends TestCase
         yield 'modern template' => [false, '@Contao/frontend_preview/toolbar_js.html.twig'];
     }
 
-    private function mockRequest(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true): Request&MockObject
+    private function mockRequest(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true): Request&Stub
     {
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $request->headers = new HeaderBag();
         $request->attributes = new ParameterBag();
 
@@ -423,15 +423,15 @@ class PreviewToolbarListenerTest extends TestCase
         ;
 
         if ($hasSession) {
-            $request->setSession($this->createMock(Session::class));
+            $request->setSession($this->createStub(Session::class));
         }
 
         return $request;
     }
 
-    private function mockTwig(): Environment&MockObject
+    private function mockTwig(): Environment&Stub
     {
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->willReturn('CONTAO')
@@ -440,9 +440,9 @@ class PreviewToolbarListenerTest extends TestCase
         return $twig;
     }
 
-    private function mockRouterWithContext(): RouterInterface&MockObject
+    private function mockRouterWithContext(): RouterInterface&Stub
     {
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->with('contao_backend_switch', [], UrlGeneratorInterface::ABSOLUTE_PATH)
@@ -456,9 +456,9 @@ class PreviewToolbarListenerTest extends TestCase
         return $router;
     }
 
-    private function mockTokenChecker(): TokenChecker&MockObject
+    private function mockTokenChecker(): TokenChecker&Stub
     {
-        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('hasBackendUser')
             ->willReturn(true)

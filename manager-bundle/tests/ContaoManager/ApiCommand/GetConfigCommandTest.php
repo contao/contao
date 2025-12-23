@@ -31,18 +31,13 @@ class GetConfigCommandTest extends TestCase
 
         $this->config = $this->createMock(ManagerConfig::class);
 
-        $application = $this->createMock(Application::class);
+        $application = $this->createStub(Application::class);
         $application
             ->method('getManagerConfig')
             ->willReturn($this->config)
         ;
 
         $this->command = new GetConfigCommand($application);
-    }
-
-    public function testHasCorrectName(): void
-    {
-        $this->assertSame('config:get', $this->command->getName());
     }
 
     public function testDumpsManagerConfigAsJson(): void

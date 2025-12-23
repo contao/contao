@@ -169,39 +169,39 @@ class AbstractLayoutPageControllerTest extends TestCase
 
     private function getContainerWithDefaultConfiguration(bool $existingResponseContext = false, array $pageModelAttributes = []): ContainerInterface
     {
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with('@Contao/layout/default.html.twig', ['some' => 'data'])
             ->willReturn('rendered page content')
         ;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class, [
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, [
             'modules' => serialize([]),
             'defaultImageDensities' => 'foo_densities',
             'template' => 'foo_template',
         ]);
 
-        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
             ->with(42)
             ->willReturn($layoutModel)
         ;
 
-        $systemAdapter = $this->mockAdapter(['loadLanguageFile']);
+        $systemAdapter = $this->createAdapterMock(['loadLanguageFile']);
         $systemAdapter
             ->expects($this->once())
             ->method('loadLanguageFile')
             ->with('default')
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             LayoutModel::class => $layoutAdapter,
             System::class => $systemAdapter,
         ]);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->layout = 42;
         $page->language = 'en';
 
@@ -212,12 +212,11 @@ class AbstractLayoutPageControllerTest extends TestCase
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $page);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $pageFinder = new PageFinder(
             $framework,
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             $requestStack,
         );
 
@@ -268,13 +267,13 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->with('foo_densities')
         ;
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('isPreviewMode')
             ->willReturn(false)
         ;
 
-        $tagManager = $this->createMock(CacheTagManager::class);
+        $tagManager = $this->createStub(CacheTagManager::class);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('twig', $twig);

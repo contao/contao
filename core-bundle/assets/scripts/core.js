@@ -459,7 +459,6 @@ window.AjaxRequest =
 		overlay.set({
 			'styles': {
 				'display': 'block',
-				'top': scroll.y + 'px'
 			}
 		});
 
@@ -1886,93 +1885,6 @@ window.Backend =
 			currentHover = undefined;
 			currentHoverTime = undefined;
 		});
-	},
-
-	/**
-	 * Crawl the website
-	 */
-	crawl: function() {
-		var timeout = 2000,
-			crawl = $('tl_crawl'),
-			progressBar = crawl.getElement('div.progress-bar'),
-			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results'),
-			debugLog = crawl.getElement('p.debug-log');
-
-		function updateData(response) {
-			var total = response.total,
-				done = total - response.pending,
-				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
-				result;
-
-			// Initialize the status bar at 10%
-			if (done < 1 && percentage < 1) {
-				done = 1;
-				percentage = 10;
-				total = 10;
-			}
-
-			progressBar.setStyle('width', percentage + '%');
-			progressBar.set('html', percentage + '%');
-			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + total);
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (!response.finished) {
-				return;
-			}
-
-			progressBar.removeClass('running').addClass('finished');
-			results.removeClass('running').addClass('finished');
-
-			for (result in response.results) {
-				if (response.results.hasOwnProperty(result)) {
-					var summary = results.getElement('.result[data-subscriber="' + result + '"] p.summary'),
-						warning = results.getElement('.result[data-subscriber="' + result + '"] p.warning'),
-						log = results.getElement('.result[data-subscriber="' + result + '"] p.subscriber-log'),
-						subscriberResults = response.results[result],
-						subscriberSummary = subscriberResults.summary;
-
-					if (subscriberResults.warning) {
-						warning.set('html', subscriberResults.warning);
-					}
-
-					if (subscriberResults.hasLog) {
-						log.setStyle('display', 'block');
-					}
-
-					summary.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
-					summary.set('html', subscriberSummary);
-				}
-			}
-		}
-
-		function execRequest(onlyStatusUpdate = false) {
-			new Request({
-				url: window.location.href,
-				headers: {
-					'Only-Status-Update': onlyStatusUpdate
-				},
-				onSuccess: function(responseText) {
-					var response = JSON.decode(responseText);
-
-					updateData(response);
-
-					if (!response.finished) {
-						setTimeout(execRequest, timeout);
-					}
-				}
-			}).send();
-		}
-
-		execRequest(true);
 	}
 };
 

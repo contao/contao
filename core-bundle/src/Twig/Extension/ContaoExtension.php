@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
@@ -50,6 +51,7 @@ use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\FrontendTemplate;
 use Contao\FrontendTemplateTrait;
 use Contao\StringUtil;
+use Contao\Widget;
 use Symfony\Component\Filesystem\Path;
 use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
@@ -91,6 +93,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);
 
         $this->environment->addGlobal(
             'request_token',
@@ -182,7 +185,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
                         if ('Contao' === ($parts[0] ?? null)) {
                             $candidates = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
-                            $args[2] = $candidates[$this->filesystemLoader->getCurrentThemeSlug()] ?? $candidates[''];
+                            $args[2] = $candidates[$this->filesystemLoader->getCurrentThemeSlug() ?? ''] ?? $candidates[''];
                         }
                     }
 
@@ -383,6 +386,14 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 ['preserves_safety' => ['contao_html', 'html']],
             ),
             new TwigFilter(
+                'input_encoded_to_plain_text',
+                [StringRuntime::class, 'inputEncodedToPlainText'],
+            ),
+            new TwigFilter(
+                'html_to_plain_text',
+                [StringRuntime::class, 'htmlToPlainText'],
+            ),
+            new TwigFilter(
                 'deserialize',
                 static fn (mixed $value): array => StringUtil::deserialize($value, true),
             ),
@@ -405,27 +416,31 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
      */
     public function renderLegacyTemplate(string $name, array $blocks, array $context): string
     {
-        $template = Path::getFilenameWithoutExtension($name);
+        $isWidget = ($context['this'] ?? null) instanceof Widget;
 
-        $partialTemplate = new class($template) extends FrontendTemplate {
-            use BackendTemplateTrait;
-            use FrontendTemplateTrait;
+        if (!$isWidget) {
+            $template = Path::getFilenameWithoutExtension($name);
 
-            public function setBlocks(array $blocks): void
-            {
-                $this->arrBlocks = $blocks;
-            }
+            $partialTemplate = new class($template) extends FrontendTemplate {
+                use BackendTemplateTrait;
+                use FrontendTemplateTrait;
 
-            public function parse(): string
-            {
-                return $this->inherit();
-            }
+                public function setBlocks(array $blocks): void
+                {
+                    $this->arrBlocks = $blocks;
+                }
 
-            protected function renderTwigSurrogateIfExists(): string|null
-            {
-                return null;
-            }
-        };
+                public function parse(): string
+                {
+                    return $this->inherit();
+                }
+
+                protected function renderTwigSurrogateIfExists(): string|null
+                {
+                    return null;
+                }
+            };
+        }
 
         // Prevent replacing insert tags in output from Twig
         $nonce = ContaoFramework::getNonce();
@@ -440,10 +455,16 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             $blocks,
         );
 
-        $partialTemplate->setData($context);
-        $partialTemplate->setBlocks($blocks);
+        if ($isWidget) {
+            $output = $context['this']->renderLegacyFromTwig($blocks);
+        } else {
+            $partialTemplate->setData($context);
+            $partialTemplate->setBlocks($blocks);
 
-        return str_replace($to, $from, $partialTemplate->parse());
+            $output = $partialTemplate->parse();
+        }
+
+        return str_replace($to, $from, $output);
     }
 
     /**

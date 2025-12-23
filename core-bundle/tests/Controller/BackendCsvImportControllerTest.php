@@ -13,25 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportControllerTest extends TestCase
@@ -40,19 +34,12 @@ class BackendCsvImportControllerTest extends TestCase
     {
         parent::setUp();
 
-        $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('session', new Session(new MockArraySessionStorage()));
-        $container->set('contao.resource_finder', $finder);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithFixtures());
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST']);
 
         $this->resetStaticProperties([System::class, Config::class]);
 
@@ -97,18 +84,10 @@ class BackendCsvImportControllerTest extends TestCase
 
         $request->server->set('REQUEST_URI', 'http://localhost/contao');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $controller = new BackendCsvImportController(
-            $this->mockFrameworkWithUploader(),
-            $connection,
-            $requestStack,
-            $this->createMock(TranslatorInterface::class),
-            $this->getFixturesDir(),
-        );
-
-        $response = $controller->importListWizardAction($this->mockDataContainer());
+        $response = $this
+            ->getController($request, $connection)
+            ->importListWizardAction($this->mockDataContainer())
+        ;
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -152,18 +131,10 @@ class BackendCsvImportControllerTest extends TestCase
 
         $request->server->set('REQUEST_URI', 'http://localhost/contao');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $controller = new BackendCsvImportController(
-            $this->mockFrameworkWithUploader(),
-            $connection,
-            $requestStack,
-            $this->createMock(TranslatorInterface::class),
-            $this->getFixturesDir(),
-        );
-
-        $response = $controller->importTableWizardAction($this->mockDataContainer());
+        $response = $this
+            ->getController($request, $connection)
+            ->importTableWizardAction($this->mockDataContainer())
+        ;
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -211,18 +182,10 @@ class BackendCsvImportControllerTest extends TestCase
 
         $request->server->set('REQUEST_URI', 'http://localhost/contao');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $controller = new BackendCsvImportController(
-            $this->mockFrameworkWithUploader(),
-            $connection,
-            $requestStack,
-            $this->createMock(TranslatorInterface::class),
-            $this->getFixturesDir(),
-        );
-
-        $response = $controller->importOptionWizardAction($this->mockDataContainer());
+        $response = $this
+            ->getController($request, $connection)
+            ->importOptionWizardAction($this->mockDataContainer())
+        ;
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -230,30 +193,14 @@ class BackendCsvImportControllerTest extends TestCase
 
     public function testRedirectsIfThePostDataIsIncomplete(): void
     {
-        $connection = $this->createMock(Connection::class);
-
         $request = new Request();
         $request->query->set('key', 'lw');
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->method('trans')
-            ->willReturnArgument(0)
+        $response = $this
+            ->getController($request, null, $this->mockFramework(['files/data.csv'], true))
+            ->importListWizardAction($this->mockDataContainer())
         ;
-
-        $controller = new BackendCsvImportController(
-            $this->mockFramework(['files/data.csv'], true),
-            $connection,
-            $requestStack,
-            $translator,
-            $this->getFixturesDir(),
-        );
-
-        $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -261,13 +208,13 @@ class BackendCsvImportControllerTest extends TestCase
 
     public function testFailsIfThereIsNoRequestObject(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
         $controller = new BackendCsvImportController(
             $this->mockFrameworkWithUploader(),
             $connection,
             new RequestStack(),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
             $this->getFixturesDir(),
         );
 
@@ -278,30 +225,14 @@ class BackendCsvImportControllerTest extends TestCase
 
     public function testFailsIfThereAreNoFiles(): void
     {
-        $connection = $this->createMock(Connection::class);
-
         $request = new Request();
         $request->query->set('key', 'lw');
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->method('trans')
-            ->willReturnArgument(0)
+        $response = $this
+            ->getController($request, null, $this->mockFramework([], true))
+            ->importListWizardAction($this->mockDataContainer())
         ;
-
-        $controller = new BackendCsvImportController(
-            $this->mockFramework([], true),
-            $connection,
-            $requestStack,
-            $translator,
-            $this->getFixturesDir(),
-        );
-
-        $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
@@ -309,50 +240,34 @@ class BackendCsvImportControllerTest extends TestCase
 
     public function testFailsIfTheFileExtensionIsNotCsv(): void
     {
-        $connection = $this->createMock(Connection::class);
-
         $request = new Request();
         $request->query->set('key', 'lw');
         $request->request->set('FORM_SUBMIT', 'tl_csv_import_lw');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->method('trans')
-            ->willReturnArgument(0)
+        $response = $this
+            ->getController($request, null, $this->mockFramework(['files/data.jpg'], true))
+            ->importListWizardAction($this->mockDataContainer())
         ;
-
-        $controller = new BackendCsvImportController(
-            $this->mockFramework(['files/data.jpg'], true),
-            $connection,
-            $requestStack,
-            $translator,
-            $this->getFixturesDir(),
-        );
-
-        $response = $controller->importListWizardAction($this->mockDataContainer());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame(302, $response->getStatusCode());
     }
 
-    private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework&MockObject
+    private function mockFramework(array $files = [], bool $expectError = false): ContaoFramework&Stub
     {
-        $uploader = $this->createMock(FileUpload::class);
+        $uploader = $this->createStub(FileUpload::class);
         $uploader
             ->method('uploadTo')
             ->willReturn($files)
         ;
 
-        $adapter = $this->mockAdapter(['addError']);
+        $adapter = $this->createAdapterMock(['addError']);
         $adapter
             ->expects($expectError ? $this->once() : $this->never())
             ->method('addError')
         ;
 
-        $framework = $this->mockContaoFramework([Message::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([Message::class => $adapter]);
         $framework
             ->method('createInstance')
             ->willReturn($uploader)
@@ -361,44 +276,48 @@ class BackendCsvImportControllerTest extends TestCase
         return $framework;
     }
 
-    private function getController(Request|null $request = null): BackendCsvImportController
+    private function getController(Request|null $request = null, Connection|null $connection = null, ContaoFramework|null $framework = null): BackendCsvImportController
     {
-        $requestStack = new RequestStack();
-        $requestStack->push($request ?: new Request());
+        $request ??= new Request();
+        $request->setSession($this->mockSession());
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $requestStack = new RequestStack([$request]);
+
+        System::getContainer()->set('request_stack', $requestStack);
+
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnArgument(0)
         ;
 
         return new BackendCsvImportController(
-            $this->mockFrameworkWithUploader(),
-            $this->createMock(Connection::class),
+            $framework ?? $this->mockFrameworkWithUploader(),
+            $connection ?? $this->createStub(Connection::class),
             $requestStack,
             $translator,
             $this->getFixturesDir(),
         );
     }
 
-    private function mockDataContainer(): DataContainer&MockObject
+    private function mockDataContainer(): DataContainer&Stub
     {
-        $mock = $this->mockClassWithProperties(DataContainer::class);
+        $mock = $this->createClassWithPropertiesStub(DataContainer::class);
         $mock->id = 1;
         $mock->table = 'tl_content';
 
         return $mock;
     }
 
-    private function mockFrameworkWithUploader(): ContaoFramework&MockObject
+    private function mockFrameworkWithUploader(): ContaoFramework&Stub
     {
-        $uploader = $this->createMock(FileUpload::class);
+        $uploader = $this->createStub(FileUpload::class);
         $uploader
             ->method('uploadTo')
             ->willReturn(['files/data/data.csv'])
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->method('createInstance')
             ->willReturn($uploader)

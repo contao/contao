@@ -41,7 +41,7 @@ class LegacyLocaleSwitcherTest extends TestCase
             ->method('getLocale')
         ;
 
-        $legacyLocaleSwitcher = new LegacyLocaleSwitcher($framework, $this->createMock(TranslatorInterface::class));
+        $legacyLocaleSwitcher = new LegacyLocaleSwitcher($framework, $this->createStub(TranslatorInterface::class));
         $legacyLocaleSwitcher->setLocale('de_AT');
 
         $this->assertSame('de-AT', $GLOBALS['TL_LANGUAGE']);

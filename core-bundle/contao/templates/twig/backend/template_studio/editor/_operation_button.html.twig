@@ -1,9 +1,9 @@
-{% trans_default_domain "contao_template_studio" %}
+{% trans_default_domain 'contao_template_studio' %}
 
 {% set button_attributes = attrs()
     .set('formaction', path('_contao_template_studio_operation.stream', {identifier, operation}))
     .set('data-operation', operation)
-    .set('title',  ('operation.' ~ operation ~ '.1')|trans([identifier]))
+    .set('title', ('operation.' ~ operation ~ '.1')|trans([identifier]))
     .set('accesskey', 's', operation == 'save')
     .addClass('operation operation--' ~ operation)
     .mergeWith(button_attributes|default)

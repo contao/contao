@@ -20,11 +20,11 @@ class SwiperControllerTest extends ContentElementTestCase
 {
     public function testOutputsMarkup(): void
     {
-        $text = $this->mockClassWithProperties(ContentModel::class, [
+        $text = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'text',
         ]);
 
-        $image = $this->mockClassWithProperties(ContentModel::class, [
+        $image = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'image',
         ]);
 

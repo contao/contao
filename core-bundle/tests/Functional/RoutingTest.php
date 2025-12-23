@@ -37,6 +37,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
+        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -251,6 +252,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
+        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -480,6 +482,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
+        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -724,6 +727,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
+        $_SERVER['APP_RUNTIME_MODE'] = 'web=1';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());

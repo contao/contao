@@ -1207,7 +1207,7 @@ class StringUtil
 
 		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', \sprintf('%.' . ($precision - 1) . 'e', $number), $match))
 		{
-			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', $number));
+			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', is_nan($number) ? 'NAN' : $number));
 		}
 
 		$significantDigits = rtrim($match[2] . $match[3], '0');
