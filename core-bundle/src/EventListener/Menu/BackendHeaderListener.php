@@ -81,7 +81,7 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
             ->setAttribute('data-controller', 'contao--toggle-state')
             ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
