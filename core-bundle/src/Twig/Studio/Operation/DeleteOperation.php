@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @internal
  */
 #[AsOperationForTemplateStudioElement]
-final class DeleteOperation extends AbstractOperation
+class DeleteOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {

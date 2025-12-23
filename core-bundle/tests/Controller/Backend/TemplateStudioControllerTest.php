@@ -158,6 +158,11 @@ class TemplateStudioControllerTest extends TestCase
             {
                 throw new \RuntimeException('not implemented');
             }
+
+            public function getName(): string
+            {
+                return 'foo_operation';
+            }
         };
 
         $controller = new TemplateStudioController(
@@ -169,7 +174,7 @@ class TemplateStudioControllerTest extends TestCase
             $this->createStub(Autocomplete::class),
             $this->createStub(EnvironmentInformation::class),
             $connection,
-            ['foo_operation' => $fooOperation],
+            [$fooOperation],
         );
 
         $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);

@@ -19,7 +19,7 @@
         {# Headline #}
         <h1 id="main_headline">
             {{ headline }}
-            {{ render(path('contao_backend_favorites', {target_path: app.request.requestUri})) }}
+            {{ include('@Contao/backend/component/_favorites.html.twig') }}
         </h1>
 
         <section id="template-studio" class="content chrome">

@@ -94,7 +94,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'articles' => array
 			(
 				'href'                => 'do=article',
-				'icon'                => 'article.svg'
+				'icon'                => 'article.svg',
+				'method'              => 'POST',
 			)
 		)
 	),
