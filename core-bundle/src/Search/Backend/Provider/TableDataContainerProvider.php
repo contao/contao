@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
@@ -49,6 +50,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly TranslatorInterface $translator,
+        private readonly VirtualFieldHandler $virtualFieldHandler,
     ) {
     }
 
@@ -229,7 +231,7 @@ class TableDataContainerProvider implements ProviderInterface
 
     private function createDocumentFromRow(string $table, array $row, array $fieldsConfig, array $searchableFields): Document|null
     {
-        $searchableContent = $this->extractSearchableContent($row, $fieldsConfig, $searchableFields);
+        $searchableContent = $this->extractSearchableContent($table, $row, $fieldsConfig, $searchableFields);
 
         if ('' === $searchableContent) {
             return null;
@@ -243,29 +245,14 @@ class TableDataContainerProvider implements ProviderInterface
         return self::TYPE_PREFIX.$table;
     }
 
-    private function extractSearchableContent(array $row, array $fieldsConfig, array $searchableFields): string
+    private function extractSearchableContent(string $table, array $row, array $fieldsConfig, array $searchableFields): string
     {
         $searchableContent = [];
 
+        // Expand virtual fields
+        $row = $this->virtualFieldHandler->expandFields($row, $table);
+
         foreach (array_keys($searchableFields) as $field) {
-            if ($targetField = ($fieldsConfig[$field]['saveTo'] ?? null)) {
-                // Do nothing if target field is empty
-                if (!($row[$targetField] ?? null)) {
-                    continue;
-                }
-
-                // Expand storage of virtual fields
-                if (\is_string($row[$targetField])) {
-                    try {
-                        $row[$targetField] = json_decode($row[$targetField], true, flags: JSON_THROW_ON_ERROR);
-                    } catch (\JsonException) {
-                        $row[$targetField] = [];
-                    }
-
-                    $row = array_merge($row, $row[$targetField]);
-                }
-            }
-
             if (isset($row[$field])) {
                 $event = new FormatTableDataContainerDocumentEvent($row[$field], $fieldsConfig[$field] ?? []);
                 $this->eventDispatcher->dispatch($event);

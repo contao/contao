@@ -278,6 +278,10 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    contao.data_container.virtual_field_handler:
+        class: Contao\CoreBundle\DataContainer\VirtualFieldHandler
+        public: true
+
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\CoreBundle\Twig\FragmentTemplate;
-use Contao\CoreBundle\Twig\ModelProxy;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,9 +34,6 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             $this->isBackendScope($request),
             $request->attributes->get('nestedFragments', []),
         );
-
-        // Overwrite model data with model proxy to automatically expand virtual fields
-        $template->set('data', new ModelProxy($model));
 
         $this->tagResponse($model);
 

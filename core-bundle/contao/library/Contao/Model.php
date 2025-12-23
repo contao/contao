@@ -107,11 +107,6 @@ abstract class Model
 	protected $blnPreventSaving = false;
 
 	/**
-	 * Expanded virtual fields
-	 */
-	protected $arrVirtualExpanded = array();
-
-	/**
 	 * @var array<string, array<string, string>>
 	 */
 	private static $arrColumnCastTypes = array();
@@ -202,6 +197,9 @@ abstract class Model
 					$this->arrRelated[$key] = $objRelated;
 				}
 			}
+
+			// Expand virtual fields
+			$this->arrData = System::getContainer()->get('contao.data_container.virtual_field_handler')->expandFields($this->arrData, $this->getTable());
 		}
 	}
 
@@ -281,35 +279,7 @@ abstract class Model
 	 */
 	public function __get($strKey)
 	{
-		if (\array_key_exists($strKey, $this->arrData))
-		{
-			return $this->arrData[$strKey];
-		}
-
-		// Check for virtual fields
-		$table = $this->getTable();
-		Controller::loadDataContainer($table);
-
-		if ($virtualStorage = ($GLOBALS['TL_DCA'][$table]['fields'][$strKey]['saveTo'] ?? null))
-		{
-			if (!\array_key_exists($virtualStorage, $this->arrVirtualExpanded))
-			{
-				try
-				{
-					$expanded = json_decode($this->arrData[$virtualStorage], true, flags: JSON_THROW_ON_ERROR);
-				}
-				catch (\JsonException)
-				{
-					$expanded = null;
-				}
-
-				$this->arrVirtualExpanded[$virtualStorage] = $expanded;
-			}
-
-			return $this->arrVirtualExpanded[$virtualStorage][$strKey] ?? null;
-		}
-
-		return null;
+		return $this->arrData[$strKey] ?? null;
 	}
 
 	/**

@@ -12,12 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\Config;
+use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\DcaLoader;
 use Contao\Model;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -50,17 +49,26 @@ class ModelTest extends TestCase
             ->willReturn($schemaManager)
         ;
 
+        $virtualFieldHandler = $this->createStub(VirtualFieldHandler::class);
+        $virtualFieldHandler
+            ->method('expandFields')
+            ->willReturnCallback(
+                static fn (array $record) => $record,
+            )
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.doctrine.schema_provider', $schemaProvider);
+        $container->set('contao.data_container.virtual_field_handler', $virtualFieldHandler);
         System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_DCA']);
 
-        $this->resetStaticProperties([Model::class, System::class, Config::class, DcaLoader::class]);
+        $this->resetStaticProperties([Model::class, System::class]);
 
         parent::tearDown();
     }
@@ -181,34 +189,6 @@ class ModelTest extends TestCase
         yield [IntBackedEnum::class, IntBackedEnum::optionB->value, IntBackedEnum::optionB];
         yield [StringBackedEnum::class, 'foo', null];
         yield [IntBackedEnum::class, 100, null];
-    }
-
-    public function testReturnsVirtualStorageValue(): void
-    {
-        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
-            'foo' => [
-                'saveTo' => 'jsonData',
-            ],
-            'empty' => [
-                'saveTo' => 'jsonData',
-            ],
-        ];
-
-        $fooModel = new class() extends Model {
-            protected static $strTable = 'tl_foobar';
-
-            public function __construct()
-            {
-                $this->arrData = [
-                    'lorem' => 'ipsum',
-                    'jsonData' => json_encode(['foo' => 'bar'], JSON_THROW_ON_ERROR),
-                ];
-            }
-        };
-
-        $this->assertSame('ipsum', $fooModel->lorem);
-        $this->assertSame('bar', $fooModel->foo);
-        $this->assertNull($fooModel->empty);
     }
 
     private function createSchema(bool $fromDatabase): Schema

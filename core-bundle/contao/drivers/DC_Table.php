@@ -267,27 +267,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$table = $table ?: $this->strTable;
 
-		Controller::loadDataContainer($table);
-
-		// Expand virtual fields
-		foreach ($currentRecord as $field => $value)
-		{
-			$config = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? array();
-
-			if (($config['virtualTarget'] ?? null) && $value)
-			{
-				try
-				{
-					$currentRecord = array_merge($currentRecord, json_decode($value, true, flags: JSON_THROW_ON_ERROR));
-				}
-				catch (\JsonException)
-				{
-					// noop
-				}
-			}
-		}
-
-		return $currentRecord;
+		return System::getContainer()->get('contao.data_container.virtual_field_handler')->expandFields($currentRecord, $table);
 	}
 
 	/**

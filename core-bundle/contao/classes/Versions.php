@@ -461,32 +461,9 @@ class Versions extends Controller
 				$arrFields = $objDcaExtractor->getFields();
 
 				// Expand virtual fields
-				foreach (array_keys(array_merge($to, $from)) as $k)
-				{
-					if (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['virtualTarget'] ?? null))
-					{
-						continue;
-					}
-
-					try
-					{
-						foreach (json_decode($to[$k], true, flags: JSON_THROW_ON_ERROR) as $virtualField => $virtualValue)
-						{
-							$to[$virtualField] = $virtualValue;
-						}
-
-						foreach (json_decode($from[$k], true, flags: JSON_THROW_ON_ERROR) as $virtualField => $virtualValue)
-						{
-							$from[$virtualField] = $virtualValue;
-						}
-					}
-					catch (\JsonException)
-					{
-						// noop
-					}
-
-					unset($to[$k], $from[$k]);
-				}
+				$virtualFieldHandler = System::getContainer()->get('contao.data_container.virtual_field_handler');
+				$to = $virtualFieldHandler->expandFields($to, $this->strTable, true);
+				$from = $virtualFieldHandler->expandFields($from, $this->strTable, true);
 
 				// Find the changed fields and highlight the changes
 				foreach (array_keys(array_merge($to, $from)) as $k)

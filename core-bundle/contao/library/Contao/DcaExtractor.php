@@ -89,6 +89,17 @@ class DcaExtractor extends Controller
 	protected $blnIsDbTable = false;
 
 	/**
+	 * Virtual field targets
+	 * @var array
+	 */
+	protected $arrVirtualTargets = array();
+
+	/**
+	 * Virtual fields
+	 */
+	protected $arrVirtualFields = array();
+
+	/**
 	 * Load or create the extract
 	 *
 	 * @param string $strTable The table name
@@ -264,6 +275,26 @@ class DcaExtractor extends Controller
 	}
 
 	/**
+	 * Returns the fields used as targets for virtual fields
+	 *
+	 * @return array The virtual field targets
+	 */
+	public function getVirtualTargets()
+	{
+		return $this->arrVirtualTargets;
+	}
+
+	/**
+	 * Returns the virtual fields
+	 *
+	 * @return array The virtual fields
+	 */
+	public function getVirtualFields()
+	{
+		return $this->arrVirtualFields;
+	}
+
+	/**
 	 * Return an array that can be used by the database installer
 	 *
 	 * @return array The data array
@@ -412,6 +443,18 @@ class DcaExtractor extends Controller
 				if (isset($config['enum']))
 				{
 					$this->arrEnums[$field] = $config['enum'];
+				}
+
+				// Store as virtual field target
+				if (($config['virtualTarget'] ?? false) && ($config['sql'] ?? null))
+				{
+					$this->arrVirtualTargets[] = $field;
+				}
+
+				// Store as virtual field
+				if (!($config['sql'] ?? null) && ($config['saveTo'] ?? null))
+				{
+					$this->arrVirtualFields[$field] = $config['saveTo'];
 				}
 			}
 		}
