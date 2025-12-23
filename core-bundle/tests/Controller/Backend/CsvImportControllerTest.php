@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
 use Contao\Config;
-use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\Backend\CsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class BackendCsvImportControllerTest extends TestCase
+class CsvImportControllerTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -210,7 +210,7 @@ class BackendCsvImportControllerTest extends TestCase
     {
         $connection = $this->createStub(Connection::class);
 
-        $controller = new BackendCsvImportController(
+        $controller = new CsvImportController(
             $this->mockFrameworkWithUploader(),
             $connection,
             new RequestStack(),
@@ -276,7 +276,7 @@ class BackendCsvImportControllerTest extends TestCase
         return $framework;
     }
 
-    private function getController(Request|null $request = null, Connection|null $connection = null, ContaoFramework|null $framework = null): BackendCsvImportController
+    private function getController(Request|null $request = null, Connection|null $connection = null, ContaoFramework|null $framework = null): CsvImportController
     {
         $request ??= new Request();
         $request->setSession($this->mockSession());
@@ -291,7 +291,7 @@ class BackendCsvImportControllerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        return new BackendCsvImportController(
+        return new CsvImportController(
             $framework ?? $this->mockFrameworkWithUploader(),
             $connection ?? $this->createStub(Connection::class),
             $requestStack,

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
-use Contao\CoreBundle\Controller\BackendTemplateStudioController;
+use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Finder\Finder;
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-class BackendTemplateStudioControllerTest extends TestCase
+class TemplateStudioControllerTest extends TestCase
 {
     #[DataProvider('provideControllerActionsThatValidateIdentifiers')]
     public function testInvalidIdentifierIsDenied(string $action, array $parameters, string|null $streamError = null, Request|null $request = null): void
@@ -101,7 +101,7 @@ class BackendTemplateStudioControllerTest extends TestCase
     /**
      * @param (Environment&MockObject)|null $twig
      */
-    private function getBackendTemplatedStudioController(Environment|null $twig = null, Request|null $request = null): BackendTemplateStudioController
+    private function getBackendTemplatedStudioController(Environment|null $twig = null, Request|null $request = null): TemplateStudioController
     {
         $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
@@ -165,7 +165,7 @@ class BackendTemplateStudioControllerTest extends TestCase
             }
         };
 
-        $controller = new BackendTemplateStudioController(
+        $controller = new TemplateStudioController(
             $loader,
             $finderFactory,
             $this->createStub(Inspector::class),

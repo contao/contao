@@ -2,7 +2,7 @@ services:
     _defaults:
         autoconfigure: true
 
-    Contao\CoreBundle\Controller\BackendSearchController:
+    Contao\CoreBundle\Controller\Backend\SearchController:
         public: true
         arguments:
             - '@security.helper'

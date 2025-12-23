@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Controller;
+namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Finder\Finder;
@@ -43,7 +43,7 @@ use Twig\Error\SyntaxError;
  * @experimental
  */
 #[IsGranted('ROLE_ADMIN', message: 'Access restricted to administrators.')]
-class BackendTemplateStudioController extends AbstractBackendController
+class TemplateStudioController extends AbstractBackendController
 {
     /**
      * @var array<string, list<OperationInterface>>
