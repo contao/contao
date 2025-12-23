@@ -14,6 +14,7 @@ use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Create and execute queries
@@ -255,7 +256,7 @@ class Statement
 			}
 
 			// Native JSON support
-			if (\is_array($varParam) && 'json' === $arrTypes[$key])
+			if (\is_array($varParam) && Types::JSON === $arrTypes[$key])
 			{
 				continue;
 			}
