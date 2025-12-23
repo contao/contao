@@ -53,7 +53,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'id' => $this->id,
             'operations' => $operations,
             'has_primary' => [] !== array_filter(array_column($operations, 'primary'), static fn ($v) => null !== $v),
-            'globalOperations' => false,
+            'global_operations' => false,
         ]);
     }
 

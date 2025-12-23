@@ -104,7 +104,7 @@ class JobsListener
             'has_primary' => true,
             'more_icon' => 'theme_import.svg',
             'more_alt' => 'MSC.viewAttachments',
-            'globalOperations' => false,
+            'global_operations' => false,
         ]));
     }
 

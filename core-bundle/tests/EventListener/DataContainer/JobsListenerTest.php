@@ -107,7 +107,7 @@ class JobsListenerTest extends AbstractJobsTestCase
                     function (array $context): bool {
                         $this->assertSame('theme_import.svg', $context['more_icon']);
                         $this->assertTrue($context['has_primary']);
-                        $this->assertFalse($context['globalOperations']);
+                        $this->assertFalse($context['global_operations']);
 
                         $this->assertCount(2, $context['operations']);
                         $this->assertSame('theme_import.svg', $context['operations'][0]['icon']);
