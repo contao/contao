@@ -17,10 +17,10 @@ export default class extends Controller {
             this.controlsTarget.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
         }
 
-        this.controllerTargets.forEach((controllerTarget) => {
+        for (const controllerTarget of this.controllerTargets) {
             controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
             controllerTarget.setAttribute('aria-expanded', 'false');
-        });
+        }
     }
 
     toggle() {
@@ -65,7 +65,7 @@ export default class extends Controller {
             this.controlsTarget.classList.toggle(this.inactiveClass, !state);
         }
 
-        this.controllerTargets.forEach((controllerTarget) => {
+        for (const controllerTarget of this.controllerTargets) {
             controllerTarget.classList.toggle('active', state);
             controllerTarget.setAttribute('aria-expanded', state);
 
@@ -74,14 +74,14 @@ export default class extends Controller {
             } else if (!state && this.hasInactiveTitleValue) {
                 controllerTarget.title = this.inactiveTitleValue;
             }
-        });
+        }
 
-        (this.hasLabelTarget ? this.labelTargets : this.controllerTargets).forEach((el) => {
+        for (const el of this.hasLabelTarget ? this.labelTargets : this.controllerTargets) {
             if (state && this.hasActiveLabelValue) {
                 el.innerText = this.activeLabelValue;
             } else if (!state && this.hasInactiveLabelValue) {
                 el.innerText = this.inactiveLabelValue;
             }
-        });
+        }
     }
 }

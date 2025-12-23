@@ -7,6 +7,8 @@ export default class extends Controller {
     connect() {
         const count = this.parentTarget.querySelectorAll(this.selectorValue).length;
 
-        this.countTargets.forEach((el) => (el.innerText = count !== 0 ? count : ''));
+        for (const el of this.countTargets) {
+            el.innerText = count !== 0 ? count : '';
+        }
     }
 }
