@@ -8,7 +8,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations'];
+    static targets = ['content', 'themeSelector', 'tabs', 'editor', 'editorAnnotations'];
 
     #editors = new Map();
     #turboStreamConnection = new TurboStreamConnection();
@@ -70,6 +70,10 @@ export default class extends Controller {
         for (const editor of this.#editors.values()) {
             editor.setColorScheme(event.detail.mode);
         }
+    }
+
+    enterFullscreen(event) {
+        this.contentTarget.requestFullscreen();
     }
 
     #addOpenEditorTabsToRequest(event) {
