@@ -2945,6 +2945,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 	margin-top: 5px;
 	padding: 10px 15px;
 	position: relative;
+	pointer-events: none;
 }
 
 .tl_undo_preview td {
