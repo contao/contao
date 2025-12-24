@@ -53,15 +53,13 @@ export default class extends Controller {
         }
 
         setColorScheme();
+        this.setLabel();
 
         this.dispatch('change', {
             detail: {
                 mode: isDark ? 'dark' : 'light',
             },
         });
-
-        // Change the label after the dropdown is hidden
-        setTimeout(this.setLabel, 300);
     }
 
     setLabel() {
@@ -69,8 +67,6 @@ export default class extends Controller {
             return;
         }
 
-        const label = this.i18nValue[prefersDark() ? 'light' : 'dark'];
-
-        this.labelTarget.innerText = label;
+        this.labelTarget.innerText = this.i18nValue[prefersDark() ? 'light' : 'dark'];
     }
 }
