@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class VirtualFieldHandlerTest extends TestCase
 {
     #[DataProvider('virtualFieldsProvider')]
-    public function testExpandsVirtualFields(array $record, array $targets, array $fields, array $expanded, bool $unset = false): void
+    public function testExpandsVirtualFields(array $record, array $targets, array $fields, array $expanded): void
     {
         $table = 'tl_foobar';
 
@@ -41,7 +41,7 @@ class VirtualFieldHandlerTest extends TestCase
 
         $virtualFieldHandler = new VirtualFieldHandler($contaoFramework);
 
-        $this->assertSame($expanded, $virtualFieldHandler->expandFields($record, $table, $unset));
+        $this->assertSame($expanded, $virtualFieldHandler->expandFields($record, $table));
     }
 
     public static function virtualFieldsProvider(): iterable
@@ -50,13 +50,13 @@ class VirtualFieldHandlerTest extends TestCase
             ['foobar' => json_encode(['lorem' => 'ipsum']), 'moo' => 'bar'],
             ['foobar'],
             ['lorem' => 'foobar'],
-            ['foobar' => json_encode(['lorem' => 'ipsum']), 'moo' => 'bar', 'lorem' => 'ipsum'],
+            ['moo' => 'bar', 'lorem' => 'ipsum'],
         ];
 
         yield 'Does not expand non-storage fields' => [
             ['foobar' => json_encode(['lorem' => 'ipsum']), 'moo' => 'bar'],
             [],
-            ['lorem'],
+            ['lorem' => 'nope'],
             ['foobar' => json_encode(['lorem' => 'ipsum']), 'moo' => 'bar'],
         ];
 
@@ -64,15 +64,7 @@ class VirtualFieldHandlerTest extends TestCase
             ['foobar' => json_encode(['lorem' => 'ipsum', 'dolor' => 'sit']), 'moo' => 'bar'],
             ['foobar'],
             ['lorem' => 'foobar'],
-            ['foobar' => json_encode(['lorem' => 'ipsum', 'dolor' => 'sit']), 'moo' => 'bar', 'lorem' => 'ipsum'],
-        ];
-
-        yield 'Removes storage data' => [
-            ['foobar' => json_encode(['lorem' => 'ipsum', 'dolor' => 'sit']), 'moo' => 'bar'],
-            ['foobar'],
-            ['lorem' => 'foobar'],
             ['moo' => 'bar', 'lorem' => 'ipsum'],
-            true,
         ];
     }
 }

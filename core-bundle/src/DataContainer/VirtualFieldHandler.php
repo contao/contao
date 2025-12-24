@@ -21,7 +21,7 @@ class VirtualFieldHandler
     {
     }
 
-    public function expandFields(array $record, string $table, bool $unsetStorage = false): array
+    public function expandFields(array $record, string $table): array
     {
         $dcaExtractor = $this->contaoFramework->createInstance(DcaExtractor::class, [$table]);
 
@@ -36,9 +36,7 @@ class VirtualFieldHandler
                 }
             }
 
-            if ($unsetStorage) {
-                unset($record[$target]);
-            }
+            unset($record[$target]);
         }
 
         // Unset non-virtual fields
