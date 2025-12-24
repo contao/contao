@@ -4712,9 +4712,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						list($f) = explode(':', $f, 2);
 					}
 
-					$parameters['table_headers'][$f] = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? null) ?
-						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'][0] :
-						($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? $f)
+					$parameters['table_headers'][$f] = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? null)
+						? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'][0]
+						: ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? $f)
 					;
 				}
 			}
