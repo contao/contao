@@ -42,40 +42,6 @@
                         </div>
                     {% endif %}
 
-                        {% set tree_attributes = attrs()
-                            .addClass(['tl_listing', tree_class, as_picker and picker.type ? 'picker unselectable'])
-                        %}
-                        <ul{{ tree_attributes }}>
-                            <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
-                                <div class="tl_left"></div>
-                                <div class="tl_right">{{ actions|raw }}</div>
-                            </li>
-                            {{ records|raw }}
-                        </ul>
-                        {% if as_picker and picker.type == 'radio' %}
-                            {# Add an input to reset picker radio buttons #}
-                            <div class="tl_radio_reset">
-                                <label for="tl_radio_reset" class="tl_radio_label">
-                                    {{ 'MSC.resetSelected'|trans }}
-                                </label>
-                                <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endblock %}
-            {% else %}
-                <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
-                    <div class="tl_formbody_edit">
-                        <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-                        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-                        {{ block('list') }}
-                    </div>
-                    {{ buttons|raw }}
-                </form>
-            {% endif %}
-        {% else %}
-            <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
-        {% endif %}
                     {% set tree_attributes = attrs()
                         .addClass('tl_listing')
                         .addClass('tl_tree', not extended_mode)
@@ -103,6 +69,7 @@
             {% endblock %}
         {% else %}
             {# Wrap listing in a form for select mode #}
+            {# todo: generalize with list #}
             <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
                 <div class="tl_formbody_edit">
                     <input type="hidden" name="FORM_SUBMIT" value="tl_select">

@@ -4757,7 +4757,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$parameters['message'] = Message::generate();
-		$parameters['operations'] = $operations;
+		$parameters['global_operations'] = $operations;
 		$parameters['records'] = $records;
 		$parameters['order_by'] = $firstOrderBy;
 		$parameters['limit_height'] = (int) $limitHeight;
