@@ -32,7 +32,7 @@ class VirtualFieldHandler
             if ($record[$target] ?? null) {
                 if (\is_array($record[$target])) {
                     $decoded = $record[$target];
-                } else {
+                } elseif (\is_string($record[$target])) {
                     try {
                         $decoded = json_decode($record[$target], true, flags: JSON_THROW_ON_ERROR);
                     } catch (\JsonException) {
@@ -40,7 +40,7 @@ class VirtualFieldHandler
                     }
                 }
 
-                if (\is_array($decoded)) {
+                if (isset($decoded) && \is_array($decoded)) {
                     $expanded = [...$expanded, ...$decoded];
                 }
             }

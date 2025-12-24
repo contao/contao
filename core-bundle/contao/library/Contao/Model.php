@@ -394,7 +394,7 @@ abstract class Model
 		// Expand virtual fields
 		if ($container->has('contao.data_container.virtual_field_handler'))
 		{
-			$arrData = $container->get('contao.data_container.virtual_field_handler')->expandFields($arrData, $this->getTable());
+			$arrData = $container->get('contao.data_container.virtual_field_handler')->expandFields($arrData, static::$strTable);
 		}
 
 		$this->arrData = $arrData;
@@ -551,24 +551,26 @@ abstract class Model
 		}
 
 		$objDatabase = Database::getInstance();
+		$objDca = DcaExtractor::getInstance(static::$strTable);
 		$arrFields = $objDatabase->getFieldNames(static::$strTable);
+		$arrRow = $this->row();
+
+		$container = System::getContainer();
+
+		// Compress virtual fields
+		if ($container->has('contao.data_container.virtual_field_handler'))
+		{
+			$arrRow = $container->get('contao.data_container.virtual_field_handler')->combineFields($arrRow, static::$strTable);
+		}
 
 		// The model is in the registry
 		if (Registry::getInstance()->isRegistered($this))
 		{
 			$arrSet = array();
-			$arrRow = $this->row();
-
-			$container = System::getContainer();
-
-			// Compress virtual fields
-			if ($container->has('contao.data_container.virtual_field_handler'))
-			{
-				$arrRow = $container->get('contao.data_container.virtual_field_handler')->combineFields($arrRow, $this->getTable());
-			}
+			$arrTypes = array();
 
 			// Mark virtual field targets as modified, if virtual field is modified
-			foreach (DcaExtractor::getInstance($this->getTable())->getVirtualFields() as $virtualField => $target)
+			foreach ($objDca->getVirtualFields() as $virtualField => $target)
 			{
 				if (\array_key_exists($virtualField, $this->arrModified))
 				{
@@ -594,6 +596,9 @@ abstract class Model
 				return $this;
 			}
 
+			// Ensure JSON data type for virtual field targets when saving to database
+			$arrTypes = array_map(static fn (string $k) => \in_array($k, $objDca->getVirtualTargets()) ? Types::JSON : null, array_keys($arrSet));
+
 			// Track primary key changes
 			$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
@@ -605,7 +610,7 @@ abstract class Model
 			// Update the row
 			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 						->set($arrSet)
-						->execute($intPk);
+						->query('', array_merge(array_values($arrSet), array($intPk)), array_values($arrTypes));
 
 			$this->postSave(self::UPDATE);
 			$this->arrModified = array(); // reset after postSave()
@@ -614,7 +619,7 @@ abstract class Model
 		// The model is not yet in the registry
 		else
 		{
-			$arrSet = $this->row();
+			$arrSet = $arrRow;
 
 			// Remove fields that do not exist in the DB
 			foreach ($arrSet as $k=>$v)
@@ -633,10 +638,13 @@ abstract class Model
 				return $this;
 			}
 
+			// Ensure JSON data type for virtual field targets when saving to database
+			$arrTypes = array_map(static fn (string $k) => \in_array($k, $objDca->getVirtualTargets()) ? Types::JSON : null, array_keys($arrSet));
+
 			// Insert a new row
 			$stmt = $objDatabase->prepare("INSERT INTO " . static::$strTable . " %s")
 								->set($arrSet)
-								->execute();
+								->query('', array_values($arrSet), array_values($arrTypes));
 
 			if (static::$strPk == 'id')
 			{
