@@ -10,11 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\Controller\AbstractBackendController;
+use Contao\CoreBundle\Controller\Backend\AbstractBackendController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
@@ -36,7 +36,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -112,7 +111,6 @@ class AbstractBackendControllerTest extends TestCase
             'getLocaleString' => $this->anything(),
             'getDateString' => $this->anything(),
             'as_editor_view' => true,
-            'toggleFavorites' => '#fragment',
         ];
 
         $container = $this->getContainerWithDefaultConfiguration($expectedContext);
@@ -189,7 +187,6 @@ class AbstractBackendControllerTest extends TestCase
             'getLocaleString' => self::anything(),
             'getDateString' => self::anything(),
             'as_editor_view' => true,
-            'toggleFavorites' => '#fragment',
         ];
 
         $customContext = [
@@ -379,12 +376,6 @@ class AbstractBackendControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $fragmentHandler = $this->createStub(FragmentHandler::class);
-        $fragmentHandler
-            ->method('render')
-            ->willReturn('#fragment')
-        ;
-
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('security.token_storage', $this->createStub(TokenStorageInterface::class));
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
@@ -395,7 +386,6 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('router', $this->createStub(RouterInterface::class));
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
-        $container->set('fragment.handler', $fragmentHandler);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 

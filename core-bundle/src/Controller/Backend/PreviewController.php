@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Controller;
+namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
@@ -32,7 +32,7 @@ use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
  * used. When requested, the front end user gets authenticated.
  */
 #[Route('%contao.backend.route_prefix%/preview', name: 'contao_backend_preview', defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false])]
-class BackendPreviewController
+class PreviewController
 {
     public function __construct(
         private readonly string $previewScript,

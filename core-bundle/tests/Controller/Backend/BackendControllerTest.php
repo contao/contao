@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
-use Contao\CoreBundle\Controller\BackendController;
+use Contao\CoreBundle\Controller\Backend\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Tests\TestCase;

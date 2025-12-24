@@ -6,11 +6,16 @@ export default class extends Controller {
     static targets = ['count', 'filter'];
 
     connect() {
-        this.#updateCountNumber();
+        if (this.hasCountTarget) {
+            this.#updateCountNumber();
+        }
     }
 
     disconnect() {
-        this.countTarget.innerText = '';
+        if (this.hasCountTarget) {
+            this.countTarget.innerText = '';
+        }
+
         this.#filterMap.clear();
     }
 

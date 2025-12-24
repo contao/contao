@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Controller;
+namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Finder\Finder;
@@ -43,16 +43,13 @@ use Twig\Error\SyntaxError;
  * @experimental
  */
 #[IsGranted('ROLE_ADMIN', message: 'Access restricted to administrators.')]
-class BackendTemplateStudioController extends AbstractBackendController
+class TemplateStudioController extends AbstractBackendController
 {
     /**
-     * @var array<string, OperationInterface>
+     * @var array<string, list<OperationInterface>>
      */
     private array $operations;
 
-    /**
-     * @param iterable<string, OperationInterface> $operations
-     */
     public function __construct(
         private readonly ContaoFilesystemLoader $loader,
         private readonly FinderFactory $finder,
@@ -62,9 +59,18 @@ class BackendTemplateStudioController extends AbstractBackendController
         private readonly Autocomplete $autocomplete,
         private readonly EnvironmentInformation $environmentInformation,
         private readonly Connection $connection,
-        iterable $operations,
+        iterable $taggedOperations,
     ) {
-        $this->operations = $operations instanceof \Traversable ? iterator_to_array($operations) : $operations;
+        $operationsByName = [];
+
+        foreach ($taggedOperations as $operation) {
+            $name = $operation->getName();
+            $operationsByName[$name] = [$operation, ...$operationsByName[$name] ?? []];
+        }
+
+        ksort($operationsByName);
+
+        $this->operations = $operationsByName;
     }
 
     #[Route(
@@ -163,7 +169,15 @@ class BackendTemplateStudioController extends AbstractBackendController
         $operationNames = array_keys(
             array_filter(
                 $this->operations,
-                static fn (OperationInterface $operation) => $operation->canExecute($operationContext),
+                static function (array $candidates) use ($operationContext) {
+                    foreach ($candidates as $candidate) {
+                        if ($candidate->canExecute($operationContext)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                },
             ),
         );
 
@@ -206,6 +220,9 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'shadowed' => $shadowed,
                     'warning' => false,
                     'not_analyzable' => false,
+                    'legacy_pair' => !str_contains($templateNameInformation['identifier'], '/')
+                        && $this->loader->exists("@Contao/{$templateNameInformation['identifier']}.html5")
+                        && 'Contao_Global' !== $templateNameInformation['namespace'],
                 ],
                 'annotations' => $canEdit && 0 === $i
                     ? $this->getAnnotations($logicalName, $templateInformation)
@@ -393,7 +410,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function operation(Request $request, string $identifier, #[MapQueryParameter('operation')] string $operationName): Response
     {
-        if (null === ($operation = ($this->operations[$operationName] ?? null)) || !$this->isAllowedIdentifier($identifier)) {
+        if (null === ($candidates = ($this->operations[$operationName] ?? null)) || !$this->isAllowedIdentifier($identifier)) {
             return new Response(
                 'Cannot execute given operation for the given template identifier.',
                 Response::HTTP_FORBIDDEN,
@@ -402,7 +419,15 @@ class BackendTemplateStudioController extends AbstractBackendController
 
         $operationContext = $this->getOperationContext($identifier);
 
-        $result = $operation->execute($request, $operationContext);
+        $result = null;
+
+        foreach ($candidates as $candidate) {
+            if ($candidate->canExecute($operationContext)) {
+                $result = $candidate->execute($request, $operationContext);
+
+                break;
+            }
+        }
 
         // Operations can either stream their own intermediary steps, a custom result or
         // nothing at all - in which case we stream a default result.
@@ -432,6 +457,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         }
 
         $prefixTree = [];
+        $notPrefixed = [];
 
         foreach ($this->getFinder() as $identifier => $extension) {
             $parts = explode('/', $identifier);
@@ -456,6 +482,12 @@ class BackendTemplateStudioController extends AbstractBackendController
                 }
             };
 
+            // Group templates without prefix under their own key
+            if (!str_contains($identifier, '/')) {
+                $notPrefixed[$identifier] = [$leaf];
+                continue;
+            }
+
             $node = [...$node, $leaf];
         }
 
@@ -472,9 +504,19 @@ class BackendTemplateStudioController extends AbstractBackendController
         };
 
         $sortRecursive($prefixTree);
+        ksort($notPrefixed);
 
-        // Apply opinionated ordering
-        return ['content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
+        return array_filter([
+            // Apply opinionated ordering by explicitly placing keys of the prefix tree
+            // before merging it
+            'page' => [],
+            'content_element' => [],
+            'frontend_module' => [],
+            'component' => [],
+            ...$prefixTree,
+            // Append nodes without prefix to the end under a virtual key
+            '' => $notPrefixed,
+        ]);
     }
 
     /**
@@ -514,7 +556,7 @@ class BackendTemplateStudioController extends AbstractBackendController
 
             $data['error'] = [
                 'line' => $error->getLine() > 0 ? $error->getLine() : 1,
-                'message' => "Syntax Error\n\n{$message}",
+                'message' => "Syntax Error\n\n$message",
             ];
         } elseif ($error instanceof LoaderError) {
             $data['error'] = [
