@@ -376,8 +376,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function render(string $component, array $parameters): string
 	{
-		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
-
 		$defaultParameters = array(
 			'table' => $this->table,
 			'sorting_mode' => (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0),
@@ -386,7 +384,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'error' => $this->noReload,
 			'as_select' => Input::get('act') === 'select',
 			'as_picker' => (bool) $this->strPickerFieldType,
-			'as_clipboard' => null !== $arrClipboard
+			'as_clipboard' => null !== System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable)
 		);
 
 		if ($defaultParameters['as_picker'])
@@ -3397,6 +3395,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$operations->addFilterButton();
+
 		$parameters['operations'] = Message::generate() . $operations;
 
 		$tree = '';
@@ -4036,6 +4036,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
+		$operations->addFilterButton();
+
 		$return = Message::generate() . $operations;
 
 		// Get all details of the parent record
@@ -4629,30 +4631,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->append(array('html' => $buttons), true);
 		}
 
-		$return = Message::generate() . $operations;
+		$operations->addFilterButton();
 
-		// Return "no records found" message
-		if ($objRow->numRows < 1)
-		{
-			$return .= '
-<p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
-		}
+		$parameters = array();
+		$records = array();
 
-		// List records
-		else
+		if ($objRow->numRows)
 		{
 			$result = $objRow->fetchAllAssoc();
-
-			$return .= ((Input::get('act') == 'select') ? '
-<form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' : '') . '
-<div class="tl_listing_container list_view" id="tl_listing" data-controller="contao--check-all"' . $this->getPickerValueAttribute() . '>' . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
-<div class="tl_select_trigger">
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
-</div>' : '') . '
-<table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
@@ -4681,12 +4667,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Generate the table header if the "show columns" option is active
+			$parameters['table_headers'] = array();
+
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
 			{
-				$return .= '
-<thead>
-  <tr>';
-
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
 					if (str_contains($f, ':'))
@@ -4694,20 +4678,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						list($f) = explode(':', $f, 2);
 					}
 
-					$return .= '
-    <th class="tl_folder_tlist col_' . $f . (($f == $firstOrderBy) ? ' ordered_by' : '') . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? $f)) . '</th>';
+					$parameters['table_headers'][$f] = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? null)
+						? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'][0]
+						: ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? $f)
+					;
 				}
-
-				$return .= '
-    <th class="tl_folder_tlist tl_right_nowrap"></th>
-  </tr>
-</thead>
-<tbody>';
 			}
 
 			// Process result and add label and buttons
 			$remoteCur = false;
-			$groupclass = 'tl_folder_tlist';
 
 			foreach ($result as $row)
 			{
@@ -4715,6 +4694,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				static::setCurrentRecordCache($row['id'], $this->strTable, $row);
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
+
+				$record = array(
+					'id' => $row['id'],
+					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
+					'buttons' => $this->generateButtons($row, $this->strTable, $this->root),
+				);
+
+				if ($this->strPickerFieldType)
+				{
+					$record['picker_input_field'] = $this->getPickerInputField($row['id']);
+				}
 
 				$this->current[] = $row['id'];
 				$label = $this->generateRecordLabel($row, $this->strTable);
@@ -4733,101 +4723,61 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row);
 						$remoteCur = $remoteNew;
 
-						$return .= '
-  <tr>
-    <th colspan="2" class="' . $groupclass . '">' . $group . '</th>
-  </tr>';
-						$groupclass = 'tl_folder_list';
+						$record['group_header'] = $group;
 					}
 				}
 
-				$return .= '
-  <tr class="' . ((string) ($row['tstamp'] ?? null) === '0' ? 'draft ' : '') . ' hover-row" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">
-    ';
-
-				$colspan = 1;
-
-				// Handle strings and arrays
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
+				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false)
 				{
-					$label = \is_array($label) ? implode(' ', $label) : $label;
-				}
-				elseif (!\is_array($label))
-				{
-					$label = array($label);
-					$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
-				}
+					$colspan = 1;
 
-				// Show columns
-				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
-				{
+					if (!\is_array($label))
+					{
+						$label = array($label);
+						$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
+					}
+
+					$record['columns'] = array();
+					$record['columns_colspan'] = $colspan;
+
 					foreach ($label as $j=>$arg)
 					{
 						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
+						$name = explode(':', $field, 2)[0];
 						$value = (string) $arg !== '' ? $arg : '-';
 
-						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . explode(':', $field, 2)[0] . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
+						$record['columns'][$name] = $value;
 					}
 				}
 				else
 				{
-					$return .= '<td class="tl_file_list">' . ($limitHeight ? '<div data-contao--limit-height-target="node">' : '') . $label . ($limitHeight ? '</div>' : '') . '</td>';
+					$record['label'] = \is_array($label) ? implode(' ', $label) : $label;
 				}
 
-				// Buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
-				$return .= ((Input::get('act') == 'select') ? '
-    <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_' . $row['id'] . '" class="tl_tree_checkbox" data-contao--check-all-target="input" data-action="contao--check-all#toggleInput" value="' . $row['id'] . '"></td>' : '
-    <td class="tl_file_list tl_right_nowrap">' . $this->generateButtons($row, $this->strTable, $this->root) . ($this->strPickerFieldType ? $this->getPickerInputField($row['id']) : '') . '</td>') . '
-  </tr>';
+				$records[] = $record;
 			}
-
-			// Close the table body if the "show columns" option is active
-			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
-			{
-				$return .= '</tbody>';
-			}
-
-			// Close the table
-			$return .= '
-</table>' . ($this->strPickerFieldType == 'radio' ? '
-<div class="tl_radio_reset">
-<label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-</div>' : '') . '
-</div>';
 
 			// Add another panel at the end of the page
 			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 			{
-				$return .= $this->paginationMenu();
+				$parameters['pagination'] = $this->paginationMenu();
 			}
 
 			// Close the form
 			if (Input::get('act') == 'select')
 			{
-				$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
-
-				$return .= '
-</div>
-  ' . $strButtons . '
-</form>';
+				$parameters['buttons'] = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
 			}
 		}
 
-		if ($limitHeight)
-		{
-			$return = '<div
-				data-controller="contao--limit-height"
-				data-contao--limit-height-max-value="' . $limitHeight . '"
-				data-contao--limit-height-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
-				data-contao--limit-height-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
-				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
-				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
-				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
-			>' . $return . '</div>';
-		}
+		$parameters['message'] = Message::generate();
+		$parameters['operations'] = $operations;
+		$parameters['records'] = $records;
+		$parameters['order_by'] = $firstOrderBy;
+		$parameters['limit_height'] = (int) $limitHeight;
+		$parameters['show_columns'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false;
 
-		return $return;
+		return $this->render('view/list', $parameters);
 	}
 
 	/**
@@ -5519,7 +5469,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'options' => array(
 					array(
 						'value' => 'tl_' . $field,
-						'label' => '---',
+						'label' => '-',
 						'selected' => false,
 					),
 					...$options,
@@ -5574,7 +5524,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$pagination = System::getContainer()->get('contao.pagination.factory')->create($paginationConfig);
 
-		return System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
+		return System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination, 'form_submit' => 'tl_pagination'));
 	}
 
 	/**

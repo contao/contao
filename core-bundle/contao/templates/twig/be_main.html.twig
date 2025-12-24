@@ -22,6 +22,15 @@
     .mergeWith(containerAttributes|default)
 -%}
 
+{% set mainAttributes = attrs()
+    .set('id', 'main')
+    .set('aria-labelledby', 'main_headline')
+    .set('data-controller', 'contao--toggle-state contao--filter')
+    .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+    .set('data-contao--toggle-state-active-class', 'filter-active')
+    .mergeWith(mainAttributes|default)
+%}
+
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
 <head>
@@ -104,14 +113,14 @@
 
         {% block main %}
             <turbo-frame id="contao-main" target="_top">
-                <main id="main" aria-labelledby="main_headline">
+                <main{{ mainAttributes }}>
                     {% block main_headline %}
                         <h1 id="main_headline">
                             {{ headline|raw }}
-                            {{ toggleFavorites|raw }}
+                            {{ include('@Contao/backend/component/_favorites.html.twig') }}
                         </h1>
                     {% endblock %}
-                    <div class="content">
+                    <div class="content" data-contao--toggle-state-target="controls">
                         {% if pickerMenu|default %}
                             <div id="picker-menu">
                                 {{ pickerMenu|raw }}

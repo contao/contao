@@ -1,6 +1,7 @@
 {% trans_default_domain 'contao_default' %}
 
 {% set view_attributes = attrs()
+    .addClass('tree-view')
     .set('data-controller', 'contao--toggle-nodes')
     .set('data-contao--toggle-nodes-mode-value', sorting_mode)
     .set('data-contao--toggle-nodes-toggle-action-value', 'toggleStructure')
