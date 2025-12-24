@@ -63,8 +63,8 @@ class VirtualFieldHandlerTest extends TestCase
         yield 'Does not set non-virtual fields' => [
             ['foobar' => json_encode(['lorem' => 'ipsum', 'dolor' => 'sit']), 'moo' => 'bar'],
             ['foobar'],
-            ['lorem' => 'foobar'],
-            ['moo' => 'bar', 'lorem' => 'ipsum'],
+            ['dolor' => 'foobar'],
+            ['moo' => 'bar', 'dolor' => 'sit'],
         ];
     }
 }
