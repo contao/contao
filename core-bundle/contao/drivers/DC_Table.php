@@ -3348,18 +3348,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
-		// Return if a mandatory field (id, pid, sorting) is missing
+		// Throw if a mandatory field (id, pid, sorting) is missing
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$db->fieldExists('id', $table) || !$db->fieldExists('pid', $table) || !$db->fieldExists('sorting', $table)))
 		{
-			$parameters['error']['table_is_missing_field'] = true;
-			return $this->render('view/tree', $parameters);
+			throw new \LogicException(\sprintf('Table "%s" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!', $table));
 		}
 
-		// Return if there is no parent table
+		// Throw if there is no parent table
 		if (!$this->ptable && $blnModeTreeExtended)
 		{
-			$parameters['error']['table_is_missing_parent'] = true;
-			return $this->render('view/tree', $parameters);
+			throw new \LogicException(\sprintf('Table "%s" can not be shown as extended tree, because there is no parent table!', $table));
 		}
 
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
