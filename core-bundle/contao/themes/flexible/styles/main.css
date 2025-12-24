@@ -1174,6 +1174,10 @@ table.tl_listing {
 	background: var(--content-bg);
 }
 
+.tl_file_list {
+	word-break: break-word;
+}
+
 .tl_file_list .ellipsis {
 	overflow: hidden;
 	word-break: break-all;
