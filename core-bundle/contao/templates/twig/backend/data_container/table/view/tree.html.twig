@@ -1,4 +1,5 @@
 {% trans_default_domain 'contao_default' %}
+{% extends '@Contao/backend/data_container/table/view/_record_listing.html.twig' %}
 
 {% set view_attributes = attrs()
     .addClass('tree-view')
@@ -14,77 +15,44 @@
     .set('data-contao--toggle-nodes-collapse-all-value', 'DCA.collapseNodes.0'|trans)
     .set('data-contao--toggle-nodes-collapse-all-title-value', 'DCA.collapseNodes.1'|trans)
 %}
-<div{{ view_attributes }}>
-    {{ message|raw }}
-    {{ global_operations|raw }}
 
-    {% if records|length %}
-        {% if not as_select %}
-            {% block list %}
-                {% if has_clipboard_content %}
-                    <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
-                {% endif %}
-
-                {% set listing_attributes = attrs()
-                    .addClass(['tl_listing_container', 'tree_view'])
-                    .set('id', 'tl_listing')
-                    .set('data-controller', 'contao--check-all')
-                    .set('data-picker-value', picker.value|default, as_picker)
-                %}
-                <div{{ listing_attributes }}>
-                    {{ breadcrumb }}
-
-                    {% if as_select or (as_picker and picker.type == 'checkbox') %}
-                        {# Add a "select all" checkbox #}
-                        <div class="tl_select_trigger">
-                            <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
-                            <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
-                        </div>
-                    {% endif %}
-
-                    {% set tree_attributes = attrs()
-                        .addClass('tl_listing')
-                        .addClass('tl_tree', not extended_mode)
-                        .addClass('tl_tree_xtnd', extended_mode)
-                        .addClass(['picker', 'unselectable'], as_picker)
-                    %}
-                    <ul{{ tree_attributes }}>
-                        <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
-                            <div class="tl_left"></div>
-                            <div class="tl_right">{{ operations|raw }}</div>
-                        </li>
-                        {{ records|join|raw }}
-                    </ul>
-
-                    {% if as_picker and picker.type == 'radio' %}
-                        {# Add an input to reset picker radio buttons #}
-                        <div class="tl_radio_reset">
-                            <label for="tl_radio_reset" class="tl_radio_label">
-                                {{ 'MSC.resetSelected'|trans }}
-                            </label>
-                            <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-                        </div>
-                    {% endif %}
-                </div>
-            {% endblock %}
-        {% else %}
-            {# Wrap listing in a form for select mode #}
-            {# todo: generalize with list #}
-            <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
-                <div class="tl_formbody_edit">
-                    <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-                    {{ block('list') }}
-                </div>
-
-                {{ buttons|default|raw }}
-            </form>
-        {% endif %}
-    {% else %}
-        {% if breadcrumb %}
-            <div class="tl_listing_container">{{ breadcrumb }}</div>
-        {% endif %}
-
-        <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
+{% block list %}
+    {% if has_clipboard_content %}
+        <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
     {% endif %}
-</div>
+
+    {% set listing_attributes = attrs()
+        .addClass(['tl_listing_container', 'tree_view'])
+        .set('id', 'tl_listing')
+        .set('data-controller', 'contao--check-all')
+        .set('data-picker-value', picker.value|default, as_picker)
+    %}
+    <div{{ listing_attributes }}>
+        {{ breadcrumb }}
+        {{ include('@Contao/backend/data_container/table/view/_select_all_button.html.twig') }}
+
+        {% set tree_attributes = attrs()
+            .addClass('tl_listing')
+            .addClass('tl_tree', not extended_mode)
+            .addClass('tl_tree_xtnd', extended_mode)
+            .addClass(['picker', 'unselectable'], as_picker)
+        %}
+        <ul{{ tree_attributes }}>
+            <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+                <div class="tl_left"></div>
+                <div class="tl_right">{{ operations|raw }}</div>
+            </li>
+            {{ records|join|raw }}
+        </ul>
+
+        {{ include('@Contao/backend/data_container/table/view/_picker_reset_button.html.twig') }}
+    </div>
+{% endblock %}
+
+{% block no_records %}
+    {% if breadcrumb %}
+        <div class="tl_listing_container">{{ breadcrumb }}</div>
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
