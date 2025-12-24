@@ -414,10 +414,7 @@ abstract class Backend extends Controller
 
 			$container = System::getContainer();
 
-			$this->Template->headline = '';
-			$twig = $container->get('twig');
-
-			$this->Template->headline .= $twig->render('@Contao/backend/data_container/headline.html.twig');
+			$this->Template->headline = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
 
 			$do = Input::get('do');
 
