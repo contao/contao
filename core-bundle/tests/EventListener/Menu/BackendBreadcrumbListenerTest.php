@@ -19,6 +19,7 @@ use Contao\CoreBundle\EventListener\Menu\BackendBreadcrumbListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendBreadcrumbListenerTest extends TestCase
 {
@@ -43,7 +44,11 @@ class BackendBreadcrumbListenerTest extends TestCase
             ->willReturn($this->getTreeTrail())
         ;
 
-        $listener = new BackendBreadcrumbListener($security, $dcaUrlAnalyzer);
+        $listener = new BackendBreadcrumbListener(
+            $security,
+            $dcaUrlAnalyzer,
+            $this->getTranslator(),
+        );
         $listener($event);
 
         $tree = $event->getTree();
@@ -54,11 +59,11 @@ class BackendBreadcrumbListenerTest extends TestCase
 
         $this->assertCount(4, $children);
         $this->assertSame(
-            ['current_0', 'ancestor_trail_1', 'ancestor_1', 'current_1'],
+            ['current_0', 'ancestor_trail', 'ancestor_1', 'current_1'],
             array_keys($children),
         );
 
-        $collapsedChildren = $children['ancestor_trail_1']->getChildren();
+        $collapsedChildren = $children['ancestor_trail']->getChildren();
 
         $this->assertSame(['ancestor_trail_0'], array_keys($collapsedChildren));
         $this->assertSame('Website name', $collapsedChildren['ancestor_trail_0']->getLabel());
@@ -91,7 +96,11 @@ class BackendBreadcrumbListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('breadcrumbMenu'));
 
-        $listener = new BackendBreadcrumbListener($security, $this->createStub(DcaUrlAnalyzer::class));
+        $listener = new BackendBreadcrumbListener(
+            $security,
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->getTranslator()
+        );
         $listener($event);
 
         $tree = $event->getTree();
@@ -113,7 +122,11 @@ class BackendBreadcrumbListenerTest extends TestCase
         $nodeFactory = new MenuFactory();
         $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('foo'));
 
-        $listener = new BackendBreadcrumbListener($security, $this->createStub(DcaUrlAnalyzer::class));
+        $listener = new BackendBreadcrumbListener(
+            $security,
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->getTranslator()
+        );
         $listener($event);
 
         $tree = $event->getTree();
@@ -167,5 +180,16 @@ class BackendBreadcrumbListenerTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    private function getTranslator(): TranslatorInterface
+    {
+        $translator = $this->createStub(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(static fn (string $id): string => $id)
+        ;
+
+        return $translator;
     }
 }

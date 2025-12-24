@@ -412,9 +412,12 @@ abstract class Backend extends Controller
 					break;
 			}
 
-			$container = System::getContainer();
+			foreach (System::getContainer()->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
+			{
+				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
+			}
 
-			$this->Template->headline = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			$this->Template->headline .= System::getContainer()->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
 
 			$do = Input::get('do');
 

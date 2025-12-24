@@ -17,6 +17,7 @@ use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\MenuEvent;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -27,6 +28,7 @@ readonly class BackendBreadcrumbListener
     public function __construct(
         private Security $security,
         private DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -50,10 +52,11 @@ readonly class BackendBreadcrumbListener
                 $nearestAncestor = array_pop($treeTrail);
 
                 if ([] !== $treeTrail) {
-                    $ancestorTrail = $factory->createItem('ancestor_trail_'.$level);
+                    $ancestorTrail = $factory->createItem('ancestor_trail');
+                    $ancestorTrail->setLabel($this->translator->trans('MSC.trail', [], 'contao_default'));
 
-                    foreach ($treeTrail as $trailLevel => ['label' => $trail_label, 'url' => $trail_url]) {
-                        $ancestorTrail->addChild('ancestor_trail_'.$trailLevel, [
+                    foreach ($treeTrail as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
+                        $ancestorTrail->addChild('ancestor_trail_'.$trail, [
                             'label' => $trail_label,
                             'uri' => $trail_url,
                         ]);

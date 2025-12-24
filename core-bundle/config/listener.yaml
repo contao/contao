@@ -436,6 +436,7 @@ services:
         arguments:
             - '@security.helper'
             - '@contao.data_container.dca_url_analyzer'
+            - '@translator'
 
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
