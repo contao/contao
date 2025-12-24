@@ -384,7 +384,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'error' => $this->noReload,
 			'as_select' => Input::get('act') === 'select',
 			'as_picker' => (bool) $this->strPickerFieldType,
-			'as_clipboard' => null !== System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable)
 		);
 
 		if ($defaultParameters['as_picker'])
@@ -3296,19 +3295,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function treeView()
 	{
-		$parameters = array(
-			'records' => array()
-		);
-
 		$table = $this->strTable;
-		$treeClass = 'tl_tree';
-
 		$blnModeTreeExtended = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED;
 
 		if ($blnModeTreeExtended)
 		{
 			$table = $this->ptable;
-			$treeClass = 'tl_tree_xtnd';
 
 			System::loadLanguageFile($table);
 			$this->loadDataContainer($table);
@@ -3395,9 +3387,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$operations->addFilterButton();
 
-		$parameters['operations'] = Message::generate() . $operations;
+		$parameters = array(
+			'extended_mode' => $blnModeTreeExtended,
+			'message' => Message::generate(),
+			'global_operations' => $operations,
+		);
 
-		$tree = '';
 		$blnHasSorting = $db->fieldExists('sorting', $table);
 		$arrFound = array();
 
@@ -3470,6 +3465,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Call a recursive function that builds the tree
+		$records = array();
+
 		if (!empty($topMostRootIds))
 		{
 			static::preloadCurrentRecords($topMostRootIds, $table);
@@ -3477,62 +3474,53 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $topMostRootIds[$i]), false, false, $arrFound);
+				$records[] = $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $topMostRootIds[$i]), false, false, $arrFound);
 			}
 		}
 
-		$breadcrumb = $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '';
+		$parameters['records'] = $records;
+		$parameters['breadcrumb'] = $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '';
 
-		// Return if there are no records
-		if (!$tree && !$blnClipboard)
+		if ($records || $blnClipboard)
 		{
-			if ($breadcrumb)
+			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
+
+			// Show paste button only if there are no root records specified
+			if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 			{
-				$parameters['breadcrumb'] = $breadcrumb;
+				// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
+				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
+				{
+					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
+					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
+
+					$operations->append(array('primary' => true, 'html'=>System::importStatic($strClass)->$strMethod($this, array('id'=>0), $table, false, $arrClipboard)), true);
+				}
+				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
+				{
+					$operations->append(array('primary' => true, 'html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard)), true);
+				}
+				elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
+				{
+					$operations->addPasteButton('pasteroot', $this->strTable, null);
+				}
+				else
+				{
+					$operations->addPasteButton('pasteroot', $this->strTable, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
+				}
+			}
+			elseif (!$blnModeTreeExtended && Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => 0, 'sorting' => 0))))
+			{
+				$operations->addNewButton($operations::CREATE_TOP, $this->strTable, 0);
 			}
 
-			return $this->render('view/tree', $parameters);
-		}
+			$parameters['operations'] = $operations;
+			$parameters['has_clipboard_content'] = $blnClipboard;
 
-		$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-
-		// Show paste button only if there are no root records specified
-		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
-		{
-			// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
+			if (Input::get('act') == 'select')
 			{
-				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
-				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
-
-				$operations->append(array('primary' => true, 'html'=>System::importStatic($strClass)->$strMethod($this, array('id'=>0), $table, false, $arrClipboard)), true);
+				$parameters['buttons'] = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
 			}
-			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
-			{
-				$operations->append(array('primary' => true, 'html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard)), true);
-			}
-			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
-			{
-				$operations->addPasteButton('pasteroot', $this->strTable, null);
-			}
-			else
-			{
-				$operations->addPasteButton('pasteroot', $this->strTable, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
-			}
-		}
-		elseif (!$blnModeTreeExtended && Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => 0, 'sorting' => 0))))
-		{
-			$operations->addNewButton($operations::CREATE_TOP, $this->strTable, 0);
-		}
-
-		$parameters['actions'] = $operations;
-		$parameters['tree_class'] = $treeClass;
-		$parameters['records'] = $tree;
-
-		// Close the form
-		if (Input::get('act') == 'select')
-		{
-			$parameters['buttons'] = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
 		}
 
 		return $this->render('view/tree', $parameters);
