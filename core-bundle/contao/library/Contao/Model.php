@@ -197,14 +197,6 @@ abstract class Model
 					$this->arrRelated[$key] = $objRelated;
 				}
 			}
-
-			$container = System::getContainer();
-
-			// Expand virtual fields
-			if ($container->has('contao.data_container.virtual_field_handler'))
-			{
-				$this->arrData = $container->get('contao.data_container.virtual_field_handler')->expandFields($this->arrData, $this->getTable());
-			}
 		}
 	}
 
@@ -397,6 +389,14 @@ abstract class Model
 			$arrData[$strKey] = static::convertToPhpValue($strKey, $varValue);
 		}
 
+		$container = System::getContainer();
+
+		// Expand virtual fields
+		if ($container->has('contao.data_container.virtual_field_handler'))
+		{
+			$arrData = $container->get('contao.data_container.virtual_field_handler')->expandFields($arrData, $this->getTable());
+		}
+
 		$this->arrData = $arrData;
 
 		return $this;
@@ -558,6 +558,23 @@ abstract class Model
 		{
 			$arrSet = array();
 			$arrRow = $this->row();
+
+			$container = System::getContainer();
+
+			// Compress virtual fields
+			if ($container->has('contao.data_container.virtual_field_handler'))
+			{
+				$arrRow = $container->get('contao.data_container.virtual_field_handler')->combineFields($arrRow, $this->getTable());
+			}
+
+			// Mark virtual field targets as modified, if virtual field is modified
+			foreach (DcaExtractor::getInstance($this->getTable())->getVirtualFields() as $virtualField => $target)
+			{
+				if (\array_key_exists($virtualField, $this->arrModified))
+				{
+					$this->arrModified[$target] = $arrRow[$target];
+				}
+			}
 
 			// Only update modified fields
 			foreach ($this->arrModified as $k=>$v)

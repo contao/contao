@@ -259,9 +259,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
-	public function getCurrentRecord(int|string|null $id = null, string|null $table = null, bool $expandVirtualFields = true): array|null
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
 	{
-		if (!($currentRecord = parent::getCurrentRecord($id, $table)) || !$expandVirtualFields)
+		if (!($currentRecord = parent::getCurrentRecord($id, $table)))
 		{
 			return $currentRecord;
 		}
@@ -3037,10 +3037,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!$this->noReload && !empty($arrValues))
 		{
 			$arrTypes = array();
-			$arrVirtual = array();
 			$blnVersionize = false;
 
 			$db = Database::getInstance();
+
+			// Always save virtual field data
+			$arrValues = array_merge(array_intersect_key($currentRecord, DcaExtractor::getInstance($this->strTable)->getVirtualFields()), $arrValues);
+
+			// Store virtual fields in their respective storages
+			$arrValues = System::getContainer()->get('contao.data_container.virtual_field_handler')->combineFields($arrValues, $this->strTable);
 
 			foreach ($arrValues as $strField => $varValue)
 			{
@@ -3066,16 +3071,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				// Store virtual fields separately
-				if (($arrData['saveTo'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$arrData['saveTo']]['virtualTarget'] ?? null))
-				{
-					$arrVirtual[$arrData['saveTo']][$strField] = StringUtil::ensureStringUuids($varValue);
-					unset($arrValues[$strField]);
-				}
-				else
-				{
-					$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null;
-				}
+				$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField]['sql']['type'] ?? null;
 
 				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
 				{
@@ -3094,35 +3090,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				->set($arrValues)
 				->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
 
-			// Update virtual fields
-			if ($arrVirtual)
-			{
-				$arrVirtualTypes = array();
-
-				// Combine with previous values
-				array_walk($arrVirtual, function (array &$fieldData, string $virtualField) use ($currentRecord, &$arrVirtualTypes): void {
-					if ($currentRecord[$virtualField] ?? null)
-					{
-						$fieldData = array_merge(json_decode($currentRecord[$virtualField], true, flags: JSON_THROW_ON_ERROR), $fieldData);
-					}
-
-					$type = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$virtualField]['sql']['type'] ?? null;
-
-					if ('json' !== $type)
-					{
-						$fieldData = json_encode($fieldData, JSON_THROW_ON_ERROR);
-					}
-
-					$arrVirtualTypes[] = $type;
-				});
-
-				$objVirtualUpdateStmt = $db
-					->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
-					->set($arrVirtual)
-					->query('', array_merge(array_values($arrVirtual), $this->values), $arrVirtualTypes);
-			}
-
-			if ($objUpdateStmt->affectedRows || $objVirtualUpdateStmt?->affectedRows)
+			if ($objUpdateStmt->affectedRows)
 			{
 				// Empty cached data for this record
 				self::clearCurrentRecordCache($this->intId, $this->strTable);
