@@ -213,8 +213,7 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('foo-id', $template['element_html_id']);
         $this->assertSame('foo-class bar-class baz-class', $template['element_css_classes']);
         $this->assertSame(['text' => 'foo', 'tag_name' => 'h3'], $template['headline']);
-        $this->assertSame(serialize(['value' => 'foo', 'unit' => 'h3']), $template['data']['headline']);
-        $this->assertSame(serialize(['foo-id', 'foo-class']), $template['data']['cssID']);
+        $this->assertSame($model->row(), $template['data']);
     }
 
     public static function provideScope(): iterable
