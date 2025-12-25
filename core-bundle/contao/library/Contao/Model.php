@@ -392,9 +392,9 @@ abstract class Model
 		$container = System::getContainer();
 
 		// Expand virtual fields
-		if ($container->has('contao.data_container.virtual_field_handler'))
+		if ($container->has('contao.data_container.virtual_fields_handler'))
 		{
-			$arrData = $container->get('contao.data_container.virtual_field_handler')->expandFields($arrData, static::$strTable);
+			$arrData = $container->get('contao.data_container.virtual_fields_handler')->expandFields($arrData, static::$strTable);
 		}
 
 		$this->arrData = $arrData;
@@ -558,9 +558,9 @@ abstract class Model
 		$container = System::getContainer();
 
 		// Combine virtual fields
-		if ($container->has('contao.data_container.virtual_field_handler'))
+		if ($container->has('contao.data_container.virtual_fields_handler'))
 		{
-			$arrRow = $container->get('contao.data_container.virtual_field_handler')->combineFields($arrRow, static::$strTable);
+			$arrRow = $container->get('contao.data_container.virtual_fields_handler')->combineFields($arrRow, static::$strTable);
 		}
 
 		// The model is in the registry

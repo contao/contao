@@ -72,7 +72,7 @@ class DcTableTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('security.helper', $security);
-        $container->set('contao.data_container.virtual_field_handler', $VirtualFieldsHandler);
+        $container->set('contao.data_container.virtual_fields_handler', $VirtualFieldsHandler);
 
         System::setContainer($container);
 

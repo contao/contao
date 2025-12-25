@@ -461,7 +461,7 @@ class Versions extends Controller
 				$arrFields = $objDcaExtractor->getFields();
 
 				// Expand virtual fields
-				$VirtualFieldsHandler = System::getContainer()->get('contao.data_container.virtual_field_handler');
+				$VirtualFieldsHandler = System::getContainer()->get('contao.data_container.virtual_fields_handler');
 				$to = $VirtualFieldsHandler->expandFields($to, $this->strTable);
 				$from = $VirtualFieldsHandler->expandFields($from, $this->strTable);
 

@@ -266,7 +266,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return $currentRecord;
 		}
 
-		return System::getContainer()->get('contao.data_container.virtual_field_handler')->expandFields($currentRecord, $table ?: $this->strTable);
+		return System::getContainer()->get('contao.data_container.virtual_fields_handler')->expandFields($currentRecord, $table ?: $this->strTable);
 	}
 
 	/**
@@ -3045,7 +3045,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrValues = array_merge(array_intersect_key($currentRecord, DcaExtractor::getInstance($this->strTable)->getVirtualFields()), $arrValues);
 
 			// Combine virtual fields
-			$arrValues = System::getContainer()->get('contao.data_container.virtual_field_handler')->combineFields($arrValues, $this->strTable);
+			$arrValues = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($arrValues, $this->strTable);
 
 			foreach ($arrValues as $strField => $varValue)
 			{

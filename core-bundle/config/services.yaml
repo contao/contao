@@ -278,7 +278,7 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    contao.data_container.virtual_field_handler:
+    contao.data_container.virtual_fields_handler:
         class: Contao\CoreBundle\DataContainer\VirtualFieldsHandler
         public: true
         arguments:
