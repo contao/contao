@@ -679,6 +679,11 @@ class StringUtilTest extends TestCase
             'a:2:{i:0;s:36:"0f075374-ed26-11ee-a657-14ac60298720";i:1;s:36:"0f07538b-ed26-11ee-a657-14ac60298720";}',
         ];
 
+        yield 'Array UUIDs' => [
+            [StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')],
+            ['0f075374-ed26-11ee-a657-14ac60298720', '0f07538b-ed26-11ee-a657-14ac60298720'],
+        ];
+
         yield 'Ignores regular string' => [
             'Lorem',
             'Lorem',
