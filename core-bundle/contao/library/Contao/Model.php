@@ -557,7 +557,7 @@ abstract class Model
 
 		$container = System::getContainer();
 
-		// Compress virtual fields
+		// Combine virtual fields
 		if ($container->has('contao.data_container.virtual_field_handler'))
 		{
 			$arrRow = $container->get('contao.data_container.virtual_field_handler')->combineFields($arrRow, static::$strTable);

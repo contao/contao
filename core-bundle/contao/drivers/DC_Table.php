@@ -3041,10 +3041,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$db = Database::getInstance();
 
-			// Always save virtual field data
+			// Get all virtual field data from the current record, so that the fields can be combined
 			$arrValues = array_merge(array_intersect_key($currentRecord, DcaExtractor::getInstance($this->strTable)->getVirtualFields()), $arrValues);
 
-			// Store virtual fields in their respective storages
+			// Combine virtual fields
 			$arrValues = System::getContainer()->get('contao.data_container.virtual_field_handler')->combineFields($arrValues, $this->strTable);
 
 			foreach ($arrValues as $strField => $varValue)
