@@ -539,7 +539,7 @@ class StringUtil
 	 */
 	public static function ensureStringUuids(mixed $data): mixed
 	{
-		if (!\is_string($data))
+		if (!\is_string($data) && !\is_array($data))
 		{
 			return $data;
 		}
@@ -550,7 +550,7 @@ class StringUtil
 		{
 			$deserialized = array_map(static fn (mixed $v) => Validator::isBinaryUuid($v) ? self::binToUuid($v) : $v, $deserialized);
 
-			return serialize($deserialized);
+			return \is_string($data) ? serialize($deserialized) : $deserialized;
 		}
 
 		return Validator::isBinaryUuid($data) ? self::binToUuid($data) : $data;

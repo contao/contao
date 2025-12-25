@@ -22,6 +22,11 @@ class VirtualFieldHandler
     {
     }
 
+    /**
+     * This function takes the given record and checks for any virtual field storages
+     * and expands their data. The JSON data of the storage will be automatically
+     * decoded. The original data of the storages will be removed from the record.
+     */
     public function expandFields(array $record, string $table): array
     {
         $dcaExtractor = $this->contaoFramework->createInstance(DcaExtractor::class, [$table]);
@@ -54,19 +59,24 @@ class VirtualFieldHandler
         return [...$record, ...$expanded];
     }
 
+    /**
+     * This function takes the given record and writes the data of virtual fields into
+     * their respective storages. Note that the data of a storage will not be
+     * automatically encoded to JSON as this would happen later on via DBAL.
+     */
     public function combineFields(array $record, string $table): array
     {
         $dcaExtractor = $this->contaoFramework->createInstance(DcaExtractor::class, [$table]);
 
         $compressed = [];
 
-        // Write the data to their storages
         foreach ($dcaExtractor->getVirtualFields() as $virtualField => $storageField) {
             if (!\array_key_exists($virtualField, $record)) {
                 continue;
             }
 
             $compressed[$storageField][$virtualField] = StringUtil::ensureStringUuids($record[$virtualField]);
+
             unset($record[$virtualField]);
         }
 
