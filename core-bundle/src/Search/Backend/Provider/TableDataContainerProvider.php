@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
@@ -50,7 +50,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly TranslatorInterface $translator,
-        private readonly VirtualFieldHandler $virtualFieldHandler,
+        private readonly VirtualFieldsHandler $VirtualFieldsHandler,
     ) {
     }
 
@@ -250,7 +250,7 @@ class TableDataContainerProvider implements ProviderInterface
         $searchableContent = [];
 
         // Expand virtual fields
-        $row = $this->virtualFieldHandler->expandFields($row, $table);
+        $row = $this->VirtualFieldsHandler->expandFields($row, $table);
 
         foreach (array_keys($searchableFields) as $field) {
             if (isset($row[$field])) {

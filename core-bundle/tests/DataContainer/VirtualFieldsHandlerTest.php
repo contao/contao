@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DataContainer;
 
-use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\StringUtil;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 
-class VirtualFieldHandlerTest extends TestCase
+class VirtualFieldsHandlerTest extends TestCase
 {
     #[DataProvider('expandsProvider')]
     public function testExpandsVirtualFields(array $record, array $targets, array $fields, array $expanded): void
@@ -41,9 +41,9 @@ class VirtualFieldHandlerTest extends TestCase
 
         $contaoFramework = $this->createContaoFrameworkStub([], [DcaExtractor::class => $dcaExtractor]);
 
-        $virtualFieldHandler = new VirtualFieldHandler($contaoFramework);
+        $VirtualFieldsHandler = new VirtualFieldsHandler($contaoFramework);
 
-        $this->assertSame($expanded, $virtualFieldHandler->expandFields($record, $table));
+        $this->assertSame($expanded, $VirtualFieldsHandler->expandFields($record, $table));
     }
 
     public static function expandsProvider(): iterable
@@ -84,9 +84,9 @@ class VirtualFieldHandlerTest extends TestCase
 
         $contaoFramework = $this->createContaoFrameworkStub([], [DcaExtractor::class => $dcaExtractor]);
 
-        $virtualFieldHandler = new VirtualFieldHandler($contaoFramework);
+        $VirtualFieldsHandler = new VirtualFieldsHandler($contaoFramework);
 
-        $this->assertSame($combined, $virtualFieldHandler->combineFields($record, $table));
+        $this->assertSame($combined, $VirtualFieldsHandler->combineFields($record, $table));
     }
 
     public static function combinesProvider(): iterable

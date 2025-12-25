@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
@@ -56,7 +56,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(DcaUrlAnalyzer::class),
             $this->createStub(TranslatorInterface::class),
-            $this->createStub(VirtualFieldHandler::class),
+            $this->createStub(VirtualFieldsHandler::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -123,8 +123,8 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $resourceFinder = new ResourceFinder(Path::join($fixturesDir, 'table-data-container-provider'));
         $locator = new FileLocator(Path::join($fixturesDir, 'table-data-container-provider'));
 
-        $virtualFieldHandler = $this->createStub(VirtualFieldHandler::class);
-        $virtualFieldHandler
+        $VirtualFieldsHandler = $this->createStub(VirtualFieldsHandler::class);
+        $VirtualFieldsHandler
             ->method('expandFields')
             ->willReturnCallback(
                 static function (array $record): array {
@@ -151,7 +151,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(DcaUrlAnalyzer::class),
             $this->createStub(TranslatorInterface::class),
-            $virtualFieldHandler,
+            $VirtualFieldsHandler,
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

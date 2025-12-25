@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\CoreBundle\DataContainer\VirtualFieldHandler;
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -60,8 +60,8 @@ class DcTableTest extends TestCase
             ->willReturn(true)
         ;
 
-        $virtualFieldHandler = $this->createMock(VirtualFieldHandler::class);
-        $virtualFieldHandler
+        $VirtualFieldsHandler = $this->createMock(VirtualFieldsHandler::class);
+        $VirtualFieldsHandler
             ->expects($this->once())
             ->method('expandFields')
             ->willReturnCallback(
@@ -72,7 +72,7 @@ class DcTableTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('security.helper', $security);
-        $container->set('contao.data_container.virtual_field_handler', $virtualFieldHandler);
+        $container->set('contao.data_container.virtual_field_handler', $VirtualFieldsHandler);
 
         System::setContainer($container);
 
