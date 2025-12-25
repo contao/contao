@@ -13,16 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\ArticleModel;
-use Contao\Config;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\DcaLoader;
 use Contao\PageModel;
-use Contao\System;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -30,22 +27,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContentUrlGeneratorTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        System::setContainer($this->getContainerWithContaoConfiguration());
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_MIME']);
-
-        $this->resetStaticProperties([System::class, DcaLoader::class, Config::class]);
-
-        parent::tearDown();
-    }
-
     public function testGeneratesPageUrlUsingUrlGenerator(): void
     {
         $content = $this->mockPageModel();
