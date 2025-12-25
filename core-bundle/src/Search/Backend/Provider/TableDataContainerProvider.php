@@ -50,7 +50,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly TranslatorInterface $translator,
-        private readonly VirtualFieldsHandler $VirtualFieldsHandler,
+        private readonly VirtualFieldsHandler $virtualFieldsHandler,
     ) {
     }
 

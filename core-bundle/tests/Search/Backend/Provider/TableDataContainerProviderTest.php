@@ -123,8 +123,8 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $resourceFinder = new ResourceFinder(Path::join($fixturesDir, 'table-data-container-provider'));
         $locator = new FileLocator(Path::join($fixturesDir, 'table-data-container-provider'));
 
-        $VirtualFieldsHandler = $this->createStub(VirtualFieldsHandler::class);
-        $VirtualFieldsHandler
+        $virtualFieldsHandler = $this->createStub(VirtualFieldsHandler::class);
+        $virtualFieldsHandler
             ->method('expandFields')
             ->willReturnCallback(
                 static function (array $record): array {
@@ -151,7 +151,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(DcaUrlAnalyzer::class),
             $this->createStub(TranslatorInterface::class),
-            $VirtualFieldsHandler,
+            $virtualFieldsHandler,
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

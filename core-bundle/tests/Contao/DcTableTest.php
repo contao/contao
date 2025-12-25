@@ -60,8 +60,8 @@ class DcTableTest extends TestCase
             ->willReturn(true)
         ;
 
-        $VirtualFieldsHandler = $this->createMock(VirtualFieldsHandler::class);
-        $VirtualFieldsHandler
+        $virtualFieldsHandler = $this->createMock(VirtualFieldsHandler::class);
+        $virtualFieldsHandler
             ->expects($this->once())
             ->method('expandFields')
             ->willReturnCallback(
@@ -72,7 +72,7 @@ class DcTableTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('security.helper', $security);
-        $container->set('contao.data_container.virtual_fields_handler', $VirtualFieldsHandler);
+        $container->set('contao.data_container.virtual_fields_handler', $virtualFieldsHandler);
 
         System::setContainer($container);
 

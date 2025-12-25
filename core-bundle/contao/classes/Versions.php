@@ -461,9 +461,9 @@ class Versions extends Controller
 				$arrFields = $objDcaExtractor->getFields();
 
 				// Expand virtual fields
-				$VirtualFieldsHandler = System::getContainer()->get('contao.data_container.virtual_fields_handler');
-				$to = $VirtualFieldsHandler->expandFields($to, $this->strTable);
-				$from = $VirtualFieldsHandler->expandFields($from, $this->strTable);
+				$virtualFieldsHandler = System::getContainer()->get('contao.data_container.virtual_fields_handler');
+				$to = $virtualFieldsHandler->expandFields($to, $this->strTable);
+				$from = $virtualFieldsHandler->expandFields($from, $this->strTable);
 
 				// Find the changed fields and highlight the changes
 				foreach (array_keys(array_merge($to, $from)) as $k)
