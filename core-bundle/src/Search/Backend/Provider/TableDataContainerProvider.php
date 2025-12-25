@@ -250,7 +250,7 @@ class TableDataContainerProvider implements ProviderInterface
         $searchableContent = [];
 
         // Expand virtual fields
-        $row = $this->VirtualFieldsHandler->expandFields($row, $table);
+        $row = $this->virtualFieldsHandler->expandFields($row, $table);
 
         foreach (array_keys($searchableFields) as $field) {
             if (isset($row[$field])) {
