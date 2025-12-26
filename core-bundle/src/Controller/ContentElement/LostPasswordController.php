@@ -26,8 +26,7 @@ class LostPasswordController extends AbstractContentElementController
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-    ){
-
+    ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
@@ -37,8 +36,7 @@ class LostPasswordController extends AbstractContentElementController
         $this->executeOnloadCallbacks();
 
         // Set new password
-        if (str_starts_with($request->get('token', ''), 'pw-'))
-        {
+        if (str_starts_with($request->get('token', ''), 'pw-')) {
             $this->setNewPassword();
 
             return $template->getResponse();
