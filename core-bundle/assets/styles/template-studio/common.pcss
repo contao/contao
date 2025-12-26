@@ -126,17 +126,27 @@
         background-size: 10px 10px;
     }
 
-    .warning {
-        background-color: var(--error-bg);
-        color: var(--red);
+    .warning,
+    .info {
         padding: 12px;
         margin: 6px 12px;
         border-radius: var(--border-radius);
         font-size: 0.8rem;
+        line-height: 1.3;
 
         svg {
             vertical-align: middle;
             padding-bottom: 2px;
+        }
+
+        &.warning {
+            background-color: var(--error-bg);
+            color: var(--red);
+        }
+
+        &.info {
+            background-color: var(--info-bg);
+            color: var(--blue);
         }
     }
 }

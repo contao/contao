@@ -29,7 +29,7 @@ class ArticleContentVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new ArticleContentVoter($this->createMock(AccessDecisionManagerInterface::class), $this->createMock(Connection::class));
+        $voter = new ArticleContentVoter($this->createStub(AccessDecisionManagerInterface::class), $this->createStub(Connection::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(ReadAction::class));
@@ -43,7 +43,7 @@ class ArticleContentVoterTest extends TestCase
     #[DataProvider('checksElementAccessPermissionProvider')]
     public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $articleParents): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionMap = [[$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true]];
 
@@ -200,7 +200,7 @@ class ArticleContentVoterTest extends TestCase
 
     public function testIgnoresOtherParentTables(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
@@ -210,7 +210,7 @@ class ArticleContentVoterTest extends TestCase
 
         $action = new CreateAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]);
 
-        $voter = new ArticleContentVoter($accessDecisionManager, $this->createMock(Connection::class));
+        $voter = new ArticleContentVoter($accessDecisionManager, $this->createStub(Connection::class));
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);

@@ -21,7 +21,7 @@ use Twig\Node\Nodes;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
- * @experimental
+ * @internal
  */
 final class PhpTemplateProxyNodeVisitor implements NodeVisitorInterface
 {

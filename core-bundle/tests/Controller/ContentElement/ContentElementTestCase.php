@@ -30,6 +30,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -38,6 +39,7 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\Image\Studio\FigureBuilderStub;
 use Contao\CoreBundle\Tests\Image\Studio\ImageResultStub;
 use Contao\CoreBundle\Tests\TestCase;
@@ -55,6 +57,7 @@ use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\DcaExtractor;
@@ -69,12 +72,15 @@ use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
+use Symfony\Bridge\Twig\Extension\HtmlSanitizerExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizer;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -139,30 +145,44 @@ abstract class ContentElementTestCase extends TestCase
         $environment = $this->getEnvironment($loader, $framework);
 
         // Setup container with helper services
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn($asEditorView)
         ;
 
-        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder = $this->createStub(PageFinder::class);
         $pageFinder
             ->method('getCurrentPage')
             ->willReturn($page)
         ;
 
+        $translator = $this->createStub(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(
+                static fn (string $id): string => match ($id) {
+                    'MSC.decimalSeparator' => '.',
+                    'MSC.thousandsSeparator' => ',',
+                    'UNITS.0' => 'Byte',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
+                },
+            )
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
-        $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('contao.twig.filesystem_loader', $loader);
-        $container->set('contao.twig.interop.context_factory', new ContextFactory());
+        $container->set('contao.twig.interop.context_factory', new ContextFactory($scopeMatcher));
         $container->set('twig', $environment);
         $container->set('contao.framework', $framework);
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
         $container->set('contao.routing.page_finder', $pageFinder);
+        $container->set('translator', $translator);
 
         if ($adjustedContainer) {
             $container->merge($adjustedContainer);
@@ -179,8 +199,10 @@ abstract class ContentElementTestCase extends TestCase
         $controller->setContainer($container);
         System::setContainer($container);
 
+        $this->setDefaultSanitizerConfig();
+
         // Render template with model data
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $model
             ->method('getOverwriteMetadata')
             ->willReturnCallback(
@@ -273,7 +295,7 @@ abstract class ContentElementTestCase extends TestCase
     {
         $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')
@@ -284,22 +306,22 @@ abstract class ContentElementTestCase extends TestCase
             '',
             $resourceFinder,
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
         );
 
         return new ContaoFilesystemLoader(
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
             $resourceBasePath,
         );
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -312,7 +334,7 @@ abstract class ContentElementTestCase extends TestCase
             )
         ;
 
-        $packages = $this->createMock(Packages::class);
+        $packages = $this->createStub(Packages::class);
         $packages
             ->method('getUrl')
             ->willReturnCallback(static fn (string $url): string => '/'.$url)
@@ -321,21 +343,27 @@ abstract class ContentElementTestCase extends TestCase
         $environment = new Environment($contaoFilesystemLoader);
         $environment->addExtension(new TranslationExtension($translator));
         $environment->addExtension(new AssetExtension($packages));
-        $environment->addExtension(new RoutingExtension($this->createMock(UrlGeneratorInterface::class)));
+        $environment->addExtension(new RoutingExtension($this->createStub(UrlGeneratorInterface::class)));
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
+        $sanitizers = new ContainerBuilder();
+        $sanitizers->set('html', new HtmlSanitizer(new HtmlSanitizerConfig()));
+        $sanitizers->set('contao', new ContaoHtmlSanitizer($framework));
+
+        $environment->addExtension(new HtmlSanitizerExtension($sanitizers));
+
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
-        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
@@ -345,7 +373,8 @@ abstract class ContentElementTestCase extends TestCase
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
                 CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([])),
-                StringRuntime::class => static fn () => new StringRuntime($framework),
+                StringRuntime::class => static fn () => new StringRuntime($framework, new HtmlDecoder($insertTagParser)),
+                SanitizerRuntime::class => static fn () => new SanitizerRuntime($environment),
             ]),
         );
 
@@ -356,7 +385,7 @@ abstract class ContentElementTestCase extends TestCase
 
     protected function getDefaultStorage(): VirtualFilesystem
     {
-        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage = $this->createStub(VirtualFilesystem::class);
         $storage
             ->method('getPrefix')
             ->willReturn('files')
@@ -452,7 +481,7 @@ abstract class ContentElementTestCase extends TestCase
 
     protected function getDefaultStudio(): Studio
     {
-        $studio = $this->createMock(Studio::class);
+        $studio = $this->createStub(Studio::class);
         $studio
             ->method('createFigureBuilder')
             ->willReturn(new FigureBuilderStub(
@@ -486,7 +515,7 @@ abstract class ContentElementTestCase extends TestCase
             $input,
         );
 
-        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser = $this->createStub(InsertTagParser::class);
         $insertTagParser
             ->method('replace')
             ->willReturnCallback($replaceDemo)
@@ -515,15 +544,7 @@ abstract class ContentElementTestCase extends TestCase
 
     protected function getDefaultFramework(array $nestedFragments = []): ContaoFramework
     {
-        $GLOBALS['TL_LANG'] = [
-            'MSC' => [
-                'decimalSeparator' => '.',
-                'thousandsSeparator' => ',',
-            ],
-            'UNITS' => ['Byte'],
-        ];
-
-        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
             ->willReturnCallback(
@@ -538,34 +559,34 @@ abstract class ContentElementTestCase extends TestCase
             )
         ;
 
-        $inputAdapter = $this->mockAdapter(['stripTags']);
+        $inputAdapter = $this->createAdapterStub(['stripTags']);
         $inputAdapter
             ->method('stripTags')
             ->willReturnArgument(0)
         ;
 
-        $page1 = $this->mockClassWithProperties(PageModel::class);
+        $page1 = $this->createClassWithPropertiesStub(PageModel::class);
         $page1->id = self::PAGE1;
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterStub(['findPublishedById']);
         $pageAdapter
             ->method('findPublishedById')
             ->willReturnCallback(static fn (int $id) => [self::PAGE1 => $page1][$id] ?? null)
         ;
 
-        $article1 = $this->mockClassWithProperties(ArticleModel::class);
+        $article1 = $this->createClassWithPropertiesStub(ArticleModel::class);
         $article1->id = self::ARTICLE1;
         $article1->pid = self::PAGE1;
         $article1->title = 'A title';
         $article1->teaser = '<p>This will tease you to read article 1.</p>';
 
-        $article2 = $this->mockClassWithProperties(ArticleModel::class);
+        $article2 = $this->createClassWithPropertiesStub(ArticleModel::class);
         $article2->id = self::ARTICLE2;
         $article2->pid = self::PAGE1;
         $article2->title = 'Just a title, no teaser';
         $article2->teaser = null;
 
-        $articleAdapter = $this->mockAdapter(['findPublishedById']);
+        $articleAdapter = $this->createAdapterStub(['findPublishedById']);
         $articleAdapter
             ->method('findPublishedById')
             ->willReturnCallback(static fn (int $id) => match ($id) {
@@ -575,26 +596,71 @@ abstract class ContentElementTestCase extends TestCase
             })
         ;
 
-        $controllerAdapter = $this->mockAdapter(['getContentElement']);
+        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
         $controllerAdapter
             ->method('getContentElement')
             ->with($this->isInstanceOf(ContentElementReference::class))
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($el) => $el->getContentModel()->type, $nestedFragments))
         ;
 
-        $stringUtil = $this->mockAdapter(['encodeEmail']);
+        $stringUtil = $this->createAdapterStub(['encodeEmail']);
         $stringUtil
             ->method('encodeEmail')
             ->willReturnArgument(0)
         ;
 
-        return $this->mockContaoFramework([
+        return $this->createContaoFrameworkStub([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
             PageModel::class => $pageAdapter,
             ArticleModel::class => $articleAdapter,
             Controller::class => $controllerAdapter,
             StringUtil::class => $stringUtil,
+        ]);
+    }
+
+    private function setDefaultSanitizerConfig(): void
+    {
+        $GLOBALS['TL_CONFIG']['allowedTags']
+            = '<a><abbr><acronym><address><area><article><aside><audio>'
+            .'<b><bdi><bdo><big><blockquote><br><button>'
+            .'<caption><cite><code><col><colgroup>'
+            .'<data><datalist><dd><del><details><dfn><div><dl><dt>'
+            .'<em>'
+            .'<fieldset><figcaption><figure><footer><form>'
+            .'<h1><h2><h3><h4><h5><h6><header><hgroup><hr>'
+            .'<i><img><input><ins>'
+            .'<kbd>'
+            .'<label><legend><li>'
+            .'<map><mark><menu>'
+            .'<nav>'
+            .'<ol><optgroup><option><output>'
+            .'<p><picture><pre>'
+            .'<q>'
+            .'<s><samp><section><select><small><source><span><strong><style><sub><summary><sup>'
+            .'<table><tbody><td><textarea><tfoot><th><thead><time><tr><tt>'
+            .'<u><ul>'
+            .'<var><video>'
+            .'<wbr>';
+
+        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize([
+            ['key' => '*', 'value' => 'data-*,id,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'],
+            ['key' => 'a', 'value' => 'href,hreflang,rel,target,download,referrerpolicy'],
+            ['key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap,referrerpolicy'],
+            ['key' => 'map', 'value' => 'name'],
+            ['key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target,download'],
+            ['key' => 'video', 'value' => 'src,crossorigin,width,height,autoplay,controls,controlslist,loop,muted,poster,preload,playsinline'],
+            ['key' => 'audio', 'value' => 'src,crossorigin,autoplay,controls,loop,muted,preload'],
+            ['key' => 'source', 'value' => 'src,srcset,media,sizes,type'],
+            ['key' => 'ol', 'value' => 'reversed,start,type'],
+            ['key' => 'table', 'value' => 'border,cellspacing,cellpadding,width,height'],
+            ['key' => 'col', 'value' => 'span'],
+            ['key' => 'colgroup', 'value' => 'span'],
+            ['key' => 'td', 'value' => 'rowspan,colspan,width,height'],
+            ['key' => 'th', 'value' => 'rowspan,colspan,width,height'],
+            ['key' => 'style', 'value' => 'media'],
+            ['key' => 'time', 'value' => 'datetime'],
+            ['key' => 'details', 'value' => 'open,name'],
         ]);
     }
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
 use Contao\EasyCodingStandard\Set\SetList;
-use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
+use PhpCsFixer\Fixer\ClassNotation\ModifierKeywordsFixer;
 use PhpCsFixer\Fixer\ControlStructure\NoAlternativeSyntaxFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
 use PhpCsFixer\Fixer\PhpTag\BlankLineAfterOpeningTagFixer;
@@ -44,13 +44,13 @@ return ECSConfig::configure()
         CommentLengthFixer::class,
         DeclareStrictTypesFixer::class,
         LinebreakAfterOpeningTagFixer::class,
+        ModifierKeywordsFixer::class,
         NoAlternativeSyntaxFixer::class,
         ReferenceUsedNamesOnlySniff::class,
         SemicolonAfterInstructionFixer::class,
         StatementIndentationFixer::class,
         StrictComparisonFixer::class,
         StrictParamFixer::class,
-        VisibilityRequiredFixer::class,
         VoidReturnFixer::class,
     ])
     ->withParallel()

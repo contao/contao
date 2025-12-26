@@ -3,8 +3,10 @@ import * as Message from '../modules/message';
 import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class extends Controller {
-    _turboStreamConnection = new TurboStreamConnection();
-    _runningJobs = false;
+    #turboStreamConnection = new TurboStreamConnection();
+    #runningJobs = false;
+    #pollInterval = null;
+    #timer = null;
 
     static values = {
         pendingJobsUrl: String,
@@ -17,49 +19,54 @@ export default class extends Controller {
     static targets = ['count', 'list'];
 
     connect() {
-        this._pollInterval = this.defaultIntervalValue;
-        this._timer = null;
+        this.#pollInterval = this.defaultIntervalValue;
+        this.#timer = null;
 
         if (this.enabledValue) {
             this.enable();
         }
     }
 
+    disconnect() {
+        clearTimeout(this.#timer);
+        this.#timer = null;
+    }
+
     enable() {
-        clearTimeout(this._timer);
-        this._poll();
+        clearTimeout(this.#timer);
+        this.#poll();
     }
 
     listTargetConnected(el) {
         // Clear timer in case the target was added manually
-        clearTimeout(this._timer);
+        clearTimeout(this.#timer);
 
         if ('0' === el.dataset.jobs) {
             this.countTarget.innerText = '';
 
-            if (this._runningJobs) {
+            if (this.#runningJobs) {
                 // ALl pending jobs have been processed
-                this._runningJobs = false;
+                this.#runningJobs = false;
                 Message.info(this.allJobsProcessedMessageValue);
             }
 
             // Continuously increase interval if there are no results
-            this._pollInterval = Math.min(this.maximumIntervalValue, this._pollInterval * 2);
+            this.#pollInterval = Math.min(this.maximumIntervalValue, this.#pollInterval * 2);
         } else {
             this.countTarget.innerText = el.dataset.jobs;
-            this._runningJobs = true;
+            this.#runningJobs = true;
 
-            this._pollInterval = this.defaultIntervalValue;
+            this.#pollInterval = this.defaultIntervalValue;
         }
 
-        this._waitAndPoll();
+        this.#waitAndPoll();
     }
 
-    _waitAndPoll() {
-        this._timer = setTimeout(() => this._poll(), this._pollInterval);
+    #waitAndPoll() {
+        this.#timer = setTimeout(() => this.#poll(), this.#pollInterval);
     }
 
-    _poll() {
-        this._turboStreamConnection.get(this.pendingJobsUrlValue, null, true);
+    #poll() {
+        this.#turboStreamConnection.get(this.pendingJobsUrlValue, null, true);
     }
 }

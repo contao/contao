@@ -30,7 +30,7 @@ class CalendarContentVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new CalendarContentVoter($this->createMock(AccessDecisionManagerInterface::class), $this->createMock(Connection::class));
+        $voter = new CalendarContentVoter($this->createStub(AccessDecisionManagerInterface::class), $this->createStub(Connection::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(ReadAction::class));
@@ -44,7 +44,7 @@ class CalendarContentVoterTest extends TestCase
     #[DataProvider('checksElementAccessPermissionProvider')]
     public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $events): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionMap = [[$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true]];
 
@@ -201,7 +201,7 @@ class CalendarContentVoterTest extends TestCase
 
     public function testIgnoresOtherParentTables(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
@@ -211,7 +211,7 @@ class CalendarContentVoterTest extends TestCase
 
         $action = new CreateAction('tl_content', ['ptable' => 'tl_article', 'pid' => 1]);
 
-        $voter = new CalendarContentVoter($accessDecisionManager, $this->createMock(Connection::class));
+        $voter = new CalendarContentVoter($accessDecisionManager, $this->createStub(Connection::class));
         $decision = $voter->vote($token, $action, [ContaoCorePermissions::DC_PREFIX.'tl_content']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $decision);

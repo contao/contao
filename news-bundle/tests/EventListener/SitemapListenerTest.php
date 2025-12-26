@@ -36,7 +36,7 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNothingIsAddedIfNoPublishedArchive(): void
     {
         $adapters = [
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByProtected' => null]),
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub(['findByProtected' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -49,21 +49,19 @@ class SitemapListenerTest extends ContaoTestCase
     #[DataProvider('getNewsArticles')]
     public function testNewsArticleIsAdded(array $pageProperties, array $newsArchiveProperties, bool $hasAuthenticatedMember): void
     {
+        $newsArchive = $this->createClassWithPropertiesStub(NewsArchiveModel::class, $newsArchiveProperties);
+
         $adapters = [
-            NewsArchiveModel::class => $this->mockConfiguredAdapter([
-                'findByProtected' => [
-                    $this->mockClassWithProperties(NewsArchiveModel::class, $newsArchiveProperties),
-                ],
-                'findAll' => [
-                    $this->mockClassWithProperties(NewsArchiveModel::class, $newsArchiveProperties),
-                ],
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub([
+                'findByProtected' => [$newsArchive],
+                'findAll' => [$newsArchive],
             ]),
-            PageModel::class => $this->mockConfiguredAdapter([
-                'findWithDetails' => $this->mockClassWithProperties(PageModel::class, $pageProperties),
+            PageModel::class => $this->createConfiguredAdapterStub([
+                'findWithDetails' => $this->createClassWithPropertiesStub(PageModel::class, $pageProperties),
             ]),
-            NewsModel::class => $this->mockConfiguredAdapter([
+            NewsModel::class => $this->createConfiguredAdapterStub([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(NewsModel::class, ['jumpTo' => 42]),
+                    $this->createClassWithPropertiesStub(NewsModel::class, ['jumpTo' => 42]),
                 ],
             ]),
         ];
@@ -116,7 +114,7 @@ class SitemapListenerTest extends ContaoTestCase
 
     private function createListener(array $allPages, array $adapters, bool $hasAuthenticatedMember = false): SitemapListener
     {
-        $database = $this->createMock(Database::class);
+        $database = $this->createStub(Database::class);
         $database
             ->method('getChildRecords')
             ->willReturn($allPages)
@@ -126,10 +124,12 @@ class SitemapListenerTest extends ContaoTestCase
             Database::class => $database,
         ];
 
-        $framework = $this->mockContaoFramework($adapters, $instances);
-        $security = $this->createMock(Security::class);
+        $framework = $this->createContaoFrameworkStub($adapters, $instances);
 
-        if ([] !== $allPages) {
+        if ([] === $allPages) {
+            $security = $this->createStub(Security::class);
+        } else {
+            $security = $this->createMock(Security::class);
             $security
                 ->expects($this->atLeastOnce())
                 ->method('isGranted')
@@ -137,7 +137,7 @@ class SitemapListenerTest extends ContaoTestCase
             ;
         }
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
             ->willReturn('https://contao.org')

@@ -44,13 +44,13 @@ class PageModelTest extends TestCase
 
         $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -63,7 +63,7 @@ class PageModelTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
@@ -110,7 +110,7 @@ class PageModelTest extends TestCase
 
     public function testFindByPk(): void
     {
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturn(new Result([['id' => 1, 'alias' => 'alias']], ''))
@@ -161,7 +161,7 @@ class PageModelTest extends TestCase
 
         $this->mockDatabase($database);
 
-        $sourcePage = $this->mockClassWithProperties(PageModel::class, $page);
+        $sourcePage = $this->createClassWithPropertiesStub(PageModel::class, $page);
         $result = PageModel::findSimilarByAlias($sourcePage);
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -282,7 +282,7 @@ class PageModelTest extends TestCase
 
         $this->mockDatabase($database);
 
-        $sourcePage = $this->mockClassWithProperties(PageModel::class, [
+        $sourcePage = $this->createClassWithPropertiesMock(PageModel::class, [
             'id' => 1,
             'alias' => '',
         ]);
@@ -305,7 +305,7 @@ class PageModelTest extends TestCase
 
         $numberOfParents = \count($parents);
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnCallback(
@@ -375,7 +375,7 @@ class PageModelTest extends TestCase
             \define('TL_MODE', 'BE');
         }
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($p) => new Result([$p], ''), $databaseResultData))

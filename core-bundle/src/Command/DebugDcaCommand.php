@@ -37,6 +37,8 @@ class DebugDcaCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('table', InputArgument::REQUIRED, 'The table name');
+        $this->addArgument('path', InputArgument::OPTIONAL, 'Reference a DCA subsection using dot notation');
+        $this->addUsage('tl_member fields.username');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -55,8 +57,22 @@ class DebugDcaCommand extends Command
         $cloner = new VarCloner();
         $dumper = new CliDumper();
 
-        $dumper->dump($cloner->cloneVar($GLOBALS['TL_DCA'][$table]));
+        $keys = array_filter(explode('.', (string) $input->getArgument('path')));
+        $dcaRef = &$this->getDcaReference($table, $keys);
+
+        $dumper->dump($cloner->cloneVar($dcaRef));
 
         return Command::SUCCESS;
+    }
+
+    private function &getDcaReference(string $table, array $keys): array|callable|null
+    {
+        $dcaRef = &$GLOBALS['TL_DCA'][$table];
+
+        foreach ($keys as $key) {
+            $dcaRef = &$dcaRef[$key];
+        }
+
+        return $dcaRef;
     }
 }

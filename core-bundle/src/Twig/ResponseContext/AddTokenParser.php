@@ -17,7 +17,10 @@ use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
-class AddTokenParser extends AbstractTokenParser
+/**
+ * @internal
+ */
+final class AddTokenParser extends AbstractTokenParser
 {
     public function __construct(private readonly string $extensionName)
     {
@@ -57,6 +60,12 @@ class AddTokenParser extends AbstractTokenParser
         return new AddNode($this->extensionName, $body, $identifier, $location, $token->getLine());
     }
 
+    /**
+     * Keep the name of this function consistent - we use it to guess which token
+     * parsers have corresponding end tags.
+     *
+     * @see \Contao\CoreBundle\Twig\EnvironmentInformation
+     */
     public function decideAddEnd(Token $token): bool
     {
         return $token->test('endadd');

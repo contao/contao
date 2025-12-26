@@ -83,7 +83,7 @@ class LocalesTest extends TestCase
 
     public function testGetsEnabledLocales(): void
     {
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getLocale')
             ->willReturn('en')
@@ -160,7 +160,7 @@ class LocalesTest extends TestCase
 
     public function testGetsLocalesTranslated(): void
     {
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->willReturnCallback(
@@ -172,7 +172,7 @@ class LocalesTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getCatalogue')
             ->with('de')
@@ -311,7 +311,7 @@ class LocalesTest extends TestCase
 
     public function testsGetsFallbackLocaleFromRequest(): void
     {
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getLocale')
             ->willReturn('de')
@@ -358,10 +358,10 @@ class LocalesTest extends TestCase
     private function getLocalesService(Translator|null $translator = null, array|null $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string|null $defaultLocale = null): Locales
     {
         if (!$translator) {
-            $translator = $this->createMock(Translator::class);
+            $translator = $this->createStub(Translator::class);
             $translator
                 ->method('getCatalogue')
-                ->willReturn($this->createMock(MessageCatalogueInterface::class))
+                ->willReturn($this->createStub(MessageCatalogueInterface::class))
             ;
         }
 

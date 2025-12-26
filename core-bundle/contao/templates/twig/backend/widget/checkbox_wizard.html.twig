@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set fieldset_attributes = attrs()
     .set('data-controller', 'contao--sortable contao--check-all')
@@ -43,7 +43,7 @@
                     .set('data-action', 'keydown->contao--sortable#move')
                     .addClass('drag-handle')
                 %}
-                <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
 
                 {% set label_attributes = attrs()
                     .set('for', "opt_#{id}_#{loop.index0}")

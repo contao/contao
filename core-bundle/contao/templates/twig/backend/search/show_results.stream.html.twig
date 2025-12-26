@@ -1,5 +1,34 @@
 <turbo-stream action="update" target="backend-search--results">
     <template>
-        {% include "@Contao/backend/search/_results.html.twig" %}
+        {{ include('@Contao/backend/search/_results.html.twig') }}
     </template>
 </turbo-stream>
+
+{% if typeFacets %}
+    <turbo-stream action="update" target="backend-search--facet-types">
+        <template>
+            {{ include('@Contao/backend/search/_facet.html.twig', {
+                facetName: 'type',
+                facets: typeFacets,
+                filterName: 'type',
+                activeFilter: query.type(),
+                resetAction: path('_contao_backend_search.stream', query.withoutType.toUrlParams),
+            }) }}
+        </template>
+    </turbo-stream>
+{% endif %}
+
+{% if not query.tag %}
+    <turbo-stream action="update" target="backend-search--facet-tags">
+        <template>
+            {# Ignore the "type" facet in order to not update the type facet #}
+            {{ include('@Contao/backend/search/_facet.html.twig', {
+                facetName: 'tags',
+                facets: tagFacets,
+                filterName: 'tag',
+                activeFilter: query.tag(),
+                resetAction: path('_contao_backend_search.stream', query.withoutTag.toUrlParams),
+            }) }}
+        </template>
+    </turbo-stream>
+{% endif %}

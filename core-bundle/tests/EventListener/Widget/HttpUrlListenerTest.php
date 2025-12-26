@@ -39,7 +39,7 @@ class HttpUrlListenerTest extends TestCase
 
         $listener = new HttpUrlListener($translator);
 
-        $this->assertFalse($listener('foobar', 'input', $this->createMock(Widget::class)));
+        $this->assertFalse($listener('foobar', 'input', $this->createStub(Widget::class)));
     }
 
     public function testReturnsTrueIfNoString(): void
@@ -53,7 +53,7 @@ class HttpUrlListenerTest extends TestCase
 
         $listener = new HttpUrlListener($translator);
 
-        $this->assertTrue($listener(HttpUrlListener::RGXP_NAME, [], $this->createMock(Widget::class)));
+        $this->assertTrue($listener(HttpUrlListener::RGXP_NAME, [], $this->createStub(Widget::class)));
     }
 
     public function testAddsErrorIfInputIsNotAbsoluteUrl(): void
