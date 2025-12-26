@@ -8,5 +8,20 @@ services:
                 - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
 
             tags:
+                - 'form.type'
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
                 - { name: container.service_subscriber, id: parameter_bag }
+
+    contao.form.altcha_type:
+        class: Contao\CoreBundle\Form\Type\AltchaType
+        arguments:
+            - '@assets.packages'
+            - '@contao.altcha'
+            - '@router.default'
+            - '@translator'
+            - '@request_stack'
+        tags:
+            - 'form.type'
+
+    contao.form.lost_password_type:
+        class: Contao\CoreBundle\Form\Type\LostPasswordType

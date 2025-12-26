@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\Form\Type\LostPasswordType;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\System;
@@ -32,15 +33,30 @@ class LostPasswordController extends AbstractContentElementController
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $this->framework->initialize();
+        $this->framework->getAdapter(System::class)->loadLanguageFile('tl_member');
 
         $this->executeOnloadCallbacks();
 
+        $form = $this->createForm(
+            LostPasswordType::class,
+            [],
+            [
+                'askForUsername' => !$model->reg_skipName,
+                'addCaptcha' => !$model->disableCaptcha,
+            ],
+        );
+        $form->handleRequest($request);
+
         // Set new password
-        if (str_starts_with($request->get('token', ''), 'pw-')) {
-            $this->setNewPassword();
+        if (str_starts_with($request->query->get('token', ''), 'pw-')) {
+            // $this->setNewPassword();
 
             return $template->getResponse();
         }
+
+        $template->set('form', $form->createView());
+        $template->set('ask_for_username', !$model->reg_skipName);
+        $template->set('add_captcha', !$model->disableCaptcha);
 
         return $template->getResponse();
     }

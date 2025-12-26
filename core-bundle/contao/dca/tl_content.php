@@ -835,7 +835,17 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
-		)
+		),
+		'reg_skipName' => array
+		(
+			'inputType'               => 'checkbox',
+			'sql'                     => array('type' => 'boolean', 'default' => false),
+		),
+		'disableCaptcha' => array
+		(
+			'inputType'               => 'checkbox',
+			'sql'                     => array('type' => 'boolean', 'default' => false),
+		),
 	)
 );
 
