@@ -21,7 +21,7 @@ class HitTest extends TestCase
 {
     public function testHit(): void
     {
-        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder = $this->createStub(FigureBuilder::class);
 
         $hit = (new Hit(new Document('42', 'type', 'searchable'), 'title', 'https://example.com'))
             ->withContext('context')
@@ -36,5 +36,9 @@ class HitTest extends TestCase
         $this->assertSame($figureBuilder, $hit->getImageFigureBuilder());
         $this->assertSame('https://example.com?edit=true', $hit->getEditUrl());
         $this->assertSame(['foo' => 'bar'], $hit->getMetadata());
+        $this->assertSame('type', $hit->getVisibleType());
+
+        $hit = $hit->withVisibleType('visible-type');
+        $this->assertSame('visible-type', $hit->getVisibleType());
     }
 }

@@ -29,7 +29,7 @@ class ImageSizeOptionsListenerTest extends TestCase
             ],
         ];
 
-        $backendUser = $this->mockClassWithProperties(BackendUser::class, [
+        $backendUser = $this->createClassWithPropertiesStub(BackendUser::class, [
             'isAdmin' => true,
         ]);
 

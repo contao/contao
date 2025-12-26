@@ -1,7 +1,17 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['body', 'row'];
+    static targets = ['body', 'row', 'copy', 'delete'];
+
+    static values = {
+        name: String,
+        min: Number,
+        max: Number,
+    };
+
+    connect() {
+        this.#updatePermissions();
+    }
 
     rowTargetConnected() {
         this.updateSorting();
@@ -12,7 +22,11 @@ export default class extends Controller {
     }
 
     copy(event) {
-        const row = this._getRow(event);
+        if (!this.#copyAllowed()) {
+            return;
+        }
+
+        const row = this.#getRow(event);
         const previous = row.previousElementSibling;
 
         // Cause Choices and similar controllers to be disconnected
@@ -29,30 +43,37 @@ export default class extends Controller {
                 this.bodyTarget.prepend(row, newRow);
             }
 
-            this._focus(newRow);
+            this.#focus(newRow);
+            this.#updatePermissions();
         });
     }
 
     delete(event) {
-        const row = this._getRow(event);
+        if (!this.#deleteAllowed()) {
+            return;
+        }
+
+        const row = this.#getRow(event);
 
         if (this.bodyTarget.children.length > 1) {
-            this._focus(row.nextElementSibling) ||
-                this._focus(row.previousElementSibling) ||
-                this._focus(this.bodyTarget);
+            this.#focus(row.nextElementSibling) ||
+                this.#focus(row.previousElementSibling) ||
+                this.#focus(this.bodyTarget);
 
             row.remove();
         } else {
-            this._resetInputs(row);
-            this._focus(row);
+            this.#resetInputs(row);
+            this.#focus(row);
         }
+
+        this.#updatePermissions();
     }
 
     /**
      * This method is specific to the row wizard being a "module wizard".
      */
     updateModuleWizardLink(event) {
-        const row = this._getRow(event);
+        const row = this.#getRow(event);
         const link = row.querySelector('.module_link');
         const images = row.querySelectorAll('img.module_image');
         const select = event.target;
@@ -80,29 +101,74 @@ export default class extends Controller {
         }
     }
 
-    updateSorting() {
-        Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            for (const el of tr.querySelectorAll('label, input, select')) {
+    updateNesting(i) {
+        const name = this.nameValue.replace(/\d+$/, i);
+
+        this.bodyTarget
+            .querySelectorAll(
+                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+            )
+            .forEach((el, i) => {
                 if (el.name) {
-                    el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
+                    el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(/_[0-9]+(_|$)/g, `_${i}$1`);
+                    el.id = el.id.replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`);
                 }
 
                 if (el.getAttribute('for')) {
-                    el.setAttribute('for', el.getAttribute('for').replace(/_[0-9]+(_|$)/g, `_${i}$1`));
+                    el.setAttribute(
+                        'for',
+                        el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`),
+                    );
                 }
+            });
+
+        this.element.setAttribute(`data-${this.identifier}-name-value`, name);
+        this.updateSorting();
+    }
+
+    updateSorting() {
+        Array.from(this.bodyTarget.children).forEach((tr, i) => {
+            for (const el of tr.querySelectorAll(
+                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+            )) {
+                if (el.name) {
+                    el.name = el.name.replace(
+                        new RegExp(`^${this.nameValue}\[[0-9]+]`, 'g'),
+                        `${this.nameValue}[${i}]`,
+                    );
+                }
+
+                if (el.id) {
+                    el.id = el.id.replace(
+                        new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'),
+                        `${this.nameValue}_${i}$1`,
+                    );
+                }
+
+                if (el.getAttribute('for')) {
+                    el.setAttribute(
+                        'for',
+                        el
+                            .getAttribute('for')
+                            .replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`),
+                    );
+                }
+            }
+
+            for (const el of tr.querySelectorAll(`[data-controller="${this.identifier}"]`)) {
+                this.application.getControllerForElementAndIdentifier(el, this.identifier)?.updateNesting(i);
             }
         });
     }
 
-    _getRow(event) {
-        return event.target.closest('*[data-contao--row-wizard-target="row"]');
+    #getRow(event) {
+        return event.target.closest(`*[data-${this.identifier}-target="row"]`);
     }
 
-    _resetInputs(row) {
+    #resetInputs(row) {
         for (const input of row.querySelectorAll('input')) {
             input.value = '';
         }
@@ -112,7 +178,7 @@ export default class extends Controller {
         }
     }
 
-    _focus(el) {
+    #focus(el) {
         if (!el) {
             return false;
         }
@@ -120,5 +186,39 @@ export default class extends Controller {
         el.querySelector('input, select:not(.choices__input), .tl_select.choices')?.focus();
 
         return true;
+    }
+
+    #deleteAllowed() {
+        return !(this.hasMinValue && this.bodyTarget.children.length === this.minValue);
+    }
+
+    #copyAllowed() {
+        return !(this.hasMaxValue && this.bodyTarget.children.length === this.maxValue);
+    }
+
+    #updatePermissions() {
+        if (this.hasMinValue) {
+            const enable = this.#deleteAllowed();
+
+            for (const el of this.deleteTargets) {
+                if (enable) {
+                    el.removeAttribute('disabled');
+                } else {
+                    el.disabled = true;
+                }
+            }
+        }
+
+        if (this.hasMaxValue) {
+            const enable = this.#copyAllowed();
+
+            for (const el of this.copyTargets) {
+                if (enable) {
+                    el.removeAttribute('disabled');
+                } else {
+                    el.disabled = true;
+                }
+            }
+        }
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Contao;
 
-if ($GLOBALS['TL_CONFIG']['useRTE']):
+if ($this->enableTinyMce):
 
 ?>
 <script>
 {
   const config = {
     min_height: 336,
-    language: '<?= Backend::getTinyMceLanguage() ?>',
+    language: '<?= $this->tinyMceLanguage ?>',
     element_format: 'html',
     document_base_url: '<?= Environment::get('base') ?>',
     entities: '160,nbsp,60,lt,62,gt,173,shy',
@@ -46,7 +46,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
     <?php $this->endblock(); ?>
 
     <?php $this->block('content_css'); ?>
-      content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'system/themes/'.Backend::getTheme()) ?>' : '<?= $this->asset('tinymce.css', 'system/themes/'.Backend::getTheme()) ?>',
+      content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'system/themes/'.$this->theme) ?>' : '<?= $this->asset('tinymce.css', 'system/themes/'.$this->theme) ?>',
     <?php $this->endblock(); ?>
 
     <?php $this->block('plugins'); ?>

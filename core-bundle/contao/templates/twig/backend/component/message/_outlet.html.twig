@@ -8,15 +8,15 @@
 %}
 <div{{ message_outlet_attributes }}>
     <template data-contao--message-outlet-target="messagePrototype" data-type="info">
-        {% include "@Contao/backend/component/message/_message.html.twig" with {
+        {{ include('@Contao/backend/component/message/_message.html.twig', {
             content: '{{message}}',
-            success: true
-        }%}
+            success: true,
+        }) }}
     </template>
     <template data-contao--message-outlet-target="messagePrototype" data-type="error">
-        {% include "@Contao/backend/component/message/_message.html.twig" with {
+        {{ include('@Contao/backend/component/message/_message.html.twig', {
             content: '{{message}}',
-            success: false
-        }%}
+            success: false,
+        }) }}
     </template>
 </div>

@@ -16,7 +16,7 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Routing\Route;
 
 class AbstractPageRouteProviderTest extends TestCase
@@ -32,7 +32,7 @@ class AbstractPageRouteProviderTest extends TestCase
             $b->setDefault('pageModel', $this->mockPageModel(...$b->getDefault('pageModel')));
         }
 
-        $instance = $this->createMock(RouteProvider::class);
+        $instance = $this->createStub(RouteProvider::class);
         $class = new \ReflectionClass($instance);
 
         if (null !== $languages) {
@@ -276,7 +276,7 @@ class AbstractPageRouteProviderTest extends TestCase
     #[DataProvider('ordersRoutesByPreferredLanguages')]
     public function testOrdersRoutesByPreferredLanguages(array $pageLanguages, array $preferredLanguages, array $expected): void
     {
-        $instance = $this->createMock(RouteProvider::class);
+        $instance = $this->createStub(RouteProvider::class);
         $class = new \ReflectionClass($instance);
 
         $method = $class->getMethod('convertLanguagesForSorting');
@@ -387,7 +387,7 @@ class AbstractPageRouteProviderTest extends TestCase
     #[DataProvider('convertLanguageForSortingProvider')]
     public function testConvertLanguagesForSorting(array $languages, array $expected): void
     {
-        $instance = $this->createMock(RouteProvider::class);
+        $instance = $this->createStub(RouteProvider::class);
 
         $class = new \ReflectionClass($instance);
         $method = $class->getMethod('convertLanguagesForSorting');
@@ -429,9 +429,9 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
     }
 
-    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128, int $routePriority = 0): PageModel&MockObject
+    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128, int $routePriority = 0): PageModel&Stub
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->type = $root ? 'root' : 'regular';
         $pageModel->rootLanguage = $language;
         $pageModel->rootIsFallback = $fallback;

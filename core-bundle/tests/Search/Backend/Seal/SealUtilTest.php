@@ -16,6 +16,7 @@ use CmsIg\Seal\Reindex\ReindexConfig as SealReindexConfig;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
+use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
 use Contao\CoreBundle\Search\Backend\Seal\SealUtil;
 use PHPUnit\Framework\TestCase;
 
@@ -44,6 +45,7 @@ class SealUtilTest extends TestCase
         $sealReindexConfig = SealUtil::internalReindexConfigToSealReindexConfig($reindexConfig);
 
         $this->assertSame(['foobar__42', 'foobar__99', 'other__12'], $sealReindexConfig->getIdentifiers());
+        $this->assertSame(SealReindexProvider::getIndex(), $sealReindexConfig->getIndex());
     }
 
     public function testSealConfigToInternalConfig(): void

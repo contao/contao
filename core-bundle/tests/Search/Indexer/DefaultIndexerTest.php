@@ -26,7 +26,7 @@ class DefaultIndexerTest extends TestCase
     #[DataProvider('indexProvider')]
     public function testIndexesADocument(Document $document, array|null $expectedIndexParams, string|null $expectedMessage = null, bool $indexProtected = false): void
     {
-        $searchAdapter = $this->mockAdapter(['indexPage']);
+        $searchAdapter = $this->createAdapterMock(['indexPage']);
 
         if (null === $expectedIndexParams) {
             $searchAdapter
@@ -41,9 +41,10 @@ class DefaultIndexerTest extends TestCase
             ;
         }
 
-        $framework = $this->mockContaoFramework([Search::class => $searchAdapter]);
-
-        if (null !== $expectedIndexParams) {
+        if (null === $expectedIndexParams) {
+            $framework = $this->createContaoFrameworkStub([Search::class => $searchAdapter]);
+        } else {
+            $framework = $this->createContaoFrameworkMock([Search::class => $searchAdapter]);
             $framework
                 ->expects($this->once())
                 ->method('initialize')
@@ -55,7 +56,7 @@ class DefaultIndexerTest extends TestCase
             $this->expectExceptionMessage($expectedMessage);
         }
 
-        $indexer = new DefaultIndexer($framework, $this->createMock(Connection::class), $indexProtected);
+        $indexer = new DefaultIndexer($framework, $this->createStub(Connection::class), $indexProtected);
         $indexer->index($document);
     }
 
@@ -210,16 +211,16 @@ class DefaultIndexerTest extends TestCase
 
     public function testDeletesADocument(): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
-        $searchAdapter = $this->mockAdapter(['removeEntry']);
+        $searchAdapter = $this->createAdapterMock(['removeEntry']);
         $searchAdapter
             ->expects($this->once())
             ->method('removeEntry')
             ->with('https://example.com', $connection)
         ;
 
-        $framework = $this->mockContaoFramework([Search::class => $searchAdapter]);
+        $framework = $this->createContaoFrameworkMock([Search::class => $searchAdapter]);
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -231,7 +232,7 @@ class DefaultIndexerTest extends TestCase
 
     public function testClearsTheSearchIndex(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $expected = [
             'TRUNCATE TABLE tl_search',

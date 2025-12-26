@@ -23,6 +23,9 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 {
     private readonly PropertyAccessor $propertyAccessor;
 
+    /**
+     * @internal
+     */
     public function __construct()
     {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();

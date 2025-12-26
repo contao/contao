@@ -27,14 +27,14 @@ class PurgeSubscriptionsCronTest extends ContaoTestCase
             ->method('delete')
         ;
 
-        $commentsNotifyModelAdapter = $this->mockAdapter(['findExpiredSubscriptions']);
+        $commentsNotifyModelAdapter = $this->createAdapterMock(['findExpiredSubscriptions']);
         $commentsNotifyModelAdapter
             ->expects($this->once())
             ->method('findExpiredSubscriptions')
             ->willReturn(new Collection([$commentsNotifyModel], CommentsNotifyModel::getTable()))
         ;
 
-        $framework = $this->mockContaoFramework([CommentsNotifyModel::class => $commentsNotifyModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([CommentsNotifyModel::class => $commentsNotifyModelAdapter]);
 
         (new PurgeSubscriptionsCron($framework, null))();
     }

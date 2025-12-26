@@ -1,0 +1,53 @@
+{
+    "name": "contao/loupe-bridge",
+    "description": "Bridges Contao with SEAL and Loupe",
+    "license": "LGPL-3.0-or-later",
+    "type": "contao-bundle",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
+        }
+    ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/manager-bundle",
+        "docs": "https://docs.contao.org"
+    },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://to.contao.org/donate"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "cmsig/seal-loupe-adapter": "^0.12.6",
+        "contao/core-bundle": "self.version",
+        "loupe/loupe": "^0.13.2"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\LoupeBridge\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": false,
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\LoupeBridge\\ContaoManager\\Plugin"
+    }
+}
