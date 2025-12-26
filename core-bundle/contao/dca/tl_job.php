@@ -55,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('createdAt', 'type', 'progress', 'status', 'owner'),
+			'fields'                  => array('createdAt', 'type', 'progress', 'status', 'owner', 'attachments'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -113,6 +113,10 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			'inputType'               => 'select',
 			'enum'                    => Status::class,
 			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
+		),
+		'attachments' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['jobs']['attachments'],
 		),
 		'public' => array
 		(

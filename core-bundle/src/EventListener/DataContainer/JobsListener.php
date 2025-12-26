@@ -49,64 +49,12 @@ class JobsListener
 
         $columns[2] = $this->twig->render('@Contao/backend/jobs/_progress.html.twig', ['job' => $job]);
         $columns[3] = $this->twig->render('@Contao/backend/jobs/_status.html.twig', ['job' => $job]);
+        $columns[5] = $this->twig->render('@Contao/backend/jobs/_attachments.html.twig', [
+            'job' => $job,
+            'attachments' => $this->jobs->getAttachments($job),
+        ]);
 
         return $columns;
-    }
-
-    #[AsCallback(table: 'tl_job', target: 'list.operations.attachments.button')]
-    public function onAttachmentsCallback(DataContainerOperation $operation): void
-    {
-        $uuid = $operation->getRecord()['uuid'];
-        $job = $this->jobs->getByUuid($uuid);
-
-        if (!$job) {
-            $operation->hide();
-
-            return;
-        }
-
-        $attachments = $this->jobs->getAttachments($job);
-        $numberOfAttachments = \count($attachments);
-
-        // Hide the operation if there are no attachments
-        if (0 === $numberOfAttachments) {
-            $operation->hide();
-
-            return;
-        }
-
-        // Link directly to the one attachment, if there is only one
-        if (1 === $numberOfAttachments) {
-            $operation['icon'] = 'theme_import.svg';
-            $operation['title'] = $attachments[0]->getFileLabel();
-            $operation->setUrl($attachments[0]->getDownloadUrl());
-
-            return;
-        }
-
-        // Otherwise, we build a button with submenu
-        $operations = [];
-
-        foreach ($attachments as $attachment) {
-            $operations[] = new DataContainerOperation(
-                'download',
-                [
-                    'icon' => 'theme_import.svg',
-                    'label' => $attachment->getFileLabel(),
-                    'href' => $attachment->getDownloadUrl(),
-                ],
-                null,
-                $operation->getDataContainer(),
-            );
-        }
-
-        $operation->setHtml($this->twig->render('@Contao/backend/data_container/operations.html.twig', [
-            'operations' => $operations,
-            'has_primary' => true,
-            'more_icon' => 'theme_import.svg',
-            'more_alt' => 'MSC.viewAttachments',
-            'globalOperations' => false,
-        ]));
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]

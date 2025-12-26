@@ -35,4 +35,10 @@
             {{ include('@Contao/backend/jobs/_status.html.twig') }}
         </template>
     </turbo-stream>
+
+    <turbo-stream action="update" targets="[data-job-attachments='{{ job.uuid }}']">
+        <template>
+            {{ include('@Contao/backend/jobs/_attachments.html.twig', {attachments: attachments[job.uuid]}) }}
+        </template>
+    </turbo-stream>
 {% endfor %}

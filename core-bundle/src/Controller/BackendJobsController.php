@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,8 +36,14 @@ class BackendJobsController extends AbstractBackendController
     )]
     public function latestJobsAction(Request $request): Response
     {
-        return $this->render('@Contao/backend/jobs/show_running_jobs.stream.html.twig', [
-            'jobs' => $this->jobs->findMyRecent($request->query->getInt('range')),
+        $jobs = $this->jobs->findMyRecent($request->query->getInt('range'));
+
+        return $this->render('@Contao/backend/jobs/update_running_jobs.stream.html.twig', [
+            'jobs' => $jobs,
+            'attachments' => array_combine(
+                array_map(static fn (Job $job): string => $job->getUuid(), $jobs),
+                array_map($this->jobs->getAttachments(...), $jobs),
+            ),
         ]);
     }
 

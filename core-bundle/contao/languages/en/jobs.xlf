@@ -14,6 +14,9 @@
       <trans-unit id="jobs.owner.0">
         <source>Initiated by</source>
       </trans-unit>
+      <trans-unit id="jobs.attachments.0">
+        <source>Attachments</source>
+      </trans-unit>
       <trans-unit id="jobs.type.0">
         <source>Type</source>
       </trans-unit>
