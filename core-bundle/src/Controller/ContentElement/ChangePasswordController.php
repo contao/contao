@@ -33,7 +33,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-#[AsContentElement(category: 'miscellaneous')]
+#[AsContentElement(category: 'user')]
 class ChangePasswordController extends AbstractContentElementController
 {
     public function __construct(
