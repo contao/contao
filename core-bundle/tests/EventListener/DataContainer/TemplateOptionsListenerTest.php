@@ -29,7 +29,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -112,10 +112,9 @@ class TemplateOptionsListenerTest extends TestCase
         $request = new Request(['act' => 'overrideAll']);
         $request->setSession($session);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('rowCount')
             ->willReturn(null !== $commonType ? 1 : 2)
@@ -128,7 +127,7 @@ class TemplateOptionsListenerTest extends TestCase
             ;
         }
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -175,14 +174,14 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testUsesLegacyTemplatesForOptInLegacyContentElements(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
             ->with('ce_text_', [], 'ce_text')
             ->willReturn(['' => '[result from legacy class]'])
         ;
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
 
         $listener = $this->getTemplateOptionsListener($framework);
         $listener->setDefaultIdentifiersByType('tl_content', ['text' => 'content_element/text']);
@@ -197,14 +196,14 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testUsesLegacyTemplatesIfDefined(): void
     {
-        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
             ->with('ce_custom_', [], 'ce_custom')
             ->willReturn(['' => '[result from legacy class]'])
         ;
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
 
         $listener = $this->getTemplateOptionsListener($framework);
         $listener->setDefaultIdentifiersByType('tl_content', ['example' => 'ce_custom']);
@@ -217,7 +216,7 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function getDefaultTemplateOptionsListener(RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([
@@ -245,18 +244,18 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function getTemplateOptionsListener(ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, ContaoFilesystemLoader|null $filesystemLoader = null): TemplateOptionsListener
     {
-        $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
-        $connection ??= $this->createMock(Connection::class);
+        $filesystemLoader ??= $this->createStub(ContaoFilesystemLoader::class);
+        $connection ??= $this->createStub(Connection::class);
         $framework ??= $this->mockFramework();
         $requestStack ??= new RequestStack();
 
         $finder = new Finder(
             $filesystemLoader,
-            $this->createMock(ThemeNamespace::class),
-            $this->createMock(Translator::class),
+            $this->createStub(ThemeNamespace::class),
+            $this->createStub(Translator::class),
         );
 
-        $finderFactory = $this->createMock(FinderFactory::class);
+        $finderFactory = $this->createStub(FinderFactory::class);
         $finderFactory
             ->method('create')
             ->willReturn($finder)
@@ -271,9 +270,9 @@ class TemplateOptionsListenerTest extends TestCase
         );
     }
 
-    private function mockFramework(): ContaoFramework&MockObject
+    private function mockFramework(): ContaoFramework&Stub
     {
-        $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
+        $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
             ->willReturnMap([
@@ -297,12 +296,12 @@ class TemplateOptionsListenerTest extends TestCase
             ])
         ;
 
-        return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+        return $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
     }
 
-    private function mockDataContainer(string $table, array $currentRecord = []): DC_Table&MockObject
+    private function mockDataContainer(string $table, array $currentRecord = []): DC_Table&Stub
     {
-        $dc = $this->mockClassWithProperties(DC_Table::class);
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class);
         $dc->table = $table;
 
         if ($currentRecord) {

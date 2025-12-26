@@ -32,6 +32,12 @@
       <trans-unit id="tl_user.backendTheme.1">
         <source>Here you can override the global back end theme.</source>
       </trans-unit>
+      <trans-unit id="tl_user.backendWidth.0">
+        <source>Maximum width</source>
+      </trans-unit>
+      <trans-unit id="tl_user.backendWidth.1">
+        <source>Here you can limit the width of the back end container.</source>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
       </trans-unit>
@@ -325,6 +331,9 @@
       </trans-unit>
       <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user.tableLabel">
+        <source>User</source>
       </trans-unit>
     </body>
   </file>

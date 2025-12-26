@@ -22,23 +22,23 @@ class LegacyTemplatesListenerTest extends TestCase
 {
     public function testAddsInfoMessage(): void
     {
-        $message = $this->mockAdapter(['addInfo']);
+        $message = $this->createAdapterMock(['addInfo']);
         $message
             ->expects($this->once())
             ->method('addInfo')
             ->with('<message>')
         ;
 
-        $framework = $this->mockContaoFramework([Message::class => $message]);
+        $framework = $this->createContaoFrameworkStub([Message::class => $message]);
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->with('tl_templates.twig_studio_hint', ['<a href="contao_template_studio">Template Studio</a>'], 'contao_templates')
             ->willReturn('<message>')
         ;
 
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
         $urlGenerator
             ->method('generate')
             ->willReturnArgument(0)

@@ -22,7 +22,7 @@ class FigureRendererRuntimeTest extends TestCase
 {
     public function testDelegatesCallsWhenBuildingFigure(): void
     {
-        $figure = new Figure($this->createMock(ImageResult::class));
+        $figure = new Figure($this->createStub(ImageResult::class));
 
         $figureRenderer = $this->createMock(FigureRenderer::class);
         $figureRenderer

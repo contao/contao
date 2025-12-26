@@ -16,10 +16,8 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FrontendUser;
 use Contao\Image;
-use Contao\MemberGroupModel;
 use Contao\MemberModel;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Request;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
@@ -339,12 +337,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	)
 );
 
-// Filter disabled groups in the front end (see #6757)
-if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
-{
-	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');
-}
-
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -352,27 +344,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
  */
 class tl_member extends Backend
 {
-	/**
-	 * Filter disabled groups
-	 *
-	 * @return array
-	 */
-	public function getActiveGroups()
-	{
-		$arrGroups = array();
-		$objGroup = MemberGroupModel::findAllActive();
-
-		if ($objGroup !== null)
-		{
-			while ($objGroup->next())
-			{
-				$arrGroups[$objGroup->id] = $objGroup->name;
-			}
-		}
-
-		return $arrGroups;
-	}
-
 	/**
 	 * Add an image to each record
 	 *

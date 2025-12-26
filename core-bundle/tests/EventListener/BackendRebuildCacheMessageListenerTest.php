@@ -30,13 +30,13 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
     #[DataProvider('provideRequestAndDirty')]
     public function testDoesNotAddMessageIfNotBackendRequestOrAppCacheIsNotDirty(bool $backendRequest, bool $dirty): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn($backendRequest)
         ;
 
-        $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
+        $cacheItemPool = $this->createStub(CacheItemPoolInterface::class);
         $cacheItemPool
             ->method('hasItem')
             ->with(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG)
@@ -52,11 +52,11 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
             $cacheItemPool,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
         );
@@ -73,20 +73,20 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
 
     public function testAddsMessage(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(true)
         ;
 
-        $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
+        $cacheItemPool = $this->createStub(CacheItemPoolInterface::class);
         $cacheItemPool
             ->method('hasItem')
             ->with(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG)
             ->willReturn(true)
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->with('ERR.applicationCache', [], 'contao_default')
@@ -100,13 +100,13 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
             ->with('contao.BE.info', 'message')
         ;
 
-        $session = $this->createMock(Session::class);
+        $session = $this->createStub(Session::class);
         $session
             ->method('getFlashBag')
             ->willReturn($flashBag)
         ;
 
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $request
             ->method('getSession')
             ->willReturn($session)
@@ -119,7 +119,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         );
 
         $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
         );

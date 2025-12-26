@@ -2,7 +2,7 @@ services:
     _defaults:
         autoconfigure: true
 
-    Contao\CoreBundle\Controller\BackendSearchController:
+    Contao\CoreBundle\Controller\Backend\SearchController:
         public: true
         arguments:
             - '@security.helper'
@@ -41,6 +41,7 @@ services:
             - '@security.helper'
             - '@contao.image.studio'
             - '@router'
+            - '@translator'
             - '%contao.upload_path%'
 
     contao.search.backend.format_binary_uuid_results_listener:
@@ -66,6 +67,7 @@ services:
             - '@security.access.decision_manager'
             - '@event_dispatcher'
             - '@contao.data_container.dca_url_analyzer'
+            - '@translator'
 
     contao.search.backend.trigger_reindex_on_files_storage_update_listener:
         class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnFilesStorageUpdateListener

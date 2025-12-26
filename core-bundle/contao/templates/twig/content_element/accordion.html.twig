@@ -1,5 +1,5 @@
-{% extends "@Contao/content_element/_base.html.twig" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {% block content %}
     {% for element in elements %}
@@ -41,7 +41,7 @@
 {% endblock %}
 
 {% block script %}
-    {% add "handorgel_js" to body %}
+    {% add 'handorgel_js' to body %}
         {% set script_attributes = attrs()
             .setIfExists('nonce', csp_nonce('script-src'))
             .mergeWith(script_attributes|default)
@@ -63,7 +63,7 @@
 {% endblock %}
 
 {% block style %}
-    {% add "handorgel_css" to stylesheets %}
+    {% add 'handorgel_css' to stylesheets %}
         {% with {file: handorgel_css_file|default(asset('css/handorgel.min.css', 'contao-components/handorgel'))} %}
             {{ block('stylesheet_component') }}
         {% endwith %}

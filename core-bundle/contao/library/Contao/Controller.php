@@ -1027,7 +1027,7 @@ abstract class Controller extends System
 	 * Add a request string to the current URL
 	 *
 	 * @param string  $strRequest The string to be added
-	 * @param boolean $blnAddRef  Add the referer ID
+	 * @param boolean $blnAddRef  Not used anymore
 	 * @param array   $arrUnset   An optional array of keys to unset
 	 *
 	 * @return string The new URL
@@ -1052,8 +1052,8 @@ abstract class Controller extends System
 			$pairs = static::$arrQueryCache[$cacheKey];
 		}
 
-		// Remove the request token and referer ID
-		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+		// Remove the request token
+		unset($pairs['rt'], $pairs['revise']);
 
 		foreach ($arrUnset as $key)
 		{
@@ -1065,12 +1065,6 @@ abstract class Controller extends System
 		{
 			parse_str(str_replace('&amp;', '&', $strRequest), $newPairs);
 			$pairs = array_merge($pairs, $newPairs);
-		}
-
-		// Add the referer ID
-		if ($request->query->has('ref') || ($strRequest && $blnAddRef))
-		{
-			$pairs['ref'] = $request->attributes->get('_contao_referer_id');
 		}
 
 		$uri = '';

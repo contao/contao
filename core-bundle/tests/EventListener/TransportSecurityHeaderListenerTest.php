@@ -83,7 +83,7 @@ class TransportSecurityHeaderListenerTest extends TestCase
     private function createEvent(Request $request, Response $response): ResponseEvent
     {
         return new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,

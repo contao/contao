@@ -38,7 +38,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->willReturn(true)
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->with('contao_backend_preview')
@@ -49,8 +49,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $request->query->set('do', $do);
         $request->query->set('id', $id);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
@@ -134,8 +133,8 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $security,
             $router,
             new RequestStack(),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(EventDispatcher::class),
         );
 
         $listener($event);
@@ -168,8 +167,8 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $security,
             $router,
             new RequestStack(),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(EventDispatcher::class),
         );
 
         $listener($event);
@@ -181,7 +180,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
 
     private function getTranslator(): TranslatorInterface
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $id): string => $id)

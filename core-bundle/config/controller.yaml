@@ -28,13 +28,15 @@ services:
                 - { name: container.service_subscriber, id: contao.security.token_checker }
                 - { name: container.service_subscriber, id: contao.image.picture_factory }
                 - { name: container.service_subscriber, id: contao.image.preview_factory }
+                - { name: container.service_subscriber, id: contao.assets.assets_context }
+                - { name: container.service_subscriber, id: contao.twig.defer.renderer }
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\AltchaController:
         arguments:
             - '@contao.altcha'
 
-    Contao\CoreBundle\Controller\BackendController: ~
+    Contao\CoreBundle\Controller\Backend\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
         public: true
@@ -45,13 +47,13 @@ services:
             - '@translator'
             - '%kernel.project_dir%'
 
-    Contao\CoreBundle\Controller\BackendJobsController:
+    Contao\CoreBundle\Controller\Backend\JobsController:
         arguments:
             - '@contao.job.jobs'
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\BackendPreviewController:
+    Contao\CoreBundle\Controller\Backend\PreviewController:
         arguments:
             - '%contao.preview_script%'
             - '@contao.security.frontend_preview_authenticator'
@@ -62,7 +64,7 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\BackendPreviewSwitchController:
+    Contao\CoreBundle\Controller\Backend\PreviewSwitchController:
         arguments:
             - '@contao.security.frontend_preview_authenticator'
             - '@contao.security.token_checker'
@@ -76,6 +78,11 @@ services:
             - '%contao.backend.badge_title%'
         tags:
             - controller.service_arguments
+
+    Contao\CoreBundle\Controller\Backend\FavoriteController:
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
 
     Contao\CoreBundle\Controller\CaptchaController:
         arguments:
@@ -112,6 +119,7 @@ services:
             - '@security.helper'
             - '@contao.filesystem.virtual.files'
             - '@contao.image.studio'
+            - '@contao.pagination.factory'
             - '%contao.image.valid_extensions%'
 
     Contao\CoreBundle\Controller\ContentElement\ListController: ~
@@ -187,6 +195,7 @@ services:
             - '@contao.feed.feedio'
             - '@logger'
             - '@cache.system'
+            - '@contao.pagination.factory'
 
     Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
 

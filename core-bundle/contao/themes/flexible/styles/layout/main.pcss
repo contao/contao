@@ -3,25 +3,78 @@
     width: calc(100% - 220px);
     display: flex;
     flex-direction: column;
+    position: relative;
+
+    .content {
+        margin: 0 15px 15px;
+
+        &:not(:has(.content-filter)) {
+            background: var(--content-bg);
+            border: 1px solid var(--content-border);
+            border-radius: var(--border-radius);
+        }
+    }
+
+    .content-inner, .content-filter {
+        background: var(--content-bg);
+        border: 1px solid var(--content-border);
+        border-radius: var(--border-radius);
+    }
+
+    .content:has(.tl_formbody_submit) {
+        overflow: clip;
+    }
 }
 
 .popup #main {
-    float: none;
-    width: auto;
-    max-width: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    display: initial;
+    .content {
+        height: auto;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .content-inner {
+        border: none;
+    }
 }
 
-#main .content {
-    margin: 0 15px 15px;
-    background: var(--content-bg);
-    border: 1px solid var(--content-border);
+@media (width < 1280px) {
+    #main {
+        .content-filter {
+            border-width: 0 0 0 1px;
+            border-radius: 0;
+        }
+    }
 }
 
-.popup #main .content {
-    margin: 0;
-    border: 0;
+@media (min-width: 1280px) {
+    #main {
+        .content:has(>.content-filter),
+        .content > .tree-view:has(>.content-filter) {
+            display: grid;
+            align-items: start;
+            column-gap: var(--main-panel-gap, 10px);
+            grid-template-columns: calc(100% - var(--main-panel-gap, 10px) - var(--filter-width, 240px)) var(--filter-width, 240px);
+            min-height: 100%;
+
+            &:has(>.operations, > #picker-menu) {
+                grid-template-rows: auto 1fr;
+                grid-template-areas: "top top"
+                                     "listing filter";
+
+                > *:not(.content-filter, .operations) {
+                    grid-area: listing;
+                }
+
+                > .content-filter {
+                    grid-area: filter;
+                }
+
+                > .operations, > #picker-menu {
+                    grid-area: top;
+                }
+            }
+        }
+    }
 }

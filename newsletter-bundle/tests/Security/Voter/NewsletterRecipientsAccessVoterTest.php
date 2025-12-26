@@ -54,7 +54,7 @@ class NewsletterRecipientsAccessVoterTest extends AbstractAccessVoterTestCase
 
     public function testDeniesUpdateActionToNewParent(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
