@@ -27,7 +27,7 @@ class ContaoVariableTest extends TestCase
 {
     public function testReturnsThePage(): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
@@ -41,9 +41,9 @@ class ContaoVariableTest extends TestCase
 
         $contaoVariable = new ContaoVariable(
             $requestStack,
-            $this->createMock(TokenChecker::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoFramework::class),
         );
 
         $this->assertSame($page, $contaoVariable->getPage());
@@ -52,7 +52,7 @@ class ContaoVariableTest extends TestCase
     #[DataProvider('getDateFormats')]
     public function testReturnsPageDatimFormat(string $variable, string $format, string $function): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [$variable]);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [$variable]);
         $page->{$variable} = $format;
 
         $request = new Request();
@@ -65,7 +65,7 @@ class ContaoVariableTest extends TestCase
             ->willReturn($request)
         ;
 
-        $contaoFramework = $this->mockContaoFramework();
+        $contaoFramework = $this->createContaoFrameworkMock();
         $contaoFramework
             ->expects($this->never())
             ->method('initialize')
@@ -73,8 +73,8 @@ class ContaoVariableTest extends TestCase
 
         $contaoVariable = new ContaoVariable(
             $requestStack,
-            $this->createMock(TokenChecker::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(ContaoCsrfTokenManager::class),
             $contaoFramework,
         );
 
@@ -84,7 +84,7 @@ class ContaoVariableTest extends TestCase
     #[DataProvider('getDateFormats')]
     public function testReturnsGlobalDatimFormat(string $variable, string $format, string $function): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, [$variable]);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [$variable]);
         $page->{$variable} = '';
 
         $request = new Request();
@@ -97,7 +97,7 @@ class ContaoVariableTest extends TestCase
             ->willReturn($request)
         ;
 
-        $config = $this->mockAdapter(['get']);
+        $config = $this->createAdapterMock(['get']);
         $config
             ->expects($this->once())
             ->method('get')
@@ -105,7 +105,7 @@ class ContaoVariableTest extends TestCase
             ->willReturn($format)
         ;
 
-        $contaoFramework = $this->mockContaoFramework([Config::class => $config]);
+        $contaoFramework = $this->createContaoFrameworkMock([Config::class => $config]);
         $contaoFramework
             ->expects($this->once())
             ->method('initialize')
@@ -113,8 +113,8 @@ class ContaoVariableTest extends TestCase
 
         $contaoVariable = new ContaoVariable(
             $requestStack,
-            $this->createMock(TokenChecker::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(ContaoCsrfTokenManager::class),
             $contaoFramework,
         );
 

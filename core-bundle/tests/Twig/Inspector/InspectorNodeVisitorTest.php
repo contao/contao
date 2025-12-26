@@ -37,8 +37,8 @@ class InspectorNodeVisitorTest extends TestCase
     public function testHasLowPriority(): void
     {
         $inspectorNodeVisitor = new InspectorNodeVisitor(
-            $this->createMock(Storage::class),
-            $this->createMock(Environment::class),
+            $this->createStub(Storage::class),
+            $this->createStub(Environment::class),
         );
 
         $this->assertSame(128, $inspectorNodeVisitor->getPriority());
@@ -48,7 +48,7 @@ class InspectorNodeVisitorTest extends TestCase
     public function testAnalyzesParent(AbstractExpression $parentExpression, string|null $expectedName): void
     {
         $storage = new Storage(new ArrayAdapter());
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
 
         $moduleNode = new ModuleNode(
             new BodyNode(),
@@ -70,7 +70,7 @@ class InspectorNodeVisitorTest extends TestCase
     public function testAnalyzesUses(AbstractExpression $useExpression, string|null $expectedName): void
     {
         $storage = new Storage(new ArrayAdapter());
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
 
         $moduleNode = new ModuleNode(
             new BodyNode(),
@@ -112,7 +112,7 @@ class InspectorNodeVisitorTest extends TestCase
     {
         $storage = new Storage(new ArrayAdapter());
 
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
         $environment
             ->method('tokenize')
             ->willReturn(new TokenStream([new Token(Token::EOF_TYPE, null, 0)]))

@@ -138,19 +138,19 @@ class FaqPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        $model = $this->mockClassWithProperties(FaqCategoryModel::class);
+        $model = $this->createClassWithPropertiesStub(FaqCategoryModel::class);
         $model->id = 1;
 
-        $faq = $this->createMock(FaqModel::class);
+        $faq = $this->createStub(FaqModel::class);
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $model]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faq]),
+            FaqCategoryModel::class => $this->createConfiguredAdapterStub(['findById' => $model]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -165,11 +165,11 @@ class FaqPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -181,16 +181,16 @@ class FaqPickerProviderTest extends ContaoTestCase
 
     public function testDoesNotAddTableAndIdIfThereIsNoCategoryModel(): void
     {
-        $faq = $this->createMock(FaqModel::class);
+        $faq = $this->createStub(FaqModel::class);
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            FaqModel::class => $this->createConfiguredAdapterStub(['findById' => $faq]),
+            FaqCategoryModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(FaqPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -209,7 +209,7 @@ class FaqPickerProviderTest extends ContaoTestCase
             ->willReturn($accessGranted ?? false)
         ;
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
+        $menuFactory = $this->createStub(FactoryInterface::class);
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -225,13 +225,13 @@ class FaqPickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Faq picker')

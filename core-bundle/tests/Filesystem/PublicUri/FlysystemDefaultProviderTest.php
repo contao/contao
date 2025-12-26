@@ -24,7 +24,7 @@ class FlysystemDefaultProviderTest extends TestCase
 {
     public function testGetUri(): void
     {
-        $adapter = $this->createMock(FilesystemAdapterAndPublicUrlGeneratorInterface::class);
+        $adapter = $this->createStub(FilesystemAdapterAndPublicUrlGeneratorInterface::class);
         $adapter
             ->method('publicUrl')
             ->with('path/to/resource.txt')
@@ -42,7 +42,7 @@ class FlysystemDefaultProviderTest extends TestCase
         $provider = new FlysystemDefaultProvider();
 
         $uri = $provider->getUri(
-            $this->createMock(LocalFilesystemAdapter::class),
+            $this->createStub(LocalFilesystemAdapter::class),
             'path/to/resource.txt',
             null,
         );

@@ -46,7 +46,7 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testExecutesWithoutPendingImages(): void
     {
-        $storage = $this->createMock(DeferredImageStorageInterface::class);
+        $storage = $this->createStub(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
             ->willReturn([])
@@ -63,19 +63,19 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testResizesImages(): void
     {
-        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createMock(DeferredImageInterface::class))
+            ->willReturn($this->createStub(DeferredImageInterface::class))
         ;
 
-        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer = $this->createStub(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willReturn($this->createMock(ImageInterface::class))
+            ->willReturn($this->createStub(ImageInterface::class))
         ;
 
-        $storage = $this->createMock(DeferredImageStorageInterface::class);
+        $storage = $this->createStub(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
             ->willReturn(['image1.jpg', 'image2.jpg'])
@@ -94,25 +94,25 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testTimeLimit(): void
     {
-        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createMock(DeferredImageInterface::class))
+            ->willReturn($this->createStub(DeferredImageInterface::class))
         ;
 
-        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer = $this->createStub(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
             ->willReturnCallback(
                 function () {
                     sleep(1);
 
-                    return $this->createMock(ImageInterface::class);
+                    return $this->createStub(ImageInterface::class);
                 },
             )
         ;
 
-        $storage = $this->createMock(DeferredImageStorageInterface::class);
+        $storage = $this->createStub(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
             ->willReturn(['image1.jpg', 'image2.jpg'])
@@ -133,10 +133,10 @@ class ResizeImagesCommandTest extends TestCase
     private function getCommand(ImageFactoryInterface|null $factory = null, DeferredResizerInterface|null $resizer = null, DeferredImageStorageInterface|null $storage = null): ResizeImagesCommand
     {
         return new ResizeImagesCommand(
-            $factory ?? $this->createMock(ImageFactoryInterface::class),
-            $resizer ?? $this->createMock(DeferredResizerInterface::class),
+            $factory ?? $this->createStub(ImageFactoryInterface::class),
+            $resizer ?? $this->createStub(DeferredResizerInterface::class),
             Path::join($this->getTempDir(), 'assets/images'),
-            $storage ?? $this->createMock(DeferredImageStorageInterface::class),
+            $storage ?? $this->createStub(DeferredImageStorageInterface::class),
         );
     }
 }

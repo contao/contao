@@ -1,7 +1,6 @@
 @import "common.pcss";
 @import "tree.pcss";
 @import "editor-tab.pcss";
-@import "ace.pcss";
 @import "operations.pcss";
 @import "info.pcss";
 @import "dialog.pcss";
@@ -39,6 +38,10 @@
 
     > :empty {
         display: none;
+    }
+
+    &:fullscreen {
+        padding: 6px;
     }
 
     #template-studio--nav {
@@ -123,5 +126,13 @@
         .badges {
             justify-content: flex-end;
         }
+    }
+}
+
+#main_headline button.fullscreen {
+    transition: transform 0.1s;
+
+    &:hover {
+        transform: scale(1.25);
     }
 }

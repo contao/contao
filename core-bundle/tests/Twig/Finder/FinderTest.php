@@ -279,7 +279,7 @@ class FinderTest extends TestCase
 
     private function getFinder(array $translations = []): Finder
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturnCallback(
@@ -328,7 +328,7 @@ class FinderTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -348,7 +348,7 @@ class FinderTest extends TestCase
             )
         ;
 
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->willReturnCallback(

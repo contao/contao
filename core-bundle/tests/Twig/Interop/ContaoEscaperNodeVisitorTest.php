@@ -140,9 +140,9 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         HookHelper::registerHook('replaceInsertTags', static fn (string $tag) => 'flavor' === $tag ? 'vanilla' : false);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
         System::setContainer($container);
 
@@ -168,17 +168,17 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $contaoExtension = new ContaoExtension(
             $environment,
-            $this->createMock(ContaoFilesystemLoader::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+            $this->createStub(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
 
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
