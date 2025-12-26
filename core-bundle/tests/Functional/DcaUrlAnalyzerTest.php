@@ -173,7 +173,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         $this->loadFixtureFile('default');
 
-        $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getTrail());
+        $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getTrail(withTreeTrail: true));
     }
 
     public static function getTrail(): iterable
@@ -181,111 +181,239 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         yield [
             'do=article&act=edit&id=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&act=edit&table=tl_article', 'label' => 'Article 1'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_article&act=edit',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_article&act=edit',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
             ],
         ];
 
         yield [
             'do=article',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=article&act=select',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=article&act=show&id=1&popup=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&act=show&table=tl_article', 'label' => 'Article 1'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_article&act=show',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_article&act=show',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
             ],
         ];
 
         yield [
             'do=article&table=tl_content&id=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
             ],
         ];
 
         yield [
             'do=article&id=1&table=tl_content&act=edit',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
-                ['url' => '/contao?do=article&id=1&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content&act=edit', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=article&id=1&table=tl_content&act=show&popup=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
-                ['url' => '/contao?do=article&id=1&act=show&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content&act=show', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=article&id=1&table=tl_content&ptable=tl_content',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=article&id=2&ptable=tl_content&table=tl_content&act=edit',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
-                ['url' => '/contao?do=article&id=2&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
+                ['url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content&act=edit', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=article&id=3&ptable=tl_content&table=tl_content&act=edit',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
-                ['url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
-                ['url' => '/contao?do=article&id=3&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Headline'],
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                [
+                    'url' => '/contao?do=article&id=1&table=tl_content',
+                    'label' => 'Article 1',
+                    'treeTrail' => [
+                        [
+                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'label' => 'Edit page ID 1',
+                        ],
+                    ],
+                    'treeSiblings' => [
+                        [
+                            'url' => '/contao?do=article&id=1&table=tl_content',
+                            'label' => 'Article 1',
+                            'active' => true,
+                        ],
+                    ],
+                ],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
+                ['url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
+                ['url' => '/contao?do=article&id=3&table=tl_content&ptable=tl_content&act=edit', 'label' => 'Headline', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=themes&table=tl_image_size&id=1',
             [
-                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
-                ['url' => '/contao?do=themes&id=1&table=tl_image_size', 'label' => 'Default Theme'],
+                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null],
+                ['url' => '/contao?do=themes&id=1&table=tl_image_size', 'label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=themes&id=1&table=tl_layout',
             [
-                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
-                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme'],
+                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null],
+                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
 
         yield [
             'do=themes&id=1&table=tl_layout&act=edit',
             [
-                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
-                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme'],
-                ['url' => '/contao?do=themes&id=1&act=edit&table=tl_layout', 'label' => 'Default Layout'],
+                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null],
+                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null],
+                ['url' => '/contao?do=themes&id=1&table=tl_layout&act=edit', 'label' => 'Default Layout', 'treeTrail' => null, 'treeSiblings' => null],
             ],
         ];
     }

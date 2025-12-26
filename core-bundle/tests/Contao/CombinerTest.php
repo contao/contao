@@ -34,7 +34,7 @@ class CombinerTest extends TestCase
         $this->filesystem->mkdir($this->getTempDir().'/public');
         $this->filesystem->mkdir($this->getTempDir().'/system/tmp');
 
-        $context = $this->createMock(ContaoContext::class);
+        $context = $this->createStub(ContaoContext::class);
         $context
             ->method('getStaticUrl')
             ->willReturn('')

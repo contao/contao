@@ -289,10 +289,9 @@ class PageRegular extends Frontend
 
 		foreach ($arrModules as $arrModule)
 		{
-			/** @var class-string<Module> $strClass */
 			$strClass = Module::findClass($arrMapper[$arrModule['mod']]->type ?? '');
 
-			if (!$strClass || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
 			{
 				continue;
 			}
@@ -316,14 +315,18 @@ class PageRegular extends Frontend
 			}
 		}
 
+		if (empty($arrArticleColumns))
+		{
+			return $arrPreloaded;
+		}
+
 		$objResult = ContentModel::findModulesByArticleByPublishedPidAndColumns($objPage->id, $arrArticleColumns);
 
 		foreach ($objResult->fetchAllAssoc() as list('id' => $intId, 'type' => $strType, 'column' => $strColumn))
 		{
-			/** @var class-string<Module> $strClass */
 			$strClass = Module::findClass($strType);
 
-			if (!$strClass || !$strClass::shouldPreload($strType, $objPage, $request))
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($strType, $objPage, $request))
 			{
 				continue;
 			}
@@ -468,7 +471,7 @@ class PageRegular extends Frontend
 		// Overwrite the viewport tag (see #6251)
 		if ($objLayout->viewport)
 		{
-			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '">' . "\n";
+			$this->Template->viewport = '<meta name="viewport" content="' . StringUtil::specialcharsAttribute($objLayout->viewport) . '">' . "\n";
 		}
 
 		$this->Template->mooScripts = '';

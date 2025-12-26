@@ -1,0 +1,23 @@
+{% trans_default_domain 'contao_default' %}
+
+{% for table, rows in data %}
+    {% for entries in rows %}
+        <table class="tl_show with-padding with-zebra">
+            <thead>
+                <tr>
+                    <th class="tl_label">{{ 'MSC.table'|trans }}</th>
+                    <th>{{ table }}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for label, value in entries %}
+                    <tr>
+                        <td class="tl_label">{{ label|raw }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+{% endfor %}

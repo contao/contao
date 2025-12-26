@@ -5,6 +5,9 @@
       <trans-unit id="jobs.tstamp.0">
         <source>Created at</source>
       </trans-unit>
+      <trans-unit id="jobs.progress.0">
+        <source>Progress</source>
+      </trans-unit>
       <trans-unit id="jobs.status.0">
         <source>Status</source>
       </trans-unit>
@@ -25,6 +28,9 @@
       </trans-unit>
       <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
+      </trans-unit>
+      <trans-unit id="jobs.typeLabel.crawl">
+        <source>Crawling the website</source>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>

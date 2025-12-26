@@ -1,154 +1,207 @@
-/* Filter */
-.tl_panel,
-.tl_version_panel {
-    padding: 8px 15px;
-    background: var(--panel-bg);
-    border-bottom: 1px solid var(--content-border);
-    text-align: right;
-    flex-wrap: wrap;
-}
-
-.tl_subpanel,
 .tl_panel {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 3px;
-}
+    &:not(:last-of-type) {
+        padding-bottom: 16px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--content-border);
+    }
 
-/* Limit, search and submit */
-.tl_panel:last-of-type {
-    column-gap: 10px;
-    min-width: 100px;
-}
+    fieldset {
+        border: none;
+        padding: 0;
+        margin: 0;
 
-.tl_subpanel :is(select, input, button) {
-    height: 30px;
-}
+        legend {
+            font-weight: 600;
+            padding: 0;
 
-.tl_filter {
-    flex-wrap: wrap;
-    gap: 6px 3px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.tl_filter > * {
-    margin: 0;
-}
-
-.tl_version_panel {
-    padding: 8px 12px;
-}
-
-.tl_panel .tl_select {
-    text-align: left;
-}
-
-.tl_version_panel .tl_select {
-    max-width: 280px;
-}
-
-.tl_version_panel .tl_submit {
-    vertical-align: middle;
-}
-
-.tl_version_panel .tl_formbody {
-    position: relative;
-}
-
-.tl_limit {
-    width: 20%;
-}
-
-.tl_limit .tl_select_wrapper {
-    width: 57%;
-}
-
-.tl_search {
-    gap: 4px;
-    width: 100%;
-}
-
-.tl_search > .tl_select_wrapper {
-    width: 38%;
-}
-
-.tl_search > .tl_text {
-    width: 38%;
-}
-
-.tl_select_wrapper {
-    margin: 3px 0;
-}
-
-.tl_select_wrapper > * {
-    margin: 0;
-}
-
-.tl_img_submit {
-    white-space: nowrap;
-    background-color: var(--form-bg);
-    background-position: 6px 6px;
-    background-repeat: no-repeat;
-    margin: 0;
-    border: 1px solid var(--form-border);
-    border-radius: 2px;
-    box-sizing: border-box;
-    transition: background .2s ease;
-    width: 30px;
-    padding-left: 20px;
-    text-indent: 20px;
-    overflow: hidden;
-}
-
-.tl_img_submit:hover {
-    background-color: var(--form-bg-hover);
-}
-
-.filter_apply {
-    background-image: url("icons/filter-apply.svg");
-}
-
-.filter_reset {
-    background-image: url("icons/filter-reset.svg");
-    margin-left: 6px;
-}
-
-.filter_reset[disabled] {
-    opacity: .6;
-    cursor: not-allowed;
+            @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+                font-weight: 500;
+            }
+        }
+    }
 }
 
 .tl_subpanel {
     letter-spacing: -.31em;
+
+    &:not(:last-child) {
+        padding-bottom: 16px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--content-border);
+    }
+
+    * {
+        letter-spacing: normal;
+    }
+
+    > * {
+        margin: 0;
+    }
+
+    > *:not(label, button, :last-child) {
+        margin-bottom: 10px;
+    }
+
+    > strong,
+    > label:first-child { /* If there is no strong, style the label */
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            font-weight: 500;
+        }
+    }
+
+    label:not(:first-child) {
+        display: inline-block;
+        margin-bottom: 4px;
+        font-size: 13px;
+    }
+
+    :is(select, input, button) {
+        height: 30px;
+    }
 }
 
-.tl_subpanel > * {
-    margin: 0;
+.tl_subpanel {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
 }
 
-.tl_subpanel * {
-    letter-spacing: normal;
+.tl_filter {
+    box-sizing: border-box;
 }
 
-.tl_subpanel strong, .tl_search span {
-    vertical-align: middle;
+.tl_search {
+    gap: 0;
 }
 
-.tl_sorting {
-    width: 26%;
-}
+[data-contao--filter-target="count"] {
+    font-size: .6rem;
+    color: var(--text);
+    background: var(--nav-current);
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16px;
+    width: 16px;
 
-.tl_sorting .tl_select_wrapper {
-    width: 60%;
-    margin-left: 1%;
-}
-
-.tl_submit_panel {
-    min-width: 32px;
+    &:empty {
+        display: none;
+    }
 }
 
 .tl_panel .active, .tl_panel_bottom .active, #search .active {
     background-color: var(--active-bg);
+}
+
+.content-filter {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    order: 1;
+    border-bottom: 1px solid var(--content-border);
+
+    .tl_formbody {
+        padding: 14px 0 16px;
+    }
+
+    > .close {
+        display: none;
+    }
+}
+
+.tl_submit_panel {
+    position: sticky;
+    bottom: 0;
+    background: var(--panel-bg);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 10px 15px;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    border-top: 1px solid var(--content-border);
+
+    &.is-sticky {
+        border-radius: 0;
+    }
+
+    .tl_select_wrapper {
+        margin: 0;
+    }
+
+    .tl_submit {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background: var(--form-bg);
+
+        &:hover {
+            background: var(--form-bg-hover);
+        }
+    }
+}
+
+@media (width < 1280px) {
+    .content-filter {
+        position: absolute;
+        inset: 0 0 auto auto;
+        z-index: 4; /* higher z-index than tl_formbody_submit */
+        bottom: 0;
+        background: var(--content-bg);
+        width: 280px;
+        transform: translateX(280px);
+        visibility: hidden;
+        transition: transform .2s ease, visibility .2s ease;
+        will-change: transform, visibility;
+
+        > .close {
+            position: absolute;
+            inset: 12px 12px auto auto;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            border: 0 none;
+            background: transparent;
+            font-size: 30px;
+            line-height: 19px;
+        }
+    }
+
+    li:has(>.header_filter_toggle) {
+        display: initial !important;
+    }
+
+    .content.filter-active {
+        .content-filter {
+            visibility: visible;
+            transform: translateX(0);
+        }
+    }
+
+    .tl_submit_panel {
+        border-radius: 0;
+    }
+}
+
+@media (min-width: 1280px) {
+    #main {
+        .content-filter {
+            border-left: 1px solid var(--content-border);
+            position: sticky;
+            top: 15px;
+            margin-bottom: 15px;
+        }
+    }
+}
+
+@media (min-width: 1440px) {
+    :root {
+        --filter-width: 280px;
+        --main-panel-gap: 15px;
+    }
 }

@@ -23,7 +23,7 @@ class AutoRefreshTemplateHierarchyListenerTest extends TestCase
     #[DataProvider('provideRequestScenarios')]
     public function testRefreshesHierarchyOnKernelRequest(bool $isMainRequest, string $environment, bool $shouldRefresh): void
     {
-        $event = $this->createMock(RequestEvent::class);
+        $event = $this->createStub(RequestEvent::class);
         $event
             ->method('isMainRequest')
             ->willReturn($isMainRequest)

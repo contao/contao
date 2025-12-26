@@ -119,7 +119,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             if (
                 $this->canEdit($action, $token, $pageId)
                 && $this->canChangeHierarchy($action, $token, $pageId)
-                && $this->canAccessPage($token, $pageId)
+                && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource())
             ) {
                 return true;
             }
@@ -159,7 +159,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         if ($changePid) {
             $newPid = (int) $action->getNewPid();
 
-            if (!$this->canAccessPage($token, $newPid) || !$this->canChangeHierarchy($action, $token, $newPid)) {
+            if (!$this->canAccessPage($token, $newPid, false) || !$this->canChangeHierarchy($action, $token, $newPid)) {
                 return false;
             }
         }

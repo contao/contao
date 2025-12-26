@@ -125,10 +125,11 @@ export default class extends Controller {
 
         this.#autoFocus = true;
         input.focus();
-    }
 
-    autoFocusTargetDisconnected() {
-        this.#autoFocus = false;
+        requestAnimationFrame(() => {
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
     }
 
     widgetErrorTargetConnected() {

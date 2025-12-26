@@ -26,6 +26,7 @@ use Contao\Database;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -35,9 +36,9 @@ class PagePermissionVoterTest extends TestCase
     public function testSupport(): void
     {
         $voter = new PagePermissionVoter(
-            $this->mockContaoFramework(),
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(Connection::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(Connection::class),
         );
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
@@ -52,7 +53,7 @@ class PagePermissionVoterTest extends TestCase
 
     public function testAllowsAllForAdmin(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
@@ -62,13 +63,13 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn(true)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->willReturn('regular')
         ;
 
-        $voter = new PagePermissionVoter($this->mockContaoFramework(), $decisionManager, $connection);
+        $voter = new PagePermissionVoter($this->createContaoFrameworkStub(), $decisionManager, $connection);
         $result = $voter->vote($token, new CreateAction('tl_page'), [ContaoCorePermissions::DC_PREFIX.'tl_page']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
@@ -77,11 +78,10 @@ class PagePermissionVoterTest extends TestCase
     #[DataProvider('voterProvider')]
     public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
     {
-        $token = $this->mockToken($pagemounts);
-        $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
-        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-
         array_unshift($decisions, [['ROLE_ADMIN'], null, false]);
+
+        $token = $this->mockToken($pagemounts);
+
         array_walk(
             $decisions,
             static function (array &$decision) use ($token): void {
@@ -89,13 +89,16 @@ class PagePermissionVoterTest extends TestCase
             },
         );
 
+        $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
+
+        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
             ->expects($this->exactly(\count($decisions)))
             ->method('decide')
             ->willReturnMap($decisions)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->willReturn('regular')
@@ -116,7 +119,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -130,7 +132,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -147,7 +148,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -284,7 +284,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -302,7 +301,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -318,7 +316,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -337,7 +334,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -466,7 +462,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
         ];
@@ -690,7 +685,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, true],
             ],
             true,
@@ -732,7 +726,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, false],
             ],
             false,
@@ -745,7 +738,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 21, true],
             ],
             true,
@@ -787,7 +779,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 21, false],
             ],
             false,
@@ -915,7 +906,6 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
-                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
             ],
@@ -933,7 +923,7 @@ class PagePermissionVoterTest extends TestCase
                 ->method('getUser')
             ;
         } else {
-            $backendUser = $this->mockClassWithProperties(BackendUser::class, ['id' => 42, 'pagemounts' => $pagemounts]);
+            $backendUser = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 42, 'pagemounts' => $pagemounts]);
 
             $token
                 ->expects($this->atLeastOnce())
@@ -945,7 +935,7 @@ class PagePermissionVoterTest extends TestCase
         return $token;
     }
 
-    private function mockContaoFrameworkWithDatabase(array|null $pagemounts = null): ContaoFramework&MockObject
+    private function mockContaoFrameworkWithDatabase(array|null $pagemounts = null): ContaoFramework&Stub
     {
         $database = $this->createMock(Database::class);
 
@@ -963,6 +953,6 @@ class PagePermissionVoterTest extends TestCase
             ;
         }
 
-        return $this->mockContaoFramework([], [Database::class => $database]);
+        return $this->createContaoFrameworkStub([], [Database::class => $database]);
     }
 }

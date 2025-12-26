@@ -1,20 +1,11 @@
 /* Tablet */
 @media (width < 992px) {
-    #container {
-        overflow-x: clip;
-        width: auto;
-    }
-
     #main {
         width: 100%;
         flex-shrink: 0;
         position: relative;
         transition: transform .2s ease;
         will-change: transform;
-    }
-
-    .show-navigation #main {
-        transform: translateX(240px);
     }
 
     #left {
@@ -26,13 +17,24 @@
         will-change: transform, visibility;
     }
 
-    .show-navigation #left {
+    #left.active {
         visibility: visible;
         transform: translateX(240px);
+
+        + #contao-main #main {
+            transform: translateX(240px);
+        }
     }
 
     #tmenu .burger {
         display: inline;
+    }
+}
+
+@media (width < 1280px) {
+    #container {
+        overflow-x: clip;
+        width: auto;
     }
 }
 
@@ -67,11 +69,11 @@
     }
 
     #tmenu .icon-debug {
-        background: url("icons/debug.svg") center center no-repeat;
+        background: var(--icon-debug) center center no-repeat;
     }
 
     #tmenu .icon-preview {
-        background: url("icons/preview.svg") center center no-repeat;
+        background: var(--icon-preview) center center no-repeat;
     }
 
     #tmenu .profile button {
@@ -86,12 +88,12 @@
     }
 
     #main .content {
-        margin: 0 10px 10px;
+        margin: 0 5px 5px;
     }
 
     #main_headline {
         margin: 13px 0;
-        padding: 0 11px;
+        padding: 0 9px;
     }
 
     div.tl_tbox, div.tl_box {
@@ -119,10 +121,6 @@
         display: none;
     }
 
-    .tl_filter strong {
-        display: none;
-    }
-
     input.tl_submit {
         margin-top: 3px;
         margin-bottom: 3px;
@@ -142,8 +140,9 @@
         display: none;
     }
 
-    .tl_version_panel .tl_select {
-        width: 44%;
+    #tl_buttons > ul, .tl_listing_container, fieldset > .widget-group {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     .tl_modulewizard td:first-child {
@@ -174,8 +173,14 @@
         display: none;
     }
 
-    .tl_sorting, .tl_limit {
-        width: 60%;
+    .tl_submit_panel {
+        margin-top: 15px;
+        display: flex;
+        gap: 6px;
+    }
+
+    .filter_apply {
+        flex-grow: 1;
     }
 
     .passkeys .credential-list td.actions,
@@ -243,25 +248,12 @@
 
 /* Tablets */
 @media (min-width: 768px) {
-    .tl_filter > * {
-        flex: 1 1 0;
-        min-width: 15%;
-        max-width: 15%;
-    }
-
-    .tl_filter > strong {
-        min-width: unset;
-    }
-
-    .tl_search {
-        width: 40%;
-    }
 
     .widget-group {
         --widget-gap-cols: 30px;
     }
 
-    .w16, .w25, .w33, .w50, .w75 {
+    .w16, .w25, .w33, .w50, .w66, .w75 {
         --widget-cols: 6;
     }
 
@@ -281,7 +273,7 @@
         min-height: 80px;
     }
 
-    .nogrid :not(.widget-group) > :is(.w25, .w33, .w50, .w66, .w75) {
+    .nogrid :not(.widget-group) > :is(.w16, .w25, .w33, .w50, .w66, .w75) {
         float: none;
     }
 
@@ -311,6 +303,10 @@
 
     .w50 {
         --widget-cols: 6;
+    }
+
+    .w66 {
+        --widget-cols: 8;
     }
 
     .w75 {
@@ -349,7 +345,7 @@
         min-width: 100%;
         background: var(--form-bg);
         border: 1px solid var(--form-border);
-        border-radius: 2px;
+        border-radius: var(--border-radius);
         box-sizing: border-box;
         padding: 3px 0;
         margin-bottom: 1em;
@@ -400,7 +396,7 @@
 
     .split-button > button[type="submit"] {
         position: relative;
-        border-radius: 2px 0 0 2px;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
     }
 
     .split-button > button[type="button"] {
@@ -410,7 +406,7 @@
         background: var(--form-bg);
         border: 1px solid var(--form-border);
         border-left: 0;
-        border-radius: 0 2px 2px 0;
+        border-radius: 0 var(--border-radius) var(--border-radius) 0;
         box-sizing: border-box;
         transition: background .2s ease;
     }
@@ -421,5 +417,11 @@
 
     .split-button > button[type="button"]:focus {
         outline: none;
+    }
+}
+
+@media (width >= 1280px) {
+    .d-xl-none {
+        display: none;
     }
 }

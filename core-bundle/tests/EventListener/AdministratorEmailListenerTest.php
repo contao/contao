@@ -18,8 +18,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -41,14 +39,14 @@ class AdministratorEmailListenerTest extends TestCase
 
     public function testDoesNotAddMessageIfAdminEmailIsSet(): void
     {
-        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
             ->with('adminEmail')
             ->willReturn('foobar@example.com')
         ;
 
-        $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
+        $framework = $this->createContaoFrameworkStub([Config::class => $configAdapter]);
         $listener = $this->createAdministratorEmailListener($framework);
 
         $this->assertNull($listener());
@@ -65,7 +63,7 @@ class AdministratorEmailListenerTest extends TestCase
 
     public function testShowsMessageWithoutLinkIfSettingsModuleIsDisallowed(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')
@@ -87,17 +85,17 @@ class AdministratorEmailListenerTest extends TestCase
     private function createAdministratorEmailListener(ContaoFramework|null $framework = null, Security|null $security = null): AdministratorEmailListener
     {
         if (!$framework) {
-            $configAdapter = $this->mockAdapter(['get']);
+            $configAdapter = $this->createAdapterStub(['get']);
             $configAdapter
                 ->method('get')
                 ->with('adminEmail')
                 ->willReturn(null)
             ;
 
-            $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
+            $framework = $this->createContaoFrameworkStub([Config::class => $configAdapter]);
         }
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnMap([
@@ -106,20 +104,14 @@ class AdministratorEmailListenerTest extends TestCase
             ])
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturn('https://example.com')
         ;
 
-        $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->method('getCurrentRequest')
-            ->willReturn(new Request())
-        ;
-
         if (!$security) {
-            $security = $this->createMock(Security::class);
+            $security = $this->createStub(Security::class);
             $security
                 ->method('isGranted')
                 ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')
@@ -127,6 +119,6 @@ class AdministratorEmailListenerTest extends TestCase
             ;
         }
 
-        return new AdministratorEmailListener($framework, $translator, $router, $requestStack, $security);
+        return new AdministratorEmailListener($framework, $translator, $router, $security);
     }
 }

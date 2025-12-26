@@ -29,6 +29,7 @@ use Doctrine\DBAL\Connection;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 class BackupManagerTest extends ContaoTestCase
 {
@@ -40,7 +41,7 @@ class BackupManagerTest extends ContaoTestCase
 
         $this->vfs = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
     }
 
@@ -230,8 +231,9 @@ class BackupManagerTest extends ContaoTestCase
     {
         $this->vfs->write($config->getBackup()->getFilename(), $backupContent);
 
-        $connection = $this->mockConnection();
         $matcher = $this->exactly(3);
+
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($matcher)
             ->method('executeQuery')
@@ -295,7 +297,7 @@ class BackupManagerTest extends ContaoTestCase
                 BACKUP,
         );
 
-        $connection = $this->mockConnection();
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('executeQuery')
@@ -374,9 +376,9 @@ class BackupManagerTest extends ContaoTestCase
         return $dumper;
     }
 
-    private function mockConnection(): Connection&MockObject
+    private function mockConnection(): Connection&Stub
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('transactional')
             ->willReturnCallback(static fn (\Closure $closure) => $closure())
@@ -387,8 +389,8 @@ class BackupManagerTest extends ContaoTestCase
 
     private function getBackupManager(Connection|null $connection = null, DumperInterface|null $dumper = null, RetentionPolicyInterface|null $retentionPolicy = null): BackupManager
     {
-        $connection ??= $this->createMock(Connection::class);
-        $dumper ??= $this->createMock(DumperInterface::class);
+        $connection ??= $this->createStub(Connection::class);
+        $dumper ??= $this->createStub(DumperInterface::class);
         $retentionPolicy ??= new RetentionPolicy(5);
 
         return new BackupManager($connection, $dumper, $this->vfs, ['foobar'], $retentionPolicy);
