@@ -251,7 +251,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
             $label = [null, $label];
         }
 
-        if (null !== $id) {
+        if (null !== $id && isset($label[1])) {
             $label[1] = \sprintf($label[1], $id);
         }
 

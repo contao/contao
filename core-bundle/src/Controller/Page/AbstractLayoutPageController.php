@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Twig\Defer\Renderer;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\LayoutModel;
@@ -71,13 +72,14 @@ abstract class AbstractLayoutPageController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.routing.page_finder'] = '?'.PageFinder::class;
-        $services['contao.routing.response_context_accessor'] = '?'.ResponseContextAccessor::class;
-        $services['contao.routing.response_context_factory'] = '?'.CoreResponseContextFactory::class;
-        $services['contao.security.token_checker'] = '?'.TokenChecker::class;
-        $services['contao.image.picture_factory'] = '?'.PictureFactoryInterface::class;
-        $services['contao.image.preview_factory'] = '?'.PreviewFactory::class;
-        $services['contao.assets.assets_context'] = '?'.ContaoContext::class;
+        $services['contao.routing.page_finder'] = PageFinder::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
+        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
+        $services['contao.security.token_checker'] = TokenChecker::class;
+        $services['contao.image.picture_factory'] = PictureFactoryInterface::class;
+        $services['contao.image.preview_factory'] = PreviewFactory::class;
+        $services['contao.assets.assets_context'] = ContaoContext::class;
+        $services['contao.twig.defer.renderer'] = Renderer::class;
 
         return $services;
     }
@@ -108,7 +110,6 @@ abstract class AbstractLayoutPageController extends AbstractController
         $template->set('page', $page->row());
         $template->set('layout', $layout->row());
 
-        $template->set('head', $responseContext->get(HtmlHeadBag::class));
         $template->set('preview_mode', $this->container->get('contao.security.token_checker')->isPreviewMode());
 
         $locale = LocaleUtil::formatAsLocale($page->language);
@@ -156,20 +157,25 @@ abstract class AbstractLayoutPageController extends AbstractController
         });
 
         // Content composition
-        $moduleIdsBySlot = [];
+        $elementReferencesBySlot = [];
 
         foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
             if ($definition['enable'] ?? false) {
-                $moduleIdsBySlot[$definition['col']][] = (int) $definition['mod'];
+                $isContentElement = str_starts_with($definition['mod'], 'content-');
+
+                $elementReferencesBySlot[$definition['col']][] = [
+                    'type' => $isContentElement ? 'content_element' : 'frontend_module',
+                    'id' => (int) ($isContentElement ? substr($definition['mod'], 8) : $definition['mod']),
+                ];
             }
         }
 
-        $template->set('modules', $moduleIdsBySlot);
+        $template->set('element_references', $elementReferencesBySlot);
 
-        foreach ($moduleIdsBySlot as $slot => $moduleIds) {
+        foreach ($elementReferencesBySlot as $slot => $elementIds) {
             // We use a lazy value here, so that modules won't get rendered if not requested.
             // This is for instance the case if the slot's content was defined explicitly.
-            $lazyValue = new class(fn () => $this->renderSlot($slot, $moduleIds)) {
+            $lazyValue = new class(fn () => $this->renderSlot($slot, $elementIds)) {
                 public function __construct(private \Closure|string $value)
                 {
                 }
@@ -194,7 +200,7 @@ abstract class AbstractLayoutPageController extends AbstractController
     protected function getResponseContextData(ResponseContext $responseContext): array
     {
         return [
-            'head' => static fn () => $responseContext->get(HtmlHeadBag::class),
+            'head' => $responseContext->get(HtmlHeadBag::class),
             'end_of_head' => fn () => [
                 ...array_map(
                     function (string $url): string {
@@ -228,17 +234,25 @@ abstract class AbstractLayoutPageController extends AbstractController
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
-        return parent::render($view, $parameters, $response);
+        // The abstract parent class does several things when rendering a template (like
+        // handling Symfony forms) but uses the default Twig environment, which would
+        // output the content in a linear fashion. In order to use our own renderer
+        // capable of deferred blocks, we first render an empty template using the
+        // default method and then set our own content.
+        $response = parent::render('@ContaoCore/blank.html.twig', $parameters, $response);
+        $response->setContent($this->container->get('contao.twig.defer.renderer')->render($view, $parameters));
+
+        return $response;
     }
 
     /**
-     * @param list<int> $moduleIds
+     * @param list<array{type: string, id: int}> $elementReferences
      */
-    protected function renderSlot(string $slot, array $moduleIds, string $identifier = 'frontend_module/module_group'): string
+    protected function renderSlot(string $slot, array $elementReferences, string $identifier = 'page/_element_group'): string
     {
         $result = $this->renderView("@Contao/$identifier.html.twig", [
             '_slot_name' => $slot,
-            'modules' => $moduleIds,
+            'references' => $elementReferences,
         ]);
 
         // If there is no non-whitespace character, do not output the slot at all

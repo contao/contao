@@ -6,6 +6,13 @@
     margin: 1px 1px 1px 0;
 }
 
+/* Radio buttons in Safari are 12x12 instead of 14x14, so increase the margin */
+@supports (hanging-punctuation: first) and (font: -apple-system-body) and (-webkit-appearance: none) {
+    .tl_tree_radio {
+        margin: 2px 2px 2px 1px;
+    }
+}
+
 /* Radio table */
 .tl_radio_table {
     margin-top: 3px;

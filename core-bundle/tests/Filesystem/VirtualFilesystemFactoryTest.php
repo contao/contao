@@ -24,8 +24,8 @@ class VirtualFilesystemFactoryTest extends TestCase
     #[DataProvider('provideReadOnlyValues')]
     public function testCreatesVirtualFilesystemInstances(bool $readonly): void
     {
-        $mountManager = $this->createMock(MountManager::class);
-        $dbafsManager = $this->createMock(DbafsManager::class);
+        $mountManager = $this->createStub(MountManager::class);
+        $dbafsManager = $this->createStub(DbafsManager::class);
 
         $factory = new VirtualFilesystemFactory($mountManager, $dbafsManager);
         $dbafs = $factory('some/prefix', $readonly);

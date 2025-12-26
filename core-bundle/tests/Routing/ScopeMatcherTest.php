@@ -40,7 +40,7 @@ class ScopeMatcherTest extends TestCase
         $request = new Request();
         $request->attributes->set('_scope', $scope);
 
-        $event = new KernelEvent($this->createMock(KernelInterface::class), $request, $requestType);
+        $event = new KernelEvent($this->createStub(KernelInterface::class), $request, $requestType);
 
         $this->assertSame($isMain, $this->matcher->isContaoMainRequest($event));
         $this->assertSame($isMain && $isBackend, $this->matcher->isBackendMainRequest($event));
@@ -103,8 +103,8 @@ class ScopeMatcherTest extends TestCase
     public function testReturnsFalseIfThereIsNoRequest(): void
     {
         $scopeMatcher = new ScopeMatcher(
-            $this->createMock(RequestMatcherInterface::class),
-            $this->createMock(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
             new RequestStack(),
         );
 

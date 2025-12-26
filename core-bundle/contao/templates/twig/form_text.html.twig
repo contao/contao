@@ -1,0 +1,34 @@
+{% extends '@Contao/form_row.html.twig' %}
+
+{% block label %}
+    {% if this.label %}
+        <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
+            {% if this.mandatory|default %}
+                <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
+            {% else %}
+                {{ this.label }}
+            {% endif %}
+        </label>
+    {% endif %}
+{% endblock %}
+
+{% block field %}
+    {% if hasErrors.invoke() %}
+        <p class="error">{{ getErrorAsString.invoke() }}</p>
+    {% endif %}
+
+    <input{{ attrs()
+        .set('type', this.type)
+        .set('name', this.name)
+        .set('id', "ctrl_#{this.id}")
+        .addClass('text')
+        .addClass('password', this.hideInput|default)
+        .addClass(this.class|default)
+        .set('value', convertDate.invoke(this.value|default))
+        .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
+        .mergeWith(getAttributes.invoke())
+    }}>
+    {% if this.help|default %}
+        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
+    {% endif %}
+{% endblock %}

@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\String;
 
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Input;
+use Contao\InputEncodingMode;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class HtmlAttributesTest extends TestCase
@@ -196,6 +198,57 @@ class HtmlAttributesTest extends TestCase
             'style="; /* ; Farbe << */ color /* >> */ : /* Rot */ red /* foo: bar */ "',
             ['style' => '/* ; Farbe << */ color /* >> */: /* Rot */ red /* foo: bar */;'],
         ];
+    }
+
+    #[DataProvider('provideAttributeValues')]
+    public function testSerializesAttributeValues(mixed $value, string|null $expected): void
+    {
+        $attributes = new HtmlAttributes();
+        $attributes->set('foo', $value);
+
+        $this->assertSame($expected, $attributes['foo'] ?? null);
+
+        $attributes = new HtmlAttributes();
+        $attributes->mergeWith(['foo' => $value]);
+
+        $this->assertSame($expected, $attributes['foo'] ?? null);
+    }
+
+    public static function provideAttributeValues(): iterable
+    {
+        yield ['string', 'string'];
+
+        yield ['', ''];
+
+        yield [
+            new class() implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'stringable';
+                }
+            },
+            'stringable',
+        ];
+
+        yield [null, ''];
+
+        yield [true, ''];
+
+        yield [false, null];
+
+        yield [123, '123'];
+
+        yield [0, '0'];
+
+        yield [123.4, '123.4'];
+
+        yield [0.0000000001, '0.0000000001'];
+
+        yield [-0.0, '0'];
+
+        yield [INF, null];
+
+        yield [NAN, null];
     }
 
     public function testCreatesAttributesFromIterable(): void
@@ -612,6 +665,33 @@ class HtmlAttributesTest extends TestCase
         $attributes->addStyle(['--d' => '']);
 
         $this->assertSame([], iterator_to_array($attributes));
+    }
+
+    public function testAddEncodedStyles(): void
+    {
+        $attributes = new HtmlAttributes();
+
+        $attributes->addStyle(Input::encodeInput('color: #F00;', InputEncodingMode::encodeAll));
+        $this->assertSame('color: #F00;', $attributes['style']);
+        $this->assertSame(' style="color: #F00;"', $attributes->toString());
+
+        $attributes->set('style', Input::encodeInput('foo:url("bar.jpg");baz:foo;c\6F lor:red', InputEncodingMode::encodeAll));
+        $this->assertSame('foo: url(&quot;bar.jpg&quot;); baz: foo; c\6F lor: red;', $attributes['style']);
+
+        $attributes->set('style', Input::encodeInput('foo: func("ba\"r;"); baz: foo\; bar: baz; bar: foo;', InputEncodingMode::encodeAll));
+        $this->assertSame('foo: func(&quot;ba\&quot;r;&quot;); baz: foo\; bar: baz; bar: foo;', $attributes['style']);
+
+        $attributes->set('style', 'foo:func(&quot;double &amp;quot; encoded&quot;)');
+        $this->assertSame('foo: func(&quot;double &amp;quot; encoded&quot;);', $attributes['style']);
+        $attributes->addStyle('bar:"foo"');
+        $this->assertSame('foo: func(&quot;double &amp;quot; encoded&quot;); bar: "foo";', $attributes['style']);
+        $attributes->addStyle('');
+        $this->assertSame('foo: func(&quot;double &amp;quot; encoded&quot;); bar: &quot;foo&quot;;', $attributes['style']);
+
+        $attributes = new HtmlAttributes();
+        $attributes->setDoubleEncoding(true);
+        $attributes->addStyle('color: &#35;F00;');
+        $this->assertSame('color: &#35;', $attributes['style']);
     }
 
     public function testDoesNotOutputEmptyStyleAttribute(): void

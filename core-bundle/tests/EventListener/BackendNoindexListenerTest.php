@@ -28,7 +28,7 @@ class BackendNoindexListenerTest extends TestCase
         $request->attributes->set('_scope', 'backend');
 
         $response = new Response();
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
         $listener = new BackendNoindexListener($this->mockScopeMatcher());
@@ -41,7 +41,7 @@ class BackendNoindexListenerTest extends TestCase
     {
         $request = Request::create('/foobar');
         $response = new Response();
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
         $listener = new BackendNoindexListener($this->mockScopeMatcher());

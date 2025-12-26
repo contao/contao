@@ -1,16 +1,16 @@
 {# Show a dialog #}
-{% embed "@Contao/backend/template_studio/show_modal.stream.html.twig" %}
-    {% trans_default_domain "contao_template_studio" %}
+{% embed '@Contao/backend/template_studio/show_modal.stream.html.twig' %}
+    {% trans_default_domain 'contao_template_studio' %}
 
     {% set identifier_token -%}
         <span class="token">{{ identifier }}</span>
     {%- endset %}
 
-    {% block title %}{{ ('operation.'~operation~'.0')|trans }}{% endblock %}
+    {% block title %}{{ ('operation.' ~ operation ~ '.0')|trans }}{% endblock %}
 
     {% block content %}
         <div class="description">
-            {{ ('dialog.'~operation_type~'_variant')|trans([identifier_token])|raw }}
+            {{ ('dialog.' ~ operation_type ~ '_variant')|trans([identifier_token])|raw }}
         </div>
 
         <div class="template_name name_container">

@@ -40,14 +40,14 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
     {
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
-                new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
-                $this->createMock(UriSigner::class),
+                new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer(),
-            page: $this->createMock(PageModel::class),
+            page: $this->createStub(PageModel::class),
         );
 
         $this->assertSame('', $response->getContent());
@@ -58,14 +58,14 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
     {
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
-                new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
-                $this->createMock(UriSigner::class),
+                new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'type' => 'manage_passkeys',
             ],
-            adjustedContainer: $this->getAdjustedContainer($this->createMock(BackendUser::class)),
-            page: $this->createMock(PageModel::class),
+            adjustedContainer: $this->getAdjustedContainer($this->createStub(BackendUser::class)),
+            page: $this->createStub(PageModel::class),
         );
 
         $this->assertSame('', $response->getContent());
@@ -76,13 +76,13 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
     {
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
-                new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
-                $this->createMock(UriSigner::class),
+                new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'type' => 'manage_passkeys',
             ],
-            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class)),
+            adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class)),
         );
 
         $this->assertSame('', $response->getContent());
@@ -95,14 +95,14 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
-                new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
-                $this->createMock(UriSigner::class),
+                new WebauthnCredentialRepository($this->createStub(ManagerRegistry::class)),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'type' => 'manage_passkeys',
             ],
-            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class), false),
-            page: $this->createMock(PageModel::class),
+            adjustedContainer: $this->getAdjustedContainer($this->createStub(FrontendUser::class), false),
+            page: $this->createStub(PageModel::class),
         );
 
         $this->assertSame('', $response->getContent());
@@ -111,7 +111,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
     public function testRendersEmptyList(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $repository = $this->createMock(WebauthnCredentialRepository::class);
         $repository
@@ -124,13 +124,13 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
                 $repository,
-                $this->createMock(UriSigner::class),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer($user, true),
-            page: $this->createMock(PageModel::class),
+            page: $this->createStub(PageModel::class),
         );
 
         $content = $response->getContent();
@@ -142,7 +142,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
     public function testRendersList(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $credential = new WebauthnCredential(
             'publicKeyCredentialId',
@@ -169,14 +169,14 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
                 $repository,
-                $this->createMock(UriSigner::class),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'id' => 74205,
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer($user, true),
-            page: $this->createMock(PageModel::class),
+            page: $this->createStub(PageModel::class),
         );
 
         $content = $response->getContent();
@@ -186,7 +186,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
     public function testRendersListAndEditsNewCredential(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $credential = new WebauthnCredential(
             'publicKeyCredentialId',
@@ -235,7 +235,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer($user, true),
-            page: $this->createMock(PageModel::class),
+            page: $this->createStub(PageModel::class),
             request: $request,
         );
 
@@ -244,7 +244,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
     public function testDeletesPasskey(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $credential = new WebauthnCredential(
             'publicKeyCredentialId',
@@ -284,14 +284,14 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
                 $repository,
-                $this->createMock(UriSigner::class),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'id' => 74205,
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer($user, true, $credential),
-            page: $this->createMock(PageModel::class),
+            page: $this->createStub(PageModel::class),
             request: $request,
         );
 
@@ -300,7 +300,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
     public function testEditsPasskey(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $credential = new WebauthnCredential(
             'publicKeyCredentialId',
@@ -334,14 +334,14 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
                 $repository,
-                $this->createMock(UriSigner::class),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'id' => 74205,
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer($user, true, $credential),
-            page: $this->createMock(PageModel::class),
+            page: $this->createStub(PageModel::class),
             request: $request,
         );
 
@@ -351,7 +351,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
     public function testSavesPasskey(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->createStub(FrontendUser::class);
 
         $credential = new WebauthnCredential(
             'publicKeyCredentialId',
@@ -398,14 +398,14 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
                 $repository,
-                $this->createMock(UriSigner::class),
+                $this->createStub(UriSigner::class),
             ),
             [
                 'id' => 74205,
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer($user, true, $credential),
-            page: $this->createMock(PageModel::class),
+            page: $this->createStub(PageModel::class),
             request: $request,
         );
 
@@ -436,7 +436,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
         $container->set('security.token_storage', $tokenStorage);
 
-        $authChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authChecker
             ->method('isGranted')
             ->willReturnCallback(
@@ -452,7 +452,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
         $container->set('security.authorization_checker', $authChecker);
 
-        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator = $this->createStub(ContentUrlGenerator::class);
         $contentUrlGenerator
             ->method('generate')
             ->willReturnCallback(

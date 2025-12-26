@@ -34,6 +34,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'backendSearchIgnore'         => true,
 		'onload_callback' => array
 		(
 			array('tl_calendar_feed', 'checkPermission'),
@@ -95,7 +96,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_calendar_feed', 'deleteFeed')
 			),
-			'show'
+			'show',
+			'versions',
 		)
 	),
 

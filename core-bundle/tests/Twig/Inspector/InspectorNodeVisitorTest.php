@@ -19,21 +19,26 @@ use Contao\CoreBundle\Twig\Inspector\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Twig\Environment;
+use Twig\Node\BlockNode;
+use Twig\Node\BlockReferenceNode;
 use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Nodes;
+use Twig\NodeTraverser;
 use Twig\Source;
+use Twig\Token;
+use Twig\TokenStream;
 
 class InspectorNodeVisitorTest extends TestCase
 {
     public function testHasLowPriority(): void
     {
         $inspectorNodeVisitor = new InspectorNodeVisitor(
-            $this->createMock(Storage::class),
-            $this->createMock(Environment::class),
+            $this->createStub(Storage::class),
+            $this->createStub(Environment::class),
         );
 
         $this->assertSame(128, $inspectorNodeVisitor->getPriority());
@@ -43,7 +48,7 @@ class InspectorNodeVisitorTest extends TestCase
     public function testAnalyzesParent(AbstractExpression $parentExpression, string|null $expectedName): void
     {
         $storage = new Storage(new ArrayAdapter());
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
 
         $moduleNode = new ModuleNode(
             new BodyNode(),
@@ -65,7 +70,7 @@ class InspectorNodeVisitorTest extends TestCase
     public function testAnalyzesUses(AbstractExpression $useExpression, string|null $expectedName): void
     {
         $storage = new Storage(new ArrayAdapter());
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
 
         $moduleNode = new ModuleNode(
             new BodyNode(),
@@ -101,5 +106,66 @@ class InspectorNodeVisitorTest extends TestCase
             new class() extends AbstractExpression {},
             null,
         ];
+    }
+
+    public function testAnalyzesBlockNesting(): void
+    {
+        $storage = new Storage(new ArrayAdapter());
+
+        $environment = $this->createStub(Environment::class);
+        $environment
+            ->method('tokenize')
+            ->willReturn(new TokenStream([new Token(Token::EOF_TYPE, null, 0)]))
+        ;
+
+        $moduleNode = new ModuleNode(
+            new BodyNode([
+                new BlockReferenceNode('foo', 0),
+            ]),
+            null,
+            new Nodes([
+                'foo' => new BodyNode([
+                    new BlockNode(
+                        'foo',
+                        new Nodes([
+                            new BlockReferenceNode('bar', 0),
+                        ]),
+                        0,
+                    ),
+                ]),
+                'bar' => new BodyNode([
+                    new BlockNode(
+                        'bar',
+                        new Nodes([
+                            new BlockReferenceNode('baz', 0),
+                        ]),
+                        0,
+                    ),
+                ]),
+                'baz' => new BodyNode([
+                    new BlockNode('baz', new EmptyNode(), 0),
+                ]),
+            ]),
+            new EmptyNode(),
+            new EmptyNode(),
+            null,
+            new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
+        );
+
+        $inspectorNodeVisitor = new InspectorNodeVisitor($storage, $environment);
+
+        $nodeTraverser = new NodeTraverser($environment, [$inspectorNodeVisitor]);
+        $nodeTraverser->traverse($moduleNode);
+
+        $data = $storage->get('path/to/template.html.twig');
+
+        $this->assertSame(
+            [
+                'foo' => null,
+                'bar' => 'foo',
+                'baz' => 'bar',
+            ],
+            $data['nesting'],
+        );
     }
 }

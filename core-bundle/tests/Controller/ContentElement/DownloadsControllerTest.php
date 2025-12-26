@@ -174,10 +174,8 @@ class DownloadsControllerTest extends ContentElementTestCase
 
     private function getDownloadsController(): DownloadsController
     {
-        $security = $this->createMock(Security::class);
-
         return new DownloadsController(
-            $security,
+            $this->createStub(Security::class),
             $this->getDefaultStorage(),
         );
     }
@@ -185,7 +183,7 @@ class DownloadsControllerTest extends ContentElementTestCase
     private function getAdjustedContainer(): ContainerBuilder
     {
         $container = new ContainerBuilder();
-        $container->set('contao.filesystem.file_download_helper', $this->createMock(FileDownloadHelper::class));
+        $container->set('contao.filesystem.file_download_helper', $this->createStub(FileDownloadHelper::class));
 
         return $container;
     }

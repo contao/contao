@@ -56,4 +56,9 @@ class TestCronJob
     {
         return new Promise(static function (): never { throw new CronExecutionSkippedException(); });
     }
+
+    public function wrongReturnValue(): int
+    {
+        return 42;
+    }
 }

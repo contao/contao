@@ -25,12 +25,20 @@
     --skip-focus-border-color: #f47c00;
 }
 
-body.navigation-open {
-    overflow: hidden;
+body {
+    &:not(.navigation-open, .nav-is-desktop) .navigation-main {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+    }
 
-    header .logo {
-        position: relative;
-        z-index: 7;
+    &.navigation-open {
+        overflow: hidden;
+
+        header .logo {
+            position: relative;
+            z-index: 7;
+        }
     }
 }
 
@@ -175,12 +183,6 @@ body.nav-is-mobile {
             }
         }
 
-        &:not(.is-active) {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
         :is(a, strong) {
             display: inline-block;
             color: var(--nav-mobile-color) !important;
@@ -189,7 +191,7 @@ body.nav-is-mobile {
             width: calc(100% - 44px);
 
             &:is(.active) {
-                --nav-color: var(--nav-mobile-active-color);
+                --nav-mobile-color: var(--nav-mobile-active-color);
             }
         }
 

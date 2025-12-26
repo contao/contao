@@ -492,7 +492,7 @@ class CommandCompilerTest extends TestCase
 
     private function getInstaller(Schema|null $fromSchema = null, Schema|null $toSchema = null, array $tables = [], string $filePerTable = 'ON'): CommandCompiler
     {
-        $schemaManagerConnection = $this->createMock(Connection::class);
+        $schemaManagerConnection = $this->createStub(Connection::class);
         $schemaManagerConnection
             ->method('fetchNumeric')
             ->with('SELECT @@character_set_database, @@collation_database')
@@ -502,7 +502,7 @@ class CommandCompilerTest extends TestCase
         $platform = new MySQLPlatform();
         $comparator = (new MySQLSchemaManager($schemaManagerConnection, $platform))->createComparator();
 
-        $schemaManager = $this->createMock(MySQLSchemaManager::class);
+        $schemaManager = $this->createStub(MySQLSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn($fromSchema)
@@ -526,7 +526,7 @@ class CommandCompilerTest extends TestCase
             ->willReturn($tables)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
@@ -570,10 +570,10 @@ class CommandCompilerTest extends TestCase
 
         $connection
             ->method('getConfiguration')
-            ->willReturn($this->createMock(Configuration::class))
+            ->willReturn($this->createStub(Configuration::class))
         ;
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider = $this->createStub(SchemaProvider::class);
         $schemaProvider
             ->method('createSchema')
             ->willReturn($toSchema)

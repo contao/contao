@@ -47,9 +47,9 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.filesystem.file_download_helper'] = '?'.FileDownloadHelper::class;
-        $services['contao.image.preview_factory'] = '?'.PreviewFactory::class;
-        $services['contao.image.studio'] = '?'.Studio::class;
+        $services['contao.filesystem.file_download_helper'] = FileDownloadHelper::class;
+        $services['contao.image.preview_factory'] = PreviewFactory::class;
+        $services['contao.image.studio'] = Studio::class;
 
         return $services;
     }
@@ -137,7 +137,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     /**
      * Generate file preview images on the fly for a content model (default Contao
-     * controller behaviour).
+     * controller behavior).
      *
      * @return \Generator<Figure>
      */

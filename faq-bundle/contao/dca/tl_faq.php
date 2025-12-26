@@ -12,16 +12,10 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\DC_Table;
 use Contao\FaqCategoryModel;
-use Contao\Image;
-use Contao\Input;
-use Contao\StringUtil;
 use Contao\System;
 
 System::loadLanguageFile('tl_content');
@@ -60,10 +54,15 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'panelLayout'             => 'filter;search,limit',
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp'),
-			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('question', 'answer'),
+			'format'                  => '<h2>%s</h2> %s',
+			'label_callback'          => array('tl_faq', 'listQuestions'),
+		),
 	),
 
 	// Palettes
@@ -350,29 +349,17 @@ class tl_faq extends Backend
 	}
 
 	/**
-	 * Add the type of input field
+	 * Add the question as element metadata
 	 *
-	 * @param array $arrRow
+	 * @param array  $arrRow
+	 * @param string $label
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function listQuestions($arrRow)
+	public function listQuestions($arrRow, $label): array
 	{
 		$key = $arrRow['published'] ? 'published' : 'unpublished';
-		$date = Date::parse(Config::get('datimFormat'), $arrRow['tstamp']);
-		$dragHandle = '';
 
-		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_faq', new UpdateAction('tl_faq', $arrRow)))
-		{
-			$labelCut = $GLOBALS['TL_LANG']['tl_faq']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-			$dragHandle = '<button type="button" class="drag-handle">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
-		}
-
-		return '
-<div class="cte_type ' . $key . '">' . $dragHandle . $date . '</div>
-<div class="cte_preview">
-<h2>' . $arrRow['question'] . '</h2>
-' . StringUtil::insertTagToSrc($arrRow['answer']) . '
-</div>' . "\n";
+		return array($arrRow['question'], $label, $key);
 	}
 }

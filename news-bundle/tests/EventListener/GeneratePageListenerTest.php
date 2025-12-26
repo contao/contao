@@ -41,7 +41,7 @@ class GeneratePageListenerTest extends ContaoTestCase
 
     public function testAddsTheNewsFeedLink(): void
     {
-        $newsFeedModel = $this->createMock(PageModel::class);
+        $newsFeedModel = $this->createStub(PageModel::class);
         $newsFeedModel
             ->method('__get')
             ->willReturnMap([
@@ -64,16 +64,16 @@ class GeneratePageListenerTest extends ContaoTestCase
         $collection = new Collection([$newsFeedModel], 'tl_page');
 
         $adapters = [
-            Environment::class => $this->mockAdapter(['get']),
-            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
+            Environment::class => $this->createAdapterStub(['get']),
+            PageModel::class => $this->createConfiguredAdapterStub(['findMultipleByIds' => $collection]),
             Template::class => new Adapter(Template::class),
         ];
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework($adapters), $urlGenerator);
-        $listener($this->createMock(PageModel::class), $layoutModel);
+        $listener = new GeneratePageListener($this->createContaoFrameworkStub($adapters), $urlGenerator);
+        $listener($this->createStub(PageModel::class), $layoutModel);
 
         $this->assertSame(
             ['<link type="application/rss+xml" rel="alternate" href="http://localhost/news.xml" title="Latest news">'],
@@ -83,29 +83,29 @@ class GeneratePageListenerTest extends ContaoTestCase
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoFeeds(): void
     {
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->newsfeeds = '';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class));
-        $listener($this->createMock(PageModel::class), $layoutModel);
+        $listener = new GeneratePageListener($this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class));
+        $listener($this->createStub(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoValidModels(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['type' => 'regular']);
         $collection = new Collection([$pageModel], 'tl_page');
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
+            PageModel::class => $this->createConfiguredAdapterStub(['findMultipleByIds' => $collection]),
         ];
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
-        $listener = new GeneratePageListener($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
-        $listener($this->createMock(PageModel::class), $layoutModel);
+        $listener = new GeneratePageListener($this->createContaoFrameworkStub($adapters), $this->createStub(ContentUrlGenerator::class));
+        $listener($this->createStub(PageModel::class), $layoutModel);
 
         $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }

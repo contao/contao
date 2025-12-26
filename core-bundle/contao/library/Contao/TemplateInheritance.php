@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -377,8 +378,9 @@ trait TemplateInheritance
 		}
 
 		$templateCandidate = "@Contao/$this->strTemplate.html.twig";
+		$loader = $container->get('contao.twig.filesystem_loader');
 
-		if (!$twig->getLoader()->exists($templateCandidate))
+		if (!$loader->exists($templateCandidate) || 'html5' === ContaoTwigUtil::getExtension($loader->getFirst($this->strTemplate)))
 		{
 			return null;
 		}
