@@ -3709,7 +3709,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
-		$return = '';
 		$intSpacing = 16;
 		$children = array();
 
@@ -3747,14 +3746,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
 
-		$mouseover = '';
-
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable || (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && $arrClipboard !== false))
-		{
-			$mouseover = ' hover-div';
-		}
-
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="' . ($table == $this->strTable ? 'contao--deeplink ' : '') . 'contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 16 : 0)) . 'px">';
+		$parameters= [
+			'is_tree_entry' => ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable || (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && $arrClipboard !== false),
+			'is_folder' => ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable),
+			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
+			'is_table' => $table == $this->strTable,
+			'is_childless' => intval(empty($children)),
+		];
 
 		// Calculate label and add a toggle button
 		$level = $intMargin / $intSpacing + 1;
@@ -3778,18 +3776,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		if (!empty($children))
-		{
-			$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
-			$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle:prevent" data-contao--toggle-nodes-id-param="' . $node . '_' . $id . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
-		}
+		$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
+
+		$parameters['child_toggler']['link'] = $this->addToUrl('ptg=' . $id);
+		$parameters['child_toggler']['class'] = $blnIsOpen ?? false ? 'foldable foldable--open' : 'foldable';
+		$parameters['child_toggler']['image'] = Image::getHtml('chevron-right.svg', $alt);
+		$parameters['level'] = $level;
+		$parameters['node'] = $node;
+		$parameters['id'] = $id;
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
 		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails);
 
-		$return .= $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
-		$return .= '</div> <div class="tl_right">';
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
 		$_buttons = '';
@@ -3933,8 +3931,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$return .= ($_buttons ?: '&nbsp;') . '</div></li>';
-
 		// Add the records of the table itself
 		if ($table != $this->strTable)
 		{
@@ -3961,9 +3957,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				static::preloadCurrentRecords($ids, $this->strTable);
 
+				$parameters['records'] = [];
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
-					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[$j - 1] ?? null), 'nn'=>($ids[$j + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, false, $j<(\count($ids)-1) || !empty($children), $blnNoRecursion, $arrFound);
+					$parameters['records'][] = $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[$j - 1] ?? null), 'nn'=>($ids[$j + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, false, $j<(\count($ids)-1) || !empty($children), $blnNoRecursion, $arrFound);
 				}
 			}
 		}
@@ -3971,23 +3968,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Begin a new submenu
 		if (!$blnNoRecursion && $blnIsOpen && !empty($children))
 		{
-			$return .= '<li class="parent" id="' . $node . '_' . $id . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
-
 			static::preloadCurrentRecords($children, $table);
 			$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
 
 			// Add the records of the parent table
+			$parameters['children'] = [];
 			for ($k=0, $c=\count($children); $k<$c; $k++)
 			{
-				$return .= $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
+				$parameters['children'][] = $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
 			}
-
-			$return .= '</ul></li>';
 		}
+
+		$parameters['label'] = $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
+		$parameters['buttons'] = $_buttons;
+		dump($parameters);
 
 		$objSessionBag->replace($session);
 
-		return $return;
+		return $this->render('view/records', $parameters);
 	}
 
 	/**

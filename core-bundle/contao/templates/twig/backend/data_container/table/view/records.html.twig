@@ -1,0 +1,53 @@
+{%
+    set row_attributes = attrs()
+    .addClass([
+        'cf',
+        is_tree_entry ? 'hover-div',
+        is_folder ? 'tl_folder' : 'tl_file',
+        is_draft ? 'draft'
+    ])
+    .set('data-controller', "#{is_table ? 'contao--deeplink '}contao--operations-menu")
+    .set('data-action', "contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput")
+    .addStyle({
+        '--isChildless': is_childless
+    })
+%}
+<li{{ row_attributes }}>
+    <div class="tl_left">
+
+        {% if not is_childless %}
+            {% set child_toggler_attributes = attrs()
+                .addClass(child_toggler.class)
+                .setIfExists('href', child_toggler.link)
+                .set('data-contao--toggle-nodes-target', "toggle")
+                .set('data-action', "contao--toggle-nodes#toggle:prevent")
+                .set('data-contao--toggle-nodes-id-param', "#{node}_#{id}")
+                .set('data-contao--toggle-nodes-id-param', "#{node}_#{id}")
+                .set('data-contao--toggle-nodes-level-param', level)
+             %}
+             <a{{ child_toggler_attributes}}>{{ child_toggler.image|raw }}</a>
+        {% endif %}
+
+        {{ label|raw }}
+    </div>
+    <div class="tl_right">
+        {{ buttons|raw }}
+    </div>
+</li>
+{{ records|default|join('')|raw }}
+{% if children|default %}
+    {% set child_attributes = attrs()
+        .addClass('parent')
+        .set('id', "#{node}_#{id}")
+        .set('data-contao--toggle-nodes-target', "child#{level == 0 ? ' rootChild'}")
+    %}
+    <li{{ child_attributes }}>
+        {% set child_list_attributes = attrs()
+            .addClass("level_#{level}")
+            .addStyle({"--level": level})
+        %}
+        <ul{{ child_list_attributes }}>
+            {{ children|join('')|raw }}
+        </ul>
+    </li>
+{% endif %}
