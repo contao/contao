@@ -12,7 +12,6 @@
     .set('data-contao--limit-height-collapse-all-title-value', 'DCA.collapseNodes.1'|trans, limit_height)
 %}
 
-{# todo: check; "no records"-block would originally have class "tl_empty_parent_view" instead of "tl_empty" #}
 {% block list %}
     {% if has_clipboard_content %}
         <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
@@ -28,7 +27,6 @@
     <div{{ listing_attributes }}>
         <div class="tl_header hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">
             <div class="tl_content_right">
-                {# todo: check; this would wrap in "<div class="tl_select_trigger">%</div>" - remove or generalize? #}
                 {{ include ('@Contao/backend/data_container/table/view/_select_all_button.html.twig') }}
 
                 {{ header_operations|default|raw }}
@@ -44,7 +42,6 @@
             </table>
         </div>
 
-        {# todo: check; this "<ul>" and the inner "<li>"'s are now always output - not only when "has_sorting" is true #}
         {% set list_attributes = attrs()
             .set('data-controller', 'contao--sortable', is_sortable)
             .set('data-contao--sortable-handle-value', '.drag-handle', is_sortable)
