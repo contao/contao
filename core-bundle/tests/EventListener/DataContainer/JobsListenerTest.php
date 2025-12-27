@@ -259,7 +259,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         $twig
             ->expects($this->once())
             ->method('render')
-            ->with('@Contao/backend/jobs/_progress.html.twig', ['progress' => 37.0])
+            ->with('@Contao/backend/jobs/progress.html.twig', ['progress' => 37.0])
             ->willReturn('the resulting twig output')
         ;
 

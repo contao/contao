@@ -49,7 +49,7 @@ class BackendJobsListener
             return;
         }
 
-        $markup = $this->twig->render('@Contao/backend/jobs/_menu_item.html.twig', [
+        $markup = $this->twig->render('@Contao/backend/jobs/menu_item.html.twig', [
             'jobs_link' => $this->router->generate('contao_backend', ['do' => 'jobs']),
             'has_pending_jobs' => [] !== $this->jobs->findMyNewOrPending(),
         ]);

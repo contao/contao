@@ -13,7 +13,7 @@
             <ul>
                 {% for job in running_jobs %}
                     <li>
-                        {{ include('@Contao/backend/jobs/_progress.html.twig') }}
+                        {{ include('@Contao/backend/jobs/progress.html.twig') }}
                         {{ ('jobs.typeLabel.' ~ job.type)|trans }}
                     </li>
                 {% endfor %}
@@ -26,19 +26,19 @@
 {% for job in jobs %}
     <turbo-stream action="update" targets="[data-job-progress='{{ job.uuid }}']">
         <template>
-            {{ include('@Contao/backend/jobs/_progress.html.twig') }}
+            {{ include('@Contao/backend/jobs/progress.html.twig') }}
         </template>
     </turbo-stream>
 
     <turbo-stream action="update" targets="[data-job-status='{{ job.uuid }}']">
         <template>
-            {{ include('@Contao/backend/jobs/_status.html.twig') }}
+            {{ include('@Contao/backend/jobs/status.html.twig') }}
         </template>
     </turbo-stream>
 
     <turbo-stream action="update" targets="[data-job-attachments='{{ job.uuid }}']">
         <template>
-            {{ include('@Contao/backend/jobs/_attachments.html.twig', {attachments: attachments[job.uuid]}) }}
+            {{ include('@Contao/backend/jobs/attachments.html.twig', {attachments: attachments[job.uuid]}) }}
         </template>
     </turbo-stream>
 {% endfor %}
