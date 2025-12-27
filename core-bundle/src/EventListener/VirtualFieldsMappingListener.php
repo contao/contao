@@ -31,7 +31,13 @@ class VirtualFieldsMappingListener
 
     public function __invoke(string $table): void
     {
+        // Only support auto-mapping for DC_Table
         if (!is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
+            return;
+        }
+
+        // Ignore any DCAs that are not editable or do not have any palettes
+        if (($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? null) || !($GLOBALS['TL_DCA'][$table]['palettes'] ?? null)) {
             return;
         }
 

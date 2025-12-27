@@ -29,6 +29,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
                 'dataContainer' => $dc,
             ],
             'fields' => $fields,
+            'palettes' => ['default' => 'foobar'],
         ];
 
         (new VirtualFieldsMappingListener())('tl_foobar');
@@ -110,5 +111,47 @@ class VirtualFieldsMappingListenerTest extends TestCase
             ],
             DC_File::class,
         ];
+    }
+
+    public function testDoesNotMapForNonEditableDcas(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foobar'] = [
+            'config' => [
+                'dataContainer' => DC_Table::class,
+                'notEditable' => true,
+            ],
+            'fields' => [
+                'foobar' => [
+                    'inputType' => 'text',
+                ],
+            ],
+            'palettes' => ['default' => 'foobar'],
+        ];
+
+        (new VirtualFieldsMappingListener())('tl_foobar');
+
+        $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public function testDoesNotMapForDcasWithoutPalettes(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foobar'] = [
+            'config' => [
+                'dataContainer' => DC_Table::class,
+            ],
+            'fields' => [
+                'foobar' => [
+                    'inputType' => 'text',
+                ],
+            ],
+        ];
+
+        (new VirtualFieldsMappingListener())('tl_foobar');
+
+        $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
+
+        unset($GLOBALS['TL_DCA']);
     }
 }
