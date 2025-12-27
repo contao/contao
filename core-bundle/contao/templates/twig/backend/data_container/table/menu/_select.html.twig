@@ -3,7 +3,6 @@
 {% set select_wrapper_attributes = attrs()
     .addClass('tl_select_wrapper')
     .set('data-controller', 'contao--choices')
-    .mergeWith(select_wrapper_attributes|default)
 %}
 <div{{ select_wrapper_attributes }}>
     {% set select_attributes = attrs()
