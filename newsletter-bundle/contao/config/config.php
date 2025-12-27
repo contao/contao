@@ -24,6 +24,7 @@ $GLOBALS['BE_MOD']['content']['newsletter'] = array
 	'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients'),
 	'send'       => array(Newsletter::class, 'send'),
 	'import'     => array(Newsletter::class, 'importRecipients'),
+	'block'      => array('tl_newsletter_recipients', 'blockRecipient'),
 	'stylesheet' => 'bundles/contaonewsletter/newsletter.min.css'
 );
 

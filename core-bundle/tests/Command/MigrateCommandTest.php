@@ -32,6 +32,7 @@ use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -294,7 +295,23 @@ class MigrateCommandTest extends TestCase
             )
         ;
 
-        $connection = $this->createDefaultConnection();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturnCallback(
+                static fn (string $query): string|false => match ($query) {
+                    'SELECT @@sql_mode' => 'TRADITIONAL',
+                    'SELECT @@version' => '8.0.0',
+                    default => false,
+                },
+            )
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn(new PdoDriver())
+        ;
+
         $connection
             ->expects($this->never())
             ->method('executeQuery')
@@ -440,7 +457,7 @@ class MigrateCommandTest extends TestCase
 
         if (interface_exists(ServerInfoAwareConnection::class)) {
             /** @phpstan-ignore class.notFound */
-            $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
+            $driverConnection = $this->createStub(ServerInfoAwareConnection::class);
             /** @phpstan-ignore class.notFound, phpunit.mockMethod */
             $driverConnection
                 ->method('getServerVersion')
@@ -461,7 +478,7 @@ class MigrateCommandTest extends TestCase
 
         $connection
             ->method('getDriver')
-            ->willReturn($this->createMock(Driver::class))
+            ->willReturn($this->createStub(Driver::class))
         ;
 
         $connection
@@ -511,7 +528,7 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('provideBadConfigurations')]
     public function testOutputsConfigurationErrors(array $configuration, array|string $expectedMessages): void
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->with('SELECT @@version')
@@ -746,7 +763,7 @@ class MigrateCommandTest extends TestCase
      */
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler|null $commandCompiler = null, BackupManager|null $backupManager = null, Connection|null $connection = null): MigrateCommand
     {
-        $migrations = $this->createMock(MigrationCollection::class);
+        $migrations = $this->createStub(MigrationCollection::class);
         $migrations
             ->method('hasPending')
             ->willReturn((bool) \count($pendingMigrations))
@@ -774,7 +791,7 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$migrationResults)
         ;
 
-        $commandCompiler ??= $this->createMock(CommandCompiler::class);
+        $commandCompiler ??= $this->createStub(CommandCompiler::class);
         $commandCompiler
             ->method('compileTargetSchema')
             ->willReturn(new Schema())
@@ -785,13 +802,13 @@ class MigrateCommandTest extends TestCase
             $connection ?? $this->createDefaultConnection(),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
-            $this->createMock(MysqlInnodbRowSizeCalculator::class),
+            $this->createStub(MysqlInnodbRowSizeCalculator::class),
         );
     }
 
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&MockObject
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&Stub
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
             ->willReturnCallback(

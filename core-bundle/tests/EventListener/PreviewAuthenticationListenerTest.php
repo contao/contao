@@ -29,10 +29,10 @@ class PreviewAuthenticationListenerTest extends TestCase
 {
     public function testDoesNothingIfPreviewAttributeIsNotSet(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $router = $this->createMock(UrlGeneratorInterface::class);
-        $uriSigner = $this->createMock(UriSigner::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $tokenChecker = $this->createStub(TokenChecker::class);
+        $router = $this->createStub(UrlGeneratorInterface::class);
+        $uriSigner = $this->createStub(UriSigner::class);
 
         $requestEvent = $this->getRequestEvent();
 
@@ -105,7 +105,7 @@ class PreviewAuthenticationListenerTest extends TestCase
 
     private function getRequestEvent(Request|null $request = null): RequestEvent
     {
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
 
         return new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
     }

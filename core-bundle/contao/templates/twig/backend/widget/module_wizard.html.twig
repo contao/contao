@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set table_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
@@ -25,7 +25,7 @@
                         .set('data-action', 'keydown->contao--sortable#move')
                         .addClass('drag-handle')
                     %}
-                    <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                    <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
                 </td>
 
                 {# Module/Content element #}
@@ -36,7 +36,7 @@
                             .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
                             .addClass('tl_select')
                         %}
-                        <select{{ module_select_attributes}}>
+                        <select{{ module_select_attributes }}>
                             <optgroup label="{{ 'MSC.mw_elements'|trans }}">
                                 {% for option in row.element_options %}
                                     {% set option_attributes = attrs()
@@ -67,7 +67,7 @@
                             .set('data-action', 'focus->contao--scroll-offset#store')
                             .addClass('tl_select')
                         %}
-                        <select{{ layout_select_attributes}}>
+                        <select{{ layout_select_attributes }}>
                             {% for option in row.layout_options %}
                                 {% set option_attributes = attrs()
                                     .set('value', option.value)
@@ -91,7 +91,7 @@
                         .addClass('hidden', not row.controls.edit)
                     %}
                     <a{{ edit_anchor_attributes }}>{{ backend_icon('edit.svg', title) }}</a>
-                    {{ backend_icon('edit--disabled.svg', attributes: attrs().addClass('module_image').addClass('hidden', row.controls.edit) ) }}
+                    {{ backend_icon('edit--disabled.svg', attributes: attrs().addClass('module_image').addClass('hidden', row.controls.edit)) }}
 
                     {# Copy row #}
                     {% set copy_button_attributes = attrs()

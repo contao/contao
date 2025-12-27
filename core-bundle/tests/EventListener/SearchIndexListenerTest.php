@@ -33,8 +33,8 @@ class SearchIndexListenerTest extends TestCase
     public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete): void
     {
         $dispatchCount = (int) $index + (int) $delete;
-        $messenger = $this->createMock(MessageBusInterface::class);
 
+        $messenger = $this->createMock(MessageBusInterface::class);
         $messenger
             ->expects($this->exactly($dispatchCount))
             ->method('dispatch')
@@ -49,7 +49,7 @@ class SearchIndexListenerTest extends TestCase
             ->willReturnCallback(static fn (SearchIndexMessage $message) => new Envelope($message))
         ;
 
-        $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
+        $event = new TerminateEvent($this->createStub(HttpKernelInterface::class), $request, $response);
 
         $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $features);
         $listener($event);
@@ -75,7 +75,7 @@ class SearchIndexListenerTest extends TestCase
             ->willReturnCallback(static fn (SearchIndexMessage $message) => new Envelope($message))
         ;
 
-        $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
+        $event = new TerminateEvent($this->createStub(HttpKernelInterface::class), $request, $response);
         $listener = new SearchIndexListener($messenger, '_fragment', '/contao', SearchIndexListener::FEATURE_INDEX);
 
         // Should index (total expected count: 1)

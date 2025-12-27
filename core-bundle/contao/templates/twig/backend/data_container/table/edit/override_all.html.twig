@@ -1,5 +1,5 @@
-{% trans_default_domain "contao_default" %}
-{% extends "@Contao/backend/data_container/table/edit/_edit.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% extends '@Contao/backend/data_container/table/edit/_edit.html.twig' %}
 
 {% set add_jump_targets = false %}
 {% set form_body_attributes = attrs()
@@ -17,4 +17,3 @@
         {{ widgets|join|raw }}
     </div>
 {% endblock %}
-

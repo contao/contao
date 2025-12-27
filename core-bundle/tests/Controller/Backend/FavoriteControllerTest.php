@@ -21,7 +21,7 @@ use Contao\CoreBundle\Util\UrlUtil;
 use Contao\DC_Table;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,9 +38,9 @@ class FavoriteControllerTest extends TestCase
     public function testReturnsEmptyResponseWithoutBackendUser(): void
     {
         $container = $this->getContainer(null, [], null, false);
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
 
-        $controller = new FavoriteController($this->mockContaoFramework(), $connection);
+        $controller = new FavoriteController($this->createContaoFrameworkStub(), $connection);
         $controller->setContainer($container);
 
         $response = $controller(new Request());
@@ -51,10 +51,10 @@ class FavoriteControllerTest extends TestCase
     public function testThrowsExceptionWithoutTargetPath(): void
     {
         $container = $this->getContainer();
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $request = new Request();
 
-        $controller = new FavoriteController($this->mockContaoFramework(), $connection);
+        $controller = new FavoriteController($this->createContaoFrameworkStub(), $connection);
         $controller->setContainer($container);
 
         $this->expectException(BadRequestException::class);
@@ -66,10 +66,10 @@ class FavoriteControllerTest extends TestCase
     #[DataProvider('favoriteProvider')]
     public function testRendersAddToFavoriteButton(Request $request, int|false $currentId, array $parameters, string|null $block = 'form', string $expectedResponse = Response::class): void
     {
-        $controllerAdapter = $this->mockAdapter(['loadDataContainer']);
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class);
+        $controllerAdapter = $this->createAdapterStub(['loadDataContainer']);
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class);
 
-        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter], [DC_Table::class => $dataContainer]);
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter], [DC_Table::class => $dataContainer]);
 
         $queries = [[
             'SELECT id FROM tl_favorites WHERE url = :url AND user = :user',
@@ -170,7 +170,7 @@ class FavoriteControllerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($backendUser ? $this->mockClassWithProperties(BackendUser::class, ['id' => 42]) : null)
+            ->willReturn($backendUser ? $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 42]) : null)
         ;
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
@@ -180,8 +180,6 @@ class FavoriteControllerTest extends TestCase
             ->willReturn($token)
         ;
 
-        $twig = $this->createMock(Environment::class);
-
         $template = $this->createMock(Template::class);
         $template
             ->expects(null === $block ? $this->never() : $this->once())
@@ -189,6 +187,7 @@ class FavoriteControllerTest extends TestCase
             ->with($block, $parameters)
         ;
 
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('load')
             ->with('@Contao/backend/chrome/favorite.html.twig')
@@ -232,9 +231,9 @@ class FavoriteControllerTest extends TestCase
         return $request;
     }
 
-    private function mockRouter(string|null $url): UrlGeneratorInterface&MockObject
+    private function mockRouter(string|null $url): UrlGeneratorInterface&Stub
     {
-        $router = $this->createMock(UrlGeneratorInterface::class);
+        $router = $this->createStub(UrlGeneratorInterface::class);
 
         if ($url) {
             $router

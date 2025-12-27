@@ -1,5 +1,5 @@
-{% trans_default_domain "contao_default" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {% set wrapper_attributes = attrs(cssID)
     .addClass([class, 'nav-wrapper', 'block'])
@@ -7,15 +7,17 @@
 %}
 
 {% block content %}
-    <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
-        let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
-        if (typeof accessibleNavObserver === 'undefined') {
-            const accessibleNavObserver = new ResizeObserver(() => {
-                document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
-                document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
-            }).observe(document.body);
-        }
-    </script>
+    {% block navigation_script_variables %}
+        <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+            let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
+            if (typeof accessibleNavObserver === 'undefined') {
+                const accessibleNavObserver = new ResizeObserver(() => {
+                    document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
+                    document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
+                }).observe(document.body);
+            }
+        </script>
+    {% endblock %}
     <!-- indexer::stop -->
     <div{{ wrapper_attributes }}>
         {% block toggle %}
@@ -67,7 +69,7 @@
 {% endblock %}
 
 {% block script %}
-    {% add "accessible_navigation_js" to head %}
+    {% add 'accessible_navigation_js' to head %}
         <link rel="modulepreload" href="{{ asset('navigation.js', 'contao_core') }}">
         <script src="{{ asset('navigation.js', 'contao_core') }}" type="module"></script>
     {% endadd %}
@@ -97,7 +99,7 @@
 {% endblock %}
 
 {% block style %}
-    {% add "accessible_navigation_css" to stylesheets %}
+    {% add 'accessible_navigation_css' to stylesheets %}
         {% with {file: navigation_css_file|default(asset('navigation.css', 'contao_core'))} %}
             {{ block('stylesheet_component') }}
         {% endwith %}

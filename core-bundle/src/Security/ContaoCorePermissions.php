@@ -148,7 +148,7 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_FRONTEND_MODULES = 'contao_user.themes.modules';
 
     /**
-     * Access is granted if the current user can access the css editor in themes.
+     * Access is granted if the current user can access the CSS editor in themes.
      */
     public const USER_CAN_ACCESS_STYLE_SHEETS = 'contao_user.themes.css';
 

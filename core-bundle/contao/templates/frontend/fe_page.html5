@@ -1,14 +1,14 @@
 <?php
 
 $this->rootAttributes = $this
-    ->attr()
+    ->attrs()
     ->set('lang', $this->language)
     ->set('dir', 'rtl', $this->isRTL)
     ->mergeWith($this->rootAttributes)
 ;
 
 $this->bodyAttributes = $this
-    ->attr()
+    ->attrs()
     ->set('id', 'top')
     ->addClass($this->class)
     ->setIfExists('onload', $this->onload)

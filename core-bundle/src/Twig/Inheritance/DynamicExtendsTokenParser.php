@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Twig\Error\LoaderError;
 use Twig\Error\SyntaxError;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ArrayExpression;
@@ -49,7 +50,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
             throw new SyntaxError('Cannot use "extends" in a macro.', $token->getLine(), $stream->getSourceContext());
         }
 
-        $expr = $this->parser->getExpressionParser()->parseExpression();
+        $expr = $this->parser->parseExpression();
         $sourcePath = $stream->getSourceContext()->getPath();
 
         // Handle Contao extends
@@ -80,7 +81,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
                     // Allow missing templates if they are listed in an array like "{% extends
                     // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
-                        throw $e;
+                        throw new LoaderError($e->getMessage().' Optional templates are only supported in array notation.', $node->getTemplateLine(), $node->getSourceContext(), $e);
                     }
                 }
             }

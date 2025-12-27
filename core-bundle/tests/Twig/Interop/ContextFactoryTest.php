@@ -43,7 +43,7 @@ class ContextFactoryTest extends TestCase
             'has_foo' => Template::once(static fn (): bool => false),
         ];
 
-        $template = $this->createMock(Template::class);
+        $template = $this->createStub(Template::class);
         $template
             ->method('getData')
             ->willReturn($data)
@@ -159,7 +159,7 @@ class ContextFactoryTest extends TestCase
 
     public function testEnhancesErrorMessageInCallableWrappersIfStringAccessFails(): void
     {
-        $template = $this->createMock(Template::class);
+        $template = $this->createStub(Template::class);
         $template
             ->method('getData')
             ->willReturn(['lazy' => static fn (): object => new \stdClass()])
@@ -182,13 +182,13 @@ class ContextFactoryTest extends TestCase
 
     public function testAddsAsEditorViewParameter(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
             ->willReturn(true)
         ;
 
-        $template = $this->createMock(Template::class);
+        $template = $this->createStub(Template::class);
         $template
             ->method('getData')
             ->willReturn([])

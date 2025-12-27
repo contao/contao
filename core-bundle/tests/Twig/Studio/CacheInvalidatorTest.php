@@ -28,7 +28,7 @@ class CacheInvalidatorTest extends TestCase
 
         $invalidatedTemplates = [];
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('removeCache')
             ->willReturnCallback(
@@ -38,7 +38,7 @@ class CacheInvalidatorTest extends TestCase
             )
         ;
 
-        $loader = $this->createMock(ContaoFilesystemLoader::class);
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('getInheritanceChains')
             ->willReturn([

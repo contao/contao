@@ -29,6 +29,9 @@
       <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
       </trans-unit>
+      <trans-unit id="jobs.typeLabel.crawl">
+        <source>Crawling the website</source>
+      </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>
       </trans-unit>

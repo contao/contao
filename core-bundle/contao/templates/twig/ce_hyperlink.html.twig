@@ -1,4 +1,4 @@
-{% extends "@Contao/block_searchable.html.twig" %}
+{% extends '@Contao/block_searchable.html.twig' %}
 
 {% block content %}
 
@@ -13,7 +13,7 @@
                 .mergeWith(target)
                 .mergeWith(rel)
             }}>
-                {% include "@Contao/picture_default" with picture %}
+                {{ include('@Contao/picture_default', picture) }}
             </a>
             {{ embed_post|insert_tag_raw }}
             {% if caption|default %}
