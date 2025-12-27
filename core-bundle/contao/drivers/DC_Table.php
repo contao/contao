@@ -4034,10 +4034,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!$objParent->numRows)
 		{
-			// todo: check if this is correct; previously just the message + global operations were output
 			throw new ResponseException(new Response(\sprintf('No parent record with ID "%s" exists in "%s".', $this->intCurrentPid, $this->ptable), Response::HTTP_NOT_FOUND));
 		}
-		// todo: check if this is correct; previously we did not output the header fields and child records (everything in <li></li>) if !\in_array(Input::get('act'), array('select', null))
+
 		$security = System::getContainer()->get('security.helper');
 
 		$parameters = array();
