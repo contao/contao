@@ -11,7 +11,7 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.twig.studio.cache_invalidator }
 
-    Contao\CoreBundle\Controller\BackendTemplateStudioController:
+    Contao\CoreBundle\Controller\Backend\TemplateStudioController:
         arguments:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.finder_factory'

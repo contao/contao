@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Controller;
+namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\BackendAlerts;
 use Contao\BackendConfirm;
@@ -19,6 +19,7 @@ use Contao\BackendIndex;
 use Contao\BackendMain;
 use Contao\BackendPassword;
 use Contao\BackendPopup;
+use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Symfony\Component\HttpFoundation\RedirectResponse;

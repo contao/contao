@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Controller\BackendPreviewController;
+use Contao\CoreBundle\Controller\Backend\PreviewController;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
@@ -32,11 +32,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkDetails;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
-class BackendPreviewControllerTest extends TestCase
+class PreviewControllerTest extends TestCase
 {
     public function testRedirectsToPreviewEntrypoint(): void
     {
-        $controller = new BackendPreviewController(
+        $controller = new PreviewController(
             '/preview.php',
             $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
@@ -53,7 +53,7 @@ class BackendPreviewControllerTest extends TestCase
 
     public function testAddsThePreviewEntrypointAtTheCorrectPosition(): void
     {
-        $controller = new BackendPreviewController(
+        $controller = new PreviewController(
             '/preview.php',
             $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
@@ -74,7 +74,7 @@ class BackendPreviewControllerTest extends TestCase
 
     public function testDeniesAccessIfNotGranted(): void
     {
-        $controller = new BackendPreviewController(
+        $controller = new PreviewController(
             '/preview.php',
             $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
@@ -107,7 +107,7 @@ class BackendPreviewControllerTest extends TestCase
         $request->server->set('SCRIPT_NAME', '/managed-edition/preview.php');
         $request->server->set('SCRIPT_FILENAME', '/managed-edition/preview.php');
 
-        $controller = new BackendPreviewController(
+        $controller = new PreviewController(
             '/preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
@@ -130,7 +130,7 @@ class BackendPreviewControllerTest extends TestCase
             ->with($this->isInstanceOf(PreviewUrlConvertEvent::class))
         ;
 
-        $controller = new BackendPreviewController(
+        $controller = new PreviewController(
             '/preview.php',
             $this->createStub(FrontendPreviewAuthenticator::class),
             $dispatcher,
@@ -172,7 +172,7 @@ class BackendPreviewControllerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $controller = new BackendPreviewController(
+        $controller = new PreviewController(
             '/preview.php',
             $this->createStub(FrontendPreviewAuthenticator::class),
             $dispatcher,
@@ -223,7 +223,7 @@ class BackendPreviewControllerTest extends TestCase
 
     public function testRedirectsToRootPage(): void
     {
-        $controller = new BackendPreviewController(
+        $controller = new PreviewController(
             '/preview.php',
             $this->createStub(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
