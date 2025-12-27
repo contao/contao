@@ -12,7 +12,7 @@
     .addClass('be_main')
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips contao--toggle-state')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
     .set('data-contao--toggle-state-active-class', 'active')
     .set('data-contao--toggle-state-active-title-value', 'MSC.hideMainNavigation'|trans)
     .set('data-contao--toggle-state-inactive-title-value', 'MSC.showMainNavigation'|trans)

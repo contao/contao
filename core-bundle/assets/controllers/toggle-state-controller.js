@@ -17,6 +17,10 @@ export default class extends Controller {
             this.controlsTarget.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
         }
 
+        if (!this.controlsTarget.hasAttribute('tabindex')) {
+            this.controlsTarget.setAttribute('tabindex', '-1');
+        }
+
         for (const controllerTarget of this.controllerTargets) {
             controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
             controllerTarget.setAttribute('aria-expanded', 'false');
@@ -30,10 +34,18 @@ export default class extends Controller {
     }
 
     open() {
+        if ('true' === this.controllerTarget.ariaExpanded) {
+            return;
+        }
+
         this.#toggleState(true);
     }
 
     close(event) {
+        if ('true' !== this.controllerTarget.ariaExpanded) {
+            return;
+        }
+
         if (event?.params.closeDelay) {
             clearTimeout(this.#closeDelay);
             this.#closeDelay = setTimeout(() => this.#toggleState(false), event.params.closeDelay);
@@ -45,6 +57,7 @@ export default class extends Controller {
 
     documentClick(event) {
         if (
+            'true' !== this.controllerTarget.ariaExpanded ||
             this.controllerTargets.filter((t) => t.contains(event.target)).length > 0 ||
             this.controlsTarget.contains(event.target)
         ) {
@@ -83,5 +96,13 @@ export default class extends Controller {
                 el.innerText = this.inactiveLabelValue;
             }
         }
+
+        setTimeout(() => {
+            if (state) {
+                this.controlsTarget.focus();
+            } else {
+                this.controllerTarget.focus();
+            }
+        }, 50);
     }
 }

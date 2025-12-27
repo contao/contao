@@ -3,12 +3,7 @@
 {% if panel is not empty %}
     {% do attributes
         .set('data-controller', 'contao--toggle-state contao--element-count')
-        .set('data-contao--toggle-state-target', 'controls')
-        .set('data-contao--toggle-state-active-class', 'filter-active')
-        .set('data-contao--toggle-state-active-label-value', 'DCA.toggleFilter.2'|trans)
-        .set('data-contao--toggle-state-active-title-value', 'DCA.toggleFilter.3'|trans)
-        .set('data-contao--toggle-state-inactive-label-value', 'DCA.toggleFilter.0'|trans)
-        .set('data-contao--toggle-state-inactive-title-value', 'DCA.toggleFilter.1'|trans)
+        .set('data-contao--toggle-state-active-class', 'active')
         .set('data-contao--element-count-selector-value', '.active:not(#tl_search_term)')
         .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
     %}
