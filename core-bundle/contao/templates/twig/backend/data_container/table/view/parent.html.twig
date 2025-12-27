@@ -83,34 +83,33 @@
                             {% if record.legacy_data is defined %}
                                 {{ record.legacy_data|raw }}
                             {% else %}
-                                {% if not display_grid %}
-                                    <div class="tl_content_left">
-                                        {% block drag_handle %}
+                                {% if display_grid %}
+                                    {# Record displayed as box with optional preview #}
+                                    {% set record_label_attributes = attrs()
+                                        .addClass('cte_type')
+                                        .addClass(record.state, record.state)
+                                    %}
+                                    <div{{ record_label_attributes }}>
+                                        {% block label %}
                                             {% if record.allow_dragging %}
                                                 <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
                                                     {{ backend_icon('drag.svg', record.drag_handle_label) }}
                                                 </button>
                                             {% endif %}
+                                            {{ record.label|raw }}
                                         {% endblock %}
-                                        {{ record.label|raw }}
-                                    </div>
-                                {% else %}
-                                    {# todo: can we improve this weird abomination of label data to detect content elements with a preview? #}
-                                    {% set record_label_attributes = attrs()
-                                        .addClass('cte_type')
-                                        .addClass(record.label[2]|default, record.label is iterable)
-                                    %}
-                                    <div{{ record_label_attributes }}>
-                                        {{ block('drag_handle') }}
-                                        {{ record.label is iterable ? record.label[0]|raw : '' }}
                                     </div>
 
-                                    {% set preview = record.label is iterable ? record.label[1]|default : record.label %}
-                                    {% if preview %}
+                                    {% if record.preview %}
                                         <div class="cte_content" data-contao--limit-height-target="node">
-                                            <div class="cte_preview" style="contain:paint">{{ preview|raw }}</div>
+                                            <div class="cte_preview" style="contain:paint">{{ record.preview|raw }}</div>
                                         </div>
                                     {% endif %}
+                                {% else %}
+                                    {# Record displayed flat #}
+                                    <div class="tl_content_left">
+                                        {{ block('label') }}
+                                    </div>
                                 {% endif %}
                             {% endif %}
                         </div>
