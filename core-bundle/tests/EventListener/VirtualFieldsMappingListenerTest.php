@@ -130,6 +130,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
 
         (new VirtualFieldsMappingListener())('tl_foobar');
 
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
         unset($GLOBALS['TL_DCA']);
@@ -150,6 +151,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
 
         (new VirtualFieldsMappingListener())('tl_foobar');
 
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
         unset($GLOBALS['TL_DCA']);
