@@ -4191,6 +4191,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
 				);
 
+				if ($this->strPickerFieldType)
+				{
+					$record['picker_input_field'] = $this->getPickerInputField($row['id']);
+				}
+
 				// Add the group header
 				if ($firstOrderBy != 'sorting' && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
 				{
