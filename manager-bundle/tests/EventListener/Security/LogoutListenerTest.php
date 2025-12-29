@@ -23,7 +23,7 @@ class LogoutListenerTest extends ContaoTestCase
 {
     public function testClearsCookieOnResponse(): void
     {
-        $response = $this->createMock(Response::class);
+        $response = $this->createStub(Response::class);
 
         $jwtManager = $this->createMock(JwtManager::class);
         $jwtManager
@@ -32,8 +32,8 @@ class LogoutListenerTest extends ContaoTestCase
             ->with($response)
         ;
 
-        $event = new LogoutEvent($this->createMock(Request::class), null);
-        $event->setResponse($this->createMock(Response::class));
+        $event = new LogoutEvent($this->createStub(Request::class), null);
+        $event->setResponse($this->createStub(Response::class));
 
         $listener = new LogoutListener($jwtManager);
         $listener($event);
@@ -41,8 +41,8 @@ class LogoutListenerTest extends ContaoTestCase
 
     public function testDoesNothingIfJwtManagerIsNotSet(): void
     {
-        $event = new LogoutEvent($this->createMock(Request::class), null);
-        $event->setResponse($this->createMock(Response::class));
+        $event = new LogoutEvent($this->createStub(Request::class), null);
+        $event->setResponse($this->createStub(Response::class));
 
         $listener = new LogoutListener();
         $listener($event);
@@ -52,7 +52,7 @@ class LogoutListenerTest extends ContaoTestCase
 
     public function testDoesNothingIfResponseIsNotSet(): void
     {
-        $event = new LogoutEvent($this->createMock(Request::class), null);
+        $event = new LogoutEvent($this->createStub(Request::class), null);
 
         $listener = new LogoutListener();
         $listener($event);

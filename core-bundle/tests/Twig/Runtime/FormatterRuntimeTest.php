@@ -15,27 +15,47 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
+use Contao\System;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FormatterRuntimeTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testDelegatesCalls(): void
     {
-        $GLOBALS['TL_LANG'] = [
-            'MSC' => [
-                'decimalSeparator' => '.',
-                'thousandsSeparator' => ',',
-            ],
-            'UNITS' => ['Byte', 'KiB'],
-        ];
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->exactly(5))
+            ->method('trans')
+            ->willReturnCallback(
+                static fn (string $id): string => match ($id) {
+                    'MSC.decimalSeparator' => '.',
+                    'MSC.thousandsSeparator' => ',',
+                    'UNITS.0' => 'Byte',
+                    'UNITS.1' => 'KiB',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
+                },
+            )
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('translator', $translator);
+
+        System::setContainer($container);
 
         $framework = $this->createMock(ContaoFramework::class);
         $framework
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('initialize')
         ;
 
         $this->assertSame('1.50 KiB', (new FormatterRuntime($framework))->formatBytes(1024 + 512, 2));
-
-        unset($GLOBALS['TL_LANG']);
+        $this->assertSame('42.00', (new FormatterRuntime($framework))->formatNumber(42, 2));
     }
 }

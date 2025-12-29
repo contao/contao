@@ -1009,7 +1009,7 @@ class StringUtil
 	 * @param mixed   $varValue      The serialized string
 	 * @param boolean $blnForceArray True to always return an array
 	 *
-	 * @return mixed The unserialized array or the unprocessed input value
+	 * @return ($blnForceArray is true ? array : mixed) The unserialized array or the unprocessed input value
 	 */
 	public static function deserialize($varValue, $blnForceArray=false)
 	{
@@ -1184,7 +1184,7 @@ class StringUtil
 
 		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', \sprintf('%.' . ($precision - 1) . 'e', $number), $match))
 		{
-			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', $number));
+			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', is_nan($number) ? 'NAN' : $number));
 		}
 
 		$significantDigits = rtrim($match[2] . $match[3], '0');

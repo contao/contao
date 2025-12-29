@@ -16,21 +16,96 @@ use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
 
 class JobsListener
 {
     public function __construct(
+        private readonly Jobs $jobs,
         private readonly Security $security,
         private readonly Connection $connection,
         private readonly RequestStack $requestStack,
         private readonly ContaoFramework $contaoFramework,
+        private readonly Environment $twig,
     ) {
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'list.label.label')]
+    public function onLabelCallback(array $row, string $label, DC_Table $dc, array $columns): array
+    {
+        $job = $this->jobs->getByUuid($row['uuid']);
+
+        if (!$job) {
+            return $columns;
+        }
+
+        $columns[2] = $this->twig->render('@Contao/backend/jobs/_progress.html.twig', ['progress' => $job->getProgress()]);
+
+        return $columns;
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'list.operations.attachments.button')]
+    public function onAttachmentsCallback(DataContainerOperation $operation): void
+    {
+        $uuid = $operation->getRecord()['uuid'];
+        $job = $this->jobs->getByUuid($uuid);
+
+        if (!$job) {
+            $operation->hide();
+
+            return;
+        }
+
+        $attachments = $this->jobs->getAttachments($job);
+        $numberOfAttachments = \count($attachments);
+
+        // Hide the operation if there are no attachments
+        if (0 === $numberOfAttachments) {
+            $operation->hide();
+
+            return;
+        }
+
+        // Link directly to the one attachment, if there is only one
+        if (1 === $numberOfAttachments) {
+            $operation['icon'] = 'theme_import.svg';
+            $operation['title'] = $attachments[0]->getFileLabel();
+            $operation->setUrl($attachments[0]->getDownloadUrl());
+
+            return;
+        }
+
+        // Otherwise, we build a button with submenu
+        $operations = [];
+
+        foreach ($attachments as $attachment) {
+            $operations[] = new DataContainerOperation(
+                'download',
+                [
+                    'icon' => 'theme_import.svg',
+                    'label' => $attachment->getFileLabel(),
+                    'href' => $attachment->getDownloadUrl(),
+                ],
+                null,
+                $operation->getDataContainer(),
+            );
+        }
+
+        $operation->setHtml($this->twig->render('@Contao/backend/data_container/operations.html.twig', [
+            'operations' => $operations,
+            'has_primary' => true,
+            'more_icon' => 'theme_import.svg',
+            'more_alt' => 'MSC.viewAttachments',
+            'globalOperations' => false,
+        ]));
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]

@@ -345,7 +345,10 @@ window.AjaxRequest =
 							}
 
 							const newSrc = !published ? img.get('data-icon') : img.get('data-icon-disabled');
-							img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+
+							if (newSrc) {
+								img.src = (img.src.includes('/') && !newSrc.includes('/')) ? img.src.slice(0, img.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+							}
 						}
 					})
 				}
@@ -456,7 +459,6 @@ window.AjaxRequest =
 		overlay.set({
 			'styles': {
 				'display': 'block',
-				'top': scroll.y + 'px'
 			}
 		});
 
@@ -744,6 +746,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	toggleCheckboxGroup: function(el, id) {
+		console.warn('Backend.toggleCheckboxGroup() is deprecated. Please use the Stimulus controllers instead.');
+
 		var cls = $(el).className,
 			status = $(el).checked ? 'checked' : '';
 
@@ -1662,97 +1666,6 @@ window.Backend =
 	},
 
 	/**
-	 * Allow toggling checkboxes or radio buttons by clicking a row
-	 *
-	 * @author Kamil Kuzminski
-	 */
-	enableToggleSelect: function() {
-		var container = $('tl_listing'),
-			shiftToggle = function(el) {
-				thisIndex = checkboxes.indexOf(el);
-				startIndex = checkboxes.indexOf(start);
-				from = Math.min(thisIndex, startIndex);
-				to = Math.max(thisIndex, startIndex);
-				status = !!checkboxes[startIndex].checked;
-
-				for (from; from<=to; from++) {
-					checkboxes[from].checked = status;
-				}
-			},
-			clickEvent = function(e) {
-				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
-					return;
-				}
-
-				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
-					limitToggler = $(e.target).getParent('.limit_toggler');
-
-				if (!input || input.get('disabled') || limitToggler !== null) {
-					return;
-				}
-
-				// Radio buttons
-				if (input.type == 'radio') {
-					if (!input.checked) {
-						input.checked = 'checked';
-					}
-
-					return;
-				}
-
-				// Checkboxes
-				if (e.shift && start) {
-					shiftToggle(input);
-				} else {
-					input.checked = input.checked ? '' : 'checked';
-
-					if (input.get('onclick') == 'Backend.toggleCheckboxes(this)') {
-						Backend.toggleCheckboxes(input); // see #6399
-					}
-				}
-
-				start = input;
-			},
-			checkboxes = [], start, thisIndex, startIndex, status, from, to;
-
-		if (container) {
-			checkboxes = container.getElements('input[type="checkbox"]');
-		}
-
-		// Row click
-		$$('.toggle_select').each(function(el) {
-			var boundEvent = el.retrieve('boundEvent');
-
-			if (boundEvent) {
-				el.removeEvent('click', boundEvent);
-			}
-
-			// Do not propagate the form field click events
-			el.getElements('label,input[type="checkbox"],input[type="radio"]').each(function(i) {
-				i.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-
-			boundEvent = clickEvent.bind(el);
-
-			el.addEvent('click', boundEvent);
-			el.store('boundEvent', boundEvent);
-		});
-
-		// Checkbox click
-		checkboxes.each(function(el) {
-			el.addEvent('click', function(e) {
-				if (e.shift && start) {
-					shiftToggle(this);
-				}
-
-				start = this;
-			});
-		});
-	},
-
-	/**
 	 * Allow to mark the important part of an image
 	 *
 	 * @param {object} el The DOM element
@@ -1972,93 +1885,6 @@ window.Backend =
 			currentHover = undefined;
 			currentHoverTime = undefined;
 		});
-	},
-
-	/**
-	 * Crawl the website
-	 */
-	crawl: function() {
-		var timeout = 2000,
-			crawl = $('tl_crawl'),
-			progressBar = crawl.getElement('div.progress-bar'),
-			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results'),
-			debugLog = crawl.getElement('p.debug-log');
-
-		function updateData(response) {
-			var total = response.total,
-				done = total - response.pending,
-				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
-				result;
-
-			// Initialize the status bar at 10%
-			if (done < 1 && percentage < 1) {
-				done = 1;
-				percentage = 10;
-				total = 10;
-			}
-
-			progressBar.setStyle('width', percentage + '%');
-			progressBar.set('html', percentage + '%');
-			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + total);
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (!response.finished) {
-				return;
-			}
-
-			progressBar.removeClass('running').addClass('finished');
-			results.removeClass('running').addClass('finished');
-
-			for (result in response.results) {
-				if (response.results.hasOwnProperty(result)) {
-					var summary = results.getElement('.result[data-subscriber="' + result + '"] p.summary'),
-						warning = results.getElement('.result[data-subscriber="' + result + '"] p.warning'),
-						log = results.getElement('.result[data-subscriber="' + result + '"] p.subscriber-log'),
-						subscriberResults = response.results[result],
-						subscriberSummary = subscriberResults.summary;
-
-					if (subscriberResults.warning) {
-						warning.set('html', subscriberResults.warning);
-					}
-
-					if (subscriberResults.hasLog) {
-						log.setStyle('display', 'block');
-					}
-
-					summary.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
-					summary.set('html', subscriberSummary);
-				}
-			}
-		}
-
-		function execRequest(onlyStatusUpdate = false) {
-			new Request({
-				url: window.location.href,
-				headers: {
-					'Only-Status-Update': onlyStatusUpdate
-				},
-				onSuccess: function(responseText) {
-					var response = JSON.decode(responseText);
-
-					updateData(response);
-
-					if (!response.finished) {
-						setTimeout(execRequest, timeout);
-					}
-				}
-			}).send();
-		}
-
-		execRequest(true);
 	}
 };
 
@@ -2280,7 +2106,6 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
@@ -2297,8 +2122,5 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.enableToggleSelect();
-
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 });

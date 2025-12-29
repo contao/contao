@@ -39,7 +39,7 @@ class CustomRgxpListenerTest extends TestCase
 
         $listener = new CustomRgxpListener($translator);
 
-        $this->assertFalse($listener('foobar', 'input', $this->createMock(Widget::class)));
+        $this->assertFalse($listener('foobar', 'input', $this->createStub(Widget::class)));
     }
 
     public function testReturnsTrueIfNoCustomRgxpSet(): void
@@ -53,7 +53,7 @@ class CustomRgxpListenerTest extends TestCase
 
         $listener = new CustomRgxpListener($translator);
 
-        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'input', $this->createMock(Widget::class)));
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'input', $this->createStub(Widget::class)));
     }
 
     public function testAddsErrorIfInputDoesNotMatchCustomRgxp(): void
@@ -65,7 +65,7 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
+        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->once())
             ->method('addError')
@@ -86,7 +86,7 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
+        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->never())
             ->method('addError')
@@ -107,7 +107,7 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^&lt;>$/i']);
+        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^&lt;>$/i']);
         $widget
             ->expects($this->never())
             ->method('addError')

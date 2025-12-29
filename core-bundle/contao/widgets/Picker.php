@@ -158,6 +158,7 @@ class Picker extends Widget
           "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
+            AjaxRequest.displayBox(Contao.lang.loading + \' …\');
             new Request.Contao({
               evalScripts: false,
               onSuccess: function(txt, json) {
@@ -166,6 +167,7 @@ class Picker extends Widget
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", true, true);
                 $("ctrl_' . $this->strId . '").dispatchEvent(evt);
+                AjaxRequest.hideBox();
               }
             }).post({"action":"reloadPicker", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '"});
           }
@@ -200,7 +202,7 @@ class Picker extends Widget
 				$dataContainer = DataContainer::getDriverForTable($strRelatedTable);
 
 				$dc = (new \ReflectionClass($dataContainer))->newInstanceWithoutConstructor();
-				$dc->table = $strRelatedTable;
+				$dc->strTable = $strRelatedTable;
 
 				while ($objRows->next())
 				{
@@ -235,6 +237,12 @@ class Picker extends Widget
 		}
 
 		$label = $dc->generateRecordLabel($arrRow, $dc->table);
+
+		if ($GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['renderAsGrid'] ?? null)
+		{
+			$label = \is_array($label) ? $label : array('', $label);
+			$label = '<div class="cte_type ' . ($label[2] ?? '') . '">' . $label[0] . '</div><div class="cte_content"><div class="cte_preview">' . ($label[1] ?? '') . '</div></div>';
+		}
 
 		return $label ?: $arrRow['id'] ?? '';
 	}

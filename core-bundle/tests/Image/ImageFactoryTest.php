@@ -68,7 +68,7 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImagePath(): void
     {
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
@@ -102,10 +102,10 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
 
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
+        $filesAdapter = $this->createConfiguredAdapterStub(['findByPath' => $filesModel]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
@@ -123,7 +123,7 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImagePathWithEmptySize(): void
     {
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
@@ -155,9 +155,9 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
+        $filesAdapter = $this->createConfiguredAdapterStub(['findByPath' => $filesModel]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, ['', '', '']);
 
@@ -190,7 +190,7 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImagePathWithAnImageSize(): void
     {
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
@@ -264,28 +264,28 @@ class ImageFactoryTest extends TestCase
             ]),
         ];
 
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel = $this->createClassWithPropertiesStub(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
             ->willReturn($imageSizeProperties)
         ;
 
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => $imageSizeModel]);
+        $imageSizeAdapter = $this->createConfiguredAdapterStub(['findById' => $imageSizeModel]);
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $filesModel->importantPartX = 0.5;
         $filesModel->importantPartY = 0.5;
         $filesModel->importantPartWidth = 0.25;
         $filesModel->importantPartHeight = 0.25;
 
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
+        $filesAdapter = $this->createConfiguredAdapterStub(['findByPath' => $filesModel]);
 
         $adapters = [
             ImageSizeModel::class => $imageSizeAdapter,
             FilesModel::class => $filesAdapter,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, 1, Path::join($this->getTempDir(), 'target/path.jpg'));
 
@@ -295,15 +295,15 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImagePathIfTheImageSizeIsMissing(): void
     {
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $imageSizeAdapter = $this->mockConfiguredAdapter(['findById' => null]);
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => null]);
+        $imageSizeAdapter = $this->createConfiguredAdapterStub(['findById' => null]);
+        $filesAdapter = $this->createConfiguredAdapterStub(['findByPath' => null]);
 
         $adapters = [
             ImageSizeModel::class => $imageSizeAdapter,
             FilesModel::class => $filesAdapter,
         ];
 
-        $resizer = $this->createMock(ResizerInterface::class);
+        $resizer = $this->createStub(ResizerInterface::class);
         $resizer
             ->method('resize')
             ->willReturnCallback(
@@ -315,7 +315,7 @@ class ImageFactoryTest extends TestCase
             )
         ;
 
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->createContaoFrameworkStub($adapters);
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, 1);
 
@@ -341,7 +341,7 @@ class ImageFactoryTest extends TestCase
             ],
         ];
 
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
@@ -412,7 +412,7 @@ class ImageFactoryTest extends TestCase
             ->setZoomLevel(50)
         ;
 
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
@@ -461,7 +461,7 @@ class ImageFactoryTest extends TestCase
 
     public function testCreatesAnImageObjectFromAnImageObjectWithAnEmptyResizeConfiguration(): void
     {
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $imageFactory = $this->getImageFactory();
         $image = $imageFactory->create($imageMock, new ResizeConfiguration());
 
@@ -471,9 +471,9 @@ class ImageFactoryTest extends TestCase
     public function testCreatesADeferredImageObjectFromAnImagePath(): void
     {
         $path = Path::join($this->getTempDir(), 'images/non-existent-deferred.jpg');
-        $imageMock = $this->createMock(DeferredImageInterface::class);
+        $imageMock = $this->createStub(DeferredImageInterface::class);
 
-        $resizer = $this->createMock(DeferredResizer::class);
+        $resizer = $this->createStub(DeferredResizer::class);
         $resizer
             ->method('getDeferredImage')
             ->with($path)
@@ -490,7 +490,7 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
         $path = Path::join($this->getTempDir(), 'images/none.jpg');
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
 
         $filesystem = $this
             ->getMockBuilder(Filesystem::class)
@@ -540,10 +540,10 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        $imagine = $this->createMock(ImagineInterface::class);
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
+        $imagine = $this->createStub(ImagineInterface::class);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
+        $filesAdapter = $this->createConfiguredAdapterStub(['findByPath' => $filesModel]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
 
         $this->expectUserDeprecationMessageMatches("/legacy resize mode \"$mode\" is deprecated/");
@@ -558,13 +558,13 @@ class ImageFactoryTest extends TestCase
     #[DataProvider('getCreateWithLegacyMode')]
     public function testReturnsTheImportantPartFromALegacyMode(string $mode, array $expected): void
     {
-        $dimensionsMock = $this->createMock(ImageDimensions::class);
+        $dimensionsMock = $this->createStub(ImageDimensions::class);
         $dimensionsMock
             ->method('getSize')
             ->willReturn(new Box(100, 100))
         ;
 
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $imageMock
             ->method('getDimensions')
             ->willReturn($dimensionsMock)
@@ -599,7 +599,7 @@ class ImageFactoryTest extends TestCase
 
     public function testFailsToReturnTheImportantPartIfTheModeIsInvalid(): void
     {
-        $imageMock = $this->createMock(ImageInterface::class);
+        $imageMock = $this->createStub(ImageInterface::class);
         $imageFactory = $this->getImageFactory();
 
         $this->expectException('InvalidArgumentException');
@@ -611,8 +611,8 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImagePathWithoutAResizer(): void
     {
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
-        $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
-        $framework = $this->mockContaoFramework([FilesModel::class => $adapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findByPath' => null]);
+        $framework = $this->createContaoFrameworkStub([FilesModel::class => $adapter]);
 
         $imageFactory = $this->getImageFactory(null, null, null, null, $framework);
         $image = $imageFactory->create($path);
@@ -622,11 +622,11 @@ class ImageFactoryTest extends TestCase
 
     private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null): ImageFactory
     {
-        $resizer ??= $this->createMock(ResizerInterface::class);
-        $imagine ??= $this->createMock(ImagineInterface::class);
-        $imagineSvg ??= $this->createMock(ImagineInterface::class);
+        $resizer ??= $this->createStub(ResizerInterface::class);
+        $imagine ??= $this->createStub(ImagineInterface::class);
+        $imagineSvg ??= $this->createStub(ImagineInterface::class);
         $filesystem ??= new Filesystem();
-        $framework ??= $this->createMock(ContaoFramework::class);
+        $framework ??= $this->createStub(ContaoFramework::class);
 
         // Do not use Path::join here (see #4596)
         $uploadDir = $this->getTempDir().'/images';

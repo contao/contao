@@ -1,9 +1,9 @@
 <turbo-stream action="update" target="running-jobs">
     <template>
-        {% include "@Contao/backend/jobs/_list.html.twig" with {
+        {{ include('@Contao/backend/jobs/_list.html.twig', {
             list_attributes: attrs()
                 .set('data-jobs', jobs|length)
-                .set('data-contao--jobs-target', 'list')
-        } %}
+                .set('data-contao--jobs-target', 'list'),
+        }) }}
     </template>
 </turbo-stream>

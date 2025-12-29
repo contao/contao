@@ -30,7 +30,7 @@ class ContaoCacheTest extends ContaoTestCase
 {
     public function testAddsTheEventSubscribers(): void
     {
-        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
+        $cache = new ContaoCache($this->createStub(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
         $preHandle = $dispatcher->getListeners(Events::PRE_HANDLE);
         $preInvalidateListeners = $dispatcher->getListeners(Events::PRE_INVALIDATE);
@@ -49,7 +49,7 @@ class ContaoCacheTest extends ContaoTestCase
     {
         $_SERVER['COOKIE_ALLOW_LIST'] = $env;
 
-        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
+        $cache = new ContaoCache($this->createStub(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
         $preHandle = $dispatcher->getListeners(Events::PRE_HANDLE);
 
@@ -82,7 +82,7 @@ class ContaoCacheTest extends ContaoTestCase
 
     public function testCreatesTheCacheStore(): void
     {
-        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
+        $cache = new ContaoCache($this->createStub(ContaoKernel::class), $this->getTempDir());
 
         $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
     }

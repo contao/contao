@@ -27,6 +27,7 @@ use League\Flysystem\FilesystemReader;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\UriInterface;
 
 class MountManagerTest extends TestCase
@@ -487,7 +488,7 @@ class MountManagerTest extends TestCase
     public function testSetsLazyMetadataIfAdapterDidNotProvideDetailsWhenListing(): void
     {
         // Mock an adapter that does not set metadata when listing
-        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter = $this->createStub(FilesystemAdapter::class);
         $adapter
             ->method('listContents')
             ->willReturnCallback(
@@ -575,7 +576,7 @@ class MountManagerTest extends TestCase
 
     public function testGeneratePublicUri(): void
     {
-        $fooAdapter = $this->createMock(FilesystemAdapter::class);
+        $fooAdapter = $this->createStub(FilesystemAdapter::class);
 
         $publicUriProvider1 = $this->createMock(PublicUriProviderInterface::class);
         $publicUriProvider1
@@ -595,7 +596,7 @@ class MountManagerTest extends TestCase
             )
         ;
 
-        $options = $this->createMock(OptionsInterface::class);
+        $options = $this->createStub(OptionsInterface::class);
 
         $publicUriProvider2 = $this->createMock(PublicUriProviderInterface::class);
         $publicUriProvider2
@@ -624,7 +625,7 @@ class MountManagerTest extends TestCase
         return (new MountManager())->mount($adapter);
     }
 
-    private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
+    private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter&MockObject
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
         $adapter
@@ -635,7 +636,7 @@ class MountManagerTest extends TestCase
         return $adapter;
     }
 
-    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter
+    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter&MockObject
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
 

@@ -30,6 +30,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TableDataContainerProviderTest extends AbstractProviderTestCase
 {
@@ -47,12 +48,13 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
     public function testSupports(): void
     {
         $provider = new TableDataContainerProvider(
-            $this->mockContaoFramework(),
-            $this->createMock(ResourceFinder::class),
-            $this->createMock(Connection::class),
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(DcaUrlAnalyzer::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(Connection::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -67,6 +69,8 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                     new Column('id', Type::getType(Types::INTEGER)),
                     new Column('type', Type::getType(Types::STRING)),
                     new Column('text', Type::getType(Types::STRING)),
+                    new Column('text_search_disabled', Type::getType(Types::STRING)),
+                    new Column('text_search_disabled_backend_search_enabled', Type::getType(Types::STRING)),
                 ]),
                 new Table('tl_news', [
                     new Column('id', Type::getType(Types::INTEGER)),
@@ -83,7 +87,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                     [
                         'id' => 1,
                         'type' => 'text',
-                        'text' => '<p>This is <em>some</em> content.',
+                        'text' => '<p>This is <em>some</em> content in "text".</p>',
+                        'text_search_disabled' => '<p>This is <em>some</em> content in "text_search_disabled".</p>',
+                        'text_search_disabled_backend_search_enabled' => '<p>This is <em>some</em> content in "text_search_disabled_backend_search_enabled".</p>',
                     ],
                 ],
                 'tl_news' => [
@@ -107,7 +113,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             ],
         );
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $fixturesDir = $this->getFixturesDir();
         $resourceFinder = new ResourceFinder(Path::join($fixturesDir, 'table-data-container-provider'));
@@ -123,9 +129,10 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $framework,
             $resourceFinder,
             $connection,
-            $this->createMock(AccessDecisionManagerInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(DcaUrlAnalyzer::class),
+            $this->createStub(AccessDecisionManagerInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(DcaUrlAnalyzer::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());
@@ -139,7 +146,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $this->assertSame('1', $documents[0]->getId());
         $this->assertSame('contao.db.tl_content', $documents[0]->getType());
         $this->assertSame('tl_content', $documents[0]->getMetadata()['table']);
-        $this->assertSame('<p>This is <em>some</em> content.', $documents[0]->getSearchableContent());
+        $this->assertSame('<p>This is <em>some</em> content in "text".</p> <p>This is <em>some</em> content in "text_search_disabled_backend_search_enabled".</p>', $documents[0]->getSearchableContent());
         $this->assertSame('2', $documents[1]->getId());
         $this->assertSame('contao.db.tl_news', $documents[1]->getType());
         $this->assertSame('tl_news', $documents[1]->getMetadata()['table']);

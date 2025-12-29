@@ -58,7 +58,7 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
         $framework = new \ReflectionClass(ContaoFramework::class);
         $framework->setStaticPropertyValue('nonce', '<nonce>');
 
-        $environment = $this->createMock(Environment::class);
+        $environment = $this->createStub(Environment::class);
         (new NodeTraverser($environment, [$visitor]))->traverse($module);
 
         /** @var array<BlockNode> $blocks */

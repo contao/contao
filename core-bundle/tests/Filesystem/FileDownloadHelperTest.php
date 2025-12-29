@@ -110,7 +110,7 @@ class FileDownloadHelperTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
 
-        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
 
         $helper = $this->getFileDownloadHelper();
         $url = $helper->generateDownloadUrl('https://example.com/', 'data.csv', 'data.csv');
@@ -176,7 +176,7 @@ class FileDownloadHelperTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
 
-        return new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class));
+        return new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
     }
 
     private function getResponseContent(Response $response): string

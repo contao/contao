@@ -99,7 +99,7 @@ class NewsletterRecipientsModel extends Model
 	}
 
 	/**
-	 * Find subscriptions that have not been activated for more than 24 hours
+	 * Find subscriptions that have not been confirmed while the opt-in token was valid
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
@@ -110,8 +110,8 @@ class NewsletterRecipientsModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active=0 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'nl-%')")
-								 ->execute(strtotime('-24 hours'));
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active=0 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn<=? AND o.confirmedOn=0 AND o.token LIKE 'nl-%')")
+								 ->execute(time());
 
 		if ($objResult->numRows < 1)
 		{
