@@ -448,38 +448,49 @@ class DcaExtractor extends Controller
 					$this->arrEnums[$field] = $config['enum'];
 				}
 
-				// Store as virtual field target
+				// Store virtual field targets
 				if (($config['virtualTarget'] ?? false) && ($config['sql'] ?? null))
 				{
 					$this->arrVirtualTargets[] = $field;
 				}
+			}
 
-				// Store as virtual field
-				if (!($config['sql'] ?? null) && ($config['saveTo'] ?? null))
+			// Store virtual fields
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config)
+			{
+				if (($config['sql'] ?? null) || !($config['saveTo'] ?? null))
 				{
-					// Validate the config for virtual fields
-					if ($config['filter'] ?? false)
-					{
-						throw new InvalidConfigException(\sprintf('Enabling \'filter\' on virtual field %s.%s is not supported.', $this->strTable, $field));
-					}
-
-					if ($config['search'] ?? false)
-					{
-						throw new InvalidConfigException(\sprintf('Enabling \'search\' on virtual field %s.%s is not supported.', $this->strTable, $field));
-					}
-
-					if ($config['eval']['fallback'] ?? false)
-					{
-						throw new InvalidConfigException(\sprintf('Enabling \'eval.fallback\' on virtual field %s.%s is not supported.', $this->strTable, $field));
-					}
-
-					if ($config['eval']['unique'] ?? false)
-					{
-						throw new InvalidConfigException(\sprintf('Enabling \'eval.unique\' on virtual field %s.%s is not supported.', $this->strTable, $field));
-					}
-
-					$this->arrVirtualFields[$field] = $config['saveTo'];
+					continue;
 				}
+
+				// Validate target
+				if (!\in_array($config['saveTo'], $this->arrVirtualTargets, true))
+				{
+					throw new InvalidConfigException(\sprintf('Target for \'saveTo\' on virtual field %s.%s does not exist.', $this->strTable, $field));
+				}
+
+				// Validate the config for virtual fields
+				if ($config['filter'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling \'filter\' on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				if ($config['search'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling \'search\' on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				if ($config['eval']['fallback'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling \'eval.fallback\' on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				if ($config['eval']['unique'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling \'eval.unique\' on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				$this->arrVirtualFields[$field] = $config['saveTo'];
 			}
 		}
 

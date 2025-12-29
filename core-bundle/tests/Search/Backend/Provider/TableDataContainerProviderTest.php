@@ -19,6 +19,7 @@ use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
+use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -117,7 +118,19 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             ],
         );
 
-        $framework = $this->createContaoFrameworkStub();
+        $contentDcaExtractor = $this->createStub(DcaExtractor::class);
+        $contentDcaExtractor
+            ->method('getVirtualFields')
+            ->willReturn(['foo' => 'jsonData', 'moo' => 'jsonData', 'lorem' => 'emptyTarget', 'ipsum' => 'invalidTarget'])
+        ;
+
+        $generalDcaExtractor = $this->createStub(DcaExtractor::class);
+        $generalDcaExtractor
+            ->method('getVirtualFields')
+            ->willReturn([])
+        ;
+
+        $framework = $this->createContaoFrameworkStub([], [DcaExtractor::class => static fn (array $args) => 'tl_content' === $args[0] ? $contentDcaExtractor : $generalDcaExtractor]);
 
         $fixturesDir = $this->getFixturesDir();
         $resourceFinder = new ResourceFinder(Path::join($fixturesDir, 'table-data-container-provider'));

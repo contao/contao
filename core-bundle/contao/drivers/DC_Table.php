@@ -545,11 +545,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Use the field order of the DCA file
 		$fields = array_intersect($allowedFields, $fields);
 		$db = Database::getInstance();
+		$virtualTargets = DcaExtractor::getInstance($this->strTable)->getVirtualTargets();
 
 		// Show all allowed fields
 		foreach ($fields as $i)
 		{
-			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'password' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['hideInput'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['virtualTarget'] ?? null) || !\in_array($i, $allowedFields))
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'password' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['hideInput'] ?? null) || !\in_array($i, $allowedFields) || \in_array($i, $virtualTargets))
 			{
 				continue;
 			}

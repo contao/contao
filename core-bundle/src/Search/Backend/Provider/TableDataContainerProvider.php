@@ -24,6 +24,7 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\DC_Table;
+use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -207,8 +208,10 @@ class TableDataContainerProvider implements ProviderInterface
             static fn (array $config): bool => isset($config['search']) && true === $config['search'],
         );
 
+        $virtualFields = $this->contaoFramework->createInstance(DcaExtractor::class, [$table])->getVirtualFields();
+
         // Only select the rows we need so we don't transfer the entire database when indexing
-        $select = array_unique(['id', ...array_map(static fn (string $field) => $fieldsConfig[$field]['saveTo'] ?? $field, array_keys($searchableFields))]);
+        $select = array_unique(['id', ...array_map(static fn (string $field) => $virtualFields[$field] ?? $field, array_keys($searchableFields))]);
 
         $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
