@@ -19,6 +19,11 @@ use Contao\Input;
 use Contao\System;
 
 /**
+ * @phpstan-type HtmlOperation array{html: string, primary?: bool}
+ * @phpstan-type ParametricOperation array{label: string, title?: string, attributes?: HtmlAttributes, listAttributes?: HtmlAttributes, icon?: string, iconAttributes?: HtmlAttributes, href?: string, method?: string, primary?: bool|null}
+ * @phpstan-type Separator array{separator: true}
+ * @phpstan-type Operation HtmlOperation|ParametricOperation|Separator
+ *
  * @internal
  */
 abstract class AbstractDataContainerOperationsBuilder implements \Stringable
@@ -34,17 +39,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     public const CREATE_TOP = 'top';
 
     /**
-     * @var list<array{html: string, primary?: bool}|array{separator: true}|array{
-     *     label: string,
-     *     title?: string,
-     *     attributes?: HtmlAttributes,
-     *     listAttributes?: HtmlAttributes,
-     *     icon?: string,
-     *     iconAttributes?: HtmlAttributes,
-     *     href?: string,
-     *     method?: string,
-     *     primary?: bool|null,
-     * }>
+     * @var list<Operation>
      */
     protected array|null $operations = null;
 
@@ -53,17 +48,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     }
 
     /**
-     * @param array{html: string, primary?: bool}|array{separator: true}|array{
-     *     label: string,
-     *     title?: string,
-     *     attributes?: HtmlAttributes,
-     *     listAttributes?: HtmlAttributes,
-     *     icon?: string,
-     *     iconAttributes?: HtmlAttributes,
-     *     href?: string,
-     *     method?: string,
-     *     primary?: bool|null
-     * } $operation
+     * @param Operation $operation
      */
     public function prepend(array $operation, bool $parseHtml = false): self
     {
@@ -79,17 +64,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     }
 
     /**
-     * @param array{html: string, primary?: bool}|array{separator: true}|array{
-     *     label: string,
-     *     title?: string,
-     *     attributes?: HtmlAttributes,
-     *     listAttributes?: HtmlAttributes,
-     *     icon?: string,
-     *     iconAttributes?: HtmlAttributes,
-     *     href?: string,
-     *     method?: string,
-     *     primary?: bool|null
-     * } $operation
+     * @param Operation $operation
      */
     public function append(array $operation, bool $parseHtml = false): self
     {
