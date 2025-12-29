@@ -202,7 +202,13 @@ class TableDataContainerProvider implements ProviderInterface
 
         $searchableFields = array_filter(
             $fieldsConfig,
-            static fn (array $config): bool => isset($config['search']) && true === $config['search'],
+            static function (array $config): bool {
+                if (\array_key_exists('backendSearch', $config)) {
+                    return $config['backendSearch'];
+                }
+
+                return \array_key_exists('search', $config) && true === $config['search'];
+            },
         );
 
         // Only select the rows we need so we don't transfer the entire database when indexing
