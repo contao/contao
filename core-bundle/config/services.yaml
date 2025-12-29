@@ -1184,8 +1184,18 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container_permission_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DataContainerPermissionVoter
+        arguments:
+            - '@contao.framework'
+            - '@security.access.decision_manager'
+        tags:
+            - { name: security.voter, priority: -128 }
+
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
+        arguments:
+            - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
