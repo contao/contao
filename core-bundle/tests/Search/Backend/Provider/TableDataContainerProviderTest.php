@@ -72,6 +72,8 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                     new Column('id', Type::getType(Types::INTEGER)),
                     new Column('type', Type::getType(Types::STRING)),
                     new Column('text', Type::getType(Types::STRING)),
+                    new Column('text_search_disabled', Type::getType(Types::STRING)),
+                    new Column('text_search_disabled_backend_search_enabled', Type::getType(Types::STRING)),
                     new Column('jsonData', Type::getType(Types::TEXT)),
                     new Column('emptyTarget', Type::getType(Types::TEXT), ['notnull' => false]),
                     new Column('invalidTarget', Type::getType(Types::TEXT), ['notnull' => false]),
@@ -91,7 +93,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                     [
                         'id' => 1,
                         'type' => 'text',
-                        'text' => '<p>This is <em>some</em> content.',
+                        'text' => '<p>This is <em>some</em> content in "text".</p>',
+                        'text_search_disabled' => '<p>This is <em>some</em> content in "text_search_disabled".</p>',
+                        'text_search_disabled_backend_search_enabled' => '<p>This is <em>some</em> content in "text_search_disabled_backend_search_enabled".</p>',
                         'jsonData' => json_encode(['foo' => 'bar', 'moo' => 'koo'], JSON_THROW_ON_ERROR),
                         'emptyTarget' => null,
                         'invalidTarget' => 'this is not JSON',
@@ -178,7 +182,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $this->assertSame('1', $documents[0]->getId());
         $this->assertSame('contao.db.tl_content', $documents[0]->getType());
         $this->assertSame('tl_content', $documents[0]->getMetadata()['table']);
-        $this->assertSame('<p>This is <em>some</em> content. bar koo', $documents[0]->getSearchableContent());
+        $this->assertSame('<p>This is <em>some</em> content in "text".</p> <p>This is <em>some</em> content in "text_search_disabled_backend_search_enabled".</p> bar koo', $documents[0]->getSearchableContent());
         $this->assertSame('2', $documents[1]->getId());
         $this->assertSame('contao.db.tl_news', $documents[1]->getType());
         $this->assertSame('tl_news', $documents[1]->getMetadata()['table']);
