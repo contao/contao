@@ -204,10 +204,10 @@ class TableDataContainerProvider implements ProviderInterface
             $fieldsConfig,
             static function (array $config): bool {
                 if (\array_key_exists('backendSearch', $config)) {
-                    return $config['backendSearch'];
+                    return (bool) $config['backendSearch'];
                 }
 
-                return \array_key_exists('search', $config) && true === $config['search'];
+                return (bool) ($config['search'] ?? false);
             },
         );
 
