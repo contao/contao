@@ -2599,9 +2599,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Security check before using field in DB query!
-		if (!Database::getInstance()->fieldExists($this->strField, $this->strTable))
+		if (!Database::getInstance()->fieldExists($this->strField, $this->strTable) && !\in_array($this->strField, array_keys(DcaExtractor::getInstance($this->strTable)->getVirtualFields())))
 		{
-			throw new AccessDeniedException('Database field ' . $this->strTable . '.' . $this->strField . ' does not exist.');
+			throw new AccessDeniedException('Field ' . $this->strTable . '.' . $this->strField . ' does not exist.');
 		}
 
 		// Check the field access

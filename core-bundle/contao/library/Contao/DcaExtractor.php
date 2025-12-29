@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\InvalidConfigException;
+
 /**
  * Extracts DCA information and cache it
  *
@@ -455,6 +457,22 @@ class DcaExtractor extends Controller
 				// Store as virtual field
 				if (!($config['sql'] ?? null) && ($config['saveTo'] ?? null))
 				{
+					// Validate the config for virtual fields
+					if ($config['filter'] ?? false)
+					{
+						throw new InvalidConfigException(\sprintf('Enabling \'filter\' on virtual field %s.%s is not supported.', $this->strTable, $field));
+					}
+
+					if ($config['eval']['fallback'] ?? false)
+					{
+						throw new InvalidConfigException(\sprintf('Enabling \'eval.fallback\' on virtual field %s.%s is not supported.', $this->strTable, $field));
+					}
+
+					if ($config['eval']['unique'] ?? false)
+					{
+						throw new InvalidConfigException(\sprintf('Enabling \'eval.unique\' on virtual field %s.%s is not supported.', $this->strTable, $field));
+					}
+
 					$this->arrVirtualFields[$field] = $config['saveTo'];
 				}
 			}

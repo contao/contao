@@ -3,7 +3,7 @@
 use Contao\DC_Table;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 
-$GLOBALS['TL_DCA']['tl_test'] = [
+$GLOBALS['TL_DCA']['tl_test_with_invalid_config'] = [
     'config' => [
         'dataContainer' => DC_Table::class,
         'sql' => [
@@ -18,6 +18,7 @@ $GLOBALS['TL_DCA']['tl_test'] = [
         ],
         'virtualField' => [
             'saveTo' => 'virtualTarget',
+            'filter' => true,
         ],
         'virtualTarget' => [
             'virtualTarget' => true,

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\InvalidConfigException;
 use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\TestCase;
@@ -113,5 +114,20 @@ class DcaExtractorTest extends TestCase
             ],
             $extractor->getEnums(),
         );
+    }
+
+    public function testExtractsVirtualFieldsAndTargets(): void
+    {
+        $extractor = DcaExtractor::getInstance('tl_test');
+
+        $this->assertSame(['virtualTarget'], $extractor->getVirtualTargets());
+        $this->assertSame(['virtualField' => 'virtualTarget'], $extractor->getVirtualFields());
+    }
+
+    public function testThrowsInvalidConfigException(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+
+        DcaExtractor::getInstance('tl_test_with_invalid_config');
     }
 }
