@@ -20,7 +20,17 @@ use Contao\System;
 
 /**
  * @phpstan-type HtmlOperation array{html: string, primary?: bool}
- * @phpstan-type ParametricOperation array{label: string, title?: string, attributes?: HtmlAttributes, listAttributes?: HtmlAttributes, icon?: string, iconAttributes?: HtmlAttributes, href?: string, method?: string, primary?: bool|null}
+ * @phpstan-type ParametricOperation array{
+ *     label: string,
+ *     title?: string,
+ *     attributes?: HtmlAttributes,
+ *     listAttributes?: HtmlAttributes,
+ *     icon?: string,
+ *     iconAttributes?: HtmlAttributes,
+ *     href?: string,
+ *     method?: string,
+ *     primary?: bool|null,
+ * }
  * @phpstan-type Separator array{separator: true}
  * @phpstan-type Operation HtmlOperation|ParametricOperation|Separator
  *
