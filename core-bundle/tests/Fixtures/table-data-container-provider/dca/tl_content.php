@@ -59,6 +59,6 @@ $GLOBALS['TL_DCA']['tl_content'] =
         ],
         'invalidTarget' => [
             'virtualTarget' => true,
-        ]
+        ],
     ],
 ];
