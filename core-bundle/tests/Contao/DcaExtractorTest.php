@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
-use Contao\CoreBundle\DataContainer\InvalidConfigException;
 use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\TestCase;
