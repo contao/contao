@@ -4797,7 +4797,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get search fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
-			if (($v['search'] ?? null) && !($v['saveTo'] ?? null))
+			if ($v['search'] ?? null)
 			{
 				$searchFields[] = $k;
 			}
