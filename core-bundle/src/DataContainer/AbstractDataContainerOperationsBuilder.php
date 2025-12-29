@@ -19,7 +19,7 @@ use Contao\Input;
 use Contao\System;
 
 /**
- * @phpstan-type HtmlOperation array{html: string, primary?: bool}
+ * @phpstan-type LegacyOperation array{html: string, primary?: bool}
  * @phpstan-type ParametricOperation array{
  *     label: string,
  *     title?: string,
@@ -32,7 +32,7 @@ use Contao\System;
  *     primary?: bool|null,
  * }
  * @phpstan-type Separator array{separator: true}
- * @phpstan-type Operation HtmlOperation|ParametricOperation|Separator
+ * @phpstan-type Operation LegacyOperation|ParametricOperation|Separator
  *
  * @internal
  */
