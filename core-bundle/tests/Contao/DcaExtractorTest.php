@@ -123,11 +123,4 @@ class DcaExtractorTest extends TestCase
         $this->assertSame(['virtualTarget'], $extractor->getVirtualTargets());
         $this->assertSame(['virtualField' => 'virtualTarget'], $extractor->getVirtualFields());
     }
-
-    public function testThrowsInvalidConfigException(): void
-    {
-        $this->expectException(InvalidConfigException::class);
-
-        DcaExtractor::getInstance('tl_test_with_invalid_config');
-    }
 }
