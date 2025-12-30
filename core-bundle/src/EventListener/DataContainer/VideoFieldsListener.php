@@ -15,11 +15,11 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
-use Symfony\Component\Mime\MimeTypes;
+use Symfony\Component\Mime\MimeTypesInterface;
 
 readonly class VideoFieldsListener
 {
-    public function __construct(private MimeTypes $mimeTypes)
+    public function __construct(private MimeTypesInterface $mimeTypes)
     {
     }
 
@@ -28,7 +28,7 @@ readonly class VideoFieldsListener
     {
         $mime = $this->mimeTypes->guessMimeType($dc->id);
 
-        if ($mime !== null && str_starts_with($mime, 'video/')) {
+        if (null !== $mime && str_starts_with($mime, 'video/')) {
             $palette = PaletteManipulator::create()
                 ->addField('videoSizes', 'name')
                 ->applyToString($palette)
