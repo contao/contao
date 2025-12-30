@@ -27,8 +27,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
-#[AsHook('loadDataContainer')]
-class PermissionsListener implements ResetInterface
+/**
+ * @internal
+ */
+#[AsHook('loadDataContainer', priority: -64)]
+class UserRootListener implements ResetInterface
 {
     /**
      * @var array<string, array<array>>
@@ -44,7 +47,7 @@ class PermissionsListener implements ResetInterface
 
     public function __invoke(string $table): void
     {
-        if (!isset($GLOBALS['TL_DCA'][$table]['config']['userRoot']) || !is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
+        if (!is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
             return;
         }
 
@@ -54,16 +57,13 @@ class PermissionsListener implements ResetInterface
             return;
         }
 
-        $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
-        $permissions = $GLOBALS['TL_DCA'][$table]['config']['permissions'] ?? [];
-
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $GLOBALS['TL_DCA'][$table]['config']['onload_callback'][] = fn () => $this->filterRecords($table, $rootField, $user);
-            $GLOBALS['TL_DCA'][$table]['config']['oncreate_callback'][] = fn ($ignore, $insertId) => $this->adjustPermissions($table, $rootField, $permissions, (int) $insertId, $user);
-            $GLOBALS['TL_DCA'][$table]['config']['oncopy_callback'][] = fn ($insertId) => $this->adjustPermissions($table, $rootField, $permissions, (int) $insertId, $user);
+            $GLOBALS['TL_DCA'][$table]['config']['onload_callback'][] = fn () => $this->filterRecords($table, $user);
+            $GLOBALS['TL_DCA'][$table]['config']['oncreate_callback'][] = fn ($ignore, $insertId) => $this->adjustPermissions($table, (int) $insertId, $user);
+            $GLOBALS['TL_DCA'][$table]['config']['oncopy_callback'][] = fn ($insertId) => $this->adjustPermissions($table, (int) $insertId, $user);
         }
 
-        $this->injectPermissionField($table, $rootField);
+        $GLOBALS['TL_DCA'][$table]['config']['onload_callback'][] = fn () => $this->injectPermissionField($table);
     }
 
     public function reset(): void
@@ -71,8 +71,13 @@ class PermissionsListener implements ResetInterface
         $this->recordCache = [];
     }
 
-    private function filterRecords(string $table, string $rootField, BackendUser $user): void
+    private function filterRecords(string $table, BackendUser $user): void
     {
+        if (!isset($GLOBALS['TL_DCA'][$table]['config']['userRoot'])) {
+            return;
+        }
+
+        $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
         $root = $user->{$rootField};
 
         if (empty($root) || !\is_array($root)) {
@@ -82,8 +87,14 @@ class PermissionsListener implements ResetInterface
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] = $root;
     }
 
-    private function adjustPermissions(string $table, string $rootField, array $permissions, int $insertId, BackendUser $user): void
+    private function adjustPermissions(string $table, int $insertId, BackendUser $user): void
     {
+        if (!isset($GLOBALS['TL_DCA'][$table]['config']['userRoot'])) {
+            return;
+        }
+
+        $permissions = $GLOBALS['TL_DCA'][$table]['config']['permissions'] ?? [];
+        $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
         $root = $user->{$rootField};
 
         if (empty($root) || !\is_array($root)) {
@@ -146,8 +157,13 @@ class PermissionsListener implements ResetInterface
         $this->connection->update($table, $new, ['id' => $record['id']]);
     }
 
-    private function injectPermissionField(string $table, string $rootField): void
+    private function injectPermissionField(string $table): void
     {
+        if (!isset($GLOBALS['TL_DCA'][$table]['config']['userRoot'])) {
+            return;
+        }
+
+        $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
         $canEditUsers = $this->canEdit('user', 'tl_user', $rootField);
         $canEditGroups = $this->canEdit('group', 'tl_user_group', $rootField);
 

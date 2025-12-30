@@ -248,13 +248,6 @@ services:
         arguments:
             - '@request_stack'
 
-    contao.listener.data_container.permissions:
-        class: Contao\CoreBundle\EventListener\DataContainer\PermissionsListener
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@database_connection'
-
     contao.listener.data_container.personal_data_password:
         class: Contao\CoreBundle\EventListener\DataContainer\PersonalDataPasswordListener
         arguments:
@@ -357,6 +350,13 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\UserAdminFieldListener
         arguments:
             - '@security.helper'
+
+    contao.listener.data_container.user_root:
+        class: Contao\CoreBundle\EventListener\DataContainer\UserRootListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@database_connection'
 
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
