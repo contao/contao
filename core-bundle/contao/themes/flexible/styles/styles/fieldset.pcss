@@ -33,8 +33,8 @@ fieldset:is(.tl_tbox,.tl_box) > legend > button {
     border: 0 none;
     line-height: inherit;
     box-sizing: border-box;
-    padding: 9px 12px 9px 43px;
-    background: transparent url("icons/navcol.svg") 23px 10px no-repeat;
+    padding: 9px 12px 9px 28px;
+    background: transparent url("icons/navcol.svg") 13px 10px no-repeat;
     cursor: pointer;
 }
 
@@ -50,4 +50,11 @@ fieldset.collapsed div {
 fieldset.collapsed > legend > button,
 fieldset.collapsed > legend:not(:has(> button)) {
     background-image: url("icons/navexp.svg");
+}
+
+@media (min-width: 768px) {
+    fieldset:is(.tl_tbox,.tl_box) > legend > button {
+        padding-left: 43px;
+        background-position-x: 23px;
+    }
 }

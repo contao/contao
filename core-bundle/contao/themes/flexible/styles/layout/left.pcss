@@ -1,5 +1,5 @@
 #left {
-    width: 220px;
+    width: var(--navigation-width);
     display: flex;
     flex-direction: column;
 }
@@ -16,7 +16,7 @@
 }
 
 @media (min-width: 1280px) {
-    #left {
-        width: 280px;
+    :root {
+        --navigation-width: 280px;
     }
 }
