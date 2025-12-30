@@ -160,7 +160,7 @@ export class Navigation {
 
         // Hide the active navigation on escape
         document.addEventListener('keyup', (e) => {
-            e.key === 'Escape' && this._hideDropdown();
+            this._isDesktop() && e.key === 'Escape' && this._hideDropdown();
         });
     }
 
