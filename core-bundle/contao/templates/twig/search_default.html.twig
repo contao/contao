@@ -1,0 +1,15 @@
+<div class="search_default">
+
+    {% if hasImage %}
+        {{ include('@Contao/image.html.twig', image) }}
+    {% endif %}
+
+    <h3><a href="{{ href }}">{{ link }}</a></h3>
+
+    {% if context|default %}
+        <p class="context">{{ context|raw }}</p>
+    {% endif %}
+
+    <p class="url">{{ url }}</p>
+
+</div>

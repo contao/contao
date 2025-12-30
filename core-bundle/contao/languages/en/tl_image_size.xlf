@@ -161,6 +161,9 @@
       <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

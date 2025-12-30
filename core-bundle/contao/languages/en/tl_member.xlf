@@ -224,6 +224,9 @@
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

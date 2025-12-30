@@ -30,19 +30,19 @@ class ModelTest extends TestCase
     {
         parent::setUp();
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider = $this->createStub(SchemaProvider::class);
         $schemaProvider
             ->method('createSchema')
             ->willReturn($this->createSchema(false))
         ;
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn($this->createSchema(true))
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)

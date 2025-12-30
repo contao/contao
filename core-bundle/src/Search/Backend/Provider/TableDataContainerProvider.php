@@ -32,6 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @experimental
@@ -47,6 +48,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -144,6 +146,13 @@ class TableDataContainerProvider implements ProviderInterface
         );
     }
 
+    public function convertTypeToVisibleType(string $type): string
+    {
+        $table = substr($type, \strlen(self::TYPE_PREFIX));
+
+        return $this->translator->trans($table.'.tableLabel', [], 'contao_'.$table);
+    }
+
     private function addCurrentRowToDocumentIfNotAlreadyLoaded(Document $document): Document
     {
         if (isset($document->getMetadata()['row'])) {
@@ -193,10 +202,19 @@ class TableDataContainerProvider implements ProviderInterface
 
         $searchableFields = array_filter(
             $fieldsConfig,
-            static fn (array $config): bool => isset($config['search']) && true === $config['search'],
+            static function (array $config): bool {
+                if (\array_key_exists('backendSearch', $config)) {
+                    return (bool) $config['backendSearch'];
+                }
+
+                return (bool) ($config['search'] ?? false);
+            },
         );
 
-        $qb = $this->createQueryBuilderForTable($table);
+        // Only select the rows we need so we don't transfer the entire database when indexing
+        $select = array_unique(['id', ...array_keys($searchableFields)]);
+
+        $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
         if ($reindexConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
             $qb->andWhere('tstamp <= ', $qb->createNamedParameter($reindexConfig->getUpdateSince()));
@@ -248,7 +266,10 @@ class TableDataContainerProvider implements ProviderInterface
 
     private function loadRow(string $table, int $id): array|false
     {
-        $qb = $this->createQueryBuilderForTable($table);
+        // In this case, we want to load the entire row. This method is called only when
+        // generating the search result hits of which there are not that many and the
+        // entire row can be useful in the EnhanceHitEvent.
+        $qb = $this->createQueryBuilderForTable($table, '*');
 
         return $qb
             ->andWhere('id = '.$qb->createNamedParameter($id, ParameterType::INTEGER))
@@ -256,11 +277,11 @@ class TableDataContainerProvider implements ProviderInterface
         ;
     }
 
-    private function createQueryBuilderForTable(string $table): QueryBuilder
+    private function createQueryBuilderForTable(string $table, string $select): QueryBuilder
     {
         return $this->connection
             ->createQueryBuilder()
-            ->select('*')
+            ->select($select)
             ->from($table)
         ;
     }

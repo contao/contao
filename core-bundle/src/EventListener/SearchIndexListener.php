@@ -65,7 +65,12 @@ class SearchIndexListener
         }
 
         // Do not handle Contao backend requests
-        if (preg_match('~(?:^|/)'.preg_quote($this->contaoBackendRoutePrefix, '~').'~', $request->getPathInfo())) {
+        if (preg_match('~(?:^|/)'.preg_quote(ltrim($this->contaoBackendRoutePrefix, '/'), '~').'(?:$|/)~', $request->getPathInfo())) {
+            return;
+        }
+
+        // Do not handle profiler requests
+        if (preg_match('~(?:^|/)_wdt/~', $request->getPathInfo())) {
             return;
         }
 
@@ -135,7 +140,7 @@ class SearchIndexListener
             // No meta robots tag found
         }
 
-        // If there are no json ld scripts at all, this should not be handled by our indexer
+        // If there are no JSON-LD scripts at all, this should not be handled by our indexer
         return [] !== $document->extractJsonLdScripts();
     }
 

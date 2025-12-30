@@ -10,10 +10,10 @@ namespace Contao\CoreBundle\Search\Backend;
 class Query
 {
     public function __construct(
-        private readonly int $perPage,
+        private readonly int $perPage = 20,
         private readonly string|null $keywords = null,
-        private readonly string|null $type = null,
-        private readonly string|null $tag = null,
+        private string|null $type = null,
+        private string|null $tag = null,
     ) {
     }
 
@@ -27,6 +27,22 @@ class Query
         return $this->keywords;
     }
 
+    public function withoutTag(): self
+    {
+        $query = clone $this;
+        $query->tag = null;
+
+        return $query;
+    }
+
+    public function withoutType(): self
+    {
+        $query = clone $this;
+        $query->type = null;
+
+        return $query;
+    }
+
     public function getType(): string|null
     {
         return $this->type;
@@ -35,6 +51,16 @@ class Query
     public function getTag(): string|null
     {
         return $this->tag;
+    }
+
+    public function toUrlParams(): array
+    {
+        return array_filter([
+            'keywords' => $this->keywords,
+            'type' => $this->type,
+            'tag' => $this->tag,
+            'perPage' => $this->perPage,
+        ]);
     }
 
     public function equals(self $otherQuery): bool

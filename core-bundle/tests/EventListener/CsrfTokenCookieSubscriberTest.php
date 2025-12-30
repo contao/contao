@@ -56,7 +56,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
 
     public function testDoesNotInitializeTheStorageUponSubrequests(): void
     {
-        $requestEvent = $this->createMock(RequestEvent::class);
+        $requestEvent = $this->createStub(RequestEvent::class);
         $requestEvent
             ->method('isMainRequest')
             ->willReturn(false)
@@ -234,7 +234,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         ;
 
         $responseEvent = new ResponseEvent(
-            $this->createMock(Kernel::class),
+            $this->createStub(Kernel::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             new Response(),
@@ -250,7 +250,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             $request = new Request();
         }
 
-        return new RequestEvent($this->createMock(Kernel::class), $request, HttpKernelInterface::MAIN_REQUEST);
+        return new RequestEvent($this->createStub(Kernel::class), $request, HttpKernelInterface::MAIN_REQUEST);
     }
 
     public function getResponseEvent(Request|null $request = null, Response|null $response = null): ResponseEvent
@@ -263,6 +263,6 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             $response = new Response();
         }
 
-        return new ResponseEvent($this->createMock(Kernel::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
+        return new ResponseEvent($this->createStub(Kernel::class), $request, HttpKernelInterface::MAIN_REQUEST, $response);
     }
 }

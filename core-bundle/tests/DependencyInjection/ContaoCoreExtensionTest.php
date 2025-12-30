@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
-use Contao\CoreBundle\Controller\BackendSearchController;
-use Contao\CoreBundle\Controller\BackendTemplateStudioController;
+use Contao\CoreBundle\Controller\Backend\SearchController;
+use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -592,7 +592,7 @@ class ContaoCoreExtensionTest extends TestCase
             'contao.general',
         ];
 
-        $monologExtension = $this->createMock(Extension::class);
+        $monologExtension = $this->createStub(Extension::class);
         $monologExtension
             ->method('getAlias')
             ->willReturn('monolog')
@@ -642,10 +642,11 @@ class ContaoCoreExtensionTest extends TestCase
             ->willReturn($container)
         ;
 
-        $matcher = $this->exactly(3);
+        $matcher = $this->exactly(4);
         $expected = [
             ['upload/path', 'upload/path', 'files'],
             ['var/backups', 'backups', 'backups'],
+            ['var/job-attachments', 'job-attachments', 'job-attachments'],
             ['templates', 'user_templates', 'user_templates'],
         ];
 
@@ -717,7 +718,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $this->assertFalse($container->hasDefinition(BackendSearchController::class));
+        $this->assertFalse($container->hasDefinition(SearchController::class));
         $this->assertFalse($container->hasDefinition('contao.search_backend.adapter_factory'));
         $this->assertFalse($container->hasDefinition('contao.search.backend'));
         $this->assertFalse($container->hasDefinition('contao.search.backend.files_provider'));
@@ -804,7 +805,7 @@ class ContaoCoreExtensionTest extends TestCase
             ],
         ]);
 
-        $this->assertFalse($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
     }
@@ -813,7 +814,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $this->assertTrue($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
     }
@@ -821,7 +822,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsContentElementAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsContentElement::class, $autoConfiguredAttributes);
 
@@ -845,7 +846,7 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        $autoConfiguredAttributes[AsContentElement::class](
+        $autoConfiguredAttributes[AsContentElement::class][0](
             $definition,
             new AsContentElement(...[
                 'type' => 'content_element/text',
@@ -864,7 +865,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsFrontendModuleAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsFrontendModule::class, $autoConfiguredAttributes);
 
@@ -888,7 +889,7 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        $autoConfiguredAttributes[AsFrontendModule::class](
+        $autoConfiguredAttributes[AsFrontendModule::class][0](
             $definition,
             new AsFrontendModule(...[
                 'type' => 'frontend_module/navigation',
@@ -904,7 +905,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsPageAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsPage::class, $autoConfiguredAttributes);
 
@@ -931,7 +932,7 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        $autoConfiguredAttributes[AsPage::class](
+        $autoConfiguredAttributes[AsPage::class][0](
             $definition,
             new AsPage(
                 'foo',
@@ -952,7 +953,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsPickerProviderAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsPickerProvider::class, $autoConfiguredAttributes);
 
@@ -963,7 +964,7 @@ class ContaoCoreExtensionTest extends TestCase
             ->with('contao.picker_provider', ['priority' => 32])
         ;
 
-        $autoConfiguredAttributes[AsPickerProvider::class](
+        $autoConfiguredAttributes[AsPickerProvider::class][0](
             $definition,
             new AsPickerProvider(32),
             new \ReflectionClass(ClassWithMethod::class),
@@ -973,7 +974,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsCronjobAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsCronJob::class, $autoConfiguredAttributes);
 
@@ -984,13 +985,13 @@ class ContaoCoreExtensionTest extends TestCase
             ->with('contao.cronjob', ['interval' => 'daily', 'method' => 'someMethod'])
         ;
 
-        $autoConfiguredAttributes[AsCronJob::class](
+        $autoConfiguredAttributes[AsCronJob::class][0](
             $definition,
             new AsCronJob('daily', 'someMethod'),
             new \ReflectionClass(ClassWithMethod::class),
         );
 
-        $autoConfiguredAttributes[AsCronJob::class](
+        $autoConfiguredAttributes[AsCronJob::class][0](
             $definition,
             new AsCronJob('daily'),
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
@@ -1000,7 +1001,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsHookAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsHook::class, $autoConfiguredAttributes);
 
@@ -1011,13 +1012,13 @@ class ContaoCoreExtensionTest extends TestCase
             ->with('contao.hook', ['hook' => 'activateAccount', 'priority' => 32, 'method' => 'someMethod'])
         ;
 
-        $autoConfiguredAttributes[AsHook::class](
+        $autoConfiguredAttributes[AsHook::class][0](
             $definition,
             new AsHook('activateAccount', 'someMethod', 32),
             new \ReflectionClass(ClassWithMethod::class),
         );
 
-        $autoConfiguredAttributes[AsHook::class](
+        $autoConfiguredAttributes[AsHook::class][0](
             $definition,
             new AsHook('activateAccount', null, 32),
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
@@ -1027,7 +1028,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsCallbackAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsCallback::class, $autoConfiguredAttributes);
 
@@ -1049,13 +1050,13 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        $autoConfiguredAttributes[AsCallback::class](
+        $autoConfiguredAttributes[AsCallback::class][0](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', 'someMethod', 32),
             new \ReflectionClass(ClassWithMethod::class),
         );
 
-        $autoConfiguredAttributes[AsCallback::class](
+        $autoConfiguredAttributes[AsCallback::class][0](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', null, 32),
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
@@ -1066,7 +1067,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
         $container = $this->getContainerBuilder();
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $definition = $this->createMock(ChildDefinition::class);
         $definition
@@ -1080,7 +1081,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage($attributeClass.' attribute cannot declare a method on "Contao\CoreBundle\Tests\Fixtures\ClassWithMethod::someMethod()".');
 
-        $autoConfiguredAttributes[$attributeClass](
+        $autoConfiguredAttributes[$attributeClass][0](
             $definition,
             $attribute,
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),

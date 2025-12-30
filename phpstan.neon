@@ -51,6 +51,7 @@ parameters:
         - identifier: property.internalClass
         - identifier: staticMethod.internal
         - identifier: staticMethod.internalClass
+        - identifier: classConstant.internalClass
 
         # Ignore @no-named-arguments errors caused by PHPUnit.
         # https://github.com/sebastianbergmann/phpunit/issues/6163

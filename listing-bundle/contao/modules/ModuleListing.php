@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 
 /**
  * Provide methods to render content element "listing".
@@ -147,13 +149,15 @@ class ModuleListing extends Module
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
-		$page = (int) (Input::get($id) ?? 1);
 		$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
-		// Thanks to Hagen Klemp (see #4485)
-		if ($per_page > 0 && ($page < 1 || $page > max(ceil($objTotal->count/$per_page), 1)))
+		try
 		{
-			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+			$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
+		}
+		catch (PageOutOfRangeException $e)
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 		}
 
 		// Get the selected records
@@ -221,11 +225,7 @@ class ModuleListing extends Module
 		// Limit
 		if ($per_page)
 		{
-			$objDataStmt->limit($per_page, ($page - 1) * $per_page);
-		}
-		elseif ($this->perPage)
-		{
-			$objDataStmt->limit($this->perPage, ($page - 1) * $per_page);
+			$objDataStmt->limit($per_page, $pagination->getOffset());
 		}
 
 		$objData = $objDataStmt->execute(...$varKeyword);
@@ -326,8 +326,7 @@ class ModuleListing extends Module
 		$this->Template->tbody = $arrTd;
 
 		// Pagination
-		$objPagination = new Pagination($objTotal->count, $per_page, Config::get('maxPaginationLinks'), $id);
-		$this->Template->pagination = $objPagination->generate("\n  ");
+		$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 		$this->Template->per_page = $per_page;
 		$this->Template->total = $objTotal->count;
 

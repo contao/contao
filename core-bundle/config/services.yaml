@@ -125,6 +125,11 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_jobs:
+        class: Contao\CoreBundle\Cron\PurgeJobsCron
+        arguments:
+            - '@contao.job.jobs'
+
     contao.cron.purge_opt_in_tokens:
         class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
         arguments:
@@ -190,6 +195,11 @@ services:
             - '@contao.image.imagine'
             - '@router'
             - '@contao.routing.page_finder'
+            - '@contao.cron'
+            - '@?contao.search.backend'
+            - '@?contao.messenger.web_worker'
+            - '@?contao.search_backend.adapter'
+
         tags:
             - { name: data_collector, template: '@Contao/web_debug_toolbar/contao_collector.html.twig', id: contao }
 
@@ -223,6 +233,7 @@ services:
             - '@contao.translation.translator'
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
+            - '@database_connection'
 
     contao.data_container.global_operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder
@@ -256,6 +267,16 @@ services:
         public: true
         arguments:
             - '@event_dispatcher'
+
+    contao.data_container.value_formatter:
+        class: Contao\CoreBundle\DataContainer\ValueFormatter
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@translator'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
@@ -394,6 +415,13 @@ services:
             - '%contao.error_level%'
         calls:
             - [setContainer, ['@service_container']]
+
+    contao.html_sanitizer:
+        class: Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: html_sanitizer, sanitizer: contao }
 
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
@@ -629,6 +657,9 @@ services:
         arguments:
             - '@database_connection'
             - '@security.helper'
+            - '@contao.filesystem.virtual.job-attachments'
+            - '@router'
+            - '@messenger.bus.default'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -663,6 +694,15 @@ services:
         public: true
         arguments:
             - '@contao.menu.matcher'
+
+    contao.messenger.crawl_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\CrawlMessageHandler
+        arguments:
+            - '@contao.crawl.escargot.factory'
+            - '@contao.job.jobs'
+            - '@messenger.bus.default'
+            - '%kernel.project_dir%'
+            - '%contao.backend.crawl_concurrency%'
 
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
@@ -703,6 +743,12 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+
+    contao.pagination.factory:
+        class: Contao\CoreBundle\Pagination\PaginationFactory
+        public: true
+        arguments:
+            - '@request_stack'
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider
@@ -1312,6 +1358,11 @@ services:
             - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
 
+    contao.twig.defer.renderer:
+        class: Contao\CoreBundle\Twig\Defer\Renderer
+        arguments:
+            - '@twig'
+
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
         public: true
@@ -1352,8 +1403,6 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.cache_dir%'
-            - '%kernel.environment%'
 
     contao.twig.finder_factory:
         class: Contao\CoreBundle\Twig\Finder\FinderFactory
@@ -1383,6 +1432,17 @@ services:
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
 
+    contao.twig.ide.namespace_lookup_file_generator:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator
+        arguments:
+            - '@contao.twig.filesystem_loader'
+
+    contao.twig.ide.namespace_lookup_file_warmer:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileWarmer
+        arguments:
+            - '@contao.twig.ide.namespace_lookup_file_generator'
+            - '%kernel.environment%'
+
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime
         arguments:
@@ -1410,6 +1470,8 @@ services:
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory
         public: true
+        arguments:
+            - '@contao.routing.scope_matcher'
 
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
@@ -1444,6 +1506,7 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\StringRuntime
         arguments:
             - '@contao.framework'
+            - '@contao.string.html_decoder'
 
     contao.twig.url_runtime:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
@@ -1476,6 +1539,7 @@ services:
     Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
     Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
+    Contao\CoreBundle\Pagination\PaginationFactoryInterface: '@contao.pagination.factory'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ContentUrlGenerator: '@contao.routing.content_url_generator'
     Contao\CoreBundle\Routing\PageFinder: '@contao.routing.page_finder'

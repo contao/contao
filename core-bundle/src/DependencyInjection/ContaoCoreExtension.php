@@ -253,6 +253,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->addVirtualFilesystem('backups', 'backups')
         ;
 
+        // Job attachments
+        $config
+            ->mountLocalAdapter('var/job-attachments', 'job-attachments', 'job-attachments')
+            ->addVirtualFilesystem('job-attachments', 'job-attachments')
+        ;
+
         // User templates
         $config
             ->mountLocalAdapter('templates', 'user_templates', 'user_templates')
