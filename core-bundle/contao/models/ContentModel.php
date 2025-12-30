@@ -90,7 +90,7 @@ use Contao\Model\MetadataTrait;
  * @property string|array|null $youtubeOptions
  * @property string|array|null $vimeoOptions
  * @property string|null       $textTrackSRC
- * @property string      	   $videoSizes
+ * @property string            $videoSizes
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
