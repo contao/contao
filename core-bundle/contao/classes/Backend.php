@@ -416,9 +416,7 @@ abstract class Backend extends Controller
 
 			$this->Template->headline = '';
 
-			$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail();
-
-			foreach ($trail as list('url' => $linkUrl, 'label' => $linkLabel))
+			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
 			{
 				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
 			}
