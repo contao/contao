@@ -27,6 +27,7 @@ use Contao\CoreBundle\Util\ArrayTree;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -727,12 +728,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$databaseFields = $db->getFieldNames($this->strTable);
+		$dcaExtract = DcaExtractor::getInstance($this->strTable);
+		$virtualFields = $dcaExtract->getVirtualFields();
+		$container = System::getContainer();
 
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
 			// Use array_key_exists here (see #5252)
-			if (\array_key_exists('default', $v) && \in_array($k, $databaseFields, true))
+			if (\array_key_exists('default', $v) && (\in_array($k, $databaseFields, true) || \array_key_exists($k, $virtualFields)))
 			{
 				$default = $v['default'];
 
@@ -760,10 +764,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
+		$objSession = $container->get('request_stack')->getSession();
 
 		// Empty the clipboard
-		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
+		$container->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		$this->set['tstamp'] = 0;
 
@@ -772,10 +776,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
+			// Combine virtual fields
+			$this->set = $container->get('contao.data_container.virtual_fields_handler')->combineFields($this->set, $this->strTable);
+
+			// Ensure JSON data type for virtual field targets when saving to database
+			$arrTypes = array_map(static fn (string $k) => \in_array($k, $dcaExtract->getVirtualTargets()) ? Types::JSON : null, array_keys($this->set));
+
 			$objInsertStmt = $db
 				->prepare("INSERT INTO " . $this->strTable . " %s")
 				->set($this->set)
-				->execute();
+				->query('', array_values($this->set), array_values($arrTypes));
 
 			if ($objInsertStmt->affectedRows)
 			{
@@ -805,7 +815,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
+				$container->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
 
 				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
