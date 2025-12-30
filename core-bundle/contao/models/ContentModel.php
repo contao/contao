@@ -90,6 +90,7 @@ use Contao\Model\MetadataTrait;
  * @property string|array|null $youtubeOptions
  * @property string|array|null $vimeoOptions
  * @property string|null       $textTrackSRC
+ * @property string      	   $videoSizes
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
@@ -187,6 +188,7 @@ use Contao\Model\MetadataTrait;
  * @method static ContentModel|null findOneByYoutubeOptions($val, array $opt=array())
  * @method static ContentModel|null findOneByVimeoOptions($val, array $opt=array())
  * @method static ContentModel|null findOneByTextTrackSRC($val, array $opt = array())
+ * @method static ContentModel|null findOneByVideoSizes($val, array $opt = array())
  * @method static ContentModel|null findOneBySliderDelay($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderSpeed($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderStartSlide($val, array $opt=array())
@@ -277,6 +279,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<ContentModel>|null findByYoutubeOptions($val, array $opt=array())
  * @method static Collection<ContentModel>|null findByVimeoOptions($val, array $opt=array())
  * @method static Collection<ContentModel>|null findByTextTrackSRC($val, array $opt = array())
+ * @method static Collection<ContentModel>|null findByVideoSizes($val, array $opt = array())
  * @method static Collection<ContentModel>|null findBySliderDelay($val, array $opt=array())
  * @method static Collection<ContentModel>|null findBySliderSpeed($val, array $opt=array())
  * @method static Collection<ContentModel>|null findBySliderStartSlide($val, array $opt=array())
@@ -371,6 +374,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByYoutubeOptions($val, array $opt=array())
  * @method static integer countByVimeoOptions($val, array $opt=array())
  * @method static integer countByTextTrackSRC($val, array $opt = array())
+ * @method static integer countByVideoSizes($val, array $opt = array())
  * @method static integer countBySliderDelay($val, array $opt=array())
  * @method static integer countBySliderSpeed($val, array $opt=array())
  * @method static integer countBySliderStartSlide($val, array $opt=array())

@@ -267,6 +267,13 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'options_callback'        => static fn () => array_map(static fn ($case) => $case->name, TextTrackType::cases()),
 			'sql'                     => "varchar(12) NULL"
 		),
+		'videoSizes' => array
+		(
+			'inputType'               => 'text',
+			'explanation'             => 'imageSizeDensities',
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr', 'decodeEntities'=>true),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'meta' => array
 		(
 			'inputType'               => 'metaWizard',

@@ -67,6 +67,13 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('textTrack', $textTrack);
         }
 
+        $videoSizes = $row['videoSizes'] ?? null;
+
+        // Add video size information
+        if ($videoSizes) {
+            $event->set('videoSizes', $videoSizes);
+        }
+
         // Add localized metadata
         $localizedMetadata = [];
 

@@ -108,6 +108,7 @@ class PlayerController extends AbstractContentElementController
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
+                    ->setIfExists('media', $item->getExtraMetadata()->getVideoSizes())
                 ;
             },
             $sourceFiles,

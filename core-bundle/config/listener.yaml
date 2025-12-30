@@ -350,6 +350,11 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.video_fields:
+        class: Contao\CoreBundle\EventListener\DataContainer\VideoFieldsListener
+        arguments:
+            - '@mime_types'
+
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         arguments:
