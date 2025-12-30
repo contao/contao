@@ -28,7 +28,7 @@
         .set('data-picker-value', picker.value|default, as_picker)
     %}
     <div{{ listing_attributes }}>
-        {{ breadcrumb }}
+        {{ breadcrumb|raw }}
         {{ include('@Contao/backend/data_container/table/view/_select_all_button.html.twig') }}
 
         {% set tree_attributes = attrs()
