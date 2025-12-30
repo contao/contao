@@ -7,21 +7,19 @@
 
     .content {
         margin: 0 15px 15px;
-
-        &:not(:has(.content-filter)) {
-            background: var(--content-bg);
-            border: 1px solid var(--content-border);
-            border-radius: var(--border-radius);
-        }
     }
 
-    .content-inner, .content-filter {
+    .content:not(:has(.content-filter)),
+    .content-inner,
+    .content-filter {
         background: var(--content-bg);
         border: 1px solid var(--content-border);
-        border-radius: calc(var(--border-radius) * 3);
+        border-radius: calc(var(--border-radius) * 2);
     }
 
-    .content:has(.tl_formbody_submit) {
+    .content:has(.tl_formbody_submit),
+    .content-inner,
+    .content-filter {
         overflow: clip;
     }
 }
@@ -50,6 +48,10 @@
 
 @media (min-width: 1280px) {
     #main {
+        .content-inner, .content-filter {
+            border-radius: calc(var(--border-radius) * 3);
+        }
+
         .content:has(>.content-filter),
         .content > .tree-view:has(>.content-filter) {
             display: grid;

@@ -2,7 +2,7 @@
     &:not(:last-of-type) {
         padding-bottom: 16px;
         margin-bottom: 14px;
-        border-bottom: 1px solid var(--content-border);
+        border-bottom: 1px solid var(--border);
     }
 
     fieldset {
@@ -66,8 +66,8 @@
 }
 
 .tl_subpanel {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
+    padding-left: var(--gap) !important;
+    padding-right: var(--gap) !important;
 }
 
 .tl_filter {
@@ -120,8 +120,8 @@
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
-    padding: 10px 15px;
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    padding: 10px var(--gap);
+    border-radius: 0 0 calc(var(--border-radius) * 2) calc(var(--border-radius) * 2);
     border-top: 1px solid var(--content-border);
 
     &.is-sticky {
@@ -197,12 +197,16 @@
             top: 15px;
             margin-bottom: 15px;
         }
+
+        .tl_submit_panel {
+            border-radius: 0 0 calc(var(--border-radius) * 3) calc(var(--border-radius) * 3);
+        }
     }
 }
 
 @media (min-width: 1440px) {
     :root {
         --filter-width: 280px;
-        --main-panel-gap: 15px;
+        --main-panel-gap: var(--gap);
     }
 }
