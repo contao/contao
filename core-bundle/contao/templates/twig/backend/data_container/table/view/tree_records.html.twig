@@ -1,53 +1,58 @@
-{%
-    set row_attributes = attrs()
-    .addClass([
-        'cf',
-        is_tree_entry ? 'hover-div',
-        is_folder ? 'tl_folder' : 'tl_file',
-        is_draft ? 'draft'
-    ])
-    .set('data-controller', "#{is_table ? 'contao--deeplink '}contao--operations-menu")
-    .set('data-action', "contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput")
-    .addStyle({
-        '--isChildless': is_childless
-    })
+{% trans_default_domain 'contao_default' %}
+
+{% set row_attributes = attrs()
+    .addClass('cf')
+    .addClass('tl_folder', is_group)
+    .addClass(['tl_file', 'hover-div'], not is_group)
+    .addClass('draft', is_draft)
+    .set('data-controller', 'contao--operations-menu' ~ (enable_deeplink ? ' contao--deeplink' : ''))
+    .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
 %}
 <li{{ row_attributes }}>
-    <div class="tl_left">
-
-        {% if not is_childless %}
-            {% set child_toggler_attributes = attrs()
-                .addClass(child_toggler.class)
-                .setIfExists('href', child_toggler.link)
-                .set('data-contao--toggle-nodes-target', "toggle")
-                .set('data-action', "contao--toggle-nodes#toggle:prevent")
-                .set('data-contao--toggle-nodes-id-param', "#{node}_#{id}")
-                .set('data-contao--toggle-nodes-id-param', "#{node}_#{id}")
-                .set('data-contao--toggle-nodes-level-param', level)
-             %}
-             <a{{ child_toggler_attributes}}>{{ child_toggler.image|raw }}</a>
+    {% set has_children = children|length or toggler_url %}
+    {% set row_attributes = attrs()
+        .addClass(['tl_left', 'with-offset'])
+        .addStyle({'--level': level + (has_children ? 0 : 1)})
+    %}
+    <div{{ row_attributes }}>
+        {# Button to expand/collapse child nodes #}
+        {% if toggler_url %}
+            {% set toggler_attributes = attrs()
+               .set('href', toggler_url)
+               .addClass('foldable')
+               .addClass('foldable--open', is_expanded)
+               .set('data-contao--toggle-nodes-target', 'toggle')
+               .set('data-action', 'contao--toggle-nodes#toggle:prevent')
+               .set('data-contao--toggle-nodes-id-param', id)
+               .set('data-contao--toggle-nodes-level-param', level)
+            %}
+            <a{{ toggler_attributes }}>
+                {{ backend_icon('chevron-right.svg', (is_expanded ? 'MSC.collapseNode' : 'MSC.expandNode')|trans) }}
+            </a>
         {% endif %}
 
+        {# Main label #}
         {{ label|raw }}
     </div>
     <div class="tl_right">
         {{ buttons|raw }}
     </div>
 </li>
-{{ records|default|join('')|raw }}
-{% if children|default %}
-    {% set child_attributes = attrs()
+
+{# Recursivly rendered records #}
+{{ records|join|raw }}
+
+{# Child nodes if expanded #}
+{% if children %}
+    {% set children_attributes = attrs()
         .addClass('parent')
-        .set('id', "#{node}_#{id}")
-        .set('data-contao--toggle-nodes-target', "child#{level == 0 ? ' rootChild'}")
+        .set('id', id)
+        .set('data-contao--toggle-nodes-target', 'child' ~ (level == 0 ? ' rootChild' : ''))
     %}
-    <li{{ child_attributes }}>
-        {% set child_list_attributes = attrs()
-            .addClass("level_#{level}")
-            .addStyle({"--level": level})
-        %}
-        <ul{{ child_list_attributes }}>
-            {{ children|join('')|raw }}
+    <li{{ children_attributes }}>
+        <ul{{ attrs().addClass("level_#{level}") }}>
+            {# Recursivly rendered children #}
+            {{ children|join|raw }}
         </ul>
     </li>
 {% endif %}

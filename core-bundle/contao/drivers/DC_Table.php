@@ -3713,16 +3713,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
 
-		$parameters= [
-			'is_tree_entry' => ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable || (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && $arrClipboard !== false),
-			'is_folder' => ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable),
-			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
-			'is_table' => $table == $this->strTable,
-			'is_childless' => intval(empty($children)),
-		];
-
 		// Calculate label and add a toggle button
-		$level = $intMargin / $intSpacing + 1;
 		$blnIsOpen = !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
 
 		// Always show selected nodes
@@ -3742,15 +3733,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$blnIsOpen = true;
 			}
 		}
-
-		$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-
-		$parameters['child_toggler']['link'] = $this->addToUrl('ptg=' . $id);
-		$parameters['child_toggler']['class'] = $blnIsOpen ?? false ? 'foldable foldable--open' : 'foldable';
-		$parameters['child_toggler']['image'] = Image::getHtml('chevron-right.svg', $alt);
-		$parameters['level'] = $level;
-		$parameters['node'] = $node;
-		$parameters['id'] = $id;
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
 		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails);
@@ -3899,6 +3881,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Add the records of the table itself
+		$isTreeMode = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) === self::MODE_TREE;
+		$isCurrentTable = $table === $this->strTable;
+
+		$parameters = array(
+			'id' => "{$node}_{$id}",
+			'level' => $intMargin / $intSpacing + 1,
+			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
+			'is_group' => (($isTreeMode && ($currentRecord['type'] ?? null) === 'root') || !$isCurrentTable),
+			'is_expanded' => $blnIsOpen,
+			'enable_deeplink' => $isCurrentTable,
+			'toggler_url' => !empty($children) ? $this->addToUrl('ptg=' . $id) : null,
+			'records' => array(),
+			'children' => array(),
+		);
+
 		if ($table != $this->strTable)
 		{
 			// Also apply the filter settings to the child table (see #716)
@@ -3924,7 +3921,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				static::preloadCurrentRecords($ids, $this->strTable);
 
-				$parameters['records'] = [];
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
 					$parameters['records'][] = $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[$j - 1] ?? null), 'nn'=>($ids[$j + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, false, $j<(\count($ids)-1) || !empty($children), $blnNoRecursion, $arrFound);
@@ -3939,7 +3935,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
 
 			// Add the records of the parent table
-			$parameters['children'] = [];
 			for ($k=0, $c=\count($children); $k<$c; $k++)
 			{
 				$parameters['children'][] = $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
@@ -3951,7 +3946,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$objSessionBag->replace($session);
 
-		return $this->render('view/tree_records', $parameters);
+		return System::getContainer()
+			->get('twig')
+			->render(
+				'@Contao/backend/data_container/table/view/tree_records.html.twig',
+				$parameters
+			);
 	}
 
 	/**
