@@ -37,7 +37,7 @@ class PlayerControllerTest extends ContentElementTestCase
             <div class="content-player">
                 <figure>
                     <video controls autoplay loop>
-                        <source type="video/mp4" src="https://example.com/files/video.mp4" media="(min-width: 600px)">
+                        <source media="(min-width: 600px)" type="video/mp4" src="https://example.com/files/video.mp4">
                         <source type="video/ogg" src="https://example.com/files/video.ogv">
                     </video>
                     <figcaption>Caption</figcaption>
@@ -110,7 +110,7 @@ class PlayerControllerTest extends ContentElementTestCase
             <div class="content-player">
                 <figure>
                     <video controls>
-                        <source type="video/mp4" src="https://example.com/files/video.mp4" media="(min-width: 600px)">
+                        <source media="(min-width: 600px)" type="video/mp4" src="https://example.com/files/video.mp4">
                         <track label="English" srclang="en" src="https://example.com/files/subtitles-en.vtt" default>
                         <track kind="captions" label="Deutsch" srclang="de" src="https://example.com/files/subtitles-de.vtt">
                     </video>
@@ -140,7 +140,7 @@ class PlayerControllerTest extends ContentElementTestCase
             <div class="content-player">
                 <figure>
                     <video controls>
-                        <source type="video/mp4" src="https://example.com/files/video.mp4" media="(min-width: 600px)">
+                        <source media="(min-width: 600px)" type="video/mp4" src="https://example.com/files/video.mp4">
                     </video>
                 </figure>
             </div>
