@@ -122,7 +122,11 @@ $this->mainAttributes = $this
           <main<?= $this->mainAttributes ?>>
             <?php $this->block('main_headline'); ?>
               <h1 id="main_headline">
-                <?= $this->headline ?>
+                <?php if (true /*$this->breadcrumb */): ?>
+                  <?php $this->insert('@Contao/backend/data_container/breadcrumb.html.twig') ?>
+                <?php else: ?>
+                  <?= $this->headline ?>
+                <?php endif; ?>
                 <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
               </h1>
             <?php $this->endblock(); ?>
