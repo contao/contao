@@ -166,7 +166,7 @@ class JobsListenerTest extends AbstractJobsTestCase
                     }
 
                     $this->fail('render() called too many times.');
-                }
+                },
             )
         ;
 
