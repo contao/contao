@@ -412,7 +412,16 @@ abstract class ContentElementTestCase extends TestCase
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE_MISSING => new FilesystemItem(true, 'image_missing.jpg', null, null, 'image/jpeg'),
-                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
+                        self::FILE_VIDEO_MP4 => new FilesystemItem(
+                            true,
+                            'video.mp4',
+                            null,
+                            null,
+                            'video/mp4',
+                            new ExtraMetadata([
+                                'videoSizes' => '(min-width: 600px)',
+                            ]),
+                        ),
                         self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
                         self::FILE_SUBTITLES_INVALID_VTT => new FilesystemItem(true, 'subtitles-incomplete.vtt', null, null, 'text/vtt'),
                         self::FILE_SUBTITLES_EN_VTT => new FilesystemItem(
