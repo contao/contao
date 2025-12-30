@@ -15,7 +15,8 @@ export class Navigation {
             ariaLabels: {
                 'expand': 'Expand menu: ',
                 'collapse': 'Collapse menu: ',
-            }
+            },
+            showMobileTrail: true
         }, options || {});
 
         this.navigation = document.querySelector(this.options.selector);
@@ -95,10 +96,20 @@ export class Navigation {
         this.lastFocus = nodes[nodes.length - 1] ?? [];
     }
 
+    #initMobileTrail() {
+        for (const submenu of this.navigation.querySelectorAll('li.submenu.trail')) {
+            this.#showDropdown(submenu)
+        }
+    }
+
     /**
      * Toggles the menu state on mobile
      */
     #toggleMenuState() {
+        if (this.options.showMobileTrail) {
+            this.#initMobileTrail()
+        }
+
         this.toggle.ariaExpanded = this.state ? 'false' : 'true';
         this.toggle.classList.toggle(this.options.classes.active, !this.state);
         this.navigation.classList.toggle(this.options.classes.active, !this.state);
