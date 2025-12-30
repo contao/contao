@@ -3951,7 +3951,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$objSessionBag->replace($session);
 
-		return $this->render('view/records', $parameters);
+		return $this->render('view/tree_records', $parameters);
 	}
 
 	/**
