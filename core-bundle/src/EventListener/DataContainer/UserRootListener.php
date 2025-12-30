@@ -93,7 +93,6 @@ class UserRootListener implements ResetInterface
             return;
         }
 
-        $permissions = $GLOBALS['TL_DCA'][$table]['config']['permissions'] ?? [];
         $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
         $root = $user->{$rootField};
 
@@ -106,11 +105,11 @@ class UserRootListener implements ResetInterface
             return;
         }
 
-        /** @var AttributeBagInterface $objSessionBag */
-        $objSessionBag = $this->requestStack->getSession()->getBag('contao_backend');
-        $arrNew = $objSessionBag->get('new_records');
+        /** @var AttributeBagInterface $sessionBag */
+        $sessionBag = $this->requestStack->getSession()->getBag('contao_backend');
+        $newRecords = $sessionBag->get('new_records');
 
-        if (!\is_array($arrNew[$table] ?? null) || !\in_array($insertId, $arrNew[$table], false)) {
+        if (!\is_array($newRecords[$table] ?? null) || !\in_array($insertId, $newRecords[$table], false)) {
             return;
         }
 
@@ -123,13 +122,13 @@ class UserRootListener implements ResetInterface
             );
 
             foreach ($groups as $group) {
-                $this->addNewPermission('tl_user_group', $group, $rootField, $permissions, $insertId);
+                $this->addNewPermission('tl_user_group', $group, $rootField, $insertId);
             }
         }
 
         // Add the permissions on user level
         if ('group' !== $user->inherit) {
-            $this->addNewPermission('tl_user', $user->getData(), $rootField, $permissions, $insertId);
+            $this->addNewPermission('tl_user', $user->getData(), $rootField, $insertId);
         }
 
         // Add the new element to the user object
@@ -137,15 +136,8 @@ class UserRootListener implements ResetInterface
         $user->{$rootField} = $root;
     }
 
-    private function addNewPermission(string $table, array $record, string $rootField, array $permissions, int $insertId): void
+    private function addNewPermission(string $table, array $record, string $rootField, int $insertId): void
     {
-        if (
-            \in_array('create', $permissions, true)
-            && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_OPERATE_ON_TABLE, $table.'::create')
-        ) {
-            return;
-        }
-
         $root = (array) StringUtil::deserialize($record[$rootField], true);
         $root[] = $insertId;
         $new = [$rootField => serialize($root)];
@@ -171,17 +163,20 @@ class UserRootListener implements ResetInterface
             return;
         }
 
-        if (!isset($GLOBALS['TL_LANG'][$table]['permissions'])) {
-            $GLOBALS['TL_LANG'][$table]['permissions'] = &$GLOBALS['TL_LANG']['DCA']['permissions'];
+        if (isset($GLOBALS['TL_LANG'][$table]['_permissions'])) {
+            $label = &$GLOBALS['TL_LANG'][$table]['_permissions'];
+        } else {
+            $label = &$GLOBALS['TL_LANG']['DCA']['permissions'];
         }
 
         if (!isset($GLOBALS['TL_LANG'][$table]['permissions_legend'])) {
             $GLOBALS['TL_LANG'][$table]['permissions_legend'] = &$GLOBALS['TL_LANG']['DCA']['permissions_legend'];
         }
 
-        $GLOBALS['TL_DCA'][$table]['fields']['permissions'] = [
+        $GLOBALS['TL_DCA'][$table]['fields']['_permissions'] = [
+            'label' => $label,
             'inputType' => 'checkbox',
-            'options_callback' => fn () => $this->getUserAndGroupOptions($table, $canEditUsers, $canEditGroups),
+            'options_callback' => fn () => $this->getUserAndGroupOptions($label, $canEditUsers, $canEditGroups),
             'eval' => ['multiple' => true, 'doNotSaveEmpty' => true],
             'load_callback' => [fn ($value, DataContainer $dc) => $this->loadPermissions((int) $dc->id, $rootField, $canEditUsers, $canEditGroups)],
             'save_callback' => [fn ($value, DataContainer $dc) => $this->savePermissions((int) $dc->id, $rootField, $value, $canEditUsers, $canEditGroups)],
@@ -189,7 +184,7 @@ class UserRootListener implements ResetInterface
 
         $GLOBALS['TL_DCA'][$table]['config']['onpalette_callback'][] = static fn (string $palette): string => PaletteManipulator::create()
             ->addLegend('permissions_legend', null, PaletteManipulator::POSITION_APPEND)
-            ->addField('permissions', 'permissions_legend', PaletteManipulator::POSITION_APPEND)
+            ->addField('_permissions', 'permissions_legend', PaletteManipulator::POSITION_APPEND)
             ->applyToString($palette)
         ;
     }
@@ -247,14 +242,14 @@ class UserRootListener implements ResetInterface
         }
     }
 
-    private function getUserAndGroupOptions(string $table, bool $canEditUsers, bool $canEditGroups): array
+    private function getUserAndGroupOptions(array $label, bool $canEditUsers, bool $canEditGroups): array
     {
         $users = $this->fetchRecords('tl_user', 'u', 'name', $canEditUsers);
         $groups = $this->fetchRecords('tl_user_group', 'g', 'name', $canEditGroups);
 
         return [
-            $GLOBALS['TL_LANG'][$table]['permissions']['groups'] => $groups,
-            $GLOBALS['TL_LANG'][$table]['permissions']['users'] => $users,
+            ($label['groups'] ?? 'groups') => $groups,
+            ($label['users'] ?? 'users') => $users,
         ];
     }
 
