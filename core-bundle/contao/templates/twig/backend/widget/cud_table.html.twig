@@ -19,7 +19,7 @@
             {% for operation in ['create', 'update', 'delete'] %}
                 <td>
                     {% if operation in operations %}
-                        {% set value = table~'::'~operation %}
+                        {% set value = table ~ '::' ~ operation %}
                         {% set input_attributes = attrs(attributes)
                             .set('id', "ctrl_#{id}_#{table}_#{operation}")
                             .set('type', 'checkbox')
@@ -29,7 +29,7 @@
                             .addClass('tl_checkbox')
                             .setIfExists('checked', value in values)
                         %}
-                        <label for="{{ input_attributes.id }}" class="invisible">{{ ('tl_user.cud.table_'~operation)|trans([table]) }}</label>
+                        <label for="{{ input_attributes.id }}" class="invisible">{{ ('tl_user.cud.table_' ~ operation)|trans([table]) }}</label>
                         <input{{ input_attributes }}>
                     {% endif %}
                 </td>
@@ -40,7 +40,7 @@
                 {% if operations is not empty %}
                     <fieldset class="tl_checkbox_container">
                         {% for operation in operations %}
-                            {% set value = table~'::'~operation %}
+                            {% set value = table ~ '::' ~ operation %}
                             {% set input_attributes = attrs(attributes)
                                 .set('id', "ctrl_#{id}_#{table}_#{operation}")
                                 .set('type', 'checkbox')
@@ -52,7 +52,7 @@
                             %}
                             <span>
                                 <input{{ input_attributes }}>
-                                <label for="{{ input_attributes.id }}">{{ ('tl_user.cud.'~table~'.'~operation)|trans([table]) }}</label>
+                                <label for="{{ input_attributes.id }}">{{ ('tl_user.cud.' ~ table ~ '.' ~ operation)|trans([table]) }}</label>
                             </span>
                         {% endfor %}
                     </fieldset>
