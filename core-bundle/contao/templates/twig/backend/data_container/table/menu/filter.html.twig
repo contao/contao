@@ -1,14 +1,17 @@
 {% trans_default_domain 'contao_default' %}
 
-<div class="tl_filter tl_subpanel">
-    <strong>{{ 'MSC.filter'|trans }}:</strong>
+<fieldset class="tl_filter tl_subpanel">
+    <legend>{{ 'MSC.filter'|trans }}</legend>
 
     {% for filter in filters %}
         {{ include('@Contao/backend/data_container/table/menu/_select.html.twig', {
             name: filter.name,
             options: filter.options,
             active: filter.active,
-            select_attributes: attrs().set('data-placeholder', filter.placeholder),
+            title: filter.placeholder,
+            select_wrapper_attributes: attrs().set('data-contao--filter-target', 'filter'),
+            select_attributes: attrs().set('data-action', 'contao--filter#updateCount'),
+            auto_submit: true,
         }) }}
     {% endfor %}
-</div>
+</fieldset>
