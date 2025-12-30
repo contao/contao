@@ -99,7 +99,7 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener = new BackendBreadcrumbListener(
             $security,
             $this->createStub(DcaUrlAnalyzer::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
         $listener($event);
 
@@ -125,7 +125,7 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener = new BackendBreadcrumbListener(
             $security,
             $this->createStub(DcaUrlAnalyzer::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
         $listener($event);
 
