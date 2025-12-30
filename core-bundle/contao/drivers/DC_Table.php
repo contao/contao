@@ -3948,7 +3948,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters['label'] = $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
 		$parameters['buttons'] = $_buttons;
-		dump($parameters);
 
 		$objSessionBag->replace($session);
 
