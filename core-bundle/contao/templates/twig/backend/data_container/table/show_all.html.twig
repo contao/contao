@@ -1,13 +1,11 @@
 {% trans_default_domain 'contao_default' %}
-{% set attributes = attrs().addClass('tl_show_all') %}
-{% if panel is not empty %}
-    {% do attributes
-        .set('data-controller', 'contao--toggle-state contao--element-count')
-        .set('data-contao--toggle-state-active-class', 'active')
-        .set('data-contao--element-count-selector-value', '.active:not(#tl_search_term)')
-        .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-    %}
-{% endif %}
+{% set attributes = attrs()
+    .addClass('tl_show_all')
+    .set('data-controller', 'contao--toggle-state contao--element-count', panel)
+    .set('data-contao--toggle-state-active-class', 'active', panel)
+    .set('data-contao--element-count-selector-value', '.active:not(#tl_search_term)', panel)
+    .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close', panel)
+%}
 <div{{ attributes }}>
     {{ panel|raw }}
     <div class="content-inner">
