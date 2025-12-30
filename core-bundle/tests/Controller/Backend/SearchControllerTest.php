@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Controller;
+namespace Contao\CoreBundle\Tests\Controller\Backend;
 
-use Contao\CoreBundle\Controller\BackendSearchController;
+use Contao\CoreBundle\Controller\Backend\SearchController;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
@@ -28,13 +28,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Twig\Environment;
 
-class BackendSearchControllerTest extends TestCase
+class SearchControllerTest extends TestCase
 {
     public function testSends404OnInvalidUser(): void
     {
         $this->expectException(AccessDeniedHttpException::class);
 
-        $controller = new BackendSearchController(
+        $controller = new SearchController(
             $this->mockSecurityHelper(false),
             $this->createStub(BackendSearch::class),
         );
@@ -57,7 +57,7 @@ class BackendSearchControllerTest extends TestCase
             ->willReturn(new Result($hits))
         ;
 
-        $controller = new BackendSearchController(
+        $controller = new SearchController(
             $this->mockSecurityHelper(),
             $backendSearch,
         );

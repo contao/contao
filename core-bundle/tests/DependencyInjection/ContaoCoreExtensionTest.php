@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
-use Contao\CoreBundle\Controller\BackendSearchController;
-use Contao\CoreBundle\Controller\BackendTemplateStudioController;
+use Contao\CoreBundle\Controller\Backend\SearchController;
+use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -718,7 +718,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $this->assertFalse($container->hasDefinition(BackendSearchController::class));
+        $this->assertFalse($container->hasDefinition(SearchController::class));
         $this->assertFalse($container->hasDefinition('contao.search_backend.adapter_factory'));
         $this->assertFalse($container->hasDefinition('contao.search.backend'));
         $this->assertFalse($container->hasDefinition('contao.search.backend.files_provider'));
@@ -805,7 +805,7 @@ class ContaoCoreExtensionTest extends TestCase
             ],
         ]);
 
-        $this->assertFalse($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
     }
@@ -814,7 +814,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $this->assertTrue($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
     }

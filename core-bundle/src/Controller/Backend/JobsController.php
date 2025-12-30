@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Controller;
+namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 /**
  * @experimental
  */
-class BackendJobsController extends AbstractBackendController
+class JobsController extends AbstractBackendController
 {
     public function __construct(private readonly Jobs $jobs)
     {

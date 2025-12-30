@@ -40,6 +40,10 @@
         display: none;
     }
 
+    &:fullscreen {
+        padding: 6px;
+    }
+
     #template-studio--nav {
         grid-area: nav;
         border-right: 1px solid var(--border);
@@ -122,5 +126,13 @@
         .badges {
             justify-content: flex-end;
         }
+    }
+}
+
+#main_headline button.fullscreen {
+    transition: transform 0.1s;
+
+    &:hover {
+        transform: scale(1.25);
     }
 }
