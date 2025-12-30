@@ -1,6 +1,6 @@
 export class Navigation {
     constructor(options) {
-        this.options = this._merge({
+        this.options = this.#merge({
             selector: '.navigation-main',
             toggle: '.nav-burger',
             minWidth: 1024,
@@ -31,63 +31,25 @@ export class Navigation {
         this.active = [];
         this.listeners = new WeakMap();
 
-        this._init();
+        this.#init();
 
         for (const dropdown of this.dropdowns) {
-            this._addSubMenuButton(dropdown);
+            this.#addSubMenuButton(dropdown);
         }
 
         new ResizeObserver(() => {
-            const isDesktop = this._isDesktop();
+            const isDesktop = this.#isDesktop();
 
             for (const dropdown of this.dropdowns) {
-                isDesktop ? this._registerDropdownEvents(dropdown) : this._unregisterDropdownEvents(dropdown);
+                isDesktop ? this.#registerDropdownEvents(dropdown) : this.#unregisterDropdownEvents(dropdown);
             }
         }).observe(document.body);
     }
 
     /**
-     * Merges configuration options and replaces them if they exist
-     *
-     * @private
-     */
-    _merge(a, b) {
-        return [...new Set([...Object.keys(a), ...Object.keys(b)])].reduce((result, key) => ({
-            ...result,
-            [key]: "object" === typeof (a[key]) ? Object.assign({}, a[key], b[key]) : !b[key] ? a[key] : b[key],
-        }), {});
-    }
-
-    /**
-     * Placeholder button that is cloned for each submenu item
-     *
-     * @private
-     */
-    _createSubMenuButton() {
-        this.btn = document.createElement('button');
-        this.btn.classList.add(this.options.classes.submenuButton);
-        this.btn.ariaHasPopup = 'true';
-        this.btn.ariaExpanded = 'false';
-    }
-
-    /**
-     * Determines the focus trap targets
-     *
-     * @private
-     */
-    _initFocusTrapTargets() {
-        const nodes = [this.navigation.closest('#header')?.querySelector('a[href].logo'), ...this.navigation.querySelectorAll('a[href]:not([disabled]), button:not([disabled])')];
-
-        this.firstFocus = nodes[0] ?? this.toggle;
-        this.lastFocus = nodes[nodes.length - 1] ?? [];
-    }
-
-    /**
      * Handles the focus trap on the open mobile navigation
-     *
-     * @private
      */
-    _focusTrapEvent(event) {
+    focusTrapEvent(event) {
         if (!(event.key === 'Tab' || event.keyCode === 9)) {
             return;
         }
@@ -104,11 +66,39 @@ export class Navigation {
     }
 
     /**
-     * Toggles the menu state on mobile
-     *
-     * @private
+     * Merges configuration options and replaces them if they exist
      */
-    _toggleMenuState() {
+    #merge(a, b) {
+        return [...new Set([...Object.keys(a), ...Object.keys(b)])].reduce((result, key) => ({
+            ...result,
+            [key]: "object" === typeof (a[key]) ? Object.assign({}, a[key], b[key]) : !b[key] ? a[key] : b[key],
+        }), {});
+    }
+
+    /**
+     * Placeholder button that is cloned for each submenu item
+     */
+    #createSubMenuButton() {
+        this.btn = document.createElement('button');
+        this.btn.classList.add(this.options.classes.submenuButton);
+        this.btn.ariaHasPopup = 'true';
+        this.btn.ariaExpanded = 'false';
+    }
+
+    /**
+     * Determines the focus trap targets
+     */
+    #initFocusTrapTargets() {
+        const nodes = [this.navigation.closest('#header')?.querySelector('a[href].logo'), ...this.navigation.querySelectorAll('a[href]:not([disabled]), button:not([disabled])')];
+
+        this.firstFocus = nodes[0] ?? this.toggle;
+        this.lastFocus = nodes[nodes.length - 1] ?? [];
+    }
+
+    /**
+     * Toggles the menu state on mobile
+     */
+    #toggleMenuState() {
         this.toggle.ariaExpanded = this.state ? 'false' : 'true';
         this.toggle.classList.toggle(this.options.classes.active, !this.state);
         this.navigation.classList.toggle(this.options.classes.active, !this.state);
@@ -120,25 +110,21 @@ export class Navigation {
 
     /**
      * Adds and removes the focusTrap based on the mobile navigation state
-     *
-     * @private
      */
-    _focusMenu() {
+    #focusMenu() {
         if (this.state) {
-            document.addEventListener('keydown', this._focusTrapEvent, false);
+            document.addEventListener('keydown', this.focusTrapEvent, false);
         } else {
-            document.removeEventListener('keydown', this._focusTrapEvent, false);
+            document.removeEventListener('keydown', this.focusTrapEvent, false);
         }
     }
 
     /**
      * Initializes navigation items and sets aria-attributes if they do not exist
-     *
-     * @private
      */
-    _init() {
-        this._createSubMenuButton();
-        this._initMobileToggleEvents();
+    #init() {
+        this.#createSubMenuButton();
+        this.#initMobileToggleEvents();
 
         this.navigation.querySelectorAll('li').forEach(item => {
 
@@ -160,26 +146,22 @@ export class Navigation {
 
         // Hide the active navigation on escape
         document.addEventListener('keyup', (e) => {
-            this._isDesktop() && e.key === 'Escape' && this._hideDropdown();
+            this.#isDesktop() && e.key === 'Escape' && this.#hideDropdown();
         });
     }
 
     /**
      * Updates the aria labels and state for the dropdown buttons
-     *
-     * @private
      */
-    _updateAriaState(dropdown, show) {
+    #updateAriaState(dropdown, show) {
         dropdown.btn.ariaLabel = (show ? this.options.ariaLabels.collapse : this.options.ariaLabels.expand) + dropdown.btn.dataset.label;
         dropdown.btn.ariaExpanded = show ? 'true' : 'false';
     }
 
     /**
      * Collapses the dropdown
-     *
-     * @private
      */
-    _collapseSubmenu(dropdown) {
+    #collapseSubmenu(dropdown) {
         dropdown.classList.remove(this.options.classes.expand);
 
         dropdown.querySelector(':scope > ul')?.classList.remove(
@@ -187,28 +169,26 @@ export class Navigation {
             this.options.classes.boundsRight,
         );
 
-        this._updateAriaState(dropdown, false);
+        this.#updateAriaState(dropdown, false);
     }
 
     /**
      * Handles hiding dropdowns. Adding no parameter will close all
-     *
-     * @private
      */
-    _hideDropdown(dropdown = null) {
+    #hideDropdown(dropdown = null) {
         if (0 === this.active.length) {
             return;
         }
 
         // Case 1: Leaving the previous dropdown (e.g. focus left)
         if (this.active.includes(dropdown)) {
-            this._collapseSubmenu(dropdown);
+            this.#collapseSubmenu(dropdown);
             this.active = this.active.filter(node => node !== dropdown);
         }
 
         // Case 2: Not contained in the tree at all, remove everything
         else if (null === dropdown || this.active[0] !== dropdown && !this.active[0].contains(dropdown)) {
-            this.active.forEach(node => this._collapseSubmenu(node));
+            this.active.forEach(node => this.#collapseSubmenu(node));
             this.active = [];
         }
 
@@ -219,13 +199,13 @@ export class Navigation {
                     return true;
                 }
 
-                this._collapseSubmenu(node);
+                this.#collapseSubmenu(node);
                 return false;
             });
         }
     }
 
-    _setDropdownPosition(dropdown) {
+    #setDropdownPosition(dropdown) {
         const submenu = dropdown.querySelector(':scope > ul');
 
         if (null === submenu) {
@@ -241,19 +221,17 @@ export class Navigation {
 
     /**
      * Shows the dropdown
-     *
-     * @private
      */
-    _showDropdown(dropdown) {
-        this._hideDropdown(dropdown);
+    #showDropdown(dropdown) {
+        this.#hideDropdown(dropdown);
 
         dropdown.classList.add(this.options.classes.expand);
 
-        if (this._isDesktop()) {
-            this._setDropdownPosition(dropdown);
+        if (this.#isDesktop()) {
+            this.#setDropdownPosition(dropdown);
         }
 
-        this._updateAriaState(dropdown, true);
+        this.#updateAriaState(dropdown, true);
 
         if (!this.active.includes(dropdown)) {
             this.active.push(dropdown);
@@ -262,19 +240,15 @@ export class Navigation {
 
     /**
      * Updates the dropdown state
-     *
-     * @private
      */
-    _toggleDropdownState(dropdown, show) {
-        show ? this._showDropdown(dropdown) : this._hideDropdown(dropdown);
+    #toggleDropdownState(dropdown, show) {
+        show ? this.#showDropdown(dropdown) : this.#hideDropdown(dropdown);
     }
 
     /**
      * Adds a submenu button that toggles submenu navigations
-     *
-     * @private
      */
-    _addSubMenuButton(dropdown) {
+    #addSubMenuButton(dropdown) {
         const item = dropdown.firstElementChild,
               btn = this.btn.cloneNode();
 
@@ -285,7 +259,7 @@ export class Navigation {
 
         btn.addEventListener('click', () => {
             const show = btn.ariaExpanded === 'false' ?? true;
-            this._toggleDropdownState(dropdown, show);
+            this.#toggleDropdownState(dropdown, show);
         });
 
         item.after(btn);
@@ -293,65 +267,57 @@ export class Navigation {
 
     /**
      * Mouse enter event for dropdowns
-     *
-     * @private
      */
-    _mouseEnter(e, dropdown) {
-        this._toggleDropdownState(dropdown, true);
+    #mouseEnter(e, dropdown) {
+        this.#toggleDropdownState(dropdown, true);
     }
 
     /**
      * Mouse leave event for dropdowns
-     *
-     * @private
      */
-    _mouseLeave(e, dropdown) {
-        this._hideDropdown(dropdown);
+    #mouseLeave(e, dropdown) {
+        this.#hideDropdown(dropdown);
     }
 
     /**
      * Listener for the focusout event when an element loses it's focus, necessary for tab control
-     *
-     * @private
      */
-    _focusOut(e, dropdown) {
+    #focusOut(e, dropdown) {
         if (e.relatedTarget && this.active.length > 0 && !dropdown.contains(e.relatedTarget)) {
-            this._hideDropdown(dropdown);
+            this.#hideDropdown(dropdown);
         }
     }
 
-    _isDesktop() {
+    #isDesktop() {
         return window.innerWidth >= this.options.minWidth;
     }
 
-    _initMobileToggleEvents() {
-        this._initFocusTrapTargets();
-        this._focusTrapEvent = this._focusTrapEvent.bind(this);
+    #initMobileToggleEvents() {
+        this.#initFocusTrapTargets();
+        this.focusTrapEvent = this.focusTrapEvent.bind(this);
 
         this.toggle?.addEventListener('click', () => {
-            if (this._isDesktop()) {
+            if (this.#isDesktop()) {
                 return;
             }
 
-            this._toggleMenuState();
-            this._focusMenu();
+            this.#toggleMenuState();
+            this.#focusMenu();
         });
     }
 
     /**
      * Registers the mouse dropdown events
-     *
-     * @private
      */
-    _registerDropdownEvents(dropdown) {
+    #registerDropdownEvents(dropdown) {
         if (this.listeners.has(dropdown)) {
             return;
         }
 
         const events = {
-            mouseenter: (e) => this._mouseEnter(e, dropdown),
-            mouseleave: (e) => this._mouseLeave(e, dropdown),
-            focusout: (e) => this._focusOut(e, dropdown),
+            mouseenter: (e) => this.#mouseEnter(e, dropdown),
+            mouseleave: (e) => this.#mouseLeave(e, dropdown),
+            focusout: (e) => this.#focusOut(e, dropdown),
         }
 
         for(const [type, event] of Object.entries(events)) {
@@ -363,10 +329,8 @@ export class Navigation {
 
     /**
      * Removes the mouse dropdown events
-     *
-     * @private
      */
-    _unregisterDropdownEvents(dropdown) {
+    #unregisterDropdownEvents(dropdown) {
         const events = this.listeners.get(dropdown);
 
         if (!events) {
