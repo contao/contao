@@ -17,9 +17,14 @@ use Contao\CoreBundle\Security\Voter\AbstractBackendAccessVoter;
 
 class BackwardsCompatibilityBackendAccessVoter extends AbstractBackendAccessVoter
 {
-    protected function supports(string $attribute, mixed $subject): bool
+    public function supportsAttribute(string $attribute): bool
     {
         return str_starts_with($attribute, 'contao_user.newsletterp');
+    }
+
+    protected function supports(string $attribute, mixed $subject): bool
+    {
+        return $this->supportsAttribute($attribute);
     }
 
     /**

@@ -1088,6 +1088,8 @@ services:
 
     contao.security.backwards_compatibility_backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao.security.data_container.article_content_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter

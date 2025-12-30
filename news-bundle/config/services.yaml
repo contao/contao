@@ -120,6 +120,8 @@ services:
 
     contao_news.security.backwards_compatibility_backend_access_voter:
         class: Contao\NewsBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao_news.security.news_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsAccessVoter

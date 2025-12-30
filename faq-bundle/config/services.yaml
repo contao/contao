@@ -52,6 +52,8 @@ services:
 
     contao_faq.security.backwards_compatibility_backend_access_voter:
         class: Contao\FaqBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao_faq.security.faq_access_voter:
         class: Contao\FaqBundle\Security\Voter\FaqAccessVoter

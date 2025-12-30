@@ -16,9 +16,14 @@ use Contao\BackendUser;
 
 class BackwardsCompatibilityBackendAccessVoter extends AbstractBackendAccessVoter
 {
-    protected function supports(string $attribute, mixed $subject): bool
+    public function supportsAttribute(string $attribute): bool
     {
         return str_starts_with($attribute, 'contao_user.formp');
+    }
+
+    protected function supports(string $attribute, mixed $subject): bool
+    {
+        return $this->supportsAttribute($attribute);
     }
 
     /**

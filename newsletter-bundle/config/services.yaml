@@ -35,6 +35,8 @@ services:
 
     contao_newsletter.security.backwards_compatibility_backend_access_voter:
         class: Contao\NewsletterBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao_newsletter.security.newsletter_access_voter:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterAccessVoter
