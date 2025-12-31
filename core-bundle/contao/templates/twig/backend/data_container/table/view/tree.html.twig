@@ -51,7 +51,7 @@
 
 {% block no_records %}
     {% if breadcrumb %}
-        <div class="tl_listing_container">{{ breadcrumb }}</div>
+        <div class="tl_listing_container">{{ breadcrumb|raw }}</div>
     {% endif %}
 
     {{ parent() }}
