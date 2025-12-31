@@ -50,7 +50,7 @@
     color: var(--header-bg);
     background: var(--header-text);
     padding: 2px;
-    border-radius: 2px;
+    border-radius: var(--border-radius);
     text-indent: 0;
     font-weight: 400;
 }
@@ -70,14 +70,20 @@
     vertical-align: middle;
 }
 
-#tmenu .profile button {
-    position: relative;
-    cursor: pointer;
-    font-size: .875rem;
-    font-weight: 400;
-    border: none;
-    padding-right: 26px;
-    background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
+#tmenu {
+    :is(.profile, .color-scheme) {
+        button {
+            position: relative;
+            cursor: pointer;
+            font-size: .875rem;
+            border: none;
+        }
+    }
+
+    .profile button {
+        padding-right: 26px;
+        background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
+    }
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
@@ -109,30 +115,36 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity .3s ease, visibility .3s ease;
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
-#tmenu .active ul.menu_level_1 {
-    opacity: 1;
-    visibility: visible;
-}
+#tmenu ul.menu_level_1 li {
+    :is(a, button) {
+        display: block;
+        color: inherit;
+        padding: 6px 20px 6px 40px;
+        white-space: nowrap;
 
-#tmenu ul.menu_level_1 li a {
-    display: block;
-    color: inherit;
-    padding: 6px 20px 6px 40px;
-    white-space: nowrap;
-}
+        &:hover {
+            background-color: var(--nav-hover-bg);
+        }
+    }
 
-#tmenu ul.menu_level_1 li a:hover {
-    background-color: var(--nav-hover-bg);
+    button {
+        width: 100%;
+        text-align: left;
+        background-color: transparent;
+    }
 }
 
 #tmenu ul.menu_level_1 .info {
     color: var(--info);
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--border);
+    padding: 15px 20px 7px;
     line-height: 1.4;
-    margin-bottom: 9px;
     white-space: nowrap;
 }
 
@@ -166,19 +178,30 @@
     transform: rotateZ(-45deg);
 }
 
-#tmenu ul.menu_level_1 .logout {
-    margin-top: 9px;
-    padding: 6px 0;
-    border-top: 1px solid var(--border);
+#tmenu ul.menu_level_1 {
+    .separator {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+    }
+
+    .last {
+        padding-bottom: 8px;
+    }
 }
 
-#tmenu .icon-alert, #tmenu .icon-favorite, #tmenu .icon-manual, #tmenu .icon-color-scheme, #tmenu .icon-jobs {
-    width: 16px;
-    margin-bottom: -2px;
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-    text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+#tmenu {
+    .icon-alert,
+    .icon-favorite,
+    .icon-manual,
+    .icon-jobs {
+        width: 16px;
+        margin-bottom: -2px;
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+    }
 }
 
 #tmenu .icon-alert {
@@ -201,16 +224,16 @@
     background: var(--icon-jobs) center center no-repeat;
 }
 
-#tmenu .icon-color-scheme {
-    background: var(--icon-color-scheme) center center no-repeat;
-}
-
 #tmenu .icon-profile {
     background: var(--icon-profile) 20px center no-repeat;
 }
 
 #tmenu .icon-security {
     background: var(--icon-security) 20px center no-repeat;
+}
+
+#tmenu .icon-color-scheme {
+    background: var(--icon-color-scheme) 20px center no-repeat;
 }
 
 #tmenu .icon-favorites {

@@ -160,6 +160,9 @@ class PageRegular extends Frontend
 				}
 			}
 
+			$arrPreloadedModules = $this->preloadReaderModules($objPage, $request, $arrModules, $arrModuleMapper);
+			$arrPreloadedContentElements = $this->preloadReaderContentElements($objPage, $request, $arrModules, $arrModuleMapper);
+
 			foreach ($arrModules as $arrModule)
 			{
 				// Disabled module
@@ -205,7 +208,7 @@ class PageRegular extends Frontend
 						continue;
 					}
 
-					$this->Template->{$arrModule['col']} .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$this->Template->{$arrModule['col']} .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : $arrPreloadedModules[$arrModule['col']][$arrModule['mod']->id ?? $arrModule['mod']] ?? Controller::getFrontendModule($arrModule['mod'], $arrModule['col'], $arrPreloadedContentElements);
 				}
 				else
 				{
@@ -214,7 +217,7 @@ class PageRegular extends Frontend
 						$arrCustomSections[$arrModule['col']] = '';
 					}
 
-					$arrCustomSections[$arrModule['col']] .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$arrCustomSections[$arrModule['col']] .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : $arrPreloadedModules[$arrModule['col']][$arrModule['mod']->id ?? $arrModule['mod']] ?? Controller::getFrontendModule($arrModule['mod'], $arrModule['col'], $arrPreloadedContentElements);
 				}
 			}
 		}
@@ -278,6 +281,60 @@ class PageRegular extends Frontend
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);
 		$this->createHeaderScripts($objPage, $objLayout);
+	}
+
+	protected function preloadReaderModules($objPage, $request, $arrModules, $arrMapper): array
+	{
+		$arrPreloaded = array();
+
+		foreach ($arrModules as $arrModule)
+		{
+			$strClass = Module::findClass($arrMapper[$arrModule['mod']]->type ?? '');
+
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
+			{
+				continue;
+			}
+
+			$arrPreloaded[$arrModule['col']][$arrModule['mod']] = $this->getFrontendModule($arrMapper[$arrModule['mod']], $arrModule['col']);
+		}
+
+		return $arrPreloaded;
+	}
+
+	protected function preloadReaderContentElements($objPage, $request, $arrModules, $arrMapper): array
+	{
+		$arrPreloaded = array();
+		$arrArticleColumns = array();
+
+		foreach ($arrModules as $arrModule)
+		{
+			if ($arrModule['mod'] == 0)
+			{
+				$arrArticleColumns[] = $arrModule['col'];
+			}
+		}
+
+		if (empty($arrArticleColumns))
+		{
+			return $arrPreloaded;
+		}
+
+		$objResult = ContentModel::findModulesByArticleByPublishedPidAndColumns($objPage->id, $arrArticleColumns);
+
+		foreach ($objResult->fetchAllAssoc() as list('id' => $intId, 'type' => $strType, 'column' => $strColumn))
+		{
+			$strClass = Module::findClass($strType);
+
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($strType, $objPage, $request))
+			{
+				continue;
+			}
+
+			$arrPreloaded[$intId] = $this->getContentElement($intId, $strColumn);
+		}
+
+		return $arrPreloaded;
 	}
 
 	/**
@@ -414,7 +471,7 @@ class PageRegular extends Frontend
 		// Overwrite the viewport tag (see #6251)
 		if ($objLayout->viewport)
 		{
-			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '">' . "\n";
+			$this->Template->viewport = '<meta name="viewport" content="' . StringUtil::specialcharsAttribute($objLayout->viewport) . '">' . "\n";
 		}
 
 		$this->Template->mooScripts = '';

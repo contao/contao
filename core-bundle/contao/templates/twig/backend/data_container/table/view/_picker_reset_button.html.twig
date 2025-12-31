@@ -1,0 +1,11 @@
+{% trans_default_domain 'contao_default' %}
+
+{# Add an input to reset picker radio buttons #}
+{% if as_picker and picker.type == 'radio' %}
+    <div class="tl_radio_reset">
+        <label for="tl_radio_reset" class="tl_radio_label">
+            {{ 'MSC.resetSelected'|trans }}
+        </label>
+        <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
+    </div>
+{% endif %}

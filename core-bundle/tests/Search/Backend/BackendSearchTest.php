@@ -36,6 +36,7 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
 use Contao\CoreBundle\Search\Backend\Seal\SealUtil;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Tests\Fixtures\Search\DocumentProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -46,21 +47,15 @@ class BackendSearchTest extends TestCase
 {
     public function testIAvailable(): void
     {
-        $webWorker = $this->createMock(WebWorker::class);
-        $webWorker
-            ->method('hasCliWorkersRunning')
-            ->willReturn(true)
-        ;
-
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
-            $this->createMock(EngineInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(MessageBusInterface::class),
-            $this->createMock(Jobs::class),
-            $webWorker,
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(Security::class),
+            $this->createStub(EngineInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(MessageBusInterface::class),
+            $this->createStub(Jobs::class),
+            $this->createWebworkerWithCliRunning(),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $this->assertTrue($backendSearch->isAvailable());
@@ -74,7 +69,7 @@ class BackendSearchTest extends TestCase
             ->withJobId('foobar')
         ;
 
-        $reindexProvider = $this->createMock(SealReindexProvider::class);
+        $reindexProvider = $this->createStub(SealReindexProvider::class);
 
         $engine = $this->createMock(EngineInterface::class);
         $engine
@@ -121,13 +116,13 @@ class BackendSearchTest extends TestCase
         ;
 
         $backendSearch = new BackendSearch(
-            [$this->createMock(ProviderInterface::class)],
-            $this->createMock(Security::class),
+            [$this->createStub(ProviderInterface::class)],
+            $this->createStub(Security::class),
             $engine,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(MessageBusInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(MessageBusInterface::class),
             $jobs,
-            $this->createMock(WebWorker::class),
+            $this->createWebworkerWithCliRunning(),
             $reindexProvider,
         );
 
@@ -147,7 +142,7 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(static fn (ReindexMessage $message): bool => '2024-01-01T00:00:00+00:00' === $message->getReindexConfig()->getUpdateSince()->format(\DateTimeInterface::ATOM) && ['foo' => ['bar']] === $message->getReindexConfig()->getLimitedDocumentIds()->toArray()))
-            ->willReturn(new Envelope($this->createMock(ReindexMessage::class)))
+            ->willReturn(new Envelope($this->createStub(ReindexMessage::class)))
         ;
 
         $jobs = $this->createMock(Jobs::class);
@@ -160,13 +155,13 @@ class BackendSearchTest extends TestCase
 
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
-            $this->createMock(EngineInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(EngineInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
             $messageBus,
             $jobs,
-            $this->createMock(WebWorker::class),
-            $this->createMock(SealReindexProvider::class),
+            $this->createWebworkerWithCliRunning(),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $backendSearch->reindex($reindexConfig);
@@ -176,16 +171,30 @@ class BackendSearchTest extends TestCase
     {
         $indexName = 'contao_backend_search';
 
-        $provider = $this->createMock(ProviderInterface::class);
+        $provider = $this->createMock(DocumentProvider::class);
         $provider
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('supportsType')
             ->with('type')
             ->willReturn(true)
         ;
 
         $provider
+            ->expects($this->exactly(3))
+            ->method('convertTypeToVisibleType')
+            ->with('type')
+            ->willReturn('visible-type')
+        ;
+
+        $provider
             ->expects($this->once())
+            ->method('getFacetLabelForTag')
+            ->with('tag-1')
+            ->willReturn('tag-1-label')
+        ;
+
+        $provider
+            ->expects($this->exactly(2))
             ->method('convertDocumentToHit')
             ->with($this->callback(static fn (Document $document): bool => '42' === $document->getId()))
             ->willReturnCallback(static fn (Document $document): Hit => new Hit($document, 'human readable hit title', 'https://whatever.com'))
@@ -193,7 +202,7 @@ class BackendSearchTest extends TestCase
 
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('isGranted')
             ->with(
                 ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
@@ -209,13 +218,13 @@ class BackendSearchTest extends TestCase
             'id' => 'type_42',
             'type' => 'type',
             'searchableContent' => 'search me',
-            'tags' => [],
+            'tags' => ['tag-1'],
             'document' => '{"id":"42","type":"type","searchableContent":"search me","tags":[],"metadata":[]}',
         ]);
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('dispatch')
             ->with($this->callback(static fn (EnhanceHitEvent $event): bool => '42' === $event->getHit()->getDocument()->getId()))
         ;
@@ -225,15 +234,27 @@ class BackendSearchTest extends TestCase
             $security,
             $engine,
             $eventDispatcher,
-            $this->createMock(MessageBusInterface::class),
-            $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(MessageBusInterface::class),
+            $this->createStub(Jobs::class),
+            $this->createWebworkerWithCliRunning(),
+            $this->createStub(SealReindexProvider::class),
         );
-        $result = $backendSearch->search(new Query(20, 'search me'));
 
+        // Test search without "type" -> should return type facets
+        $result = $backendSearch->search(new Query(20, 'search me'));
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
         $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
+        $this->assertSame('type', $result->getTypeFacets()[0]->key);
+        $this->assertSame('visible-type', $result->getTypeFacets()[0]->label);
+        $this->assertCount(0, $result->getTagFacets());
+
+        // Test search with "type" -> should return tag facets
+        $result = $backendSearch->search(new Query(20, 'search me', 'type'));
+        $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
+        $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
+        $this->assertSame('tag-1', $result->getTagFacets()[0]->key);
+        $this->assertSame('tag-1-label', $result->getTagFacets()[0]->label);
+        $this->assertCount(0, $result->getTypeFacets());
 
         // Cleanup memory
         MemoryStorage::dropIndex(new Index($indexName, []));
@@ -245,7 +266,7 @@ class BackendSearchTest extends TestCase
 
         $provider = $this->createMock(ProviderInterface::class);
         $provider
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('supportsType')
             ->with('type')
             ->willReturn(true)
@@ -291,7 +312,7 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['type' => ['42']] === $message->getGroupedDocumentIds()->toArray()))
-            ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
+            ->willReturn(new Envelope($this->createStub(DeleteDocumentsMessage::class)))
         ;
 
         $backendSearch = new BackendSearch(
@@ -300,9 +321,9 @@ class BackendSearchTest extends TestCase
             $engine,
             $eventDispatcher,
             $messageBus,
-            $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(Jobs::class),
+            $this->createWebworkerWithCliRunning(),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $result = $backendSearch->search(new Query(20, 'search me'));
@@ -329,13 +350,13 @@ class BackendSearchTest extends TestCase
 
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
+            $this->createStub(Security::class),
             $engine,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(MessageBusInterface::class),
-            $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(MessageBusInterface::class),
+            $this->createStub(Jobs::class),
+            $this->createWebworkerWithCliRunning(),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $backendSearch->deleteDocuments($documentTypesAndIds, false);
@@ -353,20 +374,31 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(static fn (DeleteDocumentsMessage $message) => $documentTypesAndIds->toArray() === $message->getGroupedDocumentIds()->toArray()))
-            ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
+            ->willReturn(new Envelope($this->createStub(DeleteDocumentsMessage::class)))
         ;
 
         $backendSearch = new BackendSearch(
             [],
-            $this->createMock(Security::class),
-            $this->createMock(EngineInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(EngineInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
             $messageBus,
-            $this->createMock(Jobs::class),
-            $this->createMock(WebWorker::class),
-            $this->createMock(SealReindexProvider::class),
+            $this->createStub(Jobs::class),
+            $this->createWebworkerWithCliRunning(),
+            $this->createStub(SealReindexProvider::class),
         );
 
         $backendSearch->deleteDocuments($documentTypesAndIds);
+    }
+
+    private function createWebworkerWithCliRunning(): WebWorker
+    {
+        $webWorker = $this->createStub(WebWorker::class);
+        $webWorker
+            ->method('hasCliWorkersRunning')
+            ->willReturn(true)
+        ;
+
+        return $webWorker;
     }
 }

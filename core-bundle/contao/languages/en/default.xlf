@@ -110,6 +110,9 @@
       <trans-unit id="ERR.filetarget">
         <source>Cannot move %s to %s because the target exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+      </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
       </trans-unit>
@@ -1356,7 +1359,7 @@
         <source>Go back</source>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
+        <source>Go up one level</source>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
@@ -1403,6 +1406,9 @@
       <trans-unit id="MSC.search">
         <source>Search</source>
       </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+      </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
       </trans-unit>
@@ -1417,9 +1423,6 @@
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
-      </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
@@ -1666,6 +1669,9 @@
       </trans-unit>
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
+      </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
@@ -2108,6 +2114,12 @@
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
       </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+      </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
       </trans-unit>
@@ -2180,6 +2192,9 @@
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
       </trans-unit>
@@ -2195,8 +2210,17 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
       </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+      </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
+      </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -2285,6 +2309,15 @@
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
       </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
+      </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
       </trans-unit>
@@ -2317,6 +2350,15 @@
       </trans-unit>
       <trans-unit id="MSC.never_index">
         <source>Never index</source>
+      </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+      </trans-unit>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
+      </trans-unit>
+      <trans-unit id="MSC.enter_fullscreen">
+        <source>Enter fullscreen mode</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2432,6 +2474,12 @@
       <trans-unit id="DCA.collapseNodes.1">
         <source>Collapse all nodes</source>
       </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Filter</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Show the filters</source>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
       </trans-unit>
@@ -2473,6 +2521,12 @@
       </trans-unit>
       <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>

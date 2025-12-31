@@ -64,9 +64,7 @@ class GetDotEnvCommand extends Command
 
         if (!$key) {
             $output->write(json_encode($vars, JSON_THROW_ON_ERROR));
-        }
-
-        if (isset($vars[$key])) {
+        } elseif (isset($vars[$key])) {
             $output->write($vars[$key]);
         }
 

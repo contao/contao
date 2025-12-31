@@ -22,7 +22,7 @@ use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
-use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\Backend\CsvImportController;
 use Contao\Crawl;
 use Contao\FilesModel;
 use Contao\FileTree;
@@ -96,6 +96,7 @@ use Contao\RadioButton;
 use Contao\RadioTable;
 use Contao\RebuildBackendSearchIndex;
 use Contao\RootPageDependentSelect;
+use Contao\RowWizard;
 use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
@@ -123,8 +124,9 @@ $GLOBALS['BE_MOD'] = array
 		'article' => array
 		(
 			'tables'      => array('tl_article', 'tl_content'),
-			'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
-			'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
+			'ptables'     => array('tl_page'),
+			'table'       => array(CsvImportController::class, 'importTableWizardAction'),
+			'list'        => array(CsvImportController::class, 'importListWizardAction')
 		),
 		'files' => array
 		(
@@ -133,7 +135,7 @@ $GLOBALS['BE_MOD'] = array
 		'form' => array
 		(
 			'tables'      => array('tl_form', 'tl_form_field'),
-			'option'      => array(BackendCsvImportController::class, 'importOptionWizardAction')
+			'option'      => array(CsvImportController::class, 'importOptionWizardAction')
 		)
 	),
 
@@ -321,7 +323,8 @@ $GLOBALS['BE_FFL'] = array
 	'metaWizard'              => MetaWizard::class,
 	'sectionWizard'           => SectionWizard::class,
 	'serpPreview'             => SerpPreview::class,
-	'rootPageDependentSelect' => RootPageDependentSelect::class
+	'rootPageDependentSelect' => RootPageDependentSelect::class,
+	'rowWizard'               => RowWizard::class
 );
 
 // Front end form fields

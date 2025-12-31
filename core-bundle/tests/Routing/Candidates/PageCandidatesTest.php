@@ -22,6 +22,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 
 class PageCandidatesTest extends TestCase
@@ -468,7 +469,7 @@ class PageCandidatesTest extends TestCase
         $this->assertSame(['bar/baz', 'bar', 15], $candidates->getCandidates($request));
     }
 
-    private function mockRequest(string $pathInfo): Request&MockObject
+    private function mockRequest(string $pathInfo): Request&Stub
     {
         $request = $this->createMock(Request::class);
         $request
@@ -506,11 +507,11 @@ class PageCandidatesTest extends TestCase
     /**
      * @param QueryBuilder&MockObject $queryBuilder
      */
-    private function mockConnection(QueryBuilder|null $queryBuilder = null): Connection&MockObject
+    private function mockConnection(QueryBuilder|null $queryBuilder = null): Connection&Stub
     {
         $queryBuilder ??= $this->createMock(QueryBuilder::class);
 
-        $result = $this->createMock(Result::class);
+        $result = $this->createStub(Result::class);
         $result
             ->method('fetchFirstColumn')
             ->willReturn([15])
@@ -535,7 +536,7 @@ class PageCandidatesTest extends TestCase
             ->willReturn($result)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('createQueryBuilder')
             ->willReturn($queryBuilder)

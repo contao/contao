@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -23,7 +24,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
         );
     }
 
-    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate', validateArgumentCount: false)]
     public function testFailToDeleteUserTemplateBecauseItDoesNotExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -32,7 +33,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->method('delete')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -53,7 +54,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
         $this->assertSame('error.stream', $response->getContent());
     }
 
-    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate', validateArgumentCount: false)]
     public function testStreamConfirmDialogWhenDeletingUserTemplate(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -62,7 +63,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->method('delete')
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -86,7 +87,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
     #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
     public function testDeleteUserTemplate(string|null $themeSlug, string $path): void
     {
-        $loader = $this->mockContaoFilesystemLoader();
+        $loader = $this->createContaoFilesystemLoaderMock();
         $loader
             ->expects($this->once())
             ->method('warmUp')
@@ -100,7 +101,7 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->with($path)
         ;
 
-        $twig = $this->mockTwigEnvironment();
+        $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
             ->method('render')
@@ -111,7 +112,14 @@ class DeleteOperationTest extends AbstractOperationTestCase
             ->willReturn('delete_result.stream')
         ;
 
-        $operation = $this->getDeleteOperation($loader, $storage, $twig);
+        $cacheInvalidator = $this->createMock(CacheInvalidator::class);
+        $cacheInvalidator
+            ->expects($this->once())
+            ->method('invalidateCache')
+            ->with('content_element/existing_user_template', $themeSlug)
+        ;
+
+        $operation = $this->getDeleteOperation($loader, $storage, $twig, $cacheInvalidator);
 
         $response = $operation->execute(
             new Request(request: ['confirm_delete' => true]),
@@ -121,10 +129,10 @@ class DeleteOperationTest extends AbstractOperationTestCase
         $this->assertSame('delete_result.stream', $response->getContent());
     }
 
-    private function getDeleteOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): DeleteOperation
+    private function getDeleteOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, CacheInvalidator|null $cacheInvalidator = null): DeleteOperation
     {
         $operation = new DeleteOperation();
-        $operation->setContainer($this->getContainer($loader, $storage, $twig));
+        $operation->setContainer($this->getContainer($loader, $storage, $twig, null, $cacheInvalidator));
         $operation->setName('delete');
 
         return $operation;

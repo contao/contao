@@ -55,4 +55,22 @@ class UrlUtil
 
         return (string) $base->withPath($path)->withQuery($query)->withFragment($relative->getFragment());
     }
+
+    public static function getNormalizePathAndQuery(string $url): string
+    {
+        $uri = new Uri($url);
+
+        if ($qs = $uri->getQuery()) {
+            parse_str($qs, $pairs);
+            ksort($pairs);
+
+            unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+
+            if ([] !== $pairs) {
+                $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+            }
+        }
+
+        return $uri->getPath().$qs;
+    }
 }

@@ -122,6 +122,13 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 continue;
             }
 
+            if ('edit' === $k) {
+                $v['attributes'] = (new HtmlAttributes($v['attributes'] ?? null))->set(
+                    'onclick',
+                    "Backend.openModalIframe({title:'".str_replace("'", "\\'", \sprintf($v['label'][1] ?? '%s', $record['id']))."', url:this.href+'&popup=1&nb=1'});return false",
+                );
+            }
+
             $v = \is_array($v) ? $v : [$v];
 
             // Add the parent table to the href
@@ -225,7 +232,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 'onclick',
                 \sprintf(
                     "Backend.openModalIframe({title:'%s', url:'%s'});return false",
-                    StringUtil::specialchars($config['title']),
+                    $config['title'],
                     $href.(str_contains($href, '?') ? '&' : '?').'popup=1',
                 ),
             );
@@ -246,7 +253,9 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
+            'listAttributes' => $config['listAttributes'],
             'icon' => $config['icon'],
+            'iconAttributes' => $config['iconAttributes'],
             'href' => $href,
             'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,

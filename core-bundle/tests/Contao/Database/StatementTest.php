@@ -33,7 +33,7 @@ class StatementTest extends TestCase
     #[DataProvider('getDeprecatedSetQueries')]
     public function testSetThrowsException(string $query): void
     {
-        $statement = new Statement($this->createMock(Connection::class));
+        $statement = new Statement($this->createStub(Connection::class));
 
         if ($query) {
             $statement->prepare($query);
@@ -59,7 +59,7 @@ class StatementTest extends TestCase
     #[DataProvider('getQueriesWithParametersAndSets')]
     public function testReplacesParametersAndSets(string $query, string $expected, array|null $params = null, array|null $set = null): void
     {
-        $doctrineResult = $this->createMock(Result::class);
+        $doctrineResult = $this->createStub(Result::class);
         $doctrineResult
             ->method('columnCount')
             ->willReturn(1)
@@ -111,7 +111,7 @@ class StatementTest extends TestCase
 
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn($this->createMock(AbstractPlatform::class))
+            ->willReturn($this->createStub(AbstractPlatform::class))
         ;
 
         $container = new Container();

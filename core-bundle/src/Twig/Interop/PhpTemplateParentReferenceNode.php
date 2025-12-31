@@ -19,7 +19,7 @@ use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
 
 /**
- * @experimental
+ * @internal
  */
 #[YieldReady]
 final class PhpTemplateParentReferenceNode extends Node implements NodeOutputInterface
@@ -28,8 +28,7 @@ final class PhpTemplateParentReferenceNode extends Node implements NodeOutputInt
     {
         /** @see PhpTemplateParentReferenceNodeTest::testCompilesParentReferenceCode() */
         $compiler
-            ->write(class_exists(YieldReady::class) ? 'yield' : 'echo') // Backwards compatibility
-            ->write(' sprintf(\'[[TL_PARENT_%s]]\', \\')
+            ->write('yield sprintf(\'[[TL_PARENT_%s]]\', \\')
             ->raw(ContaoFramework::class)
             ->raw('::getNonce());'."\n")
         ;

@@ -19,26 +19,20 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class TableAccessVoterTest extends TestCase
 {
-    private TableAccessVoter $voter;
-
-    private AccessDecisionManagerInterface&MockObject $accessDecisionManager;
-
-    private TokenInterface&MockObject $token;
+    private TokenInterface&Stub $token;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-        $this->voter = new TableAccessVoter($this->accessDecisionManager);
-        $this->token = $this->createMock(TokenInterface::class);
+        $this->token = $this->createStub(TokenInterface::class);
 
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
@@ -52,29 +46,35 @@ class TableAccessVoterTest extends TestCase
 
     public function testSupportsDCAttribute(): void
     {
-        $this->assertTrue($this->voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX));
-        $this->assertFalse($this->voter->supportsAttribute('foobar'));
+        $voter = new TableAccessVoter($this->createStub(AccessDecisionManagerInterface::class));
+
+        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX));
+        $this->assertFalse($voter->supportsAttribute('foobar'));
     }
 
     public function testSupportsCRUDActionSubject(): void
     {
-        $this->assertTrue($this->voter->supportsType(CreateAction::class));
-        $this->assertTrue($this->voter->supportsType(UpdateAction::class));
-        $this->assertTrue($this->voter->supportsType(ReadAction::class));
-        $this->assertTrue($this->voter->supportsType(DeleteAction::class));
-        $this->assertFalse($this->voter->supportsType('foobar'));
+        $voter = new TableAccessVoter($this->createStub(AccessDecisionManagerInterface::class));
+
+        $this->assertTrue($voter->supportsType(CreateAction::class));
+        $this->assertTrue($voter->supportsType(UpdateAction::class));
+        $this->assertTrue($voter->supportsType(ReadAction::class));
+        $this->assertTrue($voter->supportsType(DeleteAction::class));
+        $this->assertFalse($voter->supportsType('foobar'));
     }
 
     public function testAbstainsOnUnsupportedAttribute(): void
     {
+        $voter = new TableAccessVoter($this->createStub(AccessDecisionManagerInterface::class));
+
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('foobar'), ['foobar']),
+            $voter->vote($this->token, new CreateAction('foobar'), ['foobar']),
         );
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new UpdateAction('foobar', []), ['foobar']),
+            $voter->vote($this->token, new UpdateAction('foobar', []), ['foobar']),
         );
     }
 
@@ -82,16 +82,19 @@ class TableAccessVoterTest extends TestCase
     {
         $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
 
-        $this->accessDecisionManager
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->once())
             ->method('decide')
             ->with($this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')
             ->willReturn(false)
         ;
 
+        $voter = new TableAccessVoter($accessDecisionManager);
+
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+            $voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -111,7 +114,8 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->accessDecisionManager
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(2))
             ->method('decide')
             ->willReturnMap([
@@ -120,9 +124,49 @@ class TableAccessVoterTest extends TestCase
             ])
         ;
 
+        $voter = new TableAccessVoter($accessDecisionManager);
+
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+            $voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
+    public function testAllowsReadAccessIfTableIsInPtables(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['ptables'] = ['tl_foobar'];
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
+            ->expects($this->once())
+            ->method('decide')
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')
+            ->willReturn(true)
+        ;
+
+        $voter = new TableAccessVoter($accessDecisionManager);
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $voter->vote($this->token, new ReadAction('tl_foobar', ['id' => 42]), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
+    public function testDeniesAccessIfTableIsOnlyInPtables(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['ptables'] = ['tl_foobar'];
+
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
+            ->expects($this->never())
+            ->method('decide')
+        ;
+
+        $voter = new TableAccessVoter($accessDecisionManager);
+
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -137,7 +181,8 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->accessDecisionManager
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(2))
             ->method('decide')
             ->willReturnMap([
@@ -146,9 +191,11 @@ class TableAccessVoterTest extends TestCase
             ])
         ;
 
+        $voter = new TableAccessVoter($accessDecisionManager);
+
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+            $voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -162,7 +209,8 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->accessDecisionManager
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(2))
             ->method('decide')
             ->willReturnMap([
@@ -171,9 +219,11 @@ class TableAccessVoterTest extends TestCase
             ])
         ;
 
+        $voter = new TableAccessVoter($accessDecisionManager);
+
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+            $voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -192,16 +242,19 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->accessDecisionManager
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->once())
             ->method('decide')
             ->with($this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')
             ->willReturn(true)
         ;
 
+        $voter = new TableAccessVoter($accessDecisionManager);
+
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+            $voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -220,7 +273,8 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->accessDecisionManager
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(2))
             ->method('decide')
             ->willReturnMap([
@@ -229,9 +283,11 @@ class TableAccessVoterTest extends TestCase
             ])
         ;
 
+        $voter = new TableAccessVoter($accessDecisionManager);
+
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
-            $this->voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+            $voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
@@ -249,7 +305,8 @@ class TableAccessVoterTest extends TestCase
             ],
         ];
 
-        $this->accessDecisionManager
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager
             ->expects($this->exactly(2))
             ->method('decide')
             ->willReturnMap([
@@ -258,9 +315,11 @@ class TableAccessVoterTest extends TestCase
             ])
         ;
 
+        $voter = new TableAccessVoter($accessDecisionManager);
+
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
-            $this->voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+            $voter->vote($this->token, new UpdateAction('tl_foobar', []), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 }

@@ -29,14 +29,14 @@ class PickerTest extends TestCase
     {
         parent::setUp();
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Page picker')
         ;
 
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
         $config = new PickerConfig('page', [], 5, 'pagePicker');
 
@@ -75,8 +75,8 @@ class PickerTest extends TestCase
     public function testReturnsNullIfThereIsNoCurrentProvider(): void
     {
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createStub(RouterInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
@@ -92,8 +92,8 @@ class PickerTest extends TestCase
     public function testReturnsNullAsCurrentUrlIfThereIsNoCurrentMenuItem(): void
     {
         $factory = new MenuFactory();
-        $router = $this->createMock(RouterInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $router = $this->createStub(RouterInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
@@ -115,7 +115,7 @@ class PickerTest extends TestCase
 
     private function getSecurityHelper(): Security
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->willReturn(true)

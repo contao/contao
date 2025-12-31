@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Doctrine\DBAL\Types\BinaryType;
@@ -613,6 +614,7 @@ class Versions extends Controller
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());
@@ -678,13 +680,14 @@ class Versions extends Controller
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
 								->execute(...$params);
 
-		$intLast   = ceil($objTotal->count / 15);
-		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
-		$intOffset = ($intPage - 1) * 15;
+		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
+			(new PaginationConfig('vp', $objTotal->count, 15))->withIgnoreOutOfBounds()
+		);
+
+		$intOffset = $pagination->getOffset();
 
 		// Create the pagination menu
-		$objPagination = new Pagination($objTotal->count, 15, 7, 'vp', new BackendTemplate('be_pagination'));
-		$objTemplate->pagination = $objPagination->generate();
+		$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 
 		// Get the versions
 		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
@@ -803,7 +806,7 @@ class Versions extends Controller
 
 		parse_str($request->server->get('QUERY_STRING'), $pairs);
 
-		unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
+		unset($pairs['rt'], $pairs['revise']);
 
 		// Adjust the URL of the "personal data" module (see #7987)
 		if (isset($pairs['do']) && $pairs['do'] == 'login')

@@ -152,7 +152,7 @@ class FragmentHandlerTest extends TestCase
         $pageFinder
             ->expects($this->once())
             ->method('getCurrentPage')
-            ->willReturn($this->mockClassWithProperties(PageModel::class, ['id' => 42]))
+            ->willReturn($this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]))
         ;
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, pageFinder: $pageFinder);
@@ -252,11 +252,10 @@ class FragmentHandlerTest extends TestCase
         $renderers ??= new ServiceLocator([]);
         $preHandlers ??= new ServiceLocator([]);
         $request ??= new Request();
-        $fragmentHandler ??= $this->createMock(BaseFragmentHandler::class);
-        $pageFinder ??= $this->createMock(PageFinder::class);
+        $fragmentHandler ??= $this->createStub(BaseFragmentHandler::class);
+        $pageFinder ??= $this->createStub(PageFinder::class);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, $pageFinder, true);
     }

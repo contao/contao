@@ -96,7 +96,7 @@ class ModuleNewsletterList extends Module
 				$arrNewsletter[] = array
 				(
 					'subject' => $objNewsletter->subject,
-					'title' => StringUtil::stripInsertTags($objNewsletter->subject),
+					'title' => StringUtil::specialcharsAttribute(StringUtil::stripInsertTags($objNewsletter->subject)),
 					'href' => $strUrl,
 					'date' => Date::parse($objPage->dateFormat, $objNewsletter->date),
 					'datim' => Date::parse($objPage->datimFormat, $objNewsletter->date),

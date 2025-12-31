@@ -1,0 +1,13 @@
+{
+    "require": {
+        "vincentlanglet/twig-cs-fixer": "^3.11"
+    },
+    "require-dev": {
+        "symfony/twig-bridge": "^7.4"
+    },
+    "config": {
+        "platform": {
+            "php": "8.3"
+        }
+    }
+}

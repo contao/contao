@@ -22,12 +22,12 @@ use Twig\Error\RuntimeError;
  *
  * This strategy will get dropped once we move to output encoding.
  *
- * @experimental
+ * @internal
  */
 final class ContaoEscaper
 {
     /**
-     * This implementation is a clone of Twig's html escape strategy but calls
+     * This implementation is a clone of Twig's HTML escape strategy but calls
      * htmlspecialchars with the double_encode parameter set to false.
      *
      * @see twig_escape_filter
@@ -44,8 +44,8 @@ final class ContaoEscaper
     }
 
     /**
-     * This implementation is a clone of Twig's html_attr escape strategy but decodes
-     * entities beforehand.
+     * This implementation is a clone of Twig's "html_attr" escape strategy but
+     * decodes entities beforehand.
      *
      * @see twig_escape_filter
      */

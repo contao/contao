@@ -16,11 +16,13 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\ParsedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
+use Contao\CoreBundle\InsertTag\Resolver\InsertTagResolverNestedResolvedInterface;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -41,12 +43,11 @@ class InsertTagParserTest extends TestCase
     {
         parent::setUp();
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
         $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
@@ -156,8 +157,8 @@ class InsertTagParserTest extends TestCase
 
     public function testReplaceFragment(): void
     {
-        $handler = $this->createMock(FragmentHandler::class);
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $handler);
+        $handler = $this->createStub(FragmentHandler::class);
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $handler);
 
         $handler
             ->method('render')
@@ -176,7 +177,7 @@ class InsertTagParserTest extends TestCase
 
         System::getContainer()->set('fragment.handler', $handler);
 
-        $parser->addSubscription(new InsertTagSubscription(new FragmentInsertTag($this->createMock(RequestStack::class), $handler, $this->createMock(PageFinder::class)), '__invoke', 'fragment', null, false, false));
+        $parser->addSubscription(new InsertTagSubscription(new FragmentInsertTag($this->createStub(RequestStack::class), $handler, $this->createStub(PageFinder::class)), '__invoke', 'fragment', null, false, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
 
         $this->assertSame('<esi:include src="%7B%7Bbr%7D%7D" />', $parser->replace('{{fragment::{{br}}}}'));
@@ -342,9 +343,9 @@ class InsertTagParserTest extends TestCase
 
     public function testBlockSubscriptionEndTagExists(): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'foo', null, true, false));
-        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'foo_start', 'foo_end', true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createStub(TranslatorInterface::class)), '__invoke', 'foo_start', 'foo_end', true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
 
         $this->assertTrue($parser->hasInsertTag('foo'));
@@ -352,18 +353,72 @@ class InsertTagParserTest extends TestCase
         $this->assertTrue($parser->hasInsertTag('foo_end'));
         $this->assertFalse($parser->hasInsertTag('bar'));
 
-        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'foo_start', 'foo_end_different', true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createStub(TranslatorInterface::class)), '__invoke', 'foo_start', 'foo_end_different', true, false));
 
         $this->assertTrue($parser->hasInsertTag('foo_start'));
         $this->assertFalse($parser->hasInsertTag('foo_end'));
         $this->assertTrue($parser->hasInsertTag('foo_end_different'));
     }
 
+    public function testInfiniteRecursion(): void
+    {
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
+        $parser->addSubscription(
+            new InsertTagSubscription(
+                new class($parser) implements InsertTagResolverNestedResolvedInterface {
+                    public function __construct(private readonly InsertTagParser $parser)
+                    {
+                    }
+
+                    public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
+                    {
+                        return new InsertTagResult($this->parser->replaceInline($insertTag->serialize()));
+                    }
+                },
+                '__invoke',
+                'recursion',
+                null,
+                true,
+                false,
+            ),
+        );
+
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
+        $parser->replaceInline('{{recursion}}');
+    }
+
+    public function testInfiniteRecursionParameter(): void
+    {
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
+        $parser->addSubscription(
+            new InsertTagSubscription(
+                new class($parser) implements InsertTagResolverNestedResolvedInterface {
+                    public function __construct(private readonly InsertTagParser $parser)
+                    {
+                    }
+
+                    public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
+                    {
+                        return new InsertTagResult($this->parser->replaceInline($insertTag->serialize()));
+                    }
+                },
+                '__invoke',
+                'recursion',
+                null,
+                true,
+                false,
+            ),
+        );
+
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
+        $parser->replaceInline('{{recursion::{{recursion}}}}');
+    }
+
     private function getInsertTagParser(): InsertTagParser
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
-        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createStub(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
 
         return $parser;

@@ -1,8 +1,9 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set table_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
     .set('data-controller', 'contao--row-wizard')
+    .set('data-contao--row-wizard-name-value', id)
     .addClass('tl_key_value_wizard')
 %}
 <table{{ table_attributes }}>
@@ -24,7 +25,7 @@
                         .set('data-action', 'keydown->contao--sortable#move')
                         .addClass('drag-handle')
                     %}
-                    <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                    <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
                 </td>
                 <td>
                     {% set key_attributes = attrs()

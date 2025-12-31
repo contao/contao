@@ -1,0 +1,44 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set wrapper_attributes = attrs()
+    .set('data-controller', 'contao--jump-targets', add_jump_targets|default(true))
+%}
+<div{{ wrapper_attributes }}>
+    {% if add_jump_targets|default(true) %}
+        <div class="jump-targets">
+            <div class="inner" data-contao--jump-targets-target="navigation"></div>
+        </div>
+    {% endif %}
+
+    {% block header %}
+        {{ message|default|raw }}
+
+        {% if error|default %}
+            <p class="tl_error">{{ 'ERR.submit'|trans }}</p>
+        {% endif %}
+
+        {{ global_operations|default|raw }}
+    {% endblock %}
+
+    {% set form_attributes = attrs()
+        .set('id', table)
+        .addClass('tl_form tl_edit_form')
+        .set('method', 'post')
+        .set('enctype', 'multipart/form-data', is_upload_form)
+        .set('onsubmit', form_onsubmit|default([])|join(' '), form_onsubmit|default)
+        .mergeWith(form_attributes|default)
+    %}
+    <form{{ form_attributes }}>
+        {% set form_body_attributes = attrs()
+            .addClass('tl_formbody_edit')
+            .mergeWith(form_body_attributes|default)
+        %}
+        <div{{ form_body_attributes }}>
+            {% block form_body %}{% endblock %}
+        </div>
+
+        {% block form_buttons %}
+            {{ form_buttons|default|raw }}
+        {% endblock %}
+    </form>
+</div>

@@ -6,7 +6,7 @@
 
 @media (width >= 992px) {
     .backend-search_message,
-    .backend-search_results {
+    .backend-search_results-grid {
         display: none;
     }
 
@@ -22,16 +22,23 @@
     .search--initial .search-message--placeholder,
     .search--loading .search-message--loading,
     .search--invalid .search-message--invalid,
-    .search--results .backend-search_results,
     .search--error .search-message--error {
-        display: initial;
+        display: block;
+    }
+
+    .backend-search_message {
+        padding: 12px 0;
+    }
+
+    .search--results .backend-search_results-grid {
+        display: grid;
     }
 
     .backend-search {
         display: flex;
         align-items: center;
         flex: 1;
-        margin-left: 220px;
+        margin-left: 236px;
 
         label {
             position: relative;
@@ -53,10 +60,7 @@
         left: 0;
         height: 0;
         width: 0;
-        transition:
-            width 0ms 0.25s,
-            height 0ms 0.25s,
-            opacity 0.25s;
+        transition: width 0ms 0.25s, height 0ms 0.25s, opacity 0.25s;
         opacity: 0;
         z-index: 5;
         pointer-events: none;
@@ -65,9 +69,7 @@
     .backend-search_inner {
         position: absolute;
         width: max(30%, 280px);
-        transition:
-            width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1),
-            max-width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1);
+        transition: width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1), max-width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1);
     }
 
     #backend-search {
@@ -97,11 +99,11 @@
         width: 100%;
         background-color: var(--content-bg);
         border-top: 1px solid var(--border);
-        padding: 12px 10px 12px 16px;
+        padding: 0 10px 0 16px;
         opacity: 0;
         pointer-events: none;
         margin-top: -1px;
-        border-radius: 0 0 2px 2px;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
         max-height: 75vh;
         overflow-y: auto;
         scrollbar-width: thin;
@@ -111,15 +113,12 @@
         .backend-search_overlay {
             height: 200vh;
             opacity: 1;
-            transition:
-                width 0ms,
-                height 0ms,
-                opacity 0.25s;
+            transition: width 0ms, height 0ms, opacity 0.25s;
             width: 100%;
         }
 
         .backend-search_inner {
-            width: min(calc(100% - 235px), 1400px);
+            width: min(calc(100% - 251px), 1400px);
             z-index: 5;
         }
 
@@ -131,6 +130,21 @@
 
         #backend-search {
             background-color: var(--content-bg);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
         }
+    }
+
+    /* In case of the server not delivering results anymore */
+    .backend-search_results {
+        .search-message--empty {
+            display: block;
+            padding: 10px;
+        }
+    }
+
+    .backend-search_results-grid:not(:has(#backend-search--facet-types:empty)) {
+        grid-template-columns: 180px 1fr;
+        gap: 16px;
     }
 }
