@@ -119,7 +119,7 @@ class Jobs
         $qb->andWhere('j.status IN (:status_running) OR (j.status = :status_completed AND tstamp >= :window_start)');
         $qb->setParameter('status_running', [Status::new->value, Status::pending->value], ArrayParameterType::STRING);
         $qb->setParameter('status_completed', Status::completed->value);
-        $qb->setParameter('window_start', time() - $window);
+        $qb->setParameter('window_start', $this->clock->now()->getTimestamp() - $window);
 
         return $this->queryWithQueryBuilder($qb);
     }
@@ -201,7 +201,7 @@ class Jobs
                     'type' => StringUtil::specialchars($job->getType()),
                     'status' => $job->getStatus()->value, // No encoding needed, enum
                     'owner' => $job->getOwner()->getId(), // No encoding needed, integer
-                    'tstamp' => time(), // No encoding needed, integer
+                    'tstamp' => $this->clock->now()->getTimestamp(), // No encoding needed, integer
                     'createdAt' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
                     'public' => $job->isPublic(), // No encoding needed, boolean
                 ],
@@ -219,7 +219,7 @@ class Jobs
 
         // Update job data
         $row = [];
-        $row['tstamp'] = time(); // No encoding needed, integer
+        $row['tstamp'] = $this->clock->now()->getTimestamp(); // No encoding needed, integer
         $row['pid'] = 0; // No encoding needed, integer
         $row['status'] = $job->getStatus()->value; // No encoding needed, enum
 
