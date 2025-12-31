@@ -2111,8 +2111,14 @@
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
       </trans-unit>
-      <trans-unit id="MSC.trail">
+      <trans-unit id="MSC.trail.0">
         <source>⋯</source>
+      </trans-unit>
+      <trans-unit id="MSC.trail.1">
+        <source>Show more breadcrumb items</source>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>

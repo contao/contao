@@ -53,7 +53,7 @@ readonly class BackendBreadcrumbListener
 
                 if ([] !== $treeTrail) {
                     $ancestorTrail = $factory->createItem('ancestor_trail')
-                        ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.trail', [], 'contao_default').'</button>')
+                        ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="'.$this->translator->trans('MSC.trail.1', [], 'contao_default').'">'.$this->translator->trans('MSC.trail.0', [], 'contao_default').'</button>')
                         ->setAttribute('data-controller', 'contao--toggle-state')
                         ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
                         ->setAttribute('data-contao--toggle-state-active-class', 'active')
@@ -91,7 +91,7 @@ readonly class BackendBreadcrumbListener
                 $current->setUri($url);
             } elseif (\count($treeSiblings) > 1) {
                 $current
-                    ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$label.'</button>')
+                    ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="'.$this->translator->trans('MSC.siblings', [], 'contao_default').'">'.$label.'</button>')
                     ->setAttribute('data-controller', 'contao--toggle-state')
                     ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
                     ->setAttribute('data-contao--toggle-state-active-class', 'active')
