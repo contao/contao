@@ -52,8 +52,14 @@ readonly class BackendBreadcrumbListener
                 $nearestAncestor = array_pop($treeTrail);
 
                 if ([] !== $treeTrail) {
-                    $ancestorTrail = $factory->createItem('ancestor_trail');
-                    $ancestorTrail->setLabel($this->translator->trans('MSC.trail', [], 'contao_default'));
+                    $ancestorTrail = $factory->createItem('ancestor_trail')
+                        ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.trail', [], 'contao_default').'</button>')
+                        ->setAttribute('data-controller', 'contao--toggle-state')
+                        ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+                        ->setAttribute('data-contao--toggle-state-active-class', 'active')
+                        ->setExtra('safe_label', true)
+                        ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
+                    ;
 
                     foreach ($treeTrail as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
                         $ancestorTrail->addChild('ancestor_trail_'.$trail, [
@@ -84,6 +90,15 @@ readonly class BackendBreadcrumbListener
             if (null === $treeSiblings) {
                 $current->setUri($url);
             } elseif (\count($treeSiblings) > 1) {
+                $current
+                    ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$label.'</button>')
+                    ->setAttribute('data-controller', 'contao--toggle-state')
+                    ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+                    ->setAttribute('data-contao--toggle-state-active-class', 'active')
+                    ->setExtra('safe_label', true)
+                    ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
+                ;
+
                 foreach ($treeSiblings as $i => ['url' => $sibling_url, 'label' => $sibling_label, 'active' => $sibling_active]) {
                     $sibling = [
                         'label' => $sibling_label,
