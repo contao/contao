@@ -1,0 +1,54 @@
+{% trans_default_domain 'contao_default' %}
+
+{% extends '@KnpMenu/menu.html.twig' %}
+
+{% block item %}
+    {% if item.extra('render_dropdown') %}
+        {% set item = item.setAttributes({
+            'data-controller': 'contao--toggle-state',
+            'data-action': 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close',
+            'data-contao--toggle-state-active-class': 'active',
+        }) %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{% block spanElement %}
+    {% if item.extra('render_dropdown') %}
+        <button
+            type="button"
+            data-contao--toggle-state-target="controller"
+            data-action="contao--toggle-state#toggle:prevent"
+            title="{{ 'MSC.trail.1'|trans }}"
+        >
+            {{ 'MSC.trail.0'|trans }}
+        </button>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block linkElement %}
+    {% if item.extra('render_dropdown') %}
+        <button
+            type="button"
+            data-contao--toggle-state-target="controller"
+            data-action="contao--toggle-state#toggle:prevent"
+            title="{{ 'MSC.siblings'|trans }}"
+        >
+            {{ block('label') }}
+        </button>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block list %}
+    {% if item.extra('render_dropdown') %}
+        <ul data-contao--toggle-state-target="controls">
+            {{ block('children') }}
+        </ul>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

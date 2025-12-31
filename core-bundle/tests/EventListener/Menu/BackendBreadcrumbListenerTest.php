@@ -19,7 +19,6 @@ use Contao\CoreBundle\EventListener\Menu\BackendBreadcrumbListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendBreadcrumbListenerTest extends TestCase
 {
@@ -47,7 +46,6 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener = new BackendBreadcrumbListener(
             $security,
             $dcaUrlAnalyzer,
-            $this->getTranslator(),
         );
         $listener($event);
 
@@ -71,10 +69,9 @@ class BackendBreadcrumbListenerTest extends TestCase
 
         $this->assertSame('Homepage', $children['ancestor_1']->getLabel());
         $this->assertSame('/contao?do=article&table=tl_article&pn=2', $children['ancestor_1']->getUri());
-        $this->assertSame(['translation_domain' => false], $children['ancestor_1']->getExtras());
 
-        $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="MSC.siblings">Content One</button>', $children['current_1']->getLabel());
-        $this->assertSame(['translation_domain' => false, 'safe_label' => true], $children['current_1']->getExtras());
+        $this->assertSame('Content One', $children['current_1']->getLabel());
+        $this->assertSame(['render_dropdown' => true], $children['current_1']->getExtras());
 
         $siblings = $children['current_1']->getChildren();
 
@@ -99,7 +96,6 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener = new BackendBreadcrumbListener(
             $security,
             $this->createStub(DcaUrlAnalyzer::class),
-            $this->getTranslator(),
         );
         $listener($event);
 
@@ -125,7 +121,6 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener = new BackendBreadcrumbListener(
             $security,
             $this->createStub(DcaUrlAnalyzer::class),
-            $this->getTranslator(),
         );
         $listener($event);
 
@@ -180,16 +175,5 @@ class BackendBreadcrumbListenerTest extends TestCase
                 ],
             ],
         ];
-    }
-
-    private function getTranslator(): TranslatorInterface
-    {
-        $translator = $this->createStub(TranslatorInterface::class);
-        $translator
-            ->method('trans')
-            ->willReturnCallback(static fn (string $id): string => $id)
-        ;
-
-        return $translator;
     }
 }

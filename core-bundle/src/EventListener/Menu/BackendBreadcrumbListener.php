@@ -17,7 +17,6 @@ use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\MenuEvent;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -28,7 +27,6 @@ readonly class BackendBreadcrumbListener
     public function __construct(
         private Security $security,
         private DcaUrlAnalyzer $dcaUrlAnalyzer,
-        private TranslatorInterface $translator,
     ) {
     }
 
@@ -52,14 +50,7 @@ readonly class BackendBreadcrumbListener
                 $nearestAncestor = array_pop($treeTrail);
 
                 if ([] !== $treeTrail) {
-                    $ancestorTrail = $factory->createItem('ancestor_trail')
-                        ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="'.$this->translator->trans('MSC.trail.1', [], 'contao_default').'">'.$this->translator->trans('MSC.trail.0', [], 'contao_default').'</button>')
-                        ->setAttribute('data-controller', 'contao--toggle-state')
-                        ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-                        ->setAttribute('data-contao--toggle-state-active-class', 'active')
-                        ->setExtra('safe_label', true)
-                        ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
-                    ;
+                    $ancestorTrail = $factory->createItem('ancestor_trail')->setExtra('render_dropdown', true);
 
                     foreach ($treeTrail as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
                         $ancestorTrail->addChild('ancestor_trail_'.$trail, [
@@ -75,41 +66,26 @@ readonly class BackendBreadcrumbListener
                     ->createItem('ancestor_'.$level)
                     ->setLabel($nearestAncestor['label'])
                     ->setUri($nearestAncestor['url'])
-                    ->setExtra('translation_domain', false)
                 ;
 
                 $tree->addChild($ancestor);
             }
 
+            $hasSiblings = \is_array($treeSiblings) && \count($treeSiblings) > 1;
+
             $current = $factory
                 ->createItem('current_'.$level)
                 ->setLabel($label)
-                ->setExtra('translation_domain', false)
+                ->setUri($hasSiblings ? $url : null)
+                ->setExtra('render_dropdown', $hasSiblings)
             ;
 
-            if (null === $treeSiblings) {
-                $current->setUri($url);
-            } elseif (\count($treeSiblings) > 1) {
-                $current
-                    ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="'.$this->translator->trans('MSC.siblings', [], 'contao_default').'">'.$label.'</button>')
-                    ->setAttribute('data-controller', 'contao--toggle-state')
-                    ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-                    ->setAttribute('data-contao--toggle-state-active-class', 'active')
-                    ->setExtra('safe_label', true)
-                    ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
-                ;
-
+            if ($hasSiblings) {
                 foreach ($treeSiblings as $i => ['url' => $sibling_url, 'label' => $sibling_label, 'active' => $sibling_active]) {
-                    $sibling = [
+                    $current->addChild('sibling_'.$i, [
                         'label' => $sibling_label,
-                        'uri' => $sibling_url,
-                    ];
-
-                    if ($sibling_active) {
-                        unset($sibling['uri']);
-                    }
-
-                    $current->addChild('sibling_'.$i, $sibling);
+                        'uri' => !$sibling_active ? $sibling_url : null,
+                    ]);
                 }
             }
 
