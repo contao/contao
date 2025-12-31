@@ -14,7 +14,7 @@
                 {% for job in running_jobs %}
                     <li>
                         {{ include('@Contao/backend/jobs/progress.html.twig') }}
-                        {{ ('jobs.typeLabel.' ~ job.type)|trans }}
+                        {{ ('jobs.type_label.' ~ job.type)|trans }}
                     </li>
                 {% endfor %}
             </ul>
