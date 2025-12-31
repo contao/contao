@@ -81,5 +81,6 @@ class BackendMenuBuilderTest extends TestCase
         $tree = $builder->buildBreadcrumbMenu();
 
         $this->assertSame('breadcrumbMenu', $tree->getName());
+        $this->assertSame(['id' => 'breadcrumb'], $tree->getChildrenAttributes());
     }
 }

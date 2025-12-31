@@ -1,0 +1,104 @@
+#breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .375rem;
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+
+
+    > li {
+        &:not(:first-child) {
+            &:before {
+                display: inline-block;
+                content: '/';
+                color: var(--info);
+                opacity: .6;
+                font-weight: 300;
+                padding-right: 3px;
+            }
+        }
+
+        > * {
+            display: inline-block;
+            max-width: clamp(250px, 80vw, 600px);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow-x: clip;
+        }
+    }
+
+    ul {
+        position: relative;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            overflow-x: clip;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin: 2px 0;
+
+            a:focus-visible {
+                outline: none;
+                color: var(--contao);
+            }
+
+            > span {
+                opacity: .5;
+            }
+        }
+    }
+
+    button {
+        padding: 3px 5px 4px;
+        margin: -4px -3px -4px -6px;
+        border-radius: 5px;
+
+        &:is(:hover, :focus-visible, .active) {
+            background-color: var(--content-border);
+        }
+    }
+
+    span {
+        display: inline-block;
+        overflow: initial;
+    }
+
+    [data-controller^="contao--toggle-state"] {
+        position: relative;
+    }
+
+    [data-contao--toggle-state-target="controls"] {
+        position: absolute;
+        left: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin: 5px 0 0;
+        padding: 8px 15px;
+        color: var(--text);
+        background: var(--content-bg) !important;
+        border: 1px solid var(--content-border);
+        border-radius: var(--border-radius);
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
+        text-align: left;
+        font-size: .875rem;
+        font-weight: 400;
+        max-width: 180px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity .3s ease, visibility .3s ease;
+        z-index: 10;
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+    }
+}
