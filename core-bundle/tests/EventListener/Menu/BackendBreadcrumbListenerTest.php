@@ -73,7 +73,7 @@ class BackendBreadcrumbListenerTest extends TestCase
         $this->assertSame('/contao?do=article&table=tl_article&pn=2', $children['ancestor_1']->getUri());
         $this->assertSame(['translation_domain' => false], $children['ancestor_1']->getExtras());
 
-        $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">Content One</button>', $children['current_1']->getLabel());
+        $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" title="MSC.siblings">Content One</button>', $children['current_1']->getLabel());
         $this->assertSame(['translation_domain' => false, 'safe_label' => true], $children['current_1']->getExtras());
 
         $siblings = $children['current_1']->getChildren();
