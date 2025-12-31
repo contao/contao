@@ -122,8 +122,8 @@ $this->mainAttributes = $this
           <main<?= $this->mainAttributes ?>>
             <?php $this->block('main_headline'); ?>
               <h1 id="main_headline">
-                <?php if ($this->breadcrumb ?? true): ?>
-                  <?php $this->insert('@Contao/backend/data_container/breadcrumb.html.twig') ?>
+                <?php if ($this->breadcrumb): ?>
+                  <?= $this->breadcrumb ?>
                 <?php else: ?>
                   <?= $this->headline ?>
                 <?php endif; ?>

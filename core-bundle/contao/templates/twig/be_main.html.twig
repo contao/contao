@@ -116,8 +116,8 @@
                 <main{{ mainAttributes }}>
                     {% block main_headline %}
                         <h1 id="main_headline">
-                            {% if breadcrumb|default(true) %}
-                                {{ include('@Contao/backend/data_container/breadcrumb.html.twig') }}
+                            {% if breadcrumb|default %}
+                                {{ breadcrumb|raw }}
                             {% else %}
                                 {{ headline|raw }}
                             {% endif %}
