@@ -47,6 +47,7 @@ class VirtualFieldsMappingListener
                 if (!\array_key_exists('sql', $config) && !\array_key_exists('saveTo', $config) && !\array_key_exists('input_field_callback', $config) && !\array_key_exists('save_callback', $config)) {
                     $config['saveTo'] = $this->defaultStorageName;
                 }
+
                 return $config;
             },
             $GLOBALS['TL_DCA'][$table]['fields'],
