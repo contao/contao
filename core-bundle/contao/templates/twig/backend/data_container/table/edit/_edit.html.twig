@@ -2,6 +2,9 @@
 
 {% set wrapper_attributes = attrs()
     .set('data-controller', 'contao--jump-targets', add_jump_targets|default(true))
+    .set('data-contao--jump-targets-prev-label-value', 'MSC.scrollBack'|trans, add_jump_targets|default(true))
+    .set('data-contao--jump-targets-next-label-value', 'MSC.scrollForward'|trans, add_jump_targets|default(true))
+    .set('data-contao--jump-targets-scroll-by-value', 150, add_jump_targets|default(true))
 %}
 <div{{ wrapper_attributes }}>
     {% if add_jump_targets|default(true) %}
