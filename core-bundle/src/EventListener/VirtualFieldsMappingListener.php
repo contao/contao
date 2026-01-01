@@ -41,27 +41,19 @@ class VirtualFieldsMappingListener
             return;
         }
 
-        $targets = [];
-
         $GLOBALS['TL_DCA'][$table]['fields'] = array_map(
             function (array $config) use (&$targets): array {
                 // Automatically save to virtual field in DC_Table
                 if (!\array_key_exists('sql', $config) && !\array_key_exists('saveTo', $config) && !\array_key_exists('input_field_callback', $config) && !\array_key_exists('save_callback', $config)) {
                     $config['saveTo'] = $this->defaultStorageName;
                 }
-
-                // Collect virtual field storage targets
-                if ($config['saveTo'] ?? null) {
-                    $targets[$config['saveTo']] = true;
-                }
-
                 return $config;
             },
             $GLOBALS['TL_DCA'][$table]['fields'],
         );
 
         // Configure virtual field targets
-        foreach (array_keys($targets) as $target) {
+        foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'], 'saveTo')) as $target) {
             $GLOBALS['TL_DCA'][$table]['fields'][$target]['virtualTarget'] = true;
 
             if (!($GLOBALS['TL_DCA'][$table]['fields'][$target]['sql'] ?? null)) {
