@@ -42,7 +42,7 @@ class VirtualFieldsMappingListener
         }
 
         $GLOBALS['TL_DCA'][$table]['fields'] = array_map(
-            function (array $config) use (&$targets): array {
+            function (array $config) : array {
                 // Automatically save to virtual field in DC_Table
                 if (!\array_key_exists('sql', $config) && !\array_key_exists('saveTo', $config) && !\array_key_exists('input_field_callback', $config) && !\array_key_exists('save_callback', $config)) {
                     $config['saveTo'] = $this->defaultStorageName;
