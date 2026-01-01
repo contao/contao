@@ -254,7 +254,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		}
 
 		$return = '
-<div data-controller="contao--jump-targets" data-contao--jump-targets-prev-label-value="'.$GLOBALS['TL_LANG']['MSC']['scrollBack'].'" data-contao--jump-targets-next-label-value="'.$GLOBALS['TL_LANG']['MSC']['scrollForward'].'" data-contao--jump-targets-scroll-by-value="150">
+<div data-controller="contao--jump-targets" data-contao--jump-targets-prev-label-value="' . $GLOBALS['TL_LANG']['MSC']['scrollBack'] . '" data-contao--jump-targets-next-label-value="' . $GLOBALS['TL_LANG']['MSC']['scrollForward'] . '" data-contao--jump-targets-scroll-by-value="150">
 	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
 	' . $return . '
 </div>';
