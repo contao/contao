@@ -11,9 +11,11 @@
         .set('data-contao--serp-preview-id-value', id)
         .set('data-contao--serp-preview-trail-value', trail)
         .set('data-contao--serp-preview-title-tag-value', titleTag)
+        .set('data-contao--serp-preview-warning-value', 'MSC.serpNoIndexWarning'|trans)
         .addClass('serp-preview')
     %}
     <div{{ serp_preview_attributes }}>
+        <p data-contao--serp-preview-target="robots" class="robots"></p>
         <p data-contao--serp-preview-target="url" class="url"></p>
         <p data-contao--serp-preview-target="title" class="title"></p>
         <p data-contao--serp-preview-target="description" class="description"></p>

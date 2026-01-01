@@ -8,9 +8,10 @@ export default class extends Controller {
         trail: String,
         titleTag: String,
         fields: Object,
+        warning: String,
     };
 
-    static targets = ['url', 'title', 'description'];
+    static targets = ['url', 'title', 'description', 'robots'];
 
     connect() {
         // Install event listeners on the source fields
@@ -60,6 +61,8 @@ export default class extends Controller {
                     : `${this.trailValue} › ${(value || this.idValue).replace(/\//g, ' › ')}`;
         } else if (sourceType === 'description') {
             this.descriptionTarget.textContent = this.#shorten(value, 160);
+        } else if (sourceType === 'robots') {
+            this.robotsTarget.textContent = value.contains('noindex') ? this.warningValue : '';
         }
     }
 

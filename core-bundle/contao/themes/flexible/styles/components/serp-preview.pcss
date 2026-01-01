@@ -7,30 +7,39 @@
     color: var(--serp-preview);
     background: var(--panel-bg);
     border-radius: var(--border-radius);
-}
 
-.serp-preview p {
-    margin: 0;
-}
+    p {
+        margin: 0;
+    }
 
-.serp-preview .url, .serp-preview .description {
-    line-height: 18px;
-}
+    :is(.url, .description) {
+        line-height: 18px;
 
-.serp-preview .url:not(:empty) {
-    margin-top: 3px;
-}
+        &:not(:empty) {
+            margin-top: 3px;
+        }
+    }
 
-.serp-preview .description:not(:empty) {
-    margin-bottom: 3px;
-}
+    .description:not(:empty) {
+        margin-bottom: 3px;
+    }
 
-.serp-preview .title {
-    margin: 5px 0 4px;
-    font-size: 18px;
-    color: var(--serp-preview-title);
-}
+    .title {
+        margin: 5px 0 4px;
+        font-size: 18px;
+        color: var(--serp-preview-title);
+    }
 
-.serp-preview .tl_info {
-    background-color: transparent;
+    .tl_info {
+        background-color: transparent;
+    }
+
+    .robots:not(:empty) {
+        margin: 3px 0;
+        color: var(--orange);
+    }
+
+    &:has(.robots:not(:empty)) {
+        box-shadow: inset 0 0 0 1px var(--orange);
+    }
 }
