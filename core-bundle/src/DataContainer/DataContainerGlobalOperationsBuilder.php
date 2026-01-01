@@ -50,7 +50,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
             'operations' => $operations,
             'has_primary' => [] !== array_filter(array_column($operations, 'primary'), static fn ($v) => null !== $v),
-            'globalOperations' => true,
+            'global_operations' => true,
         ]);
     }
 

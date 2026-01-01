@@ -1,0 +1,57 @@
+{% set list_attributes = attrs(menu ? null : operation.listAttributes|default)
+    .addClass('separator', add_separator)
+%}
+{% if operation.html is defined and (not menu or '<a ' in operation.html or '<button ' in operation.html) %}
+    {# Legacy operation with pre-rendered HTML #}
+    {# TODO: When should data-contao--operations-menu-target be set? Can we move the <li> out? #}
+    {% set list_attributes = list_attributes.set('data-contao--operations-menu-target', 'title', menu and not show_labels) %}
+    <li{{ list_attributes }}>{{ operation.html|raw }}</li>
+
+{% elseif operation.href|default %}
+    {# Default #}
+    {% set list_attributes = list_attributes.set('data-contao--operations-menu-target', 'title', menu and not operation.title|default) %}
+    <li{{ list_attributes }}>
+        {% set operation_attributes = attrs(operation.attributes|default)
+            .set('title', operation.title|default, ((menu or show_labels) and operation.title|default != operation.label|default))
+            .addClass('has-icon', operation.icon|default)
+        %}
+        {% set method = operation.method|default('GET') %}
+        {% if method != 'GET' %}
+            {% set form_attributes = attrs()
+                .set('action', operation.href)
+                .set('method', 'POST')
+            %}
+            <form{{ form_attributes }}>
+                {% if method != 'POST' %}
+                    <input type="hidden" name="_method" value="{{ method }}">
+                {% endif %}
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                <button{{ operation_attributes.set('type', 'submit') }}>
+                    {% block operation_content %}
+                        {% if operation.icon|default %}
+                            {# TODO: Should there be the |trans filter or not? #}
+                            {{ backend_icon(
+                                operation.icon,
+                                (menu or show_labels) ? '' : operation.title|default(operation.label|default),
+                                operation.iconAttributes|default(null),
+                            ) }}
+                        {% endif %}
+                        {% if menu or show_labels %}
+                            {{ operation.label|default }}
+                        {% endif %}
+                    {% endblock %}
+                </button>
+            </form>
+        {% else %}
+            <a{{ operation_attributes.set('href', operation.href) }}>
+                {{ block('operation_content') }}
+            </a>
+        {% endif %}
+    </li>
+
+{% elseif operation.icon|default and not menu %}
+    {# Just an icon with optional label #}
+    <li{{ list_attributes }}>
+        {{ block('operation_content') }}
+    </li>
+{% endif %}
