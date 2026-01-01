@@ -4,11 +4,13 @@
 
 {% block item %}
     {% if item.extra('render_dropdown') %}
-        {% set item = item.setAttributes({
-            'data-controller': 'contao--toggle-state',
-            'data-action': 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close mouseleave->contao--toggle-state#close',
-            'data-contao--toggle-state-active-class': 'active',
-        }) %}
+        {% set item = item.setAttributes(
+            item.getAttributes()|merge({
+                'data-controller': 'contao--toggle-state',
+                'data-action': 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close mouseleave->contao--toggle-state#close',
+                'data-contao--toggle-state-active-class': 'active',
+            })
+        ) %}
     {% endif %}
     {{ parent() }}
 {% endblock %}
