@@ -22,7 +22,7 @@ class DropZone extends FileUpload
 	 */
 	public function generateMarkup()
 	{
-		return System::getContainer()->get('twig')->render('@Contao/backend/component/_upload.html.twig', array(
+		return System::getContainer()->get('twig')->render('@Contao/backend/component/upload/_upload.html.twig', array(
 			'name' => $this->strName,
 			// Maximum file size in MB
 			'maxSize' => round(static::getMaxUploadSize() / 1024 / 1024),
