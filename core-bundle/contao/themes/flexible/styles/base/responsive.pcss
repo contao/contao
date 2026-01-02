@@ -317,18 +317,21 @@
         display: none;
     }
 
-    .split-button ul {
+    .split-button {
         display: inline-flex;
-        clip: initial;
-        height: auto;
-        margin: 0 0 0 -4px;
-        overflow: initial;
-        position: initial;
-        width: auto;
-    }
+        gap: 10px;
+        flex-grow: 1;
 
-    .split-button li {
-        margin-left: 4px;
+        ul {
+            display: inline-flex;
+            gap: 10px;
+            clip: initial;
+            height: auto;
+            margin: 0;
+            overflow: initial;
+            position: initial;
+            width: auto;
+        }
     }
 }
 
