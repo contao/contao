@@ -51,6 +51,23 @@ export default class BackendSearchController extends Controller {
         }
     }
 
+    shortcutOpen(event) {
+        const element = document.activeElement;
+
+        if (
+            element instanceof HTMLInputElement ||
+            element instanceof HTMLTextAreaElement ||
+            element instanceof HTMLSelectElement ||
+            (element instanceof HTMLElement && element.isContentEditable)
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        this.inputTarget.focus();
+        this.#setState('initial');
+    }
+
     open() {
         // Ignore focus on input if tabbing through results
         if (this.focusTrap.active) {
