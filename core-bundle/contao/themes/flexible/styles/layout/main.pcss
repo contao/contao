@@ -16,12 +16,6 @@
         border: 1px solid var(--content-border);
         border-radius: calc(var(--border-radius) * 2);
     }
-
-    .content:has(.tl_formbody_submit),
-    .content-inner,
-    .content-filter {
-        overflow: clip;
-    }
 }
 
 .popup #main {
@@ -48,10 +42,6 @@
 
 @media (min-width: 1280px) {
     #main {
-        .content-inner, .content-filter {
-            border-radius: calc(var(--border-radius) * 3);
-        }
-
         .content:has(>.content-filter),
         .content > .tree-view:has(>.content-filter) {
             display: grid;
