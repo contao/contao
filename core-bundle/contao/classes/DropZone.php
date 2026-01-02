@@ -22,58 +22,15 @@ class DropZone extends FileUpload
 	 */
 	public function generateMarkup()
 	{
-		// Maximum file size in MB
-		$intMaxSize = round(static::getMaxUploadSize() / 1024 / 1024);
-
-		// String of accepted file extensions
-		$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
-
-		// Generate the markup
-		$return = '
-  <input type="hidden" name="action" value="fileupload">
-  <div class="fallback">
-    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" data-action="focus->contao--scroll-offset#store" multiple>
-  </div>
-  <div class="dropzone">
-    <div class="dz-default dz-message">
-      <span>' . $GLOBALS['TL_LANG']['tl_files']['dropzone'] . '</span>
-    </div>
-    <span class="dropzone-previews"></span>
-  </div>
-  <script>
-    Dropzone.autoDiscover = false;
-    new Dropzone("#tl_files", {
-      url: window.location.href,
-      paramName: "' . $this->strName . '",
-      maxFilesize: ' . $intMaxSize . ',
-      acceptedFiles: "' . $strAccepted . '",
-      timeout: 0,
-      previewsContainer: ".dropzone-previews",
-      clickable: ".dropzone",
-      dictFileTooBig: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneFileTooBig']) . ',
-      dictInvalidFileType: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneInvalidType']) . '
-    }).on("addedfile", function() {
-      $$(".dz-message").setStyle("display", "none");
-    }).on("success", function(file, message) {
-      if (!message) return;
-      var container = $("tl_message");
-      if (!container) {
-        container = new Element("div", {
-          "id": "tl_message",
-          "class": "tl_message"
-        }).inject($("tl_buttons"), "before");
-      }
-      container.appendHTML(message);
-    });
-    $$("div.tl_formbody_submit").setStyle("display", "none");
-  </script>';
-
-		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
-		{
-			$return .= '
-  <p class="tl_help tl_tip">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
-		}
-
-		return $return;
+		return System::getContainer()->get('twig')->render('@Contao/backend/component/_upload.html.twig', array(
+			'name' => $this->strName,
+			// Maximum file size in MB
+			'maxSize' => round(static::getMaxUploadSize() / 1024 / 1024),
+			// String of accepted file extensions
+			'acceptedFiles' => implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes'))))),
+			'maxUploadSize' => System::getReadableSize(static::getMaxUploadSize()),
+			'imgWidth' => Config::get('imageWidth'),
+			'imgHeight' => Config::get('imageHeight'),
+		));
 	}
 }

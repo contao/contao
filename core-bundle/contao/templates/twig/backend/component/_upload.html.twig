@@ -1,0 +1,55 @@
+{% trans_default_domain 'contao_default' %}
+
+{% block input %}
+    <input type="hidden" name="action" value="fileupload">
+    <div class="fallback">
+        <input type="file" name="{{ name ~ '[]' }}" class="tl_upload_field" data-action="focus->contao--scroll-offset#store" multiple>
+    </div>
+    <div class="dropzone">
+        <div class="dz-default dz-message">
+            <span>{{ 'tl_files.dropzone'|trans }}</span>
+        </div>
+        <span class="dropzone-previews"></span>
+    </div>
+    {% if ('tl_files.fileupload.1'|trans|default) %}
+        <p class="tl_help tl_tip">{{ 'tl_files.fileupload.1'|trans([maxUploadSize, (imgWidth ~ 'x' ~ imgHeight)]) }}</p>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script>
+        Dropzone.autoDiscover = false;
+        new Dropzone('#tl_files', {
+            url: window.location.href,
+            paramName: '{{ name }}',
+            maxFilesize: '{{ maxSize }}',
+            acceptedFiles: '{{ acceptedFiles }}',
+            timeout: 0,
+            previewsContainer: '.dropzone-previews',
+            clickable: '.dropzone',
+            dictFileTooBig: '{{ 'tl_files.dropzoneFileTooBig'|trans|json_encode }}',
+            dictInvalidFileType: '{{ 'tl_files.dropzoneInvalidType'|trans|json_encode }}'
+        }).on('addedfile', file => {
+            document.querySelector('.dz-message').style.display = 'none';
+        }).on('onsuccess', (file, message) => {
+            if (!message) return;
+
+            let container = document.getElementById('tl_message');
+            const buttons = document.getElementById('tl_buttons');
+
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'tl_message';
+                container.className = 'tl_message';
+            }
+
+            if (buttons) {
+                buttons.parentNode.insertBefore(container, buttons);
+            }
+
+            container.insertAdjacentHTML('beforeend', message);
+        })
+
+        document.querySelector('div.tl_formbody_submit').style.display = 'none';
+    </script>
+{% endblock %}
