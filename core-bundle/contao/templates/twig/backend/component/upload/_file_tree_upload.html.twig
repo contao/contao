@@ -1,0 +1,6 @@
+{% block script %}
+    <script>
+        Dropzone.autoDiscover = false;
+        Backend.enableFileTreeUpload("tl_listing", {{ options|json_encode }});
+    </script>
+{% endblock %}
