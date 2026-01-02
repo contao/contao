@@ -16,6 +16,9 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaExtractor;
 use Contao\StringUtil;
 
+/**
+ * @experimental
+ */
 class VirtualFieldsHandler
 {
     public function __construct(private readonly ContaoFramework $contaoFramework)
