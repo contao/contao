@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'filter;search,sort,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 		),

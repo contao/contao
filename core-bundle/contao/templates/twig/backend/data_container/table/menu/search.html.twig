@@ -1,22 +1,24 @@
 {% trans_default_domain 'contao_default' %}
 
 <fieldset class="tl_search tl_subpanel">
-    <legend>{{ 'MSC.search'|trans }}</legend>
+    <legend>{{ 'MSC.search'|trans }}:</legend>
     {{ include('@Contao/backend/data_container/table/menu/_select.html.twig', {
         name: 'tl_search',
         title: 'MSC.field'|trans,
     }) }}
-
-    <label for="tl_search_term">{{ 'MSC.keyword'|trans }}</label>
-    {% set input_attributes = attrs()
-        .set('type', 'search')
-        .set('id', 'tl_search_term')
-        .set('name', 'tl_value')
-        .set('value', value)
-        .addClass('tl_text')
-        .addClass('active', active)
-        .set('data-contao--filter-target', 'filter')
-        .set('data-action', 'contao--filter#updateCount')
-    %}
-    <input{{ input_attributes }}/>
+    <div class="term_wrapper">
+        <label for="tl_search_term">{{ 'MSC.keyword'|trans }}</label>
+        {% set input_attributes = attrs()
+            .set('type', 'search')
+            .set('id', 'tl_search_term')
+            .set('name', 'tl_value')
+            .set('value', value)
+            .set('placeholder', 'MSC.keyword_placeholder'|trans)
+            .addClass('tl_text')
+            .addClass('active', active)
+            .set('data-contao--filter-target', 'filter')
+            .set('data-action', 'contao--filter#updateCount')
+        %}
+        <input{{ input_attributes }}/>
+    </div>
 </fieldset>

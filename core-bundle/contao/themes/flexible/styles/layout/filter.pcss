@@ -1,8 +1,8 @@
 .tl_panel {
-    &:not(:last-of-type) {
-        padding-bottom: 16px;
-        margin-bottom: 14px;
-        border-bottom: 1px solid var(--content-border);
+    padding: 14px 0 16px;
+
+    &:not(:first-of-type) {
+        border-top: 1px solid var(--content-border);
     }
 
     fieldset {
@@ -23,10 +23,12 @@
 
 .tl_subpanel {
     letter-spacing: -.31em;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
 
     &:not(:last-child) {
-        padding-bottom: 16px;
-        margin-bottom: 14px;
+        padding-bottom: 15px;
+        margin-bottom: 15px;
         border-bottom: 1px solid var(--content-border);
     }
 
@@ -64,17 +66,61 @@
     }
 }
 
-.tl_subpanel {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-}
-
 .tl_filter {
     box-sizing: border-box;
 }
 
 .tl_search {
-    gap: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 3px;
+
+    legend {
+        float: left;
+        margin: 0 !important;
+    }
+
+    .tl_select_wrapper {
+        width: auto;
+        margin: 0 0 0 .75rem !important;
+        flex-grow: 1;
+    }
+
+    label {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .term_wrapper {
+        width: 100%;
+    }
+}
+
+.tl_sorting,
+.tl_limit {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+
+    label {
+        margin: 0 !important;
+    }
+}
+
+.tl_search,
+.tl_sorting,
+.tl_limit {
+    .tl_select:not(.is-open) {
+        background: transparent;
+        border-color: transparent;
+    }
 }
 
 [data-contao--filter-target="count"] {
@@ -102,10 +148,6 @@
     grid-template-rows: 1fr auto;
     order: 1;
     border-bottom: 1px solid var(--content-border);
-
-    .tl_formbody {
-        padding: 14px 0 16px;
-    }
 
     > .close {
         display: none;
@@ -141,6 +183,35 @@
         &:hover {
             background: var(--form-bg-hover);
         }
+    }
+}
+
+/* Reset the panel when search is in first position */
+.tl_panel {
+    + :has(>.tl_search:first-child) {
+        border-top: none;
+        background: var(--panel-bg);
+
+        .tl_subpanel {
+            border-bottom: none;
+            margin: 0;
+        }
+
+        + .tl_submit_panel {
+            border-top: 0;
+        }
+    }
+}
+
+.content-filter:has(.tl_panel >.tl_search:first-child) {
+    background: var(--panel-bg);
+
+    .tl_panel:has(.tl_filter) {
+        background: var(--content-bg);
+    }
+
+    .tl_panel:first-of-type {
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
     }
 }
 
