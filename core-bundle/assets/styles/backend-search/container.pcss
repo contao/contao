@@ -91,6 +91,19 @@
                 color: var(--header-text);
             }
         }
+
+        .backend-search_inner {
+            &:after {
+                position: absolute;
+                inset: 5px 5px auto auto;
+                content: 'Ctrl+K / ⌘+K';
+                font-size: smaller;
+                background: var(--header-bg);
+                padding: 4px;
+                border-radius: 3px;
+                opacity: .7;
+            }
+        }
     }
 
     .backend-search_results-container {
