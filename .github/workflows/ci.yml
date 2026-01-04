@@ -15,7 +15,7 @@ jobs:
         name: Rector
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -43,7 +43,7 @@ jobs:
         name: ECS
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -71,7 +71,7 @@ jobs:
         name: ECS legacy
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -93,18 +93,16 @@ jobs:
                   working-directory: vendor-bin/ecs
 
             - name: Run ECS legacy
-              run: |
-                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
 
             - name: Run ECS template
-              run: |
-                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     twig-cs-fixer:
         name: Twig CS Fixer
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -131,7 +129,7 @@ jobs:
         name: PHPStan
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -188,7 +186,7 @@ jobs:
         name: Service linter
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -216,7 +214,7 @@ jobs:
         name: Depcheck
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -261,7 +259,7 @@ jobs:
             matrix:
                 php: [8.3, 8.4, 8.5]
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
@@ -299,7 +297,7 @@ jobs:
         name: Reverse order
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -323,7 +321,7 @@ jobs:
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: nightly
@@ -358,7 +356,7 @@ jobs:
         name: Prefer lowest
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -398,7 +396,7 @@ jobs:
         name: Bundles
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -441,7 +439,7 @@ jobs:
         name: Monorepo check
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
