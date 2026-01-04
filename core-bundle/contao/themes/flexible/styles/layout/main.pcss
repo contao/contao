@@ -9,12 +9,18 @@
         margin: 0 15px 15px;
     }
 
-    .content:not(:has(.content-filter)),
+    .content:not(:has(.content-filter, .content-inner)),
     .content-inner,
     .content-filter {
         background: var(--content-bg);
-        border: 1px solid var(--content-border);
+        border: 1px solid var(--border);
         border-radius: calc(var(--border-radius) * 2);
+    }
+
+    .popup & .content:not(:has(.content-filter, .content-inner)),
+    .popup & .content-inner {
+        border: 0;
+        border-radius: 0;
     }
 }
 
@@ -22,12 +28,7 @@
     .content {
         height: auto;
         margin: 0;
-        border: 0;
         border-radius: 0;
-    }
-
-    .content-inner {
-        border: none;
     }
 }
 

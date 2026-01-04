@@ -7,6 +7,10 @@
     top: 0;
     z-index: 3; /* Above TinyMCE */
     border-radius: calc(var(--border-radius) * 2) calc(var(--border-radius) * 2) 0 0;
+
+    .popup & {
+        border-radius: 0;
+    }
 }
 
 .jump-targets .inner {
