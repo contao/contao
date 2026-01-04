@@ -10,7 +10,7 @@
         </div>
     {% endif %}
 
-    <form class="tl_form" action="" method="post">
+    <form class="tl_form" method="post">
         <div class="tl_formbody_edit">
             <input type="hidden" name="trigger_crawl" value="true">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
@@ -27,19 +27,75 @@
                         <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlDepth.1'|trans }}</p>
                     {% endif %}
                 </div>
-                {% if memberWidget|default %}
+                {% if indexProtected %}
                     <div class="widget w50 clr">
-                        {{ memberWidget.parse()|raw }}
-                        {% if not memberWidget.hasErrors() %}
+                        <h3><label for="crawl_member">{{ 'tl_maintenance.crawlMember.0'|trans }}</label></h3>
+                        <input type="text" name="crawl_member" id="crawl_member" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}">
+                        <datalist id="userlist"></datalist>
+                        {% if invalidUser|default %}
+                            <p class="tl_error tl_tip">{{ 'ERR.previewSwitchInvalidUsername'|trans([user]) }}</p>
+                        {% else %}
                             <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlMember.1'|trans }}</p>
                         {% endif %}
                     </div>
                 {% endif %}
             </fieldset>
         </div>
-        <div class="tl_submit_container">
-            <button type="submit" class="tl_submit">{{ 'tl_maintenance.startCrawling'|trans }}</button>
-        </div>
+        {% if isActive %}
+            <div class="tl_formbody_submit">
+                <div class="tl_submit_container">
+                    <button type="submit" class="tl_submit">{{ 'tl_maintenance.startCrawling'|trans }}</button>
+                    <a href="" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="tl_submit_container">
+                <button type="submit" class="tl_submit">{{ 'tl_maintenance.startCrawling'|trans }}</button>
+            </div>
+        {% endif %}
     </form>
 
 </div>
+
+<script>
+    (function () {
+        const userField = document.querySelector('input[name="crawl_member"]');
+        const userList = document.querySelector('datalist[id="userlist"]');
+
+        if (userField && userList && document.createElement('datalist') && window.HTMLDataListElement) {
+            let timer;
+
+            userField.addEventListener('input', function () {
+                userField.setCustomValidity('');
+
+                if (userField.value.length < 2) {
+                    return;
+                }
+
+                if (timer) {
+                    clearTimeout(timer);
+                }
+
+                timer = setTimeout(function () {
+
+                    fetch(document.location.href, {
+                        method: 'POST',
+                        body: new URLSearchParams({
+                            FORM_SUBMIT: 'datalist_members',
+                            REQUEST_TOKEN: document.querySelector('input[name="REQUEST_TOKEN"]').value,
+                            trigger_crawl: true,
+                            value: userField.value
+                        })
+                    }).then((response) => {
+                        userList.innerHTML = '';
+                        response.json().then(json => json.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item;
+                            userList.appendChild(option);
+                        }));
+                    });
+                }, 300);
+            });
+        }
+    })();
+</script>
