@@ -186,32 +186,33 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$andWhereGroups = '';
 
-		if (!$security->isGranted('ROLE_ADMIN')) {
+		if (!$security->isGranted('ROLE_ADMIN'))
+		{
 			$amg = StringUtil::deserialize(BackendUser::getInstance()->amg);
-			$groups = array_map(static fn ($groupId): string => '%"'.(int) $groupId.'"%', $amg);
-			$andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
+			$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $amg);
+			$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
 		}
 
 		$time = Date::floorToMinute();
 
 		// Get the active front end users
 		$query = <<<SQL
-            SELECT username
-            FROM tl_member
-            WHERE
-                username LIKE ?
-                $andWhereGroups
-                AND login = 1
-                AND disable = 0
-                AND (start = '' OR start <= $time)
-                AND (stop = '' OR stop > $time)
-            ORDER BY username
-            SQL;
+			SELECT username
+			FROM tl_member
+			WHERE
+			    username LIKE ?
+			    $andWhereGroups
+			    AND login = 1
+			    AND disable = 0
+			    AND (start = '' OR start <= $time)
+			    AND (stop = '' OR stop > $time)
+			ORDER BY username
+			SQL;
 
 		$query = $connection->getDatabasePlatform()->modifyLimitQuery($query, 20);
 
 		return $connection
-			->executeQuery($query, [str_replace('%', '', Input::post('value')).'%'])
+			->executeQuery($query, array(str_replace('%', '', Input::post('value')) . '%'))
 			->fetchFirstColumn()
 		;
 	}
