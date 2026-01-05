@@ -118,7 +118,7 @@ class CudPermissionListenerTest extends TestCase
                     $listener->addDefaultPermissions($table);
 
                     return \in_array($table, ['tl_foo', 'tl_bar'], true);
-                }
+                },
             ))
         ;
 
