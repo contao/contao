@@ -183,7 +183,8 @@ class Ajax extends Backend
 				$subField = null;
 
 				// Handle file pickers within the row wizard
-				if (preg_match('/^([0-9a-zA-Z]+)(?:\[(\d+)]\[([0-9a-zA-Z]+)])?$/', $strField, $matches)) {
+				if (preg_match('/^([0-9a-zA-Z]+)(?:\[(\d+)]\[([0-9a-zA-Z]+)])?$/', $strField, $matches))
+				{
 					$boolRowWizard = true;
 					$strField = $matches[1];
 					$subField = $matches[3] ?? null;
@@ -318,9 +319,12 @@ class Ajax extends Backend
 					$varValue = serialize($varValue);
 				}
 
-				if ($boolRowWizard) {
+				if ($boolRowWizard)
+				{
 					$dcaField = $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['fields'][$subField];
-				} else {
+				}
+				else
+				{
 					$dcaField = $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField];
 				}
 
