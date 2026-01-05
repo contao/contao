@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Maintenance module "crawl".
@@ -39,45 +41,47 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	 */
 	public function run()
 	{
+		$indexProtected = System::getContainer()->getParameter('contao.search.index_protected');
+
+		if ($indexProtected && Input::post('FORM_SUBMIT') == 'datalist_members')
+		{
+			throw new ResponseException(new JsonResponse($this->getMembersDataList()));
+		}
+
 		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$maxDepthWidget = $this->generateMaxDepthWidget();
-		$memberWidget = null;
-
-		if (System::getContainer()->getParameter('contao.search.index_protected'))
-		{
-			$memberWidget = $this->generateMemberWidget();
-		}
+		$user = Input::post('crawl_member');
 
 		$template = new BackendTemplate('be_crawl');
 		$template->message = Message::generateUnwrapped(self::class);
 		$template->subscribersWidget = $subscribersWidget;
 		$template->maxDepthWidget = $maxDepthWidget;
-		$template->memberWidget = $memberWidget;
 		$template->isActive = $this->isActive();
+		$template->indexProtected = $indexProtected;
+		$template->user = $user;
 
 		if ($this->isActive() && $this->valid)
 		{
 			$headers = array();
 			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-			if ($memberWidget?->value)
+			if ($indexProtected)
 			{
-				$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
-					->execute((int) $memberWidget->value);
-
-				if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
+				if (!$objAuthenticator->authenticateFrontendUser($user, false))
 				{
+					$template->invalidUser = true;
 					$objAuthenticator->removeFrontendAuthentication();
+					System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
+
+					return $template->parse();
 				}
-				else
-				{
-					// TODO: we need a way to authenticate with a token instead of our own cookie
-					$session = System::getContainer()->get('request_stack')->getSession();
-					$headers = array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId()));
-				}
+
+				// TODO: we need a way to authenticate with a token instead of our own cookie
+				$session = System::getContainer()->get('request_stack')->getSession();
+				$headers = array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId()));
 			}
 			else
 			{
@@ -102,6 +106,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	private function generateSubscribersWidget(array $subscriberNames): Widget
 	{
 		$name = 'crawl_subscriber_names';
+
 		$widget = new CheckBox();
 		$widget->id = $name;
 		$widget->name = $name;
@@ -174,57 +179,41 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		return $widget;
 	}
 
-	private function generateMemberWidget(): Widget
+	private function getMembersDataList(): array
 	{
-		$name = 'crawl_member';
+		$security = System::getContainer()->get('security.helper');
+		$connection = System::getContainer()->get('database_connection');
 
-		$widget = new SelectMenu();
-		$widget->id = $name;
-		$widget->name = $name;
-		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlMember'][0];
+		$andWhereGroups = '';
 
-		$time = time();
-		$options = array(array('value' => '', 'label' => '-', 'default' => true));
-		$objMembers = null;
-
-		// Get the active front end users
-		if (BackendUser::getInstance()->isAdmin)
-		{
-			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login=1 AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY username");
-		}
-		else
+		if (!$security->isGranted('ROLE_ADMIN'))
 		{
 			$amg = StringUtil::deserialize(BackendUser::getInstance()->amg);
-
-			if (!empty($amg) && \is_array($amg))
-			{
-				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login=1 AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY username");
-			}
+			$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $amg);
+			$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
 		}
 
-		if ($objMembers !== null)
-		{
-			while ($objMembers->next())
-			{
-				$options[] = array(
-					'value' => $objMembers->id,
-					'label' => $objMembers->username . ' (' . $objMembers->id . ')'
-				);
-			}
-		}
+		$time = Date::floorToMinute();
 
-		$widget->options = $options;
+		// Get the active front end users
+		$query = <<<SQL
+			SELECT username
+			FROM tl_member
+			WHERE
+				username LIKE ?
+				$andWhereGroups
+				AND login = 1
+				AND disable = 0
+				AND (start = '' OR start <= $time)
+				AND (stop = '' OR stop > $time)
+			ORDER BY username
+			SQL;
 
-		if ($this->isActive())
-		{
-			$widget->validate();
+		$query = $connection->getDatabasePlatform()->modifyLimitQuery($query, 20);
 
-			if ($widget->hasErrors())
-			{
-				$this->valid = false;
-			}
-		}
-
-		return $widget;
+		return $connection
+			->executeQuery($query, array(str_replace('%', '', Input::post('value')) . '%'))
+			->fetchFirstColumn()
+		;
 	}
 }
