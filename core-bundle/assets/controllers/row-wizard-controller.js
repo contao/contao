@@ -105,9 +105,7 @@ export default class extends Controller {
         const name = this.nameValue.replace(/\d+$/, i);
 
         this.bodyTarget
-            .querySelectorAll(
-                `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`,
-            )
+            .querySelectorAll(`[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`)
             .forEach((el, i) => {
                 if (el.name) {
                     el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
@@ -131,7 +129,7 @@ export default class extends Controller {
 
     updateSorting() {
         // Searches for digits with leading underscore or within brackets
-        const regexPattern = new RegExp('(_\\d+)|(\\[\\d+\])', 'g');
+        const regexPattern = /(_\d+)|(\[\d+\])/g;
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
@@ -145,7 +143,7 @@ export default class extends Controller {
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(regexPattern, match => match.includes('[') ? `[${i}]` : `_${i}`);
+                    el.id = el.id.replace(regexPattern, (match) => (match.includes('[') ? `[${i}]` : `_${i}`));
                 }
 
                 if (el.getAttribute('for')) {
@@ -158,11 +156,13 @@ export default class extends Controller {
                 }
             }
 
-            let pickerScript = tr.querySelector('.selector_container > script');
+            const pickerScript = tr.querySelector('.selector_container > script');
 
             if (pickerScript) {
                 const script = document.createElement('script');
-                script.textContent = pickerScript.textContent.replace(regexPattern, match => match.includes('[') ? `[${i}]` : `_${i}`);
+                script.textContent = pickerScript.textContent.replace(regexPattern, (match) =>
+                    match.includes('[') ? `[${i}]` : `_${i}`,
+                );
                 pickerScript.parentNode.replaceChild(script, pickerScript);
             }
 
