@@ -2,7 +2,7 @@
 
 {% set running_jobs = jobs|filter(job => not job.isCompleted) %}
 
-{# Update jobs list in the header #}
+{# Update the jobs list in the header #}
 <turbo-stream action="update" target="running-jobs">
     <template>
         {% set list_attributes = attrs()
@@ -22,7 +22,7 @@
     </template>
 </turbo-stream>
 
-{# Update status columns #}
+{# Update the status columns #}
 {% for job in jobs %}
     <turbo-stream action="update" targets="[data-job-progress='{{ job.uuid }}']">
         <template>

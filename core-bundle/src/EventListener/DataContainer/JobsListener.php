@@ -49,6 +49,7 @@ class JobsListener
 
         $columns[2] = $this->twig->render('@Contao/backend/jobs/progress.html.twig', ['job' => $job]);
         $columns[3] = $this->twig->render('@Contao/backend/jobs/status.html.twig', ['job' => $job]);
+
         $columns[5] = $this->twig->render('@Contao/backend/jobs/attachments.html.twig', [
             'job' => $job,
             'attachments' => $this->jobs->getAttachments($job),
