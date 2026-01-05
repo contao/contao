@@ -28,5 +28,12 @@ $GLOBALS['TL_DCA']['tl_content'] =
         'text' => [
             'search' => true,
         ],
+        'text_search_disabled' => [
+            'search' => false,
+        ],
+        'text_search_disabled_backend_search_enabled' => [
+            'search' => false,
+            'backendSearch' => true,
+        ],
     ],
 ];
