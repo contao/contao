@@ -41,12 +41,12 @@
       </fieldset>
     </div>
     <?php if ($this->isActive): ?>
-    <div class="tl_formbody_submit">
-      <div class="tl_submit_container">
-        <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
-        <a href="" class="tl_submit"><?= $this->trans('MSC.cancelBT') ?></a>
+      <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+          <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
+          <a href="" class="tl_submit"><?= $this->trans('MSC.cancelBT') ?></a>
+        </div>
       </div>
-    </div>
     <?php else: ?>
       <div class="tl_submit_container">
         <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
@@ -76,7 +76,6 @@
         }
 
         timer = setTimeout(function () {
-
           fetch(document.location.href, {
             method: 'POST',
             body: new URLSearchParams({

@@ -41,20 +41,19 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	 */
 	public function run()
 	{
+		$indexProtected = System::getContainer()->getParameter('contao.search.index_protected');
+
+		if ($indexProtected && Input::post('FORM_SUBMIT') == 'datalist_members')
+		{
+			throw new ResponseException(new JsonResponse($this->getMembersDataList()));
+		}
+
 		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$maxDepthWidget = $this->generateMaxDepthWidget();
-		$indexProtected = System::getContainer()->getParameter('contao.search.index_protected');
 		$user = Input::post('crawl_member');
-
-		if ($indexProtected && Input::post('FORM_SUBMIT') == 'datalist_members')
-		{
-			$data = $this->getMembersDataList();
-
-			throw new ResponseException(new JsonResponse($data));
-		}
 
 		$template = new BackendTemplate('be_crawl');
 		$template->message = Message::generateUnwrapped(self::class);
@@ -107,6 +106,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	private function generateSubscribersWidget(array $subscriberNames): Widget
 	{
 		$name = 'crawl_subscriber_names';
+
 		$widget = new CheckBox();
 		$widget->id = $name;
 		$widget->name = $name;
@@ -200,12 +200,12 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			SELECT username
 			FROM tl_member
 			WHERE
-			    username LIKE ?
-			    $andWhereGroups
-			    AND login = 1
-			    AND disable = 0
-			    AND (start = '' OR start <= $time)
-			    AND (stop = '' OR stop > $time)
+				username LIKE ?
+				$andWhereGroups
+				AND login = 1
+				AND disable = 0
+				AND (start = '' OR start <= $time)
+				AND (stop = '' OR stop > $time)
 			ORDER BY username
 			SQL;
 
