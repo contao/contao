@@ -106,7 +106,7 @@ export default class extends Controller {
 
         this.bodyTarget
             .querySelectorAll(
-                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+                `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`,
             )
             .forEach((el, i) => {
                 if (el.name) {
@@ -130,9 +130,12 @@ export default class extends Controller {
     }
 
     updateSorting() {
+        // Searches for digits with leading underscore or within brackets
+        const regexPattern = new RegExp('(_\\d+)|(\\[\\d+\])', 'g');
+
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+                `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[], .selector_container > ul, .selector_container script`,
             )) {
                 if (el.name) {
                     el.name = el.name.replace(
@@ -142,10 +145,7 @@ export default class extends Controller {
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(
-                        new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'),
-                        `${this.nameValue}_${i}$1`,
-                    );
+                    el.id = el.id.replace(regexPattern, match => match.includes('[') ? `[${i}]` : `_${i}`);
                 }
 
                 if (el.getAttribute('for')) {
@@ -156,6 +156,14 @@ export default class extends Controller {
                             .replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`),
                     );
                 }
+            }
+
+            let pickerScript = tr.querySelector('.selector_container > script');
+
+            if (pickerScript) {
+                const script = document.createElement('script');
+                script.textContent = pickerScript.textContent.replace(regexPattern, match => match.includes('[') ? `[${i}]` : `_${i}`);
+                pickerScript.parentNode.replaceChild(script, pickerScript);
             }
 
             for (const el of tr.querySelectorAll(`[data-controller="${this.identifier}"]`)) {
