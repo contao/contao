@@ -74,7 +74,7 @@ export default class OperationsMenuController extends Controller {
         this.setPosition(event);
     }
 
-    close(event) {
+    close() {
         if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }

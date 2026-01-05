@@ -5,6 +5,7 @@ export default class extends Controller {
 
     static targets = ['controller', 'controls', 'label'];
     static classes = ['active', 'inactive'];
+
     static values = {
         activeLabel: String,
         inactiveLabel: String,

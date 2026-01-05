@@ -2969,7 +2969,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
       <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
       <div class="tl_select_wrapper" data-controller="contao--choices">
           <select id="tl_search" name="tl_search" class="tl_select' . ($active ? ' active' : '') . '">
-          ' . implode("\n", $options) . '
+            ' . implode("\n", $options) . '
           </select>
       </div>
       <label for="tl_search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
