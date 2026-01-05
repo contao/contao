@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Migration;
 
-use Contao\CoreBundle\Migration\Version507\FieldPermissionMigration as CoreFieldPermissionMigration;
+use Contao\CoreBundle\Migration\Version507\AbstractFieldPermissionMigration;
 
-class FieldPermissionMigration extends CoreFieldPermissionMigration
+class FieldPermissionMigration extends AbstractFieldPermissionMigration
 {
     protected function getMapping(): array
     {

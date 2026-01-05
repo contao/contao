@@ -393,7 +393,7 @@ class UserRootListenerTest extends TestCase
             ],
         ];
 
-        if (null === $security) {
+        if (!$security) {
             $security = $this->mockSecurity();
         }
 
