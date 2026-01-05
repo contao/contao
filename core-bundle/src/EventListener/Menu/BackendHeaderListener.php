@@ -87,7 +87,7 @@ class BackendHeaderListener
             ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
             ->setAttribute('data-contao--toggle-state-active-class', 'active')
             ->setAttribute('data-contao--toggle-state-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
-            ->setAttribute('data-contao--toggle-state-inactive-title-value=', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
+            ->setAttribute('data-contao--toggle-state-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
