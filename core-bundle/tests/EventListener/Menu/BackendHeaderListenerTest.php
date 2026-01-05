@@ -101,7 +101,7 @@ class BackendHeaderListenerTest extends TestCase
 
         // Submenu
         $this->assertSame('<button type="button" title="MSC.showProfile" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">foo</button>', $children['submenu']->getLabel());
-        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--toggle-state', 'data-action' => 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close', 'data-contao--toggle-state-active-class' => 'active', 'data-contao--toggle-state-active-title-value' => 'MSC.hideProfile', 'data-contao--toggle-state-inactive-title-value=' => 'MSC.showProfile'], $children['submenu']->getAttributes());
+        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--toggle-state', 'data-action' => 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close', 'data-contao--toggle-state-active-class' => 'active', 'data-contao--toggle-state-active-title-value' => 'MSC.hideProfile', 'data-contao--toggle-state-inactive-title-value' => 'MSC.showProfile'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
         $this->assertSame(['data-contao--toggle-state-target' => 'controls'], $children['submenu']->getChildrenAttributes());

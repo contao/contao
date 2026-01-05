@@ -17,7 +17,7 @@ $this->bodyAttributes = $this
     ->set('data-action', 'touchstart@document->contao--tooltips#touchStart click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
     ->set('data-contao--toggle-state-active-class', 'active')
     ->set('data-contao--toggle-state-active-title-value', $this->trans('MSC.hideMainNavigation', [], 'contao_default'))
-    ->set('data-contao--toggle-state-inactive-title-value=', $this->trans('MSC.showMainNavigation', [], 'contao_default'))
+    ->set('data-contao--toggle-state-inactive-title-value', $this->trans('MSC.showMainNavigation', [], 'contao_default'))
     ->mergeWith($this->bodyAttributes)
 ;
 
