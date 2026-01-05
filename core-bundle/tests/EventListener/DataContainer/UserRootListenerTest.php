@@ -28,6 +28,13 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class UserRootListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
     public function testDoesNotRegisterCallbacksIfDriverIsNotTable(): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = [
@@ -51,8 +58,6 @@ class UserRootListenerTest extends TestCase
         $this->assertArrayNotHasKey('onload_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
         $this->assertArrayNotHasKey('oncreate_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
         $this->assertArrayNotHasKey('oncopy_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testDoesNotRegisterCallbacksIfUserIsNotBackendUser(): void
@@ -79,8 +84,6 @@ class UserRootListenerTest extends TestCase
         $this->assertArrayNotHasKey('onload_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
         $this->assertArrayNotHasKey('oncreate_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
         $this->assertArrayNotHasKey('oncopy_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testOnlyRegistersPermissionFieldCallbackIfUserIsAdmin(): void
@@ -113,11 +116,10 @@ class UserRootListenerTest extends TestCase
         $listener = new UserRootListener($security, $requestStack, $connection);
         $listener('tl_foo');
 
-        $this->assertCount(1, $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback']);
+        /* @phpstan-ignore-next-line */
+        $this->assertCount(1, $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'] ?? []);
         $this->assertArrayNotHasKey('oncreate_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
         $this->assertArrayNotHasKey('oncopy_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testRegistersAllCallbacksForNonAdmins(): void
@@ -127,8 +129,6 @@ class UserRootListenerTest extends TestCase
         $this->assertCount(2, $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback']);
         $this->assertCount(1, $GLOBALS['TL_DCA']['tl_foo']['config']['oncreate_callback']);
         $this->assertCount(1, $GLOBALS['TL_DCA']['tl_foo']['config']['oncopy_callback']);
-
-        unset($GLOBALS['TL_DCA']);
     }
 
     public function testDoesNotInjectPermissionFieldWithoutUserRoot(): void
@@ -330,6 +330,7 @@ class UserRootListenerTest extends TestCase
             ->willReturnCallback(static fn (string $attribute, $subject): bool => match ($attribute) {
                 'ROLE_ADMIN' => false,
                 ContaoCorePermissions::DC_PREFIX.'tl_user_group' => false,
+                default => throw new \RuntimeException(),
             })
         ;
 
@@ -364,6 +365,7 @@ class UserRootListenerTest extends TestCase
             ->willReturnCallback(static fn (string $attribute, $subject): bool => match ($attribute) {
                 'ROLE_ADMIN' => false,
                 ContaoCorePermissions::DC_PREFIX.'tl_user_group' => $subject instanceof UpdateAction,
+                default => throw new \RuntimeException(),
             })
         ;
 
