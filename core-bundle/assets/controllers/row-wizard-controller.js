@@ -133,7 +133,7 @@ export default class extends Controller {
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[], .selector_container > ul`,
+                `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
             )) {
                 if (el.name) {
                     el.name = el.name.replace(
