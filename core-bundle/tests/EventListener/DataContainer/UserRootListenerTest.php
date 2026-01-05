@@ -32,7 +32,7 @@ class UserRootListenerTest extends TestCase
     {
         parent::tearDown();
 
-        unset($GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
     }
 
     public function testDoesNotRegisterCallbacksIfDriverIsNotTable(): void
@@ -116,7 +116,7 @@ class UserRootListenerTest extends TestCase
         $listener = new UserRootListener($security, $requestStack, $connection);
         $listener('tl_foo');
 
-        /* @phpstan-ignore-next-line */
+        /** @phpstan-ignore-next-line */
         $this->assertCount(1, $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'] ?? []);
         $this->assertArrayNotHasKey('oncreate_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
         $this->assertArrayNotHasKey('oncopy_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
