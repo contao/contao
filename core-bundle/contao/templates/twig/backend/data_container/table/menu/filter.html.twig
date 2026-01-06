@@ -1,0 +1,15 @@
+{% trans_default_domain 'contao_default' %}
+
+<fieldset class="tl_filter tl_subpanel">
+    <legend>{{ 'MSC.filter'|trans }}</legend>
+
+    {% for filter in filters %}
+        {{ include('@Contao/backend/data_container/table/menu/_select.html.twig', {
+            name: filter.name,
+            options: filter.options,
+            active: filter.active,
+            title: filter.placeholder,
+            auto_submit: true,
+        }) }}
+    {% endfor %}
+</fieldset>

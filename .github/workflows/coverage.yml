@@ -20,7 +20,7 @@ jobs:
         name: Codecov
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -31,6 +31,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3

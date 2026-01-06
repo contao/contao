@@ -1,4 +1,4 @@
-{% use "@Contao/component/_headline.html.twig" %}
+{% use '@Contao/component/_headline.html.twig' %}
 
 {% if searchable is defined and not searchable %}
 <!-- indexer::stop -->
@@ -8,7 +8,7 @@
    template name (e.g. "content_element/text") as a class #}
 {% set attributes = attrs()
     .setIfExists('id', element_html_id)
-    .addClass([element_css_classes, "content-#{type|replace({'_': '-'})}"])
+    .addClass([element_css_classes, "content-#{type|replace({_: '-'})}"])
     .mergeWith(attributes|default)
 %}
 

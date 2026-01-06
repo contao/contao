@@ -17,3 +17,6 @@
 # PhpUnit
 /.phpunit.cache/
 /phpunit.xml
+
+# Twig-CS
+/.twig-cs-fixer.cache

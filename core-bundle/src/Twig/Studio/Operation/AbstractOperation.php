@@ -60,12 +60,12 @@ abstract class AbstractOperation extends AbstractController implements Operation
     {
         $services = parent::getSubscribedServices();
 
-        $services['twig'] = '?'.Environment::class;
-        $services['contao.twig.filesystem_loader'] = '?'.ContaoFilesystemLoader::class;
-        $services['contao.filesystem.virtual.user_templates'] = '?'.VirtualFilesystemInterface::class;
-        $services['contao.twig.studio.template_skeleton_factory'] = '?'.TemplateSkeletonFactory::class;
-        $services['contao.twig.finder_factory'] = '?'.FinderFactory::class;
-        $services['contao.twig.studio.cache_invalidator'] = '?'.CacheInvalidator::class;
+        $services['twig'] = Environment::class;
+        $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
+        $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;
+        $services['contao.twig.studio.template_skeleton_factory'] = TemplateSkeletonFactory::class;
+        $services['contao.twig.finder_factory'] = FinderFactory::class;
+        $services['contao.twig.studio.cache_invalidator'] = CacheInvalidator::class;
 
         return $services;
     }
@@ -95,6 +95,11 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->container->get('contao.twig.finder_factory')->create();
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
     protected function userTemplateExists(OperationContext $context): bool
     {
         // Check if the first template in the chain is a custom template from the
@@ -106,11 +111,6 @@ abstract class AbstractOperation extends AbstractController implements Operation
             true => str_starts_with($namespace, 'Contao_Theme_'),
             false => 'Contao_Global' === $namespace,
         };
-    }
-
-    protected function getName(): string
-    {
-        return $this->name;
     }
 
     protected function invalidateTemplateCache(OperationContext $context): void

@@ -22,7 +22,7 @@ class PaginationTest extends TestCase
 {
     public function testCreatesPagination(): void
     {
-        $request = Request::create('/foobar?page=2');
+        $request = Request::create('/foobar?page=2&lorem=ipsum');
 
         $pagination = new Pagination((new PaginationConfig('page', 100, 5))->withRequest($request)->withPageRange(10));
 
@@ -37,7 +37,7 @@ class PaginationTest extends TestCase
         $this->assertSame(range(1, 10), $pagination->getPages());
         $this->assertSame('page', $pagination->getQueryParameterName());
         $this->assertSame(5, $pagination->getPerPage());
-        $this->assertSame('/foobar?page=3', $pagination->getUrlForPage(3));
+        $this->assertSame('/foobar?page=3&lorem=ipsum', $pagination->getUrlForPage(3));
     }
 
     public function testThrowsOutOfRangeException(): void
@@ -71,5 +71,23 @@ class PaginationTest extends TestCase
 
         $this->assertNull($pagination->getNext());
         $this->assertNull($pagination->getLast());
+    }
+
+    public function testUsesForcedCurrentPage(): void
+    {
+        $request = Request::create('/foobar?page=2');
+
+        $config = (new PaginationConfig('page', 100, 5))
+            ->withRequest($request)
+            ->withPageRange(10)
+            ->withCurrentPage(3)
+        ;
+
+        $pagination = new Pagination($config);
+
+        $this->assertSame(3, $pagination->getCurrent());
+        $this->assertSame(2, $pagination->getPrevious());
+        $this->assertSame(4, $pagination->getNext());
+        $this->assertSame('/foobar?page=4', $pagination->getUrlForPage(4));
     }
 }

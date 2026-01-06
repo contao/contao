@@ -86,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple,help;{options_legend},options;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'radio'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory,help;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'checkbox'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,help;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'upload'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,maxImageWidth,maxImageHeight,help;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,fSize;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'upload'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,multipleFiles,maxImageWidth,maxImageHeight,help;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,fSize;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'range'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory,help;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hidden'                      => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hiddencustom'                => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp,customRgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -197,7 +197,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'customRgxp' => array
@@ -228,13 +228,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'maxImageWidth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'maxImageHeight' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'minval' => array
@@ -305,6 +305,12 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'multipleFiles' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w25'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'class' => array

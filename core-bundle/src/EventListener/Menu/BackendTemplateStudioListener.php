@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Menu;
 
-use Contao\CoreBundle\Controller\BackendTemplateStudioController;
+use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -66,7 +66,7 @@ class BackendTemplateStudioListener
             ->setUri($this->router->generate('contao_template_studio'))
             ->setLinkAttribute('class', 'navigation template-studio')
             ->setLinkAttribute('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
-            ->setCurrent(BackendTemplateStudioController::class === $request->get('_controller'))
+            ->setCurrent(TemplateStudioController::class === $request->get('_controller'))
         ;
 
         $categoryNode->addChild($templateStudioNode);

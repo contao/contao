@@ -16,18 +16,16 @@ jobs:
             matrix:
                 contao: [5.3, 5.6, 5.x]
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3 # highest version supported by all Contao versions in the matrix
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
+                  tools: symfony-cli
 
-            - name: Install Symfony CLI
-              run: |
-                  wget https://get.symfony.com/cli/installer -O - | bash
-                  mv /home/runner/.symfony5/bin/symfony /usr/local/bin/symfony
-                  symfony server:ca:install
+            - name: Enable TLS
+              run: symfony server:ca:install
 
             - name: Initialize the database
               run: |
@@ -39,6 +37,7 @@ jobs:
               with:
                   ref: ${{ matrix.contao }}
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Node.js
               uses: actions/setup-node@v4

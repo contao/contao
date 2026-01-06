@@ -78,7 +78,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testResetsTheBundleLoaderOnShutdown(): void
     {
-        $bundleLoader = $this->createMock(BundleLoader::class);
+        $bundleLoader = $this->createStub(BundleLoader::class);
 
         $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
@@ -93,7 +93,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testDoesNotResetsTheBundleLoaderOnShutdownIfKernelIsNotBooted(): void
     {
-        $bundleLoader = $this->createMock(BundleLoader::class);
+        $bundleLoader = $this->createStub(BundleLoader::class);
 
         $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
@@ -201,13 +201,13 @@ class ContaoKernelTest extends ContaoTestCase
     {
         $files = [];
 
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
         $container
             ->method('fileExists')
             ->willReturnCallback(static fn (string $path) => \in_array(basename($path), $expectedResult, true))
         ;
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
@@ -292,7 +292,7 @@ class ContaoKernelTest extends ContaoTestCase
         $projectDir = __DIR__.'/../Fixtures/HttpKernel/AutowireSrc';
         $container = new ContainerBuilder(new ParameterBag(['kernel.project_dir' => $projectDir]));
 
-        $locator = $this->createMock(FileLocatorInterface::class);
+        $locator = $this->createStub(FileLocatorInterface::class);
         $locator
             ->method('locate')
             ->willReturnArgument(0)
@@ -343,7 +343,7 @@ class ContaoKernelTest extends ContaoTestCase
         // Create a fake definition to stop services.php from loading anything
         $container->setDefinition('App\\Foobar', new Definition());
 
-        $locator = $this->createMock(FileLocatorInterface::class);
+        $locator = $this->createStub(FileLocatorInterface::class);
         $locator
             ->method('locate')
             ->willReturnArgument(0)
@@ -376,9 +376,9 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testRegisterContainerConfigurationLoadsPlugins(): void
     {
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
@@ -543,7 +543,7 @@ class ContaoKernelTest extends ContaoTestCase
      */
     private function getKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader = $this->createStub(PluginLoader::class);
         $pluginLoader
             ->method('getInstancesOf')
             ->willReturn([])

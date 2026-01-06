@@ -22,6 +22,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 
@@ -37,20 +38,7 @@ class SlotTokenParserTest extends TestCase
     #[DataProvider('provideSources')]
     public function testOutputsSlots(array $context, string $code, string $expectedOutput): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
-
-        $environment->addExtension(
-            new ContaoExtension(
-                $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
-            ),
-        );
-
-        $environment->addTokenParser(new SlotTokenParser());
-        $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
+        $environment = $this->getConfiguredEnvironment($code);
 
         $this->assertSame($expectedOutput, $environment->render('template.html.twig', $context));
     }
@@ -101,8 +89,8 @@ class SlotTokenParserTest extends TestCase
 
         yield 'slot inside slot with recursion' => [
             ['_slots' => ['a' => 'A', 'b' => 'B']],
-            '{% slot a %}<a>{{ slot() }}{% slot b %}<b>{% slot a %}{% endslot %}</b>{% endslot %}</a>{% endslot %}',
-            '<a>A<b>A</b></a>',
+            '{% slot a %}<a>{{ slot() }}{% slot b %}<b>{% slot a %}{% endslot %}{{ slot() }}</b>{% endslot %}</a>{% endslot %}',
+            '<a>A<b>AB</b></a>',
         ];
 
         yield 'assigning virtual slot function' => [
@@ -110,5 +98,47 @@ class SlotTokenParserTest extends TestCase
             '{% slot foo %}{% set var = slot() %}<main>{{ var ~ " baz" }}</main>{% endslot %}',
             '<main>bar baz</main>',
         ];
+    }
+
+    #[DataProvider('provideInvalidSources')]
+    public function testThrowsSyntaxErrorIfSlotWithContentDoesNotUseSlotFunction(string $code): void
+    {
+        $environment = $this->getConfiguredEnvironment($code);
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessageMatches('/Slot "foo" adds template content but does not call the "slot\(\)" function/');
+
+        $environment->render('template.html.twig', []);
+    }
+
+    public static function provideInvalidSources(): iterable
+    {
+        yield 'content without slot function' => [
+            '{% slot foo %}some content{% endslot %}',
+        ];
+
+        yield 'content with nodes without slot function' => [
+            '{% slot foo %}some content with some {{ nodes|default }}{% endslot %}',
+        ];
+    }
+
+    protected function getConfiguredEnvironment(string $templateCode): Environment
+    {
+        $environment = new Environment($this->createStub(LoaderInterface::class));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
+            ),
+        );
+
+        $environment->addTokenParser(new SlotTokenParser());
+        $environment->setLoader(new ArrayLoader(['template.html.twig' => $templateCode]));
+
+        return $environment;
     }
 }

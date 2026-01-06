@@ -53,7 +53,7 @@ class BackendFavoritesListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request && $request->query->get('return') && $request->request->has('saveNclose')) {
+        if ($request?->query->get('return') && $request->request->has('saveNclose')) {
             throw new RedirectResponseException($dc->getCurrentRecord()['url']);
         }
     }

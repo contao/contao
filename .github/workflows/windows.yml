@@ -16,11 +16,11 @@ jobs:
             matrix:
                 contao: [5.3, 5.6, 5.x]
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, sodium, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, sodium, zlib
                   ini-values: memory_limit=1G
                   coverage: none
 
@@ -32,6 +32,7 @@ jobs:
               with:
                   ref: ${{ matrix.contao }}
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3

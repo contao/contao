@@ -1,5 +1,5 @@
-{% trans_default_domain "contao_default" %}
-{% extends "@Contao/backend/data_container/table/edit/_edit.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% extends '@Contao/backend/data_container/table/edit/_edit.html.twig' %}
 
 {% set form_attributes = attrs()
     .set('action', "#{app.request.requestUri}&fields=1")
@@ -20,7 +20,7 @@
 
     <div class="tl_tbox">
         <div class="widget">
-            <fieldset class="tl_checkbox_container">
+            <fieldset class="tl_checkbox_container" data-controller="contao--check-all">
                 <legend{{ attrs().addClass('error', error_no_fields) }}>
                     {{ 'MSC.all_fields.0'|trans }}<span class="mandatory">*</span>
                 </legend>
@@ -36,6 +36,8 @@
                         .set('id', "all_#{field}")
                         .addClass('tl_checkbox')
                         .set('value', field)
+                        .set('data-contao--check-all-target', 'input')
+                        .set('data-action', 'contao--check-all#toggleInput')
                     %}
                     <input{{ input_attributes }}>
                     <label for="{{ "all_#{field}" }}" class="tl_checkbox_label">
@@ -60,5 +62,5 @@
     {% set submit_button %}
         <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">{{ 'MSC.continue'|trans }}</button>
     {% endset %}
-    {% include "@Contao/backend/data_container/buttons.html.twig" with { buttons: [submit_button] } %}
+    {{ include('@Contao/backend/data_container/buttons.html.twig', {buttons: [submit_button]}) }}
 {% endblock %}

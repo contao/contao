@@ -43,11 +43,6 @@ class VersionCommandTest extends TestCase
         $this->command = new VersionCommand($this->application);
     }
 
-    public function testHasCorrectName(): void
-    {
-        $this->assertSame('version', $this->command->getName());
-    }
-
     public function testOutputsApiVersion(): void
     {
         $this->application

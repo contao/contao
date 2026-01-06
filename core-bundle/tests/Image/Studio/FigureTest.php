@@ -29,7 +29,7 @@ use Contao\System;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -38,11 +38,11 @@ class FigureTest extends TestCase
     protected function setUp(): void
     {
         $imageFactory = new ImageFactory(
-            $this->createMock(ResizerInterface::class),
-            $this->createMock(ImagineInterface::class),
-            $this->createMock(ImagineInterface::class),
+            $this->createStub(ResizerInterface::class),
+            $this->createStub(ImagineInterface::class),
+            $this->createStub(ImagineInterface::class),
             new Filesystem(),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ContaoFramework::class),
             false,
             ['jpeg_quality' => 80],
             ['jpg', 'svg'],
@@ -68,7 +68,7 @@ class FigureTest extends TestCase
 
     public function testGetImage(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $figure = new Figure($image);
 
         $this->assertSame($image, $figure->getImage());
@@ -76,7 +76,7 @@ class FigureTest extends TestCase
 
     public function testHasNoLightboxOrMetadataByDefault(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $figure = new Figure($image);
 
         $this->assertFalse($figure->hasLightbox());
@@ -85,8 +85,8 @@ class FigureTest extends TestCase
 
     public function testGetLightbox(): void
     {
-        $image = $this->createMock(ImageResult::class);
-        $lightbox = $this->createMock(LightboxResult::class);
+        $image = $this->createStub(ImageResult::class);
+        $lightbox = $this->createStub(LightboxResult::class);
         $figure = new Figure($image, null, null, $lightbox);
 
         $this->assertTrue($figure->hasLightbox());
@@ -95,8 +95,8 @@ class FigureTest extends TestCase
 
     public function testGetLightboxSetViaCallback(): void
     {
-        $image = $this->createMock(ImageResult::class);
-        $lightbox = $this->createMock(LightboxResult::class);
+        $image = $this->createStub(ImageResult::class);
+        $lightbox = $this->createStub(LightboxResult::class);
         $called = 0;
 
         $lightboxClosure = function ($figure) use (&$called, $lightbox): LightboxResult {
@@ -117,7 +117,7 @@ class FigureTest extends TestCase
 
     public function testGetLightboxReturnsNullIfNotSet(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $figure = new Figure($image);
 
         $this->assertNull($figure->getLightbox());
@@ -125,7 +125,7 @@ class FigureTest extends TestCase
 
     public function testGetMetadata(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $metadata = new Metadata(['foo' => 'bar']);
         $figure = new Figure($image, $metadata);
 
@@ -135,7 +135,7 @@ class FigureTest extends TestCase
 
     public function testGetMetadataSetViaCallback(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $metadata = new Metadata(['foo' => 'bar']);
         $called = 0;
 
@@ -157,7 +157,7 @@ class FigureTest extends TestCase
 
     public function testGetMetadataReturnsNullIfNotSet(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $figure = new Figure($image);
 
         $this->assertNull($figure->getMetadata());
@@ -169,7 +169,7 @@ class FigureTest extends TestCase
         $lightbox = null;
 
         if ($withLightbox) {
-            $lightbox = $this->createMock(LightboxResult::class);
+            $lightbox = $this->createStub(LightboxResult::class);
             $lightbox
                 ->method('getLinkHref')
                 ->willReturn('path/from/lightbox')
@@ -181,7 +181,7 @@ class FigureTest extends TestCase
             ;
         }
 
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $figure = new Figure($image, $metadata, $attributes, $lightbox);
 
@@ -305,7 +305,7 @@ class FigureTest extends TestCase
 
     public function testGetOptions(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $options = ['attributes' => ['class' => 'foo'], 'custom' => new \stdClass()];
         $figure = new Figure($image, null, null, null, $options);
 
@@ -314,7 +314,7 @@ class FigureTest extends TestCase
 
     public function testGetOptionsSetViaCallback(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $options = ['attributes' => ['class' => 'foo'], 'custom' => new \stdClass()];
         $called = 0;
 
@@ -336,7 +336,7 @@ class FigureTest extends TestCase
 
     public function testGetOptionsReturnsEmptySetIfNotDefined(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $figure = new Figure($image);
 
         $this->assertSame([], $figure->getOptions());
@@ -485,7 +485,7 @@ class FigureTest extends TestCase
 
     public function testWithLightbox(): void
     {
-        $lightboxImage = $this->createMock(ImageResult::class);
+        $lightboxImage = $this->createStub(ImageResult::class);
         $lightboxImage
             ->method('getImg')
             ->willReturn(['lightbox img'])
@@ -496,7 +496,7 @@ class FigureTest extends TestCase
             ->willReturn(['lightbox sources'])
         ;
 
-        $lightbox = $this->createMock(LightboxResult::class);
+        $lightbox = $this->createStub(LightboxResult::class);
         $lightbox
             ->method('hasImage')
             ->willReturn(true)
@@ -641,7 +641,7 @@ class FigureTest extends TestCase
         );
     }
 
-    private function mockImage(): ImageResult&MockObject
+    private function mockImage(): ImageResult&Stub
     {
         $img = ['img foo'];
         $sources = ['sources foo'];
@@ -650,7 +650,7 @@ class FigureTest extends TestCase
         $originalWidth = 100;
         $originalHeight = 50;
 
-        $originalSize = $this->createMock(BoxInterface::class);
+        $originalSize = $this->createStub(BoxInterface::class);
         $originalSize
             ->method('getWidth')
             ->willReturn($originalWidth)
@@ -661,13 +661,13 @@ class FigureTest extends TestCase
             ->willReturn($originalHeight)
         ;
 
-        $originalDimensions = $this->createMock(ImageDimensions::class);
+        $originalDimensions = $this->createStub(ImageDimensions::class);
         $originalDimensions
             ->method('getSize')
             ->willReturn($originalSize)
         ;
 
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $image
             ->method('getOriginalDimensions')
             ->willReturn($originalDimensions)

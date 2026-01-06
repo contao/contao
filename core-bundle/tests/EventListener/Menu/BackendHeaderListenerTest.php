@@ -27,7 +27,7 @@ class BackendHeaderListenerTest extends TestCase
 {
     public function testBuildsTheHeaderMenu(): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->id = 1;
         $user->name = 'Foo Bar';
         $user->username = 'foo';
@@ -40,7 +40,7 @@ class BackendHeaderListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(
@@ -54,7 +54,7 @@ class BackendHeaderListenerTest extends TestCase
             )
         ;
 
-        $systemMessages = $this->mockAdapter(['getSystemMessages']);
+        $systemMessages = $this->createAdapterMock(['getSystemMessages']);
         $systemMessages
             ->expects($this->once())
             ->method('getSystemMessages')
@@ -68,7 +68,7 @@ class BackendHeaderListenerTest extends TestCase
             $security,
             $router,
             $this->getTranslator(),
-            $this->mockContaoFramework([Backend::class => $systemMessages]),
+            $this->createContaoFrameworkStub([Backend::class => $systemMessages]),
         );
 
         $listener($event);
@@ -79,7 +79,7 @@ class BackendHeaderListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
+        $this->assertSame(['manual', 'alerts', 'submenu', 'burger'], array_keys($children));
 
         // Manual
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
@@ -99,34 +99,17 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
 
-        // Color scheme
-        $this->assertSame('color-scheme', $children['color-scheme']->getLabel());
-        $this->assertSame('#', $children['color-scheme']->getUri());
-        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['color-scheme']->getExtras());
-
-        $this->assertSame(
-            [
-                'class' => 'icon-color-scheme',
-                'title' => '',
-                'data-controller' => 'contao--color-scheme',
-                'data-action' => 'contao--color-scheme#toggle',
-                'data-contao--color-scheme-target' => 'label',
-                'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',
-            ],
-            $children['color-scheme']->getLinkAttributes(),
-        );
-
         // Submenu
-        $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
-        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--toggle-state', 'data-action' => 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close', 'data-contao--toggle-state-active-class' => 'active'], $children['submenu']->getAttributes());
+        $this->assertSame('<button type="button" title="MSC.showProfile" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">foo</button>', $children['submenu']->getLabel());
+        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--toggle-state', 'data-action' => 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close', 'data-contao--toggle-state-active-class' => 'active', 'data-contao--toggle-state-active-title-value' => 'MSC.hideProfile', 'data-contao--toggle-state-inactive-title-value' => 'MSC.showProfile'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
         $this->assertSame(['data-contao--toggle-state-target' => 'controls'], $children['submenu']->getChildrenAttributes());
 
         $grandChildren = $children['submenu']->getChildren();
 
-        $this->assertCount(4, $grandChildren);
-        $this->assertSame(['info', 'login', 'security', 'favorites'], array_keys($grandChildren));
+        $this->assertCount(5, $grandChildren);
+        $this->assertSame(['info', 'login', 'security', 'favorites', 'color-scheme'], array_keys($grandChildren));
 
         // Info
         $this->assertSame('<strong>Foo Bar</strong> foo@bar.com', $grandChildren['info']->getLabel());
@@ -145,6 +128,11 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame(['class' => 'icon-security'], $grandChildren['security']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['security']->getExtras());
 
+        // Color scheme
+        $this->assertSame('<button class="icon-color-scheme" type="button" data-contao--color-scheme-target="label" data-action="contao--color-scheme#toggle:prevent">MSC.lightMode</button>', $grandChildren['color-scheme']->getLabel());
+        $this->assertSame(['class' => 'separator', 'data-controller' => 'contao--color-scheme', 'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}'], $grandChildren['color-scheme']->getAttributes());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $grandChildren['color-scheme']->getExtras());
+
         // Favorites
         $this->assertSame('MSC.favorites', $grandChildren['favorites']->getLabel());
         $this->assertSame('/contao?do=favorites', $grandChildren['favorites']->getUri());
@@ -152,14 +140,14 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
         // Burger
-        $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
+        $this->assertSame('<button type="button" title="MSC.showMainNavigation" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
         $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }
 
     public function testDoesNotBuildTheHeaderMenuIfNoUserIsGiven(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -177,8 +165,8 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(ContaoFramework::class),
         );
 
         $listener($event);
@@ -190,7 +178,7 @@ class BackendHeaderListenerTest extends TestCase
 
     public function testDoesNotBuildTheHeaderMenuIfTheNameDoesNotMatch(): void
     {
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('getUser')
             ->willReturn(null)
@@ -208,8 +196,8 @@ class BackendHeaderListenerTest extends TestCase
         $listener = new BackendHeaderListener(
             $security,
             $router,
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(ContaoFramework::class),
         );
 
         $listener($event);
@@ -221,7 +209,7 @@ class BackendHeaderListenerTest extends TestCase
 
     private function getTranslator(): TranslatorInterface
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $id): string => $id)

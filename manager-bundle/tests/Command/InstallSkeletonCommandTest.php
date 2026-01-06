@@ -146,7 +146,7 @@ class InstallSkeletonCommandTest extends ContaoTestCase
         $container->setParameter('kernel.project_dir', $this->getTempDir());
         $container->set('filesystem', new Filesystem());
 
-        $kernel = $this->createMock(ContaoKernel::class);
+        $kernel = $this->createStub(ContaoKernel::class);
         $kernel
             ->method('getContainer')
             ->willReturn($container)

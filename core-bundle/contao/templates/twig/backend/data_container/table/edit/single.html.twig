@@ -1,5 +1,5 @@
-{% trans_default_domain "contao_default" %}
-{% extends "@Contao/backend/data_container/table/edit/_edit.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% extends '@Contao/backend/data_container/table/edit/_edit.html.twig' %}
 
 {% block header %}
     {{ version_dropdown|raw }}
@@ -14,7 +14,7 @@
         <input type="hidden" name="VERSION_NUMBER" value="{{ version_number }}">
     {% endif %}
 
-    {% embed "@Contao/backend/data_container/table/edit/_boxes.html.twig" %}
+    {% embed '@Contao/backend/data_container/table/edit/_boxes.html.twig' %}
         {% block widget_groups %}
             <div class="widget-group">{{ parent() }}</div>
         {% endblock %}

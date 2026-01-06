@@ -25,7 +25,7 @@ class DataContainerOperationTest extends TestCase
         $translations = ['some_label' => ['first', 'second']];
         $config = ['label' => &$translations['some_label']];
 
-        new DataContainerOperation('test', $config, ['id' => 1], $this->createMock(DataContainer::class));
+        new DataContainerOperation('test', $config, ['id' => 1], $this->createStub(DataContainer::class));
 
         $this->assertSame('first', $translations['some_label'][0]);
         $this->assertSame('second', $translations['some_label'][1]);
@@ -36,7 +36,7 @@ class DataContainerOperationTest extends TestCase
     {
         $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
 
-        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createMock(DataContainer::class));
+        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createStub(DataContainer::class));
 
         $this->assertSame('#foo', $operation['href']);
         $this->assertSame('bar', $operation['route']);
@@ -53,7 +53,7 @@ class DataContainerOperationTest extends TestCase
     {
         $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
 
-        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createMock(DataContainer::class));
+        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createStub(DataContainer::class));
         $operation->setHtml('<a href="#">foobar</a>');
 
         $this->assertSame('<a href="#">foobar</a>', $operation->getHtml());
@@ -65,7 +65,7 @@ class DataContainerOperationTest extends TestCase
     {
         $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
 
-        $operation = new DataContainerOperation('test', $config, null, $this->createMock(DataContainer::class));
+        $operation = new DataContainerOperation('test', $config, null, $this->createStub(DataContainer::class));
 
         $this->assertInstanceOf(HtmlAttributes::class, $operation['attributes']);
 

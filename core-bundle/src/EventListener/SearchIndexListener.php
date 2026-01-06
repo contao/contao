@@ -140,7 +140,7 @@ class SearchIndexListener
             // No meta robots tag found
         }
 
-        // If there are no json ld scripts at all, this should not be handled by our indexer
+        // If there are no JSON-LD scripts at all, this should not be handled by our indexer
         return [] !== $document->extractJsonLdScripts();
     }
 
