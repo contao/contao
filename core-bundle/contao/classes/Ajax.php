@@ -180,14 +180,19 @@ class Ajax extends Backend
 				$intId = Input::get('id', true);
 				$strField = $dc->inputName = Input::post('name');
 				$boolRowWizard = false;
-				$subField = null;
+				$parts = null;
 
-				// Handle file pickers within the row wizard
-				if (preg_match('/^([0-9a-zA-Z]+)(?:\[(\d+)]\[([0-9a-zA-Z]+)])?$/', $strField, $matches))
+				// Row wizard check
+				if (preg_match_all('/[a-zA-Z][a-zA-Z0-9]*/', $strField, $matches))
 				{
-					$boolRowWizard = true;
-					$strField = $matches[1];
-					$subField = $matches[3] ?? null;
+					$parts = $matches[0] ?? null;
+					$field = $parts[0] ?? null;
+
+					if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['inputType'] ?? null) === 'rowWizard')
+					{
+						$boolRowWizard = true;
+						$strField = $field;
+					}
 				}
 
 				// Handle the keys in "edit multiple" mode
@@ -319,13 +324,18 @@ class Ajax extends Backend
 					$varValue = serialize($varValue);
 				}
 
+				$dcaField = $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField];
+
 				if ($boolRowWizard)
 				{
-					$dcaField = $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['fields'][$subField];
-				}
-				else
-				{
-					$dcaField = $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField];
+					// Search for the nested row wizard field
+					foreach ($parts as $i => $token)
+					{
+						if ($i !== 0 && isset($dcaField['fields'][$token]))
+						{
+							$dcaField = $dcaField['fields'][$token];
+						}
+					}
 				}
 
 				$inputName = $dc->inputName;
