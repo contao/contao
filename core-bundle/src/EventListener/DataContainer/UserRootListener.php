@@ -142,10 +142,6 @@ class UserRootListener implements ResetInterface
         $root[] = $insertId;
         $new = [$rootField => serialize($root)];
 
-        if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new UpdateAction($table, $record, $new))) {
-            return;
-        }
-
         $this->connection->update($table, $new, ['id' => $record['id']]);
     }
 

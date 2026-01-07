@@ -316,41 +316,6 @@ class UserRootListenerTest extends TestCase
         $callback(null, 42);
     }
 
-    public function testDoesNotAdjustPermissionsIfUpdateActionIsDenied(): void
-    {
-        $user = $this->createClassWithPropertiesStub(BackendUser::class, [
-            'foobars' => [1, 2, 3],
-            'inherit' => 'group',
-        ]);
-
-        $security = $this->mockSecurity(false, $user);
-        $security
-            ->expects($this->exactly(2))
-            ->method('isGranted')
-            ->willReturnCallback(static fn (string $attribute, $subject): bool => match ($attribute) {
-                'ROLE_ADMIN' => false,
-                ContaoCorePermissions::DC_PREFIX.'tl_user_group' => false,
-                default => throw new \RuntimeException(),
-            })
-        ;
-
-        $requestStack = $this->mockRequestStackWithSession(['tl_foo' => [42]]);
-
-        $connection = $this->mockConnection([['id' => 1]]);
-        $connection
-            ->expects($this->never())
-            ->method('update')
-        ;
-
-        $this->registerCallbacks($security, $requestStack, $connection);
-
-        $GLOBALS['TL_DCA']['tl_foo']['config']['userRoot'] = 'foobars';
-
-        $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['oncreate_callback'][0] ?? null;
-        $this->assertIsCallable($callback);
-        $callback(null, 42);
-    }
-
     public function testAdjustsGroupPermissions(): void
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, [
@@ -359,15 +324,6 @@ class UserRootListenerTest extends TestCase
         ]);
 
         $security = $this->mockSecurity(false, $user);
-        $security
-            ->expects($this->exactly(2))
-            ->method('isGranted')
-            ->willReturnCallback(static fn (string $attribute, $subject): bool => match ($attribute) {
-                'ROLE_ADMIN' => false,
-                ContaoCorePermissions::DC_PREFIX.'tl_user_group' => $subject instanceof UpdateAction,
-                default => throw new \RuntimeException(),
-            })
-        ;
 
         $requestStack = $this->mockRequestStackWithSession(['tl_foo' => [42]]);
 
