@@ -128,31 +128,22 @@ export default class extends Controller {
     }
 
     updateSorting() {
-        // Searches for digits with leading underscore or within brackets
-        const regexPattern = /(_\d+)|(\[\d+\])/g;
+        const regexPattern = new RegExp(`${this.nameValue}\\[[0-9]+\\]`, 'g');
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
                 `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
             )) {
                 if (el.name) {
-                    el.name = el.name.replace(
-                        new RegExp(`^${this.nameValue}\[[0-9]+]`, 'g'),
-                        `${this.nameValue}[${i}]`,
-                    );
+                    el.name = el.name.replace(regexPattern, `${this.nameValue}[${i}]`);
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(regexPattern, (match) => (match.includes('[') ? `[${i}]` : `_${i}`));
+                    el.id = el.id.replace(regexPattern, `${this.nameValue}[${i}]`);
                 }
 
                 if (el.getAttribute('for')) {
-                    el.setAttribute(
-                        'for',
-                        el
-                            .getAttribute('for')
-                            .replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`),
-                    );
+                    el.setAttribute('for', el.getAttribute('for').replace(regexPattern, `${this.nameValue}[${i}]`));
                 }
             }
 
@@ -160,9 +151,7 @@ export default class extends Controller {
 
             if (pickerScript) {
                 const script = document.createElement('script');
-                script.textContent = pickerScript.textContent.replace(regexPattern, (match) =>
-                    match.includes('[') ? `[${i}]` : `_${i}`,
-                );
+                script.textContent = pickerScript.textContent.replace(regexPattern, `${this.nameValue}[${i}]`);
                 pickerScript.parentNode.replaceChild(script, pickerScript);
             }
 
