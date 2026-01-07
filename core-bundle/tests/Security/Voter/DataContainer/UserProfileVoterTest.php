@@ -29,7 +29,7 @@ class UserProfileVoterTest extends TestCase
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 2]);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)
