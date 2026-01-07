@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\UserRootListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Folder;
 use Contao\DC_Table;
