@@ -1186,6 +1186,9 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.user_profile:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UserProfileVoter
+
     contao.security.data_container_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DataContainerPermissionVoter
         arguments:

@@ -439,11 +439,7 @@ class tl_user extends Backend
 		$GLOBALS['TL_DCA'][$dc->table]['config']['closed'] = true;
 		$GLOBALS['TL_DCA'][$dc->table]['config']['hideVersionMenu'] = true;
 
-		$GLOBALS['TL_DCA'][$dc->table]['palettes'] = array
-		(
-			'__selector__' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'],
-			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login']
-		);
+		$GLOBALS['TL_DCA'][$dc->table]['palettes']['default'] = $GLOBALS['TL_DCA'][$dc->table]['palettes']['login'];
 
 		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default'] ?? '');
 
