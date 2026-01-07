@@ -336,7 +336,9 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
-            $commandsHash = hash('sha256', json_encode($commands, JSON_THROW_ON_ERROR));
+            $sortedCommands = $commands;
+            sort($sortedCommands);
+            $commandsHash = hash('sha256', json_encode($sortedCommands, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('schema-pending', [
