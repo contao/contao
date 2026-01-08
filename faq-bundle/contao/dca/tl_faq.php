@@ -51,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'search,limit;filter',
+			'panelLayout'             => 'search;filter;limit',
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp'),
 			'renderAsGrid'            => true,

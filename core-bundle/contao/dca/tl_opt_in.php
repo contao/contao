@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('createdOn DESC'),
-			'panelLayout'             => 'search,sort,limit;filter',
+			'panelLayout'             => 'search;filter;sort,limit',
 			'defaultSearchField'      => 'email'
 		),
 		'label' => array

@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
-			'panelLayout'             => 'search,sort,limit;filter',
+			'panelLayout'             => 'search;filter;sort,limit',
 			'defaultSearchField'      => 'lastname'
 		),
 		'label' => array

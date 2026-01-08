@@ -59,7 +59,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'search,limit;filter',
+			'panelLayout'             => 'search;filter;limit',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
