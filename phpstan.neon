@@ -61,6 +61,9 @@ parameters:
         # Ignore missing generated class names
         - message: '#setMockClassName\(\) expects class-string, string given#'
 
+        # Ignore Doctrine backwards compatibility check
+        - message: "#Call to function method_exists\\(\\) with \\'Doctrine\\\\\\\\DBAL\\\\\\\\Connection\\' and \\'quoteSingleIdentifi…\\' will always evaluate to true.#"
+
     treatPhpDocTypesAsCertain: false
     rememberPossiblyImpureFunctionValues: false
 
