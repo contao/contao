@@ -32,7 +32,7 @@
                         .set('value', option.value)
                         .mergeWith(option.checked)
                         .mergeWith(option.attributes)
-                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|sanitize_html('contao')||insert_tag_raw }}</label></span>
+                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|sanitize_html('contao')|insert_tag_raw }}</label></span>
             {% endif %}
 
             {% if option.type == 'group_end' %}
