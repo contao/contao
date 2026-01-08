@@ -602,7 +602,7 @@ class tl_module extends Backend
 		{
 			if ($v['eval']['feEditable'] ?? null)
 			{
-				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0];
+				$return[$k] = $GLOBALS['TL_DCA']['tl_member']['fields'][$k]['label'][0] ?? $k;
 			}
 		}
 

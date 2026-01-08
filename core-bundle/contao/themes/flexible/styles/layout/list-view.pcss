@@ -130,11 +130,8 @@
 }
 
 .tl_content .inside {
-    padding: var(--row-padding) 6px;
-}
-
-.tl_content.draft .inside {
     min-height: 16px;
+    padding: var(--row-padding) 6px;
 }
 
 .tl_content.draft .inside > :not(.tl_content_right, .cte_type) {
@@ -304,7 +301,7 @@
     position: relative;
     align-items: center;
 
-    &.is--hidden {
+    &.is-hidden {
         visibility: hidden;
         width: 0;
         margin-left: -3px;
@@ -374,6 +371,11 @@
     align-items: start;
 }
 
+.tl_listing.picker .operations {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .cte_type {
     margin: 0 0 4px;
     font-size: .75rem;
@@ -388,6 +390,7 @@
     font-size: .815rem;
     display: flex;
     align-items: center;
+    gap: 3px;
 }
 
 .cte_type.published, .cte_type.published a {
@@ -398,6 +401,7 @@
     color: var(--red);
 }
 
+/** Deprecated in Contao 5.6, to be removed in Contao 6 */
 .cte_type.icon-protected {
     padding-left: 27px;
     background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
@@ -414,7 +418,11 @@
     margin-left: -10px;
     background: none;
     border: none;
-    padding-right: 3px;
+    padding-right: 4px;
+}
+
+.cte_type .drag-handle {
+    padding-right: 1px;
 }
 
 .cte_preview {

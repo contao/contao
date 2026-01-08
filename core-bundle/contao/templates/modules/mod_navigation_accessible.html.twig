@@ -1,24 +1,25 @@
 {% trans_default_domain "contao_default" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
-{% set wrapper_attributes = attrs()
+{% set wrapper_attributes = attrs(cssID)
     .addClass([class, 'nav-wrapper', 'block'])
     .mergeWith(wrapper_attributes|default)
 %}
 
 {% block content %}
-    <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
-        let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
-        if (typeof accessibleNavObserver === 'undefined') {
-            const accessibleNavObserver = new ResizeObserver(() => {
-                document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
-                document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
-            }).observe(document.body);
-        }
-    </script>
+    {% block navigation_script_variables %}
+        <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+            let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
+            if (typeof accessibleNavObserver === 'undefined') {
+                const accessibleNavObserver = new ResizeObserver(() => {
+                    document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
+                    document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
+                }).observe(document.body);
+            }
+        </script>
+    {% endblock %}
     <!-- indexer::stop -->
-    <div{{ cssID|default|replace({'"':''}) }}{{ wrapper_attributes }}>
-
+    <div{{ wrapper_attributes }}>
         {% block toggle %}
             {% set button_attributes = attrs()
                 .addClass('nav-burger')
@@ -58,7 +59,7 @@
                     <a{{ skiplink_attributes }}>{{ skipNavigation }}</a>
                 {% endblock %}
 
-                {{ items|join|raw }}
+                {{ items|raw }}
 
                 <span id="{{ skipId }}" class="invisible"></span>
             </nav>
@@ -89,8 +90,8 @@
                     expand: 'nav-expanded'
                 },
                 ariaLabels: {
-                    'expand': '{{ 'MSC.ariaMenuExpand'|trans }}',
-                    'collapse': '{{ 'MSC.ariaMenuCollapse'|trans }}',
+                    'expand': '{{ 'MSC.ariaMenuExpand'|trans|e('js') }}',
+                    'collapse': '{{ 'MSC.ariaMenuCollapse'|trans|e('js') }}',
                 }
             });
         })

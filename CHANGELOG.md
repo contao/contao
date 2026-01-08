@@ -2,6 +2,85 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.9] (2025-12-15)
+
+**Fixed issues:**
+
+- [#9098] Fix headline in new box for certain elements ([aschempp])
+- [#9126] Terminate parameters in the Altcha salt ([zoglo])
+- [#9119] Fix using the deprecated `Template::attr()` method ([aschempp])
+- [#9100] Wrap the accesible navigation script variables inside a block ([zoglo])
+- [#9072] Improve the performance of the table data container provider ([Toflar])
+- [#9102] Fix incorrect property naming in `FormAltcha` ([lukasbableck])
+- [#9093] Fix the missing `disconnect()` in the `jobs-controller.js` ([Toflar])
+- [#9088] Improve the `CalendarFeedListenerTest` ([fritzmg])
+- [#9069] Allow confirming opt-in tokens as long as they are valid ([leofeyer])
+
+## [5.6.8] (2025-12-04)
+
+**Fixed issues:**
+
+- [#9080] Fix accessing a method that potentially does not exist ([Toflar])
+- [#9068] Correctly bypass the password change for impersonated users ([aschempp])
+
+## [5.6.7] (2025-11-29)
+
+**Fixed issues:**
+
+- [#9050] Increase the field length for the ALTCHA challenge ([fritzmg])
+- [#9048] Fix the `LayoutTemplateMigration` ([fritzmg])
+
+## [5.6.6] (2025-11-26)
+
+**Fixed issues:**
+
+- [#9037] Allow overriding the back link if a DCA has a `ptable` ([aschempp])
+- [#9044] Update the default content element palette in the maker bundle ([fritzmg])
+- [#9043] Re-add the `flippedState` for the Choices dropdown ([zoglo])
+
+## [5.6.5] (2025-11-25)
+
+**Security fixes:**
+
+- [CVE-2025-65960]: Remote code execution in template closures
+- [CVE-2025-65961]: Cross-site scripting in templates
+
+**Fixed issues:**
+
+- [#8706] Use the attributes callback to initialize the layout template widget ([aschempp])
+- [#9033] Output custom meta tags in Twig layouts ([fritzmg])
+- [#9019] Check if operation description exists ([aschempp])
+- [#9020] Fix `supportsSource` of `PageCommentsVoter` ([fritzmg])
+- [#9025] Make class optional again for global operation with icon and button callback ([fritzmg])
+- [#9027] Set widget error on onbeforesubmit exception ([aschempp])
+- [#9004] Change the name of the default layout template in Twig layouts ([m-vo])
+- [#9014] Improve the Template Studio cache invalidation ([m-vo])
+- [#9001] Fix the picker offset in the list view ([zoglo])
+- [#9009] Provide the index to SEAL when reindexing ([Toflar])
+- [#8774] Add deferred execution for Twig layouts ([m-vo])
+- [#9000] Rename the `is--hidden` class to `is-hidden` ([leofeyer])
+- [#8988] Fix table sorting error in mutation observer ([aschempp])
+- [#8782] Analyze if parent slots were overwritten in the Twig inspector ([m-vo])
+- [#8989] Allow overriding the table header and footer blocks ([aschempp])
+- [#8783] Render both content elements and front end modules in the Twig layout ([m-vo])
+- [#8966] Increase the z-index of the jobs overlay ([stefansl])
+
+## [5.6.4] (2025-10-31)
+
+**Fixed issues:**
+
+- [#8958] Change the variable name for the active mobile navigation color ([Werbeagentur-Kopfnuss])
+- [#8956] Do not swallow DCA exceptions ([aschempp])
+- [#8953] Add a viewport tag to the new default layout template ([leofeyer])
+- [#8954] Define a minimum height for `.tl_content .inside` ([leofeyer])
+- [#8952] Use `deprecation_info` instead of `deprecated_info` ([leofeyer])
+- [#8951] Replace a leftover MooTools function call in the tooltips controller ([leofeyer])
+- [#8905] Fix the protected icon in the content element preview ([aschempp])
+- [#8944] Cast the slug to string when getting the theme path ([Tastaturberuf])
+- [#8921] Allow disabling the back end search ([fritzmg])
+- [#8919] Remove the `.operations > ul` padding caused by user-agent styles ([lukasbableck])
+- [#8913] Prevent the mobile navigation from flashing on page load ([heimseiten])
+
 ## [5.6.3] (2025-09-30)
 
 **Fixed issues:**
@@ -222,6 +301,12 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.9]: https://github.com/contao/contao/releases/tag/5.6.9
+[5.6.8]: https://github.com/contao/contao/releases/tag/5.6.8
+[5.6.7]: https://github.com/contao/contao/releases/tag/5.6.7
+[5.6.6]: https://github.com/contao/contao/releases/tag/5.6.6
+[5.6.5]: https://github.com/contao/contao/releases/tag/5.6.5
+[5.6.4]: https://github.com/contao/contao/releases/tag/5.6.4
 [5.6.3]: https://github.com/contao/contao/releases/tag/5.6.3
 [5.6.2]: https://github.com/contao/contao/releases/tag/5.6.2
 [5.6.1]: https://github.com/contao/contao/releases/tag/5.6.1
@@ -229,6 +314,8 @@ This project adheres to [Semantic Versioning].
 [5.6.0-RC3]: https://github.com/contao/contao/releases/tag/5.6.0-RC3
 [5.6.0-RC2]: https://github.com/contao/contao/releases/tag/5.6.0-RC2
 [5.6.0-RC1]: https://github.com/contao/contao/releases/tag/5.6.0-RC1
+[CVE-2025-65960]: https://github.com/contao/contao/security/advisories/GHSA-98vj-mm79-v77r
+[CVE-2025-65961]: https://github.com/contao/contao/security/advisories/GHSA-68q5-78xp-cwwc
 [CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
 [CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
 [CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
@@ -239,11 +326,14 @@ This project adheres to [Semantic Versioning].
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [fritzmg]: https://github.com/fritzmg
+[heimseiten]: https://github.com/heimseiten
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
+[stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
+[Werbeagentur-Kopfnuss]: https://github.com/Werbeagentur-Kopfnuss
 [zoglo]: https://github.com/zoglo
 [#6859]: https://github.com/contao/contao/pull/6859
 [#6955]: https://github.com/contao/contao/pull/6955
@@ -382,6 +472,7 @@ This project adheres to [Semantic Versioning].
 [#8696]: https://github.com/contao/contao/pull/8696
 [#8697]: https://github.com/contao/contao/pull/8697
 [#8700]: https://github.com/contao/contao/pull/8700
+[#8706]: https://github.com/contao/contao/pull/8706
 [#8707]: https://github.com/contao/contao/pull/8707
 [#8710]: https://github.com/contao/contao/pull/8710
 [#8715]: https://github.com/contao/contao/pull/8715
@@ -397,8 +488,11 @@ This project adheres to [Semantic Versioning].
 [#8768]: https://github.com/contao/contao/pull/8768
 [#8769]: https://github.com/contao/contao/pull/8769
 [#8773]: https://github.com/contao/contao/pull/8773
+[#8774]: https://github.com/contao/contao/pull/8774
 [#8775]: https://github.com/contao/contao/pull/8775
 [#8777]: https://github.com/contao/contao/pull/8777
+[#8782]: https://github.com/contao/contao/pull/8782
+[#8783]: https://github.com/contao/contao/pull/8783
 [#8784]: https://github.com/contao/contao/pull/8784
 [#8788]: https://github.com/contao/contao/pull/8788
 [#8790]: https://github.com/contao/contao/pull/8790
@@ -419,3 +513,43 @@ This project adheres to [Semantic Versioning].
 [#8886]: https://github.com/contao/contao/pull/8886
 [#8892]: https://github.com/contao/contao/pull/8892
 [#8894]: https://github.com/contao/contao/pull/8894
+[#8905]: https://github.com/contao/contao/pull/8905
+[#8913]: https://github.com/contao/contao/pull/8913
+[#8919]: https://github.com/contao/contao/pull/8919
+[#8921]: https://github.com/contao/contao/pull/8921
+[#8944]: https://github.com/contao/contao/pull/8944
+[#8951]: https://github.com/contao/contao/pull/8951
+[#8952]: https://github.com/contao/contao/pull/8952
+[#8953]: https://github.com/contao/contao/pull/8953
+[#8954]: https://github.com/contao/contao/pull/8954
+[#8956]: https://github.com/contao/contao/pull/8956
+[#8958]: https://github.com/contao/contao/pull/8958
+[#8966]: https://github.com/contao/contao/pull/8966
+[#8988]: https://github.com/contao/contao/pull/8988
+[#8989]: https://github.com/contao/contao/pull/8989
+[#9000]: https://github.com/contao/contao/pull/9000
+[#9001]: https://github.com/contao/contao/pull/9001
+[#9004]: https://github.com/contao/contao/pull/9004
+[#9009]: https://github.com/contao/contao/pull/9009
+[#9014]: https://github.com/contao/contao/pull/9014
+[#9019]: https://github.com/contao/contao/pull/9019
+[#9020]: https://github.com/contao/contao/pull/9020
+[#9025]: https://github.com/contao/contao/pull/9025
+[#9027]: https://github.com/contao/contao/pull/9027
+[#9033]: https://github.com/contao/contao/pull/9033
+[#9037]: https://github.com/contao/contao/pull/9037
+[#9043]: https://github.com/contao/contao/pull/9043
+[#9044]: https://github.com/contao/contao/pull/9044
+[#9048]: https://github.com/contao/contao/pull/9048
+[#9050]: https://github.com/contao/contao/pull/9050
+[#9068]: https://github.com/contao/contao/pull/9068
+[#9069]: https://github.com/contao/contao/pull/9069
+[#9072]: https://github.com/contao/contao/pull/9072
+[#9080]: https://github.com/contao/contao/pull/9080
+[#9088]: https://github.com/contao/contao/pull/9088
+[#9093]: https://github.com/contao/contao/pull/9093
+[#9098]: https://github.com/contao/contao/pull/9098
+[#9100]: https://github.com/contao/contao/pull/9100
+[#9102]: https://github.com/contao/contao/pull/9102
+[#9119]: https://github.com/contao/contao/pull/9119
+[#9126]: https://github.com/contao/contao/pull/9126

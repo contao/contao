@@ -35,6 +35,7 @@ class CreateOperation extends AbstractOperation
 
         $this->getUserTemplatesStorage()->write($context->getUserTemplatesStoragePath(), $skeleton);
 
+        $this->invalidateTemplateCache($context);
         $this->refreshTemplateHierarchy();
 
         return $this->render(

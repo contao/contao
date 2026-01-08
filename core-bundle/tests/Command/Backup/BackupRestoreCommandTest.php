@@ -69,7 +69,7 @@ class BackupRestoreCommandTest extends TestCase
         $command = new BackupRestoreCommand($this->mockBackupManagerWithBackups());
 
         $commandTester = new CommandTester($command);
-        $commandTester->setInputs([1]);
+        $commandTester->setInputs(['1']);
 
         $code = $commandTester->execute([]);
 

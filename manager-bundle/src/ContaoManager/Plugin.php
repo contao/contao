@@ -37,6 +37,7 @@ use League\FlysystemBundle\FlysystemBundle;
 use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Pdo\Mysql;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -260,10 +261,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
+        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined
-        if (isset($options[\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+        if (isset($options[$key])) {
             return $extensionConfigs;
         }
 
@@ -277,7 +279,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            $key => false,
                         ],
                     ],
                 ],
@@ -368,7 +370,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Skip if driver is not supported
-        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver ?? ''] ?? null)) {
             return $extensionConfigs;
         }
 
@@ -509,7 +511,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $loupeFactory = new LoupeFactory();
 
-        if (!$loupeFactory->isSupported()) {
+        // Older versions of Loupe did not require dependencies in the composer.json
+        // directly. There, we need to check if Loupe is supported. In newer versions of
+        // Loupe, this is ensured by Composer requirements.
+        if (method_exists($loupeFactory, 'isSupported') && !$loupeFactory->isSupported()) {
             return $extensionConfigs;
         }
 

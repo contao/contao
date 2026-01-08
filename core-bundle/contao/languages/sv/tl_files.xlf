@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_files.preview.0">
         <source>Image preview</source>
+        <target>Bildförhandsvisning</target>
       </trans-unit>
       <trans-unit id="tl_files.preview.1">
         <source>Mark the important part of the image with your mouse cursor.</source>
@@ -275,6 +276,10 @@
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Redigera källtexten för filen &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Ladda upp filer</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

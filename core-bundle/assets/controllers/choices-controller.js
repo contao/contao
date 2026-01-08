@@ -14,7 +14,6 @@ export default class ChoicesController extends Controller {
             appendGroupInSearch: true,
             classNames: {
                 containerOuter: ['choices', ...Array.from(select.classList)],
-                flippedState: '',
             },
             fuseOptions: {
                 includeScore: true,
