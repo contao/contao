@@ -17,7 +17,7 @@ $GLOBALS['TL_DCA']['tl_test'] = [
             'sql' => "int(10) unsigned NOT NULL auto_increment"
         ],
         'virtualField' => [
-            'saveTo' => 'virtualTarget',
+            'targetColumn' => 'virtualTarget',
         ],
         'virtualTarget' => [
             'virtualTarget' => true,

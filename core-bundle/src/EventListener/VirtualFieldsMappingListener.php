@@ -18,8 +18,8 @@ use Contao\DC_Table;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 /**
- * Adds "saveTo" automatically to fields without an "sql" definition. Defines
- * "saveTo" targets automatically as "virtualTarget". Adds an "sql" definition
+ * Adds "targetColumn" automatically to fields without an "sql" definition. Defines
+ * "targetColumn" fields automatically as "virtualTarget". Adds an "sql" definition
  * automatically to virtual field targets.
  */
 #[AsHook('loadDataContainer', priority: -4096)]
@@ -44,8 +44,8 @@ class VirtualFieldsMappingListener
         $GLOBALS['TL_DCA'][$table]['fields'] = array_map(
             function (array $config): array {
                 // Automatically save to virtual field in DC_Table
-                if (!\array_key_exists('sql', $config) && !\array_key_exists('saveTo', $config) && !\array_key_exists('input_field_callback', $config) && !\array_key_exists('save_callback', $config)) {
-                    $config['saveTo'] = $this->defaultStorageName;
+                if (!\array_key_exists('sql', $config) && !\array_key_exists('targetColumn', $config) && !\array_key_exists('input_field_callback', $config) && !\array_key_exists('save_callback', $config)) {
+                    $config['targetColumn'] = $this->defaultStorageName;
                 }
 
                 return $config;
@@ -54,7 +54,7 @@ class VirtualFieldsMappingListener
         );
 
         // Configure virtual field targets
-        foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'], 'saveTo')) as $target) {
+        foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'], 'targetColumn')) as $target) {
             $GLOBALS['TL_DCA'][$table]['fields'][$target]['virtualTarget'] = true;
 
             if (!($GLOBALS['TL_DCA'][$table]['fields'][$target]['sql'] ?? null)) {

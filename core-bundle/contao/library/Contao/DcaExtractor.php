@@ -458,15 +458,15 @@ class DcaExtractor extends Controller
 			// Store virtual fields
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config)
 			{
-				if (($config['sql'] ?? null) || !($config['saveTo'] ?? null))
+				if (($config['sql'] ?? null) || !($config['targetColumn'] ?? null))
 				{
 					continue;
 				}
 
 				// Validate target
-				if (!\in_array($config['saveTo'], $this->arrVirtualTargets, true))
+				if (!\in_array($config['targetColumn'], $this->arrVirtualTargets, true))
 				{
-					throw new InvalidConfigException(\sprintf('Target for \'saveTo\' on virtual field %s.%s does not exist.', $this->strTable, $field));
+					throw new InvalidConfigException(\sprintf('Field for \'targetColumn\' on virtual field %s.%s does not exist.', $this->strTable, $field));
 				}
 
 				// Validate the config for virtual fields
@@ -490,7 +490,7 @@ class DcaExtractor extends Controller
 					throw new InvalidConfigException(\sprintf('Enabling \'eval.unique\' on virtual field %s.%s is not supported.', $this->strTable, $field));
 				}
 
-				$this->arrVirtualFields[$field] = $config['saveTo'];
+				$this->arrVirtualFields[$field] = $config['targetColumn'];
 			}
 		}
 

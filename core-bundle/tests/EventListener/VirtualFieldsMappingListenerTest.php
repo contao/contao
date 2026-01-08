@@ -44,22 +44,22 @@ class VirtualFieldsMappingListenerTest extends TestCase
         $defaultSql = ['type' => 'json', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
         $textSql = ['type' => 'text', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
 
-        yield 'Adds saveTo and virtualTarget and sql' => [
+        yield 'Adds targetColumn and virtualTarget and sql' => [
             [
                 'foobar' => ['inputType' => 'text'],
             ],
             [
-                'foobar' => ['inputType' => 'text', 'saveTo' => 'jsonData'],
+                'foobar' => ['inputType' => 'text', 'targetColumn' => 'jsonData'],
                 'jsonData' => ['virtualTarget' => true, 'sql' => $defaultSql],
             ],
         ];
 
-        yield 'Does not change saveTo' => [
+        yield 'Does not change targetColumn' => [
             [
-                'foobar' => ['inputType' => 'text', 'saveTo' => 'fooData'],
+                'foobar' => ['inputType' => 'text', 'targetColumn' => 'fooData'],
             ],
             [
-                'foobar' => ['inputType' => 'text', 'saveTo' => 'fooData'],
+                'foobar' => ['inputType' => 'text', 'targetColumn' => 'fooData'],
                 'fooData' => ['virtualTarget' => true, 'sql' => $defaultSql],
             ],
         ];
@@ -70,7 +70,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
                 'jsonData' => ['sql' => $textSql],
             ],
             [
-                'foobar' => ['inputType' => 'text', 'saveTo' => 'jsonData'],
+                'foobar' => ['inputType' => 'text', 'targetColumn' => 'jsonData'],
                 'jsonData' => ['sql' => $textSql, 'virtualTarget' => true],
             ],
         ];
