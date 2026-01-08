@@ -1162,8 +1162,8 @@ abstract class DataContainer extends Backend
 </div>';
 
 		$return = '
-<form class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main">
-<button type="button" class="close" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['close']) . '" aria-controls="content-filter" data-action="contao--toggle-state#close">×</button>
+<form id="tl_content_filter" class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main" data-contao--toggle-state-target="controls" data-contao--element-count-target="parent">
+<button type="button" class="close" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['DCA']['toggleFilter'][2]) . '" aria-controls="tl_content_filter" data-action="contao--toggle-state#close">×</button>
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">

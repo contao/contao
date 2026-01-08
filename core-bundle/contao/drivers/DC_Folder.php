@@ -582,7 +582,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		return '<div
 				class="tree-view"
-				data-controller="contao--toggle-nodes"
+				data-controller="contao--toggle-nodes contao--toggle-state contao--element-count"
 				data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 				data-contao--toggle-nodes-load-action-value="loadFileManager"
 				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
@@ -592,6 +592,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
+				data-contao--toggle-state-active-class="active"
+				data-contao--toggle-state-active-title-value="' . $GLOBALS['TL_LANG']['DCA']['toggleFilter'][2] . '"
+				data-contao--toggle-state-inactive-title-value="' . $GLOBALS['TL_LANG']['DCA']['toggleFilter'][1] . '"
+				data-contao--element-count-selector-value=".active:not(#tl_search_term)"
+				data-action="click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close"
 			>' . $return . '</div>';
 	}
 
@@ -2921,7 +2926,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
-			$strField = Input::post('tl_field', true);
+			$strField = Input::post('tl_search', true);
 			$strKeyword = ltrim(Input::postRaw('tl_value'), '*');
 
 			if ($strField && !\in_array($strField, $searchFields, true))
@@ -2960,15 +2965,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		return '
     <fieldset class="tl_search tl_subpanel">
-      <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</legend>
-      <label for="search_type">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
+      <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
+      <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
       <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select id="search_type" name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-			' . implode("\n", $options) . '
+          <select id="tl_search" name="tl_search" class="tl_select' . ($active ? ' active' : '') . '">
+            ' . implode("\n", $options) . '
           </select>
       </div>
-      <label for="search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
-      <input id="search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '" placeholder="' . $GLOBALS['TL_LANG']['MSC']['keyword_placeholder'] . '" data-contao--filter-target="filter" data-action="contao--filter#updateCount">
+      <label for="tl_search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
+      <input id="tl_search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </fieldset>';
 	}
 
