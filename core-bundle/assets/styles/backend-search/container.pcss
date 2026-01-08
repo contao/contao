@@ -79,6 +79,17 @@
         border: 0 none;
     }
 
+    .search-shortcut {
+        position: absolute;
+        inset: 5px 5px auto auto;
+        font-size: smaller;
+        background: var(--header-bg);
+        padding: 4px;
+        border-radius: 3px;
+        opacity: .7;
+        visibility: hidden;
+    }
+
     .search--hidden {
         svg {
             color: var(--header-text);
@@ -92,17 +103,8 @@
             }
         }
 
-        .backend-search_inner {
-            &:after {
-                position: absolute;
-                inset: 5px 5px auto auto;
-                content: attr(data-search-shortcut);
-                font-size: smaller;
-                background: var(--header-bg);
-                padding: 4px;
-                border-radius: 3px;
-                opacity: .7;
-            }
+        .search-shortcut {
+            visibility: visible;
         }
     }
 
