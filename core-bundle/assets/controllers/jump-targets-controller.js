@@ -98,10 +98,7 @@ export default class extends Controller {
         btn.textContent = start ? this.nextLabelValue : this.prevLabelValue;
 
         btn.addEventListener('click', () => {
-            const target = start
-                ? this.#getPreviousSnapItem()
-                : this.#getNextSnapItem()
-            ;
+            const target = start ? this.#getPreviousSnapItem() : this.#getNextSnapItem();
 
             if (!target) {
                 return;
@@ -112,7 +109,12 @@ export default class extends Controller {
             if (start) {
                 scrollAmount = target.offsetLeft - this.#prevButton.offsetWidth - this.navigationTarget.scrollLeft;
             } else {
-                scrollAmount = target.offsetLeft + target.offsetWidth + this.#nextButton.offsetWidth - this.navigationTarget.clientWidth - this.navigationTarget.scrollLeft;
+                scrollAmount =
+                    target.offsetLeft +
+                    target.offsetWidth +
+                    this.#nextButton.offsetWidth -
+                    this.navigationTarget.clientWidth -
+                    this.navigationTarget.scrollLeft;
             }
 
             this.navigationTarget.scrollBy({
@@ -134,14 +136,24 @@ export default class extends Controller {
     }
 
     #getNextSnapItem() {
-        return this.#links.find(
-            item => item.offsetLeft + item.offsetWidth > this.navigationTarget.scrollLeft + this.navigationTarget.clientWidth
-        ) ?? this.#links[this.#links.length - 1] ?? null;
+        return (
+            this.#links.find(
+                (item) =>
+                    item.offsetLeft + item.offsetWidth >
+                    this.navigationTarget.scrollLeft + this.navigationTarget.clientWidth,
+            ) ??
+            this.#links[this.#links.length - 1] ??
+            null
+        );
     }
 
     #getPreviousSnapItem() {
-        return [...this.#links].reverse().find(
-            item => item.offsetLeft + item.offsetWidth <= this.navigationTarget.scrollLeft
-        ) ?? this.#links[0] ?? null;
+        return (
+            [...this.#links]
+                .reverse()
+                .find((item) => item.offsetLeft + item.offsetWidth <= this.navigationTarget.scrollLeft) ??
+            this.#links[0] ??
+            null
+        );
     }
 }
