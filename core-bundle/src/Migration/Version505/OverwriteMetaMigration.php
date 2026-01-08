@@ -63,7 +63,7 @@ class OverwriteMetaMigration extends AbstractMigration
                 SQL,
                 static::TABLE_NAME,
             ),
-            [$columns['overwritemeta']->getType() instanceof BooleanType ? true : '1']
+            [$columns['overwritemeta']->getType() instanceof BooleanType ? true : '1'],
         );
 
         return false !== $test;
@@ -86,7 +86,7 @@ class OverwriteMetaMigration extends AbstractMigration
                 SQL,
                 static::TABLE_NAME,
             ),
-            [$columns['overwritemeta']->getType() instanceof BooleanType ? true : '1']
+            [$columns['overwritemeta']->getType() instanceof BooleanType ? true : '1'],
         );
 
         $this->connection->executeStatement(
