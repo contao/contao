@@ -143,7 +143,7 @@ class FormRadio extends Widget
 				$arrOptions[] = array
 				(
 					'type'  => 'group_start',
-					'label' => $arrOption['label'] ?? ''
+					'label' => StringUtil::specialchars($arrOption['label'] ?? '')
 				);
 
 				$blnHasGroups = true;
