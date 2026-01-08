@@ -151,7 +151,11 @@ export default class extends Controller {
         return (
             [...this.#links]
                 .reverse()
-                .find((item) => item.offsetLeft + item.offsetWidth <= this.navigationTarget.scrollLeft) ??
+                .find(
+                    (item) =>
+                        item.offsetLeft + item.offsetWidth <=
+                        this.navigationTarget.scrollLeft + this.#prevButton.offsetWidth,
+                ) ??
             this.#links[0] ??
             null
         );
