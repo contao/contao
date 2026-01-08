@@ -1,8 +1,8 @@
 .tl_panel {
-    padding: 14px 0 16px;
-
-    &:not(:first-of-type) {
-        border-top: 1px solid var(--content-border);
+    &:not(:last-of-type) {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--content-border);
     }
 
     fieldset {
@@ -66,6 +66,11 @@
     }
 }
 
+.tl_subpanel {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
 .tl_filter {
     box-sizing: border-box;
 }
@@ -100,6 +105,10 @@
 
     .term_wrapper {
         width: 100%;
+
+        > input {
+            margin-bottom: 0;
+        }
     }
 }
 
@@ -111,15 +120,6 @@
 
     label {
         margin: 0 !important;
-    }
-}
-
-.tl_search,
-.tl_sorting,
-.tl_limit {
-    .tl_select:not(.is-open) {
-        background: transparent;
-        border-color: transparent;
     }
 }
 
@@ -148,6 +148,10 @@
     grid-template-rows: 1fr auto;
     order: 1;
     border-bottom: 1px solid var(--content-border);
+
+    .tl_formbody {
+        padding: 15px 0;
+    }
 
     > .close {
         display: none;
@@ -183,35 +187,6 @@
         &:hover {
             background: var(--form-bg-hover);
         }
-    }
-}
-
-/* Reset the panel when search is in first position */
-.tl_panel {
-    + :has(>.tl_search:first-child) {
-        border-top: none;
-        background: var(--panel-bg);
-
-        .tl_subpanel {
-            border-bottom: none;
-            margin: 0;
-        }
-
-        + .tl_submit_panel {
-            border-top: 0;
-        }
-    }
-}
-
-#main .content-filter:has(.tl_panel >.tl_search:first-child) {
-    background: var(--panel-bg) !important;
-
-    .tl_panel:has(.tl_filter) {
-        background: var(--content-bg);
-    }
-
-    .tl_panel:first-of-type {
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
     }
 }
 
