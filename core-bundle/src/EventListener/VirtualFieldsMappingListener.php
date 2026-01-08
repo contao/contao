@@ -18,9 +18,9 @@ use Contao\DC_Table;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 /**
- * Adds "targetColumn" automatically to fields without an "sql" definition. Defines
- * "targetColumn" fields automatically as "virtualTarget". Adds an "sql" definition
- * automatically to virtual field targets.
+ * Adds "targetColumn" automatically to fields without an "sql" definition.
+ * Defines "targetColumn" fields automatically as "virtualTarget". Adds an "sql"
+ * definition automatically to virtual field targets.
  */
 #[AsHook('loadDataContainer', priority: -4096)]
 class VirtualFieldsMappingListener
