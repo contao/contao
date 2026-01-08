@@ -4,7 +4,8 @@ export default class extends Controller {
     #btn = null;
     #prevButton = null;
     #nextButton = null;
-    #links = null;
+    #linksContainer = null;
+    #links = [];
     #onScroll = () => this.#updateScrollButtonVisibility();
     #onResize = () => this.#updateScrollButtonVisibility();
 
@@ -13,7 +14,6 @@ export default class extends Controller {
     static values = {
         prevLabel: String,
         nextLabel: String,
-        scrollBy: Number,
     };
 
     initialize() {
@@ -28,10 +28,10 @@ export default class extends Controller {
     navigationTargetDisconnected(element) {
         element.removeEventListener('scroll', this.#onScroll);
         window.removeEventListener('resize', this.#onResize);
-        this.#links.destroy();
+        this.#linksContainer.destroy();
     }
 
-    sectionTargetConnected() {
+    sectionTargetConnected(node) {
         this.rebuildNavigation();
     }
 
@@ -44,12 +44,11 @@ export default class extends Controller {
             return;
         }
 
-        this.#links = document.createElement('ul');
+        this.#linksContainer = document.createElement('ul');
 
-        // BC (having implemented the structure without the values)
-        if (this.hasScrollByValue) {
-            this.#links.append(this.#prevButton ?? this.#createScrollButton());
-        }
+        this.#linksContainer.append(this.#prevButton ?? this.#createScrollButton());
+
+        this.#links = [];
 
         for (const el of this.sectionTargets) {
             const action = this.#btn.cloneNode();
@@ -63,14 +62,13 @@ export default class extends Controller {
             const li = document.createElement('li');
             li.append(action);
 
-            this.#links.append(li);
+            this.#links.push(li);
+            this.#linksContainer.append(li);
         }
 
-        if (this.hasScrollByValue) {
-            this.#links.append(this.#nextButton ?? this.#createScrollButton(false));
-        }
+        this.#linksContainer.append(this.#nextButton ?? this.#createScrollButton(false));
 
-        this.navigationTarget.replaceChildren(this.#links);
+        this.navigationTarget.replaceChildren(this.#linksContainer);
 
         this.#updateScrollButtonVisibility();
     }
@@ -100,9 +98,26 @@ export default class extends Controller {
         btn.textContent = start ? this.nextLabelValue : this.prevLabelValue;
 
         btn.addEventListener('click', () => {
+            const target = start
+                ? this.#getPreviousSnapItem()
+                : this.#getNextSnapItem()
+            ;
+
+            if (!target) {
+                return;
+            }
+
+            let scrollAmount;
+
+            if (start) {
+                scrollAmount = target.offsetLeft - this.#prevButton.offsetWidth - this.navigationTarget.scrollLeft;
+            } else {
+                scrollAmount = target.offsetLeft + target.offsetWidth + this.#nextButton.offsetWidth - this.navigationTarget.clientWidth - this.navigationTarget.scrollLeft;
+            }
+
             this.navigationTarget.scrollBy({
                 behavior: 'smooth',
-                left: this.scrollByValue * (start ? -1 : 1),
+                left: scrollAmount,
             });
         });
 
@@ -116,5 +131,17 @@ export default class extends Controller {
     #initButtonElement() {
         this.#btn = document.createElement('button');
         this.#btn.type = 'button';
+    }
+
+    #getNextSnapItem() {
+        return this.#links.find(
+            item => item.offsetLeft + item.offsetWidth > this.navigationTarget.scrollLeft + this.navigationTarget.clientWidth
+        ) ?? this.#links[this.#links.length - 1] ?? null;
+    }
+
+    #getPreviousSnapItem() {
+        return [...this.#links].reverse().find(
+            item => item.offsetLeft + item.offsetWidth <= this.navigationTarget.scrollLeft
+        ) ?? this.#links[0] ?? null;
     }
 }
