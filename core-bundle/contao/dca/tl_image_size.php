@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,limit;filter',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 		),

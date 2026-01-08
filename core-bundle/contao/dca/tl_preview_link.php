@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('createdAt'),
-			'panelLayout'             => 'filter;search,sort,limit'
+			'panelLayout'             => 'search,sort,limit;filter'
 		),
 		'label' => array
 		(

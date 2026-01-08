@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('name'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,limit;filter',
 			'defaultSearchField'      => 'name'
 		),
 		'label' => array

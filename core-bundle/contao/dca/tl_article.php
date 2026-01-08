@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_TREE_EXTENDED,
-			'panelLayout'             => 'filter;search',
+			'panelLayout'             => 'search;filter',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array

@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,limit;filter',
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'type', 'author', 'tstamp', 'start', 'stop'),
 			'renderAsGrid'            => true,

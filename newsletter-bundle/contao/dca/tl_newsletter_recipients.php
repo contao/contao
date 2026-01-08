@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('email'),
-			'panelLayout'             => 'filter;search,sort,limit',
+			'panelLayout'             => 'search,sort,limit;filter',
 			'defaultSearchField'      => 'email',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 		),

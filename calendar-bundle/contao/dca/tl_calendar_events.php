@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('startTime DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected'),
-			'panelLayout'             => 'filter;search,sort,limit',
+			'panelLayout'             => 'search,sort,limit;filter',
 			'defaultSearchField'      => 'title',
 		),
 		'label' => array
