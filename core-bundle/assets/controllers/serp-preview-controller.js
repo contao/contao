@@ -62,7 +62,7 @@ export default class extends Controller {
         } else if (sourceType === 'description') {
             this.descriptionTarget.textContent = this.#shorten(value, 160);
         } else if (sourceType === 'robots') {
-            this.robotsTarget.textContent = value.contains('noindex') ? this.warningValue : '';
+            this.element.classList.toggle('noindex', value.contains('noindex'));
         }
     }
 

@@ -34,12 +34,17 @@
         background-color: transparent;
     }
 
-    .robots:not(:empty) {
-        margin: 3px 0;
-        color: var(--orange);
+    .robots {
+        display: none;
     }
 
-    &:has(.robots:not(:empty)) {
-        box-shadow: inset 0 0 0 1px var(--orange);
+    &.noindex {
+        > p {
+            display: none;
+        }
+
+        .robots {
+            display: block;
+        }
     }
 }
