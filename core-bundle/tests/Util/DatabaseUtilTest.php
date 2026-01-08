@@ -19,20 +19,20 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class DatabaseUtilTest extends TestCase
 {
-    #[DataProvider('getTableAndFieldExpressionFromDcaForeignKeyProvider')]
-    public function testGetTableAndFieldExpressionFromDcaForeignKey(string $foreignKeyDefinition, bool $expectsQuotingCall, string $expectedTableName, string $expectedColumnExpression, string|null $expectedColumnName = null, string|null $expectedKey = null): void
+    #[DataProvider('parseForeignKeyExpressionProvider')]
+    public function testParseForeignKeyExpression(string $foreignKeyDefinition, bool $expectsQuotingCall, string $expectedTableName, string $expectedColumnExpression, string|null $expectedColumnName = null, string|null $expectedKey = null): void
     {
         $connection = $this->mockConnection($expectsQuotingCall);
         $util = new DatabaseUtil($connection);
 
-        $expression = $util->getTableAndFieldExpressionFromDcaForeignKey($foreignKeyDefinition);
+        $expression = $util->parseForeignKeyExpression($foreignKeyDefinition);
         $this->assertSame($expectedTableName, $expression->getTableName());
         $this->assertSame($expectedColumnExpression, $expression->getColumnExpression());
         $this->assertSame($expectedColumnName, $expression->getColumnName());
         $this->assertSame($expectedKey, $expression->getKey());
     }
 
-    public static function getTableAndFieldExpressionFromDcaForeignKeyProvider(): iterable
+    public static function parseForeignKeyExpressionProvider(): iterable
     {
         yield [
             'table.field',

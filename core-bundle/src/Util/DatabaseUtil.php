@@ -22,9 +22,9 @@ class DatabaseUtil
     ) {
     }
 
-    public function getTableAndFieldExpressionFromDcaForeignKey(string $foreignKeyDefinition): ForeignKeyExpression
+    public function parseForeignKeyExpression(string $foreignKeyDefinition): ForeignKeyExpression
     {
-        $isSafe = static fn (string $expression): bool => 1 === preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $expression);
+        $isIdentifier = static fn (string $expression): bool => 1 === preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $expression);
 
         $key = null;
         [$tableExpression, $columnExpression] = explode('.', $foreignKeyDefinition, 2);
@@ -34,13 +34,13 @@ class DatabaseUtil
         }
 
         // Table names must be safe
-        if (!$isSafe($tableExpression)) {
+        if (!$isIdentifier($tableExpression)) {
             throw new \InvalidArgumentException('Invalid foreign key expression: '.$foreignKeyDefinition);
         }
 
         // If column expression is safe, quote it for the expression (to support e.g.
         // reserved column names such as "group"
-        if ($isSafe($columnExpression)) {
+        if ($isIdentifier($columnExpression)) {
             $columnName = $columnExpression; // The expression is safe here
 
             // Backwards-compatibility for doctrine/dbal < 4.3
