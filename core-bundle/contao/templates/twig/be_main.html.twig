@@ -11,13 +11,21 @@
     .set('id', 'top')
     .addClass('be_main')
     .addClass('popup', isPopup)
-    .set('data-controller', 'contao--tooltips contao--toggle-state', not isPopup)
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-    .set('data-contao--toggle-state-active-class', 'active', not isPopup)
-    .set('data-contao--toggle-state-active-title-value', 'MSC.hideMainNavigation'|trans, not isPopup)
-    .set('data-contao--toggle-state-inactive-title-value', 'MSC.showMainNavigation'|trans, not isPopup)
+    .set('data-controller', 'contao--tooltips')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
+
+{% if not isPopup %}
+    {%- do bodyAttributes
+        .addClass('popup', isPopup)
+        .set('data-controller', 'contao--tooltips contao--toggle-state')
+        .set('data-action', 'touchstart@document->contao--tooltips#touchStart click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
+        .set('data-contao--toggle-state-active-class', 'active')
+        .set('data-contao--toggle-state-active-title-value', 'MSC.hideMainNavigation'|trans)
+        .set('data-contao--toggle-state-inactive-title-value', 'MSC.showMainNavigation'|trans)
+    -%}
+{% endif %}
 
 {%- set containerAttributes = attrs()
     .addClass(containerClass)
