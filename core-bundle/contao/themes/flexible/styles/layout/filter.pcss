@@ -77,7 +77,7 @@
     gap: 0;
 }
 
-[data-contao--filter-target="count"] {
+[data-contao--element-count-target="count"] {
     font-size: .6rem;
     color: var(--text);
     background: var(--nav-current);
@@ -176,11 +176,9 @@
         display: initial !important;
     }
 
-    .content.filter-active {
-        .content-filter {
-            visibility: visible;
-            transform: translateX(0);
-        }
+    .content-filter.active {
+        visibility: visible;
+        transform: translateX(0);
     }
 
     .tl_submit_panel {
