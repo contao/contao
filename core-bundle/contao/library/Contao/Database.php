@@ -673,13 +673,30 @@ class Database
 	 * @param string $strName
 	 *
 	 * @return string
-	 *
-	 * @deprecated Use the contao.database_util instead.
 	 */
 	public static function quoteIdentifier($strName)
 	{
-		trigger_deprecation('contao/core-bundle', '5.7', 'Using %s is deprecated, use the contao.database_util instead.', __METHOD__);
+		// Quoted already or not an identifier (AbstractPlatform::quoteIdentifier() handles table.column so also allow . here)
+		if (!preg_match('/^[A-Za-z0-9_$.]+$/', $strName))
+		{
+			return $strName;
+		}
 
-		return System::getContainer()->get('contao.database_util')->quoteIdentifier($strName);
+		$connection = System::getContainer()->get('database_connection');
+
+		// Backwards-compatibility for doctrine/dbal < 4.3
+		if (!method_exists($connection, 'quoteSingleIdentifier'))
+		{
+			return $connection->quoteIdentifier($strName);
+		}
+
+		if (str_contains($strName, '.'))
+		{
+			trigger_deprecation('contao/core-bundle', '5.7', 'Passing a dot-separated identifier is deprecated. Use %s individually for each part of a qualified name instead.', __METHOD__, __METHOD__);
+
+			return implode('.', array_map($connection->quoteSingleIdentifier(...), explode('.', $strName)));
+		}
+
+		return $connection->quoteSingleIdentifier($strName);
 	}
 }
