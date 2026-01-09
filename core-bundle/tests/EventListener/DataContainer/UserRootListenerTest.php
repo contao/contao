@@ -87,6 +87,7 @@ class UserRootListenerTest extends TestCase
 
     public function testOnlyRegistersPermissionFieldCallbackIfUserIsAdmin(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'dataContainer' => DC_Table::class,
@@ -115,7 +116,6 @@ class UserRootListenerTest extends TestCase
         $listener = new UserRootListener($security, $requestStack, $connection);
         $listener('tl_foo');
 
-        /** @phpstan-ignore-next-line */
         $this->assertCount(1, $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'] ?? []);
         $this->assertArrayNotHasKey('oncreate_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);
         $this->assertArrayNotHasKey('oncopy_callback', $GLOBALS['TL_DCA']['tl_foo']['config']);

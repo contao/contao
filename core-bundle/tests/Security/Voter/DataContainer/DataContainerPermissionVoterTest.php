@@ -78,7 +78,6 @@ class DataContainerPermissionVoterTest extends TestCase
         );
 
         $token = $this->createStub(TokenInterface::class);
-
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.'tl_foobar']);
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $result);

@@ -36,7 +36,6 @@ class CudPermissionListenerTest extends TestCase
         ];
 
         $listener = new CudPermissionListener($this->createContaoFrameworkStub(), $this->createStub(ResourceFinderInterface::class));
-
         $listener->addDefaultPermissions('tl_foo');
 
         $this->assertArrayNotHasKey('permissions', $GLOBALS['TL_DCA']['tl_foo']['config']);
@@ -44,16 +43,15 @@ class CudPermissionListenerTest extends TestCase
 
     public function testDoesNotChangePermissionsIfKeyExists(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo']['config'] = [
             'dataContainer' => DC_Table::class,
             'permissions' => ['foo'],
         ];
 
         $listener = new CudPermissionListener($this->createContaoFrameworkStub(), $this->createStub(ResourceFinderInterface::class));
-
         $listener->addDefaultPermissions('tl_foo');
 
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertSame(['foo'], $GLOBALS['TL_DCA']['tl_foo']['config']['permissions']);
     }
 
@@ -71,7 +69,6 @@ class CudPermissionListenerTest extends TestCase
         ];
 
         $listener = new CudPermissionListener($this->createContaoFrameworkStub(), $this->createStub(ResourceFinderInterface::class));
-
         $listener->addDefaultPermissions('tl_foo');
 
         $this->assertArrayNotHasKey('permissions', $GLOBALS['TL_DCA']['tl_foo']['config']);
@@ -79,6 +76,7 @@ class CudPermissionListenerTest extends TestCase
 
     public function testAddsDefaultPermissions(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foo'] = [
             'config' => [
                 'dataContainer' => DC_Table::class,
@@ -91,17 +89,14 @@ class CudPermissionListenerTest extends TestCase
         ];
 
         $listener = new CudPermissionListener($this->createContaoFrameworkStub(), $this->createStub(ResourceFinderInterface::class));
-
         $listener->addDefaultPermissions('tl_foo');
 
-        /** @phpstan-ignore offsetAccess.notFound */
         $this->assertSame(['create', 'update', 'delete'], $GLOBALS['TL_DCA']['tl_foo']['config']['permissions']);
     }
 
     public function testGetCudOptions(): void
     {
-        /** @var CudPermissionListener $listener */
-        /** @phpstan-ignore varTag.nativeType */
+        /** @var CudPermissionListener|null $listener */
         $listener = null;
 
         $controllerAdapter = $this->createAdapterMock(['loadDataContainer']);
@@ -176,7 +171,6 @@ class CudPermissionListenerTest extends TestCase
         ;
 
         $listener = new CudPermissionListener($framework, $resourceFinder);
-
         $options = $listener->getCudOptions();
 
         $this->assertSame(

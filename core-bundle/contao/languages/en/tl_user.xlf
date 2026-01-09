@@ -192,7 +192,7 @@
         <source>Table permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.cud.1">
-        <source>Here you can choose what operations are allowed on tables.</source>
+        <source>Here you can select which operations are allowed for which table.</source>
       </trans-unit>
       <trans-unit id="tl_user.cud.create">
         <source>Create</source>

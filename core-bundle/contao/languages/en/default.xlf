@@ -2613,10 +2613,10 @@
         <source>Permissions</source>
       </trans-unit>
       <trans-unit id="DCA.permissions.0">
-        <source>Backend permissions</source>
+        <source>Back end permissions</source>
       </trans-unit>
       <trans-unit id="DCA.permissions.1">
-        <source>Select backend users and groups that should have access to this record.</source>
+        <source>The changes made here are saved in the user and group settings.</source>
       </trans-unit>
       <trans-unit id="DCA.permissions.groups">
         <source>Groups</source>
