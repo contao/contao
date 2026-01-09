@@ -336,6 +336,8 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         $attributes = $config['attributes']
+            ->set('data-label', $labelEnabled)
+            ->set('data-label-disabled', $labelDisabled)
             ->set('data-action', 'contao--scroll-offset#store')
             ->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')')
         ;
