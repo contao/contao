@@ -42,7 +42,7 @@ class DatabaseUtil
         // the expression is a single identifier, quote it to support reserved column
         // names such as "group"
         if ($isIdentifier($columnExpression)) {
-            $columnName = $columnExpression; // The expression is safe here
+            $columnName = $columnExpression;
 
             // Backwards-compatibility for doctrine/dbal < 4.3
             if (!method_exists(Connection::class, 'quoteSingleIdentifier')) {
