@@ -32,13 +32,8 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			(
 				'id' => 'primary',
 				'uuid' => 'index',
-				'pid' => 'index',
-				'tstamp' => 'index',
 				'createdAt' => 'index',
-				'type' => 'index',
-				'owner' => 'index',
-				'status' => 'index',
-				'public' => 'index',
+				'pid,owner,public,status,tstamp' => 'index',
 			)
 		)
 	),
