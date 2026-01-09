@@ -128,11 +128,6 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao_calendar.security.backwards_compatibility_backend_access_voter:
-        class: Contao\CalendarBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
-        tags:
-            - { name: security.voter, priority: 8 }
-
     contao_calendar.security.calendar_access_voter:
         class: Contao\CalendarBundle\Security\Voter\CalendarAccessVoter
         arguments:
@@ -148,6 +143,11 @@ services:
         class: Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_calendar.security.legacy_backend_access_voter:
+        class: Contao\CalendarBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     # Autowiring aliases
     Contao\CalendarBundle\Generator\CalendarEventsGenerator: '@contao_calendar.generator.calendar_events'

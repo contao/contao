@@ -1086,11 +1086,6 @@ services:
             - '@contao.framework'
             - Contao\BackendUser
 
-    contao.security.backwards_compatibility_backend_access_voter:
-        class: Contao\CoreBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
-        tags:
-            - { name: security.voter, priority: 8 }
-
     contao.security.data_container.article_content_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter
         arguments:
@@ -1220,6 +1215,11 @@ services:
         arguments:
             - '@contao.framework'
             - Contao\FrontendUser
+
+    contao.security.legacy_backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao.security.login_authenticator:
         class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator

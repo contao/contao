@@ -50,11 +50,6 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao_faq.security.backwards_compatibility_backend_access_voter:
-        class: Contao\FaqBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
-        tags:
-            - { name: security.voter, priority: 8 }
-
     contao_faq.security.faq_access_voter:
         class: Contao\FaqBundle\Security\Voter\FaqAccessVoter
         arguments:
@@ -64,3 +59,8 @@ services:
         class: Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_faq.security.legacy_backend_access_voter:
+        class: Contao\FaqBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }

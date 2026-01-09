@@ -10,24 +10,24 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsletterBundle\Tests\Security\Voter;
+namespace Contao\FaqBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\NewsletterBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter;
+use Contao\FaqBundle\Security\Voter\LegacyBackendAccessVoter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class BackwardsCompatibilityBackendAccessVoterTest extends TestCase
+class LegacyBackendAccessVoterTest extends TestCase
 {
     public function testSupports(): void
     {
-        $voter = new BackwardsCompatibilityBackendAccessVoter();
+        $voter = new LegacyBackendAccessVoter();
 
-        $this->assertTrue($voter->supportsAttribute('contao_user.newsletterp'));
-        $this->assertTrue($voter->supportsAttribute('contao_user.newsletterp.create'));
-        $this->assertTrue($voter->supportsAttribute('contao_user.newsletterp.delete'));
+        $this->assertTrue($voter->supportsAttribute('contao_user.faqp'));
+        $this->assertTrue($voter->supportsAttribute('contao_user.faqp.create'));
+        $this->assertTrue($voter->supportsAttribute('contao_user.faqp.delete'));
         $this->assertFalse($voter->supportsAttribute('contao_user.foo'));
     }
 
@@ -43,7 +43,7 @@ class BackwardsCompatibilityBackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new BackwardsCompatibilityBackendAccessVoter();
+        $voter = new LegacyBackendAccessVoter();
 
         $this->assertSame($expected, $voter->vote($token, $subject, [$attribute]));
     }
@@ -52,56 +52,56 @@ class BackwardsCompatibilityBackendAccessVoterTest extends TestCase
     {
         yield [
             ['cud' => []],
-            'contao_user.newsletterp',
+            'contao_user.faqp',
             null,
             VoterInterface::ACCESS_DENIED,
         ];
 
         yield [
-            ['cud' => ['tl_newsletter_channel::create']],
-            'contao_user.newsletterp',
-            null,
-            VoterInterface::ACCESS_GRANTED,
-        ];
-
-        yield [
-            ['cud' => []],
-            'contao_user.newsletterp',
-            'create',
-            VoterInterface::ACCESS_DENIED,
-        ];
-
-        yield [
-            ['cud' => ['tl_newsletter_channel::create']],
-            'contao_user.newsletterp',
-            'create',
-            VoterInterface::ACCESS_GRANTED,
-        ];
-
-        yield [
-            ['cud' => ['tl_newsletter_channel::create']],
-            'contao_user.newsletterp.create',
+            ['cud' => ['tl_faq_category::create']],
+            'contao_user.faqp',
             null,
             VoterInterface::ACCESS_GRANTED,
         ];
 
         yield [
             ['cud' => []],
-            'contao_user.newsletterp',
+            'contao_user.faqp',
+            'create',
+            VoterInterface::ACCESS_DENIED,
+        ];
+
+        yield [
+            ['cud' => ['tl_faq_category::create']],
+            'contao_user.faqp',
+            'create',
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield [
+            ['cud' => ['tl_faq_category::create']],
+            'contao_user.faqp.create',
+            null,
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield [
+            ['cud' => []],
+            'contao_user.faqp',
             'delete',
             VoterInterface::ACCESS_DENIED,
         ];
 
         yield [
-            ['cud' => ['tl_newsletter_channel::delete']],
-            'contao_user.newsletterp',
+            ['cud' => ['tl_faq_category::delete']],
+            'contao_user.faqp',
             'delete',
             VoterInterface::ACCESS_GRANTED,
         ];
 
         yield [
-            ['cud' => ['tl_newsletter_channel::delete']],
-            'contao_user.newsletterp.delete',
+            ['cud' => ['tl_faq_category::delete']],
+            'contao_user.faqp.delete',
             null,
             VoterInterface::ACCESS_GRANTED,
         ];

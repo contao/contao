@@ -14,16 +14,16 @@ namespace Contao\NewsBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\NewsBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter;
+use Contao\NewsBundle\Security\Voter\LegacyBackendAccessVoter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class BackwardsCompatibilityBackendAccessVoterTest extends TestCase
+class LegacyBackendAccessVoterTest extends TestCase
 {
     public function testSupports(): void
     {
-        $voter = new BackwardsCompatibilityBackendAccessVoter();
+        $voter = new LegacyBackendAccessVoter();
 
         $this->assertTrue($voter->supportsAttribute('contao_user.newsp'));
         $this->assertTrue($voter->supportsAttribute('contao_user.newsp.create'));
@@ -43,7 +43,7 @@ class BackwardsCompatibilityBackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new BackwardsCompatibilityBackendAccessVoter();
+        $voter = new LegacyBackendAccessVoter();
 
         $this->assertSame($expected, $voter->vote($token, $subject, [$attribute]));
     }

@@ -10,15 +10,16 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Security\Voter;
+namespace Contao\NewsletterBundle\Security\Voter;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Security\Voter\AbstractBackendAccessVoter;
 
-class BackwardsCompatibilityBackendAccessVoter extends AbstractBackendAccessVoter
+class LegacyBackendAccessVoter extends AbstractBackendAccessVoter
 {
     public function supportsAttribute(string $attribute): bool
     {
-        return str_starts_with($attribute, 'contao_user.formp');
+        return str_starts_with($attribute, 'contao_user.newsletterp');
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -31,13 +32,13 @@ class BackwardsCompatibilityBackendAccessVoter extends AbstractBackendAccessVote
      */
     protected function hasAccess(array|null $subject, string $field, BackendUser $user): bool
     {
-        trigger_deprecation('contao/core-bundle', '5.7', 'Checking access on contao_user.formp is deprecated, vote on contao_user.cud instead.');
+        trigger_deprecation('contao/newsletter-bundle', '5.7', 'Checking access on "contao_user.newsletterp" is deprecated and will no longer work in Contao 6. Vote on "contao_user.cud" instead.');
 
         if (null === $subject) {
-            return \count(preg_grep('/^tl_form::/', $user->cud)) > 0;
+            return \count(preg_grep('/^tl_newsletter_channel::/', $user->cud)) > 0;
         }
 
-        $subject = array_map(static fn ($v) => 'tl_form::'.$v, $subject);
+        $subject = array_map(static fn ($v) => 'tl_newsletter_channel::'.$v, $subject);
 
         return \is_array($user->cud) && array_intersect($subject, $user->cud);
     }

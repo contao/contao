@@ -118,8 +118,8 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao_news.security.backwards_compatibility_backend_access_voter:
-        class: Contao\NewsBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter
+    contao_news.security.legacy_backend_access_voter:
+        class: Contao\NewsBundle\Security\Voter\LegacyBackendAccessVoter
         tags:
             - { name: security.voter, priority: 8 }
 

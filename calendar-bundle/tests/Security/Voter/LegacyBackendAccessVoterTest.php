@@ -13,17 +13,17 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
-use Contao\CalendarBundle\Security\Voter\BackwardsCompatibilityBackendAccessVoter;
+use Contao\CalendarBundle\Security\Voter\LegacyBackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class BackwardsCompatibilityBackendAccessVoterTest extends TestCase
+class LegacyBackendAccessVoterTest extends TestCase
 {
     public function testSupports(): void
     {
-        $voter = new BackwardsCompatibilityBackendAccessVoter();
+        $voter = new LegacyBackendAccessVoter();
 
         $this->assertTrue($voter->supportsAttribute('contao_user.calendarp'));
         $this->assertTrue($voter->supportsAttribute('contao_user.calendarp.create'));
@@ -46,7 +46,7 @@ class BackwardsCompatibilityBackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new BackwardsCompatibilityBackendAccessVoter();
+        $voter = new LegacyBackendAccessVoter();
 
         $this->assertSame($expected, $voter->vote($token, $subject, [$attribute]));
     }

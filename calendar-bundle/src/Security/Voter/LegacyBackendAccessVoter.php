@@ -15,7 +15,7 @@ namespace Contao\CalendarBundle\Security\Voter;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\Voter\AbstractBackendAccessVoter;
 
-class BackwardsCompatibilityBackendAccessVoter extends AbstractBackendAccessVoter
+class LegacyBackendAccessVoter extends AbstractBackendAccessVoter
 {
     public function supportsAttribute(string $attribute): bool
     {
@@ -33,7 +33,7 @@ class BackwardsCompatibilityBackendAccessVoter extends AbstractBackendAccessVote
      */
     protected function hasAccess(array|null $subject, string $field, BackendUser $user): bool
     {
-        trigger_deprecation('contao/calendar-bundle', '5.7', 'Checking access on contao_user.'.$field.' is deprecated, vote on contao_user.cud instead.');
+        trigger_deprecation('contao/calendar-bundle', '5.7', 'Checking access on "contao_user.'.$field.'" is deprecated and will no longer work in Contao 6. Vote on "contao_user.cud" instead.');
 
         $table = match ($field) {
             'calendarp' => 'tl_calendar',
