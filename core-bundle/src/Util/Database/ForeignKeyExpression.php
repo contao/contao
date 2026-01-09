@@ -16,6 +16,22 @@ class ForeignKeyExpression
     ) {
     }
 
+    public function withTableName(string $tableName): self
+    {
+        $clone = clone $this;
+        $clone->tableName = $tableName;
+
+        return $clone;
+    }
+
+    public function withColumnExpression(string $columnExpression): self
+    {
+        $clone = clone $this;
+        $clone->columnExpression = $columnExpression;
+
+        return $clone;
+    }
+
     /**
      * The table name, always safe to use in queries.
      */
