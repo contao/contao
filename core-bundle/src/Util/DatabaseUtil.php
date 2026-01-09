@@ -33,13 +33,14 @@ class DatabaseUtil
             [$key, $tableExpression] = explode(':', $tableExpression, 2);
         }
 
-        // Table names must be safe
+        // Table name must be an identifier
         if (!$isIdentifier($tableExpression)) {
             throw new \InvalidArgumentException('Invalid foreign key expression: '.$foreignKeyDefinition);
         }
 
         // If column expression is safe, quote it for the expression (to support e.g.
-        // reserved column names such as "group"
+        // If the expression is a single identifier, quote it to support reserved column
+        // names such as "group"
         if ($isIdentifier($columnExpression)) {
             $columnName = $columnExpression; // The expression is safe here
 
