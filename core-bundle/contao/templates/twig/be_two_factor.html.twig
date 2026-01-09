@@ -141,20 +141,20 @@
                                         <input type="text" name="passkey_name" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
                                     </form>
                                 {% else %}
-                                    {{ crendial.name ?: credential.id }}
+                                    {{ credential.name|default(credential.id) }}
                                 {% endif %}
                             </td>
                             <td class="created">{{ credential.createdAt.format('j. F Y, H:i') }}</td>
                             <td class="actions">
                                 <form method="post">
                                     <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
-                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_id }}">
+                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                                     {% if editPassKeyId == credential.id %}
                                         <button type="submit" name="save_passkey" form="form-edit-passkey-{{ credential.id }}" value="{{ credential.id }}">{{ backend_icon('save.svg', 'MSC.save'|trans) }}</button>
                                     {% else %}
                                         <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ backend_icon('edit.svg', 'MSC.edit'|trans) }}</button>
                                     {% endif %}
-                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name ?: credential.id]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
+                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
                                 </form>
                             </td>
                         </tr>
