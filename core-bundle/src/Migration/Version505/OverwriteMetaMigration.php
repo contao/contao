@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Migration\Version505;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\DBAL\Types\StringType;
 
 /**
@@ -52,7 +53,7 @@ class OverwriteMetaMigration extends AbstractMigration
                 SELECT TRUE
                 FROM %s
                 WHERE
-                    overwriteMeta = 1
+                    overwriteMeta = ?
                     AND (alt = ''
                         OR imageUrl = ''
                         OR caption = ''
@@ -62,6 +63,7 @@ class OverwriteMetaMigration extends AbstractMigration
                 SQL,
                 static::TABLE_NAME,
             ),
+            [$columns['overwritemeta']->getType() instanceof BooleanType ? true : '1'],
         );
 
         return false !== $test;
@@ -69,6 +71,9 @@ class OverwriteMetaMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $schemaManager = $this->connection->createSchemaManager();
+        $columns = $schemaManager->listTableColumns(static::TABLE_NAME);
+
         $this->connection->executeStatement(
             \sprintf(<<<'SQL'
                 UPDATE %s
@@ -77,10 +82,11 @@ class OverwriteMetaMigration extends AbstractMigration
                     imageUrl = IF(imageUrl != '', imageUrl, '{{empty}}'),
                     caption = IF(caption != '', caption, '{{empty}}'),
                     imageTitle = IF(imageTitle != '', imageTitle, '{{empty}}')
-                WHERE overwriteMeta = 1
+                WHERE overwriteMeta = ?
                 SQL,
                 static::TABLE_NAME,
             ),
+            [$columns['overwritemeta']->getType() instanceof BooleanType ? true : '1'],
         );
 
         $this->connection->executeStatement(
