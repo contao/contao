@@ -1114,6 +1114,14 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.dca_permission_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DcaPermissionVoter
+        arguments:
+            - '@contao.framework'
+            - '@security.access.decision_manager'
+        tags:
+            - { name: security.voter, priority: -128 }
+
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
 
@@ -1183,14 +1191,6 @@ services:
 
     contao.security.data_container.user_profile_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\UserProfileVoter
-
-    contao.security.data_container_permission_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\DataContainerPermissionVoter
-        arguments:
-            - '@contao.framework'
-            - '@security.access.decision_manager'
-        tags:
-            - { name: security.voter, priority: -128 }
 
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter

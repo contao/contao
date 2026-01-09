@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 
-class DataContainerPermissionVoter implements CacheableVoterInterface
+class DcaPermissionVoter implements CacheableVoterInterface
 {
     public function __construct(
         private readonly ContaoFramework $framework,

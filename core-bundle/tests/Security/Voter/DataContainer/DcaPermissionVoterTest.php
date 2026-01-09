@@ -19,7 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Security\Voter\DataContainer\DataContainerPermissionVoter;
+use Contao\CoreBundle\Security\Voter\DataContainer\DcaPermissionVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -27,11 +27,11 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class DataContainerPermissionVoterTest extends TestCase
+class DcaPermissionVoterTest extends TestCase
 {
     public function testSupportsAttribute(): void
     {
-        $voter = new DataContainerPermissionVoter(
+        $voter = new DcaPermissionVoter(
             $this->createContaoFrameworkStub(),
             $this->createStub(AccessDecisionManagerInterface::class),
         );
@@ -42,7 +42,7 @@ class DataContainerPermissionVoterTest extends TestCase
 
     public function testSupportsType(): void
     {
-        $voter = new DataContainerPermissionVoter(
+        $voter = new DcaPermissionVoter(
             $this->createContaoFrameworkStub(),
             $this->createStub(AccessDecisionManagerInterface::class),
         );
@@ -56,7 +56,7 @@ class DataContainerPermissionVoterTest extends TestCase
 
     public function testAbstainsIfAttributeIsNotSupported(): void
     {
-        $voter = new DataContainerPermissionVoter(
+        $voter = new DcaPermissionVoter(
             $this->stubContaoFramework(),
             $this->mockAccessDecisionManager(),
         );
@@ -72,7 +72,7 @@ class DataContainerPermissionVoterTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config'][$config] = true;
 
-        $voter = new DataContainerPermissionVoter(
+        $voter = new DcaPermissionVoter(
             $this->stubContaoFramework(),
             $this->mockAccessDecisionManager(),
         );
@@ -123,7 +123,7 @@ class DataContainerPermissionVoterTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['permissions'] = $permissions;
 
-        $voter = new DataContainerPermissionVoter(
+        $voter = new DcaPermissionVoter(
             $this->stubContaoFramework(),
             $this->mockAccessDecisionManager($accessDecision),
         );
