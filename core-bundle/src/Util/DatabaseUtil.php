@@ -38,8 +38,7 @@ class DatabaseUtil
             throw new \InvalidArgumentException('Invalid foreign key expression: '.$foreignKeyDefinition);
         }
 
-        // If column expression is safe, quote it for the expression (to support e.g. If
-        // the expression is a single identifier, quote it to support reserved column
+        // If the expression is a single identifier, quote it to support reserved column
         // names such as "group"
         if ($isIdentifier($columnExpression)) {
             $columnName = $columnExpression;
