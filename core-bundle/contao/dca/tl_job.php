@@ -32,12 +32,8 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			(
 				'id' => 'primary',
 				'uuid' => 'index',
-				'pid' => 'index',
-				'tstamp' => 'index',
-				'type' => 'index',
-				'owner' => 'index',
-				'status' => 'index',
-				'public' => 'index',
+				'createdAt' => 'index',
+				'pid,owner,public,status,tstamp' => 'index',
 			)
 		)
 	),
@@ -48,13 +44,13 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_SORTED,
-			'fields'                  => array('tstamp'),
+			'fields'                  => array('createdAt'),
 			'panelLayout'             => 'filter;limit',
-			'headerFields'            => array('tstamp', 'type', 'uuid', 'status', 'owner'),
+			'headerFields'            => array('createdAt', 'type', 'uuid', 'status', 'owner'),
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'type', 'progress', 'status', 'owner'),
+			'fields'                  => array('createdAt', 'type', 'progress', 'status', 'owner', 'attachments'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -81,7 +77,11 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		),
 		'tstamp' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['jobs']['tstamp'],
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+		),
+		'createdAt' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['jobs']['created_at'],
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
 		),
@@ -89,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['type'],
 			'inputType'               => 'select',
-			'reference'               => &$GLOBALS['TL_LANG']['jobs']['typeLabel'],
+			'reference'               => &$GLOBALS['TL_LANG']['jobs']['type_label'],
 			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
 		),
 		'owner' => array
@@ -108,6 +108,10 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			'inputType'               => 'select',
 			'enum'                    => Status::class,
 			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
+		),
+		'attachments' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['jobs']['attachments'],
 		),
 		'public' => array
 		(
