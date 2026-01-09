@@ -8,7 +8,7 @@ $GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $thi
 ?>
 
 <?php $this->block('label'); ?>
-  <?php if (!$this->altchaFloating && $this->label): ?>
+  <?php if ($this->label && !$this->altchaFloating): ?>
     <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
       <span class="invisible"><?= $this->mandatoryField ?> </span><?= $this->label ?><span class="mandatory">*</span>
     </label>

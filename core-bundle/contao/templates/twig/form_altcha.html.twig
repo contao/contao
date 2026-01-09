@@ -3,7 +3,7 @@
 {% trans_default_domain 'contao_default' %}
 
 {% block label %}
-    {% if this.label %}
+    {% if this.label and not this.altchaFloating %}
         <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
             <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
         </label>
