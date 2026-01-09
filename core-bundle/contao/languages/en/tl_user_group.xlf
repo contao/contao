@@ -56,6 +56,9 @@
       <trans-unit id="tl_user_group.amg_legend">
         <source>Allowed member groups</source>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
       </trans-unit>
