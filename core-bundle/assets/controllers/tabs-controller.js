@@ -37,8 +37,8 @@ export default class TabsController extends Controller {
         selectButton.addEventListener('click', () => {
             this.selectTab(panel);
         });
-        selectButton.addEventListener('auxclick', event => {
-            if (event.button == 1) {
+        selectButton.addEventListener('auxclick', (event) => {
+            if (event.button === 1) {
                 panel.remove();
             }
         });
