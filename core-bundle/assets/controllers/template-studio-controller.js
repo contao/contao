@@ -67,7 +67,7 @@ export default class extends Controller {
     }
 
     colorChange(event) {
-        for (const editor of this.editors) {
+        for (const editor of this.editors.values()) {
             editor.setColorScheme(event.detail.mode);
         }
     }
