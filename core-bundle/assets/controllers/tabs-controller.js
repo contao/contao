@@ -37,6 +37,11 @@ export default class TabsController extends Controller {
         selectButton.addEventListener('click', () => {
             this.selectTab(panel);
         });
+        selectButton.addEventListener('auxclick', event => {
+            if (event.button == 1) {
+                panel.remove();
+            }
+        });
 
         const closeButton = isRestore
             ? this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`)
