@@ -28,6 +28,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
+use Contao\ThemeModel;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spatie\SchemaOrg\Graph;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -83,8 +84,10 @@ class AbstractLayoutPageControllerTest extends TestCase
                 'page' => [
                     'layout' => 42,
                     'language' => 'en',
+                    'templateGroup' => 'foobar',
                 ],
                 'layout' => [
+                    'pid' => 420,
                     'modules' => 'a:0:{}',
                     'defaultImageDensities' => 'foo_densities',
                     'template' => 'foo_template',
@@ -177,6 +180,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         ;
 
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class, [
+            'pid' => 420,
             'modules' => serialize([]),
             'defaultImageDensities' => 'foo_densities',
             'template' => 'foo_template',
@@ -189,6 +193,17 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn($layoutModel)
         ;
 
+        $themeModel = $this->mockClassWithProperties(ThemeModel::class, [
+            'templates' => 'foobar',
+        ]);
+
+        $themeAdapter = $this->mockAdapter(['findById']);
+        $themeAdapter
+            ->method('findById')
+            ->with(420)
+            ->willReturn($themeModel)
+        ;
+
         $systemAdapter = $this->mockAdapter(['loadLanguageFile']);
         $systemAdapter
             ->expects($this->once())
@@ -198,6 +213,7 @@ class AbstractLayoutPageControllerTest extends TestCase
 
         $framework = $this->mockContaoFramework([
             LayoutModel::class => $layoutAdapter,
+            ThemeModel::class => $themeAdapter,
             System::class => $systemAdapter,
         ]);
 

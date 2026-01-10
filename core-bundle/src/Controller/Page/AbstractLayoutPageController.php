@@ -24,6 +24,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
+use Contao\ThemeModel;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,11 @@ abstract class AbstractLayoutPageController extends AbstractController
         // Set the context
         $this->container->get('contao.image.picture_factory')->setDefaultDensities($layout->defaultImageDensities);
         $this->container->get('contao.image.preview_factory')->setDefaultDensities($layout->defaultImageDensities);
+
+        // Set the template group
+        if ($theme = $this->getContaoAdapter(ThemeModel::class)->findById($layout->pid)) {
+            $page->templateGroup = $theme->templates;
+        }
 
         // Create layout template and assign defaults
         $template = $this->createTemplate($layout->template);
