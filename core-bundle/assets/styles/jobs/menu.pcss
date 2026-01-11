@@ -64,8 +64,19 @@
             transform: rotateZ(-45deg);
         }
 
+        li {
+            display: flex;
+            gap: 8px;
+        }
+
         .jobs-progress {
-            display: inline-block;
+            display: flex;
+
+            progress {
+                display: flex;
+                width: 100px;
+                height: 100%;
+            }
         }
     }
 }
