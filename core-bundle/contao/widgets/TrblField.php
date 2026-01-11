@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\TrblField" is deprecated and will no longer work in Contao 6.');
+
 /**
  * Provide methods to handle text fields with unit drop down menu.
  *
