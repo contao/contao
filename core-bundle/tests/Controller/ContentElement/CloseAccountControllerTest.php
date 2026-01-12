@@ -30,9 +30,10 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -111,9 +112,8 @@ class CloseAccountControllerTest extends ContentElementTestCase
     public function testShowsErrorMessageWhenInvalidPassword(): void
     {
         $user = $this->createClassWithPropertiesStub(FrontendUser::class);
-        $user->password = 'hashed-password';
 
-        $container = $this->getContainerWithFrameworkTemplate($user);
+        $container = $this->getContainerWithFrameworkTemplate($user, false);
 
         $memberModel = $this->createStub(MemberModel::class);
 
@@ -130,8 +130,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $request = new Request();
-        $request->request->set('FORM_SUBMIT', 'tl_close_account_');
-        $request->request->set('password', '12345678');
 
         $response = $controller($request, $model, 'main');
 
@@ -141,9 +139,8 @@ class CloseAccountControllerTest extends ContentElementTestCase
     public function testDeactivatesMember(): void
     {
         $user = $this->createClassWithPropertiesStub(FrontendUser::class);
-        $user->password = 'hashed-password';
 
-        $container = $this->getContainerWithFrameworkTemplate($user);
+        $container = $this->getContainerWithFrameworkTemplate($user, true);
 
         $memberModel = $this->createMock(MemberModel::class);
         $memberModel
@@ -177,9 +174,8 @@ class CloseAccountControllerTest extends ContentElementTestCase
     public function testDeletesMember(): void
     {
         $user = $this->createClassWithPropertiesStub(FrontendUser::class);
-        $user->password = 'hashed-password';
 
-        $container = $this->getContainerWithFrameworkTemplate($user);
+        $container = $this->getContainerWithFrameworkTemplate($user, true);
 
         $memberModel = $this->createClassWithPropertiesStub(MemberModel::class);
         $memberModel->assignDir = true;
@@ -307,13 +303,53 @@ class CloseAccountControllerTest extends ContentElementTestCase
         return $tokenStorage;
     }
 
-    private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, MemberModel|null $member = null): ContainerBuilder
+    /**
+     * @template T
+     *
+     * @param FormInterface<T>|null $form
+     */
+    private function mockFormFactory(FormInterface|null $form = null): FormFactoryInterface
     {
+        $formFactory = $this->createStub(FormFactoryInterface::class);
+
+        if ($form) {
+            $formFactory = $this->createMock(FormFactoryInterface::class);
+            $formFactory
+                ->expects($this->once())
+                ->method('create')
+                ->willReturn($form)
+            ;
+        }
+
+        return $formFactory;
+    }
+
+    private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, bool|null $formIsValid = null): ContainerBuilder
+    {
+        $form = $this->createMock(FormInterface::class);
+        $form
+            ->expects(null !== $formIsValid ? $this->once() : $this->never())
+            ->method('handleRequest')
+        ;
+
+        $form
+            ->expects(null !== $formIsValid ? $this->once() : $this->never())
+            ->method('isSubmitted')
+            ->willReturn(true)
+        ;
+
+        $form
+            ->expects(null !== $formIsValid ? $this->once() : $this->never())
+            ->method('isValid')
+            ->willReturn((bool) $formIsValid)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member));
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate());
         $container->set('security.token_storage', $this->mockTokenStorageWithToken($user));
         $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $container->set('form.factory', $this->mockFormFactory(null !== $formIsValid ? $form : null));
 
         System::setContainer($container);
 
