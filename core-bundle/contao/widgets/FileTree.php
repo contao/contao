@@ -83,14 +83,22 @@ class FileTree extends Widget
 
 		if (!str_contains($varInput, ','))
 		{
-			$varInput = StringUtil::uuidToBin($varInput);
+			if (false !== $this->binary)
+			{
+				$varInput = StringUtil::uuidToBin($varInput);
+			}
 
 			return $this->multiple ? array($varInput) : $varInput;
 		}
 
 		$arrValue = array_values(array_filter(explode(',', $varInput)));
 
-		return $this->multiple ? array_map('\Contao\StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
+		if (false === $this->binary)
+		{
+			return $this->multiple ? $arrValue : $arrValue[0];
+		}
+
+		return $this->multiple ? array_map(StringUtil::uuidToBin(...), $arrValue) : StringUtil::uuidToBin($arrValue[0]);
 	}
 
 	/**
