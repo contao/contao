@@ -234,6 +234,7 @@ services:
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
             - '@database_connection'
+            - '@contao.csrf.token_manager'
 
     contao.data_container.global_operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder
@@ -1120,6 +1121,14 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.dca_permission_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DcaPermissionVoter
+        arguments:
+            - '@contao.framework'
+            - '@security.access.decision_manager'
+        tags:
+            - { name: security.voter, priority: -128 }
+
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
 
@@ -1187,8 +1196,13 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.user_profile_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UserProfileVoter
+
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
+        arguments:
+            - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
@@ -1208,6 +1222,11 @@ services:
         arguments:
             - '@contao.framework'
             - Contao\FrontendUser
+
+    contao.security.legacy_backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao.security.login_authenticator:
         class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
