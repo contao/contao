@@ -2,6 +2,11 @@
 {% use '@Contao/component/_stylesheet.html.twig' %}
 {% trans_default_domain 'contao_default' %}
 
+{% set wrapperAttributes = attrs()
+    .addClass('altcha-hidden', this.altchaFloating|default)
+    .mergeWith(wrapperAttributes|default)
+%}
+
 {% block label %}
     {% if this.label and not this.altchaFloating|default %}
         <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
