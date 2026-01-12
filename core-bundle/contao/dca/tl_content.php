@@ -504,7 +504,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'numberOfItems' => array
 		(
@@ -789,26 +788,20 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'redirectBack' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'autologin' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default' =>false),
 		),
 		'pwResetPage' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'cssID' => array
 		(
