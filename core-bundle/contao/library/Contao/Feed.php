@@ -35,6 +35,8 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
  * @property string  $language    The feed language
  * @property string  $link        The feed link
  * @property integer $published   The publication date
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6.
  */
 class Feed
 {
