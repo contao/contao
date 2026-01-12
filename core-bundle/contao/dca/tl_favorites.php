@@ -20,6 +20,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		'notCreatable'                => true,
 		'notCopyable'                 => true,
 		'backendSearchIgnore'         => true,
+		'permissions'                 => array(),
 		'sql' => array
 		(
 			'keys' => array
