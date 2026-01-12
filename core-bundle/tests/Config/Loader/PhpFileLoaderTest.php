@@ -57,7 +57,7 @@ class PhpFileLoaderTest extends TestCase
 
         $content = <<<'EOF'
 
-            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"]]];
+            $GLOBALS['TL_DCA']['tl_test'] = ['config' => ['dataContainer' => \Contao\DC_Table::class, 'sql' => ['keys' => ['id' => 'primary']]], 'fields' => ['id' => ['sql' => "int(10) unsigned NOT NULL auto_increment"], 'virtualField' => ['targetColumn' => 'virtualTarget'], 'virtualTarget' => ['virtualTarget' => \true, 'sql' => ['type' => 'json', 'length' => \Doctrine\DBAL\Platforms\MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => \false]]]];
 
             EOF;
 
