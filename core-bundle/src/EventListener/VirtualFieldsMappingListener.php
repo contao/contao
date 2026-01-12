@@ -50,11 +50,11 @@ class VirtualFieldsMappingListener
 
                 return $config;
             },
-            $GLOBALS['TL_DCA'][$table]['fields'],
+            $GLOBALS['TL_DCA'][$table]['fields'] ?? [],
         );
 
         // Configure virtual field targets
-        foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'], 'targetColumn')) as $target) {
+        foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'] ?? [], 'targetColumn')) as $target) {
             $GLOBALS['TL_DCA'][$table]['fields'][$target]['virtualTarget'] = true;
 
             if (!($GLOBALS['TL_DCA'][$table]['fields'][$target]['sql'] ?? null)) {
