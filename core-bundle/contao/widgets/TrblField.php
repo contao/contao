@@ -10,11 +10,15 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\TrblField" is deprecated and will no longer work in Contao 6.');
+
 /**
  * Provide methods to handle text fields with unit drop down menu.
  *
  * @property integer $maxlength
  * @property array   $options
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6.
  */
 class TrblField extends Widget
 {

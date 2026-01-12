@@ -105,3 +105,14 @@ services:
         class: Contao\CoreBundle\Migration\Version506\SearchIndexerSettingsMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_507.default_cud:
+        class: Contao\CoreBundle\Migration\Version507\DefaultCudMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.listener.data_container.cud_permission'
+
+    contao.migration.version_507.field_permission:
+        class: Contao\CoreBundle\Migration\Version507\FieldPermissionMigration
+        arguments:
+            - '@database_connection'

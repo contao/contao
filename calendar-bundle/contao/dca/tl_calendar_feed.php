@@ -16,7 +16,6 @@ use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarModel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Environment;
@@ -35,18 +34,11 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
 		'backendSearchIgnore'         => true,
+		'userRoot'                    => 'calendarfeeds',
 		'onload_callback' => array
 		(
 			array('tl_calendar_feed', 'checkPermission'),
 			array('tl_calendar_feed', 'generateFeed')
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_calendar_feed', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_calendar_feed', 'adjustPermissions')
 		),
 		'onsubmit_callback' => array
 		(
@@ -300,93 +292,6 @@ class tl_calendar_feed extends Backend
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar feeds.');
 				}
 				break;
-		}
-	}
-
-	/**
-	 * Add the new calendar feed to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->calendarfeeds) || !is_array($user->calendarfeeds))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->calendarfeeds;
-		}
-
-		// The calendar feed is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$db = Database::getInstance();
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_calendar_feed']) && in_array($insertId, $arrNew['tl_calendar_feed']))
-		{
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrCalendarfeedp = StringUtil::deserialize($objGroup->calendarfeedp);
-
-					if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
-					{
-						$arrCalendarfeeds = StringUtil::deserialize($objGroup->calendarfeeds, true);
-						$arrCalendarfeeds[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT calendarfeeds, calendarfeedp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrCalendarfeedp = StringUtil::deserialize($objUser->calendarfeedp);
-
-				if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
-				{
-					$arrCalendarfeeds = StringUtil::deserialize($objUser->calendarfeeds, true);
-					$arrCalendarfeeds[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->calendarfeeds = $root;
 		}
 	}
 

@@ -8,14 +8,9 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\StringUtil;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
@@ -27,18 +22,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_newsletter_channel', 'adjustDca')
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_newsletter_channel', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_newsletter_channel', 'adjustPermissions')
-		),
+		'userRoot'                    => 'newsletters',
 		'sql' => array
 		(
 			'keys' => array
@@ -143,123 +127,3 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		)
 	)
 );
-
-/**
- * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @internal
- */
-class tl_newsletter_channel extends Backend
-{
-	/**
-	 * Set the root IDs.
-	 */
-	public function adjustDca()
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->newsletters) || !is_array($user->newsletters))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->newsletters;
-		}
-
-		$GLOBALS['TL_DCA']['tl_newsletter_channel']['list']['sorting']['root'] = $root;
-	}
-
-	/**
-	 * Add the new channel to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->newsletters) || !is_array($user->newsletters))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->newsletters;
-		}
-
-		// The channel is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$db = Database::getInstance();
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_newsletter_channel']) && in_array($insertId, $arrNew['tl_newsletter_channel']))
-		{
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrNewsletterp = StringUtil::deserialize($objGroup->newsletterp);
-
-					if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
-					{
-						$arrNewsletters = StringUtil::deserialize($objGroup->newsletters, true);
-						$arrNewsletters[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")->execute(serialize($arrNewsletters), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT newsletters, newsletterp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrNewsletterp = StringUtil::deserialize($objUser->newsletterp);
-
-				if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
-				{
-					$arrNewsletters = StringUtil::deserialize($objUser->newsletters, true);
-					$arrNewsletters[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")->execute(serialize($arrNewsletters), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->newsletter = $root;
-		}
-	}
-}
