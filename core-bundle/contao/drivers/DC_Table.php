@@ -4394,7 +4394,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 					else
 					{
-						$return .= '<div class="tl_content_left' . ($dragHandle ? 'draggable' : '') . '">' . $dragHandle . $label . '</div>';
+						$return .= '<div class="tl_content_left">' . $label . '</div>';
 					}
 				}
 
