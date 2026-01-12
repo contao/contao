@@ -234,6 +234,7 @@ services:
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
             - '@database_connection'
+            - '@contao.csrf.token_manager'
 
     contao.data_container.global_operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder
