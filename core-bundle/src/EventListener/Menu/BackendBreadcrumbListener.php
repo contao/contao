@@ -47,28 +47,16 @@ readonly class BackendBreadcrumbListener
 
         foreach ($this->dcaUrlAnalyzer->getTrail(withTreeTrail: true) as $level => ['label' => $label, 'url' => $url, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings]) {
             if (\count($treeTrail ?? []) > 0) {
-                $nearestAncestor = array_pop($treeTrail);
+                $ancestorTrail = $factory->createItem('ancestor_trail')->setExtra('render_dropdown', true);
 
-                if ([] !== $treeTrail) {
-                    $ancestorTrail = $factory->createItem('ancestor_trail')->setExtra('render_dropdown', true);
-
-                    foreach ($treeTrail as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
-                        $ancestorTrail->addChild('ancestor_trail_'.$trail, [
-                            'label' => $trail_label,
-                            'uri' => $trail_url,
-                        ]);
-                    }
-
-                    $tree->addChild($ancestorTrail);
+                foreach ($treeTrail as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
+                    $ancestorTrail->addChild('ancestor_trail_'.$trail, [
+                        'label' => $trail_label,
+                        'uri' => $trail_url,
+                    ]);
                 }
 
-                $ancestor = $factory
-                    ->createItem('ancestor_'.$level)
-                    ->setLabel($nearestAncestor['label'])
-                    ->setUri($nearestAncestor['url'])
-                ;
-
-                $tree->addChild($ancestor);
+                $tree->addChild($ancestorTrail);
             }
 
             $hasSiblings = \is_array($treeSiblings) && \count($treeSiblings) > 1;
