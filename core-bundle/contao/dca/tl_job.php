@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('createdAt'),
-			'panelLayout'             => 'limit;filter',
+			'panelLayout'             => 'filter,limit',
 			'headerFields'            => array('createdAt', 'type', 'uuid', 'status', 'owner'),
 		),
 		'label' => array

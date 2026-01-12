@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
-			'panelLayout'             => 'search;filter;sort,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'comment',
 			'limitHeight'             => 104
 		),

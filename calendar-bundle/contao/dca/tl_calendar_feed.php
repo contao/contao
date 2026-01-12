@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'search;filter;limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
