@@ -2369,9 +2369,6 @@
       <trans-unit id="MSC.keyword">
         <source>Keyword</source>
       </trans-unit>
-      <trans-unit id="MSC.keyword_placeholder">
-        <source>Search keyword...</source>
-      </trans-unit>
       <trans-unit id="MSC.enter_fullscreen">
         <source>Enter fullscreen mode</source>
       </trans-unit>
