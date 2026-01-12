@@ -322,7 +322,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
         return $framework;
     }
 
-    private function mockTokenStorageWithToken(UserInterface|null $user = null): TokenStorageInterface|Stub
+    private function mockTokenStorageWithToken(UserInterface|null $user = null): Stub|TokenStorageInterface
     {
         $tokenStorage = $this->createStub(TokenStorageInterface::class);
         $tokenStorage
