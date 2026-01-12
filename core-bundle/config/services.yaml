@@ -276,8 +276,6 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@translator'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.data_container.virtual_fields_handler:
         class: Contao\CoreBundle\DataContainer\VirtualFieldsHandler
@@ -1349,8 +1347,6 @@ services:
         autoconfigure: false
         arguments:
             - '@contao.translation.data_collector_translator.inner'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.translation.legacy_locale_switcher:
         class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
