@@ -27,6 +27,7 @@ use Contao\CoreBundle\Util\ArrayTree;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -257,6 +258,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objSession->set('CLIPBOARD', $arrClipboard);
 			}
 		}
+	}
+
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
+	{
+		if (!$currentRecord = parent::getCurrentRecord($id, $table))
+		{
+			return $currentRecord;
+		}
+
+		return System::getContainer()->get('contao.data_container.virtual_fields_handler')->expandFields($currentRecord, $table ?: $this->strTable);
 	}
 
 	/**
@@ -538,11 +549,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Use the field order of the DCA file
 		$fields = array_intersect($allowedFields, $fields);
 		$db = Database::getInstance();
+		$virtualTargets = DcaExtractor::getInstance($this->strTable)->getVirtualTargets();
 
 		// Show all allowed fields
 		foreach ($fields as $i)
 		{
-			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'password' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['hideInput'] ?? null) || !\in_array($i, $allowedFields))
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'password' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['doNotShow'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['hideInput'] ?? null) || !\in_array($i, $allowedFields) || \in_array($i, $virtualTargets))
 			{
 				continue;
 			}
@@ -719,12 +731,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$databaseFields = $db->getFieldNames($this->strTable);
+		$dcaExtract = DcaExtractor::getInstance($this->strTable);
+		$virtualFields = $dcaExtract->getVirtualFields();
 
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
 			// Use array_key_exists here (see #5252)
-			if (\array_key_exists('default', $v) && \in_array($k, $databaseFields, true))
+			if (\array_key_exists('default', $v) && (\in_array($k, $databaseFields, true) || \array_key_exists($k, $virtualFields)))
 			{
 				$default = $v['default'];
 
@@ -752,10 +766,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
+		$container = System::getContainer();
+		$objSession = $container->get('request_stack')->getSession();
 
 		// Empty the clipboard
-		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
+		$container->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		$this->set['tstamp'] = 0;
 
@@ -764,10 +779,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
+			// Combine virtual fields
+			$this->set = $container->get('contao.data_container.virtual_fields_handler')->combineFields($this->set, $this->strTable);
+
+			// Ensure JSON data type for virtual field targets when saving to database
+			$arrTypes = array_map(static fn (string $k) => \in_array($k, $dcaExtract->getVirtualTargets()) ? Types::JSON : null, array_keys($this->set));
+
 			$objInsertStmt = $db
 				->prepare("INSERT INTO " . $this->strTable . " %s")
 				->set($this->set)
-				->execute();
+				->query('', array_values($this->set), array_values($arrTypes));
 
 			if ($objInsertStmt->affectedRows)
 			{
@@ -797,7 +818,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
+				$container->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
 
 				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
@@ -2593,9 +2614,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Security check before using field in DB query!
-		if (!Database::getInstance()->fieldExists($this->strField, $this->strTable))
+		if (!Database::getInstance()->fieldExists($this->strField, $this->strTable) && !\in_array($this->strField, array_keys(DcaExtractor::getInstance($this->strTable)->getVirtualFields())))
 		{
-			throw new AccessDeniedException('Database field ' . $this->strTable . '.' . $this->strField . ' does not exist.');
+			throw new AccessDeniedException('Field ' . $this->strTable . '.' . $this->strField . ' does not exist.');
 		}
 
 		// Check the field access
@@ -3034,6 +3055,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$blnVersionize = false;
 
 			$db = Database::getInstance();
+
+			// Get all virtual field data from the current record, so that the fields can be combined
+			$arrValues = array_merge(array_intersect_key($currentRecord, DcaExtractor::getInstance($this->strTable)->getVirtualFields()), $arrValues);
+
+			// Combine virtual fields
+			$arrValues = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($arrValues, $this->strTable);
 
 			foreach ($arrValues as $strField => $varValue)
 			{

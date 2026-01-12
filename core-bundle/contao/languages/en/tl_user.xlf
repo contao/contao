@@ -182,17 +182,38 @@
       <trans-unit id="tl_user.forms.1">
         <source>Here you can grant access to one or more forms.</source>
       </trans-unit>
-      <trans-unit id="tl_user.formp.0">
-        <source>Form permissions</source>
-      </trans-unit>
-      <trans-unit id="tl_user.formp.1">
-        <source>Here you can define the form permissions.</source>
-      </trans-unit>
       <trans-unit id="tl_user.amg.0">
         <source>Allowed member groups</source>
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.0">
+        <source>Table permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.1">
+        <source>Here you can select which operations are allowed for which table.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.create">
+        <source>Create</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.update">
+        <source>Update</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.delete">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.other">
+        <source>Additional permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_create">
+        <source>Create records in "%s"</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_update">
+        <source>Update records of "%s"</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_delete">
+        <source>Delete records of "%s"</source>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -256,6 +277,9 @@
       </trans-unit>
       <trans-unit id="tl_user.amg_legend">
         <source>Allowed member groups</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud_legend">
+        <source>Table permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
