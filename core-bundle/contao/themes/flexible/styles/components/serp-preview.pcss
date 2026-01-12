@@ -1,7 +1,7 @@
 .serp-preview {
     max-width: 600px;
     margin: 2px 0;
-    padding: 5px 7px;
+    padding: 6px 9px;
     font-family: Arial, sans-serif;
     font-weight: 400;
     color: var(--serp-preview);
@@ -14,18 +14,10 @@
 
     :is(.url, .description) {
         line-height: 18px;
-
-        &:not(:empty) {
-            margin-top: 3px;
-        }
-    }
-
-    .description:not(:empty) {
-        margin-bottom: 3px;
     }
 
     .title {
-        margin: 5px 0 4px;
+        margin: 4px 0;
         font-size: 18px;
         color: var(--serp-preview-title);
     }
@@ -36,6 +28,8 @@
 
     .robots {
         display: none;
+        padding: 2px 1px 2px 21px;
+        background-position: 0 3px;
     }
 
     &.noindex {
