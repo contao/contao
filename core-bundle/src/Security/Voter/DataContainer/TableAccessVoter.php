@@ -19,18 +19,29 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_File;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
-class TableAccessVoter implements CacheableVoterInterface
+class TableAccessVoter implements CacheableVoterInterface, ResetInterface
 {
+    private array $canAccessTable = [];
+    private array $canReadAccessTable = [];
+
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
+    }
+
+    public function reset(): void
+    {
+        $this->canAccessTable = [];
+        $this->canReadAccessTable = [];
     }
 
     public function supportsAttribute(string $attribute): bool
@@ -87,6 +98,12 @@ class TableAccessVoter implements CacheableVoterInterface
 
     private function hasAccessToModule(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $subject): bool
     {
+        $tokenHash = ContainerBuilder::hash($token);
+
+        if (isset($this->canAccessTable[$tokenHash]) || ($subject instanceof ReadAction && isset($this->canReadAccessTable[$tokenHash]))) {
+            return $this->canAccessTable[$tokenHash] ?? $this->canReadAccessTable[$tokenHash];
+        }
+
         $table = $subject->getDataSource();
 
         foreach ($GLOBALS['BE_MOD'] as $modules) {
@@ -96,7 +113,7 @@ class TableAccessVoter implements CacheableVoterInterface
                     && \in_array($table, $config['tables'], true)
                     && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
                 ) {
-                    return true;
+                    return $this->canAccessTable[$tokenHash] = true;
                 }
 
                 if (
@@ -105,11 +122,11 @@ class TableAccessVoter implements CacheableVoterInterface
                     && \in_array($table, $config['ptables'], true)
                     && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $name)
                 ) {
-                    return true;
+                    return $this->canReadAccessTable[$tokenHash] = true;
                 }
             }
         }
 
-        return false;
+        return $this->canAccessTable[$tokenHash] = false;
     }
 }
