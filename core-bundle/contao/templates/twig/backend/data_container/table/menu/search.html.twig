@@ -6,16 +6,14 @@
         name: 'tl_search',
         title: 'MSC.field'|trans,
     }) }}
-    <div class="term_wrapper">
-        <label for="tl_search_term">{{ 'MSC.keyword'|trans }}</label>
-        {% set input_attributes = attrs()
-            .set('type', 'search')
-            .set('id', 'tl_search_term')
-            .set('name', 'tl_value')
-            .set('value', value)
-            .addClass('tl_text')
-            .addClass('active', active)
-        %}
-        <input{{ input_attributes }}/>
-    </div>
+    <label for="tl_search_term">{{ 'MSC.keyword'|trans }}</label>
+    {% set input_attributes = attrs()
+        .set('type', 'search')
+        .set('id', 'tl_search_term')
+        .set('name', 'tl_value')
+        .set('value', value)
+        .addClass('tl_text')
+        .addClass('active', active)
+    %}
+    <input{{ input_attributes }}/>
 </fieldset>
