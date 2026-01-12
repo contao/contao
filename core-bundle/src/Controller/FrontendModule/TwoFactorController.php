@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\CoreBundle\Controller\FrontendModule\TwoFactorController" is deprecated and will no longer work in Contao 6. Use the content element instead.');
+
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
