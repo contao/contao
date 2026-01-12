@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.1">
         <source>Copy media query ID %s</source>
+        <target>Kopieer mediaquery ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.4">
         <source>Activate</source>
+        <target>Activeren</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>

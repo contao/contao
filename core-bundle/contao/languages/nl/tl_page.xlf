@@ -419,9 +419,11 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>Verberg wanneer ingelogd</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Verberg de pagina in het navigatiemenu als een lid is ingelogd.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -525,6 +527,7 @@
       </trans-unit>
       <trans-unit id="tl_page.feedDescription.1">
         <source>Here you can enter a short description of the feed.</source>
+        <target>Hier kunt u een korte beschrijving van de feed invoeren.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -660,9 +663,11 @@
       </trans-unit>
       <trans-unit id="tl_page.copy.1">
         <source>Copy page ID %s</source>
+        <target>Kopieer pagina ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.copyChildren.1">
         <source>Copy page ID %s with its subpages</source>
+        <target>Kopieer pagina ID %s met subpagina's</target>
       </trans-unit>
       <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
@@ -698,12 +703,15 @@
       </trans-unit>
       <trans-unit id="tl_page.pastenewtop.1">
         <source>Add a new page at the top</source>
+        <target>Voeg bovenaan een nieuwe pagina toe</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewafter.1">
         <source>Add a new page after page ID %s</source>
+        <target>Voeg een nieuwe pagina toe na pagina ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewinto.1">
         <source>Add a new page inside page ID %s</source>
+        <target>Voeg een nieuwe pagina toe binnen pagina ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.articles.0">
         <source>Articles</source>

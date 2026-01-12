@@ -431,7 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.modern">
         <source>Twig layout with slots</source>
-        <target>スロットのあるTwigレイアウト</target>
+        <target>スロットによるTwigレイアウト</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
         <source>Default layout</source>

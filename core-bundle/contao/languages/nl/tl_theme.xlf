@@ -179,6 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.elements.1">
         <source>Edit the content elements of theme ID %s</source>
+        <target>Bewerk de inhoudselementen van het thema ID %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.layout.0">
         <source>Page layouts</source>
@@ -198,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.exportTheme.0">
         <source>Export theme</source>
+        <target>Thema exporteren</target>
       </trans-unit>
       <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>

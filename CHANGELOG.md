@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.10] (2026-01-12)
+
+**Fixed issues:**
+
+- [#8935] Handle updates from Contao 4.13 in the `OverwriteMetaMigration` ([aschempp])
+- [#9183] Fix the tooltip flickering in the header bar ([zoglo])
+- [#8776] Support creating/renaming Twig page layouts in the Template Studio ([m-vo])
+- [#9140] Fix a wrong JS value iteration ([m-vo])
+
 ## [5.6.9] (2025-12-15)
 
 **Fixed issues:**
@@ -301,6 +310,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.10]: https://github.com/contao/contao/releases/tag/5.6.10
 [5.6.9]: https://github.com/contao/contao/releases/tag/5.6.9
 [5.6.8]: https://github.com/contao/contao/releases/tag/5.6.8
 [5.6.7]: https://github.com/contao/contao/releases/tag/5.6.7
@@ -490,6 +500,7 @@ This project adheres to [Semantic Versioning].
 [#8773]: https://github.com/contao/contao/pull/8773
 [#8774]: https://github.com/contao/contao/pull/8774
 [#8775]: https://github.com/contao/contao/pull/8775
+[#8776]: https://github.com/contao/contao/pull/8776
 [#8777]: https://github.com/contao/contao/pull/8777
 [#8782]: https://github.com/contao/contao/pull/8782
 [#8783]: https://github.com/contao/contao/pull/8783
@@ -517,6 +528,7 @@ This project adheres to [Semantic Versioning].
 [#8913]: https://github.com/contao/contao/pull/8913
 [#8919]: https://github.com/contao/contao/pull/8919
 [#8921]: https://github.com/contao/contao/pull/8921
+[#8935]: https://github.com/contao/contao/pull/8935
 [#8944]: https://github.com/contao/contao/pull/8944
 [#8951]: https://github.com/contao/contao/pull/8951
 [#8952]: https://github.com/contao/contao/pull/8952
@@ -553,3 +565,5 @@ This project adheres to [Semantic Versioning].
 [#9102]: https://github.com/contao/contao/pull/9102
 [#9119]: https://github.com/contao/contao/pull/9119
 [#9126]: https://github.com/contao/contao/pull/9126
+[#9140]: https://github.com/contao/contao/pull/9140
+[#9183]: https://github.com/contao/contao/pull/9183

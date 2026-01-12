@@ -3,15 +3,19 @@
     <body>
       <trans-unit id="getting-started.0">
         <source>Getting started</source>
+        <target>Aan de slag</target>
       </trans-unit>
       <trans-unit id="getting-started.1">
         <source>Select a template from the browser. You can then inspect all its representations and create your own versions and variants.</source>
+        <target>Selecteer een sjabloon in de browser. Je kunt vervolgens alle weergaven ervan bekijken en je eigen versies en varianten maken.</target>
       </trans-unit>
       <trans-unit id="theme-selector">
         <source>Theme context</source>
+        <target>Thema context</target>
       </trans-unit>
       <trans-unit id="no_theme_context">
         <source>Default/None</source>
+        <target>Standaard/Geen</target>
       </trans-unit>
       <trans-unit id="operation.save.0">
         <source>Save</source>
@@ -19,6 +23,7 @@
       </trans-unit>
       <trans-unit id="operation.save.1">
         <source>Save your template for %s</source>
+        <target>Bewaar je template voor %s</target>
       </trans-unit>
       <trans-unit id="operation.delete.0">
         <source>Delete</source>
@@ -26,60 +31,94 @@
       </trans-unit>
       <trans-unit id="operation.delete.1">
         <source>Delete your template for %s</source>
+        <target>Verwijder je template voor %s</target>
       </trans-unit>
       <trans-unit id="operation.create.0">
         <source>Create your template</source>
+        <target>Maak je template</target>
       </trans-unit>
       <trans-unit id="operation.create.1">
         <source>Modify %s by creating your own template</source>
+        <target>Wijzig %s door je eigen template te maken.</target>
       </trans-unit>
       <trans-unit id="operation.create_content_element_variant.0">
         <source>Create variant</source>
+        <target>Maak variant</target>
       </trans-unit>
       <trans-unit id="operation.create_content_element_variant.1">
         <source>Create a new variant template for the %s content element</source>
+        <target>Maak een nieuwe variant template voor content element %s.</target>
       </trans-unit>
       <trans-unit id="operation.rename_content_element_variant.0">
         <source>Rename variant</source>
+        <target>Variant hernoemen</target>
       </trans-unit>
       <trans-unit id="operation.rename_content_element_variant.1">
         <source>Rename the %s variant template</source>
+        <target>Template variant %s hernoemen</target>
       </trans-unit>
       <trans-unit id="operation.create_frontend_module_variant.0">
         <source>Create variant</source>
+        <target>Maak variant</target>
       </trans-unit>
       <trans-unit id="operation.create_frontend_module_variant.1">
         <source>Create a new variant template for the %s front end module</source>
+        <target>Maak een nieuwe variant template voor front-end module %s.</target>
       </trans-unit>
       <trans-unit id="operation.rename_frontend_module_variant.0">
         <source>Rename variant</source>
+        <target>Variant hernoemen</target>
       </trans-unit>
       <trans-unit id="operation.rename_frontend_module_variant.1">
         <source>Rename the %s variant template</source>
+        <target>Template variant %s hernoemen</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>Maak variant</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>Variant hernoemen</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Template variant %s hernoemen</target>
       </trans-unit>
       <trans-unit id="message.create.success">
         <source>Your template for %s was created.</source>
+        <target>Uw template voor %s is aangemaakt.</target>
       </trans-unit>
       <trans-unit id="message.create.error">
         <source>Your template for %s could not be created.</source>
+        <target>Uw template voor %s kon niet worden aangemaakt.</target>
       </trans-unit>
       <trans-unit id="message.create_variant.success">
         <source>The %s variant template was created.</source>
+        <target>Template variant %s is aangemaakt</target>
       </trans-unit>
       <trans-unit id="message.create_variant.error">
         <source>A variant template for %s could not be created.</source>
+        <target>Er kon geen template variant voor %s worden gemaakt.</target>
       </trans-unit>
       <trans-unit id="message.rename_variant.success">
         <source>The variant template was renamed to %s.</source>
+        <target>De template variant is hernoemd naar %s.</target>
       </trans-unit>
       <trans-unit id="message.rename_variant.error">
         <source>The variant template %s could not be renamed.</source>
+        <target>Template variant %s kon niet hernoemd worden.</target>
       </trans-unit>
       <trans-unit id="message.save.success">
         <source>Your template for %s was saved.</source>
+        <target>Uw template voor %s is opgeslagen.</target>
       </trans-unit>
       <trans-unit id="message.save.error">
         <source>Your template for %s could not be saved.</source>
+        <target>Uw template voor %s kon niet worden opgeslagen.</target>
       </trans-unit>
       <trans-unit id="message.delete.success">
         <source>Your template for %s was deleted.</source>

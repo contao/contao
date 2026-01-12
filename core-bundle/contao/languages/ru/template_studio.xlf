@@ -73,6 +73,22 @@
         <source>Rename the %s variant template</source>
         <target>Переименовать %s вариант шаблона</target>
       </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>Создать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>Создать новый вариант шаблона для макета %s</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>Переименовать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Переименовать %s вариант шаблона</target>
+      </trans-unit>
       <trans-unit id="message.create.success">
         <source>Your template for %s was created.</source>
         <target>Шаблон для %s был создан.</target>

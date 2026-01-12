@@ -73,6 +73,22 @@
         <source>Rename the %s variant template</source>
         <target>%sというバリアント・テンプレートの名前を変更</target>
       </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>バリアントを作成</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>%sというテンプレート用の新しいバリアント・テンプレートを作成</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>バリアントの名前を変更</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>%sというバリアント・テンプレートの名前を変更</target>
+      </trans-unit>
       <trans-unit id="message.create.success">
         <source>Your template for %s was created.</source>
         <target>%sのテンプレートを作成しました。</target>

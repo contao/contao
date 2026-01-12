@@ -318,10 +318,10 @@
         <target>انتشار آیتم خبر شناسه %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
-        <source>Publish</source>
+        <source>Unpublish</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.4">
-        <source>Unpublish</source>
+        <source>Publish</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>

@@ -7,12 +7,15 @@
       </trans-unit>
       <trans-unit id="jobs.status.0">
         <source>Status</source>
+        <target>Status</target>
       </trans-unit>
       <trans-unit id="jobs.owner.0">
         <source>Initiated by</source>
+        <target>Geïnitieerd door</target>
       </trans-unit>
       <trans-unit id="jobs.type.0">
         <source>Type</source>
+        <target>Type</target>
       </trans-unit>
       <trans-unit id="jobs.statusLabel.new">
         <source>New</source>
@@ -20,15 +23,19 @@
       </trans-unit>
       <trans-unit id="jobs.statusLabel.pending">
         <source>Pending</source>
+        <target>In behandeling</target>
       </trans-unit>
       <trans-unit id="jobs.statusLabel.completed">
         <source>Completed</source>
+        <target>Voltooid</target>
       </trans-unit>
       <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
+        <target>Herbouw de zoekindex van de backend</target>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>
+        <target>Alle opdrachten zijn verwerkt.</target>
       </trans-unit>
     </body>
   </file>

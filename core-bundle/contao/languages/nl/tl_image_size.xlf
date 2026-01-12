@@ -207,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.copy.1">
         <source>Copy image size ID %s</source>
+        <target>Kopieer afbeeldingsgrootte ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>

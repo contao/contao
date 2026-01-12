@@ -531,6 +531,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Kies module voor &quot;%s&quot;[%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -669,6 +670,7 @@ Indien u geen nieuw wachtwoord aanvroeg, gelieve dan met de administrator van de
       </trans-unit>
       <trans-unit id="tl_module.copy.1">
         <source>Copy module ID %s</source>
+        <target>Kopieer module ID %s</target>
       </trans-unit>
       <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>

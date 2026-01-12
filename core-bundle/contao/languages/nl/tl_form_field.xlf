@@ -171,9 +171,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.help.0">
         <source>Help text</source>
+        <target>Helptekst</target>
       </trans-unit>
       <trans-unit id="tl_form_field.help.1">
         <source>Here you can enter a help text that is associated with the field.</source>
+        <target>Hier kunt u een helptekst invoeren die aan het veld is gekoppeld.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
@@ -481,6 +483,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.copy.1">
         <source>Copy form field ID %s</source>
+        <target>Kopieer formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete.1">
         <source>Delete form field ID %s</source>
@@ -500,9 +503,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.3">
         <source>Hide</source>
+        <target>Verberg</target>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.4">
         <source>Unhide</source>
+        <target>Weergeven</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>

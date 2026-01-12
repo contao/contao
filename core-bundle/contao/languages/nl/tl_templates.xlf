@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.twig_studio_hint">
         <source>If you want to create or edit Twig templates, use the %s instead.</source>
+        <target>Als je Twig-sjablonen wilt maken of bewerken, gebruik dan de %s in plaats daarvan.</target>
       </trans-unit>
     </body>
   </file>

@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_user.doNotHideMessages.0">
         <source>Keep pop-up messages</source>
+        <target>Pop-upberichten behouden</target>
       </trans-unit>
       <trans-unit id="tl_user.doNotHideMessages.1">
         <source>Do not automatically hide pop-up messages.</source>
+        <target>Pop-upberichten niet automatisch verbergen.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -421,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_user.toggle.4">
         <source>Activate</source>
+        <target>Activeren</target>
       </trans-unit>
       <trans-unit id="tl_user.su.0">
         <source>Switch user</source>

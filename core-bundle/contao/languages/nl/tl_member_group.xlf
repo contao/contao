@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.4">
         <source>Activate</source>
+        <target>Activeren</target>
       </trans-unit>
     </body>
   </file>

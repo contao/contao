@@ -203,9 +203,11 @@
       </trans-unit>
       <trans-unit id="tl_form.storeSession.0">
         <source>Store data in the session</source>
+        <target>Sla gegevens op in de sessie</target>
       </trans-unit>
       <trans-unit id="tl_form.storeSession.1">
         <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>Sla de ingediende gegevens op in de sessie zodat ze kunnen worden opgehaald via de &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert-tag.</target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>

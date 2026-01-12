@@ -199,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_article.copy.1">
         <source>Copy article ID %s</source>
+        <target>Kopieer artikel ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
@@ -230,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.0">
         <source>Paste after article</source>
+        <target>Plakken achter artikel</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
@@ -237,6 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.0">
         <source>Paste into page</source>
+        <target>Plak in pagina</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -244,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_article.pastenewafter.1">
         <source>Add a new article after article ID %s</source>
+        <target>Voeg een nieuw artikel toe na artikel ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.0">
         <source>New at the top</source>
@@ -251,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.1">
         <source>Add a new article in page ID %s</source>
+        <target>Voeg een nieuw artikel toe op pagina ID %s</target>
       </trans-unit>
     </body>
   </file>

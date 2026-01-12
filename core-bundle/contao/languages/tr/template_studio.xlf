@@ -73,6 +73,21 @@
         <source>Rename the %s variant template</source>
         <target>%s çeşit kalıbının adını değiştirin</target>
       </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>Çeşit oluşturun</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>Çeşidin adını değiştirin</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>%s çeşit kalıbının adını değiştirin</target>
+      </trans-unit>
       <trans-unit id="message.create.success">
         <source>Your template for %s was created.</source>
         <target>%s kalıbınız oluşturuldu.</target>
