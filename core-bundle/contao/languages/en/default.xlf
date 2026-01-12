@@ -2618,6 +2618,21 @@
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
       </trans-unit>
+      <trans-unit id="DCA.permissions_legend">
+        <source>Permissions</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.0">
+        <source>Back end permissions</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.1">
+        <source>The changes made here are saved in the user and group settings.</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.groups">
+        <source>Groups</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.users">
+        <source>Users</source>
+      </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
       </trans-unit>
