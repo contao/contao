@@ -82,10 +82,14 @@ readonly class BackendBreadcrumbListener
 
             if ($hasSiblings) {
                 foreach ($treeSiblings as $i => ['url' => $sibling_url, 'label' => $sibling_label, 'active' => $sibling_active]) {
-                    $current->addChild('sibling_'.$i, [
+                    $item = $current->addChild('sibling_'.$i, [
                         'label' => $sibling_label,
-                        'uri' => !$sibling_active ? $sibling_url : null,
+                        'uri' => $sibling_url,
                     ]);
+
+                    if ($sibling_active) {
+                        $item->setCurrent(true);
+                    }
                 }
             }
 

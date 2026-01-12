@@ -76,7 +76,7 @@ class BackendBreadcrumbListenerTest extends TestCase
         $siblings = $children['current_1']->getChildren();
 
         $this->assertSame('Content One', $siblings['sibling_0']->getLabel());
-        $this->assertNull($siblings['sibling_0']->getUri());
+        $this->assertTrue($siblings['sibling_0']->isCurrent());
 
         $this->assertSame('Content Two', $siblings['sibling_1']->getLabel());
         $this->assertSame('/contao?do=article&id=2&table=tl_content', $siblings['sibling_1']->getUri());
