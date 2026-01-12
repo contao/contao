@@ -16,7 +16,7 @@ export class Navigation {
                 'expand': 'Expand menu: ',
                 'collapse': 'Collapse menu: ',
             },
-            showMobileTrail: true
+            showMobileTrail: true,
         }, options || {});
 
         this.navigation = document.querySelector(this.options.selector);
@@ -51,7 +51,7 @@ export class Navigation {
      * Handles the focus trap on the open mobile navigation
      */
     focusTrapEvent(event) {
-        if (!(event.key === 'Tab' || event.keyCode === 9)) {
+        if (event.key !== 'Tab' && event.keyCode !== 9) {
             return;
         }
 
@@ -98,7 +98,7 @@ export class Navigation {
 
     #initMobileTrail() {
         for (const submenu of this.navigation.querySelectorAll('li.submenu.trail')) {
-            this.#showDropdown(submenu)
+            this.#showDropdown(submenu);
         }
     }
 
@@ -107,7 +107,7 @@ export class Navigation {
      */
     #toggleMenuState() {
         if (this.options.showMobileTrail) {
-            this.#initMobileTrail()
+            this.#initMobileTrail();
         }
 
         this.toggle.ariaExpanded = this.state ? 'false' : 'true';
