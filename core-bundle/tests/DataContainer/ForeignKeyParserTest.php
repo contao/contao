@@ -70,6 +70,8 @@ class ForeignKeyParserTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
 
+        // Backwards-compatibility for doctrine/dbal < 4.3
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (method_exists(Connection::class, 'quoteSingleIdentifier')) {
             $connection
                 ->expects($expectsQuotingCall ? $this->once() : $this->never())

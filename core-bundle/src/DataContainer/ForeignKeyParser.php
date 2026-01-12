@@ -17,9 +17,8 @@ use Doctrine\DBAL\Connection;
 
 class ForeignKeyParser
 {
-    public function __construct(
-        private readonly Connection $connection,
-    ) {
+    public function __construct(private readonly Connection $connection)
+    {
     }
 
     /**
@@ -47,6 +46,7 @@ class ForeignKeyParser
             $columnName = $columnExpression;
 
             // Backwards-compatibility for doctrine/dbal < 4.3
+            /** @phpstan-ignore function.alreadyNarrowedType */
             if (!method_exists(Connection::class, 'quoteSingleIdentifier')) {
                 $columnExpression = $this->connection->quoteIdentifier($columnExpression);
             } else {

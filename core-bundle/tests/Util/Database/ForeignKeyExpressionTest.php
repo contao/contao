@@ -26,7 +26,8 @@ class ForeignKeyExpressionTest extends TestCase
         $this->assertNull($expr->getColumnName());
         $this->assertNull($expr->getKey());
 
-        $expr = $expr->withKey('key')
+        $expr = $expr
+            ->withKey('key')
             ->withColumnName('other_column')
             ->withColumnExpression('other_column_expression')
             ->withTableName('other_table')
