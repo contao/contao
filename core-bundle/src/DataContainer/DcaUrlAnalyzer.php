@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
@@ -36,6 +37,7 @@ class DcaUrlAnalyzer
         private readonly RecordLabeler $recordLabeler,
         private readonly DcaRequestSwitcher $dcaRequestSwitcher,
         private readonly Connection $connection,
+        private readonly ContaoCsrfTokenManager $tokenManager,
     ) {
     }
 
@@ -112,6 +114,7 @@ class DcaUrlAnalyzer
                     )
                 ) {
                     $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+                    $query['rt'] = $this->tokenManager->getDefaultTokenValue();
                 }
 
                 return $query;
@@ -478,7 +481,11 @@ class DcaUrlAnalyzer
 
         while ($id && $row = $this->getCurrentRecord($id, $table)) {
             $links[] = [
-                'url' => $this->router->generate('contao_backend', [...$query, 'pn' => (int) $row['id']]),
+                'url' => $this->router->generate('contao_backend', [
+                    ...$query,
+                    'pn' => (int) $row['id'],
+                    'rt' => $this->tokenManager->getDefaultTokenValue(),
+                ]),
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
             ];
 

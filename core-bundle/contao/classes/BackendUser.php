@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property array   $filemountIds
  * @property string  $fop
  * @property array   $alexf
+ * @property array   $cud
  * @property array   $imageSizes
  * @property string  $doNotHideMessages
  */
@@ -122,6 +123,7 @@ class BackendUser extends User
 
 			case 'groups':
 			case 'alexf':
+			case 'cud':
 				return \is_array($this->arrData[$strKey] ?? null) ? $this->arrData[$strKey] : (($this->arrData[$strKey] ?? null) ? array($this->arrData[$strKey]) : array());
 
 			case 'pagemounts':
@@ -233,7 +235,7 @@ class BackendUser extends User
 
 		// Inherit permissions
 		$always = array('alexf');
-		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg');
+		$depends = array('modules', 'themes', 'elements', 'fields', 'frontendModules', 'pagemounts', 'alpty', 'filemounts', 'fop', 'forms', 'formp', 'imageSizes', 'amg', 'cud');
 
 		// HOOK: Take custom permissions
 		if (!empty($GLOBALS['TL_PERMISSIONS']) && \is_array($GLOBALS['TL_PERMISSIONS']))
@@ -278,7 +280,7 @@ class BackendUser extends User
 			}
 		}
 
-		// Make sure pagemounts, filemounts and alexf are set!
+		// Make sure pagemounts, filemounts, alexf and cud are set!
 		if (!\is_array($this->arrData['pagemounts'] ?? null))
 		{
 			$this->arrData['pagemounts'] = array();
@@ -304,6 +306,15 @@ class BackendUser extends User
 		else
 		{
 			$this->arrData['alexf'] = array_filter($this->arrData['alexf']);
+		}
+
+		if (!\is_array($this->arrData['cud'] ?? null))
+		{
+			$this->arrData['cud'] = array();
+		}
+		else
+		{
+			$this->arrData['cud'] = array_filter($this->arrData['cud']);
 		}
 
 		// Store the numeric file mounts
