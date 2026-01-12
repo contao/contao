@@ -39,6 +39,7 @@ export default class TabsController extends Controller {
         });
         selectButton.addEventListener('auxclick', (event) => {
             if (event.button === 1) {
+                // Remove the panel and let the disconnect handler do the rest
                 panel.remove();
             }
         });
