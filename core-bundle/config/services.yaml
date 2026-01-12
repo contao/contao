@@ -1347,6 +1347,8 @@ services:
         autoconfigure: false
         arguments:
             - '@contao.translation.data_collector_translator.inner'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.translation.legacy_locale_switcher:
         class: Contao\CoreBundle\Translation\LegacyLocaleSwitcher
