@@ -387,7 +387,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w16'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'autocomplete' => array
 		(
