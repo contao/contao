@@ -36,10 +36,11 @@
             type="button"
             data-contao--toggle-state-target="controller"
             data-action="contao--toggle-state#toggle:prevent mouseover->contao--toggle-state#toggle:prevent"
-            title="{{ 'MSC.siblings'|trans }}"
+            title="{{ 'MSC.siblings.0'|trans }}"
         >
-            {{ block('label') }}
+            {{ 'MSC.siblings.1'|trans }}
         </button>
+        {{ parent() }}
     {% else %}
         {{ parent() }}
     {% endif %}

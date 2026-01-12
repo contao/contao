@@ -8,19 +8,15 @@
     line-height: 1;
 
     > li {
-        &:not(:first-child) {
+        &:not(:first-child, .current_ancestor) {
             &:before {
-                display: inline-block;
-                content: '/';
-                color: var(--info);
-                opacity: .6;
-                font-weight: 300;
-                padding-right: 3px;
+                content: "› "; /* Non-breaking-space to prevent collapsing whitespace */
+                font-weight: 600;
             }
         }
 
         > * {
-            display: inline-block;
+            display: inline-flex;
             max-width: clamp(250px, 80vw, 600px);
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -45,7 +41,7 @@
                 color: var(--contao);
             }
 
-            > span {
+            &.current {
                 opacity: .5;
             }
         }
@@ -53,7 +49,7 @@
 
     button {
         padding: 3px 5px 4px;
-        margin: -4px -3px -4px -6px;
+        margin: -4px -3px -4px -4px;
         border-radius: 5px;
 
         &:is(:hover, :focus-visible, .active) {
@@ -92,6 +88,12 @@
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
+        }
+    }
+
+    .current_ancestor {
+        [data-contao--toggle-state-target="controls"] {
+            left: -4px;
         }
     }
 }
