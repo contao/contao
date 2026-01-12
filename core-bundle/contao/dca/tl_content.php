@@ -842,13 +842,11 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('close_deactivate', 'close_delete'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
-			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_deleteDir' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
 		)
 	)
 );
