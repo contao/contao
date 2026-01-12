@@ -13,6 +13,7 @@ use Contao\Automator;
 use Contao\CheckBox;
 use Contao\CheckBoxWizard;
 use Contao\ChmodTable;
+use Contao\ColumnWizard;
 use Contao\ContentAccordion;
 use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
@@ -326,7 +327,8 @@ $GLOBALS['BE_FFL'] = array
 	'sectionWizard'           => SectionWizard::class,
 	'serpPreview'             => SerpPreview::class,
 	'rootPageDependentSelect' => RootPageDependentSelect::class,
-	'rowWizard'               => RowWizard::class
+	'rowWizard'               => RowWizard::class,
+	'columnWizard'            => ColumnWizard::class,
 );
 
 // Front end form fields

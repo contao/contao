@@ -1,0 +1,39 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set table_attributes = attrs()
+    .set('id', 'ctrl_' ~ id)
+    .addClass('column_wizard')
+    .addStyle(style|default)
+%}
+<table{{ table_attributes }}>
+    {% if showHeader %}
+        <thead>
+        <tr>
+            {% for cell in header %}
+                <th>{{ cell.label|default }}{% if cell.mandatory|default %}<span class="mandatory">*</span>{% endif %}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+    {% endif %}
+    <tbody>
+    <tr>
+        {% for cell in columns %}
+            {% set cell_attributes = attrs()
+                .addClass(cell.cell_class|default)
+                .addStyle(cell.cell_style|default)
+            %}
+            <td{{ cell_attributes }}>{{ cell.widget|raw }}</td>
+        {% endfor %}
+    </tr>
+    </tbody>
+
+    {% if showFooter %}
+        <tfoot>
+        <tr>
+            {% for cell in footer %}
+                <td><p class="tl_help tl_tip">{{ cell.description|default }}</td>
+            {% endfor %}
+        </tr>
+        </tfoot>
+    {% endif %}
+</table>
