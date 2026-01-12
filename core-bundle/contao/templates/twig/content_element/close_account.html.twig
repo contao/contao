@@ -1,6 +1,10 @@
 {% trans_default_domain 'contao_default' %}
 {% extends '@Contao/content_element/_base.html.twig' %}
 
+{% if form|default %}
+    {% form_theme form '@Contao/form/contao_layout.html.twig' %}
+{% endif %}
+
 {% block wrapper %}
     {% if as_editor_view %}
         <i class="placeholder-explanation">{{ ('CTE.' ~ type ~ '.1')|trans }}</i>
@@ -10,25 +14,19 @@
 {% endblock %}
 
 {% block content %}
-    <form class="tl_close_account" id="{{ form_id|default }}" method="post">
+    {{ form_start(form) }}
         <div class="formbody">
-            <input type="hidden" name="FORM_SUBMIT" value="{{ form_id|default }}">
-            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-
-            {% if error|default %}
-                <p class="error">{{ 'ERR.invalidPass'|trans }}</p>
-            {% endif %}
+            {{ form_row(form.REQUEST_TOKEN) }}
 
             <div class="widget widget-text">
-                <label for="ctrl_password">
-                    <span class="invisible">{{ 'MSC.mandatory'|trans }} </span>{{ 'MSC.password.0'|trans }}<span class="mandatory">*</span>
-                </label>
-                <input type="password" name="password" id="ctrl_password" class="text password" value="" required="" minlength="8">
+                {{ form_label(form.password) }}
+                {{ form_errors(form.password) }}
+                {{ form_widget(form.password) }}
             </div>
 
             <div class="widget widget-submit">
-                <button type="submit" class="submit">{{ 'MSC.closeAccount'|trans }}</button>
+                {{ form_widget(form.submit) }}
             </div>
         </div>
-    </form>
+    {{ form_end(form) }}
 {% endblock %}

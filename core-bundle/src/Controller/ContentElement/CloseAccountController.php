@@ -16,6 +16,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Event\CloseAccountEvent;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Form\Type\CloseAccountType;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -48,7 +49,6 @@ class CloseAccountController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $formId = 'tl_close_account_'.$model->id;
         $user = $this->getUser();
 
         if (!$user instanceof FrontendUser) {
@@ -64,10 +64,10 @@ class CloseAccountController extends AbstractContentElementController
             return $template->getResponse();
         }
 
-        $template->set('has_member', $this->getUser() instanceof FrontendUser);
-        $template->set('form_id', $formId);
+        $form = $this->createForm(CloseAccountType::class, [], ['attr' => ['id' => 'tl_close_account'.$model->id]]);
+        $form->handleRequest($request);
 
-        if ($formId === $request->request->get('FORM_SUBMIT')) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(FrontendUser::class);
 
             if (!$passwordHasher->verify($user->password, $request->request->get('password'))) {
@@ -111,6 +111,9 @@ class CloseAccountController extends AbstractContentElementController
                 }
             }
         }
+
+        $template->set('has_member', $this->getUser() instanceof FrontendUser);
+        $template->set('form', $form->createView());
 
         return $template->getResponse();
     }
