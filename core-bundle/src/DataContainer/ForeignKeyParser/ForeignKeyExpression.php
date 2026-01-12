@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Util\Database;
+namespace Contao\CoreBundle\DataContainer\ForeignKeyParser;
 
 class ForeignKeyExpression
 {

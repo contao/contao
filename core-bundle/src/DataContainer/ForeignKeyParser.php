@@ -10,19 +10,22 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Util;
+namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Util\Database\ForeignKeyExpression;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser\ForeignKeyExpression;
 use Doctrine\DBAL\Connection;
 
-class DatabaseUtil
+class ForeignKeyParser
 {
     public function __construct(
         private readonly Connection $connection,
     ) {
     }
 
-    public function parseForeignKeyExpression(string $foreignKeyDefinition): ForeignKeyExpression
+    /**
+     * @throws \InvalidArgumentException if the expression is not valid
+     */
+    public function parse(string $foreignKeyDefinition): ForeignKeyExpression
     {
         $isIdentifier = static fn (string $expression): bool => 1 === preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $expression);
 

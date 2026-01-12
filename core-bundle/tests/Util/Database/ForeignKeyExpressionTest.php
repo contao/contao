@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Util\Database;
 
+use Contao\CoreBundle\DataContainer\ForeignKeyParser\ForeignKeyExpression;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Util\Database\ForeignKeyExpression;
 
 class ForeignKeyExpressionTest extends TestCase
 {

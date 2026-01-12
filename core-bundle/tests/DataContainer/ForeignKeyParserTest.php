@@ -10,29 +10,29 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Util;
+namespace Contao\CoreBundle\Tests\DataContainer;
 
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Util\DatabaseUtil;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class DatabaseUtilTest extends TestCase
+class ForeignKeyParserTest extends TestCase
 {
-    #[DataProvider('parseForeignKeyExpressionProvider')]
-    public function testParseForeignKeyExpression(string $foreignKeyDefinition, bool $expectsQuotingCall, string $expectedTableName, string $expectedColumnExpression, string|null $expectedColumnName = null, string|null $expectedKey = null): void
+    #[DataProvider('parseProvider')]
+    public function testParse(string $foreignKeyDefinition, bool $expectsQuotingCall, string $expectedTableName, string $expectedColumnExpression, string|null $expectedColumnName = null, string|null $expectedKey = null): void
     {
         $connection = $this->mockConnection($expectsQuotingCall);
-        $util = new DatabaseUtil($connection);
+        $util = new ForeignKeyParser($connection);
 
-        $expression = $util->parseForeignKeyExpression($foreignKeyDefinition);
+        $expression = $util->parse($foreignKeyDefinition);
         $this->assertSame($expectedTableName, $expression->getTableName());
         $this->assertSame($expectedColumnExpression, $expression->getColumnExpression());
         $this->assertSame($expectedColumnName, $expression->getColumnName());
         $this->assertSame($expectedKey, $expression->getKey());
     }
 
-    public static function parseForeignKeyExpressionProvider(): iterable
+    public static function parseProvider(): iterable
     {
         yield [
             'table.field',
