@@ -97,7 +97,6 @@ services:
     Contao\CoreBundle\Controller\ContentElement\CloseAccountController:
         arguments:
             - '@contao.framework'
-            - '@security.password_hasher_factory'
             - '@event_dispatcher'
             - '@security.helper'
             - '@contao.routing.content_url_generator'

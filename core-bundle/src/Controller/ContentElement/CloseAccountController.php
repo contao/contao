@@ -31,14 +31,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 #[AsContentElement(category: 'user')]
 class CloseAccountController extends AbstractContentElementController
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly Security $security,
         private readonly ContentUrlGenerator $contentUrlGenerator,
@@ -68,14 +66,6 @@ class CloseAccountController extends AbstractContentElementController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(FrontendUser::class);
-
-            if (!$passwordHasher->verify($user->password, $request->request->get('password'))) {
-                $template->set('error', true);
-
-                return $template->getResponse();
-            }
-
             $this->eventDispatcher->dispatch(new CloseAccountEvent($member, $model->reg_close));
 
             if ('close_delete' === $model->reg_close) {

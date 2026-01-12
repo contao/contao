@@ -32,7 +32,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -46,7 +45,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller = new CloseAccountController(
             $this->getDefaultFramework(),
-            $this->createStub(PasswordHasherFactoryInterface::class),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(Security::class),
             $this->createStub(ContentUrlGenerator::class),
@@ -70,7 +68,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller = new CloseAccountController(
             $this->mockFrameworkWithTemplate(),
-            $this->createStub(PasswordHasherFactoryInterface::class),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(Security::class),
             $this->createStub(ContentUrlGenerator::class),
@@ -94,7 +91,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller = new CloseAccountController(
             $this->mockFrameworkWithTemplate($this->createClassWithPropertiesStub(MemberModel::class)),
-            $this->createStub(PasswordHasherFactoryInterface::class),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(Security::class),
             $this->createStub(ContentUrlGenerator::class),
@@ -123,7 +119,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller = new CloseAccountController(
             $this->mockFrameworkWithTemplate($memberModel),
-            $this->mockPasswordHasherFactory(false),
             $this->createStub(EventDispatcherInterface::class),
             $this->createStub(Security::class),
             $this->createStub(ContentUrlGenerator::class),
@@ -158,7 +153,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller = new CloseAccountController(
             $this->mockFrameworkWithTemplate($memberModel),
-            $this->mockPasswordHasherFactory(true),
             $this->mockEventDispatcher(),
             $this->mockSecurity(),
             $this->createStub(ContentUrlGenerator::class),
@@ -209,7 +203,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller = new CloseAccountController(
             $this->mockFrameworkWithTemplate($memberModel, $filesModel, $this->createClassWithPropertiesStub(PageModel::class)),
-            $this->mockPasswordHasherFactory(true),
             $this->mockEventDispatcher(),
             $this->mockSecurity(),
             $contentUrlGenerator,
@@ -265,25 +258,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
         ;
 
         return $eventDispatcher;
-    }
-
-    private function mockPasswordHasherFactory(bool $willVerify): PasswordHasherFactoryInterface&MockObject
-    {
-        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
-        $passwordHasher
-            ->expects($this->once())
-            ->method('verify')
-            ->willReturn($willVerify)
-        ;
-
-        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
-        $passwordHasherFactory
-            ->expects($this->once())
-            ->method('getPasswordHasher')
-            ->willReturn($passwordHasher)
-        ;
-
-        return $passwordHasherFactory;
     }
 
     private function mockFrameworkWithTemplate(MemberModel|null $member = null, FilesModel|null $homeDir = null, PageModel|null $jumpTo = null): ContaoFramework|Stub
