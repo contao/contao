@@ -25,6 +25,7 @@ use Contao\MemberModel;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -45,17 +46,17 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller = new CloseAccountController(
             $this->getDefaultFramework(),
-            $this->createMock(PasswordHasherFactoryInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(Security::class),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(VirtualFilesystem::class),
+            $this->createStub(PasswordHasherFactoryInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(VirtualFilesystem::class),
         );
 
         $controller->setContainer($container);
 
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $request = new Request();
 
         $response = $controller($request, $model, 'main');
@@ -65,21 +66,21 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
     public function testReturnsIfNoMemberModel(): void
     {
-        $container = $this->getContainerWithFrameworkTemplate($this->createMock(FrontendUser::class));
+        $container = $this->getContainerWithFrameworkTemplate($this->createStub(FrontendUser::class));
 
         $controller = new CloseAccountController(
             $this->mockFrameworkWithTemplate(),
-            $this->createMock(PasswordHasherFactoryInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(Security::class),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(VirtualFilesystem::class),
+            $this->createStub(PasswordHasherFactoryInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(VirtualFilesystem::class),
         );
 
         $controller->setContainer($container);
 
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $request = new Request();
 
         $response = $controller($request, $model, 'main');
@@ -89,21 +90,21 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
     public function testRendersTemplate(): void
     {
-        $container = $this->getContainerWithFrameworkTemplate($this->createMock(FrontendUser::class));
+        $container = $this->getContainerWithFrameworkTemplate($this->createStub(FrontendUser::class));
 
         $controller = new CloseAccountController(
-            $this->mockFrameworkWithTemplate($this->mockClassWithProperties(MemberModel::class)),
-            $this->createMock(PasswordHasherFactoryInterface::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(Security::class),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(VirtualFilesystem::class),
+            $this->mockFrameworkWithTemplate($this->createClassWithPropertiesStub(MemberModel::class)),
+            $this->createStub(PasswordHasherFactoryInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(VirtualFilesystem::class),
         );
 
         $controller->setContainer($container);
 
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $request = new Request();
 
         $response = $controller($request, $model, 'main');
@@ -113,26 +114,26 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
     public function testShowsErrorMessageWhenInvalidPassword(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->password = 'hashed-password';
 
         $container = $this->getContainerWithFrameworkTemplate($user);
 
-        $memberModel = $this->createMock(MemberModel::class);
+        $memberModel = $this->createStub(MemberModel::class);
 
         $controller = new CloseAccountController(
             $this->mockFrameworkWithTemplate($memberModel),
             $this->mockPasswordHasherFactory(false),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(Security::class),
-            $this->createMock(ContentUrlGenerator::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(VirtualFilesystem::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(ContentUrlGenerator::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(VirtualFilesystem::class),
         );
 
         $controller->setContainer($container);
 
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_close_account_');
         $request->request->set('password', '12345678');
@@ -144,7 +145,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
     public function testDeactivatesMember(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->password = 'hashed-password';
 
         $container = $this->getContainerWithFrameworkTemplate($user);
@@ -160,14 +161,14 @@ class CloseAccountControllerTest extends ContentElementTestCase
             $this->mockPasswordHasherFactory(true),
             $this->mockEventDispatcher(),
             $this->mockSecurity(),
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContentUrlGenerator::class),
             $this->mockLogger(),
-            $this->createMock(VirtualFilesystem::class),
+            $this->createStub(VirtualFilesystem::class),
         );
 
         $controller->setContainer($container);
 
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $model->reg_close = 'close_deactivate';
 
         $request = new Request();
@@ -181,16 +182,16 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
     public function testDeletesMember(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
         $user->password = 'hashed-password';
 
         $container = $this->getContainerWithFrameworkTemplate($user);
 
-        $memberModel = $this->mockClassWithProperties(MemberModel::class);
+        $memberModel = $this->createClassWithPropertiesStub(MemberModel::class);
         $memberModel->assignDir = true;
         $memberModel->homeDir = 'f81d4fae-7dec-11d0-a765-00a0c91e6bf6';
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $filesModel->path = '/path/to/homedir/';
 
         $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -207,7 +208,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
         ;
 
         $controller = new CloseAccountController(
-            $this->mockFrameworkWithTemplate($memberModel, $filesModel, $this->mockClassWithProperties(PageModel::class)),
+            $this->mockFrameworkWithTemplate($memberModel, $filesModel, $this->createClassWithPropertiesStub(PageModel::class)),
             $this->mockPasswordHasherFactory(true),
             $this->mockEventDispatcher(),
             $this->mockSecurity(),
@@ -218,7 +219,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller->setContainer($container);
 
-        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
         $model->reg_close = 'close_delete';
         $model->reg_deleteDir = true;
         $model->jumpTo = 1;
@@ -285,29 +286,29 @@ class CloseAccountControllerTest extends ContentElementTestCase
         return $passwordHasherFactory;
     }
 
-    private function mockFrameworkWithTemplate(MemberModel|null $member = null, FilesModel|null $homeDir = null, PageModel|null $jumpTo = null): ContaoFramework&MockObject
+    private function mockFrameworkWithTemplate(MemberModel|null $member = null, FilesModel|null $homeDir = null, PageModel|null $jumpTo = null): ContaoFramework|Stub
     {
         $template = new FragmentTemplate('close_account', static fn () => new Response());
 
-        $memberModel = $this->mockAdapter(['findById']);
+        $memberModel = $this->createAdapterStub(['findById']);
         $memberModel
             ->method('findById')
             ->willReturn($member)
         ;
 
-        $filesModel = $this->mockAdapter(['findByUuid']);
+        $filesModel = $this->createAdapterStub(['findByUuid']);
         $filesModel
             ->method('findByUuid')
             ->willReturn($homeDir)
         ;
 
-        $pageModel = $this->mockAdapter(['findById']);
+        $pageModel = $this->createAdapterStub(['findById']);
         $pageModel
             ->method('findById')
             ->willReturn($jumpTo)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             MemberModel::class => $memberModel,
             FilesModel::class => $filesModel,
             PageModel::class => $pageModel,
@@ -321,9 +322,9 @@ class CloseAccountControllerTest extends ContentElementTestCase
         return $framework;
     }
 
-    private function mockTokenStorageWithToken(UserInterface|null $user = null): TokenStorageInterface&MockObject
+    private function mockTokenStorageWithToken(UserInterface|null $user = null): TokenStorageInterface|Stub
     {
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage = $this->createStub(TokenStorageInterface::class);
         $tokenStorage
             ->method('getToken')
             ->willReturn($user ? new PreAuthenticatedToken($user, 'contao_frontend') : null)
@@ -337,8 +338,8 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockFrameworkWithTemplate($member));
         $container->set('security.token_storage', $this->mockTokenStorageWithToken($user));
-        $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+        $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         System::setContainer($container);
 
