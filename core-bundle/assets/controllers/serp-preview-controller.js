@@ -8,7 +8,6 @@ export default class extends Controller {
         trail: String,
         titleTag: String,
         fields: Object,
-        warning: String,
     };
 
     static targets = ['url', 'title', 'description', 'robots'];
