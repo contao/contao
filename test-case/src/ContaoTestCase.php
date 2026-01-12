@@ -483,13 +483,13 @@ abstract class ContaoTestCase extends TestCase
             $object
                 ->method('createInstance')
                 ->willReturnCallback(
-                    static function (string $key) use ($instances): mixed {
+                    static function (string $key, array $args = []) use ($instances): mixed {
                         if (!isset($instances[$key])) {
                             return null;
                         }
 
                         if ($instances[$key] instanceof \Closure) {
-                            return $instances[$key]();
+                            return $instances[$key]($args);
                         }
 
                         return $instances[$key];

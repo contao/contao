@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Functional;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -38,6 +39,17 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     return true;
                 }
             },
+        );
+
+        $tokenManager = $this->createStub(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->method('getDefaultTokenValue')
+            ->willReturn('RT')
+        ;
+
+        $container->set(
+            'contao.csrf.token_manager',
+            $tokenManager,
         );
 
         $this->loadFixtureFile('default');
@@ -171,6 +183,17 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             },
         );
 
+        $tokenManager = $this->createStub(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->method('getDefaultTokenValue')
+            ->willReturn('RT')
+        ;
+
+        $container->set(
+            'contao.csrf.token_manager',
+            $tokenManager,
+        );
+
         $this->loadFixtureFile('default');
 
         $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getTrail(withTreeTrail: true));
@@ -187,7 +210,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
@@ -225,7 +248,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
@@ -249,7 +272,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
@@ -273,7 +296,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
@@ -298,7 +321,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
@@ -323,7 +346,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
@@ -348,7 +371,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
@@ -374,7 +397,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
-                            'url' => '/contao?do=article&table=tl_article&pn=1',
+                            'url' => '/contao?do=article&table=tl_article&pn=1&rt=RT',
                             'label' => 'Edit page ID 1',
                         ],
                     ],
