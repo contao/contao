@@ -2827,6 +2827,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>De preview-URL kan niet worden gegenereerd omdat het formulier fouten bevat.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

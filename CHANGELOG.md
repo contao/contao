@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.44] (2026-01-12)
+
+**Fixed issues:**
+
+- [#9200] Fix inconsistent hashes for schema changes ([lukasbableck])
+- [#9182] Fix the tooltip flickering in the header bar ([zoglo])
+- [#9168] Use `break-word` in listings ([fritzmg])
+- [#9166] Improve the CAPTCHA script ([ausi])
+- [#9121] Use the image UUID in search results ([fritzmg])
+- [#9112] Fix the "Loading data …" box styling issues ([fritzmg])
+- [#9089] Improve the `NewsFeedListenerTest` ([fritzmg])
+- [#9090] Use `MockHttpClient` in `FactoryTest` ([fritzmg])
+- [#9092] Fix a missing host in the `be_conflict` template ([aschempp])
+- [#9059] Fix various PHP 8.5 issues ([aschempp])
+- [#9061] Skip cron jobs in maintenance mode (again) ([aschempp])
+
 ## [5.3.43] (2025-11-26)
 
 **Fixed issues:**
@@ -849,6 +865,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.44]: https://github.com/contao/contao/releases/tag/5.3.44
 [5.3.43]: https://github.com/contao/contao/releases/tag/5.3.43
 [5.3.42]: https://github.com/contao/contao/releases/tag/5.3.42
 [5.3.41]: https://github.com/contao/contao/releases/tag/5.3.41
@@ -1512,3 +1529,14 @@ This project adheres to [Semantic Versioning].
 [#9024]: https://github.com/contao/contao/pull/9024
 [#9032]: https://github.com/contao/contao/pull/9032
 [#9045]: https://github.com/contao/contao/pull/9045
+[#9059]: https://github.com/contao/contao/pull/9059
+[#9061]: https://github.com/contao/contao/pull/9061
+[#9089]: https://github.com/contao/contao/pull/9089
+[#9090]: https://github.com/contao/contao/pull/9090
+[#9092]: https://github.com/contao/contao/pull/9092
+[#9112]: https://github.com/contao/contao/pull/9112
+[#9121]: https://github.com/contao/contao/pull/9121
+[#9166]: https://github.com/contao/contao/pull/9166
+[#9168]: https://github.com/contao/contao/pull/9168
+[#9182]: https://github.com/contao/contao/pull/9182
+[#9200]: https://github.com/contao/contao/pull/9200

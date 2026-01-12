@@ -131,15 +131,19 @@
       </trans-unit>
       <trans-unit id="tl_module.pwResetPage.0">
         <source>Reset password page</source>
+        <target>Page de réinitialisation du mot de passe</target>
       </trans-unit>
       <trans-unit id="tl_module.pwResetPage.1">
         <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Ici, vous pouvez choisir une page vers laquelle les visiteurs seront redirigés lorsqu'ils cliqueront sur le lien &lt;em&gt;Mot de passe oublié ?&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Page d'aperçu</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
+        <target>Sélectionnez une page d'aperçu pour inclure un lien vers celle-ci dans le modèle.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
@@ -175,9 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.0">
         <source>Require full authentication</source>
+        <target>Exiger une authentification complète</target>
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.1">
         <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Les utilisateurs ne disposant que d'un cookie &quot;se souvenir de moi&quot; doivent vérifier leur identité pour accéder au module.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -517,6 +523,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Choisir un module pour &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

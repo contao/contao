@@ -427,9 +427,11 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>Masquer si connecté</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Masquer la page dans le menu de navigation si un membre est connecté.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -481,27 +483,35 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.0">
         <source>Enable CSP</source>
+        <target>Activer CSP</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.1">
         <source>Enable Content Security Policy for this website.</source>
+        <target>Activer la politique de sécurité du contenu (CSP) pour ce site web.</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.0">
         <source>Content Security Policy</source>
+        <target>Content Security Policy (CSP)</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.1">
         <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Ici, vous pouvez saisir des directives CSP personnalisées.</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.0">
         <source>Reporting only</source>
+        <target>Rapport uniquement</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.1">
         <source>Only report policy violations without enforcing them.</source>
+        <target>Signaler uniquement les violations de la politique sans les appliquer.</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.0">
         <source>Enable report logging</source>
+        <target>Activer la journalisation des rapports</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.1">
         <source>Log CSP violations to the Contao system log.</source>
+        <target>Enregistrer les violations CSP dans le journal système de Contao.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -585,6 +595,7 @@
       </trans-unit>
       <trans-unit id="tl_page.csp_legend">
         <source>Content Security Policy</source>
+        <target>Content Security Policy (CSP)</target>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>

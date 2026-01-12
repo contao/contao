@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.children">
         <source>Edit the questions of category ID %s</source>
+        <target>Éditer les questions de la catégorie ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>

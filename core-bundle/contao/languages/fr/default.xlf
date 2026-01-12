@@ -375,9 +375,11 @@
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Il existe au moins un module &quot;données personnelles&quot; qui permet de modifier le mot de passe. Il s'agit d'une faiblesse de sécurité qui ne fonctionnera plus dans Contao 6. Utilisez plutôt le module &quot;changer le mot de passe&quot;.</target>
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>L'élément ID %d ne peut pas être inséré ici car il entre en conflit avec un élément existant.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -441,9 +443,11 @@
       </trans-unit>
       <trans-unit id="CTE.description_list.0">
         <source>Description list</source>
+        <target>Liste de description</target>
       </trans-unit>
       <trans-unit id="CTE.description_list.1">
         <source>Generates a description list with terms and details.</source>
+        <target>Génère une liste de description avec des termes et des détails.</target>
       </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
@@ -459,15 +463,19 @@
       </trans-unit>
       <trans-unit id="CTE.accordion.1">
         <source>Generates an accordion.</source>
+        <target>Génère un accordéon.</target>
       </trans-unit>
       <trans-unit id="CTE.element_group.0">
         <source>Element group</source>
+        <target>Groupe d'éléments</target>
       </trans-unit>
       <trans-unit id="CTE.element_group.1">
         <source>Generates a group of nested elements.</source>
+        <target>Génère un groupe d'éléments imbriqués.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
         <source>Accordion wrapper start</source>
+        <target>Début de l'enveloppe de l'accordéon</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
@@ -475,6 +483,7 @@
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
         <source>Accordion wrapper stop</source>
+        <target>Fin de l'enveloppe de l'accordéon</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
@@ -482,6 +491,7 @@
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
         <source>Accordion single element</source>
+        <target>Élément d'accordéon unique</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -517,6 +527,7 @@
       </trans-unit>
       <trans-unit id="CTE.swiper.1">
         <source>Generates a content slider element.</source>
+        <target>Génère un élément de défilement de contenu (slider).</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -524,6 +535,7 @@
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
         <source>Slider wrapper start</source>
+        <target>Début de l'enveloppe du slider</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
@@ -531,6 +543,7 @@
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
         <source>Slider wrapper stop</source>
+        <target>Fin de l'enveloppe du slider</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -666,6 +679,7 @@
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
+        <target>Éléments obsolètes (Legacy)</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -2353,6 +2367,7 @@
       </trans-unit>
       <trans-unit id="MSC.lostPassword">
         <source>Forgot your password?</source>
+        <target>Mot de passe oublié ?</target>
       </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
@@ -2376,9 +2391,11 @@
       </trans-unit>
       <trans-unit id="MSC.reauthenticate">
         <source>Please enter your password to verify your identity.</source>
+        <target>Veuillez entrer votre mot de passe pour vérifier votre identité.</target>
       </trans-unit>
       <trans-unit id="MSC.verify">
         <source>Verify</source>
+        <target>Vérifier</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2490,6 +2507,7 @@
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
         <source>Share on X (formerly Twitter)</source>
+        <target>Partager sur X (anciennement Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2573,6 +2591,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Vous avez essayé de réinitialiser votre mot de passe trop de fois. Veuillez réessayer dans 15 minutes.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2808,6 +2827,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>L'URL d'aperçu ne peut pas être générée, car le formulaire contient des erreurs.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

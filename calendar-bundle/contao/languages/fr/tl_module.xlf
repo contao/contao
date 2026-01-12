@@ -107,12 +107,15 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
+        <target>Utiliser l'URL actuelle pour les liens canoniques</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Conserver l'URL actuelle au lieu de la page de lecture configurée pour les liens canoniques.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_overview_legend">
         <source>Overview page</source>
+        <target>Page d'aperçu</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>

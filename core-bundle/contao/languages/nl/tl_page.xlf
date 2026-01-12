@@ -427,9 +427,11 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>Verberg wanneer ingelogd</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Verberg de pagina in het navigatiemenu als een lid is ingelogd.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -645,7 +647,7 @@
       </trans-unit>
       <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
-        <target>Kopieer pagina ID %s met subpagina's</target>
+        <target>Dupliceer pagina ID %s met subpagina's</target>
       </trans-unit>
       <trans-unit id="tl_page.delete">
         <source>Delete page ID %s</source>
