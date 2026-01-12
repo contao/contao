@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\ModuleCloseAccount" is deprecated and will no longer work in Contao 6. Use the content element instead.');
+
 /**
  * Front end module "close account".
  *
