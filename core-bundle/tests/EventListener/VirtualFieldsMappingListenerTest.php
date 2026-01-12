@@ -115,6 +115,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
 
     public function testDoesNotMapForNonEditableDcas(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foobar'] = [
             'config' => [
                 'dataContainer' => DC_Table::class,
@@ -130,7 +131,6 @@ class VirtualFieldsMappingListenerTest extends TestCase
 
         (new VirtualFieldsMappingListener())('tl_foobar');
 
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
         unset($GLOBALS['TL_DCA']);
@@ -138,6 +138,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
 
     public function testDoesNotMapForDcasWithoutPalettes(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_foobar'] = [
             'config' => [
                 'dataContainer' => DC_Table::class,
@@ -151,7 +152,6 @@ class VirtualFieldsMappingListenerTest extends TestCase
 
         (new VirtualFieldsMappingListener())('tl_foobar');
 
-        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
         unset($GLOBALS['TL_DCA']);

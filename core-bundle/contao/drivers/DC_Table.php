@@ -262,7 +262,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
 	{
-		if (!($currentRecord = parent::getCurrentRecord($id, $table)))
+		if (!$currentRecord = parent::getCurrentRecord($id, $table))
 		{
 			return $currentRecord;
 		}
@@ -730,7 +730,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$databaseFields = $db->getFieldNames($this->strTable);
 		$dcaExtract = DcaExtractor::getInstance($this->strTable);
 		$virtualFields = $dcaExtract->getVirtualFields();
-		$container = System::getContainer();
 
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -764,6 +763,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->set['ptable'] = $this->ptable;
 		}
 
+		$container = System::getContainer();
 		$objSession = $container->get('request_stack')->getSession();
 
 		// Empty the clipboard

@@ -40,7 +40,6 @@ class VirtualFieldsHandlerTest extends TestCase
         ;
 
         $contaoFramework = $this->createContaoFrameworkStub([], [DcaExtractor::class => $dcaExtractor]);
-
         $virtualFieldsHandler = new VirtualFieldsHandler($contaoFramework);
 
         $this->assertSame($expanded, $virtualFieldsHandler->expandFields($record, $table));
@@ -83,7 +82,6 @@ class VirtualFieldsHandlerTest extends TestCase
         ;
 
         $contaoFramework = $this->createContaoFrameworkStub([], [DcaExtractor::class => $dcaExtractor]);
-
         $virtualFieldsHandler = new VirtualFieldsHandler($contaoFramework);
 
         $this->assertSame($combined, $virtualFieldsHandler->combineFields($record, $table));

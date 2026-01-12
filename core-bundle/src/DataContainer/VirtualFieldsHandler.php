@@ -32,9 +32,8 @@ class VirtualFieldsHandler
      */
     public function expandFields(array $record, string $table): array
     {
-        $dcaExtractor = $this->contaoFramework->createInstance(DcaExtractor::class, [$table]);
-
         $expanded = [];
+        $dcaExtractor = $this->contaoFramework->createInstance(DcaExtractor::class, [$table]);
 
         foreach ($dcaExtractor->getVirtualTargets() as $target) {
             if ($record[$target] ?? null) {
@@ -69,9 +68,8 @@ class VirtualFieldsHandler
      */
     public function combineFields(array $record, string $table): array
     {
-        $dcaExtractor = $this->contaoFramework->createInstance(DcaExtractor::class, [$table]);
-
         $compressed = [];
+        $dcaExtractor = $this->contaoFramework->createInstance(DcaExtractor::class, [$table]);
 
         foreach ($dcaExtractor->getVirtualFields() as $virtualField => $storageField) {
             if (!\array_key_exists($virtualField, $record)) {
