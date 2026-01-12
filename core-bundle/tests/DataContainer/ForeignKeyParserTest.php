@@ -69,22 +69,11 @@ class ForeignKeyParserTest extends TestCase
     private function mockConnection(bool $expectsQuotingCall): Connection
     {
         $connection = $this->createMock(Connection::class);
-
-        // Backwards-compatibility for doctrine/dbal < 4.3
-        /** @phpstan-ignore function.alreadyNarrowedType */
-        if (method_exists(Connection::class, 'quoteSingleIdentifier')) {
-            $connection
-                ->expects($expectsQuotingCall ? $this->once() : $this->never())
-                ->method('quoteSingleIdentifier')
-                ->willReturnCallback(static fn ($v) => "`$v`")
-            ;
-        } else {
-            $connection
-                ->expects($expectsQuotingCall ? $this->once() : $this->never())
-                ->method('quoteIdentifier')
-                ->willReturnCallback(static fn ($v) => "`$v`")
-            ;
-        }
+        $connection
+            ->expects($expectsQuotingCall ? $this->once() : $this->never())
+            ->method('quoteIdentifier')
+            ->willReturnCallback(static fn ($v) => "`$v`")
+        ;
 
         return $connection;
     }
