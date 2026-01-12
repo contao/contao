@@ -236,6 +236,12 @@ services:
             - '@database_connection'
             - '@contao.csrf.token_manager'
 
+    contao.data_container.foreign_key_parser:
+        class: Contao\CoreBundle\DataContainer\ForeignKeyParser
+        public: true
+        arguments:
+            - '@database_connection'
+
     contao.data_container.global_operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder
         public: true
@@ -276,8 +282,6 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@translator'
-        tags:
-            - { name: kernel.reset, method: reset }
 
     contao.data_container.virtual_fields_handler:
         class: Contao\CoreBundle\DataContainer\VirtualFieldsHandler
@@ -1551,6 +1555,7 @@ services:
     Contao\CoreBundle\Csp\WysiwygStyleProcessor: '@contao.csp.wysiwyg_style_processor'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\DataContainer\DcaUrlAnalyzer: '@contao.data_container.dca_url_analyzer'
+    Contao\CoreBundle\DataContainer\ForeignKeyParser: '@contao.data_container.foreign_key_parser'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
