@@ -17,6 +17,8 @@ trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\TrblField" is de
  *
  * @property integer $maxlength
  * @property array   $options
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6.
  */
 class TrblField extends Widget
 {
