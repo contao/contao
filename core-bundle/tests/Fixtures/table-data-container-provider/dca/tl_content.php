@@ -35,5 +35,30 @@ $GLOBALS['TL_DCA']['tl_content'] =
             'search' => false,
             'backendSearch' => true,
         ],
+        'foo' => [
+            'search' => true,
+            'targetColumn' => 'jsonData',
+        ],
+        'moo' => [
+            'search' => true,
+            'targetColumn' => 'jsonData',
+        ],
+        'lorem' => [
+            'search' => true,
+            'targetColumn' => 'emptyTarget',
+        ],
+        'ipsum' => [
+            'search' => true,
+            'targetColumn' => 'invalidTarget',
+        ],
+        'jsonData' => [
+            'virtualTarget' => true,
+        ],
+        'emptyTarget' => [
+            'virtualTarget' => true,
+        ],
+        'invalidTarget' => [
+            'virtualTarget' => true,
+        ],
     ],
 ];
