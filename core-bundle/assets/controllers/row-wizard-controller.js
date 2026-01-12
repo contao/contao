@@ -128,7 +128,7 @@ export default class extends Controller {
     }
 
     updateSorting() {
-        const regexPattern = new RegExp(`${this.nameValue}\\[[0-9]+\\]`, 'g');
+        const regexPattern = new RegExp(`${this.nameValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\[[0-9]+\\]`, 'g');
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
