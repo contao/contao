@@ -2315,6 +2315,9 @@
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
       </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K / ⌘+K</source>
+      </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
       </trans-unit>

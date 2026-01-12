@@ -3,20 +3,15 @@ import * as focusTrap from 'focus-trap';
 import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class BackendSearchController extends Controller {
-    static targets = ['input', 'results', 'shortcut'];
+    static targets = ['input', 'results'];
 
     static values = {
         url: String,
         minCharacters: Number,
         debounceDelay: Number,
-        shortcutLabel: String,
     };
 
     static classes = ['hidden', 'initial', 'loading', 'invalid', 'results', 'error'];
-
-    initialize() {
-        this.shortcutTarget.innerText = this.shortcutLabelValue;
-    }
 
     connect() {
         this.debounceTimeout = null;
