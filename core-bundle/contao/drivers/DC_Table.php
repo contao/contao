@@ -4205,9 +4205,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$row = $objOrderBy->fetchAllAssoc();
 
 			// TODO: new button
-			$new = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-			$new->addNewButton($operations::CREATE_TOP, $table, $objParent->id, $this->intId, array('primary' => true));
-			// $return .= '<li class="new_operation" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">' . $new . '</li>';
+			if ($blnHasSorting)
+			{
+				$parameters['new'] = System::getContainer()->get('contao.data_container.operations_builder')
+					->initialize($this->strTable)
+					->addNewButton($operations::CREATE_TOP, $table, $objParent->id, $this->intId, array('primary' => true))
+				;
+			}
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
@@ -4348,12 +4352,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$records[] = $record;
+				if ($blnHasSorting)
+				{
+					$record['new'] = System::getContainer()->get('contao.data_container.operations_builder')
+						->initialize($this->strTable)
+						->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id, array('primary' => true))
+					;
+				}
 
-				// TODO: new button
-				$new = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-				$new->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id, array('primary' => true));
-				// $return .= '<li class="new_operation" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">' . $new . '</li>';
+				$records[] = $record;
 			}
 		}
 

@@ -50,6 +50,7 @@
             .set('data-id', pid, is_sortable)
         %}
         <ul{{ list_attributes }}>
+            <li class="new_operation" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">{{ new|default|raw }}</li>
             {% for record in records %}
                 <li{{ attrs().set('data-id', record.id, is_sortable) }}>
                     {% if record.group_header is defined %}
@@ -112,6 +113,7 @@
                         </div>
                     </div>
                 </li>
+                <li class="new_operation" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">{{ record.new|default|raw }}</li>
             {% endfor %}
         </ul>
 
