@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Controller\ContentElement\AccordionController;
 
 trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentAccordionStart::class, AccordionController::class);
+
 /**
  * Front end content element "accordion" (wrapper start).
  *
