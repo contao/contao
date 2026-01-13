@@ -4204,7 +4204,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$intWrapLevel = 0;
 			$row = $objOrderBy->fetchAllAssoc();
 
-			// TODO: new button
 			if ($blnHasSorting)
 			{
 				$parameters['new'] = System::getContainer()->get('contao.data_container.operations_builder')
