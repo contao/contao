@@ -3,7 +3,8 @@ name: CI
 on:
     pull_request: ~
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:
@@ -23,7 +24,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -51,7 +52,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -79,7 +80,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -110,9 +111,10 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3
@@ -137,7 +139,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -158,7 +160,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -168,7 +170,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -194,7 +196,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -222,7 +224,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   show-progress: false
@@ -272,7 +274,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -305,7 +307,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -334,7 +336,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -369,7 +371,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -404,7 +406,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -447,7 +449,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
