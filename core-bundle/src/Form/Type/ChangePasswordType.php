@@ -20,9 +20,9 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * @extends AbstractContaoFormType<ChangePasswordType>
+ * @extends AbstractContaoType<ChangePasswordType>
  */
-class ChangePasswordType extends AbstractContaoFormType
+class ChangePasswordType extends AbstractContaoType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
