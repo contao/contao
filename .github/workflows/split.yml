@@ -1,13 +1,10 @@
 name: Split
 
 on:
-    push:
-        branches:
-            - 5.x
-        tags:
-            - '*'
+    push: ~
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:

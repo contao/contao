@@ -5,7 +5,8 @@ on:
     schedule:
         - cron: 0 13 * * 1-5
 
-permissions: read-all
+permissions:
+    contents: read
 
 jobs:
     cypress:

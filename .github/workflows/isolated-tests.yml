@@ -5,7 +5,8 @@ on:
     schedule:
         - cron: 0 13 * * MON,THU
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:
