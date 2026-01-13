@@ -4212,12 +4212,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$record = array(
 					'id' => $row[$i]['id'],
-					'is_draft' => (string) ($row['tstamp'] ?? null) === '0',
+					'is_draft' => (string) ($row[$i]['tstamp'] ?? null) === '0',
 				);
 
 				if ($this->strPickerFieldType)
 				{
-					$record['picker_input_field'] = $this->getPickerInputField($row['id']);
+					$record['picker_input_field'] = $this->getPickerInputField($row[$i]['id']);
 				}
 
 				// Add the group header
