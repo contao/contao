@@ -18,9 +18,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 /**
- * @extends AbstractContaoFormType<CloseAccountType>
+ * @extends AbstractContaoType<CloseAccountType>
  */
-class CloseAccountType extends AbstractContaoFormType
+class CloseAccountType extends AbstractContaoType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
