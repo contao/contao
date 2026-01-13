@@ -2219,6 +2219,9 @@
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
       </trans-unit>
+      <trans-unit id="MSC.noSerpIndexSetting">
+        <source>The URL will not be indexed due to the robots tag settings.</source>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
       </trans-unit>
