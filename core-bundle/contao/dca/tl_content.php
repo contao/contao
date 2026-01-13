@@ -156,6 +156,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'title' => array
 		(
+			'sorting'                 => true,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -163,6 +165,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'type' => array
 		(
+			'sorting'                 => true,
+			'flag'                    => DataContainer::SORT_ASC,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
