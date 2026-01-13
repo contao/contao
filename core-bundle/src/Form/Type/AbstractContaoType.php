@@ -17,7 +17,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  *
  * @extends AbstractType<T>
  */
-abstract class AbstractContaoFormType extends AbstractType implements ServiceSubscriberInterface
+abstract class AbstractContaoType extends AbstractType implements ServiceSubscriberInterface
 {
     protected ContainerInterface $container;
 
