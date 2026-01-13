@@ -92,8 +92,10 @@
                                                 <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
                                                     {{ backend_icon('drag.svg', record.drag_handle_label) }}
                                                 </button>
+                                                <div>{{ record.label|raw }}</div>
+                                            {% else %}
+                                                {{ record.label|raw }}
                                             {% endif %}
-                                            {{ record.label|raw }}
                                         {% endblock %}
                                     </div>
 
