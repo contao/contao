@@ -44,7 +44,11 @@
     min-height: 18px;
 }
 
-.tl_listing .tl_left.tl_left_dragging {
+.tree_view .tl_left.with-offset {
+    padding-left: calc(var(--level) * 16px);
+}
+
+.tl_tree .tl_left.tl_left_dragging {
     position: absolute;
     background: var(--drag-bg);
     border-radius: 10px;
