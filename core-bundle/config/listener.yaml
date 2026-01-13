@@ -107,6 +107,12 @@ services:
         arguments:
             - '@contao.csp.parser'
 
+    contao.listener.data_container.cud_permission:
+        class: Contao\CoreBundle\EventListener\DataContainer\CudPermissionListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.resource_finder'
+
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
@@ -344,6 +350,13 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\UserAdminFieldListener
         arguments:
             - '@security.helper'
+
+    contao.listener.data_container.user_root:
+        class: Contao\CoreBundle\EventListener\DataContainer\UserRootListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@database_connection'
 
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
@@ -629,6 +642,9 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
+
+    contao.listener.virtual_fields_mapping:
+        class: Contao\CoreBundle\EventListener\VirtualFieldsMappingListener
 
     contao.listener.webauthn_route_backend:
         class: Contao\CoreBundle\EventListener\WebauthnRouteListener

@@ -259,7 +259,7 @@ class MigrateCommandTest extends TestCase
                     ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '929210d967bc630ef187795ca91759f9e27906fc16316b205600ff7b40cbfd1b'],
+                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '151d946b476547549d3d45acf8e74d3e57094153179ccabe921bc4dcd7a057da'],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
