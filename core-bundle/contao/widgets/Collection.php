@@ -159,7 +159,7 @@ class Collection extends Widget
 			}
 		}
 
-		return System::getContainer()->get('twig')->render('@Contao/backend/widget/column_wizard.html.twig', array(
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/collection.html.twig', array(
 			'id' => $this->strId,
 			'style' => $this->style,
 			'header' => $header,
