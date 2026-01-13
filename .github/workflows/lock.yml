@@ -18,7 +18,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Lock
-              uses: dessant/lock-threads@v5
+              uses: dessant/lock-threads@v6
               with:
                   process-only: issues
                   issue-inactive-days: 30
