@@ -49,7 +49,7 @@ readonly class BackendBreadcrumbListener
             if (\count($treeTrail ?? []) > 0) {
                 $ancestorTrail = $factory->createItem('ancestor_trail')->setExtra('render_dropdown', true);
 
-                foreach ($treeTrail as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
+                foreach (array_reverse($treeTrail) as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
                     $ancestorTrail->addChild('ancestor_trail_'.$trail, [
                         'label' => $trail_label,
                         'uri' => $trail_url,
