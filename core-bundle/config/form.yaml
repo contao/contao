@@ -3,7 +3,7 @@ services:
         autoconfigure: true
 
     _instanceof:
-        Contao\CoreBundle\Form\Type\AbstractContaoFormType:
+        Contao\CoreBundle\Form\Type\AbstractContaoType:
             calls:
                 - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
 

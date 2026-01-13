@@ -4338,7 +4338,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if ($record['allow_dragging'])
 					{
-						$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+						$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
 						$record['drag_handle_label'] = \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id']);
 					}
 				}
