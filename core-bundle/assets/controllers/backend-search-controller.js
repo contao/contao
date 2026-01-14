@@ -15,9 +15,10 @@ export default class BackendSearchController extends Controller {
 
     static classes = ['hidden', 'initial', 'loading', 'invalid', 'results', 'error'];
 
-
     initialize() {
-        this.shortcutTarget.innerText = /(Mac|iPhone|iPad)/.test(navigator.platform) ? this.shortcutMacosLabelValue: this.shortcutLabelValue;
+        this.shortcutTarget.innerText = /(Mac|iPhone|iPad)/.test(navigator.platform)
+            ? this.shortcutMacosLabelValue
+            : this.shortcutLabelValue;
     }
     connect() {
         this.debounceTimeout = null;
