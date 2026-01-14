@@ -312,7 +312,7 @@
         <source>Floating mode</source>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaFloating.1">
-        <source>Enables the floating UI.</source>
+        <source>Enable the floating UI.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>
