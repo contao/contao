@@ -2972,8 +2972,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
             ' . implode("\n", $options) . '
           </select>
       </div>
-	  <label for="tl_search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
-	  <input id="tl_search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
+      <label for="tl_search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
+      <input id="tl_search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </fieldset>';
 	}
 
