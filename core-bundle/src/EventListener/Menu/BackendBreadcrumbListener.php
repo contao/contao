@@ -47,12 +47,16 @@ readonly class BackendBreadcrumbListener
 
         foreach ($this->dcaUrlAnalyzer->getTrail(withTreeTrail: true) as $level => ['label' => $label, 'url' => $url, 'treeTrail' => $treeTrail, 'treeSiblings' => $treeSiblings]) {
             if (\count($treeTrail ?? []) > 0) {
-                $ancestorTrail = $factory->createItem('ancestor_trail')->setExtra('render_dropdown', true);
+                $ancestorTrail = $factory->createItem('ancestor_trail');
+                $index = 0;
 
                 foreach ($treeTrail as $trail => ['label' => $trail_label, 'url' => $trail_url]) {
                     $ancestorTrail->addChild('ancestor_trail_'.$trail, [
                         'label' => $trail_label,
                         'uri' => $trail_url,
+                        'extras' => [
+                            'index' => $index++,
+                        ]
                     ]);
                 }
 
@@ -65,7 +69,7 @@ readonly class BackendBreadcrumbListener
                 ->createItem('current_'.$level)
                 ->setLabel($label)
                 ->setUri($url)
-                ->setExtra('render_dropdown', $hasSiblings)
+                ->setExtra('has_siblings', $hasSiblings)
             ;
 
             if ($hasSiblings) {

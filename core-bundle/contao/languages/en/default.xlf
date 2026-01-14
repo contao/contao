@@ -2129,9 +2129,6 @@
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
       </trans-unit>
-      <trans-unit id="MSC.siblings.1">
-        <source>›</source>
-      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
       </trans-unit>

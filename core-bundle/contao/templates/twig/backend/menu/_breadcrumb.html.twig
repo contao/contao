@@ -3,7 +3,7 @@
 {% extends '@KnpMenu/menu.html.twig' %}
 
 {% block item %}
-    {% if item.extra('render_dropdown') %}
+    {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
         {% set item = item.setAttributes(
             item.getAttributes()|merge({
                 'data-controller': 'contao--toggle-state',
@@ -11,43 +11,31 @@
                 'data-contao--toggle-state-active-class': 'active',
             }),
         ) %}
+    {% elseif item.extra('index') %}
+        {% set item = item.setAttributes(
+            item.getAttributes()|merge({
+                'style': 'margin-left:' ~ ((item.extra('index') - 1) * 10) ~ 'px'
+            }),
+        ) %}
     {% endif %}
     {{ parent() }}
 {% endblock %}
 
 {% block spanElement %}
-    {% if item.extra('render_dropdown') %}
-        <button
-            type="button"
-            data-contao--toggle-state-target="controller"
-            data-action="contao--toggle-state#toggle:prevent mouseenter->contao--toggle-state#open:prevent"
-            title="{{ 'MSC.trail'|trans }}"
-        >
-            …
-        </button>
+    {% if item.name == 'ancestor_trail' %}
+        {{ _self.generate_dropdown_button('MSC.trail'|trans, '…') }}
     {% else %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
 
 {% block linkElement %}
-    {% if item.extra('render_dropdown') %}
-        <button
-            type="button"
-            data-contao--toggle-state-target="controller"
-            data-action="contao--toggle-state#toggle:prevent mouseenter->contao--toggle-state#open:prevent"
-            title="{{ 'MSC.siblings'|trans }}"
-        >
-            ›
-        </button>
-        {{ parent() }}
-    {% else %}
-        {{ parent() }}
-    {% endif %}
+    {{ _self.generate_link_prefix(item) }}
+    {{ parent() }}
 {% endblock %}
 
 {% block list %}
-    {% if item.extra('render_dropdown') %}
+    {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
         <ul data-contao--toggle-state-target="controls">
             {{ block('children') }}
         </ul>
@@ -55,3 +43,25 @@
         {{ parent() }}
     {% endif %}
 {% endblock %}
+
+{% macro generate_dropdown_button(title, label) %}
+    <button
+        type="button"
+        data-contao--toggle-state-target="controller"
+        data-action="contao--toggle-state#toggle:prevent mouseenter->contao--toggle-state#open:prevent"
+        title="{{ title }}"
+    >
+        {{ label }}
+    </button>
+{% endmacro %}
+
+{% macro generate_link_prefix(item) %}
+    {% if item.extra('has_siblings') %}
+        {{ _self.generate_dropdown_button('MSC.siblings'|trans, '›') }}
+    {% elseif item.parent.name == 'ancestor_trail' and item.name != 'ancestor_trail_0' %}
+        {{ backend_icon('corner-down-right', attributes: attrs().set('width', 14).set('height', 14)) }}
+    {% elseif item.parent.extra('has_siblings') %}
+        {{ backend_icon('arrow-right-from-line', attributes: attrs().set('width', 14).set('height', 14)) }}
+    {% endif %}
+{% endmacro %}
+

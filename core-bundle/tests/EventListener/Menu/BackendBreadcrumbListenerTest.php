@@ -70,7 +70,7 @@ class BackendBreadcrumbListenerTest extends TestCase
         $this->assertSame('/contao?do=article&table=tl_article&pn=1', $collapsedChildren['ancestor_trail_0']->getUri());
 
         $this->assertSame('Content One', $children['current_1']->getLabel());
-        $this->assertSame(['render_dropdown' => true], $children['current_1']->getExtras());
+        $this->assertSame(['has_siblings' => true], $children['current_1']->getExtras());
 
         $siblings = $children['current_1']->getChildren();
 
