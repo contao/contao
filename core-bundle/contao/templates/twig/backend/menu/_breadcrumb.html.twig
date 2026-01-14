@@ -21,9 +21,9 @@
             type="button"
             data-contao--toggle-state-target="controller"
             data-action="contao--toggle-state#toggle:prevent mouseenter->contao--toggle-state#open:prevent"
-            title="{{ 'MSC.trail.1'|trans }}"
+            title="{{ 'MSC.trail'|trans }}"
         >
-            {{ 'MSC.trail.0'|trans }}
+            …
         </button>
     {% else %}
         {{ parent() }}
@@ -36,9 +36,9 @@
             type="button"
             data-contao--toggle-state-target="controller"
             data-action="contao--toggle-state#toggle:prevent mouseenter->contao--toggle-state#open:prevent"
-            title="{{ 'MSC.siblings.0'|trans }}"
+            title="{{ 'MSC.siblings'|trans }}"
         >
-            {{ 'MSC.siblings.1'|trans }}
+            ›
         </button>
         {{ parent() }}
     {% else %}
