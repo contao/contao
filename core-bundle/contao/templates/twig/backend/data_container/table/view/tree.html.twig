@@ -17,11 +17,11 @@
 %}
 
 {% block list %}
-    {% if has_clipboard_content|default %}
+    {% if has_clipboard_content %}
         <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
     {% endif %}
 
-    {% if records|length or has_clipboard_content|default %}
+    {% if records|length or has_clipboard_content %}
         {% set listing_attributes = attrs()
             .addClass(['tl_listing_container', 'tree_view'])
             .set('id', 'tl_listing')
