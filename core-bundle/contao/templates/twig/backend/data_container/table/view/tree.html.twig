@@ -54,6 +54,9 @@
 {% endblock %}
 
 {% block no_records %}
+    {% if has_clipboard_content %}
+        <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
+    {% endif %}
     <div class="tl_listing_container">
         {{ breadcrumb|default|raw }}
         {{ block('tree') }}
