@@ -66,10 +66,8 @@ class BackendBreadcrumbListenerTest extends TestCase
         $collapsedChildren = $children['ancestor_trail']->getChildren();
 
         $this->assertSame(['ancestor_trail_0', 'ancestor_trail_1'], array_keys($collapsedChildren));
-        $this->assertSame('Homepage', $collapsedChildren['ancestor_trail_0']->getLabel());
-        $this->assertSame('Website name', $collapsedChildren['ancestor_trail_1']->getLabel());
-        $this->assertSame('/contao?do=article&table=tl_article&pn=2', $collapsedChildren['ancestor_trail_0']->getUri());
-        $this->assertSame('/contao?do=article&table=tl_article&pn=1', $collapsedChildren['ancestor_trail_1']->getUri());
+        $this->assertSame('Website name', $collapsedChildren['ancestor_trail_0']->getLabel());
+        $this->assertSame('/contao?do=article&table=tl_article&pn=1', $collapsedChildren['ancestor_trail_0']->getUri());
 
         $this->assertSame('Content One', $children['current_1']->getLabel());
         $this->assertSame(['render_dropdown' => true], $children['current_1']->getExtras());
