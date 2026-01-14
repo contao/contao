@@ -276,15 +276,7 @@ class RowWizard extends Widget
 		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
-
-		if (\in_array($data['type'] ?? null, array('checkbox', 'label'), true))
-		{
-			$data['id'] = $data['name'];
-		}
-		else
-		{
-			$data['id'] .= '_' . $increment;
-		}
+		$data['id'] = $data['name'];
 
 		return $this->widgets[$increment][$key] = array(new $widgetClass($data), $data);
 	}
