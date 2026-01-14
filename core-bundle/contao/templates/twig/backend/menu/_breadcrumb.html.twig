@@ -60,7 +60,5 @@
         {{ _self.generate_dropdown_button('MSC.siblings'|trans, '›') }}
     {% elseif item.parent.name == 'ancestor_trail' and item.name != 'ancestor_trail_0' %}
         {{ backend_icon('corner-down-right', attributes: attrs().set('width', 14).set('height', 14)) }}
-    {% elseif item.parent.extra('has_siblings') %}
-        {{ backend_icon('arrow-right-from-line', attributes: attrs().set('width', 14).set('height', 14)) }}
     {% endif %}
 {% endmacro %}
