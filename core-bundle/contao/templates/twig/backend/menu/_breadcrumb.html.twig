@@ -14,7 +14,7 @@
     {% elseif item.extra('index') %}
         {% set item = item.setAttributes(
             item.getAttributes()|merge({
-                'style': 'margin-left:' ~ ((item.extra('index') - 1) * 10) ~ 'px'
+                style: 'margin-left:' ~ ((item.extra('index') - 1) * 10) ~ 'px',
             }),
         ) %}
     {% endif %}
@@ -64,4 +64,3 @@
         {{ backend_icon('arrow-right-from-line', attributes: attrs().set('width', 14).set('height', 14)) }}
     {% endif %}
 {% endmacro %}
-

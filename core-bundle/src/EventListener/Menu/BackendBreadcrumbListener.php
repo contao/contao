@@ -56,7 +56,7 @@ readonly class BackendBreadcrumbListener
                         'uri' => $trail_url,
                         'extras' => [
                             'index' => $index++,
-                        ]
+                        ],
                     ]);
                 }
 
