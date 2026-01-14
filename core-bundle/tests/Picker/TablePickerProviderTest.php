@@ -569,7 +569,7 @@ class TablePickerProviderTest extends ContaoTestCase
                 $module,
                 [
                     'label' => 'MOD.'.$module.'.0',
-                    'linkAttributes' => ['class' => $module],
+                    'linkAttributes' => ['class' => $module.'Picker'],
                     'current' => $current === $module,
                     'uri' => '',
                 ],
