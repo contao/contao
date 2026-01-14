@@ -89,26 +89,7 @@
 
                     {# Right column #}
                     <td class="tl_file_list tl_right_nowrap">
-                        {% if as_select %}
-                            {# Only show a checkbox in select mode #}
-                            {% set input_attributes = attrs()
-                                .set('type', 'checkbox')
-                                .set('name', 'IDS[]')
-                                .set('id', "ids_#{record.id}")
-                                .addClass('tl_tree_checkbox')
-                                .set('data-contao--check-all-target', 'input')
-                                .set('data-action', 'contao--check-all#toggleInput')
-                                .set('value', record.id)
-                            %}
-                            <input{{ input_attributes }}>
-                        {% else %}
-                            {# Display operation buttons and an optional picker input field by default #}
-                            {{ record.buttons|raw }}
-
-                            {% if as_picker %}
-                                {{ record.picker_input_field|raw }}
-                            {% endif %}
-                        {% endif %}
+                        {{ include(('@Contao/backend/data_container/table/view/_record_operations.html.twig')) }}
                     </td>
                 </tr>
             {% endfor %}

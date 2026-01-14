@@ -62,6 +62,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
             [
                 new Table('tl_job', [
                     new Column('id', Type::getType(Types::INTEGER), ['autoIncrement' => true]),
+                    new Column('createdAt', Type::getType(Types::INTEGER)),
                     new Column('tstamp', Type::getType(Types::INTEGER)),
                     new Column('pid', Type::getType(Types::INTEGER), ['default' => 0]),
                     new Column('type', Type::getType(Types::STRING)),

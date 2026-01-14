@@ -132,7 +132,12 @@ class ContaoCacheWarmerTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n);",
+            "\$this->arrFields = array (\n  'id' => 'int(10) unsigned NOT NULL auto_increment',\n  'virtualTarget' => \n  array (\n    'type' => 'json',\n    'length' => 65535,\n    'notnull' => false,\n  ),\n);",
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php')),
+        );
+
+        $this->assertStringContainsString(
+            "\$this->arrVirtualTargets = array (\n  0 => 'virtualTarget',\n);\n\n\$this->arrVirtualFields = array (\n  'virtualField' => 'virtualTarget',\n);",
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php')),
         );
 

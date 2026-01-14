@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property array    $titleFields
  * @property array    $descriptionFields
  * @property string   $aliasField
+ * @property string   $robotsField
  * @property callable $url_callback
  * @property callable $title_tag_callback
  */
@@ -75,6 +76,7 @@ class SerpPreview extends Widget
 				'title' => array($this->getTitleField($suffix), $this->getTitleFallbackField($suffix)),
 				'alias' => array($this->getAliasField($suffix)),
 				'description' => array($this->getDescriptionField($suffix), $this->getDescriptionFallbackField($suffix)),
+				'robots' => array($this->getRobotsField($suffix)),
 			),
 			'id' => $model->id,
 			'trail' => $trail,
@@ -195,6 +197,16 @@ class SerpPreview extends Widget
 		}
 
 		return 'ctrl_' . $this->aliasField . $suffix;
+	}
+
+	private function getRobotsField($suffix)
+	{
+		if (!isset($this->robotsField))
+		{
+			return 'ctrl_robots' . $suffix;
+		}
+
+		return 'ctrl_' . $this->robotsField . $suffix;
 	}
 
 	private function convertUrlToItems($url): array
