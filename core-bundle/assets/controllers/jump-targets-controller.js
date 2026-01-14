@@ -93,7 +93,7 @@ export default class extends Controller {
         li.classList.add('jump-target-scroll');
 
         const btn = this.#btn.cloneNode();
-        btn.textContent = start ? this.nextLabelValue : this.prevLabelValue;
+        btn.textContent = start ? this.prevLabelValue : this.nextLabelValue;
 
         btn.addEventListener('click', () => {
             const target = start ? this.#getPreviousSnapItem() : this.#getNextSnapItem();
