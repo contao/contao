@@ -2318,8 +2318,11 @@
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
       </trans-unit>
-      <trans-unit id="MSC.searchShortcut">
-        <source>Ctrl+K / ⌘+K</source>
+      <trans-unit id="MSC.searchShortcut.0">
+        <source>Ctrl+K</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut.1">
+        <source>⌘+K</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>

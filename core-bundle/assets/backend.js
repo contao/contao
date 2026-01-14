@@ -13,6 +13,11 @@ import './styles/backend.pcss';
 
 // Start the Stimulus application
 const application = Application.start();
+
+application.registerActionOption('macos', (({ value }) => {
+    return value === /(Mac|iPhone|iPad)/.test(navigator.platform);
+}));
+
 application.debug = process.env.NODE_ENV === 'development';
 application.register('contao--textarea-autogrow', TextareaAutogrow);
 
