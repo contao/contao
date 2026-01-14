@@ -108,7 +108,12 @@ export default class extends Controller {
             if (start) {
                 scrollAmount = target.offsetLeft - this.#prevButton.offsetWidth - this.navigationTarget.scrollLeft;
             } else {
-                scrollAmount = target.offsetLeft + target.offsetWidth + this.#nextButton.offsetWidth - this.navigationTarget.clientWidth - this.navigationTarget.scrollLeft;
+                scrollAmount =
+                    target.offsetLeft +
+                    target.offsetWidth +
+                    this.#nextButton.offsetWidth -
+                    this.navigationTarget.clientWidth -
+                    this.navigationTarget.scrollLeft;
             }
 
             this.navigationTarget.scrollBy({
