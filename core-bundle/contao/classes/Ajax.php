@@ -342,7 +342,6 @@ class Ajax extends Backend
 
 				/** @var class-string<FileTree|PageTree|Picker> $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey] ?? null;
-
 				$objWidget = new $strClass($strClass::getAttributesFromDca($dcaField, $inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
