@@ -2375,11 +2375,11 @@
       <trans-unit id="MSC.enter_fullscreen">
         <source>Enter fullscreen mode</source>
       </trans-unit>
-      <trans-unit id="MSC.scrollBack">
-        <source>Scroll back</source>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
       </trans-unit>
-      <trans-unit id="MSC.scrollForward">
-        <source>Scroll forward</source>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
