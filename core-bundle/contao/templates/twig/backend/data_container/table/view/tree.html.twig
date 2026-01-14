@@ -26,7 +26,7 @@
     <ul{{ tree_attributes }}>
         <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
             <div class="tl_left"></div>
-            <div class="tl_right">{{ operations|raw }}</div>
+            <div class="tl_right">{{ operations|default|raw }}</div>
         </li>
         {{ records|join|raw }}
     </ul>
@@ -54,12 +54,14 @@
 {% endblock %}
 
 {% block no_records %}
-    {% if has_clipboard_content %}
+    {% if has_clipboard_content|default %}
         <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
     {% endif %}
     <div class="tl_listing_container">
         {{ breadcrumb|default|raw }}
-        {{ block('tree') }}
+        {% if operations|default %}
+            {{ block('tree') }}
+        {% endif %}
     </div>
     {{ parent() }}
 {% endblock %}
