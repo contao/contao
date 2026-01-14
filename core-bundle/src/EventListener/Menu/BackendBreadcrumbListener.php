@@ -64,7 +64,7 @@ readonly class BackendBreadcrumbListener
             $current = $factory
                 ->createItem('current_'.$level)
                 ->setLabel($label)
-                ->setUri($hasSiblings ? $url : null)
+                ->setUri($url)
                 ->setExtra('render_dropdown', $hasSiblings)
             ;
 
