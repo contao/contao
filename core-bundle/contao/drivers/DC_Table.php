@@ -4201,6 +4201,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$intWrapLevel = 0;
 			$row = $objOrderBy->fetchAllAssoc();
 
+			if ($blnHasSorting)
+			{
+				$parameters['new'] = System::getContainer()->get('contao.data_container.operations_builder')
+					->initialize($this->strTable)
+					->addNewButton($operations::CREATE_TOP, $table, $objParent->id, $this->intId, array('primary' => true))
+				;
+			}
+
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
 				// Improve performance
@@ -4338,6 +4346,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
 						$record['drag_handle_label'] = \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id']);
 					}
+				}
+
+				if ($blnHasSorting)
+				{
+					$record['new'] = System::getContainer()->get('contao.data_container.operations_builder')
+						->initialize($this->strTable)
+						->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id, array('primary' => true))
+					;
 				}
 
 				$records[] = $record;

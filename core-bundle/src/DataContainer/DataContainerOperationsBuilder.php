@@ -187,11 +187,11 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     /**
      * @param self::CREATE_* $mode
      */
-    public function addNewButton(string $mode, string $table, int $pid, int|null $id = null): self
+    public function addNewButton(string $mode, string $table, int $pid, int|null $id = null, array $operation = []): self
     {
         [$label, $title] = $this->getLabelAndTitle($table, 'pastenew'.$mode, $pid);
 
-        $this->append([
+        $this->append(array_replace([
             'label' => $label,
             'title' => $title,
             'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null))->set('data-action', 'contao--scroll-offset#store'),
@@ -199,7 +199,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'href' => $this->getNewHref($mode, $pid, $id),
             'method' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['method'] ?? 'POST',
             'primary' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['primary'] ?? false,
-        ]);
+        ], $operation));
 
         return $this;
     }
