@@ -16,6 +16,22 @@
     .set('data-contao--toggle-nodes-collapse-all-title-value', 'DCA.collapseNodes.1'|trans)
 %}
 
+{% block tree %}
+    {% set tree_attributes = attrs()
+        .addClass('tl_listing')
+        .addClass('tl_tree', not extended_mode)
+        .addClass('tl_tree_xtnd', extended_mode)
+        .addClass(['picker', 'unselectable'], as_picker)
+    %}
+    <ul{{ tree_attributes }}>
+        <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+            <div class="tl_left"></div>
+            <div class="tl_right">{{ operations|raw }}</div>
+        </li>
+        {{ records|join|raw }}
+    </ul>
+{% endblock %}
+
 {% block list %}
     {% if has_clipboard_content %}
         <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
@@ -31,28 +47,16 @@
         {{ breadcrumb|raw }}
         {{ include('@Contao/backend/data_container/table/view/_select_all_button.html.twig') }}
 
-        {% set tree_attributes = attrs()
-            .addClass('tl_listing')
-            .addClass('tl_tree', not extended_mode)
-            .addClass('tl_tree_xtnd', extended_mode)
-            .addClass(['picker', 'unselectable'], as_picker)
-        %}
-        <ul{{ tree_attributes }}>
-            <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
-                <div class="tl_left"></div>
-                <div class="tl_right">{{ operations|raw }}</div>
-            </li>
-            {{ records|join|raw }}
-        </ul>
+        {{ block('tree') }}
 
         {{ include('@Contao/backend/data_container/table/view/_picker_reset_button.html.twig') }}
     </div>
 {% endblock %}
 
 {% block no_records %}
-    {% if breadcrumb %}
-        <div class="tl_listing_container">{{ breadcrumb|raw }}</div>
-    {% endif %}
-
+    <div class="tl_listing_container">
+        {{ breadcrumb|default|raw }}
+        {{ block('tree') }}
+    </div>
     {{ parent() }}
 {% endblock %}
