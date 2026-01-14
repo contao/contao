@@ -5,7 +5,8 @@ on:
     schedule:
         - cron: 0 13 * * 1-5
 
-permissions: read-all
+permissions:
+    contents: read
 
 jobs:
     cypress:
@@ -33,14 +34,14 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   ref: ${{ matrix.contao }}
                   show-progress: false
                   persist-credentials: false
 
             - name: Install Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v6
               with:
                   node-version: 20
                   cache: npm
@@ -57,7 +58,7 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
             - name: Upload videos
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v6
               if: ${{ failure() && steps.cypress.conclusion == 'failure' }}
               with:
                   name: Cypress videos ${{ matrix.contao }}
