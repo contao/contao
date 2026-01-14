@@ -105,9 +105,7 @@ export default class extends Controller {
         const name = this.nameValue.replace(/\d+$/, i);
 
         this.bodyTarget
-            .querySelectorAll(
-                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
-            )
+            .querySelectorAll(`[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`)
             .forEach((el, i) => {
                 if (el.name) {
                     el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
@@ -130,32 +128,31 @@ export default class extends Controller {
     }
 
     updateSorting() {
+        const regexPattern = new RegExp(`${this.nameValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\[[0-9]+\\]`, 'g');
+
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `label[for^=${this.nameValue}\\[], input[name^=${this.nameValue}\\[], select[name^=${this.nameValue}\\[], textarea[name^=${this.nameValue}\\[]`,
+                `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
             )) {
                 if (el.name) {
-                    el.name = el.name.replace(
-                        new RegExp(`^${this.nameValue}\[[0-9]+]`, 'g'),
-                        `${this.nameValue}[${i}]`,
-                    );
+                    el.name = el.name.replace(regexPattern, `${this.nameValue}[${i}]`);
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(
-                        new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'),
-                        `${this.nameValue}_${i}$1`,
-                    );
+                    el.id = el.id.replace(regexPattern, `${this.nameValue}[${i}]`);
                 }
 
                 if (el.getAttribute('for')) {
-                    el.setAttribute(
-                        'for',
-                        el
-                            .getAttribute('for')
-                            .replace(new RegExp(`^${this.nameValue}_[0-9]+(_|$)`, 'g'), `${this.nameValue}_${i}$1`),
-                    );
+                    el.setAttribute('for', el.getAttribute('for').replace(regexPattern, `${this.nameValue}[${i}]`));
                 }
+            }
+
+            const pickerScript = tr.querySelector('.selector_container > script');
+
+            if (pickerScript) {
+                const script = document.createElement('script');
+                script.textContent = pickerScript.textContent.replace(regexPattern, `${this.nameValue}[${i}]`);
+                pickerScript.parentNode.replaceChild(script, pickerScript);
             }
 
             for (const el of tr.querySelectorAll(`[data-controller="${this.identifier}"]`)) {
