@@ -51,11 +51,9 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener($event);
 
         $tree = $event->getTree();
-
         $this->assertSame('breadcrumbMenu', $tree->getName());
 
         $children = $tree->getChildren();
-
         $this->assertCount(3, $children);
 
         $this->assertSame(
@@ -100,7 +98,6 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener($event);
 
         $tree = $event->getTree();
-
         $this->assertCount(0, $tree->getChildren());
     }
 
@@ -126,7 +123,6 @@ class BackendBreadcrumbListenerTest extends TestCase
         $listener($event);
 
         $tree = $event->getTree();
-
         $this->assertNotSame('breadcrumbMenu', $tree->getName());
     }
 

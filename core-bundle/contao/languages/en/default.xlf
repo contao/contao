@@ -2124,7 +2124,7 @@
         <source>Favorites</source>
       </trans-unit>
       <trans-unit id="MSC.trail">
-        <source>Show more breadcrumb items</source>
+        <source>Show trail</source>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
