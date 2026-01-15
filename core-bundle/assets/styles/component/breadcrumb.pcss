@@ -1,0 +1,114 @@
+#breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+
+    > li {
+        &:not(:first-child, .current_ancestor)::before {
+            content: "› "; /* Non-breaking-space to prevent collapsing whitespace */
+        }
+
+        > * {
+            display: inline-flex;
+            max-width: clamp(250px, 80vw, 600px);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow-x: clip;
+        }
+    }
+
+    ul {
+        position: relative;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin: 3px 0;
+
+            a:focus-visible {
+                color: var(--contao);
+            }
+
+            &.current {
+                opacity: 0.5;
+            }
+
+            > * {
+                overflow-x: clip;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
+            }
+        }
+    }
+
+    button {
+        padding: 3px 5px 4px;
+        margin: -4px -5px -4px -4px;
+        border-radius: 5px;
+
+        &:is(:hover, :focus-visible, .active) {
+            background-color: var(--content-border);
+        }
+    }
+
+    [data-controller^="contao--toggle-state"] {
+        position: relative;
+    }
+
+    [data-contao--toggle-state-target="controls"] {
+        position: absolute;
+        left: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin: 4px 0 0;
+        padding: 8px 15px;
+        color: var(--text);
+        background: var(--content-bg) !important;
+        border: 1px solid var(--content-border);
+        border-radius: var(--border-radius);
+        box-shadow: 0 3px 6px 0 rgb(0 0 0 / 10%);
+        text-align: left;
+        font-size: 0.875rem;
+        font-weight: 400;
+        min-width: 120px;
+        max-width: 220px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        z-index: 10;
+
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            font-weight: 300;
+        }
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        > li {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+    }
+
+    .current_ancestor {
+        button {
+            margin-left: -5px;
+        }
+
+        [data-contao--toggle-state-target="controls"] {
+            left: -4px;
+        }
+    }
+}

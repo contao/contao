@@ -34,12 +34,12 @@ export default class extends Controller {
         this.#toggleState(!isOpen);
     }
 
-    open() {
+    open(event) {
         if ('true' === this.controllerTarget.ariaExpanded) {
             return;
         }
 
-        this.#toggleState(true);
+        this.#toggleState(true, event);
     }
 
     close(event) {
@@ -53,7 +53,7 @@ export default class extends Controller {
             return;
         }
 
-        this.#toggleState(false);
+        this.#toggleState(false, event);
     }
 
     documentClick(event) {
@@ -68,7 +68,7 @@ export default class extends Controller {
         this.#toggleState(false);
     }
 
-    #toggleState(state) {
+    #toggleState(state, event = null) {
         clearTimeout(this.#closeDelay);
 
         if (this.hasActiveClass) {
@@ -96,6 +96,10 @@ export default class extends Controller {
             } else if (!state && this.hasInactiveLabelValue) {
                 el.innerText = this.inactiveLabelValue;
             }
+        }
+
+        if (['mouseenter', 'mouseover', 'mouseleave'].includes(event?.type)) {
+            return;
         }
 
         setTimeout(() => {
