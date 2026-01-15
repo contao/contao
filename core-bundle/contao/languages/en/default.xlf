@@ -2316,7 +2316,13 @@
         <source>Please enter at least %s characters</source>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
+        <source>Loading results …</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
