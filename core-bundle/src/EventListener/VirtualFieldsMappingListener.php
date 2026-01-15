@@ -16,6 +16,8 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
  * Adds "targetColumn" automatically to fields without an "sql" definition.
@@ -25,12 +27,23 @@ use Doctrine\DBAL\Platforms\MySQLPlatform;
 #[AsHook('loadDataContainer', priority: -4096)]
 class VirtualFieldsMappingListener
 {
-    public function __construct(private readonly string $defaultStorageName = 'jsonData')
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly string $defaultStorageName = 'jsonData',
+    ) {
     }
 
     public function __invoke(string $table): void
     {
+        // Ignore DCAs whose tables are defined via a Doctrine entity
+        $entityTables = array_map(
+            static fn (ClassMetadata $metadata) => $metadata->getTableName(),
+            $this->entityManager->getMetadataFactory()->getAllMetadata(),
+        );
+        if (\in_array($table, $entityTables, true)) {
+            return;
+        }
+
         // Only support auto-mapping for DC_Table
         if (!is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
             return;

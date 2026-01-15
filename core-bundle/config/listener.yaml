@@ -645,6 +645,8 @@ services:
 
     contao.listener.virtual_fields_mapping:
         class: Contao\CoreBundle\EventListener\VirtualFieldsMappingListener
+        arguments:
+            - '@doctrine.orm.entity_manager'
 
     contao.listener.webauthn_route_backend:
         class: Contao\CoreBundle\EventListener\WebauthnRouteListener

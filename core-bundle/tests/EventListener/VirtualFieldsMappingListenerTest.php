@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\VirtualFieldsMappingListener;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Contao\DC_File;
 use Contao\DC_Table;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class VirtualFieldsMappingListenerTest extends TestCase
+class VirtualFieldsMappingListenerTest extends DoctrineTestCase
 {
     #[DataProvider('virtualFieldsMappingProvider')]
     public function testVirtualFieldsMapping(array $fields, array $expected, string $dc = DC_Table::class): void
@@ -32,7 +32,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             'palettes' => ['default' => 'foobar'],
         ];
 
-        (new VirtualFieldsMappingListener())('tl_foobar');
+        (new VirtualFieldsMappingListener($this->getTestEntityManager()))('tl_foobar');
 
         $this->assertSame($expected, $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
@@ -129,7 +129,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             'palettes' => ['default' => 'foobar'],
         ];
 
-        (new VirtualFieldsMappingListener())('tl_foobar');
+        (new VirtualFieldsMappingListener($this->getTestEntityManager()))('tl_foobar');
 
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
@@ -150,7 +150,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             ],
         ];
 
-        (new VirtualFieldsMappingListener())('tl_foobar');
+        (new VirtualFieldsMappingListener($this->getTestEntityManager()))('tl_foobar');
 
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
