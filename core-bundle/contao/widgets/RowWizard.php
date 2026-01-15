@@ -137,7 +137,8 @@ class RowWizard extends Widget
 				}
 			}
 
-			if (\in_array('enable', $this->actions)) {
+			if (\in_array('enable', $this->actions))
+			{
 				$varValue[$i]['enable'] = $this->getPost($this->strId . '[' . $i . '][enable]');
 			}
 		}
