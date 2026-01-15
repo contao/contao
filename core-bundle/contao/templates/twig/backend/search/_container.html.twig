@@ -5,13 +5,15 @@
     .set('data-contao--backend-search-url-value', path('_contao_backend_search.stream'))
     .set('data-contao--backend-search-min-characters-value', 3)
     .set('data-contao--backend-search-debounce-delay-value', 300)
-    .set('data-action', 'click@document->contao--backend-search#close keydown.esc@document->contao--backend-search#close')
+    .set('data-action', 'keydown.ctrl+k@window->contao--backend-search#shortcutOpen:!macos keydown.meta+k@window->contao--backend-search#shortcutOpen:macos click@document->contao--backend-search#close keydown.esc@document->contao--backend-search#close')
     .set('data-contao--backend-search-hidden-class', 'search--hidden')
     .set('data-contao--backend-search-initial-class', 'search--initial')
     .set('data-contao--backend-search-loading-class', 'search--loading')
     .set('data-contao--backend-search-invalid-class', 'search--invalid')
     .set('data-contao--backend-search-results-class', 'search--results')
     .set('data-contao--backend-search-error-class', 'search--error')
+    .set('data-contao--backend-search-shortcut-label-value', 'MSC.searchShortcut'|trans)
+    .set('data-contao--backend-search-shortcut-macos-label-value', 'MSC.searchShortcutMacos'|trans)
     .addClass(['backend-search', 'search--hidden'])
     .mergeWith(search_container_attributes|default)
 %}
@@ -35,6 +37,7 @@
             %}
             <input id="backend-search" type="text" {{ search_input_attributes }}>
         </label>
+        <span{{ attrs().addClass('search-shortcut').set('data-contao--backend-search-target', 'shortcut') }}></span>
 
         <div class="backend-search_results-container">
             {# Messages #}

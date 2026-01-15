@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('tstamp', 'id'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'text'
 		),
 		'label' => array
