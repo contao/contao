@@ -42,80 +42,84 @@
             </table>
         </div>
 
-        {% set list_attributes = attrs()
-            .set('data-controller', 'contao--sortable', is_sortable)
-            .set('data-contao--sortable-handle-value', '.drag-handle', is_sortable)
-            .set('data-contao--sortable-parent-mode-value', 'true', is_sortable)
-            .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
-            .set('data-id', pid, is_sortable)
-        %}
-        <ul{{ list_attributes }}>
-            {% for record in records %}
-                <li{{ attrs().set('data-id', record.id, is_sortable) }}>
-                    {% if record.group_header is defined %}
-                        <div class="tl_content_header">{{ record.group_header }}</div>
-                    {% endif %}
+        {% if records|length %}
+            {% set list_attributes = attrs()
+                .set('data-controller', 'contao--sortable', is_sortable)
+                .set('data-contao--sortable-handle-value', '.drag-handle', is_sortable)
+                .set('data-contao--sortable-parent-mode-value', 'true', is_sortable)
+                .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
+                .set('data-id', pid, is_sortable)
+            %}
+            <ul{{ list_attributes }}>
+                {% for record in records %}
+                    <li{{ attrs().set('data-id', record.id, is_sortable) }}>
+                        {% if record.group_header is defined %}
+                            <div class="tl_content_header">{{ record.group_header }}</div>
+                        {% endif %}
 
-                    {% set record_attributes = attrs()
-                        .addClass('tl_content')
-                        .addClass('wrapper_start', record.display.wrapper_start)
-                        .addClass('wrapper_separator', record.display.wrapper_separator)
-                        .addClass('wrapper_stop', record.display.wrapper_stop)
-                        .addClass(['indent', "indent_#{record.display.wrap_level}"], record.display.wrap_level)
-                        .addClass('indent_first', record.display.indent_first)
-                        .addClass('indent_last', record.display.indent_last)
-                        .addClass('draft', record.is_draft)
-                        .addClass(record.class)
-                        .set('data-turbo', 'false')
-                        .set('data-action', 'click->contao--check-all#toggleInput')
-                    %}
-                    <div{{ record_attributes }}>
-                        <div class="inside hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
-                            {# Right column #}
-                            <div class="tl_content_right" data-turbo="true">
-                                {{ include(('@Contao/backend/data_container/table/view/_record_operations.html.twig')) }}
-                            </div>
+                        {% set record_attributes = attrs()
+                            .addClass('tl_content')
+                            .addClass('wrapper_start', record.display.wrapper_start)
+                            .addClass('wrapper_separator', record.display.wrapper_separator)
+                            .addClass('wrapper_stop', record.display.wrapper_stop)
+                            .addClass(['indent', "indent_#{record.display.wrap_level}"], record.display.wrap_level)
+                            .addClass('indent_first', record.display.indent_first)
+                            .addClass('indent_last', record.display.indent_last)
+                            .addClass('draft', record.is_draft)
+                            .addClass(record.class)
+                            .set('data-turbo', 'false')
+                            .set('data-action', 'click->contao--check-all#toggleInput')
+                        %}
+                        <div{{ record_attributes }}>
+                            <div class="inside hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+                                {# Right column #}
+                                <div class="tl_content_right" data-turbo="true">
+                                    {{ include(('@Contao/backend/data_container/table/view/_record_operations.html.twig')) }}
+                                </div>
 
-                            {# Record #}
-                            {% if record.legacy_data is defined %}
-                                {{ record.legacy_data|raw }}
-                            {% else %}
-                                {% if display_grid %}
-                                    {# Record displayed as box with optional preview #}
-                                    {% set record_label_attributes = attrs()
-                                        .addClass('cte_type')
-                                        .addClass(record.state, record.state)
-                                    %}
-                                    <div{{ record_label_attributes }}>
-                                        {% block label %}
-                                            {% if record.allow_dragging %}
-                                                <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
-                                                    {{ backend_icon('drag.svg', record.drag_handle_label) }}
-                                                </button>
-                                            {% endif %}
-                                            {{ record.label|raw }}
-                                        {% endblock %}
-                                    </div>
+                                {# Record #}
+                                {% if record.legacy_data is defined %}
+                                    {{ record.legacy_data|raw }}
+                                {% else %}
+                                    {% if display_grid %}
+                                        {# Record displayed as box with optional preview #}
+                                        {% set record_label_attributes = attrs()
+                                            .addClass('cte_type')
+                                            .addClass(record.state, record.state)
+                                        %}
+                                        <div{{ record_label_attributes }}>
+                                            {% block label %}
+                                                {% if record.allow_dragging %}
+                                                    <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
+                                                        {{ backend_icon('drag.svg', record.drag_handle_label) }}
+                                                    </button>
+                                                {% endif %}
+                                                {{ record.label|raw }}
+                                            {% endblock %}
+                                        </div>
 
-                                    {% if record.preview %}
-                                        <div class="cte_content" data-contao--limit-height-target="node">
-                                            <div class="cte_preview" style="contain:paint">{{ record.preview|raw }}</div>
+                                        {% if record.preview %}
+                                            <div class="cte_content" data-contao--limit-height-target="node">
+                                                <div class="cte_preview" style="contain:paint">{{ record.preview|raw }}</div>
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        {# Record displayed flat #}
+                                        <div class="tl_content_left">
+                                            {{ block('label') }}
                                         </div>
                                     {% endif %}
-                                {% else %}
-                                    {# Record displayed flat #}
-                                    <div class="tl_content_left">
-                                        {{ block('label') }}
-                                    </div>
                                 {% endif %}
-                            {% endif %}
+                            </div>
                         </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
 
-        {{ include ('@Contao/backend/data_container/table/view/_picker_reset_button.html.twig') }}
+            {{ include ('@Contao/backend/data_container/table/view/_picker_reset_button.html.twig') }}
+        {% else %}
+            <p class="tl_empty_parent_view">{{ 'MSC.noResult'|trans }}</p>
+        {% endif %}
     </div>
 
     {{ pagination|default|raw }}

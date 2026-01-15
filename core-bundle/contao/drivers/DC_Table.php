@@ -3421,6 +3421,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'extended_mode' => $blnModeTreeExtended,
 			'message' => Message::generate(),
 			'global_operations' => $operations,
+			'has_clipboard_content' => $blnClipboard,
 		);
 
 		$blnHasSorting = $db->fieldExists('sorting', $table);
@@ -3545,7 +3546,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$parameters['operations'] = $operations;
-			$parameters['has_clipboard_content'] = $blnClipboard;
 
 			if (Input::get('act') == 'select')
 			{
@@ -4063,7 +4063,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$security = System::getContainer()->get('security.helper');
 
-		$parameters = array();
+		$parameters = array(
+			'has_clipboard_content' => $blnClipboard,
+			'is_sortable' => $blnIsSortable,
+		);
 
 		if (Input::get('act') != 'select' && $this->strPickerFieldType != 'checkbox')
 		{
@@ -4360,8 +4363,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters['message'] = Message::generate();
 		$parameters['global_operations'] = $operations;
-		$parameters['has_clipboard_content'] = $blnClipboard;
-		$parameters['is_sortable'] = $blnIsSortable;
 
 		return $this->render('view/parent', $parameters);
 	}

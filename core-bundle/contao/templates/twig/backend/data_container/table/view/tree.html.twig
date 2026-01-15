@@ -21,38 +21,38 @@
         <div id="paste_hint"><p>{{ 'MSC.selectNewPosition'|trans }}</p></div>
     {% endif %}
 
-    {% set listing_attributes = attrs()
-        .addClass(['tl_listing_container', 'tree_view'])
-        .set('id', 'tl_listing')
-        .set('data-controller', 'contao--check-all')
-        .set('data-picker-value', picker.value|default, as_picker)
-    %}
-    <div{{ listing_attributes }}>
-        {{ breadcrumb|raw }}
-        {{ include('@Contao/backend/data_container/table/view/_select_all_button.html.twig') }}
-
-        {% set tree_attributes = attrs()
-            .addClass('tl_listing')
-            .addClass('tl_tree', not extended_mode)
-            .addClass('tl_tree_xtnd', extended_mode)
-            .addClass(['picker', 'unselectable'], as_picker)
+    {% if records|length or has_clipboard_content %}
+        {% set listing_attributes = attrs()
+            .addClass(['tl_listing_container', 'tree_view'])
+            .set('id', 'tl_listing')
+            .set('data-controller', 'contao--check-all')
+            .set('data-picker-value', picker.value|default, as_picker)
         %}
-        <ul{{ tree_attributes }}>
-            <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
-                <div class="tl_left"></div>
+        <div{{ listing_attributes }}>
+            {{ breadcrumb|raw }}
+            {{ include('@Contao/backend/data_container/table/view/_select_all_button.html.twig') }}
+
+            {% set tree_attributes = attrs()
+                .addClass('tl_listing')
+                .addClass('tl_tree', not extended_mode)
+                .addClass('tl_tree_xtnd', extended_mode)
+                .addClass(['picker', 'unselectable'], as_picker)
+            %}
+            <ul{{ tree_attributes }}>
+                <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+                    <div class="tl_left"></div>
                 <div class="tl_right">{{ operations|raw }}</div>
-            </li>
-            {{ records|join|raw }}
-        </ul>
+                </li>
+                {{ records|join|raw }}
+            </ul>
 
-        {{ include('@Contao/backend/data_container/table/view/_picker_reset_button.html.twig') }}
-    </div>
-{% endblock %}
+            {{ include('@Contao/backend/data_container/table/view/_picker_reset_button.html.twig') }}
+        </div>
+    {% else %}
+        {% if breadcrumb %}
+            <div class="tl_listing_container">{{ breadcrumb|raw }}</div>
+        {% endif %}
 
-{% block no_records %}
-    {% if breadcrumb %}
-        <div class="tl_listing_container">{{ breadcrumb|raw }}</div>
+        <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
     {% endif %}
-
-    {{ parent() }}
 {% endblock %}
