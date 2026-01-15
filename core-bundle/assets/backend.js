@@ -15,7 +15,7 @@ import './styles/backend.pcss';
 const application = Application.start();
 
 application.registerActionOption('macos', ({ value }) => {
-    return value === /(Mac|iPhone|iPad)/.test(navigator.platform);
+    return value === /^(Mac|iPhone|iPad)/.test(navigator.platform);
 });
 
 application.debug = process.env.NODE_ENV === 'development';
