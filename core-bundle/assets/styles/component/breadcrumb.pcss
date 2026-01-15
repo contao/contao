@@ -30,9 +30,6 @@
         margin: 0;
 
         li {
-            overflow-x: clip;
-            text-overflow: ellipsis;
-            white-space: nowrap;
             margin: 3px 0;
 
             a:focus-visible {
@@ -41,6 +38,13 @@
 
             &.current {
                 opacity: 0.5;
+            }
+
+            > * {
+                overflow-x: clip;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
             }
         }
     }
