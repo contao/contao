@@ -4,24 +4,18 @@
     {{ message|raw }}
     {{ global_operations|raw }}
 
-    {% if records|length %}
-        {% if not as_select %}
-            {% block list %}{% endblock %}
-        {% else %}
-            {# Wrap listing in a form for select mode #}
-            <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
-                <div class="tl_formbody_edit">
-                    <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-                    {{ block('list') }}
-                </div>
-
-                {{ buttons|default|raw }}
-            </form>
-        {% endif %}
+    {% if not as_select %}
+        {% block list %}{% endblock %}
     {% else %}
-        {% block no_records %}
-            <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
-        {% endblock %}
+        {# Wrap listing in a form for select mode #}
+        <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
+            <div class="tl_formbody_edit">
+                <input type="hidden" name="FORM_SUBMIT" value="tl_select">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                {{ block('list') }}
+            </div>
+
+            {{ buttons|default|raw }}
+        </form>
     {% endif %}
 </div>
