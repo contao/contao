@@ -8,10 +8,8 @@
     line-height: 1;
 
     > li {
-        &:not(:first-child, .current_ancestor) {
-            &::before {
-                content: "› "; /* Non-breaking-space to prevent collapsing whitespace */
-            }
+        &:not(:first-child, .current_ancestor)::before {
+            content: "› "; /* Non-breaking-space to prevent collapsing whitespace */
         }
 
         > * {
@@ -44,7 +42,7 @@
                 overflow-x: clip;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                max-width: calc(100% - 15px);
+                max-width: 100%;
             }
         }
     }
@@ -87,6 +85,10 @@
         transition: opacity 0.3s ease, visibility 0.3s ease;
         z-index: 10;
 
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            font-weight: 300;
+        }
+
         &.active {
             opacity: 1;
             visibility: visible;
@@ -101,6 +103,10 @@
     }
 
     .current_ancestor {
+        button {
+            margin-left: -5px;
+        }
+
         [data-contao--toggle-state-target="controls"] {
             left: -4px;
         }
