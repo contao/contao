@@ -28,7 +28,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class VirtualFieldsMappingListener
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface|null $entityManager = null,
         private readonly string $defaultStorageName = 'jsonData',
     ) {
     }
@@ -36,16 +36,24 @@ class VirtualFieldsMappingListener
     public function __invoke(string $table): void
     {
         // Ignore DCAs whose tables are defined via a Doctrine entity
-        $entityTables = array_map(
-            static fn (ClassMetadata $metadata) => $metadata->getTableName(),
-            $this->entityManager->getMetadataFactory()->getAllMetadata(),
-        );
-        if (\in_array($table, $entityTables, true)) {
-            return;
+        if ($this->entityManager) {
+            $entityTables = array_map(
+                static fn (ClassMetadata $metadata) => $metadata->getTableName(),
+                $this->entityManager->getMetadataFactory()->getAllMetadata(),
+            );
+
+            if (\in_array($table, $entityTables, true)) {
+                return;
+            }
         }
 
         // Only support auto-mapping for DC_Table
         if (!is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
+            return;
+        }
+
+        // Check if the schema is managed by Contao
+        if (!($GLOBALS['TL_DCA'][$table]['config']['sql'] ?? null)) {
             return;
         }
 
