@@ -2318,10 +2318,10 @@
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results …</source>
       </trans-unit>
-      <trans-unit id="MSC.searchShortcut.0">
+      <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
       </trans-unit>
-      <trans-unit id="MSC.searchShortcut.1">
+      <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
