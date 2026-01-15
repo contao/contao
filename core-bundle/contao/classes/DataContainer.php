@@ -1144,32 +1144,10 @@ abstract class DataContainer extends Backend
 			$this->reload();
 		}
 
-		$return = '';
-		$intTotal = \count($arrPanels);
-
-		for ($i=0; $i<$intTotal; $i++)
-		{
-			$return .= '
-<div class="tl_panel">
-  ' . $arrPanels[$i] . '
-</div>';
-		}
-
-		$submit = '
-<div class="tl_submit_panel tl_subpanel" data-controller="contao--sticky-observer">
-  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_submit filter_reset">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
-  <button name="filter" id="filter" class="tl_submit filter_apply">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-</div>';
-
-		$return = '
-<form id="tl_content_filter" class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main" data-contao--toggle-state-target="controls" data-contao--element-count-target="parent">
-<button type="button" class="close" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['DCA']['toggleFilter'][2]) . '" aria-controls="tl_content_filter" data-action="contao--toggle-state#close">×</button>
-<div class="tl_formbody">
-  <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-  ' . $return . '
-</div>' . $submit . '
-</form>';
+		return System::getContainer()->get('twig')->render('@Contao/backend/data_container/panel.html.twig', array(
+			'panels' => $arrPanels,
+			'active' => $this->panelActive,
+		));
 
 		return $return;
 	}
