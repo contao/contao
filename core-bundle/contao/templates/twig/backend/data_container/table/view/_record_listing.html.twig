@@ -4,7 +4,7 @@
     {{ message|raw }}
     {{ global_operations|raw }}
 
-    {% if records|length %}
+    {% if records|length or has_clipboard_content|default %}
         {% if not as_select %}
             {% block list %}{% endblock %}
         {% else %}
