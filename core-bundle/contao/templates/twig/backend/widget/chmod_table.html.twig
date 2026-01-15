@@ -1,0 +1,37 @@
+{% trans_default_domain 'contao_default' %}
+
+<input type="hidden" name="{{ name }}" value="">
+<table id="ctrl_defaultChmod" class="tl_chmod" data-controller="contao--check-all">
+    <tr>
+        <th>
+            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
+            <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
+        </th>
+        <th scope="col">{{ 'CHMOD.editpage'|trans }}</th>
+        <th scope="col">{{ 'CHMOD.editnavigation'|trans }}</th>
+        <th scope="col">{{ 'CHMOD.deletepage'|trans }}</th>
+        <th scope="col">{{ 'CHMOD.editarticles'|trans }}</th>
+        <th scope="col">{{ 'CHMOD.movearticles'|trans }}</th>
+        <th scope="col">{{ 'CHMOD.deletearticles'|trans }}</th>
+    </tr>
+
+    {% for k,v in objects %}
+        <tr>
+            <th scope="row">{{ "CHMOD.#{v}"|trans }}</th>';
+            {% for j in 1..6 %}
+                <td>
+                    {% set value = k ~ j %}
+                    {% set input_attributes = attrs(attributes)
+                        .set('type', 'checkbox')
+                        .set('name', "#{name}[]")
+                        .set('value', value)
+                        .set('data-contao--check-all-target', 'input')
+                        .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
+                        .setIfExists('checked', value in values)
+                    %}
+                    <input{{ input_attributes }}>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>

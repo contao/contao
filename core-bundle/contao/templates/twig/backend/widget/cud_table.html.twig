@@ -1,9 +1,13 @@
 {% trans_default_domain 'contao_tl_user_group' %}
 
-<table id="ctrl_{{ id }}" class="tl_chmod">
+<input type="hidden" name="{{ name }}" value="">
+<table id="ctrl_{{ id }}" class="tl_chmod" data-controller="contao--check-all">
     <thead>
         <tr aria-hidden="true">
-            <th></th>
+            <th>
+                <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
+                <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
+            </th>
             <th scope="col">{{ 'tl_user.cud.create'|trans }}</th>
             <th scope="col">{{ 'tl_user.cud.update'|trans }}</th>
             <th scope="col">{{ 'tl_user.cud.delete'|trans }}</th>
@@ -25,7 +29,8 @@
                             .set('type', 'checkbox')
                             .set('name', "#{name}[]")
                             .set('value', value)
-                            .set('data-action', 'focus->contao--scroll-offset#store')
+                            .set('data-contao--check-all-target', 'input')
+                            .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
                             .addClass('tl_checkbox')
                             .setIfExists('checked', value in values)
                         %}
@@ -46,7 +51,8 @@
                                     .set('type', 'checkbox')
                                     .set('name', "#{name}[]")
                                     .set('value', value)
-                                    .set('data-action', 'focus->contao--scroll-offset#store')
+                                    .set('data-contao--check-all-target', 'input')
+                                    .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
                                     .addClass('tl_checkbox')
                                     .setIfExists('checked', value in values)
                                 %}
