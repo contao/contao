@@ -14,12 +14,7 @@ export default class extends Controller {
             controls.push(receiver.element.id);
         }
 
-        if (controls.length > 0) {
-            this.element.setAttribute('aria-controls', controls.join(' '));
-        } else {
-            this.element.removeAttribute('aria-controls');
-        }
-
+        this.element.setAttribute('aria-controls', controls.join(' '));
         this.element.setAttribute('aria-expanded', receiver.isOpen());
     }
 
