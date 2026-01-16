@@ -17,6 +17,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_File;
 use Contao\DC_Table;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class VirtualFieldsMappingListenerTest extends TestCase
@@ -27,6 +30,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_foobar'] = [
             'config' => [
                 'dataContainer' => $dc,
+                'sql' => true,
             ],
             'fields' => $fields,
             'palettes' => ['default' => 'foobar'],
@@ -120,6 +124,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             'config' => [
                 'dataContainer' => DC_Table::class,
                 'notEditable' => true,
+                'sql' => true,
             ],
             'fields' => [
                 'foobar' => [
@@ -142,12 +147,79 @@ class VirtualFieldsMappingListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_foobar'] = [
             'config' => [
                 'dataContainer' => DC_Table::class,
+                'sql' => true,
             ],
             'fields' => [
                 'foobar' => [
                     'inputType' => 'text',
                 ],
             ],
+        ];
+
+        (new VirtualFieldsMappingListener())('tl_foobar');
+
+        $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public function testDoesNotMapForDcasDefinedByDoctrineEntity(): void
+    {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
+        $GLOBALS['TL_DCA']['tl_foobar'] = [
+            'config' => [
+                'dataContainer' => DC_Table::class,
+                'sql' => true,
+            ],
+            'fields' => [
+                'foobar' => [
+                    'inputType' => 'text',
+                ],
+            ],
+            'palettes' => ['default' => 'foobar'],
+        ];
+
+        $classMetaData = $this->createMock(ClassMetadata::class);
+        $classMetaData
+            ->expects($this->once())
+            ->method('getTableName')
+            ->willReturn('tl_foobar')
+        ;
+
+        $classMetaDataFactory = $this->createMock(ClassMetadataFactory::class);
+        $classMetaDataFactory
+            ->expects($this->once())
+            ->method('getAllMetadata')
+            ->willReturn([$classMetaData])
+        ;
+
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager
+            ->expects($this->once())
+            ->method('getMetadataFactory')
+            ->willReturn($classMetaDataFactory)
+        ;
+
+        (new VirtualFieldsMappingListener($entityManager))('tl_foobar');
+
+        $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public function testDoesNotMapForDcasWithoutSqlConfig(): void
+    {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
+        $GLOBALS['TL_DCA']['tl_foobar'] = [
+            'config' => [
+                'dataContainer' => DC_Table::class,
+            ],
+            'fields' => [
+                'foobar' => [
+                    'inputType' => 'text',
+                ],
+            ],
+            'palettes' => ['default' => 'foobar'],
         ];
 
         (new VirtualFieldsMappingListener())('tl_foobar');

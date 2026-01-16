@@ -20,6 +20,7 @@ export default class TooltipsController extends Controller {
         'a[title].picker-wizard': { x: -4, y: 30 },
         'button img[alt]': { x: -9, y: 30 },
         '.tl_panel button[title]': { x: 0, y: 36 },
+        '.jump-target-scroll button[title]': { x: -4, y: 36 },
         'button[title].unselectable': { x: -4, y: 20 },
         'button[title]:not(.unselectable)': { x: -9, y: 30 },
         'a[title]:not(.picker-wizard)': { x: -9, y: 30 },

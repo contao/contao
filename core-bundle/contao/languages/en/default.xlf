@@ -2129,6 +2129,12 @@
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
       </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
       </trans-unit>
@@ -2322,7 +2328,13 @@
         <source>Please enter at least %s characters</source>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
+        <source>Loading results …</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -2380,6 +2392,12 @@
       </trans-unit>
       <trans-unit id="MSC.enter_fullscreen">
         <source>Enter fullscreen mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
