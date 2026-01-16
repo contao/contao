@@ -9,27 +9,32 @@
             {{ buttons|join(' ')|raw }}
         {% else %}
             {{ buttons[0]|raw }}
-            {% set button_wrapper_attributes = attrs()
-                .addClass('split-button')
-                .set('data-controller', 'contao--toggle-state')
-                .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-                .set('data-contao--toggle-state-inactive-class', 'invisible')
-            %}
-            <div{{ button_wrapper_attributes }}>
+            <div class="split-button">
                 {{ buttons[1]|raw }}
                 {% set button_attributes = attrs()
-                    .addClass('d-xl-none')
+                    .addClass('d-xl-none split-toggle')
                     .set('type', 'button')
-                    .set('data-contao--toggle-state-target', 'controller')
-                    .set('data-action', 'contao--toggle-state#toggle:prevent')
+                    .set('data-controller', 'contao--toggle-handler')
+                    .set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '.tl_submit_container .split-container')
+                    .set('data-action', 'contao--toggle-handler#toggle:prevent')
                 %}
                 <button{{ button_attributes }} tabindex="-1">{{ backend_icon('navcol.svg') }}</button>
-                <ul
-                    class="invisible"
-                    data-contao--toggle-state-target="controls"
-                    data-action="focusin->contao--toggle-state#open focusout->contao--toggle-state#close"
-                    data-contao--toggle-state-close-delay-param="300"
-                >
+                {% set list_attributes = attrs()
+                    .addClass(['split-container', 'invisible'])
+                    .set('data-controller', 'contao--toggle-receiver')
+                    .set('data-contao--toggle-receiver-contao--toggle-handler-outlet', '.tl_submit_container .split-toggle')
+                    .set('data-contao--toggle-receiver-inactive-class', 'invisible')
+                    .set(
+                        'data-action', [
+                            'focusin->contao--toggle-receiver#open',
+                            'focusout->contao--toggle-receiver#close',
+                            'click@document->contao--toggle-receiver#documentClick',
+                            'keydown.esc@document->contao--toggle-receiver#close',
+                        ]|join(' ')
+                    )
+                    .set('data-contao--toggle-receiver-close-delay-param', 300)
+                %}
+                <ul{{ list_attributes }}>
                     {% for button in buttons|slice(2) %}
                         <li>{{ button|raw }}</li>
                     {% endfor %}

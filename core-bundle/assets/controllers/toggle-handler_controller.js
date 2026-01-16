@@ -6,11 +6,20 @@ export default class extends Controller {
     contaoToggleReceiverOutletConnected(receiver) {
         const controls = (this.element.getAttribute('aria-controls') ?? '').split(' ').filter(Boolean);
 
+        if (!receiver.element.id) {
+            receiver.element.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
+        }
+
         if (!controls.includes(receiver.element.id)) {
             controls.push(receiver.element.id);
         }
 
-        this.element.setAttribute('aria-controls', controls.join(' '));
+        if (controls.length > 0) {
+            this.element.setAttribute('aria-controls', controls.join(' '));
+        } else {
+            this.element.removeAttribute('aria-controls');
+        }
+
         this.element.setAttribute('aria-expanded', receiver.isOpen());
     }
 
