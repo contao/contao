@@ -93,7 +93,7 @@ class ChangePasswordController extends AbstractContentElementController
                 $versions->create();
             }
 
-            $this->eventDispatcher->dispatch(new NewPasswordEvent($member, $form->get('newpassword')->getData(), $hashedPassword));
+            $this->eventDispatcher->dispatch(new NewPasswordEvent($member, $form->get('newpassword')->getData(), $hashedPassword, $model));
 
             $request->getSession()->migrate();
             $user->findBy('id', $member->id);

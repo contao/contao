@@ -10,13 +10,15 @@
 
 namespace Contao;
 
-trigger_deprecation('contao/core-bundle', '5.7', 'Using "Contao\ModuleChangePassword" is deprecated and will no longer work in Contao 6. Use the content element instead.');
+use Contao\CoreBundle\Controller\ContentElement\ChangePasswordController;
+
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ModuleChangePassword::class, ChangePasswordController::class);
 
 /**
  * Front end module "change password".
  *
  * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
- *             use the content element instead.
+ *             use Contao\CoreBundle\Controller\ContentElement\ChangePasswordController instead.
  */
 class ModuleChangePassword extends Module
 {

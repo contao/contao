@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
+use Contao\ContentModel;
 use Contao\MemberModel;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -21,6 +22,7 @@ class NewPasswordEvent extends Event
         private readonly MemberModel $member,
         private readonly string $password,
         private readonly string $hashedPassword,
+        private readonly ContentModel $contentModel,
     ) {
     }
 
@@ -37,5 +39,10 @@ class NewPasswordEvent extends Event
     public function getHashedPassword(): string
     {
         return $this->hashedPassword;
+    }
+
+    public function getContentModel(): ContentModel
+    {
+        return $this->contentModel;
     }
 }
