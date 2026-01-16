@@ -115,7 +115,11 @@
                 <main{{ mainAttributes }}>
                     {% block main_headline %}
                         <h1 id="main_headline">
-                            {{ headline|raw }}
+                            {% if breadcrumb|default %}
+                                {{ breadcrumb|raw }}
+                            {% else %}
+                                {{ headline|raw }}
+                            {% endif %}
                             {{ include('@Contao/backend/component/_favorites.html.twig') }}
                         </h1>
                     {% endblock %}

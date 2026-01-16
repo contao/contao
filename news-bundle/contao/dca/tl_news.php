@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('date DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'headline'
 		),
 		'label' => array

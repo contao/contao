@@ -1,4 +1,4 @@
-{% set wrapperAttributes = attrs(cssID)
+{% set wrapperAttributes = attrs(cssID|default)
     .addClass([class, 'block'])
     .addStyle(style|default)
     .mergeWith(wrapperAttributes|default)
