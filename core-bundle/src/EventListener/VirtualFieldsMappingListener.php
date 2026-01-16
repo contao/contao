@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
@@ -75,11 +75,11 @@ class VirtualFieldsMappingListener
         );
 
         // Configure virtual field targets
-        foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'] ?? [], 'targetColumn')) as $target) {
+        foreach (array_unique(array_column($GLOBALS['TL_DCA'][$table]['fields'], 'targetColumn')) as $target) {
             $GLOBALS['TL_DCA'][$table]['fields'][$target]['virtualTarget'] = true;
 
             if (!($GLOBALS['TL_DCA'][$table]['fields'][$target]['sql'] ?? null)) {
-                $GLOBALS['TL_DCA'][$table]['fields'][$target]['sql'] = ['type' => 'json', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
+                $GLOBALS['TL_DCA'][$table]['fields'][$target]['sql'] = ['type' => 'json', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
             }
         }
     }
