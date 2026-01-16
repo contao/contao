@@ -1,4 +1,4 @@
-import { Controller } from '@hotwired/stimulus'
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = ['label'];
@@ -73,7 +73,7 @@ export default class extends Controller {
             this.element.classList.toggle(this.inactiveClass, !state);
         }
 
-        for (const handler of this.contaoToggleHandlerOutlets.map(handler => handler.element)) {
+        for (const handler of this.contaoToggleHandlerOutlets.map((handler) => handler.element)) {
             handler.classList.toggle('active', state);
             handler.setAttribute('aria-expanded', state);
 
@@ -84,7 +84,9 @@ export default class extends Controller {
             }
         }
 
-        for (const el of this.hasLabelTarget ? this.labelTargets : this.contaoToggleHandlerOutlets.map(handler => handler.element)) {
+        for (const el of this.hasLabelTarget
+            ? this.labelTargets
+            : this.contaoToggleHandlerOutlets.map((handler) => handler.element)) {
             if (state && this.hasActiveLabelValue) {
                 el.innerText = this.activeLabelValue;
             } else if (!state && this.hasInactiveLabelValue) {
