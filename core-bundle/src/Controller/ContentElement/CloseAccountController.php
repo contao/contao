@@ -66,7 +66,7 @@ class CloseAccountController extends AbstractContentElementController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->eventDispatcher->dispatch(new CloseAccountEvent($member, $model->reg_close));
+            $this->eventDispatcher->dispatch(new CloseAccountEvent($member, $model->reg_close, $model));
 
             if ('close_delete' === $model->reg_close) {
                 $filesModelAdapter = $this->framework->getAdapter(FilesModel::class);

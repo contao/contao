@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
+use Contao\ContentModel;
 use Contao\MemberModel;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -20,6 +21,7 @@ class CloseAccountEvent extends Event
     public function __construct(
         private readonly MemberModel $member,
         private readonly string $closingMode,
+        private readonly ContentModel $contentModel,
     ) {
     }
 
@@ -31,5 +33,10 @@ class CloseAccountEvent extends Event
     public function getClosingMode(): string
     {
         return $this->closingMode;
+    }
+
+    public function getContentModel(): ContentModel
+    {
+        return $this->contentModel;
     }
 }
