@@ -118,7 +118,7 @@
 <div class="two-factor passkeys">
     <h2 class="sub_headline">{{ 'MSC.passkeys'|trans }}</h2>
     <p>{{ 'MSC.passkeysDescription'|trans }}</p>
-    <div class="tl_listing_container">
+    <div class="list_passkeys">
         <turbo-frame id="passkeys" data-turbo-action="advance">
             {% if credentials|default %}
                 <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">

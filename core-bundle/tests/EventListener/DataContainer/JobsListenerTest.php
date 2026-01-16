@@ -140,7 +140,7 @@ class JobsListenerTest extends AbstractJobsTestCase
             ->expects($this->exactly(3))
             ->method('render')
             ->willReturnCallback(
-                function (string $template, array $context) use ($job, &$call) {
+                function (string $template, array $context) use (&$call, $job) {
                     ++$call;
 
                     if (1 === $call) {
