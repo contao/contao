@@ -2,6 +2,12 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static outlets = ['contao--toggle-receiver'];
+    static values = {
+        activeLabel: String,
+        inactiveLabel: String,
+        activeTitle: String,
+        inactiveTitle: String,
+    };
 
     contaoToggleReceiverOutletConnected(receiver) {
         const controls = (this.element.getAttribute('aria-controls') ?? '').split(' ').filter(Boolean);
@@ -33,6 +39,29 @@ export default class extends Controller {
     close(event) {
         for (const receiver of this.contaoToggleReceiverOutlets) {
             receiver.close(event);
+        }
+    }
+
+    setState(state) {
+        this.element.classList.toggle('active', state);
+        this.element.setAttribute('aria-expanded', state);
+
+        if (state) {
+            if (this.activeTitleValue) {
+                this.element.title = this.activeTitleValue;
+            }
+
+            if (this.hasLabelTarget && this.activeLabelValue) {
+                this.labelTarget.textContent = this.activeLabelValue;
+            }
+        } else {
+            if (this.inactiveTitleValue) {
+                this.element.title = this.inactiveTitleValue;
+            }
+
+            if (this.hasLabelTarget && this.inactiveLabelValue) {
+                this.labelTarget.textContent = this.inactiveLabelValue;
+            }
         }
     }
 }

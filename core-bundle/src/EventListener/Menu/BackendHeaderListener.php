@@ -166,6 +166,8 @@ class BackendHeaderListener
             ->set('title', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
             ->set('data-controller', 'contao--toggle-handler')
             ->set('data-action', 'contao--toggle-handler#toggle:prevent')
+            ->set('data-contao--toggle-handler-active-title-value', $this->translator->trans('MSC.hideMainNavigation', [], 'contao_default'))
+            ->set('data-contao--toggle-handler-inactive-title-value', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
             ->set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#left')
         ;
 

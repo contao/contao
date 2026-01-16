@@ -5,13 +5,6 @@ export default class extends Controller {
     static classes = ['active', 'inactive'];
     static outlets = ['contao--toggle-handler'];
 
-    static values = {
-        activeLabel: String,
-        inactiveLabel: String,
-        activeTitle: String,
-        inactiveTitle: String,
-    };
-
     #closeDelay = null;
 
     connect() {
@@ -73,25 +66,8 @@ export default class extends Controller {
             this.element.classList.toggle(this.inactiveClass, !state);
         }
 
-        for (const handler of this.contaoToggleHandlerOutlets.map((handler) => handler.element)) {
-            handler.classList.toggle('active', state);
-            handler.setAttribute('aria-expanded', state);
-
-            if (state && this.hasActiveTitleValue) {
-                handler.title = this.activeTitleValue;
-            } else if (!state && this.hasInactiveTitleValue) {
-                handler.title = this.inactiveTitleValue;
-            }
-        }
-
-        for (const el of this.hasLabelTarget
-            ? this.labelTargets
-            : this.contaoToggleHandlerOutlets.map((handler) => handler.element)) {
-            if (state && this.hasActiveLabelValue) {
-                el.innerText = this.activeLabelValue;
-            } else if (!state && this.hasInactiveLabelValue) {
-                el.innerText = this.inactiveLabelValue;
-            }
+        for (const handler of this.contaoToggleHandlerOutlets) {
+            handler.setState(state);
         }
 
         if (['mouseenter', 'mouseover', 'mouseleave'].includes(event?.type)) {
@@ -102,12 +78,26 @@ export default class extends Controller {
             if (state) {
                 this.element.focus();
             } else {
-                this.contaoToggleHandlerOutlet.element.focus();
+                if (this.hasContaoToggleHandlerOutlet) {
+                    this.contaoToggleHandlerOutlet.element.focus();
+                }
             }
         }, 50);
     }
 
     isOpen() {
-        return 'true' === this.contaoToggleHandlerOutlet.element.ariaExpanded;
+        if (this.hasContaoToggleHandlerOutlet) {
+            return 'true' === this.contaoToggleHandlerOutlet.element.ariaExpanded;
+        }
+
+        if (this.hasActiveClass) {
+            return this.element.classList.contains(this.activeClass);
+        }
+
+        if (this.hasInactiveClass) {
+            return !this.element.classList.contains(this.inactiveClass);
+        }
+
+        return false;
     }
 }

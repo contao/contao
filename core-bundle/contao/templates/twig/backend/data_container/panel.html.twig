@@ -6,8 +6,11 @@
     .set('method', 'post')
     .set('aria-label', 'MSC.searchAndFilter'|trans)
     .set('data-turbo-frame', 'contao-main')
-    .set('data-contao--toggle-state-target', 'controls')
+    .set('data-controller', 'contao--toggle-receiver')
+    .set('data-contao--toggle-receiver-active-class', 'active')
+    .set('data-contao--toggle-receiver-contao--toggle-handler-outlet', '.header_filter_toggle')
     .set('data-contao--element-count-target', 'parent')
+    .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
 %}
 <form{{ form_attributes }}>
     {% set close_button_attributes = attrs()
@@ -15,7 +18,7 @@
         .addClass('close')
         .set('title', 'DCA.toggleFilter.2'|trans)
         .set('aria-controls', 'tl_content_filter')
-        .set('data-action', 'contao--toggle-state#close')
+        .set('data-action', 'contao--toggle-receiver#close')
     %}
     <button{{ close_button_attributes }}>×</button>
     <div class="tl_formbody">
