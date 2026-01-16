@@ -16,7 +16,7 @@ use Contao\CoreBundle\EventListener\VirtualFieldsMappingListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_File;
 use Contao\DC_Table;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
@@ -45,8 +45,8 @@ class VirtualFieldsMappingListenerTest extends TestCase
 
     public static function virtualFieldsMappingProvider(): iterable
     {
-        $defaultSql = ['type' => 'json', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
-        $textSql = ['type' => 'text', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
+        $defaultSql = ['type' => 'json', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
+        $textSql = ['type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull' => false];
 
         yield 'Adds targetColumn and virtualTarget and sql' => [
             [
