@@ -159,8 +159,12 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $controller->setContainer($container);
 
-        $model = $this->createClassWithPropertiesStub(ContentModel::class);
-        $model->reg_close = 'close_deactivate';
+        $model = $this->createClassWithPropertiesMock(ContentModel::class, ['reg_close' => 'close_deactivate']);
+        $model
+            ->expects($this->once())
+            ->method('cloneDetached')
+            ->willReturn($this->createStub(ContentModel::class))
+        ;
 
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_close_account_');
@@ -212,6 +216,13 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $model->reg_close = 'close_delete';
         $model->reg_deleteDir = true;
         $model->jumpTo = 1;
+
+        $model = $this->createClassWithPropertiesMock(ContentModel::class, ['reg_close' => 'close_delete', 'reg_deleteDir' => true, 'jumpTo' => 1]);
+        $model
+            ->expects($this->once())
+            ->method('cloneDetached')
+            ->willReturn($this->createStub(ContentModel::class))
+        ;
 
         $request = new Request();
         $request->request->set('FORM_SUBMIT', 'tl_close_account_');
