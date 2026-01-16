@@ -16,6 +16,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -159,9 +160,18 @@ class BackendHeaderListener
 
         $submenu->addChild($colorScheme);
 
+        $burgerAttributes = (new HtmlAttributes())
+            ->set('id', 'burger')
+            ->set('type', 'button')
+            ->set('title', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
+            ->set('data-controller', 'contao--toggle-handler')
+            ->set('data-action', 'contao--toggle-handler#toggle:prevent')
+            ->set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#left')
+        ;
+
         $burger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel(\sprintf('<button%s><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', (string) $burgerAttributes))
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
