@@ -20,7 +20,6 @@ class CloseAccountEvent extends Event
 {
     public function __construct(
         private readonly MemberModel $member,
-        private readonly string $closingMode,
         private readonly ContentModel $contentModel,
     ) {
     }
@@ -28,11 +27,6 @@ class CloseAccountEvent extends Event
     public function getMember(): MemberModel
     {
         return $this->member;
-    }
-
-    public function getClosingMode(): string
-    {
-        return $this->closingMode;
     }
 
     public function getContentModel(): ContentModel
