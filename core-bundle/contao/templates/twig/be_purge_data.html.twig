@@ -13,11 +13,11 @@
             <input type="hidden" name="FORM_SUBMIT" value="tl_purge">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
             <div class="tl_tbox">
-                <fieldset class="tl_checkbox_container">
+                <fieldset class="tl_checkbox_container" data-controller="contao--check-all">
                     <table class="with-border with-padding">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" id="check_all" class="tl_checkbox" onclick="Backend.toggleCheckboxes(this, 'purge')"></th>
+                            <th><input type="checkbox" id="check_all" class="tl_checkbox" data-action="contao--check-all#toggleAll"></th>
                             <th>{{ job }}</th>
                             <th>{{ description }}</th>
                         </tr>
@@ -25,7 +25,7 @@
                         <tbody>
                         {% for value, job in jobs %}
                             <tr class="hover-row toggle_select">
-                                <td><input type="checkbox" name="purge[{{ job.group }}][]" id="{{ job.id }}" class="tl_checkbox" value="{{ value }}" data-action="focus->contao--scroll-offset#store"></td>
+                                <td><input type="checkbox" name="purge[{{ job.group }}][]" id="{{ job.id }}" class="tl_checkbox" value="{{ value }}" data-contao--check-all-target="input" data-action="focus->contao--scroll-offset#store contao--check-all#toggleInput"></td>
                                 <td class="nw"><label for="{{ job.id }}">{{ job.title }}</label>{{ job.affected|raw }}</td>
                                 <td>{{ job.description|raw }}</td>
                             </tr>
