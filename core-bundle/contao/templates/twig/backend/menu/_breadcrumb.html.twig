@@ -6,9 +6,7 @@
     {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
         {% set item = item.setAttributes(
             item.getAttributes()|merge({
-                'data-controller': 'contao--toggle-state',
-                'data-action': 'keydown.esc@document->contao--toggle-state#close mouseleave->contao--toggle-state#close',
-                'data-contao--toggle-state-active-class': 'active',
+                'class': 'item-trail',
             }),
         ) %}
     {% elseif item.extra('index') %}
@@ -35,8 +33,15 @@
 {% endblock %}
 
 {% block list %}
+    {% set list_attributes = attrs()
+        .addClass('trail-list')
+        .set('data-controller', 'contao--toggle-receiver')
+        .set('data-contao--toggle-receiver-active-class', 'active')
+        .set('data-action', 'keydown.esc@document->contao--toggle-receiver#close mouseleave->contao--toggle-receiver#close')
+        .set('data-contao--toggle-receiver-contao--toggle-handler-outlet', '#breadcrumb .trail-toggle')
+    %}
     {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
-        <ul data-contao--toggle-state-target="controls">
+        <ul{{ list_attributes }}>
             {{ block('children') }}
         </ul>
     {% else %}
@@ -45,14 +50,15 @@
 {% endblock %}
 
 {% macro generate_dropdown_button(title, label) %}
-    <button
-        type="button"
-        data-contao--toggle-state-target="controller"
-        data-action="contao--toggle-state#toggle:prevent mouseenter->contao--toggle-state#open:prevent"
-        title="{{ title }}"
-    >
-        {{ label }}
-    </button>
+    {% set button_attributes = attrs()
+        .addClass('trail-toggle')
+        .set('type', 'button')
+        .set('data-controller', 'contao--toggle-handler')
+        .set('data-action', 'contao--toggle-handler#toggle:prevent mouseenter->contao--toggle-handler#open:prevent')
+        .set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#breadcrumb .trail-list')
+        .set('title', title)
+    %}
+    <button{{ button_attributes }}>{{ label }}</button>
 {% endmacro %}
 
 {% macro generate_link_prefix(item) %}
