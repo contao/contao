@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\Input;
-use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
