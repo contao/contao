@@ -283,7 +283,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
 
         $container
             ->get('contao.routing.content_url_generator')
@@ -318,7 +318,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 
@@ -360,7 +360,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->request->set('2fa', 'enable');
+        $request->query->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
 
