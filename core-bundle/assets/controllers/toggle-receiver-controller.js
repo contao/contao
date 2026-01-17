@@ -55,6 +55,22 @@ export default class extends Controller {
         this.#toggleState(false);
     }
 
+    isOpen() {
+        if (this.hasContaoToggleHandlerOutlet) {
+            return 'true' === this.contaoToggleHandlerOutlet.element.ariaExpanded;
+        }
+
+        if (this.hasActiveClass) {
+            return this.element.classList.contains(this.activeClass);
+        }
+
+        if (this.hasInactiveClass) {
+            return !this.element.classList.contains(this.inactiveClass);
+        }
+
+        return false;
+    }
+
     #toggleState(state, event = null) {
         clearTimeout(this.#closeDelay);
 
@@ -83,21 +99,5 @@ export default class extends Controller {
                 }
             }
         }, 50);
-    }
-
-    isOpen() {
-        if (this.hasContaoToggleHandlerOutlet) {
-            return 'true' === this.contaoToggleHandlerOutlet.element.ariaExpanded;
-        }
-
-        if (this.hasActiveClass) {
-            return this.element.classList.contains(this.activeClass);
-        }
-
-        if (this.hasInactiveClass) {
-            return !this.element.classList.contains(this.inactiveClass);
-        }
-
-        return false;
     }
 }
