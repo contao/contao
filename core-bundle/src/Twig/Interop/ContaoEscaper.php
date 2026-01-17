@@ -28,7 +28,7 @@ final class ContaoEscaper
 {
     /**
      * This implementation is a clone of Twig's HTML escape strategy but calls
-     * htmlspecialchars with the double_encode parameter set to false.
+     * htmlspecialchars() with the double_encode parameter set to false.
      *
      * @see twig_escape_filter
      */

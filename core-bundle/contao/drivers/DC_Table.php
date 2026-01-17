@@ -3915,7 +3915,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$isCurrentTable = $table === $this->strTable;
 
 		$parameters = array(
-			'id' => "{$node}_{$id}",
+			'id' => "{$node}_$id",
 			'level' => $intMargin / $intSpacing + 1,
 			'is_draft' => (string) ($currentRecord['tstamp'] ?? null) === '0',
 			'is_group' => ($isTreeMode && ($currentRecord['type'] ?? null) === 'root') || !$isCurrentTable,
