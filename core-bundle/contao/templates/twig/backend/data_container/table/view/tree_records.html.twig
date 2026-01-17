@@ -16,7 +16,7 @@
     %}
     <div{{ row_attributes }}>
         {# Button to expand/collapse child nodes #}
-        {% if toggler_url %}
+        {%- if toggler_url -%}
             {% set toggler_attributes = attrs()
                .set('href', toggler_url)
                .addClass('foldable')
@@ -27,12 +27,12 @@
                .set('data-contao--toggle-nodes-level-param', level)
             %}
             <a{{ toggler_attributes }}>
-                {{ backend_icon('chevron-right.svg', (is_expanded ? 'MSC.collapseNode' : 'MSC.expandNode')|trans) }}
+                {{- backend_icon('chevron-right.svg', (is_expanded ? 'MSC.collapseNode' : 'MSC.expandNode')|trans) -}}
             </a>
-        {% endif %}
+        {%- endif -%}
 
         {# Main label #}
-        {{ label|raw }}
+        {{- label|raw -}}
     </div>
     <div class="tl_right">
         {{ buttons|raw }}
