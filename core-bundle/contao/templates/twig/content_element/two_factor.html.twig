@@ -2,9 +2,7 @@
 {% extends '@Contao/content_element/_base.html.twig' %}
 
 {% block wrapper %}
-    {% if as_editor_view %}
-        <p class="tl_info">{{ ('CTE.' ~ type ~ '.1')|trans }}</p>
-    {% elseif can_use_2fa %}
+    {% if can_use_2fa %}
         {{ parent() }}
     {% endif %}
 {% endblock %}

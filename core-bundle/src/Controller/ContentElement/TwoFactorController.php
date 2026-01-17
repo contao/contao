@@ -51,7 +51,6 @@ class TwoFactorController extends AbstractContentElementController
 
             return $template->getResponse();
         }
-        $template->set('can_use_2fa', true);
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
 
@@ -109,6 +108,7 @@ class TwoFactorController extends AbstractContentElementController
             }
         }
 
+        $template->set('can_use_2fa', true);
         $template->set('is_enabled', $user->useTwoFactor);
         $template->set('enforce_two_factor', $pageModel->enforceTwoFactor);
 
