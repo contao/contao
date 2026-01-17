@@ -610,7 +610,7 @@ abstract class Model
 			// Update the row
 			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 						->set($arrSet)
-						->query('', array_merge(array_values($arrSet), array($intPk)), array_values($arrTypes));
+						->query('', array(...array_values($arrSet), $intPk), array_values($arrTypes));
 
 			$this->postSave(self::UPDATE);
 			$this->arrModified = array(); // reset after postSave()
