@@ -6,7 +6,7 @@
     {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
         {% set item = item.setAttributes(
             item.getAttributes()|merge({
-                'class': 'item-trail',
+                class: 'item-trail',
             }),
         ) %}
     {% elseif item.extra('index') %}
