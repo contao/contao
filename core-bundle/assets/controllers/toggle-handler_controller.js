@@ -42,6 +42,10 @@ export default class extends Controller {
         }
     }
 
+    /**
+     * Updates the attributes and label of the handler according to the given state, whenever applicable.
+     * Executed by the receiver outlet whenever its state changes by handlers or its own actions.
+     */
     setState(state) {
         this.element.classList.toggle('active', state);
         this.element.setAttribute('aria-expanded', state);
