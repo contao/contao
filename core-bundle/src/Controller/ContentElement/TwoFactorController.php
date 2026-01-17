@@ -58,7 +58,7 @@ class TwoFactorController extends AbstractContentElementController
         $targetPage = $this->getTargetPage($model, $pageModel);
 
         // Enable 2FA if it is forced in the page settings or was requested by a user
-        if ((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
+        if ((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->query->get('2fa')) {
             $exception = $this->authenticationUtils->getLastAuthenticationError();
 
             // Validate the verification code

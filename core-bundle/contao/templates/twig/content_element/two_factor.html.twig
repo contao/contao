@@ -3,7 +3,7 @@
 
 {% block wrapper %}
     {% if as_editor_view %}
-        <i class="placeholder-explanation">{{ ('CTE.' ~ type ~ '.1')|trans }}</i>
+        <p class="tl_info">{{ ('CTE.' ~ type ~ '.1')|trans }}</p>
     {% elseif can_use_2fa %}
         {{ parent() }}
     {% endif %}
