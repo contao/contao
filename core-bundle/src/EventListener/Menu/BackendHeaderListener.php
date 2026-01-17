@@ -80,19 +80,29 @@ class BackendHeaderListener
 
         $tree->addChild($alerts);
 
+        $profileButtonAttributes = (new HtmlAttributes())
+            ->set('id', 'profileButton')
+            ->set('type', 'button')
+            ->set('title', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
+            ->set('data-controller', 'contao--toggle-handler')
+            ->set('data-action', 'contao--toggle-handler#toggle:prevent')
+            ->set('data-contao--toggle-handler-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
+            ->set('data-contao--toggle-handler-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
+            ->set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#profileMenu')
+        ;
+
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showProfile', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$user->username.'</button>')
+            ->setLabel(\sprintf('<button%s>%s</button>', (string) $profileButtonAttributes, $user->username))
             ->setAttribute('class', 'submenu')
-            ->setAttribute('data-controller', 'contao--toggle-state')
-            ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-            ->setAttribute('data-contao--toggle-state-active-class', 'active')
-            ->setAttribute('data-contao--toggle-state-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
-            ->setAttribute('data-contao--toggle-state-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
-            ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
+            ->setChildrenAttribute('id', 'profileMenu')
+            ->setChildrenAttribute('data-controller', 'contao--toggle-receiver')
+            ->setChildrenAttribute('data-contao--toggle-receiver-active-class', 'active')
+            ->setChildrenAttribute('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+            ->setChildrenAttribute('data-contao--toggle-receiver-contao--toggle-handler-outlet', '#profileButton')
         ;
 
         $tree->addChild($submenu);
