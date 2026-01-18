@@ -50,7 +50,7 @@ class CloseAccountController extends AbstractContentElementController
         $user = $this->getUser();
 
         if (!$user instanceof FrontendUser) {
-            return $template->getResponse();
+            return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
         $this->framework->initialize();
@@ -59,7 +59,7 @@ class CloseAccountController extends AbstractContentElementController
         $member = $memberModelAdapter->findById($user->id);
 
         if (!$member instanceof MemberModel) {
-            return $template->getResponse();
+            return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
         $form = $this->createForm(CloseAccountType::class, [], ['attr' => ['id' => 'tl_close_account'.$model->id]]);
@@ -102,7 +102,6 @@ class CloseAccountController extends AbstractContentElementController
             }
         }
 
-        $template->set('has_member', $this->getUser() instanceof FrontendUser);
         $template->set('form', $form->createView());
 
         return $template->getResponse();

@@ -60,7 +60,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testReturnsIfNoMemberModel(): void
@@ -83,7 +83,7 @@ class CloseAccountControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testRendersTemplate(): void
