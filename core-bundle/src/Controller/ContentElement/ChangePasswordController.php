@@ -49,10 +49,8 @@ class ChangePasswordController extends AbstractContentElementController
     {
         $user = $this->getUser();
 
-        $template->set('has_member', $user instanceof FrontendUser);
-
         if (!$user instanceof FrontendUser) {
-            return $template->getResponse();
+            return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
         $this->framework->initialize();
@@ -61,7 +59,7 @@ class ChangePasswordController extends AbstractContentElementController
         $member = $memberModelAdapter->findById($user->id);
 
         if (!$member instanceof MemberModel) {
-            return $template->getResponse();
+            return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
         $this->executeOnloadCallbacks();
