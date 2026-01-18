@@ -26,7 +26,7 @@ final class Hit
     public function __construct(
         private readonly Document $document,
         private readonly string $title,
-        private readonly string $viewUrl,
+        private string $viewUrl,
     ) {
     }
 
@@ -73,6 +73,14 @@ final class Hit
     public function getMetadata(): array
     {
         return $this->metadata;
+    }
+
+    public function withViewUrl(string $viewUrl): self
+    {
+        $clone = clone $this;
+        $clone->viewUrl = $viewUrl;
+
+        return $clone;
     }
 
     public function withEditUrl(string $editUrl): self
