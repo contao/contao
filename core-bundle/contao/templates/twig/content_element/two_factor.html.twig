@@ -1,12 +1,6 @@
 {% trans_default_domain 'contao_default' %}
 {% extends '@Contao/content_element/_base.html.twig' %}
 
-{% block wrapper %}
-    {% if can_use_2fa %}
-        {{ parent() }}
-    {% endif %}
-{% endblock %}
-
 {% block content %}
     {% if enable|default %}
         {% if invalid_verification_code %}

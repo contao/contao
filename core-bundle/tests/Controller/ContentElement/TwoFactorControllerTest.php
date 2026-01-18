@@ -44,28 +44,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends ContentElementTestCase
 {
-    public function testReturnsIfInBackendScope(): void
-    {
-        $container = $this->getContainerWithFrameworkTemplate($this->createStub(BackendUser::class), true);
-
-        $controller = new TwoFactorController(
-            $this->getDefaultFramework(),
-            $this->createStub(BackupCodeManager::class),
-            $this->createStub(TrustedDeviceManager::class),
-            $this->mockAuthenticator($this->createStub(BackendUser::class)),
-            $this->mockAuthenticationUtils(),
-        );
-
-        $controller->setContainer($container);
-
-        $model = $this->createClassWithPropertiesStub(ContentModel::class);
-        $request = new Request();
-
-        $response = $controller($request, $model, 'main');
-
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-    }
-
     public function testReturnsIfTheUserIsNotAFrontendUser(): void
     {
         $container = $this->getContainerWithFrameworkTemplate($this->createStub(BackendUser::class), true);
@@ -85,8 +63,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        // todo render template for real and check output
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testReturnsIfTheRequestHasNoPageModel(): void
@@ -107,8 +84,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        // todo render template for real and check output
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testReturnsEmptyResponseIfTheUserIsNotFullyAuthenticated(): void
@@ -130,8 +106,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertEmpty($response->getContent());
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        // todo render template for real and check output
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     public function testReturnsAResponseIfTheUserIsAFrontendUser(): void
