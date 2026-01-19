@@ -1,5 +1,5 @@
 {% trans_default_domain 'contao_default' %}
-{% extends '@Contao/backend/data_container/table/view/_record_listing.html.twig' %}
+{% extends '@Contao/backend/data_container/table/view/_base.html.twig' %}
 
 {% set view_attributes = attrs()
     .set('data-controller', 'contao--limit-height', limit_height)
@@ -12,92 +12,90 @@
     .set('data-contao--limit-height-collapse-all-title-value', 'DCA.collapseNodes.1'|trans, limit_height)
 %}
 
-{% block list %}
-    {% set listing_attributes = attrs()
-        .addClass(['tl_listing_container', 'list_view'])
-        .set('id', 'tl_listing')
-        .set('data-controller', 'contao--check-all')
-        .set('data-picker-value', picker.value|default, as_picker)
-    %}
-    <div{{ listing_attributes }}>
-        {{ include ('@Contao/backend/data_container/table/view/_select_all_button.html.twig') }}
+{% block listing %}
+    {% if records|length %}
+        {% embed '@Contao/backend/data_container/table/view/_record_listing.html.twig' with {
+            listing_attributes: attrs().addClass('list_view'),
+        } %}
+            {% block records %}
+                {{ block('select_all_button') }}
 
-        {% set table_attributes = attrs()
-            .addClass('tl_listing')
-            .addClass('showColumns', show_columns)
-            .addClass(['picker', 'unselectable'], as_picker)
-        %}
-        <table{{ table_attributes }}>
-            {% if table_headers|length %}
-                <thead>
-                <tr>
-                    {% for name, label in table_headers %}
-                        {% set table_header_attributes = attrs()
-                            .addClass('tl_folder_tlist')
-                            .addClass("col_#{name}")
-                            .addClass('ordered_by', name == order_by)
-                        %}
-                        <th{{ table_header_attributes }}>{{ label }}</th>
-                    {% endfor %}
-                    <th class="tl_folder_tlist tl_right_nowrap"></th>
-                </tr>
-                </thead>
-            {% endif %}
-
-            <tbody>
-            {% for record in records %}
-                {# Group header #}
-                {% if record.group_header is defined %}
-                    <tr>
-                        {% set group_header_attributes = attrs()
-                            .set('colspan', 2)
-                            .addClass('tl_folder_tlist', loop.first)
-                            .addClass('tl_folder_list', not loop.first)
-                        %}
-                        <th{{ group_header_attributes }}>{{ record.group_header }}</th>
-                    </tr>
-                {% endif %}
-
-                {# Record #}
-                {% set row_attributes = attrs()
-                    .addClass('draft', record.is_draft)
-                    .addClass('hover-row')
-                    .set('data-controller', 'contao--deeplink contao--operations-menu')
-                    .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
+                {% set table_attributes = attrs()
+                    .addClass('tl_listing')
+                    .addClass('showColumns', show_columns)
+                    .addClass(['picker', 'unselectable'], as_picker)
                 %}
-                <tr{{ row_attributes }}>
-                    {% if record.columns is defined %}
-                        {# Record displayed as multiple columns #}
-                        {% for name, label in record.columns %}
-                            {% set col_attributes = attrs()
-                                .set('colspan', record.columns_colspan)
-                                .addClass('tl_file_list')
-                                .addClass("col_#{name}")
-                                .addClass('ordered_by', name == order_by)
-                            %}
-                            <td{{ col_attributes }}>{{ label|raw }}</td>
-                        {% endfor %}
-                    {% else %}
-                        {# Record displayed as a single column #}
-                        <td class="tl_file_list">
-                            {% set label_attributes = attrs()
-                                .set('data-contao--limit-height-target', 'node', limit_height)
-                            %}
-                            <div{{ label_attributes }}>{{ record.label|raw }}</div>
-                        </td>
+                <table{{ table_attributes }}>
+                    {% if table_headers|length %}
+                        <thead>
+                        <tr>
+                            {% for name, label in table_headers %}
+                                {% set table_header_attributes = attrs()
+                                    .addClass('tl_folder_tlist')
+                                    .addClass("col_#{name}")
+                                    .addClass('ordered_by', name == order_by)
+                                %}
+                                <th{{ table_header_attributes }}>{{ label }}</th>
+                            {% endfor %}
+                            <th class="tl_folder_tlist tl_right_nowrap"></th>
+                        </tr>
+                        </thead>
                     {% endif %}
 
-                    {# Right column #}
-                    <td class="tl_file_list tl_right_nowrap">
-                        {{ include(('@Contao/backend/data_container/table/view/_record_operations.html.twig')) }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                    <tbody>
+                    {% for record in records %}
+                        {# Group header #}
+                        {% if record.group_header is defined %}
+                            <tr>
+                                {% set group_header_attributes = attrs()
+                                    .set('colspan', 2)
+                                    .addClass('tl_folder_tlist', loop.first)
+                                    .addClass('tl_folder_list', not loop.first)
+                                %}
+                                <th{{ group_header_attributes }}>{{ record.group_header }}</th>
+                            </tr>
+                        {% endif %}
 
-        {{ include ('@Contao/backend/data_container/table/view/_picker_reset_button.html.twig') }}
-    </div>
+                        {# Record #}
+                        {% set row_attributes = attrs()
+                            .addClass('draft', record.is_draft)
+                            .addClass('hover-row')
+                            .set('data-controller', 'contao--deeplink contao--operations-menu')
+                            .set('data-action', 'contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput')
+                        %}
+                        <tr{{ row_attributes }}>
+                            {% if record.columns is defined %}
+                                {# Record displayed as multiple columns #}
+                                {% for name, label in record.columns %}
+                                    {% set col_attributes = attrs()
+                                        .set('colspan', record.columns_colspan)
+                                        .addClass('tl_file_list')
+                                        .addClass("col_#{name}")
+                                        .addClass('ordered_by', name == order_by)
+                                    %}
+                                    <td{{ col_attributes }}>{{ label|raw }}</td>
+                                {% endfor %}
+                            {% else %}
+                                {# Record displayed as a single column #}
+                                <td class="tl_file_list">
+                                    {% set label_attributes = attrs()
+                                        .set('data-contao--limit-height-target', 'node', limit_height)
+                                    %}
+                                    <div{{ label_attributes }}>{{ record.label|raw }}</div>
+                                </td>
+                            {% endif %}
 
-    {{ pagination|default|raw }}
+                            {# Right column #}
+                            <td class="tl_file_list tl_right_nowrap">
+                                {{ include(('@Contao/backend/data_container/table/view/_record_operations.html.twig')) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endblock %}
+        {% endembed %}
+    {% else %}
+        <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
+    {% endif %}
 {% endblock %}
