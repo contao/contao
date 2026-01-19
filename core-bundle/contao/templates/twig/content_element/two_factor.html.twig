@@ -98,7 +98,7 @@
                         {% endfor %}
                     </table>
                 </div>
-                <form action="{{ action|default }}" class="tl_two_factor_form" method="post">
+                <form class="tl_two_factor_form" method="post">
                     <div class="formbody">
                         <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_clear_trusted_devices">
                         <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
