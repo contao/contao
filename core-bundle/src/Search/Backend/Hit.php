@@ -17,6 +17,8 @@ final class Hit
 
     private string|null $context = null;
 
+    private string|null $visibleType = null;
+
     private FigureBuilder|null $imageFigureBuilder = null;
 
     private array $metadata = [];
@@ -24,13 +26,18 @@ final class Hit
     public function __construct(
         private readonly Document $document,
         private readonly string $title,
-        private readonly string $viewUrl,
+        private string $viewUrl,
     ) {
     }
 
     public function getDocument(): Document
     {
         return $this->document;
+    }
+
+    public function getVisibleType(): string
+    {
+        return $this->visibleType ?? $this->getDocument()->getType();
     }
 
     public function getTitle(): string
@@ -68,10 +75,26 @@ final class Hit
         return $this->metadata;
     }
 
+    public function withViewUrl(string $viewUrl): self
+    {
+        $clone = clone $this;
+        $clone->viewUrl = $viewUrl;
+
+        return $clone;
+    }
+
     public function withEditUrl(string $editUrl): self
     {
         $clone = clone $this;
         $clone->editUrl = $editUrl;
+
+        return $clone;
+    }
+
+    public function withVisibleType(string $visibleType): self
+    {
+        $clone = clone $this;
+        $clone->visibleType = $visibleType;
 
         return $clone;
     }
