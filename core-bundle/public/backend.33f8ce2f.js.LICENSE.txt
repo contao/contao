@@ -7,7 +7,7 @@
  */
 
 /*!
-* focus-trap 7.8.0
+* focus-trap 7.7.0
 * @license MIT, https://github.com/focus-trap/focus-trap/blob/master/LICENSE
 */
 
