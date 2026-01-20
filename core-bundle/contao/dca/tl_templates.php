@@ -38,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		'dataContainer'               => DC_Folder::class,
 		'uploadPath'                  => 'templates',
 		'editableFileTypes'           => 'html5',
-		'closed'                      => true,
+		'notCreatable'                => true,
 		'onload_callback' => array
 		(
 			array('tl_templates', 'addBreadcrumb'),
@@ -313,7 +313,7 @@ class tl_templates extends Backend
 
 			if (!$strError)
 			{
-				$this->redirect($this->getReferer());
+				$this->redirect(System::getContainer()->get('router')->generate('contao_backend', ['do' => 'tpl_editor']));
 			}
 		}
 
