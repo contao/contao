@@ -182,7 +182,7 @@ jobs:
               run: npx biome ci core-bundle/assets
 
             - name: Run Stylelint
-              run: npx stylelint --fix core-bundle/assets/styles
+              run: npx stylelint core-bundle/assets/styles core-bundle/contao/themes/flexible/styles
 
     service-linter:
         name: Service linter

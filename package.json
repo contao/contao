@@ -36,7 +36,7 @@
         "watch": "encore dev --watch",
         "build": "encore production --progress",
         "lint:js": "biome check --write --unsafe core-bundle/assets",
-        "lint:css": "stylelint core-bundle/assets/styles core-bundle/contao/themes/flexible/styles --fix lax",
+        "lint:css": "stylelint --fix lax core-bundle/assets/styles core-bundle/contao/themes/flexible/styles",
         "lint": "run-s lint:js lint:css"
     },
     "private": true,
