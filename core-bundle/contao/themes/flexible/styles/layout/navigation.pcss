@@ -15,7 +15,7 @@
     margin: 0 15px;
     padding: 3px 3px 3px 22px;
     color: var(--nav-group);
-    font-size: .75rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     font-weight: 500;
 }
@@ -55,7 +55,7 @@
     margin-left: 15px;
     padding: 6px 9px 6px 22px;
     font-weight: 400;
-    transition: color .2s ease;
+    transition: color 0.2s ease;
     position: relative;
 }
 
@@ -68,7 +68,7 @@
 #tl_navigation [class^="menu_level_"] > li.current > a {
     background-color: var(--nav-current);
 
-    &:before {
+    &::before {
         content: "";
         display: block;
         width: 3px;
@@ -84,7 +84,7 @@
 #tl_navigation .menu_level_2 a {
     padding-left: 34px;
 
-    &:before {
+    &::before {
         height: 18px !important;
         top: calc(50% - 9px) !important;
     }
@@ -103,7 +103,7 @@
 }
 
 #tl_navigation .menu_level_2 a {
-    font-size: .75rem;
+    font-size: 0.75rem;
 }
 
 #tl_navigation .menu_level_1 li.has-children:not(.first) {
@@ -114,7 +114,8 @@
     padding-bottom: 5px;
 }
 
-#tl_navigation .menu_level_1 a:hover, #tl_navigation .menu_level_1 li.current > a {
+#tl_navigation .menu_level_1 a:hover,
+#tl_navigation .menu_level_1 li.current > a {
     color: var(--text);
     background-color: var(--nav-current);
     border-radius: var(--border-radius);
