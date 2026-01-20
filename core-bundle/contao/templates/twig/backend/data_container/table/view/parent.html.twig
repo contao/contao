@@ -84,7 +84,7 @@
                                     {# Record displayed as box with optional preview #}
                                     {% set record_label_attributes = attrs()
                                         .addClass('cte_type')
-                                        .addClass(record.state, record.state)
+                                        .addClass('draggable', record.allow_dragging)
                                     %}
                                     <div{{ record_label_attributes }}>
                                         {% block label %}
