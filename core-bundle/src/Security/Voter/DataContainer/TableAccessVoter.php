@@ -31,6 +31,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class TableAccessVoter implements CacheableVoterInterface, ResetInterface
 {
     private array $canAccessTable = [];
+
     private array $canReadAccessTable = [];
 
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
