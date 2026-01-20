@@ -313,7 +313,7 @@ class tl_templates extends Backend
 
 			if (!$strError)
 			{
-				$this->redirect(System::getContainer()->get('router')->generate('contao_backend', ['do' => 'tpl_editor']));
+				$this->redirect(System::getContainer()->get('router')->generate('contao_backend', array('do' => 'tpl_editor')));
 			}
 		}
 
