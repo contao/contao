@@ -84,17 +84,18 @@
                                             {% set record_label_attributes = attrs()
                                                 .addClass('cte_type')
                                                 .addClass('draggable', record.allow_dragging)
-                                    %}
-                                    <div{{ record_label_attributes }}>
-                                        {% block label %}
-                                            {% if record.allow_dragging %}
-                                                <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
-                                                    {{ backend_icon('drag.svg', record.drag_handle_label) }}
-                                                </button>
-                                                <div>{{ record.label|raw }}</div>
-                                            {% else %}
-                                                {{ record.label|raw }}
-                                            {% endif %}
+                                                .addClass(record.state, record.state)
+                                            %}
+                                            <div{{ record_label_attributes }}>
+                                                {% block label %}
+                                                    {% if record.allow_dragging %}
+                                                        <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
+                                                            {{ backend_icon('drag.svg', record.drag_handle_label) }}
+                                                        </button>
+                                                        <div>{{ record.label|raw }}</div>
+                                                    {% else %}
+                                                        {{ record.label|raw }}
+                                                    {% endif %}
                                                 {% endblock %}
                                             </div>
 
