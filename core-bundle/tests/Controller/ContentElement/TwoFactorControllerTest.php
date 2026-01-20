@@ -53,7 +53,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator($this->createStub(BackendUser::class)),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
 
         $controller->setContainer($container);
@@ -75,8 +75,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator($this->createStub(BackendUser::class)),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -96,8 +97,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -122,8 +124,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -147,8 +150,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -181,8 +185,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $trustedDeviceManager,
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -217,8 +222,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -252,6 +258,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -287,6 +294,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->mockAuthenticator($user, false),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -329,6 +337,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->mockAuthenticator($user, true),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -365,8 +374,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createStub(BackupCodeManager::class),
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -401,8 +411,9 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $backupCodeManager,
             $this->createStub(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
+
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -432,18 +443,14 @@ class TwoFactorControllerTest extends ContentElementTestCase
         return $authenticator;
     }
 
-    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils|MockObject|Stub
+    private function mockAuthenticationUtils(AuthenticationException $authenticationException): AuthenticationUtils&MockObject
     {
-        $authenticationUtils = $this->createStub(AuthenticationUtils::class);
-
-        if ($authenticationException instanceof AuthenticationException) {
-            $authenticationUtils = $this->createMock(AuthenticationUtils::class);
-            $authenticationUtils
-                ->expects($this->once())
-                ->method('getLastAuthenticationError')
-                ->willReturn($authenticationException)
-            ;
-        }
+        $authenticationUtils = $this->createMock(AuthenticationUtils::class);
+        $authenticationUtils
+            ->expects($this->once())
+            ->method('getLastAuthenticationError')
+            ->willReturn($authenticationException)
+        ;
 
         return $authenticationUtils;
     }
