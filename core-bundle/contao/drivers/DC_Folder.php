@@ -214,7 +214,20 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, Input::post('cut') !== null ? 'cutAll' : 'copyAll', Input::post('copyMultiple') !== null);
+				$security = $container->get('security.helper');
+
+				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
+				$ids = array_filter($ids, fn ($id) => $security->isGranted(...$this->getClipboardPermission($mode, $id)));
+
+				if (empty($ids))
+				{
+					System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
+				}
+				else
+				{
+					System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, $mode, Input::post('copyMultiple') !== null);
+				}
+
 				$this->redirect($this->getReferer());
 			}
 		}
@@ -298,6 +311,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
+			$this->denyAccessUnlessGranted(...$this->getClipboardPermission(Input::get('mode'), Input::get('id')));
+
 			$mode = Input::get('mode');
 
 			if ($mode != 'create' && $mode != 'move')
@@ -3247,7 +3262,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		foreach ((array) $arrClipboard['id'] as $id)
 		{
-			if (!$security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], (int) $id, $new)))
+			if (!$security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], $id, $new)))
 			{
 				return false;
 			}
@@ -3256,7 +3271,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		return true;
 	}
 
-	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
+	protected function getClipboardPermission(string $mode, $id, array|null $new = null): array
 	{
 		$action = match ($mode)
 		{
