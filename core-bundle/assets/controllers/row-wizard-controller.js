@@ -104,24 +104,22 @@ export default class extends Controller {
     updateNesting(i) {
         const name = this.nameValue.replace(/\d+$/, i);
 
-        this.bodyTarget
-            .querySelectorAll(`[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`)
-            .forEach((el, i) => {
-                if (el.name) {
-                    el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
-                }
+        this.bodyTarget.querySelectorAll(`[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`).forEach((el) => {
+            if (el.name) {
+                el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
+            }
 
-                if (el.id) {
-                    el.id = el.id.replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`);
-                }
+            if (el.id) {
+                el.id = el.id.replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`);
+            }
 
-                if (el.getAttribute('for')) {
-                    el.setAttribute(
-                        'for',
-                        el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`),
-                    );
-                }
-            });
+            if (el.getAttribute('for')) {
+                el.setAttribute(
+                    'for',
+                    el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`),
+                );
+            }
+        });
 
         this.element.setAttribute(`data-${this.identifier}-name-value`, name);
         this.updateSorting();

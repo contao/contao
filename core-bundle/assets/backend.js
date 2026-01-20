@@ -31,6 +31,7 @@ application.load(
             if (identifier) {
                 return definitionForModuleAndIdentifier(context(key), `contao--${identifier}`);
             }
+            return null;
         })
         .filter((value) => value),
 );

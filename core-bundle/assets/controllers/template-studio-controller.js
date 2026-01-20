@@ -72,7 +72,7 @@ export default class extends Controller {
         }
     }
 
-    enterFullscreen(event) {
+    enterFullscreen() {
         this.contentTarget.requestFullscreen();
     }
 
