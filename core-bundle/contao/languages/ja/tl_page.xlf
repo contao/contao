@@ -809,6 +809,10 @@
         <source>1 year</source>
         <target>1年</target>
       </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>ページ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

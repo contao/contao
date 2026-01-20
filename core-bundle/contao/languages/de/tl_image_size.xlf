@@ -213,6 +213,10 @@
         <source>Delete image size ID %s</source>
         <target>Bildgröße ID %s löschen</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Bildgröße</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -89,6 +89,10 @@
         <source>Delete news archive ID %s</source>
         <target>Duplikovat archiv novinek ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.tableLabel">
+        <source>News archive</source>
+        <target>Archiv novinek</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

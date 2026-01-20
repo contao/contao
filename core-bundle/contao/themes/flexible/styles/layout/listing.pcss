@@ -8,7 +8,8 @@ table.tl_listing {
     padding: 0 15px;
 }
 
-.operations + .tl_listing_container, .operations + .tl_form .tl_listing_container {
+.operations + .tl_listing_container,
+.operations + .tl_form .tl_listing_container {
     margin-top: 12px;
 }
 
@@ -16,7 +17,8 @@ table.tl_listing {
     margin-top: 36px;
 }
 
-.tl_folder_list, .tl_folder_tlist {
+.tl_folder_list,
+.tl_folder_tlist {
     line-height: 16px;
     padding: 6px;
     border-bottom: 1px solid var(--border);
@@ -24,8 +26,9 @@ table.tl_listing {
     font-weight: 600;
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .tl_folder_list, .tl_folder_tlist {
+@media (resolution >= 2dppx) {
+    .tl_folder_list,
+    .tl_folder_tlist {
         font-weight: 500;
     }
 }
@@ -38,7 +41,8 @@ table.tl_listing {
     border-top-right-radius: var(--border-radius);
 }
 
-.tl_file, .tl_file_list {
+.tl_file,
+.tl_file_list {
     line-height: 16px;
     padding: var(--row-padding) 6px;
     border-bottom: 1px solid var(--border);
@@ -70,15 +74,24 @@ table.tl_listing {
     white-space: nowrap;
 }
 
-.tl_listing.picker .tl_file, .tl_listing.picker .tl_folder, .tl_listing.picker .tl_right_nowrap, .tl_listing_container.picker .tl_content_header {
+.tl_listing.picker .tl_file,
+.tl_listing.picker .tl_folder,
+.tl_listing.picker .tl_right_nowrap,
+.tl_listing_container.picker .tl_content_header {
     background-image: linear-gradient(90deg, transparent calc(100% - 26px), var(--table-header) 26px);
 }
 
-.tl_listing.picker .tl_tree_checkbox, .tl_listing.picker .tl_tree_radio, .tl_listing_container.picker .tl_tree_checkbox, .tl_listing_container.picker .tl_tree_radio {
+.tl_listing.picker .tl_tree_checkbox,
+.tl_listing.picker .tl_tree_radio,
+.tl_listing_container.picker .tl_tree_checkbox,
+.tl_listing_container.picker .tl_tree_radio {
     margin-left: 9px;
 }
 
-.tl_listing.picker .tl_tree_checkbox:disabled, .tl_listing.picker .tl_tree_radio:disabled, .tl_listing_container.picker .tl_tree_checkbox:disabled, .tl_listing_container.picker .tl_tree_radio:disabled {
+.tl_listing.picker .tl_tree_checkbox:disabled,
+.tl_listing.picker .tl_tree_radio:disabled,
+.tl_listing_container.picker .tl_tree_checkbox:disabled,
+.tl_listing_container.picker .tl_tree_radio:disabled {
     visibility: hidden;
 }
 

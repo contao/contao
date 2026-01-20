@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_files.preview.0">
         <source>Image preview</source>
+        <target>Náhled obrázku</target>
       </trans-unit>
       <trans-unit id="tl_files.preview.1">
         <source>Mark the important part of the image with your mouse cursor.</source>
@@ -268,13 +269,21 @@
         <source>Delete file or folder &quot;%s&quot;</source>
         <target>Smazat soubor nebo složku &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.drag.1">
-        <source>Drag file or folder &quot;%s&quot;</source>
-        <target>Uchopit soubor nebo složku &quot;%s&quot;</target>
+      <trans-unit id="tl_files.dragFolder.1">
+        <source>Drag folder &quot;%s&quot;</source>
+        <target>Vyjmout složku &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dragFile.1">
+        <source>Drag file &quot;%s&quot;</source>
+        <target>Vyjmout soubor &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Upravit zdrojový text nebo soubor &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Nahrát soubory</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

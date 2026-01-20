@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_files.preview.0">
         <source>Image preview</source>
+        <target>Görsel ön izlemesi</target>
       </trans-unit>
       <trans-unit id="tl_files.preview.1">
         <source>Mark the important part of the image with your mouse cursor.</source>
@@ -226,7 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_files.textTrackType.1">
         <source>Here you can select the type of text track.</source>
-        <target>Buradan metin izinin türünü seçebilirsiniz.</target>
+        <target>Buradan yazı izinin türünü seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_files.captions">
         <source>Closed captions</source>
@@ -258,6 +259,7 @@
       </trans-unit>
       <trans-unit id="tl_files.copy.1">
         <source>Copy file or folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosya ya da klasörünü kopyala</target>
       </trans-unit>
       <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder &quot;%s&quot;</source>
@@ -267,13 +269,21 @@
         <source>Delete file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosya ya da klasörünü sil</target>
       </trans-unit>
-      <trans-unit id="tl_files.drag.1">
-        <source>Drag file or folder &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosya ya da klasörünü sürükle</target>
+      <trans-unit id="tl_files.dragFolder.1">
+        <source>Drag folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; klasörünü sürükleyin</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dragFile.1">
+        <source>Drag file &quot;%s&quot;</source>
+        <target>&quot;%s&quot; dosyasını sürükleyin</target>
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosyasının kaynak metnini düzenle</target>
+        <target>&quot;%s&quot; dosyasının kaynak yazısını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Dosya yükle</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

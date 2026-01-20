@@ -318,12 +318,12 @@
         <target>ID %sのニュース項目を公開</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
-        <source>Publish</source>
-        <target>公開</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.4">
         <source>Unpublish</source>
         <target>非公開</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Publish</source>
+        <target>公開</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -348,6 +348,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>ニュース項目の設定を変更</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>ニュース</target>
       </trans-unit>
     </body>
   </file>

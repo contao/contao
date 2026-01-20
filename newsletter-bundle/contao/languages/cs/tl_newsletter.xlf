@@ -249,6 +249,10 @@
         <source>Paste into this channel</source>
         <target>Vložit do této distribuce</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+        <target>Zpravodaj</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

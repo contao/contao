@@ -417,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Počet záznamů na stránku. Zadejte 0, pokud chcete vypnout zalamování stránky.</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>Zalomení pomocí serveru</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Rozdělit obrázky na vícero stránek a zpracovávat jen jeden obrázek ve stejnou dobu.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Řadit dle</target>
@@ -494,8 +502,8 @@
         <target>Velikost přehrávače</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Šířka a výška přehrávače médií v obrázkových bodech (např. 640x480)</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>Šířka a výška přehrávače médií v pixlech (např. 640x360).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
@@ -909,6 +917,10 @@
         <source>Loop video</source>
         <target>Přehrávat video v časové smyčce</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>Ztumit výstup zvuku</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Automatické přehrávání</target>
@@ -977,19 +989,15 @@
         <source>Unhide</source>
         <target>Zobrazit</target>
       </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Vložit nahoru</target>
-      </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>Vložit za element ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>Vytvořit novou položku na prvním místě</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Vytvoří novou položku po položce ID %s</target>
       </trans-unit>
@@ -1060,6 +1068,34 @@
       <trans-unit id="tl_content.pwResetPage.1">
         <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
         <target>Zde můžeš vybrat stránku, na kterou budou návštěvníci přesměrováni po kliknutí na &lt;em&gt;Zapomněl si své heslo?&lt;/em&gt;</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>Způsob</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Zde určíte, jakým způsobem bude provedeno smazání.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Smazat domovský adresář</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Smaže domovský adresář, pokud se smaže účet.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Vypnutí účtu</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Nenávratné smazání účtu</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>Alias (přezdívka)</target>
       </trans-unit>
     </body>
   </file>

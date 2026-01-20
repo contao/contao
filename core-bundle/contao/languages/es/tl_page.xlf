@@ -703,12 +703,15 @@
       </trans-unit>
       <trans-unit id="tl_page.pastenewtop.1">
         <source>Add a new page at the top</source>
+        <target>Añadir una nueva página en la parte superior</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewafter.1">
         <source>Add a new page after page ID %s</source>
+        <target>Agregar una nueva página después del ID %s de página</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewinto.1">
         <source>Add a new page inside page ID %s</source>
+        <target>Agregar una nueva página dentro de la ID %s de página</target>
       </trans-unit>
       <trans-unit id="tl_page.articles.0">
         <source>Articles</source>
@@ -805,6 +808,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 año</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Página</target>
       </trans-unit>
     </body>
   </file>
