@@ -7,7 +7,7 @@ export default class extends Controller {
 
     static targets = ['source', 'input'];
 
-    static afterLoad(identifier, application) {
+    static afterLoad(identifier) {
         const addAttribute = (el, attribute, value) => {
             if (!el) {
                 return false;
