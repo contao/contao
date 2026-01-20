@@ -13,3 +13,6 @@ services:
 
     contao.form.change_password_type:
         class: Contao\CoreBundle\Form\Type\ChangePasswordType
+
+    contao.form.close_account_type:
+        class: Contao\CoreBundle\Form\Type\CloseAccountType

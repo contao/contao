@@ -102,6 +102,15 @@ services:
             - '@event_dispatcher'
             - '@router.default'
 
+    Contao\CoreBundle\Controller\ContentElement\CloseAccountController:
+        arguments:
+            - '@contao.framework'
+            - '@event_dispatcher'
+            - '@security.helper'
+            - '@contao.routing.content_url_generator'
+            - '@monolog.logger.contao.access'
+            - '@contao.filesystem.virtual.files'
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
