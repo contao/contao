@@ -94,6 +94,14 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\ContentElement\ChangePasswordController:
+        arguments:
+            - '@contao.framework'
+            - '@security.password_hasher_factory'
+            - '@contao.routing.content_url_generator'
+            - '@event_dispatcher'
+            - '@router.default'
+
     Contao\CoreBundle\Controller\ContentElement\CloseAccountController:
         arguments:
             - '@contao.framework'
