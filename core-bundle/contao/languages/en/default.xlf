@@ -323,6 +323,18 @@
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
       </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+      </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
       </trans-unit>
