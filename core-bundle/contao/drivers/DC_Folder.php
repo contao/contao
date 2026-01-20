@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\ClipboardManager;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
@@ -494,7 +495,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				));
 			}
 
-			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'file'))))
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'file'))))
 			{
 				$operations->append(array(
 					'href' => $this->addToUrl('&amp;act=paste&amp;mode=move'),
@@ -522,6 +523,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->addFilterButton();
 		}
 
+		$pasteTop = $blnClipboard
+			&& empty($this->arrFilemounts)
+			&& !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null)
+			&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false
+			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
+
 		// Build the tree
 		$return = $this->panel() . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
@@ -536,7 +543,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
 </div>' : '') . '
 <ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
+  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -1086,6 +1093,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function move($blnIsAjax=false)
 	{
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null))
+		{
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not movable.');
+		}
+
 		$strFolder = Input::get('pid', true);
 
 		if (!file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
@@ -2754,7 +2766,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 					$imagePasteInto = Image::getHtml('pasteinto.svg', \sprintf($labelPasteInto[1], $currentEncoded));
 
-					if ((\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder))) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder))))
+					if ((\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder))) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentFolder)))
 					{
 						$return .= Image::getHtml('pasteinto--disabled.svg');
 					}
@@ -3222,6 +3234,41 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		sort($visibleRootTrails);
 
 		$this->visibleRootTrails = $visibleRootTrails;
+	}
+
+	protected function canPasteClipboard(array $arrClipboard, array $new): bool
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($arrClipboard['mode'] === 'create')
+		{
+			return $security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], 0, $new));
+		}
+
+		foreach ((array) $arrClipboard['id'] as $id)
+		{
+			if (!$security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], (int) $id, $new)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
+	{
+		$action = match ($mode)
+		{
+			'move',
+			ClipboardManager::MODE_CREATE => new CreateAction($this->strTable, $new),
+			ClipboardManager::MODE_CUT,
+			ClipboardManager::MODE_CUT_ALL => new UpdateAction($this->strTable, array('id' => $id), (array) $new),
+			ClipboardManager::MODE_COPY,
+			ClipboardManager::MODE_COPY_ALL => new CreateAction($this->strTable, array_replace(array('id' => $id), (array) $new))
+		};
+
+		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
 	}
 
 	private function getParentFilemounts(string $filemount): array
