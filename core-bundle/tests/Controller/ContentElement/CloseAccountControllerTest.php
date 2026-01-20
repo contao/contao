@@ -314,27 +314,6 @@ class CloseAccountControllerTest extends ContentElementTestCase
         return $tokenStorage;
     }
 
-    /**
-     * @template T
-     *
-     * @param FormInterface<T>|null $form
-     */
-    private function mockFormFactory(FormInterface|null $form = null): FormFactoryInterface
-    {
-        $formFactory = $this->createStub(FormFactoryInterface::class);
-
-        if ($form) {
-            $formFactory = $this->createMock(FormFactoryInterface::class);
-            $formFactory
-                ->expects($this->once())
-                ->method('create')
-                ->willReturn($form)
-            ;
-        }
-
-        return $formFactory;
-    }
-
     private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, bool|null $formIsValid = null): ContainerBuilder
     {
         $form = $this->createMock(FormInterface::class);
@@ -360,7 +339,19 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $container->set('security.token_storage', $this->mockTokenStorageWithToken($user));
         $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
-        $container->set('form.factory', $this->mockFormFactory(null !== $formIsValid ? $form : null));
+
+        if (null === $formIsValid) {
+            $container->set('form.factory', $this->createStub(FormFactoryInterface::class));
+        } else {
+            $formFactory = $this->createMock(FormFactoryInterface::class);
+            $formFactory
+                ->expects($this->once())
+                ->method('create')
+                ->willReturn($form)
+            ;
+
+            $container->set('form.factory', $formFactory);
+        }
 
         System::setContainer($container);
 
