@@ -177,6 +177,14 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\TwoFactorController:
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.two_factor.backup_code_manager'
+            - '@contao.security.two_factor.trusted_device_manager'
+            - '@contao.security.two_factor.authenticator'
+            - '@security.authentication_utils'
+
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 
     Contao\CoreBundle\Controller\ContentElement\VideoController:
