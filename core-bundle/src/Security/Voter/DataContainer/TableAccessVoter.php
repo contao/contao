@@ -98,7 +98,7 @@ class TableAccessVoter implements CacheableVoterInterface, ResetInterface
 
     private function hasAccessToModule(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $subject): bool
     {
-        $tokenHash = ContainerBuilder::hash($token);
+        $tokenHash = hash('xxh128', serialize($token));
 
         if (isset($this->canAccessTable[$tokenHash]) || ($subject instanceof ReadAction && isset($this->canReadAccessTable[$tokenHash]))) {
             return $this->canAccessTable[$tokenHash] ?? $this->canReadAccessTable[$tokenHash];
