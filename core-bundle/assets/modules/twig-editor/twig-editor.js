@@ -52,7 +52,7 @@ export class TwigEditor {
         this.editor.commands.addCommand({
             name: 'lens:block-info',
             readOnly: true,
-            exec: (editor, args) => {
+            exec: (_editor, args) => {
                 this._element.dispatchEvent(
                     new CustomEvent('twig-editor:lens:block-info', {
                         bubbles: true,
@@ -68,7 +68,7 @@ export class TwigEditor {
         this.editor.commands.addCommand({
             name: 'lens:follow',
             readOnly: true,
-            exec: (editor, args) => {
+            exec: (_editor, args) => {
                 this._element.dispatchEvent(
                     new CustomEvent('twig-editor:lens:follow', {
                         bubbles: true,
@@ -177,7 +177,7 @@ export class TwigEditor {
             extLanguageTools.snippetCompleter,
             {
                 id: 'contaoTwigCompleter',
-                getCompletions: (editor, session, pos, prefix, callback) => {
+                getCompletions: (editor, _session, _pos, _prefix, callback) => {
                     callback(null, TwigEditor.autocompleteDataByEditorId.get(editor.id));
                 },
             },

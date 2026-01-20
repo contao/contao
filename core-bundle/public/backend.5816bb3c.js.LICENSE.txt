@@ -12,8 +12,8 @@
 */
 
 /*!
-Turbo 8.0.19
-Copyright © 2025 37signals LLC
+Turbo 8.0.21
+Copyright © 2026 37signals LLC
  */
 
 /**!

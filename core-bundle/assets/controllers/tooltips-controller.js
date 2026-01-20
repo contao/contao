@@ -168,7 +168,7 @@ export default class TooltipsController extends Controller {
     /**
      * Migrate legacy targets to proper controller targets.
      */
-    static afterLoad(identifier, application) {
+    static afterLoad(identifier) {
         const targetSelectors = Object.keys(TooltipsController.defaultOptionsMap);
 
         const migrateTarget = (el) => {
