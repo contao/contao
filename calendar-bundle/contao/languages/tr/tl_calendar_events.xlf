@@ -91,11 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.canonicalLink.0">
         <source>Canonical URL</source>
-        <target>Kanonik adres</target>
+        <target>Örtüşen adres</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
-        <target>Buradan bir özel kanonik adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
+        <target>Buradan bir özel örtüşen adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
@@ -119,15 +119,15 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.1">
         <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Etkinlik tanıtımı, etkinlik listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku...&quot; bağlantısı otomatik olarak eklenir.</target>
+        <target>Etkinlik tanıtımı, etkinlik listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.0">
         <source>Event text</source>
-        <target>Etkinlik metni</target>
+        <target>Etkinlik yazısı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.1">
         <source>Here you can enter the event text.</source>
-        <target>Buraya etkinlik metnini yazabilirsiniz.</target>
+        <target>Buraya etkinlik yazısını yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.0">
         <source>Add an image</source>
@@ -227,7 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
-        <target>Buradan varsayılan &quot;Devamını oku…&quot; metnini değiştirebilirsiniz.</target>
+        <target>Buradan varsayılan &quot;Devamını oku…&quot; yazısını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
@@ -307,7 +307,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.text_legend">
         <source>Event text</source>
-        <target>Etkinlik metni</target>
+        <target>Etkinlik yazısı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.image_legend">
         <source>Image settings</source>
@@ -375,6 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy.1">
         <source>Copy event ID %s</source>
+        <target>%s kimlikli etkinliği kopyala</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cut.1">
         <source>Move event ID %s</source>
@@ -386,7 +387,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.0">
         <source>Publish/unpublish event</source>
-        <target>Etkinliği yayımla/yayımlama</target>
+        <target>Etkinliği yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Unpublish event ID %s</source>
@@ -398,9 +399,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.3">
         <source>Unpublish</source>
+        <target>Yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.4">
         <source>Publish</source>
+        <target>Yayınla</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
@@ -416,13 +419,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.3">
         <source>Unfeature</source>
+        <target>Öne çıkarılmışlardan kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.4">
         <source>Feature</source>
+        <target>Öne çıkarılmışlara ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Bu takvime yapıştır</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Etkinlik</target>
       </trans-unit>
     </body>
   </file>

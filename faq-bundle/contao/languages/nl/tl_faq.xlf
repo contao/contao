@@ -151,9 +151,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.3">
         <source>Unpublish</source>
+        <target>Niet publiceren</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.4">
         <source>Publish</source>
+        <target>Publiceren</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -170,6 +172,10 @@
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
         <target>Maak een nieuwe vraag na vraag ID %s</target>
+      </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>Vraag</target>
       </trans-unit>
     </body>
   </file>

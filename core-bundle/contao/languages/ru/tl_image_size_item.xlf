@@ -73,21 +73,29 @@
         <source>Activate media query ID %s</source>
         <target>Активировать медиа-запрос ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Вставить после</target>
+      <trans-unit id="tl_image_size_item.toggle.3">
+        <source>Deactivate</source>
+        <target>Деактивировать</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.4">
+        <source>Activate</source>
+        <target>Активировать</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
         <target>Вставить после Media query (Медиа-запроса) ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.0">
+      <trans-unit id="tl_image_size_item.pastenewtop.1">
         <source>Create a new media query at the top</source>
         <target>Создать новый Media query (Медиа-запрос) вверху</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.1">
+      <trans-unit id="tl_image_size_item.pastenewafter.1">
         <source>Create a new media query after media query ID %s</source>
         <target>Создать новый Media query (Медиа-запрос) после медиа-запроса ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tableLabel">
+        <source>Media query</source>
+        <target>Media query (Медиа-запрос)</target>
       </trans-unit>
     </body>
   </file>

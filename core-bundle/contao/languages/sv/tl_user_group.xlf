@@ -73,6 +73,9 @@
         <source>Allowed member groups</source>
         <target>Tillåtna medlemsgrupper</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Tillåtna fält</target>
@@ -124,6 +127,10 @@
       <trans-unit id="tl_user_group.toggle.4">
         <source>Activate</source>
         <target>Aktivera</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+        <target>Användargrupp</target>
       </trans-unit>
     </body>
   </file>

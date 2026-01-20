@@ -11,6 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate</source>
+        <target>Etkinleştir</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -110,6 +111,23 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.4">
         <source>Activate</source>
+        <target>Etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>Haber bülteni alıcısı</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>Engelle</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>%s kimlikli alıcıyı engelle</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>%s kimlikli alıcıyı engellemek istediğinize emin misiniz?</target>
       </trans-unit>
     </body>
   </file>

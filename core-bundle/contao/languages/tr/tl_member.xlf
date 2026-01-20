@@ -259,6 +259,7 @@
       </trans-unit>
       <trans-unit id="tl_member.copy.0">
         <source>Duplicate</source>
+        <target>Çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_member.copy.1">
         <source>Duplicate member ID %s</source>
@@ -286,13 +287,19 @@
       </trans-unit>
       <trans-unit id="tl_member.toggle.4">
         <source>Activate</source>
+        <target>Etkinleştir</target>
       </trans-unit>
       <trans-unit id="tl_member.su.0">
         <source>Preview front end</source>
+        <target>Ön yüz ön izlemesi</target>
       </trans-unit>
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>
         <target>Ön yüzü %s kimlikli üye olarak görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+        <target>Üye</target>
       </trans-unit>
     </body>
   </file>

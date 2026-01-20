@@ -197,9 +197,6 @@
         <source>Rebuild index</source>
         <target>Dizini yeniden oluştur</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.backend_search.confirmation">
-        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

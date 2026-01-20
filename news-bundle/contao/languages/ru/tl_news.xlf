@@ -318,12 +318,12 @@
         <target>Опубликовать новость ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
-        <source>Publish</source>
-        <target>Опубликовать</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.4">
         <source>Unpublish</source>
         <target>Снять с публикации</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Publish</source>
+        <target>Опубликовать</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -348,6 +348,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Вставить в этот архив новостей</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>Новости</target>
       </trans-unit>
     </body>
   </file>
