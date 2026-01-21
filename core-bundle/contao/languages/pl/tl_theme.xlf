@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_theme.author.1">
         <source>Please enter the name of the theme designer.</source>
@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
         <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Tutaj możesz przesłać jeden lub więcej plików .cto, .zip lub .sql do zaimportowania.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>

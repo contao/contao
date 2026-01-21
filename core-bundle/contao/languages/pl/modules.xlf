@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
-        <target>Dodawaj lub edytuj własne templatki</target>
+        <target>Dodawaj lub edytuj własne szablony</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
@@ -207,11 +207,11 @@
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
-        <target>Załączanie moduły</target>
+        <target>Moduły frontendu</target>
       </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
-        <target>Załączanie moduły</target>
+        <target>Moduły frontendu</target>
       </trans-unit>
       <trans-unit id="MOD.layout">
         <source>Page layouts</source>
@@ -323,7 +323,7 @@
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a member's personal data</source>
-        <target>Generuje formularz do edycji danych osobistych użyktownika</target>
+        <target>Generuje formularz do edycji danych osobistych użytkownika</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>

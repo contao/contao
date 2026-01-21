@@ -443,7 +443,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokaż od</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -451,7 +451,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokaż do</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -579,7 +579,7 @@
       </trans-unit>
       <trans-unit id="tl_page.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactor_legend">
         <source>Two-factor authentication</source>
@@ -611,7 +611,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
-        <target>Odziedzicz szablon storn</target>
+        <target>Odziedzicz szablon stron</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>

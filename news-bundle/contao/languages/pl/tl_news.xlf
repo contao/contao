@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure.0">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokaż od</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -219,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokaż do</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_news.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
         <source>New</source>

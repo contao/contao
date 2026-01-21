@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.1">
         <source>Show thumbnail images in the file manager.</source>
-        <target>Jeśli wybierzesz tę opcję, w menadżerze plików zostaną wyśwwietlone miniatury obrazków.</target>
+        <target>Jeśli wybierzesz tę opcję, w menadżerze plików zostaną wyświetlone miniatury obrazków.</target>
       </trans-unit>
       <trans-unit id="tl_user.useRTE.0">
         <source>Enable the rich text editor</source>
@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_user.frontendModules.0">
         <source>Front end modules</source>
-        <target>Załączanie moduły</target>
+        <target>Moduły frontendu</target>
       </trans-unit>
       <trans-unit id="tl_user.frontendModules.1">
         <source>Here you can select the allowed front end module types.</source>
