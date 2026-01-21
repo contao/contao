@@ -85,6 +85,18 @@
         <source>Delete news archive ID %s</source>
         <target>Usuń archiwum ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.children.0">
+        <source>News items</source>
+        <target>Aktualności</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.copy.0">
+        <source>Duplicate</source>
+        <target>Duplikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.tableLabel">
+        <source>News archive</source>
+        <target>Archiwum aktualności</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -333,6 +333,26 @@
         <source>Paste into this news archive</source>
         <target>Wklej do tego archiwum</target>
       </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Unpublish</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Publish</source>
+        <target>Opublikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+        <target>Usuń wyróżnienie</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
+        <target>Wyróżnij</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>Aktualności</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
