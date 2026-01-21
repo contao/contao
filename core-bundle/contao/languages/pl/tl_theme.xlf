@@ -1,0 +1,193 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="tl_theme.name.0">
+        <source>Theme title</source>
+        <target>Tytuł motywu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.name.1">
+        <source>Please enter a unique theme title.</source>
+        <target>Wprowadź unikalny tytuł motywu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.0">
+        <source>Author</source>
+        <target>Imię</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.1">
+        <source>Please enter the name of the theme designer.</source>
+        <target>Wprowadź nazwę autora motywu graficznego.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.0">
+        <source>Folders</source>
+        <target>Katalogi</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.1">
+        <source>Please select the folders that belong to the theme from the files directory.</source>
+        <target>Zaznacz katalogi, które będą należały do motywu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.0">
+        <source>Templates folder</source>
+        <target>Katalog szablonów</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.1">
+        <source>Here you can select a templates folder that will be exported with the theme.</source>
+        <target>Tu możesz wybrać katalog szablonów, który będzie eksportowany razem z motywem.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.0">
+        <source>Screenshot</source>
+        <target>Zrzut ekranu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.1">
+        <source>Here you can choose a screenshot of the theme.</source>
+        <target>Tu możesz wybrać zrzut ekranu motywu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.0">
+        <source>Source files</source>
+        <target>Pliki źródłowe</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.1">
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.0">
+        <source>Revision date</source>
+        <target>Data rewizji</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Data i czas ostatniej rewizji</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.title_legend">
+        <source>Title and author</source>
+        <target>Tytuł i autor</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.config_legend">
+        <source>Configuration</source>
+        <target>Konfiguracja</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.theme_imported">
+        <source>Theme &quot;%s&quot; has been imported.</source>
+        <target>Motyw &quot;%s&quot; zastał zaimportowany.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.checking_theme">
+        <source>The theme data is being checked</source>
+        <target>Sprawdzanie danych motywu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_fields">
+        <source>Tables and fields</source>
+        <target>Tabele i pola</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_field">
+        <source>The field &lt;strong&gt;%s&lt;/strong&gt; is missing in the database and will not be imported.</source>
+        <target>Brakuje pola &lt;strong&gt;%s&lt;/strong&gt; w bazie danych i nie będzie ono zaimportowane</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_ok">
+        <source>The tables have been successfully checked.</source>
+        <target>Tabela została sprawdzona pomyślnie.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_xml">
+        <source>Theme &quot;%s&quot; is corrupt and cannot be imported.</source>
+        <target>Motyw &quot;%s&quot; jest uszkodzony i nie może być zaimportowany.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.custom_templates">
+        <source>Custom templates</source>
+        <target>Własne szablony</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.template_exists">
+        <source>The template &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; exists and will be overwritten.</source>
+        <target>Szablon &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; istnieje i zostanie nadpisany.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates_ok">
+        <source>No conflicts detected.</source>
+        <target>Nie wykryto żadnych konfliktów.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.0">
+        <source>Theme store</source>
+        <target>Sklep z motywami</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.1">
+        <source>Find more themes in the Contao theme store</source>
+        <target>Znajdź więcej motywów w sklepie z motywami Contao.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+        <target>Import</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+        <target>Import motywu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.0">
+        <source>Import an example website</source>
+        <target>Importuj przykładową witrynę</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.1">
+        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
+        <target>W tym miejscu można zaimportować plik &lt;code&gt;.sql&lt;/code&gt;. Wszystkie istniejące dane zostaną usunięte! Jeśli chcesz zaimportować tylko motyw, nie wybieraj pliku w tym miejscu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.0">
+        <source>Import type</source>
+        <target>Typ importu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.1">
+        <source>Here you can select the import type.</source>
+        <target>Tutaj możesz wybrać typ importu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+        <target>Pełny import SQL</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+        <target>Tylko dane</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+        <target>Tylko dane bez czyszczenia tabel</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>Edytuj ustawienia motywu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.0">
+        <source>New</source>
+        <target>Nowy</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.1">
+        <source>Create a new theme</source>
+        <target>Utwórz nowy motyw</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.show">
+        <source>Show the details of theme ID %s</source>
+        <target>Pokaż szczegóły motywu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.edit">
+        <source>Edit theme ID %s</source>
+        <target>Edytuj motyw ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.delete">
+        <source>Delete theme ID %s</source>
+        <target>Usuń motyw ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.css">
+        <source>Edit the style sheets of theme ID %s</source>
+        <target>Edytuj arkusze stylów motywu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules">
+        <source>Edit the front end modules of theme ID %s</source>
+        <target>Edytuj moduły motywu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout">
+        <source>Edit the page layouts of theme ID %s</source>
+        <target>Edytuj układy stron motywu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes">
+        <source>Edit the image sizes of theme ID %s</source>
+        <target>Edytuj rozmiary obrazka motywu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme">
+        <source>Export theme ID %s</source>
+        <target>Eksportuj motyw ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

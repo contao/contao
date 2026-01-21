@@ -81,40 +81,33 @@
         <source>Manage calendar feeds</source>
         <target>Zarządzaj kanałami RSS kalendarza</target>
       </trans-unit>
+      <trans-unit id="tl_calendar.new.0">
+        <source>New</source>
+        <target>Nowy</target>
+      </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
         <target>Utwórz nowy kalendarz</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.show.1">
+      <trans-unit id="tl_calendar.show">
         <source>Show the details of calendar ID %s</source>
         <target>Pokaż szczegóły kalendarza ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.edit.1">
+      <trans-unit id="tl_calendar.edit">
         <source>Edit calendar ID %s</source>
         <target>Edytuj kalendarz ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.children.0">
-        <source>Events</source>
-        <target>Kalendarz/Wydarzenia</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.children.1">
+      <trans-unit id="tl_calendar.children">
         <source>Edit the events of calendar ID %s</source>
         <target>Edytuj wydarzenia kalendarza ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.copy.0">
-        <source>Duplicate</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar.copy.1">
+      <trans-unit id="tl_calendar.copy">
         <source>Duplicate calendar ID %s</source>
         <target>Kopiuj kalendarz ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.delete.1">
+      <trans-unit id="tl_calendar.delete">
         <source>Delete calendar ID %s</source>
         <target>Skasuj kalendarz ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar.tableLabel">
-        <source>Calendar</source>
-        <target>Kalendarz</target>
       </trans-unit>
     </body>
   </file>

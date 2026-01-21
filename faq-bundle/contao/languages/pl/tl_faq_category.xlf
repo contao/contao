@@ -37,39 +37,33 @@
         <source>Title and redirect</source>
         <target>Tytuł i przekierowanie</target>
       </trans-unit>
+      <trans-unit id="tl_faq_category.new.0">
+        <source>New</source>
+        <target>Nowy</target>
+      </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
         <target>Utwórz nową kategorię</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.show.1">
+      <trans-unit id="tl_faq_category.show">
         <source>Show the details of category ID %s</source>
         <target>Pokaż szczegóły kategorii ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.edit.1">
+      <trans-unit id="tl_faq_category.edit">
         <source>Edit category ID %s</source>
         <target>Edytuj kategorię ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.children.0">
-        <source>Questions</source>
-        <target>Pytania</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.children.1">
+      <trans-unit id="tl_faq_category.children">
         <source>Edit the questions of category ID %s</source>
         <target>Edytuj pytania kategorii ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.copy.0">
-        <source>Duplicate</source>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.copy.1">
+      <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>
         <target>Kopiuj kategorię ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.delete.1">
+      <trans-unit id="tl_faq_category.delete">
         <source>Delete category ID %s</source>
         <target>Usuń kategorię ID %s</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.tableLabel">
-        <source>FAQ category</source>
       </trans-unit>
     </body>
   </file>
