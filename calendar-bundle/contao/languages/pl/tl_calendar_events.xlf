@@ -413,6 +413,30 @@
         <source>Paste into this calendar</source>
         <target>Wklej do tego kalendarza</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.children.0">
+        <source>Content elements</source>
+        <target>Elementy treści</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.3">
+        <source>Unpublish</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.4">
+        <source>Publish</source>
+        <target>Opublikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.3">
+        <source>Unfeature</source>
+        <target>Usuń wyróżnienie</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.4">
+        <source>Feature</source>
+        <target>Wyróżnij</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Wydarzenie</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
