@@ -5642,7 +5642,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param  array<int> $ids
 	 * @return array<int>
 	 */
-	private function getParentRecordIds(array $ids, string $table): array
+	private function getParentRecordIds(array $ids, string $table, bool $skipIds = false): array
 	{
 		if (!$ids)
 		{
@@ -5656,20 +5656,30 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if (!isset($this->parentPagesCache[$table][$id]))
 			{
-				$parents = $db->getParentRecords($id, $table);
+				$parents = $db->getParentRecords($id, $table, true);
+				$this->parentPagesCache[$table][$id] = $parents;
 
 				// Get all IDs on that level, they all have the same parents
-				$idsOnThisLevel = $db->prepare("SELECT id FROM $table WHERE pid=(SELECT pid FROM $table WHERE id = ?)")->execute($id)->fetchEach('id');
+				$siblingsOnThisLevel = $db->prepare("SELECT id FROM $table WHERE id != ? AND pid=(SELECT pid FROM $table WHERE id = ?)")->execute($id, $id)->fetchEach('id');
 
-				foreach ($idsOnThisLevel as $levelId)
+				foreach ($siblingsOnThisLevel as $siblingId)
 				{
-					$this->parentPagesCache[$table][$levelId] = $parents;
+					$this->parentPagesCache[$table][$siblingId] = $parents;
 				}
 			}
 
 			foreach ($this->parentPagesCache[$table][$id] as $parent)
 			{
 				$allParents[$parent] = true;
+			}
+		}
+
+		// Our cache does never include the IDs, so we add them to the result unless $skipIds was set to true
+		if (!$skipIds)
+		{
+			foreach ($ids as $id)
+			{
+				$allParents[$id] = true;
 			}
 		}
 
@@ -5689,7 +5699,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Fetch visible root trails if enabled
 			if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
 			{
-				$this->visibleRootTrails = $this->getParentRecordIds($this->root, $table);
+				$this->visibleRootTrails = $this->getParentRecordIds($this->root, $table, true);
 			}
 
 			// Fetch all children of the root
