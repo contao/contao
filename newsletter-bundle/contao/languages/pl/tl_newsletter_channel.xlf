@@ -101,6 +101,22 @@
         <source>Edit the recipients of channel ID %s</source>
         <target>Edytuj odbiorców kanału ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_channel.children.0">
+        <source>Newsletters</source>
+        <target>Newslettery</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.copy.0">
+        <source>Duplicate</source>
+        <target>Duplikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.recipients.0">
+        <source>Recipients</source>
+        <target>Odbiorcy</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tableLabel">
+        <source>Newsletter channel</source>
+        <target>Kanał newslettera</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

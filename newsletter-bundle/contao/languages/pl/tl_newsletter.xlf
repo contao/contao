@@ -253,6 +253,14 @@
         <source>Paste into this channel</source>
         <target>Wklej do tego kanału</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.date">
+        <source>Mailing date</source>
+        <target>Data wysyłki</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
