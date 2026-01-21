@@ -65,6 +65,18 @@
         <source>Delete category ID %s</source>
         <target>Usuń kategorię ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq_category.children.0">
+        <source>Questions</source>
+        <target>Pytania</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.copy.0">
+        <source>Duplicate</source>
+        <target>Duplikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.tableLabel">
+        <source>FAQ category</source>
+        <target>Kategoria FAQ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
