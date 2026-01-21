@@ -9,7 +9,7 @@
     {% block alias %}
         <article{{ wrapperAttributes }}>
             <div class="ce_text block">
-                <h2>{{ headline }}</h2>
+                <h2>{{ headline|insert_tag_raw }}</h2>
                 <div class="teaser">
                     {{ teaser|sanitize_html('contao')|csp_inline_styles }}
                     <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }} <span class="invisible">{{ headline }}</span></a></p>
