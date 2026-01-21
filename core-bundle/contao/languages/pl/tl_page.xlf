@@ -761,6 +761,18 @@
         <source>1 year</source>
         <target>1 rok</target>
       </trans-unit>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
+        <target>Opublikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Strona</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

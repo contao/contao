@@ -175,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_article.twitter">
         <source>Share on X (formerly Twitter)</source>
+        <target>Udostępnij na X (dawniej Twitter)</target>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>
@@ -227,6 +228,42 @@
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
         <target>Wklej do strony ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children.0">
+        <source>Content elements</source>
+        <target>Elementy treści</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.3">
+        <source>Unpublish</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.4">
+        <source>Publish</source>
+        <target>Opublikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.0">
+        <source>Paste after article</source>
+        <target>Wklej za artykułem</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteinto.0">
+        <source>Paste into page</source>
+        <target>Wklej do strony</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewafter.1">
+        <source>Add a new article after article ID %s</source>
+        <target>Dodaj nowy artykuł za artykułem ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.0">
+        <source>New at the top</source>
+        <target>Nowy na górze</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.1">
+        <source>Add a new article in page ID %s</source>
+        <target>Dodaj nowy artykuł na stronie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Artykuł</target>
       </trans-unit>
     </body>
   </file>

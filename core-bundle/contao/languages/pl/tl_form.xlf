@@ -269,6 +269,18 @@
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>Określ dostępne tabele w następującej konfiguracji DCA: &lt;code&gt;%s&lt;/code&gt;.</target>
       </trans-unit>
+      <trans-unit id="tl_form.children.0">
+        <source>Form fields</source>
+        <target>Pola formularza</target>
+      </trans-unit>
+      <trans-unit id="tl_form.copy.0">
+        <source>Duplicate</source>
+        <target>Duplikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Formularz</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

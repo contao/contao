@@ -188,6 +188,18 @@
         <source>Export theme ID %s</source>
         <target>Eksportuj motyw ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_theme.elements.0">
+        <source>Content elements</source>
+        <target>Elementy treści</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.elements.1">
+        <source>Edit the content elements of theme ID %s</source>
+        <target>Edytuj elementy treści motywu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+        <target>Motyw</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -284,6 +284,26 @@
         <source>Preview the front end as member ID %s</source>
         <target>Podgląd serwisu jako użytkownik ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_member.copy.0">
+        <source>Duplicate</source>
+        <target>Duplikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.3">
+        <source>Deactivate</source>
+        <target>Dezaktywuj</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.4">
+        <source>Activate</source>
+        <target>Aktywuj</target>
+      </trans-unit>
+      <trans-unit id="tl_member.su.0">
+        <source>Preview front end</source>
+        <target>Podgląd serwisu</target>
+      </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+        <target>Użytkownik</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

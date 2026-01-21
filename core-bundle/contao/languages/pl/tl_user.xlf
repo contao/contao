@@ -413,6 +413,82 @@
         <source>Switch to user ID %s</source>
         <target>Przełącz się na redaktora ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_user.backendWidth.0">
+        <source>Maximum width</source>
+        <target>Maksymalna szerokość</target>
+      </trans-unit>
+      <trans-unit id="tl_user.backendWidth.1">
+        <source>Here you can limit the width of the back end container.</source>
+        <target>Tutaj możesz ograniczyć szerokość kontenera panelu admina.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotHideMessages.0">
+        <source>Keep pop-up messages</source>
+        <target>Zachowaj wyskakujące komunikaty</target>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotHideMessages.1">
+        <source>Do not automatically hide pop-up messages.</source>
+        <target>Nie ukrywaj automatycznie wyskakujących komunikatów.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.0">
+        <source>Table permissions</source>
+        <target>Uprawnienia do tabel</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.1">
+        <source>Here you can select which operations are allowed for which table.</source>
+        <target>Tutaj możesz wybrać, które operacje są dozwolone dla której tabeli.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.create">
+        <source>Create</source>
+        <target>Tworzenie</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.update">
+        <source>Update</source>
+        <target>Aktualizacja</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.delete">
+        <source>Delete</source>
+        <target>Usuwanie</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.other">
+        <source>Additional permissions</source>
+        <target>Dodatkowe uprawnienia</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_create">
+        <source>Create records in "%s"</source>
+        <target>Twórz rekordy w "%s"</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_update">
+        <source>Update records of "%s"</source>
+        <target>Aktualizuj rekordy "%s"</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_delete">
+        <source>Delete records of "%s"</source>
+        <target>Usuwaj rekordy "%s"</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud_legend">
+        <source>Table permissions</source>
+        <target>Uprawnienia do tabel</target>
+      </trans-unit>
+      <trans-unit id="tl_user.copy.0">
+        <source>Duplicate</source>
+        <target>Duplikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.3">
+        <source>Deactivate</source>
+        <target>Dezaktywuj</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.4">
+        <source>Activate</source>
+        <target>Aktywuj</target>
+      </trans-unit>
+      <trans-unit id="tl_user.su.0">
+        <source>Switch user</source>
+        <target>Przełącz użytkownika</target>
+      </trans-unit>
+      <trans-unit id="tl_user.tableLabel">
+        <source>User</source>
+        <target>Redaktor</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
