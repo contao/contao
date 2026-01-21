@@ -3463,7 +3463,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				while ($objFound->next())
 				{
-					if (\count(array_intersect($this->root, $this->getParentRecords(array($objFound->id), $table))) > 0)
+					if (\count(array_intersect($this->root, $this->getParentRecordIds(array($objFound->id), $table))) > 0)
 					{
 						$arrFound[] = $objFound->id;
 					}
@@ -5642,7 +5642,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param  array<int> $ids
 	 * @return array<int>
 	 */
-	private function getParentRecords(array $ids, string $table): array
+	private function getParentRecordIds(array $ids, string $table): array
 	{
 		if (!$ids)
 		{
@@ -5689,7 +5689,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Fetch visible root trails if enabled
 			if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
 			{
-				$this->visibleRootTrails = $this->getParentRecords($this->root, $table);
+				$this->visibleRootTrails = $this->getParentRecordIds($this->root, $table);
 			}
 
 			// Fetch all children of the root
@@ -5697,7 +5697,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($isSearch)
 			{
-				$this->rootChildren = array_intersect($this->rootChildren, $this->getParentRecords($root, $table));
+				$this->rootChildren = array_intersect($this->rootChildren, $this->getParentRecordIds($root, $table));
 				$this->visibleRootTrails = array_merge($this->visibleRootTrails, array_diff($this->rootChildren, $root));
 			}
 
