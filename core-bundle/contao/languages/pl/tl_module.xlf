@@ -663,7 +663,7 @@ Jeśli nie prosiłeś o ten e-mail, skontaktuj się z administratorem strony.
         <target>Edytuj moduł ID %s</target>
       </trans-unit>
       <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
+        <source>Copy module ID %s</source>
         <target>Duplikuj moduł ID %s</target>
       </trans-unit>
       <trans-unit id="tl_module.cut">

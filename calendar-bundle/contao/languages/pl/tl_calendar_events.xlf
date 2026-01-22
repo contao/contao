@@ -374,7 +374,7 @@
         <target>Edytuj elementy treści wydarzenia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy">
-        <source>Duplicate event ID %s</source>
+        <source>Copy event ID %s</source>
         <target>Kopiuj wydarzenie ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cut">

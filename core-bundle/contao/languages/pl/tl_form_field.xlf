@@ -442,7 +442,7 @@
         <target>Przenieś pole formularza ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.copy">
-        <source>Duplicate form field ID %s</source>
+        <source>Copy form field ID %s</source>
         <target>Duplikuj pole formularza ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete">

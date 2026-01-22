@@ -204,7 +204,7 @@
         <target>Przenieś rozmiar obrazka ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.copy">
-        <source>Duplicate image size ID %s</source>
+        <source>Copy image size ID %s</source>
         <target>Duplikuj rozmiar obrazka ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete">

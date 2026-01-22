@@ -466,7 +466,7 @@
         <target>Edytuj układ strony ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
+        <source>Copy page layout ID %s</source>
         <target>Duplikuj układ strony ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">

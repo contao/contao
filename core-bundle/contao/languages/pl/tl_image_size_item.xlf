@@ -58,7 +58,7 @@
         <target>Przenieś media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy">
-        <source>Duplicate media query ID %s</source>
+        <source>Copy media query ID %s</source>
         <target>Duplikuj media query ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete">

@@ -3045,7 +3045,7 @@
         <target>Przenieś element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
-        <source>Duplicate element ID %s</source>
+        <source>Copy element ID %s</source>
         <target>Duplikuj element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.delete">

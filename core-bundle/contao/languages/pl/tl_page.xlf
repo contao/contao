@@ -634,11 +634,11 @@
         <target>Przenieś stronę ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.copy">
-        <source>Duplicate page ID %s</source>
+        <source>Copy page ID %s</source>
         <target>Duplikuj stronę ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.copyChildren">
-        <source>Duplicate page ID %s with its subpages</source>
+        <source>Copy page ID %s with its subpages</source>
         <target>Duplikuj stronę ID %s razem z podstronami</target>
       </trans-unit>
       <trans-unit id="tl_page.delete">

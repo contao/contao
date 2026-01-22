@@ -198,7 +198,7 @@
         <target>Edytuj elementy treści artykułu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.copy">
-        <source>Duplicate article ID %s</source>
+        <source>Copy article ID %s</source>
         <target>Duplikuj artykuł ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.cut">

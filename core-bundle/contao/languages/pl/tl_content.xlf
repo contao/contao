@@ -922,7 +922,7 @@
         <target>Przenieś zawartość elementu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.copy">
-        <source>Duplicate content element ID %s</source>
+        <source>Copy content element ID %s</source>
         <target>Kopiuj zawartość elementu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.delete">
