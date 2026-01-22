@@ -681,6 +681,10 @@ If you did not request this e-mail, please contact the website administrator.
         <source>Delete module ID %s</source>
         <target>Удалить модуль ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Модуль</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

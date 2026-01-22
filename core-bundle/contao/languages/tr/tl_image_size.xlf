@@ -207,10 +207,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.copy.1">
         <source>Copy image size ID %s</source>
+        <target>%s kimlikli görsel boyutunu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
         <target>%s kimlikli görsel boyutunu sil</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Görsel boyutu</target>
       </trans-unit>
     </body>
   </file>

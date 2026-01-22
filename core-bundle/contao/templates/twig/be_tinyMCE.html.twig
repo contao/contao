@@ -3,7 +3,7 @@
         {
             const config = {
                 min_height: 336,
-                language: '{{ tinyMceLanguage|e('js') }}>',
+                language: '{{ tinyMceLanguage|e('js') }}',
                 element_format: 'html',
                 document_base_url: '{{ (app.request.schemeAndHttpHost ~ app.request.basePath ~ '/')|e('js') }}',
                 entities: '160,nbsp,60,lt,62,gt,173,shy',

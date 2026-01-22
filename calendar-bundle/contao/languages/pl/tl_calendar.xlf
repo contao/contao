@@ -112,6 +112,10 @@
         <source>Delete calendar ID %s</source>
         <target>Skasuj kalendarz ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>Kalendarz</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

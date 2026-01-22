@@ -249,6 +249,10 @@
         <source>Paste into this channel</source>
         <target>In diesen Verteiler einfügen</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

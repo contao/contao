@@ -281,6 +281,10 @@
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>Die verfügbaren Tabellen können in folgender DCA-Konfiguration festgelegt werden: &lt;code&gt;%s&lt;/code&gt;.</target>
       </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Formular</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

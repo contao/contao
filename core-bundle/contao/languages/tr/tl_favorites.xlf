@@ -37,6 +37,10 @@
         <source>Delete favorite ID %s</source>
         <target>%s kimlikli sık kullanılanı sil</target>
       </trans-unit>
+      <trans-unit id="tl_favorites.tableLabel">
+        <source>Favorite</source>
+        <target>Sık kullanılan</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

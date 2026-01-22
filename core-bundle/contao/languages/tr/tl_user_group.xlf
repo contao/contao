@@ -73,6 +73,10 @@
         <source>Allowed member groups</source>
         <target>İzin verilen üye grupları</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+        <target>Tablo izinleri</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>İzin verilen alanlar</target>
@@ -95,6 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.copy.0">
         <source>Duplicate</source>
+        <target>Çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy.1">
         <source>Duplicate user group ID %s</source>
@@ -122,6 +127,11 @@
       </trans-unit>
       <trans-unit id="tl_user_group.toggle.4">
         <source>Activate</source>
+        <target>Etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+        <target>Kullanıcı grubu</target>
       </trans-unit>
     </body>
   </file>

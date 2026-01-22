@@ -17,6 +17,10 @@
         <source>Default/None</source>
         <target>Výchozí/ne</target>
       </trans-unit>
+      <trans-unit id="not_prefixed">
+        <source>without prefix</source>
+        <target>bez přípony</target>
+      </trans-unit>
       <trans-unit id="operation.save.0">
         <source>Save</source>
         <target>Uložit</target>
@@ -70,6 +74,22 @@
         <target>Přejmenovat variantu</target>
       </trans-unit>
       <trans-unit id="operation.rename_frontend_module_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Přejmenovat variantu předlohy %s </target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>Vytvořit variantu</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>Vytvořit novou variantu předlohy pro layout %s</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>Přejmenovat variantu</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
         <source>Rename the %s variant template</source>
         <target>Přejmenovat variantu předlohy %s </target>
       </trans-unit>
@@ -132,6 +152,10 @@
       <trans-unit id="dialog.rename_variant">
         <source>Please define a new unique name for the variant template %s.</source>
         <target>Zadejte prosím jedinečný název pro variantu předlohy %s.</target>
+      </trans-unit>
+      <trans-unit id="editor_tab.relation.legacy_pair">
+        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
+        <target>Předloha %identifier% je k dispozici ve dvou formátech. Při provádění změn se doporučuje použít předlohu twigu, abyste zajistili kompatabilitu s Contaem 6.</target>
       </trans-unit>
       <trans-unit id="editor_tab.relation.not_analyzable">
         <source>The template's relation cannot be analyzed because it contains errors.</source>

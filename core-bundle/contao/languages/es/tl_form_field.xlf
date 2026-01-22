@@ -313,6 +313,14 @@
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Añadir un id numérico al nombre del archivo si éste ya existe.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+        <target>Permitir varios archivos</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+        <target>Permitir al usuario cargar múltiples archivos.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
         <target>Valor defecto</target>
@@ -400,6 +408,14 @@
       <trans-unit id="tl_form_field.altchaHideFooter.1">
         <source>Hide the footer (ALTCHA link).</source>
         <target>Ocultar el pie de página (enlace ALTCHA).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.0">
+        <source>Floating mode</source>
+        <target>Modo flotante</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.1">
+        <source>Enable the floating UI.</source>
+        <target>Habilitar la interfaz de usuario flotante.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>
@@ -524,6 +540,10 @@
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
         <target>Importar opciones de un fichero CSV</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.tableLabel">
+        <source>Form field</source>
+        <target>Campo de formulario</target>
       </trans-unit>
     </body>
   </file>

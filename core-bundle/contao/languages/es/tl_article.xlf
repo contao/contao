@@ -247,12 +247,19 @@
       </trans-unit>
       <trans-unit id="tl_article.pastenewafter.1">
         <source>Add a new article after article ID %s</source>
+        <target>Agregar un nuevo artículo después del ID del artículo %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.0">
         <source>New at the top</source>
+        <target>Nuevo en la cima</target>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.1">
         <source>Add a new article in page ID %s</source>
+        <target>Agregar un nuevo artículo en la página ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Artículo</target>
       </trans-unit>
     </body>
   </file>

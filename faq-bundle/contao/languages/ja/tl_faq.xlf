@@ -173,6 +173,10 @@
         <source>Create a new question after question ID %s</source>
         <target>ID %sの質問の後に新しい質問を作成</target>
       </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>質問</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

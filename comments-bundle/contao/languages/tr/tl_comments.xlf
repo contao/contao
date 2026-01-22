@@ -191,9 +191,15 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.3">
         <source>Unpublish</source>
+        <target>Yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.4">
         <source>Publish</source>
+        <target>Yayınla</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tableLabel">
+        <source>Comment</source>
+        <target>Yorum</target>
       </trans-unit>
     </body>
   </file>

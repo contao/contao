@@ -113,6 +113,22 @@
         <source>Activate</source>
         <target>Aktivovat</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>Odběratel zpravodaje</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>Blokovat</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>Blokovaný odběratel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>Opravdu chcete blokovat odběratele ID %s?</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

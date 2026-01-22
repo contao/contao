@@ -281,6 +281,10 @@
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>以下のDCAの構成で利用できるテーブルを定義してください: &lt;code&gt;%s&lt;/code&gt;</target>
       </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>フォーム</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

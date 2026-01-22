@@ -173,6 +173,10 @@
         <source>Create a new question after question ID %s</source>
         <target>Skapa en ny fråga efter fråga ID %s</target>
       </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>Fråga</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
