@@ -5660,7 +5660,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->parentPagesCache[$table][$id] = $parents;
 
 				// Get all IDs on that level, they all have the same parents
-				$siblingsOnThisLevel = $db->prepare("SELECT id FROM $table WHERE id != ? AND pid=(SELECT pid FROM $table WHERE id = ?)")->execute($id, $id)->fetchEach('id');
+				$siblingsOnThisLevel = $db
+					->prepare("SELECT id FROM $table WHERE id != ? AND pid = (SELECT pid FROM $table WHERE id = ?)")
+					->execute($id, $id)
+					->fetchEach('id');
 
 				foreach ($siblingsOnThisLevel as $siblingId)
 				{
@@ -5674,7 +5677,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Our cache does never include the IDs, so we add them to the result unless $skipIds was set to true
+		// Our cache never includes the IDs, so we add them to the result unless $skipIds was set to true
 		if (!$skipIds)
 		{
 			foreach ($ids as $id)
