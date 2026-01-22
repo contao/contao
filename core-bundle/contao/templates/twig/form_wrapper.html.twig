@@ -8,7 +8,7 @@
 <div{{ wrapperAttributes }}>
 
     {% if headline|default %}
-        <{{ hl }}>{{ headline }}</{{ hl }}>
+        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
     {% endif %}
 
     {% if message|default %}
