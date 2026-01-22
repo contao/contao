@@ -110,6 +110,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected $arrSubmit = array();
 
 	/**
+	 * Cache for the getParentRecords() calls for root trail calculation.
+	 * @var array<string, array<<int, array<int>>
+	 */
+	private $parentPagesCache = array();
+
+	/**
 	 * Initialize the object
 	 *
 	 * @param string $strTable
@@ -3457,7 +3463,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				while ($objFound->next())
 				{
-					if (\count(array_intersect($this->root, $db->getParentRecords($objFound->id, $table))) > 0)
+					if (\count(array_intersect($this->root, $this->getParentRecordIds(array($objFound->id), $table))) > 0)
 					{
 						$arrFound[] = $objFound->id;
 					}
@@ -5630,6 +5636,59 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
+	/**
+	 * Optimized function for common tree view calls in DC_Table to reduce the amount of database queries.
+	 *
+	 * @param  array<int> $ids
+	 * @return array<int>
+	 */
+	private function getParentRecordIds(array $ids, string $table, bool $skipIds = false): array
+	{
+		if (!$ids)
+		{
+			return array();
+		}
+
+		$db = Database::getInstance();
+		$allParents = array();
+
+		foreach ($ids as $id)
+		{
+			if (!isset($this->parentPagesCache[$table][$id]))
+			{
+				$parents = $db->getParentRecords($id, $table, true);
+				$this->parentPagesCache[$table][$id] = $parents;
+
+				// Get all IDs on that level, they all have the same parents
+				$siblingsOnThisLevel = $db
+					->prepare("SELECT id FROM $table WHERE id != ? AND pid = (SELECT pid FROM $table WHERE id = ?)")
+					->execute($id, $id)
+					->fetchEach('id');
+
+				foreach ($siblingsOnThisLevel as $siblingId)
+				{
+					$this->parentPagesCache[$table][$siblingId] = $parents;
+				}
+			}
+
+			foreach ($this->parentPagesCache[$table][$id] as $parent)
+			{
+				$allParents[$parent] = true;
+			}
+		}
+
+		// Our cache never includes the IDs, so we add them to the result unless $skipIds was set to true
+		if (!$skipIds)
+		{
+			foreach ($ids as $id)
+			{
+				$allParents[$id] = true;
+			}
+		}
+
+		return array_keys($allParents);
+	}
+
 	protected function updateRoot(array $root, bool $isSearch = false)
 	{
 		$db = Database::getInstance();
@@ -5643,12 +5702,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Fetch visible root trails if enabled
 			if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
 			{
-				foreach ($this->root as $id)
-				{
-					$this->visibleRootTrails[] = $db->getParentRecords($id, $table, true);
-				}
-
-				$this->visibleRootTrails = array_unique(array_merge(...$this->visibleRootTrails));
+				$this->visibleRootTrails = $this->getParentRecordIds($this->root, $table, true);
 			}
 
 			// Fetch all children of the root
@@ -5656,14 +5710,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($isSearch)
 			{
-				$parents = array();
-
-				foreach ($root as $id)
-				{
-					$parents[] = $db->getParentRecords($id, $table);
-				}
-
-				$this->rootChildren = array_intersect($this->rootChildren, array_merge(...$parents));
+				$this->rootChildren = array_intersect($this->rootChildren, $this->getParentRecordIds($root, $table));
 				$this->visibleRootTrails = array_merge($this->visibleRootTrails, array_diff($this->rootChildren, $root));
 			}
 
