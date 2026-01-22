@@ -137,6 +137,14 @@
         <source>Store the submitted data in the database.</source>
         <target>Przechowuj dane z formularza w bazie danych.</target>
       </trans-unit>
+      <trans-unit id="tl_form.storeSession.0">
+        <source>Store data in the session</source>
+        <target>Przechowuj dane w sesji</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeSession.1">
+        <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>Przechowuj przesłane dane w sesji, aby można je było pobrać za pomocą znacznika &lt;code&gt;{{form_session_data::*}}&lt;/code&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
         <source>Form template</source>
         <target>Szablon formularza</target>
@@ -249,7 +257,15 @@
         <source>Show the details of form ID %s</source>
         <target>Pokaż szczegóły formularza ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_form.show.1">
+        <source>Show the details of form ID %s</source>
+        <target>Pokaż szczegóły formularza ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_form.edit">
+        <source>Edit form ID %s</source>
+        <target>Edytuj formularz ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
         <target>Edytuj formularz ID %s</target>
       </trans-unit>
@@ -257,11 +273,23 @@
         <source>Edit the form fields of form ID %s</source>
         <target>Edytuj pola formularza ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_form.children.1">
+        <source>Edit the form fields of form ID %s</source>
+        <target>Edytuj pola formularza ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
         <target>Duplikuj formularz ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_form.copy.1">
+        <source>Duplicate form ID %s</source>
+        <target>Duplikuj formularz ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_form.delete">
+        <source>Delete form ID %s</source>
+        <target>Skasuj formularz ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form.delete.1">
         <source>Delete form ID %s</source>
         <target>Skasuj formularz ID %s</target>
       </trans-unit>

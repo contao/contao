@@ -49,7 +49,15 @@
         <source>Show the details of media query ID %s</source>
         <target>Pokaż szczegóły media query ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size_item.show.1">
+        <source>Show the details of media query ID %s</source>
+        <target>Pokaż szczegóły media query ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_image_size_item.edit">
+        <source>Edit media query ID %s</source>
+        <target>Edytuj media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
         <target>Edytuj media query ID %s</target>
       </trans-unit>
@@ -57,11 +65,23 @@
         <source>Move media query ID %s</source>
         <target>Przenieś media query ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size_item.cut.1">
+        <source>Move media query ID %s</source>
+        <target>Przenieś media query ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_image_size_item.copy">
         <source>Copy media query ID %s</source>
         <target>Duplikuj media query ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size_item.copy.1">
+        <source>Copy media query ID %s</source>
+        <target>Duplikuj media query ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_image_size_item.delete">
+        <source>Delete media query ID %s</source>
+        <target>Usuń media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
         <target>Usuń media query ID %s</target>
       </trans-unit>
@@ -76,6 +96,14 @@
       <trans-unit id="tl_image_size_item.toggle.2">
         <source>Activate media query ID %s</source>
         <target>Aktywuj media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.3">
+        <source>Deactivate</source>
+        <target>Dezaktywuj</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.4">
+        <source>Activate</source>
+        <target>Aktywuj</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -92,6 +120,18 @@
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
         <target>Utwórz nowe media query pod media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenewtop.1">
+        <source>Create a new media query at the top</source>
+        <target>Utwórz nowe media query na górze</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.pastenewafter.1">
+        <source>Create a new media query after media query ID %s</source>
+        <target>Utwórz nowe media query po media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tableLabel">
+        <source>Media query</source>
+        <target>Media query</target>
       </trans-unit>
     </body>
   </file>

@@ -233,7 +233,15 @@
         <source>Show the details of newsletter ID %s</source>
         <target>Pokaż szczegóły newslettera ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.show.1">
+        <source>Show the details of newsletter ID %s</source>
+        <target>Pokaż szczegóły newslettera ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.edit">
+        <source>Edit newsletter ID %s</source>
+        <target>Edytuj newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
         <target>Edytuj newsletter ID %s</target>
       </trans-unit>
@@ -241,11 +249,23 @@
         <source>Duplicate newsletter ID %s</source>
         <target>Kopiuj newsletter ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.copy.1">
+        <source>Duplicate newsletter ID %s</source>
+        <target>Kopiuj newsletter ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.cut">
         <source>Move newsletter ID %s</source>
         <target>Przenieś newsletter ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.cut.1">
+        <source>Move newsletter ID %s</source>
+        <target>Przenieś newsletter ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.delete">
+        <source>Delete newsletter ID %s</source>
+        <target>Skasuj newsletter ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.delete.1">
         <source>Delete newsletter ID %s</source>
         <target>Skasuj newsletter ID %s</target>
       </trans-unit>

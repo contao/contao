@@ -161,7 +161,15 @@
         <source>Show the details of theme ID %s</source>
         <target>Pokaż szczegóły motywu ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_theme.show.1">
+        <source>Show the details of theme ID %s</source>
+        <target>Pokaż szczegóły motywu ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_theme.edit">
+        <source>Edit theme ID %s</source>
+        <target>Edytuj motyw ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.edit.1">
         <source>Edit theme ID %s</source>
         <target>Edytuj motyw ID %s</target>
       </trans-unit>
@@ -169,23 +177,43 @@
         <source>Delete theme ID %s</source>
         <target>Usuń motyw ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_theme.delete.1">
+        <source>Delete theme ID %s</source>
+        <target>Usuń motyw ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
         <target>Edytuj arkusze stylów motywu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules">
+      <trans-unit id="tl_theme.modules.0">
+        <source>Front end modules</source>
+        <target>Moduły front end</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules.1">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Edytuj moduły motywu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout">
+      <trans-unit id="tl_theme.layout.0">
+        <source>Page layouts</source>
+        <target>Układy stron</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.1">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Edytuj układy stron motywu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes">
-        <source>Edit the image sizes of theme ID %s</source>
-        <target>Edytuj rozmiary obrazka motywu ID %s</target>
+      <trans-unit id="tl_theme.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Rozmiary obrazów</target>
       </trans-unit>
-      <trans-unit id="tl_theme.exportTheme">
+      <trans-unit id="tl_theme.imageSizes.1">
+        <source>Edit the image sizes of theme ID %s</source>
+        <target>Edytuj rozmiary obrazów motywu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme.0">
+        <source>Export theme</source>
+        <target>Eksportuj motyw</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>
         <target>Eksportuj motyw ID %s</target>
       </trans-unit>

@@ -109,7 +109,15 @@
         <source>Show the details of feed ID %s</source>
         <target>Wyświetl szczegóły kanału ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_feed.show.1">
+        <source>Show the details of feed ID %s</source>
+        <target>Wyświetl szczegóły kanału ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_feed.edit">
+        <source>Edit feed ID %s</source>
+        <target>Edytuj kanał ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_feed.edit.1">
         <source>Edit feed ID %s</source>
         <target>Edytuj kanał ID %s</target>
       </trans-unit>
@@ -117,7 +125,15 @@
         <source>Duplicate feed ID %s</source>
         <target>Duplikuj kanał ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_feed.copy.1">
+        <source>Duplicate feed ID %s</source>
+        <target>Duplikuj kanał ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_feed.delete">
+        <source>Delete feed ID %s</source>
+        <target>Usuń kanał ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_feed.delete.1">
         <source>Delete feed ID %s</source>
         <target>Usuń kanał ID %s</target>
       </trans-unit>

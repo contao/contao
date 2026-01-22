@@ -33,6 +33,14 @@
         <source>To learn more about markdown, see the &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
         <target>Aby dowiedzieć się więcej o markdown, zobacz &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Podręcznik Contao&lt;/a&gt;.</target>
       </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.0">
+        <source>Autocomplete attributes</source>
+        <target>Atrybuty autouzupełniania</target>
+      </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.1">
+        <source>For more information about autocomplete attributes, see &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</source>
+        <target>Aby uzyskać więcej informacji o atrybutach autouzupełniania, zobacz &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</target>
+      </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
         <target>colspan</target>

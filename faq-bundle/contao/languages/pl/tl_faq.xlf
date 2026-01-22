@@ -125,7 +125,15 @@
         <source>Show the details of question ID %s</source>
         <target>Pokaż szczegóły pytania ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq.show.1">
+        <source>Show the details of question ID %s</source>
+        <target>Pokaż szczegóły pytania ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_faq.edit">
+        <source>Edit question ID %s</source>
+        <target>Edytuj pytanie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
         <target>Edytuj pytanie ID %s</target>
       </trans-unit>
@@ -133,11 +141,23 @@
         <source>Duplicate question ID %s</source>
         <target>Duplikuj pytanie ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq.copy.1">
+        <source>Duplicate question ID %s</source>
+        <target>Duplikuj pytanie ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_faq.cut">
         <source>Move question ID %s</source>
         <target>Przenieś pytanie ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq.cut.1">
+        <source>Move question ID %s</source>
+        <target>Przenieś pytanie ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_faq.delete">
+        <source>Delete question ID %s</source>
+        <target>Usuń pytanie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.delete.1">
         <source>Delete question ID %s</source>
         <target>Usuń pytanie ID %s</target>
       </trans-unit>

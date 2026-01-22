@@ -49,7 +49,15 @@
         <source>Show the details of category ID %s</source>
         <target>Pokaż szczegóły kategorii ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq_category.show.1">
+        <source>Show the details of category ID %s</source>
+        <target>Pokaż szczegóły kategorii ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_faq_category.edit">
+        <source>Edit category ID %s</source>
+        <target>Edytuj kategorię ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.edit.1">
         <source>Edit category ID %s</source>
         <target>Edytuj kategorię ID %s</target>
       </trans-unit>
@@ -57,11 +65,23 @@
         <source>Edit the questions of category ID %s</source>
         <target>Edytuj pytania kategorii ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq_category.children.1">
+        <source>Edit the questions of category ID %s</source>
+        <target>Edytuj pytania kategorii ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_faq_category.copy">
         <source>Duplicate category ID %s</source>
         <target>Kopiuj kategorię ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq_category.copy.1">
+        <source>Duplicate category ID %s</source>
+        <target>Kopiuj kategorię ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_faq_category.delete">
+        <source>Delete category ID %s</source>
+        <target>Usuń kategorię ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.delete.1">
         <source>Delete category ID %s</source>
         <target>Usuń kategorię ID %s</target>
       </trans-unit>

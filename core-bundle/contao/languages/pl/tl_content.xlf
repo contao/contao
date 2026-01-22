@@ -9,6 +9,14 @@
         <source>Please choose the type of content element.</source>
         <target>Wybierz typ elementu zawartości.</target>
       </trans-unit>
+      <trans-unit id="tl_content.title.0">
+        <source>Title</source>
+        <target>Tytuł</target>
+      </trans-unit>
+      <trans-unit id="tl_content.title.1">
+        <source>Here you can enter an optional title for the content element.</source>
+        <target>Tutaj możesz wprowadzić opcjonalny tytuł elementu treści.</target>
+      </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
         <target>Nagłówek</target>
@@ -409,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Wpisz ile wyników wyszukiwania ma się pojawiać jednorazowo na stronie (0 = wyłącza paginacje).</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>Stronicowanie po stronie serwera</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Podziel obrazy na wiele stron i renderuj tylko część naraz.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Kolejność</target>
@@ -448,6 +464,14 @@
       <trans-unit id="tl_content.playerSRC.1">
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>Tutaj możesz dodać plik video/audio lub kilka plików, jeśli używasz różnych kodeków.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+        <target>Pliki ścieżek tekstowych</target>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+        <target>Najwyższy plik .vtt jest ładowany jako domyślna ścieżka. Dodatkowe ustawienia można zdefiniować w pliku .vtt.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
@@ -512,6 +536,14 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Zatrzymaj odtwarzanie wideo przy określonej liczbie sekund. Ustaw na 0, aby wyłączyć.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>Tytuł</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
+        <target>Tutaj możesz wprowadzić tytuł.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -765,6 +797,10 @@
         <source>Preview image</source>
         <target>Obrazek poglądowy</target>
       </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
+        <target>Ścieżki tekstowe</target>
+      </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
         <target>Widoczność</target>
@@ -877,6 +913,10 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Użyj domeny youtube-nocookie.com</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>Wycisz dźwięk</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube_loop">
         <source>Loop video</source>
         <target>Film w pętli</target>
@@ -917,7 +957,15 @@
         <source>Show the details of content element ID %s</source>
         <target>Pokaż szczegóły elementu ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_content.show.1">
+        <source>Show the details of content element ID %s</source>
+        <target>Pokaż szczegóły elementu ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_content.cut">
+        <source>Move content element ID %s</source>
+        <target>Przenieś zawartość elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>
         <target>Przenieś zawartość elementu ID %s</target>
       </trans-unit>
@@ -925,11 +973,23 @@
         <source>Copy content element ID %s</source>
         <target>Kopiuj zawartość elementu ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_content.copy.1">
+        <source>Copy content element ID %s</source>
+        <target>Kopiuj zawartość elementu ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
         <target>Skasuj zawartość elementu ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_content.delete.1">
+        <source>Delete content element ID %s</source>
+        <target>Skasuj zawartość elementu ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_content.edit">
+        <source>Edit content element ID %s</source>
+        <target>Edytuj zawartość elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.edit.1">
         <source>Edit content element ID %s</source>
         <target>Edytuj zawartość elementu ID %s</target>
       </trans-unit>
@@ -944,6 +1004,14 @@
       <trans-unit id="tl_content.toggle.2">
         <source>Unhide content element ID %s</source>
         <target>Pokaż element treści ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.3">
+        <source>Hide</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.4">
+        <source>Unhide</source>
+        <target>Pokaż</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -960,6 +1028,14 @@
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Utwórz nowy element zawartości po elemencie zawartości ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pastenewtop.1">
+        <source>Create a new content element at the top</source>
+        <target>Utwórz nowy element treści na górze</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pastenewafter.1">
+        <source>Create a new content element after content element ID %s</source>
+        <target>Utwórz nowy element treści po elemencie treści ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
@@ -988,6 +1064,74 @@
       <trans-unit id="tl_content.dl_value">
         <source>Details</source>
         <target>Szczegóły</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirect_legend">
+        <source>Redirect settings</source>
+        <target>Ustawienia przekierowania</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Strona przekierowania</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
+        <target>Wybierz stronę, na którą odwiedzający zostaną przekierowani po kliknięciu linku lub wysłaniu formularza.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Przekieruj na ostatnią odwiedzoną stronę</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Przekieruj członka z powrotem na ostatnio odwiedzoną stronę zamiast na stronę przekierowania.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.config_legend">
+        <source>Element configuration</source>
+        <target>Konfiguracja elementu</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.0">
+        <source>Allow auto login</source>
+        <target>Zezwól na automatyczne logowanie</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.1">
+        <source>Allow members to log into the front end automatically.</source>
+        <target>Pozwól członkom automatycznie logować się w front endzie.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Strona resetu hasła</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Tutaj możesz wybrać stronę, na którą odwiedzający zostaną przekierowani po kliknięciu linku &lt;em&gt;Zapomniałeś hasła?&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>Tryb</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Tutaj możesz zdefiniować sposób usuwania.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Usuń katalog domowy</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Usuń katalog domowy, gdy konto zostanie usunięte.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Dezaktywuj konto</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Nieodwracalnie usuń konto</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>Element treści</target>
       </trans-unit>
     </body>
   </file>

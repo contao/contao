@@ -385,7 +385,15 @@
         <source>Show the details of user ID %s</source>
         <target>Pokaż szczegóły o redaktorze ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_user.show.1">
+        <source>Show the details of user ID %s</source>
+        <target>Pokaż szczegóły o redaktorze ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_user.edit">
+        <source>Edit user ID %s</source>
+        <target>Edytuj redaktora ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>
         <target>Edytuj redaktora ID %s</target>
       </trans-unit>
@@ -393,7 +401,15 @@
         <source>Duplicate user ID %s</source>
         <target>Duplikuj redaktora ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_user.copy.1">
+        <source>Duplicate user ID %s</source>
+        <target>Duplikuj redaktora ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_user.delete">
+        <source>Delete user ID %s</source>
+        <target>Usuń redaktora ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user.delete.1">
         <source>Delete user ID %s</source>
         <target>Usuń redaktora ID %s</target>
       </trans-unit>
@@ -410,6 +426,10 @@
         <target>Aktywuj użytkownika ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.su">
+        <source>Switch to user ID %s</source>
+        <target>Przełącz się na redaktora ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>
         <target>Przełącz się na redaktora ID %s</target>
       </trans-unit>

@@ -45,6 +45,18 @@
         <source>Restore element ID %s</source>
         <target>Przywróć element ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_undo.undo.0">
+        <source>Restore</source>
+        <target>Przywróć</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.undo.1">
+        <source>Restore element ID %s</source>
+        <target>Przywróć element ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.jumpToParent.0">
+        <source>Show origin</source>
+        <target>Pokaż pochodzenie</target>
+      </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>
         <target>Pokaź pochodzenie %s ID %s</target>

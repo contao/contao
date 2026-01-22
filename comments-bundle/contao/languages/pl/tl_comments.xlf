@@ -169,11 +169,23 @@
         <source>Show the details of comment ID %s</source>
         <target>Pokaż szczegóły komentarza ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_comments.show.1">
+        <source>Show the details of comment ID %s</source>
+        <target>Pokaż szczegóły komentarza ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_comments.edit">
         <source>Edit comment ID %s</source>
         <target>Edytuj komentarz ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_comments.edit.1">
+        <source>Edit comment ID %s</source>
+        <target>Edytuj komentarz ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_comments.delete">
+        <source>Delete comment ID %s</source>
+        <target>Usuń komentarz ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.delete.1">
         <source>Delete comment ID %s</source>
         <target>Usuń komentarz ID %s</target>
       </trans-unit>

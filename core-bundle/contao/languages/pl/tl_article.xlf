@@ -189,7 +189,15 @@
         <source>Show the details of article ID %s</source>
         <target>Pokaż informacje o artykule ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.show.1">
+        <source>Show the details of article ID %s</source>
+        <target>Pokaż informacje o artykule ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_article.edit">
+        <source>Edit article ID %s</source>
+        <target>Edytuj artykuł ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
         <target>Edytuj artykuł ID %s</target>
       </trans-unit>
@@ -197,7 +205,15 @@
         <source>Edit the content elements of article ID %s</source>
         <target>Edytuj elementy treści artykułu ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.children.1">
+        <source>Edit the content elements of article ID %s</source>
+        <target>Edytuj elementy treści artykułu ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_article.copy">
+        <source>Copy article ID %s</source>
+        <target>Duplikuj artykuł ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.copy.1">
         <source>Copy article ID %s</source>
         <target>Duplikuj artykuł ID %s</target>
       </trans-unit>
@@ -205,7 +221,15 @@
         <source>Move article ID %s</source>
         <target>Przenieś artykuł ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.cut.1">
+        <source>Move article ID %s</source>
+        <target>Przenieś artykuł ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_article.delete">
+        <source>Delete article ID %s</source>
+        <target>Skasuj artykuł ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
         <target>Skasuj artykuł ID %s</target>
       </trans-unit>
