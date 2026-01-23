@@ -197,6 +197,10 @@
         <source>Publish</source>
         <target>公開</target>
       </trans-unit>
+      <trans-unit id="tl_comments.tableLabel">
+        <source>Comment</source>
+        <target>コメント</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

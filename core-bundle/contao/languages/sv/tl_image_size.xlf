@@ -213,6 +213,10 @@
         <source>Delete image size ID %s</source>
         <target>Radera bildstorlek med ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Bildstorlek</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -151,9 +151,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.3">
         <source>Unpublish</source>
+        <target>Yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.4">
         <source>Publish</source>
+        <target>Yayınla</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -170,6 +172,10 @@
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
         <target>%s kimlikli sorudan sonra yeni bir soru ekle</target>
+      </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>Soru</target>
       </trans-unit>
     </body>
   </file>

@@ -9,14 +9,6 @@
         <source>Here you can grant access to one or more channels.</source>
         <target>Zde můžete určit přístup k jednomu nebo více distribucím.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsletterp.0">
-        <source>Channel permissions</source>
-        <target>Oprávnění distribuce</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsletterp.1">
-        <source>Here you can define the channel permissions.</source>
-        <target>Zde můžete určit práva distribuce.</target>
-      </trans-unit>
       <trans-unit id="tl_user.newsletter_legend">
         <source>Newsletter permissions</source>
         <target>Oprávnění zpravodaje</target>

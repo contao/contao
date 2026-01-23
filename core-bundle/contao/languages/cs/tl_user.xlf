@@ -41,6 +41,14 @@
         <source>Here you can override the global back end theme.</source>
         <target>Zde můžete přepsat hlavní nastavení vzhledu backendu.</target>
       </trans-unit>
+      <trans-unit id="tl_user.backendWidth.0">
+        <source>Maximum width</source>
+        <target>Maximální šířka</target>
+      </trans-unit>
+      <trans-unit id="tl_user.backendWidth.1">
+        <source>Here you can limit the width of the back end container.</source>
+        <target>Zde můžeš omezit šířku backendu.</target>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
         <target>Nahrávání souborů</target>
@@ -233,14 +241,6 @@
         <source>Here you can grant access to one or more forms.</source>
         <target>Zde můžete určit přístup k jednomu nebo více formulářům.</target>
       </trans-unit>
-      <trans-unit id="tl_user.formp.0">
-        <source>Form permissions</source>
-        <target>Přístup k formulářům</target>
-      </trans-unit>
-      <trans-unit id="tl_user.formp.1">
-        <source>Here you can define the form permissions.</source>
-        <target>Zde můžete určit práva pro zacházení s formuláři.</target>
-      </trans-unit>
       <trans-unit id="tl_user.amg.0">
         <source>Allowed member groups</source>
         <target>Povolené členské skupiny</target>
@@ -248,6 +248,35 @@
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
         <target>Členové této skupiny mohou použít náhled stránky.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.0">
+        <source>Table permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.1">
+        <source>Here you can select which operations are allowed for which table.</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.create">
+        <source>Create</source>
+        <target>Vytvořit</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.update">
+        <source>Update</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.delete">
+        <source>Delete</source>
+        <target>Smazat</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.other">
+        <source>Additional permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_create">
+        <source>Create records in &quot;%s&quot;</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_update">
+        <source>Update records of &quot;%s&quot;</source>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_delete">
+        <source>Delete records of &quot;%s&quot;</source>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -332,6 +361,9 @@
       <trans-unit id="tl_user.amg_legend">
         <source>Allowed member groups</source>
         <target>Povolené členské skupiny</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud_legend">
+        <source>Table permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
@@ -432,6 +464,10 @@
       <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>
         <target>Změnit za uživatele ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user.tableLabel">
+        <source>User</source>
+        <target>Uživatel</target>
       </trans-unit>
     </body>
   </file>

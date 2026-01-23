@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_content.title.1">
         <source>Here you can enter an optional title for the content element.</source>
+        <target>Buradan bir içerik bileşeni için isteğe bağlı bir başlık ekleyebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
@@ -34,11 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
-        <target>Metin</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_content.text.1">
         <source>You can use HTML tags to format the text.</source>
-        <target>Metni biçimlendirmek için HTML kod imlerini kullanabilirsiniz.</target>
+        <target>Yazıyı biçimlendirmek için HTML kod imlerini kullanabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.addImage.0">
         <source>Add an image</source>
@@ -82,11 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_content.alt.0">
         <source>Alternate text</source>
-        <target>Alternatif metin</target>
+        <target>Alternatif yazı</target>
       </trans-unit>
       <trans-unit id="tl_content.alt.1">
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
-        <target>Buraya görselin alternatif metnini yazabilirsiniz (&lt;em&gt;alt&lt;/em&gt; özniteliği).</target>
+        <target>Buraya görselin alternatif yazısını yazabilirsiniz (&lt;em&gt;alt&lt;/em&gt; özniteliği).</target>
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.0">
         <source>Image title</source>
@@ -94,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
-        <target>Buraya görselin başlık metnini yazabilirsiniz (&lt;em&gt;title&lt;/em&gt; özniteliği).</target>
+        <target>Buraya görselin başlık yazısını yazabilirsiniz (&lt;em&gt;title&lt;/em&gt; özniteliği).</target>
       </trans-unit>
       <trans-unit id="tl_content.imageUrl.0">
         <source>Image link target</source>
@@ -126,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_content.caption.1">
         <source>Here you can enter a short text that will be displayed below the image.</source>
-        <target>Buraya görsel altında görüntülenecek kısa bir metin yazabilirsiniz.</target>
+        <target>Buraya görsel altında görüntülenecek kısa bir içerik yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.html.0">
         <source>HTML code</source>
@@ -262,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooSingle.1">
         <source>Behaves like a single text element that is inside an accordion pane.</source>
-        <target>Bir akordiyon bölmesinin içindeki tek bir metin bileşeni gibi davranır.</target>
+        <target>Bir akordiyon bölmesinin içindeki tek bir yazı bileşeni gibi davranır.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooHeadline.0">
         <source>Section headline</source>
@@ -322,7 +323,7 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceText">
         <source>Text</source>
-        <target>Metin</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
@@ -338,11 +339,11 @@
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
-        <target>Bağlantı metni</target>
+        <target>Bağlantı yazısı</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
-        <target>Hedef adres yerine bağlantı metnini görüntüler.</target>
+        <target>Hedef adres yerine bağlantı yazısını görüntüler.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.0">
         <source>Overwrite link</source>
@@ -350,7 +351,7 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.1">
         <source>Set a custom link text and link title.</source>
-        <target>Özel bir bağlantı metni ve başlığı ayarlayın.</target>
+        <target>Özel bir bağlantı yazısı ve başlığı ayarlayın.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -416,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>Sunucu tarafında sayfalama</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Görselleri birden fazla sayfaya ayırın ve bir kerede yalnızca bir alt küme oluşturun.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Sıralama</target>
@@ -458,7 +467,7 @@
       </trans-unit>
       <trans-unit id="tl_content.textTrackSRC.0">
         <source>Text track files</source>
-        <target>Metin iz dosyaları</target>
+        <target>Yazı iz dosyaları</target>
       </trans-unit>
       <trans-unit id="tl_content.textTrackSRC.1">
         <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
@@ -706,7 +715,7 @@
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
-        <target>Metin/HTML/Kod</target>
+        <target>Yazı/HTML/Kod</target>
       </trans-unit>
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
@@ -790,7 +799,7 @@
       </trans-unit>
       <trans-unit id="tl_content.texttrack_legend">
         <source>Text tracks</source>
-        <target>Metin izleri</target>
+        <target>Yazı izleri</target>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
@@ -908,6 +917,10 @@
         <source>Loop video</source>
         <target>Görüntü sondan başa dönsün</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>Ses kapatılsın</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Otomatik oynatılsın</target>
@@ -946,6 +959,7 @@
       </trans-unit>
       <trans-unit id="tl_content.copy.1">
         <source>Copy content element ID %s</source>
+        <target>%s kimlikli içerik bileşenini kopyala</target>
       </trans-unit>
       <trans-unit id="tl_content.delete.1">
         <source>Delete content element ID %s</source>
@@ -969,23 +983,21 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle.3">
         <source>Hide</source>
+        <target>Gizle</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.4">
         <source>Unhide</source>
-      </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Üste yapıştır</target>
+        <target>Görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>%s kimlikli içerik bileşeninden sonra yapıştır</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>En üste yeni bir içerik bileşeni ekle</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>%s kimlikli içerik bileşeninden sonra yeni bir içerik bileşeni ekle</target>
       </trans-unit>
@@ -1039,6 +1051,7 @@
       </trans-unit>
       <trans-unit id="tl_content.config_legend">
         <source>Element configuration</source>
+        <target>Bileşen yapılandırması</target>
       </trans-unit>
       <trans-unit id="tl_content.autologin.0">
         <source>Allow auto login</source>
@@ -1055,6 +1068,34 @@
       <trans-unit id="tl_content.pwResetPage.1">
         <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
         <target>Buradan ziyaretçiler &lt;em&gt;Parolamı unuttum&lt;/em&gt; bağlantısına tıkladığında yönlendirilecekleri sayfayı seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>Kip</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Buradan silme işleminin nasıl yapılacağını tanımlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Giriş klasörü silinsin</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Bu seçenek etkinleştirildiğinde, hesap silindiğinde giriş klasörü de silinir.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Hesabı etkisizleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Hesabı geri alınamayacak şekilde sil</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>İçerik ögesi</target>
       </trans-unit>
     </body>
   </file>

@@ -313,6 +313,14 @@
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Přidá číslo k souborům, které se jmenují stejně jako ty, které se už nachází v cílovém adresáři.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+        <target>Povolit vícero souborů</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+        <target>Povolí uživatelům nahrát vícero souborů najednou.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
         <target>Výchozí hodnota</target>
@@ -400,6 +408,12 @@
       <trans-unit id="tl_form_field.altchaHideFooter.1">
         <source>Hide the footer (ALTCHA link).</source>
         <target>Skrýt zápatí (link ALTCHA).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.0">
+        <source>Floating mode</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.1">
+        <source>Enable the floating UI.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>
@@ -524,6 +538,10 @@
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
         <target>Importovat možnosti ze souboru CSV</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.tableLabel">
+        <source>Form field</source>
+        <target>Formulářové pole</target>
       </trans-unit>
     </body>
   </file>

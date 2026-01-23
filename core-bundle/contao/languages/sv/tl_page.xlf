@@ -703,12 +703,15 @@
       </trans-unit>
       <trans-unit id="tl_page.pastenewtop.1">
         <source>Add a new page at the top</source>
+        <target>Lägg till en ny sida högst upp</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewafter.1">
         <source>Add a new page after page ID %s</source>
+        <target>Lägg till en ny sida efter sid-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewinto.1">
         <source>Add a new page inside page ID %s</source>
+        <target>Lägg till en ny sida inom sid-ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.articles.0">
         <source>Articles</source>
@@ -805,6 +808,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 år</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Intern sida</target>
       </trans-unit>
     </body>
   </file>

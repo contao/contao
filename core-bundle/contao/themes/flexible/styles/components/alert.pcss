@@ -4,7 +4,10 @@
     background: url("icons/error.svg") no-repeat left center;
 }
 
-.tl_error, .tl_confirm, .tl_info, .tl_new {
+.tl_error,
+.tl_confirm,
+.tl_info,
+.tl_new {
     margin: 0 0 1px;
     padding: 11px 18px 11px 32px;
     line-height: 1.3;
@@ -26,36 +29,52 @@
     background: var(--new-bg) url("icons/featured.svg") no-repeat 11px 12px;
 }
 
-.tl_gerror, .tl_gerror a, .tl_error, .tl_error a {
+.tl_gerror,
+.tl_gerror a,
+.tl_error,
+.tl_error a {
     color: var(--red);
 }
 
-.tl_confirm, .tl_confirm a {
+.tl_confirm,
+.tl_confirm a {
     color: var(--green);
 }
 
-.tl_info, .tl_info a {
+.tl_info,
+.tl_info a {
     color: var(--blue);
 }
 
-.tl_new, .tl_new a {
+.tl_new,
+.tl_new a {
     color: var(--orange);
 }
 
-.tl_gerror a, .tl_error a, .tl_confirm a, .tl_info a, .tl_new a {
+.tl_gerror a,
+.tl_error a,
+.tl_confirm a,
+.tl_info a,
+.tl_new a {
     text-decoration: underline;
 }
 
-.widget .tl_error, .widget .tl_confirm, .widget .tl_info, .widget .tl_new {
+.widget .tl_error,
+.widget .tl_confirm,
+.widget .tl_info,
+.widget .tl_new {
     padding: 8px 10px 8px 30px;
     background-position: 9px 9px;
 }
 
-.tl_error strong, .tl_confirm strong, .tl_info strong, .tl_new strong {
+.tl_error strong,
+.tl_confirm strong,
+.tl_info strong,
+.tl_new strong {
     color: inherit;
 }
 
-.content > div > .tl_message:first-child {
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-    overflow: hidden;
+.content-inner .tl_message:first-child {
+    border-radius: calc(var(--border-radius-lg) - 1px) calc(var(--border-radius-lg) - 1px) 0 0;
+    overflow: clip;
 }

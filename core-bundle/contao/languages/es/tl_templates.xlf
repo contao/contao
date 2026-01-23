@@ -73,6 +73,14 @@
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Comparar &quot;%s&quot; con otra plantilla</target>
       </trans-unit>
+      <trans-unit id="tl_templates.dragFolder.1">
+        <source>Drag folder &quot;%s&quot;</source>
+        <target>Arrastra la carpeta &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.dragFile.1">
+        <source>Drag template &quot;%s&quot;</source>
+        <target>Arrastra la plantilla &quot;%s&quot;</target>
+      </trans-unit>
       <trans-unit id="tl_templates.twig_studio_hint">
         <source>If you want to create or edit Twig templates, use the %s instead.</source>
         <target>Si desea crear o editar plantillas Twig, utilice en su lugar %s .</target>
