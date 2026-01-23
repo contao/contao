@@ -44,7 +44,13 @@ class ForeignKeyParser
         // names such as "group"
         if ($isIdentifier($columnExpression)) {
             $columnName = $columnExpression;
-            $columnExpression = $this->connection->quoteIdentifier($columnExpression);
+
+            // Backwards-compatibility for doctrine/dbal < 4.3
+            if (!method_exists(Connection::class, 'quoteSingleIdentifier')) {
+                $columnExpression = $this->connection->quoteIdentifier($columnExpression);
+            } else {
+                $columnExpression = $this->connection->quoteSingleIdentifier($columnExpression);
+            }
 
             $expression = new ForeignKeyExpression($tableExpression, $columnExpression);
             $expression = $expression->withColumnName($columnName);

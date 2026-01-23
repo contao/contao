@@ -13,9 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser\ForeignKeyExpression;
 use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Util\DatabaseUtil;
 use Contao\DataContainer;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
@@ -63,7 +64,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
-            $this->createStub(DatabaseUtil::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -225,7 +226,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
-            $this->createStub(DatabaseUtil::class),
+            $this->createStub(ForeignKeyParser::class),
             $translator,
         );
 
@@ -330,7 +331,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
-            $this->createStub(DatabaseUtil::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -361,17 +362,17 @@ class ValueFormatterTest extends TestCase
             ->willReturn('bar')
         ;
 
-        $databaseUtil = $this->createMock(DatabaseUtil::class);
-        $databaseUtil
+        $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
+        $foreignKeyParser
             ->expects($this->once())
-            ->method('quoteIdentifier')
-            ->willReturnCallback(static fn ($v) => '`'.$v.'`')
+            ->method('parse')
+            ->willReturnCallback(static fn ($v) => (new ForeignKeyExpression('tl_foo', '`name`'))->withColumnName('name')->withKey('foo'))
         ;
 
         $valueFormatter = new ValueFormatter(
             $framework,
             $connection,
-            $databaseUtil,
+            $foreignKeyParser,
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -403,7 +404,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
-            $this->createStub(DatabaseUtil::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -550,7 +551,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
-            $this->createStub(DatabaseUtil::class),
+            $this->createStub(ForeignKeyParser::class),
             $translator,
         );
 

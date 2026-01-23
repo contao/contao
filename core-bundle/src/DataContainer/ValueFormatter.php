@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\DataContainer;
 use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser\ForeignKeyExpression;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Util\DatabaseUtil;
 use Contao\DataContainer;
@@ -42,7 +43,7 @@ class ValueFormatter implements ResetInterface
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Connection $connection,
-        private readonly DatabaseUtil $databaseUtil,
+        private readonly ForeignKeyParser $foreignKeyParser,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -64,15 +65,22 @@ class ValueFormatter implements ResetInterface
     public function formatListing(string $table, string $field, array $row, DataContainer $dc): string|null
     {
         if (str_contains($field, ':')) {
-            [$key, $table] = explode(':', $field, 2);
-            [$table, $field] = explode('.', $table, 2);
+            $fk = $this->foreignKeyParser->parse($field);
+            $id = $row[$fk->getKey()] ?? null;
 
             // Ignore NULL but also 0 value, since 0 is not a valid foreign key ID
-            if (!($row[$key] ?? null)) {
+            if (!$id) {
                 return null;
             }
 
-            return $this->format($table, $field, $this->fetchForeignValue($table, $field, $row[$key]), $dc);
+            $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $id);
+
+            // If we don't have a column name, the expression can never be a valid DCA field to format
+            if ($fk->getColumnName()) {
+                return $this->format($fk->getTableName(), $fk->getColumnName(), $value, $dc);
+            }
+
+            return $value;
         }
 
         if (!isset($row[$field])) {
@@ -257,8 +265,14 @@ class ValueFormatter implements ResetInterface
             }
 
             [$table, $field] = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'], 2);
+            $fk = $this->foreignKeyParser->parse($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']);
+            $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $value);
 
-            return $this->getLabel($table, $field, $this->fetchForeignValue($table, $field, $value), $dc);
+            if ($fk->getColumnName()) {
+                return $this->getLabel($table, $field, $value, $dc);
+            }
+
+            return $value;
         }
 
         if (
@@ -378,8 +392,7 @@ class ValueFormatter implements ResetInterface
     {
         // Cannot use isset() because the value can be NULL
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
-            $dbField = $this->databaseUtil->quoteIdentifier($field);
-            $value = $this->connection->fetchOne("SELECT $dbField FROM $table WHERE id=?", [$id]);
+            $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE id=?", [$id]);
 
             $this->foreignValueCache[$table][$field][$id] = false === $value ? $id : $value;
         }
