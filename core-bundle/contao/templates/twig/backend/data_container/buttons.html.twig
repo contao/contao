@@ -14,15 +14,15 @@
                 {% set button_attributes = attrs()
                     .addClass('d-xl-none split-toggle')
                     .set('type', 'button')
-                    .set('data-controller', 'contao--toggle-handler')
-                    .set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '.tl_submit_container .split-container')
-                    .set('data-action', 'contao--toggle-handler#toggle:prevent')
+                    .set('data-controller', 'contao--toggle-sender')
+                    .set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '.tl_submit_container .split-container')
+                    .set('data-action', 'contao--toggle-sender#toggle:prevent')
                 %}
                 <button{{ button_attributes }} tabindex="-1">{{ backend_icon('navcol.svg') }}</button>
                 {% set list_attributes = attrs()
                     .addClass(['split-container', 'invisible'])
                     .set('data-controller', 'contao--toggle-receiver')
-                    .set('data-contao--toggle-receiver-contao--toggle-handler-outlet', '.tl_submit_container .split-toggle')
+                    .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '.tl_submit_container .split-toggle')
                     .set('data-contao--toggle-receiver-inactive-class', 'invisible')
                     .set(
                         'data-action', [

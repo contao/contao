@@ -92,11 +92,11 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $buttonAttributes = (new HtmlAttributes())
             ->addClass('header_filter_toggle')
             ->set('title', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
-            ->set('data-controller', 'contao--toggle-handler')
-            ->set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#tl_content_filter')
-            ->set('data-contao--toggle-handler-active-title-value', $this->translator->trans('DCA.toggleFilter.2', [], 'contao_default'))
-            ->set('data-contao--toggle-handler-inactive-title-value', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
-            ->set('data-action', 'contao--toggle-handler#toggle:prevent contao--operations-menu#close')
+            ->set('data-controller', 'contao--toggle-sender')
+            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#tl_content_filter')
+            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('DCA.toggleFilter.2', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
+            ->set('data-action', 'contao--toggle-sender#toggle:prevent contao--operations-menu#close')
         ;
 
         $this->append([

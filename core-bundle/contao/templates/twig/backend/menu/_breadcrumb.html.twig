@@ -38,7 +38,7 @@
         .set('data-controller', 'contao--toggle-receiver')
         .set('data-contao--toggle-receiver-active-class', 'active')
         .set('data-action', 'keydown.esc@document->contao--toggle-receiver#close mouseleave->contao--toggle-receiver#close')
-        .set('data-contao--toggle-receiver-contao--toggle-handler-outlet', '#breadcrumb .trail-toggle')
+        .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#breadcrumb .trail-toggle')
     %}
     {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
         <ul{{ list_attributes }}>
@@ -53,9 +53,9 @@
     {% set button_attributes = attrs()
         .addClass('trail-toggle')
         .set('type', 'button')
-        .set('data-controller', 'contao--toggle-handler')
-        .set('data-action', 'contao--toggle-handler#toggle:prevent mouseenter->contao--toggle-handler#open:prevent')
-        .set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#breadcrumb .trail-list')
+        .set('data-controller', 'contao--toggle-sender')
+        .set('data-action', 'contao--toggle-sender#toggle:prevent mouseenter->contao--toggle-sender#open:prevent')
+        .set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#breadcrumb .trail-list')
         .set('title', title)
     %}
     <button{{ button_attributes }}>{{ label }}</button>

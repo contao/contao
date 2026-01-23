@@ -84,11 +84,11 @@ class BackendHeaderListener
             ->set('id', 'profileButton')
             ->set('type', 'button')
             ->set('title', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
-            ->set('data-controller', 'contao--toggle-handler')
-            ->set('data-action', 'contao--toggle-handler#toggle:prevent')
-            ->set('data-contao--toggle-handler-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
-            ->set('data-contao--toggle-handler-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
-            ->set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#profileMenu')
+            ->set('data-controller', 'contao--toggle-sender')
+            ->set('data-action', 'contao--toggle-sender#toggle:prevent')
+            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#profileMenu')
         ;
 
         $submenu = $factory
@@ -102,7 +102,7 @@ class BackendHeaderListener
             ->setChildrenAttribute('data-controller', 'contao--toggle-receiver')
             ->setChildrenAttribute('data-contao--toggle-receiver-active-class', 'active')
             ->setChildrenAttribute('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
-            ->setChildrenAttribute('data-contao--toggle-receiver-contao--toggle-handler-outlet', '#profileButton')
+            ->setChildrenAttribute('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#profileButton')
         ;
 
         $tree->addChild($submenu);
@@ -174,11 +174,11 @@ class BackendHeaderListener
             ->set('id', 'burger')
             ->set('type', 'button')
             ->set('title', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
-            ->set('data-controller', 'contao--toggle-handler')
-            ->set('data-action', 'contao--toggle-handler#toggle:prevent')
-            ->set('data-contao--toggle-handler-active-title-value', $this->translator->trans('MSC.hideMainNavigation', [], 'contao_default'))
-            ->set('data-contao--toggle-handler-inactive-title-value', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
-            ->set('data-contao--toggle-handler-contao--toggle-receiver-outlet', '#left')
+            ->set('data-controller', 'contao--toggle-sender')
+            ->set('data-action', 'contao--toggle-sender#toggle:prevent')
+            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideMainNavigation', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#left')
         ;
 
         $burger = $factory

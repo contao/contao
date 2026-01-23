@@ -3,7 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['label'];
     static classes = ['active', 'inactive'];
-    static outlets = ['contao--toggle-handler'];
+    static outlets = ['contao--toggle-sender'];
 
     #closeDelay = null;
 
@@ -46,7 +46,7 @@ export default class extends Controller {
     documentClick(event) {
         if (
             !this.isOpen() ||
-            this.contaoToggleHandlerOutlets.filter((t) => t.element.contains(event.target)).length > 0 ||
+            this.contaoToggleSenderOutlets.filter((t) => t.element.contains(event.target)).length > 0 ||
             this.element.contains(event.target)
         ) {
             return;
@@ -56,8 +56,8 @@ export default class extends Controller {
     }
 
     isOpen() {
-        if (this.hasContaoToggleHandlerOutlet) {
-            return 'true' === this.contaoToggleHandlerOutlet.element.ariaExpanded;
+        if (this.hasContaoToggleSenderOutlet) {
+            return 'true' === this.contaoToggleSenderOutlet.element.ariaExpanded;
         }
 
         if (this.hasActiveClass) {
@@ -82,7 +82,7 @@ export default class extends Controller {
             this.element.classList.toggle(this.inactiveClass, !state);
         }
 
-        for (const handler of this.contaoToggleHandlerOutlets) {
+        for (const handler of this.contaoToggleSenderOutlets) {
             handler.setState(state);
         }
 
@@ -94,8 +94,8 @@ export default class extends Controller {
             if (state) {
                 this.element.focus();
             } else {
-                if (this.hasContaoToggleHandlerOutlet) {
-                    this.contaoToggleHandlerOutlet.element.focus();
+                if (this.hasContaoToggleSenderOutlet) {
+                    this.contaoToggleSenderOutlet.element.focus();
                 }
             }
         }, 50);

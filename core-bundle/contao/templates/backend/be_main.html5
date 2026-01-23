@@ -35,7 +35,7 @@ $this->asideAttributes = $this
     ->attrs()
     ->set('id', 'left')
     ->set('data-controller', 'contao--toggle-receiver')
-    ->set('data-contao--toggle-receiver-contao--toggle-handler-outlet', '#burger')
+    ->set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#burger')
     ->set('data-contao--toggle-receiver-active-class', 'active')
     ->set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
     ->mergeWith($this->asideAttributes)
