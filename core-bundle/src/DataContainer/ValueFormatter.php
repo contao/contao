@@ -15,9 +15,7 @@ namespace Contao\CoreBundle\DataContainer;
 use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\DataContainer\ForeignKeyParser\ForeignKeyExpression;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Util\DatabaseUtil;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FilesModel;
@@ -75,7 +73,8 @@ class ValueFormatter implements ResetInterface
 
             $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $id);
 
-            // If we don't have a column name, the expression can never be a valid DCA field to format
+            // If we don't have a column name, the expression can never be a valid DCA field
+            // to format
             if ($fk->getColumnName()) {
                 return $this->format($fk->getTableName(), $fk->getColumnName(), $value, $dc);
             }
