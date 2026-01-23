@@ -102,8 +102,8 @@ class DcaPermissionVoter implements CacheableVoterInterface
     private function canOperate(TokenInterface $token, string $table, string $permission): bool
     {
         if (
-            \is_array($GLOBALS['TL_DCA'][$table]['config']['permissions'] ?? null)
-            && !\in_array($permission, $GLOBALS['TL_DCA'][$table]['config']['permissions'], true)
+            !\is_array($GLOBALS['TL_DCA'][$table]['config']['permissions'] ?? null)
+            || !\in_array($permission, $GLOBALS['TL_DCA'][$table]['config']['permissions'], true)
         ) {
             return true;
         }

@@ -198,6 +198,7 @@ services:
             - '@contao.framework'
             - '@translator'
             - '@router'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener

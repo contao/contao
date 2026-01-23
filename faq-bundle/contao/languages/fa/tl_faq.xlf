@@ -171,6 +171,10 @@
         <source>Create a new question after question ID %s</source>
         <target>ایجاد یک سوال بعد از سوال شناسه‌ی %s</target>
       </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>پرسش</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

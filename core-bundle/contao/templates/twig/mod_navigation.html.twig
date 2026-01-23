@@ -9,7 +9,7 @@
 <nav{{ wrapperAttributes }}>
 
     {% if headline %}
-        <{{ hl }}>{{ headline }}</{{ hl }}>
+        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
     {% endif %}
 
     <a href="{{ request }}#{{ skipId }}" class="invisible">{{ skipNavigation }}</a>

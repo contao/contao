@@ -109,6 +109,10 @@
         <source>Edit the recipients of channel ID %s</source>
         <target>ID %sのチャンネルの宛先を編集</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tableLabel">
+        <source>Newsletter channel</source>
+        <target>ニュースレターのチャンネル</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

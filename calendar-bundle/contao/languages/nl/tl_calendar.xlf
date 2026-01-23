@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate</source>
+        <target>Kopie</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
@@ -111,6 +112,10 @@
       <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
         <target>Verwijder kalender ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>Kalender</target>
       </trans-unit>
     </body>
   </file>

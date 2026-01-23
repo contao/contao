@@ -257,6 +257,10 @@
         <source>Add a new article in page ID %s</source>
         <target>Neuen Artikel in die Seite ID %s einfügen</target>
       </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Artikel</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -1,0 +1,24 @@
+/*
+ * based on code from:
+ *
+ * @license RequireJS text 0.25.0 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
+ * Available via the MIT or new BSD license.
+ * see: http://github.com/jrburke/requirejs for details
+ */
+
+/*!
+* focus-trap 7.7.0
+* @license MIT, https://github.com/focus-trap/focus-trap/blob/master/LICENSE
+*/
+
+/*!
+Turbo 8.0.21
+Copyright © 2026 37signals LLC
+ */
+
+/**!
+ * Sortable 1.15.6
+ * @author	RubaXa   <trash@rubaxa.org>
+ * @author	owenm    <owen23355@gmail.com>
+ * @license MIT
+ */

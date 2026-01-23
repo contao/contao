@@ -17,14 +17,6 @@
         <source>Here you can select the layout type.</source>
         <target>Zde můžete zvolit druh vzhledu.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Výchozí vzhled</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Nastavit jako výchozí vzhled</target>
-      </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
         <target>Záhlaví a zápatí</target>
@@ -442,7 +434,8 @@
         <target>Vzhled s twigem se sloty</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
-        <source>Legacy HTML5 layout</source>
+        <source>Default layout</source>
+        <target>Výchozí vzhled</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
@@ -483,6 +476,10 @@
       <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
         <target>Smazat vzhled stránky ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+        <target>Rozvržení</target>
       </trans-unit>
     </body>
   </file>

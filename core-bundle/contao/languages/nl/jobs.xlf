@@ -1,0 +1,52 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/jobs.php" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="jobs.created_at.0">
+        <source>Created at</source>
+        <target>Gemaakt bij</target>
+      </trans-unit>
+      <trans-unit id="jobs.progress.0">
+        <source>Progress</source>
+      </trans-unit>
+      <trans-unit id="jobs.status.0">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="jobs.owner.0">
+        <source>Initiated by</source>
+        <target>Geïnitieerd door</target>
+      </trans-unit>
+      <trans-unit id="jobs.attachments.0">
+        <source>Attachments</source>
+        <target>Bijlagen</target>
+      </trans-unit>
+      <trans-unit id="jobs.type.0">
+        <source>Type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.new">
+        <source>New</source>
+        <target>Nieuw</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.pending">
+        <source>Pending</source>
+        <target>In behandeling</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.completed">
+        <source>Completed</source>
+        <target>Voltooid</target>
+      </trans-unit>
+      <trans-unit id="jobs.type_label.contao_backend_search_reindex">
+        <source>Rebuild the back end search index</source>
+        <target>Herbouw de zoekindex van de backend</target>
+      </trans-unit>
+      <trans-unit id="jobs.type_label.crawl">
+        <source>Crawling the website</source>
+      </trans-unit>
+      <trans-unit id="jobs.all_jobs_processed">
+        <source>All jobs have been processed.</source>
+        <target>Alle opdrachten zijn verwerkt.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
