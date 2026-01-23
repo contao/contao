@@ -24,7 +24,10 @@ export default class extends Controller {
         }
 
         for (const controllerTarget of this.controllerTargets) {
-            controllerTarget.setAttribute('aria-controls', this.hasControlsTarget ? this.controlsTarget.id : this.contaoToggleStateOutletElement.id);
+            controllerTarget.setAttribute(
+                'aria-controls',
+                this.hasControlsTarget ? this.controlsTarget.id : this.contaoToggleStateOutletElement.id,
+            );
             controllerTarget.setAttribute('aria-expanded', 'false');
         }
     }
