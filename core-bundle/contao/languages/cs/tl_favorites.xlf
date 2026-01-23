@@ -37,6 +37,10 @@
         <source>Delete favorite ID %s</source>
         <target>Smazat oblíbenou položku %s</target>
       </trans-unit>
+      <trans-unit id="tl_favorites.tableLabel">
+        <source>Favorite</source>
+        <target>Oblíbené</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -13,7 +13,7 @@ import manifest from '../../contao/themes/flexible/icons/manifest.json';
  */
 export function getTemplate(name, attributes = {}) {
     // Make sure the alt attribute gets set
-    if (!Object.prototype.hasOwnProperty.call(attributes, 'alt')) {
+    if (!Object.hasOwn(attributes, 'alt')) {
         attributes.alt = '';
     }
 
@@ -54,5 +54,5 @@ function _getImage(source, attributes, colorScheme = null) {
 export function getSource(name, darkScheme = false) {
     const fileName = `${name}${darkScheme ? '--dark' : ''}.svg`;
 
-    return Object.prototype.hasOwnProperty.call(manifest, fileName) ? manifest[fileName] : null;
+    return Object.hasOwn(manifest, fileName) ? manifest[fileName] : null;
 }

@@ -681,6 +681,10 @@ Kontakta webbplatsadministratören om du inte begärde detta e-postmeddelande.
         <source>Delete module ID %s</source>
         <target>Ta bort modul med ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Modul</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -17,8 +17,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	'config' => array
 	(
 		'dataContainer'               => DC_Table::class,
-		'notCreatable'                => true,
-		'notCopyable'                 => true,
 		'backendSearchIgnore'         => true,
 		'permissions'                 => array(),
 		'sql' => array
@@ -91,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>1022, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>1022, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(1022) NOT NULL default ''"
 		)
 	)

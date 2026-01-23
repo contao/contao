@@ -318,12 +318,12 @@
         <target>Zveřejnit novinku ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
-        <source>Publish</source>
-        <target>Zveřejnit</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.4">
         <source>Unpublish</source>
         <target>Nezveřejnit</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Publish</source>
+        <target>Zveřejnit</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -348,6 +348,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Vložit do tohto archivu</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>Novinky</target>
       </trans-unit>
     </body>
   </file>

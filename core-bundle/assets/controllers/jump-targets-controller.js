@@ -31,7 +31,7 @@ export default class extends Controller {
         this.#linksContainer.destroy();
     }
 
-    sectionTargetConnected(node) {
+    sectionTargetConnected() {
         this.rebuildNavigation();
     }
 

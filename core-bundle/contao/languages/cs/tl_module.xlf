@@ -680,6 +680,10 @@ Pokud jste o nic takového nepožádali, kontaktujte prosím správce webu.
         <source>Delete module ID %s</source>
         <target>Smazat modul ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Modul</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

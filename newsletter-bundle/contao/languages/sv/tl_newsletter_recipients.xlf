@@ -113,6 +113,22 @@
         <source>Activate</source>
         <target>Aktivera</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>Nyhetsbrevsadressat</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>Blockera</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>Blockera mottagar-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>Vill du verkligen blockera mottagar-ID %s?</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

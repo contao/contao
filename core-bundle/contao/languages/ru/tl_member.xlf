@@ -297,6 +297,10 @@
         <source>Preview the front end as member ID %s</source>
         <target>Просмотр внешнего интерфейса как участник ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+        <target>Участник</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

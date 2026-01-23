@@ -417,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Количество элементов на странице. Установите 0 для отключения нумерации.</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>Серверная разбивка на страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Разделить изображения на несколько страниц и выводить только их часть за раз.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Сортировать по</target>
@@ -909,6 +917,10 @@
         <source>Loop video</source>
         <target>Зацикленное видео</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>Отключение звука</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Автовоспроизведение</target>
@@ -977,19 +989,15 @@
         <source>Unhide</source>
         <target>Отменить скрытие</target>
       </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Вставить после</target>
-      </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>Вставить после элемента контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>Создать новый элемент контента вверху</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Создать новый элемент контента после элемента ID %s</target>
       </trans-unit>
@@ -1060,6 +1068,34 @@
       <trans-unit id="tl_content.pwResetPage.1">
         <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
         <target>Вы можете выбрать страницу, к которой будут перенаправлены посетители при нажатии ссылки &lt;em&gt;Забыли пароль?&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>Метод удаления</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Вы можете определить метод удаления учетной записи.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Удалить домашний каталог</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Удалить домашний каталог при удалении учетной записи.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Деактивировать учетную запись</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Полностью удалить учетную запись</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>Элемент контента</target>
       </trans-unit>
     </body>
   </file>

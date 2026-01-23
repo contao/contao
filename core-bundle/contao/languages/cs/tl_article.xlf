@@ -257,6 +257,10 @@
         <source>Add a new article in page ID %s</source>
         <target>Přidat nový článek ve stránce ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Propojit s článkem</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

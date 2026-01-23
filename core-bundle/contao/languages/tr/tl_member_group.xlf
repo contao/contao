@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.copy.0">
         <source>Duplicate</source>
+        <target>Çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_member_group.copy.1">
         <source>Duplicate member group ID %s</source>
@@ -102,6 +103,11 @@
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.4">
         <source>Activate</source>
+        <target>Etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.tableLabel">
+        <source>Member group</source>
+        <target>Üye grubu</target>
       </trans-unit>
     </body>
   </file>

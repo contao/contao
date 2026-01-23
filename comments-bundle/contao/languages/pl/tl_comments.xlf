@@ -195,6 +195,10 @@
       <trans-unit id="tl_comments.toggle.4">
         <source>Publish</source>
       </trans-unit>
+      <trans-unit id="tl_comments.tableLabel">
+        <source>Comment</source>
+        <target>Komentarz</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

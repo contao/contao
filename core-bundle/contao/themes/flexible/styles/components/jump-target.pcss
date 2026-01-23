@@ -6,7 +6,7 @@
     position: sticky;
     top: 0;
     z-index: 3; /* Above TinyMCE */
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
 
     .inner {
         overflow-x: scroll;
@@ -28,7 +28,7 @@
         display: inline-block;
         padding: 10px;
         white-space: nowrap;
-        font-size: .75rem;
+        font-size: 0.75rem;
     }
 
     button {
@@ -44,7 +44,7 @@
         padding: 0;
         opacity: 0;
         visibility: hidden;
-        transition: .15s opacity;
+        transition: 0.15s opacity;
 
         &:first-of-type {
             left: 0;
@@ -53,6 +53,7 @@
                 background: var(--panel-bg) var(--icon-chevron-left) 0 5px no-repeat;
                 background-size: auto 23px;
                 border-right: 1px solid var(--content-border);
+                border-top-left-radius: var(--border-radius-lg);
             }
         }
 
@@ -63,6 +64,7 @@
                 background: var(--panel-bg) var(--icon-chevron-right) 0 5px no-repeat;
                 background-size: auto 23px;
                 border-left: 1px solid var(--content-border);
+                border-top-right-radius: var(--border-radius-lg);
             }
         }
 

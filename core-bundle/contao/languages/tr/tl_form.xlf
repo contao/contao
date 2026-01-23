@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_form.raw.1">
         <source>The form data will be sent as plain text message with each field in a new line.</source>
-        <target>Form verileri düz metin iletisi olarak gönderilir. Her alan ayrı bir satırda yer alır.</target>
+        <target>Form verileri düz yazı iletisi olarak gönderilir. Her alan ayrı bir satırda yer alır.</target>
       </trans-unit>
       <trans-unit id="tl_form.xml.0">
         <source>XML file</source>
@@ -203,9 +203,11 @@
       </trans-unit>
       <trans-unit id="tl_form.storeSession.0">
         <source>Store data in the session</source>
+        <target>Veriler oturumda tutulsun</target>
       </trans-unit>
       <trans-unit id="tl_form.storeSession.1">
         <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>Gönderilen verilerin oturumda tutulmasını sağlar. Böylece &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; kod imi ile alınabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
@@ -265,6 +267,7 @@
       </trans-unit>
       <trans-unit id="tl_form.copy.0">
         <source>Duplicate</source>
+        <target>Çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
@@ -277,6 +280,10 @@
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>Şu DCA yapılandırmasında kullanılabilecek tabloları belirtin: &lt;code&gt;%s&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Form</target>
       </trans-unit>
     </body>
   </file>
