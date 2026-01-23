@@ -93,7 +93,7 @@ export class TwigEditor {
         element.classList.add('hidden');
 
         const shadowRoot = this._host.attachShadow({ mode: 'open' });
-        const target = element.cloneNode();
+        const target = element.cloneNode(true);
 
         shadowRoot.appendChild(target);
 
