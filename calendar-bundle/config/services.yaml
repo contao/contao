@@ -105,6 +105,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_calendar.migration.field_permission:
+        class: Contao\CalendarBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
+
     contao_calendar.migration.overwrite_meta:
         class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
         arguments:
@@ -138,6 +143,11 @@ services:
         class: Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_calendar.security.legacy_backend_access_voter:
+        class: Contao\CalendarBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     # Autowiring aliases
     Contao\CalendarBundle\Generator\CalendarEventsGenerator: '@contao_calendar.generator.calendar_events'

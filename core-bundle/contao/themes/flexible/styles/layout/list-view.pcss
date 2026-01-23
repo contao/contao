@@ -14,7 +14,8 @@
     margin-top: 36px;
 }
 
-.tl_show th, .tl_show td {
+.tl_show th,
+.tl_show td {
     line-height: 16px;
     white-space: pre-line;
 }
@@ -43,7 +44,7 @@
     font-weight: 400;
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (resolution >= 2dppx) {
     .tl_label {
         font-weight: 500;
     }
@@ -72,9 +73,12 @@
 }
 
 .tl_select_trigger {
-    margin-top: -9px;
     padding: 0 6px 3px 0;
     text-align: right;
+}
+
+:not(.tl_content_right) > .tl_select_trigger {
+    margin-top: -9px;
 }
 
 .tl_radio_reset {
@@ -83,10 +87,11 @@
     text-align: right;
 }
 
-.tl_select_label, .tl_radio_label {
+.tl_select_label,
+.tl_radio_label {
     margin-right: 2px;
     color: var(--gray);
-    font-size: .75rem;
+    font-size: 0.75rem;
 }
 
 /* Parent view */
@@ -112,7 +117,7 @@
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (resolution >= 2dppx) {
     .tl_content_header {
         font-weight: 500;
     }
@@ -278,19 +283,27 @@
     border-top-right-radius: var(--border-radius);
 }
 
-.tl_right button, .tl_right_nowrap button, .tl_content_right button {
+.tl_right button,
+.tl_right_nowrap button,
+.tl_content_right button {
     margin: 0;
     padding: 0;
     border: 0;
     background: none;
 }
 
-.tl_right img, .tl_content_right img, .tl_right_nowrap img,
-.tl_right button, .tl_content_right button, .tl_right_nowrap button {
+.tl_right img,
+.tl_content_right img,
+.tl_right_nowrap img,
+.tl_right button,
+.tl_content_right button,
+.tl_right_nowrap button {
     margin-left: 1px;
 }
 
-.tl_right button img, .tl_content_right button img, .tl_right_nowrap button img {
+.tl_right button img,
+.tl_content_right button img,
+.tl_right_nowrap button img {
     margin-left: 0;
 }
 
@@ -402,7 +415,7 @@
 
 .cte_type {
     margin: 0 0 4px;
-    font-size: .75rem;
+    font-size: 0.75rem;
     color: var(--info);
 }
 
@@ -411,18 +424,20 @@
     margin-bottom: 0;
     padding: 8px 10px;
     background-color: var(--table-header);
-    font-size: .815rem;
+    font-size: 0.815rem;
     display: flex;
     align-items: center;
     gap: 3px;
     border-top-left-radius: var(--border-radius);
 }
 
-.cte_type.published, .cte_type.published a {
+.cte_type.published,
+.cte_type.published a {
     color: var(--green);
 }
 
-.cte_type.unpublished, .cte_type.unpublished a {
+.cte_type.unpublished,
+.cte_type.unpublished a {
     color: var(--red);
 }
 
@@ -470,16 +485,26 @@
 }
 
 .cte_preview h3 {
-    font-size: .9rem;
+    font-size: 0.9rem;
     margin-bottom: 6px;
 }
 
-.cte_preview h4, .cte_preview h5, .cte_preview h6 {
-    font-size: .875rem;
+.cte_preview h4,
+.cte_preview h5,
+.cte_preview h6 {
+    font-size: 0.875rem;
     margin-bottom: 6px;
 }
 
-.cte_preview p, .cte_preview figure, .cte_preview ol, .cte_preview ul, .cte_preview table, .cte_preview div.tl_gray, .content-hyperlink, .content-toplink, .cte_preview table caption {
+.cte_preview p,
+.cte_preview figure,
+.cte_preview ol,
+.cte_preview ul,
+.cte_preview table,
+.cte_preview div.tl_gray,
+.content-hyperlink,
+.content-toplink,
+.cte_preview table caption {
     margin-bottom: 6px;
 }
 
@@ -498,7 +523,8 @@
     float: right;
 }
 
-.cte_preview th, .cte_preview td {
+.cte_preview th,
+.cte_preview td {
     padding: 3px 6px;
     border-bottom: 1px solid var(--border);
 }
@@ -514,7 +540,7 @@
 
 .cte_preview table caption {
     text-align: left;
-    font-size: .75rem;
+    font-size: 0.75rem;
 }
 
 .cte_preview pre {
@@ -552,7 +578,10 @@
     margin-bottom: 3px;
 }
 
-.cte_preview input, .cte_preview select, .cte_preview textarea, .cte_preview button {
+.cte_preview input,
+.cte_preview select,
+.cte_preview textarea,
+.cte_preview button {
     background: var(--form-bg);
     border: 1px solid var(--form-border);
 }
@@ -562,11 +591,12 @@
 }
 
 .cte_preview select {
-    -moz-appearance: menulist;
-    -webkit-appearance: menulist;
+    appearance: menulist; /* see #9273 */
 }
 
-.cte_preview label, .cte_preview .checkbox_container legend, .cte_preview .radio_container legend {
+.cte_preview label,
+.cte_preview .checkbox_container legend,
+.cte_preview .radio_container legend {
     display: block;
     margin-bottom: 6px;
 }
@@ -575,7 +605,8 @@
     margin: 0 0 6px;
 }
 
-.cte_preview .checkbox_container label, .cte_preview .radio_container label {
+.cte_preview .checkbox_container label,
+.cte_preview .radio_container label {
     display: initial;
 }
 

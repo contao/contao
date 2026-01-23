@@ -37,6 +37,10 @@
         <source>Delete favorite ID %s</source>
         <target>ID %sのお気に入りを削除</target>
       </trans-unit>
+      <trans-unit id="tl_favorites.tableLabel">
+        <source>Favorite</source>
+        <target>お気に入り</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

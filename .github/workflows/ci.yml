@@ -3,7 +3,8 @@ name: CI
 on:
     pull_request: ~
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:
@@ -15,7 +16,7 @@ jobs:
         name: Rector
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -23,7 +24,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -43,7 +44,7 @@ jobs:
         name: ECS
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -51,7 +52,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -71,7 +72,7 @@ jobs:
         name: ECS legacy
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -79,7 +80,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -93,18 +94,16 @@ jobs:
                   working-directory: vendor-bin/ecs
 
             - name: Run ECS legacy
-              run: |
-                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
 
             - name: Run ECS template
-              run: |
-                  vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
+              run: vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     twig-cs-fixer:
         name: Twig CS Fixer
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -112,9 +111,10 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3
@@ -131,7 +131,7 @@ jobs:
         name: PHPStan
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -139,7 +139,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -160,7 +160,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -170,7 +170,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -182,13 +182,13 @@ jobs:
               run: npx biome ci core-bundle/assets
 
             - name: Run Stylelint
-              run: npx stylelint --fix core-bundle/assets/styles
+              run: npx stylelint core-bundle/assets/styles core-bundle/contao/themes/flexible/styles
 
     service-linter:
         name: Service linter
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -196,7 +196,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -216,7 +216,7 @@ jobs:
         name: Depcheck
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -224,7 +224,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   show-progress: false
@@ -261,7 +261,7 @@ jobs:
             matrix:
                 php: [8.3, 8.4, 8.5]
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
@@ -274,7 +274,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -283,7 +283,7 @@ jobs:
               uses: ramsey/composer-install@v3
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --fail-on-phpunit-notice
 
             - name: Run the functional tests with PDO MySQL
               run: vendor/bin/phpunit --testsuite=functional
@@ -299,7 +299,7 @@ jobs:
         name: Reverse order
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -307,7 +307,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -323,7 +323,7 @@ jobs:
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: nightly
@@ -336,7 +336,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -347,7 +347,7 @@ jobs:
                   composer-options: --ignore-platform-req=php+
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit
+              run: vendor/bin/phpunit --fail-on-phpunit-notice
 
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional
@@ -358,7 +358,7 @@ jobs:
         name: Prefer lowest
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -371,7 +371,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -398,7 +398,7 @@ jobs:
         name: Bundles
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -406,7 +406,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -441,7 +441,7 @@ jobs:
         name: Monorepo check
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.3
@@ -449,7 +449,7 @@ jobs:
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false

@@ -3,16 +3,29 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     #closeDelay = null;
 
-    static targets = ['controller', 'controls'];
+    static targets = ['controller', 'controls', 'label'];
     static classes = ['active', 'inactive'];
+
+    static values = {
+        activeLabel: String,
+        inactiveLabel: String,
+        activeTitle: String,
+        inactiveTitle: String,
+    };
 
     connect() {
         if (!this.controlsTarget.id) {
             this.controlsTarget.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
         }
 
-        this.controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
-        this.controllerTarget.setAttribute('aria-expanded', 'false');
+        if (!this.controlsTarget.hasAttribute('tabindex')) {
+            this.controlsTarget.setAttribute('tabindex', '-1');
+        }
+
+        for (const controllerTarget of this.controllerTargets) {
+            controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
+            controllerTarget.setAttribute('aria-expanded', 'false');
+        }
     }
 
     toggle() {
@@ -21,33 +34,42 @@ export default class extends Controller {
         this.#toggleState(!isOpen);
     }
 
-    open() {
-        this.#toggleState(true);
+    open(event) {
+        if ('true' === this.controllerTarget.ariaExpanded) {
+            return;
+        }
+
+        this.#toggleState(true, event);
     }
 
     close(event) {
+        if ('true' !== this.controllerTarget.ariaExpanded) {
+            return;
+        }
+
         if (event?.params.closeDelay) {
             clearTimeout(this.#closeDelay);
             this.#closeDelay = setTimeout(() => this.#toggleState(false), event.params.closeDelay);
             return;
         }
 
-        this.#toggleState(false);
+        this.#toggleState(false, event);
     }
 
     documentClick(event) {
-        if (this.controllerTarget.contains(event.target) || this.controlsTarget.contains(event.target)) {
+        if (
+            'true' !== this.controllerTarget.ariaExpanded ||
+            this.controllerTargets.filter((t) => t.contains(event.target)).length > 0 ||
+            this.controlsTarget.contains(event.target)
+        ) {
             return;
         }
 
         this.#toggleState(false);
     }
 
-    #toggleState(state) {
+    #toggleState(state, event = null) {
         clearTimeout(this.#closeDelay);
-
-        this.controllerTarget.classList.toggle('active', state);
-        this.controllerTarget.setAttribute('aria-expanded', state);
 
         if (this.hasActiveClass) {
             this.controlsTarget.classList.toggle(this.activeClass, state);
@@ -56,5 +78,36 @@ export default class extends Controller {
         if (this.hasInactiveClass) {
             this.controlsTarget.classList.toggle(this.inactiveClass, !state);
         }
+
+        for (const controllerTarget of this.controllerTargets) {
+            controllerTarget.classList.toggle('active', state);
+            controllerTarget.setAttribute('aria-expanded', state);
+
+            if (state && this.hasActiveTitleValue) {
+                controllerTarget.title = this.activeTitleValue;
+            } else if (!state && this.hasInactiveTitleValue) {
+                controllerTarget.title = this.inactiveTitleValue;
+            }
+        }
+
+        for (const el of this.hasLabelTarget ? this.labelTargets : this.controllerTargets) {
+            if (state && this.hasActiveLabelValue) {
+                el.innerText = this.activeLabelValue;
+            } else if (!state && this.hasInactiveLabelValue) {
+                el.innerText = this.inactiveLabelValue;
+            }
+        }
+
+        if (['mouseenter', 'mouseover', 'mouseleave'].includes(event?.type)) {
+            return;
+        }
+
+        setTimeout(() => {
+            if (state) {
+                this.controlsTarget.focus();
+            } else {
+                this.controllerTarget.focus();
+            }
+        }, 50);
     }
 }

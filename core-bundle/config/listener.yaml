@@ -90,6 +90,7 @@ services:
             - '@contao.routing.page_registry'
             - '@database_connection'
             - '@request_stack'
+            - '@router'
 
     contao.listener.data_container.content_element_type:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
@@ -105,6 +106,12 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener
         arguments:
             - '@contao.csp.parser'
+
+    contao.listener.data_container.cud_permission:
+        class: Contao\CoreBundle\EventListener\DataContainer\CudPermissionListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.resource_finder'
 
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
@@ -191,6 +198,7 @@ services:
             - '@contao.framework'
             - '@translator'
             - '@router'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
@@ -344,6 +352,13 @@ services:
         arguments:
             - '@security.helper'
 
+    contao.listener.data_container.user_root:
+        class: Contao\CoreBundle\EventListener\DataContainer\UserRootListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@database_connection'
+
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
         arguments:
@@ -429,6 +444,12 @@ services:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
         arguments:
             - '@contao.routing.scope_matcher'
+
+    contao.listener.menu.backend_breadcrumb:
+        class: Contao\CoreBundle\EventListener\Menu\BackendBreadcrumbListener
+        arguments:
+            - '@security.helper'
+            - '@contao.data_container.dca_url_analyzer'
 
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
@@ -628,6 +649,11 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
+
+    contao.listener.virtual_fields_mapping:
+        class: Contao\CoreBundle\EventListener\VirtualFieldsMappingListener
+        arguments:
+            - '@doctrine.orm.entity_manager'
 
     contao.listener.webauthn_route_backend:
         class: Contao\CoreBundle\EventListener\WebauthnRouteListener

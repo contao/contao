@@ -199,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_article.copy.1">
         <source>Copy article ID %s</source>
+        <target>%s kimlikli makaleyi kopyala</target>
       </trans-unit>
       <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
@@ -222,12 +223,15 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.3">
         <source>Unpublish</source>
+        <target>Yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.4">
         <source>Publish</source>
+        <target>Yayınla</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.0">
         <source>Paste after article</source>
+        <target>Makaleden sonra yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
@@ -235,6 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.0">
         <source>Paste into page</source>
+        <target>Sayfa içine yapıştır</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -242,12 +247,19 @@
       </trans-unit>
       <trans-unit id="tl_article.pastenewafter.1">
         <source>Add a new article after article ID %s</source>
+        <target>%s kimlikli makaleden sonra yeni bir makale ekle</target>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.0">
         <source>New at the top</source>
+        <target>Yeni üstte görüntülensin</target>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.1">
         <source>Add a new article in page ID %s</source>
+        <target>%s kimlikli sayfaya yeni bir makale ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Makale</target>
       </trans-unit>
     </body>
   </file>

@@ -113,6 +113,10 @@
         <source>Delete calendar ID %s</source>
         <target>ID %sのカレンダーを削除</target>
       </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>カレンダー</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

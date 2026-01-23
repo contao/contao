@@ -424,6 +424,10 @@
         <source>Paste into this calendar</source>
         <target>Incolla nel calendario</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Evento</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

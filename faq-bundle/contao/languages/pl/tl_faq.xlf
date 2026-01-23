@@ -171,6 +171,10 @@
         <source>Create a new question after question ID %s</source>
         <target>Utwórz nowe pytanie po pytaniu ID %s</target>
       </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>Pytanie</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

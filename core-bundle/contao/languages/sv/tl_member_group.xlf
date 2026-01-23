@@ -105,6 +105,10 @@
         <source>Activate</source>
         <target>Aktivera</target>
       </trans-unit>
+      <trans-unit id="tl_member_group.tableLabel">
+        <source>Member group</source>
+        <target>Medlemsgrupp</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

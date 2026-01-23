@@ -12,8 +12,10 @@
     .addClass('be_main')
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips contao--toggle-state')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
     .set('data-contao--toggle-state-active-class', 'active')
+    .set('data-contao--toggle-state-active-title-value', 'MSC.hideMainNavigation'|trans)
+    .set('data-contao--toggle-state-inactive-title-value', 'MSC.showMainNavigation'|trans)
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -21,6 +23,12 @@
     .addClass(containerClass)
     .mergeWith(containerAttributes|default)
 -%}
+
+{% set mainAttributes = attrs()
+    .set('id', 'main')
+    .set('aria-labelledby', 'main_headline')
+    .mergeWith(mainAttributes|default)
+%}
 
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
@@ -104,11 +112,15 @@
 
         {% block main %}
             <turbo-frame id="contao-main" target="_top">
-                <main id="main" aria-labelledby="main_headline">
+                <main{{ mainAttributes }}>
                     {% block main_headline %}
                         <h1 id="main_headline">
-                            {{ headline|raw }}
-                            {{ toggleFavorites|raw }}
+                            {% if breadcrumb|default %}
+                                {{ breadcrumb|raw }}
+                            {% else %}
+                                {{ headline|raw }}
+                            {% endif %}
+                            {{ include('@Contao/backend/component/_favorites.html.twig') }}
                         </h1>
                     {% endblock %}
                     <div class="content">

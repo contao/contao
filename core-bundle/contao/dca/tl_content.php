@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'text',
 			'headerFields'            => array('title', 'type', 'author', 'tstamp', 'start', 'stop'),
 			'renderAsGrid'            => true,
@@ -113,7 +113,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'form'                        => '{type_legend},title,headline,type;{include_legend},form;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'module'                      => '{type_legend},title,type;{include_legend},module;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'login'                       => '{type_legend},title,headline,type;{config_legend},autologin,pwResetPage;{redirect_legend},jumpTo,redirectBack;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'manage_passkeys'             => '{type_legend},title,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
+		'manage_passkeys'             => '{type_legend},title,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'two_factor'                  => '{type_legend},title,headline,type;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'change_password'             => '{type_legend},title,headline,type;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'close_account'               => '{type_legend},title,headline,type;{config_legend},reg_close,reg_deleteDir;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
 	),
 
 	// Sub-palettes
@@ -504,7 +507,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'numberOfItems' => array
 		(
@@ -789,26 +791,20 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'redirectBack' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'autologin' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default' =>false),
 		),
 		'pwResetPage' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'cssID' => array
 		(
@@ -834,6 +830,18 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
+		),
+		'reg_close' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('close_deactivate', 'close_delete'),
+			'eval'                    => array('tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
+		),
+		'reg_deleteDir' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
 		)
 	)
 );

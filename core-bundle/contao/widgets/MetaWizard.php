@@ -141,6 +141,11 @@ class MetaWizard extends Widget
 	 */
 	public function generate()
 	{
+		if (!\is_array($this->varValue))
+		{
+			$this->varValue = array();
+		}
+
 		$count = 0;
 
 		// Only show the root page languages plus their primary language (see #7112, #7667, #7569)

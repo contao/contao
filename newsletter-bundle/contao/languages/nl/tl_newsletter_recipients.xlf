@@ -11,6 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate</source>
+        <target>Activeren</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -110,6 +111,23 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.4">
         <source>Activate</source>
+        <target>Activeren</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>Nieuwsbrief ontvanger</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>Blokkeren</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>Blokkeer ontvanger ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>Wil je ontvanger ID %s echt blokkeren?</target>
       </trans-unit>
     </body>
   </file>

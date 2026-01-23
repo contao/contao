@@ -145,6 +145,10 @@
         <source>Cannot move %s to %s because the target exists!</source>
         <target>Nelze přesunout %s do %s, protože již daný cíl existuje!</target>
       </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+        <target>Nahrávání více souborů najednou není podporováno u tohoto pole!</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
         <target>Přístup zamítnut! Současná adresa (%s) nesouhlasí s odkazovanou adresou (%s)!</target>
@@ -425,6 +429,20 @@
         <source>Text elements</source>
         <target>Textové prvky</target>
       </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+        <target>Změnit heslo</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+        <target>Zrušit účet</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+      </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
         <target>Nadpis</target>
@@ -704,6 +722,13 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>Začlenění perexu (ukázky) konkrétního článku.</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Dvoufázové ověření</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1805,8 +1830,8 @@
         <target>Jdi zpět</target>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
-        <target>Zpět na předešlou stránku</target>
+        <source>Go up one level</source>
+        <target>Jdi o úroveň výš</target>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
@@ -1868,6 +1893,10 @@
         <source>Search</source>
         <target>Prohledat</target>
       </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+        <target>Soubor</target>
+      </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
         <target>Nenalezeny žádné záznamy.</target>
@@ -1887,10 +1916,6 @@
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
         <target>Uložit a upravit související elementy</target>
-      </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
-        <target>Uložit a zpět</target>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
@@ -2219,6 +2244,10 @@
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
         <target>Smazat filtry</target>
+      </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
+        <target>Filtr</target>
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
@@ -2712,6 +2741,22 @@
         <source>Header</source>
         <target>Záhlaví</target>
       </trans-unit>
+      <trans-unit id="MSC.showProfile">
+        <source>Show user profile</source>
+        <target>Zobrazit uživatelský profil</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideProfile">
+        <source>Hide user profile</source>
+        <target>Skrýt uživatelský profil</target>
+      </trans-unit>
+      <trans-unit id="MSC.showMainNavigation">
+        <source>Show main navigation</source>
+        <target>Zobrazit hlavní navigaci</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideMainNavigation">
+        <source>Hide main navigation</source>
+        <target>Skrýt hlavní navigaci</target>
+      </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
         <target>Navigace stránek</target>
@@ -2805,9 +2850,23 @@
         <source>Favorites</source>
         <target>Oblíbené</target>
       </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
         <target>Uložit odkaz do Oblíbených</target>
+      </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+        <target>Odstranit URL z oblíbených</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+        <target>Opravdu chcete smazat stávající URL z vašich oblíbených? </target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
@@ -2905,6 +2964,13 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Nelze vytvořit URL náhledu, protože má povinná parametry.</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Nelze vytvořit URL náhledu, protože formulář obsahuje chyby.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpIndexSetting">
+        <source>The URL will not be indexed due to the robots tag settings.</source>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>Neplatná možnost: %s</target>
@@ -2925,9 +2991,21 @@
         <source>Manual</source>
         <target>Nápověda</target>
       </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+        <target>Úloha byly zařazena do fronty. Zkontrolujte přehled úloh, abyste se dozvěděli stav dané úlohy.</target>
+      </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
         <target>Přehled úloh na pozadí</target>
+      </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+        <target>Zobrazit přílohy</target>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
+        <target>Stáhnout přílohu %s</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -3034,8 +3112,13 @@
         <target>Zadejte prosím alespoň %s znaků</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Načítám výsledky...</target>
+        <source>Loading results …</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3044,6 +3127,18 @@
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
         <target>Upravit %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+        <target>Druh</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+        <target>Tagy</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
+        <target>Nebyly nalezené žádné výsledky nebo neexistují dostatečná oprávnění pro zobrazení odpovídajících výsledků.</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
@@ -3088,6 +3183,24 @@
       <trans-unit id="MSC.never_index">
         <source>Never index</source>
         <target>Nikdy neindexovat</target>
+      </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+        <target>Pole</target>
+      </trans-unit>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
+        <target>Klíčové slovo</target>
+      </trans-unit>
+      <trans-unit id="MSC.enter_fullscreen">
+        <source>Enter fullscreen mode</source>
+        <target>Spustit v celoobrazovém módu</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3241,6 +3354,18 @@
         <source>Collapse all nodes</source>
         <target>Sbalit všechny uzly</target>
       </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Filter</source>
+        <target>Filtr</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Show the filter panel</source>
+        <target>Zobrazit filtrovou lištu</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.2">
+        <source>Hide the filter panel</source>
+        <target>Skrýt filtrovou lištu</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Nové</target>
@@ -3296,6 +3421,14 @@
       <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
         <target>Smazat položku ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+        <target>Verze</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
+        <target>Zobrazit verze elementu ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
@@ -3384,6 +3517,22 @@
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
         <target>Vytvořit nový element uvnitř elementu ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions_legend">
+        <source>Permissions</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.0">
+        <source>Back end permissions</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.1">
+        <source>The changes made here are saved in the user and group settings.</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.groups">
+        <source>Groups</source>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.users">
+        <source>Users</source>
+        <target>Uživatelé</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

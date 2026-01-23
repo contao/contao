@@ -83,14 +83,22 @@ class FileTree extends Widget
 
 		if (!str_contains($varInput, ','))
 		{
-			$varInput = StringUtil::uuidToBin($varInput);
+			if (false !== $this->binary)
+			{
+				$varInput = StringUtil::uuidToBin($varInput);
+			}
 
 			return $this->multiple ? array($varInput) : $varInput;
 		}
 
 		$arrValue = array_values(array_filter(explode(',', $varInput)));
 
-		return $this->multiple ? array_map('\Contao\StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
+		if (false === $this->binary)
+		{
+			return $this->multiple ? $arrValue : $arrValue[0];
+		}
+
+		return $this->multiple ? array_map(StringUtil::uuidToBin(...), $arrValue) : StringUtil::uuidToBin($arrValue[0]);
 	}
 
 	/**
@@ -324,8 +332,11 @@ class FileTree extends Widget
             new Request.Contao({
               evalScripts: false,
               onSuccess: function(txt, json) {
-                $("ctrl_' . $this->strId . '").getParent("div").set("html", json.content);
-                json.javascript && Browser.exec(json.javascript);
+                var parent = $("ctrl_' . $this->strId . '").getParent("div");
+                parent.set("html", json.content);
+                if (json.javascript) {
+                    new Element("script", {text: json.javascript}).inject(parent.getElement(".selector_container"));
+                }
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", true, true);
                 $("ctrl_' . $this->strId . '").dispatchEvent(evt);

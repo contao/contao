@@ -87,6 +87,10 @@
         <source>Delete news archive ID %s</source>
         <target>حذف بایگانی خبری شناسه %s</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.tableLabel">
+        <source>News archive</source>
+        <target>بایگانی اخبار</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

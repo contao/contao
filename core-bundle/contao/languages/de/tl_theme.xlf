@@ -205,6 +205,10 @@
         <source>Export theme ID %s</source>
         <target>Theme ID %s exportieren</target>
       </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+        <target>Theme</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

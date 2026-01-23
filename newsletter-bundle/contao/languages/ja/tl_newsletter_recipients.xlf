@@ -113,6 +113,22 @@
         <source>Activate</source>
         <target>有効化</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>ニュースレターの宛先</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>ブロック</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>ID %sの宛先をブロック</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>ID %sの宛先をほんとうにブロックしますか?</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

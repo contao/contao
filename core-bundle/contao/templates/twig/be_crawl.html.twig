@@ -4,62 +4,97 @@
 
     <h2 class="sub_headline sub_headline_index">{{ 'tl_maintenance.crawler'|trans }}</h2>
 
-    {% if isRunning|default %}
-        <div class="inner">
-            <div class="progress">
-                <div class="progress-bar running" role="progressbar" style="width:0" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-            </div>
-            <p class="progress-count">0 / 0</p>
-            <div class="results running">
-                <p class="crawl-hint show-when-running">{{ hint }}</p>
-                {% for subscriber in activeSubscribers %}
-                    <h3>{{ ('tl_maintenance.crawlSubscriberNames.' ~ subscriber.name)|trans }}</h3>
-                    <div class="result" data-subscriber="{{ subscriber.name }}">
-                        <p class="summary show-when-finished"></p>
-                        <p class="warning show-when-finished"></p>
-                        <p class="subscriber-log"><a href="{{ subscriberLogHrefs[subscriber.name] }}" class="tl_submit">{{ 'tl_maintenance.crawlDownloadLog'|trans }}</a></p>
-                    </div>
-                    <p class="wait show-when-running">{{ 'tl_maintenance.crawlWaitToBeFinished'|trans }}</p>
-                {% endfor %}
-                <h3>{{ 'tl_maintenance.crawlDebugLog'|trans }}</h3>
-                <p>{{ 'tl_maintenance.crawlDebugLogExplain'|trans }}</p>
-                <p class="debug-log"><a href="{{ debugLogHref }}" class="tl_submit">{{ 'tl_maintenance.crawlDownloadLog'|trans }}</a></p>
-            </div>
-            <script>Backend.crawl()</script>
+    {% if message|default %}
+        <div class="tl_message">
+            {{ message|raw }}
         </div>
-    {% else %}
-        <form class="tl_form" method="get">
-            <div class="tl_formbody_edit">
-                <input type="hidden" name="do" value="maintenance">
-                <input type="hidden" name="act" value="crawl">
-                <input type="hidden" name="rt" value="{{ contao.request_token }}">
-                <fieldset class="tl_tbox">
-                    <div class="widget">
-                        {{ subscribersWidget.parse()|raw }}
-                        {% if not subscribersWidget.hasErrors() %}
-                            <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlSubscribers.1'|trans }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="widget w50">
-                        {{ maxDepthWidget.parse()|raw }}
-                        {% if not maxDepthWidget.hasErrors() %}
-                            <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlDepth.1'|trans }}</p>
-                        {% endif %}
-                    </div>
-                    {% if memberWidget|default %}
-                        <div class="widget w50 clr">
-                            {{ memberWidget.parse()|raw }}
-                            {% if not memberWidget.hasErrors() %}
-                                <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlMember.1'|trans }}</p>
-                            {% endif %}
-                        </div>
+    {% endif %}
+
+    <form class="tl_form" method="post">
+        <div class="tl_formbody_edit">
+            <input type="hidden" name="trigger_crawl" value="true">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            <fieldset class="tl_tbox">
+                <div class="widget">
+                    {{ subscribersWidget.parse()|raw }}
+                    {% if not subscribersWidget.hasErrors() %}
+                        <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlSubscribers.1'|trans }}</p>
                     {% endif %}
-                </fieldset>
+                </div>
+                <div class="widget w50">
+                    {{ maxDepthWidget.parse()|raw }}
+                    {% if not maxDepthWidget.hasErrors() %}
+                        <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlDepth.1'|trans }}</p>
+                    {% endif %}
+                </div>
+                {% if indexProtected %}
+                    <div class="widget w50 clr">
+                        <h3><label for="crawl_member">{{ 'tl_maintenance.crawlMember.0'|trans }}</label></h3>
+                        <input type="text" name="crawl_member" id="crawl_member" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}">
+                        <datalist id="userlist"></datalist>
+                        {% if invalidUser|default %}
+                            <p class="tl_error tl_tip">{{ 'ERR.previewSwitchInvalidUsername'|trans([user]) }}</p>
+                        {% else %}
+                            <p class="tl_help tl_tip">{{ 'tl_maintenance.crawlMember.1'|trans }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </fieldset>
+        </div>
+        {% if isActive %}
+            <div class="tl_formbody_submit">
+                <div class="tl_submit_container">
+                    <button type="submit" class="tl_submit">{{ 'tl_maintenance.startCrawling'|trans }}</button>
+                    <a href="" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
+                </div>
             </div>
+        {% else %}
             <div class="tl_submit_container">
                 <button type="submit" class="tl_submit">{{ 'tl_maintenance.startCrawling'|trans }}</button>
             </div>
-        </form>
-    {% endif %}
+        {% endif %}
+    </form>
 
 </div>
+
+<script>
+    (function () {
+        const userField = document.querySelector('input[name="crawl_member"]');
+        const userList = document.querySelector('datalist[id="userlist"]');
+
+        if (userField && userList && document.createElement('datalist') && window.HTMLDataListElement) {
+            let timer;
+
+            userField.addEventListener('input', function () {
+                userField.setCustomValidity('');
+
+                if (userField.value.length < 2) {
+                    return;
+                }
+
+                if (timer) {
+                    clearTimeout(timer);
+                }
+
+                timer = setTimeout(function () {
+                    fetch(document.location.href, {
+                        method: 'POST',
+                        body: new URLSearchParams({
+                            FORM_SUBMIT: 'datalist_members',
+                            REQUEST_TOKEN: document.querySelector('input[name="REQUEST_TOKEN"]').value,
+                            trigger_crawl: true,
+                            value: userField.value
+                        })
+                    }).then((response) => {
+                        userList.innerHTML = '';
+                        response.json().then(json => json.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item;
+                            userList.appendChild(option);
+                        }));
+                    });
+                }, 300);
+            });
+        }
+    })();
+</script>

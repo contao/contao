@@ -79,38 +79,15 @@ class BackendHeaderListener
 
         $tree->addChild($alerts);
 
-        $colorScheme = $event
-            ->getFactory()
-            ->createItem('color-scheme')
-            ->setUri('#')
-            ->setLinkAttribute('class', 'icon-color-scheme')
-            ->setLinkAttribute('title', '') // Required for the tips.js script
-            ->setLinkAttribute('data-controller', 'contao--color-scheme')
-            ->setLinkAttribute('data-action', 'contao--color-scheme#toggle')
-            ->setLinkAttribute('data-contao--color-scheme-target', 'label')
-            ->setLinkAttribute(
-                'data-contao--color-scheme-i18n-value',
-                json_encode(
-                    [
-                        'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
-                        'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
-                    ],
-                    JSON_THROW_ON_ERROR,
-                ),
-            )
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($colorScheme);
-
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showProfile', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
             ->setAttribute('data-controller', 'contao--toggle-state')
             ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
             ->setAttribute('data-contao--toggle-state-active-class', 'active')
+            ->setAttribute('data-contao--toggle-state-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
+            ->setAttribute('data-contao--toggle-state-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
@@ -131,6 +108,7 @@ class BackendHeaderListener
 
         $login = $factory
             ->createItem('login')
+            ->setAttribute('class', 'separator')
             ->setLabel('MSC.profile')
             ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'nb' => '1']))
             ->setLinkAttribute('class', 'icon-profile')
@@ -159,9 +137,31 @@ class BackendHeaderListener
 
         $submenu->addChild($favorites);
 
+        $colorScheme = $factory
+            ->createItem('color-scheme')
+            ->setLabel('<button class="icon-color-scheme" type="button" data-contao--color-scheme-target="label" data-action="contao--color-scheme#toggle:prevent">'.$this->translator->trans('MSC.lightMode', [], 'contao_default').'</button>')
+            ->setAttribute('class', 'separator')
+            ->setAttribute('data-controller', 'contao--color-scheme')
+            ->setAttribute(
+                'data-contao--color-scheme-i18n-value',
+                json_encode(
+                    [
+                        'dark' => $this->translator->trans('MSC.darkMode', [], 'contao_default'),
+                        'light' => $this->translator->trans('MSC.lightMode', [], 'contao_default'),
+                    ],
+                    JSON_THROW_ON_ERROR,
+                ),
+            )
+            ->setLabelAttribute('class', 'color-scheme')
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $submenu->addChild($colorScheme);
+
         $burger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)

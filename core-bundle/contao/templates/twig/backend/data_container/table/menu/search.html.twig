@@ -1,19 +1,19 @@
 {% trans_default_domain 'contao_default' %}
 
-<div class="tl_search tl_subpanel">
+<fieldset class="tl_search tl_subpanel">
+    <legend>{{ 'MSC.search'|trans }}</legend>
     {{ include('@Contao/backend/data_container/table/menu/_select.html.twig', {
         name: 'tl_search',
-        title: 'MSC.search'|trans,
+        title: 'MSC.field'|trans,
     }) }}
-
-    <span>=</span>
-
+    <label for="tl_search_term">{{ 'MSC.keyword'|trans }}</label>
     {% set input_attributes = attrs()
         .set('type', 'search')
+        .set('id', 'tl_search_term')
         .set('name', 'tl_value')
         .set('value', value)
         .addClass('tl_text')
         .addClass('active', active)
     %}
     <input{{ input_attributes }}/>
-</div>
+</fieldset>

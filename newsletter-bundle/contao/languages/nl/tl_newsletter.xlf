@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send</source>
+        <target>Verzenden</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
@@ -247,6 +248,10 @@
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
         <target>Plak in dit kanaal</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+        <target>Nieuwsbrief</target>
       </trans-unit>
     </body>
   </file>

@@ -41,6 +41,14 @@
         <source>Here you can override the global back end theme.</source>
         <target>Aquí puedes sobre escribir el tema del back end.</target>
       </trans-unit>
+      <trans-unit id="tl_user.backendWidth.0">
+        <source>Maximum width</source>
+        <target>Ancho máximo</target>
+      </trans-unit>
+      <trans-unit id="tl_user.backendWidth.1">
+        <source>Here you can limit the width of the back end container.</source>
+        <target>Aquí puede limitar el ancho del contenedor back-end.</target>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
         <target>Cargador de archivos</target>
@@ -233,14 +241,6 @@
         <source>Here you can grant access to one or more forms.</source>
         <target>Por favor selecciona el tipo de formularios que quieres habilitar para este usuario</target>
       </trans-unit>
-      <trans-unit id="tl_user.formp.0">
-        <source>Form permissions</source>
-        <target>Permisos de formulario</target>
-      </trans-unit>
-      <trans-unit id="tl_user.formp.1">
-        <source>Here you can define the form permissions.</source>
-        <target>Aquí puedes definir los permisos del formulario.</target>
-      </trans-unit>
       <trans-unit id="tl_user.amg.0">
         <source>Allowed member groups</source>
         <target>Miembros de grupos permitidos</target>
@@ -248,6 +248,42 @@
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
         <target>Los miembros de estos grupos se pueden utilizar en la vista preliminar del front end.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.0">
+        <source>Table permissions</source>
+        <target>Permisos de tabla</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.1">
+        <source>Here you can select which operations are allowed for which table.</source>
+        <target>Aquí puede seleccionar qué operaciones están permitidas para qué tabla.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.create">
+        <source>Create</source>
+        <target>Crear</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.update">
+        <source>Update</source>
+        <target>Actualizar</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.delete">
+        <source>Delete</source>
+        <target>Borrar</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.other">
+        <source>Additional permissions</source>
+        <target>Permisos adicionales</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_create">
+        <source>Create records in &quot;%s&quot;</source>
+        <target>Crear registros en &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_update">
+        <source>Update records of &quot;%s&quot;</source>
+        <target>Actualizar registros de &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_delete">
+        <source>Delete records of &quot;%s&quot;</source>
+        <target>Eliminar registros de &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -332,6 +368,10 @@
       <trans-unit id="tl_user.amg_legend">
         <source>Allowed member groups</source>
         <target>Miembros de grupos permitidos</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud_legend">
+        <source>Table permissions</source>
+        <target>Permisos de tabla</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
@@ -432,6 +472,10 @@
       <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>
         <target>Cambiar al usuario con ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user.tableLabel">
+        <source>User</source>
+        <target>Usuario</target>
       </trans-unit>
     </body>
   </file>

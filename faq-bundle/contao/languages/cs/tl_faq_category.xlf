@@ -69,6 +69,10 @@
         <source>Delete category ID %s</source>
         <target>Smazat kategorii s ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_faq_category.tableLabel">
+        <source>FAQ category</source>
+        <target>Kategorie FAQ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -1,13 +1,16 @@
-{% if title is defined %}
-    <label for="{{ name }}"><strong>{{ title }}:</strong></label>
-{% endif %}
+<label for="{{ name }}">{{ title }}</label>
 
-<div class="tl_select_wrapper" data-controller="contao--choices">
+{% set select_wrapper_attributes = attrs()
+    .addClass('tl_select_wrapper')
+    .set('data-controller', 'contao--choices')
+%}
+<div{{ select_wrapper_attributes }}>
     {% set select_attributes = attrs()
         .set('name', name)
         .set('id', name)
         .addClass('tl_select')
         .addClass('active', active|default)
+        .set('onchange', 'this.form.requestSubmit()', auto_submit|default(false))
         .mergeWith(select_attributes|default)
     %}
     <select{{ select_attributes }}>

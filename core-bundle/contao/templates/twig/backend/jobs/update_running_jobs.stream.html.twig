@@ -1,0 +1,44 @@
+{% trans_default_domain 'contao_jobs' %}
+
+{% set running_jobs = jobs|filter(job => not job.isCompleted) %}
+
+{# Update the jobs list in the header #}
+<turbo-stream action="update" target="running-jobs">
+    <template>
+        {% set list_attributes = attrs()
+            .set('data-jobs', running_jobs|length)
+            .set('data-contao--jobs-target', 'list')
+        %}
+        <div{{ list_attributes }}>
+            <ul>
+                {% for job in running_jobs %}
+                    <li>
+                        {{ include('@Contao/backend/jobs/progress.html.twig') }}
+                        {{ ('jobs.type_label.' ~ job.type)|trans }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </template>
+</turbo-stream>
+
+{# Update the status columns #}
+{% for job in jobs %}
+    <turbo-stream action="update" targets="[data-job-progress='{{ job.uuid }}']">
+        <template>
+            {{ include('@Contao/backend/jobs/progress.html.twig') }}
+        </template>
+    </turbo-stream>
+
+    <turbo-stream action="update" targets="[data-job-status='{{ job.uuid }}']">
+        <template>
+            {{ include('@Contao/backend/jobs/status.html.twig') }}
+        </template>
+    </turbo-stream>
+
+    <turbo-stream action="update" targets="[data-job-attachments='{{ job.uuid }}']">
+        <template>
+            {{ include('@Contao/backend/jobs/attachments.html.twig', {attachments: attachments[job.uuid]}) }}
+        </template>
+    </turbo-stream>
+{% endfor %}

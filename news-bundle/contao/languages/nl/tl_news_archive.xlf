@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.children.0">
         <source>News items</source>
+        <target>Nieuwsberichten</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.children.1">
         <source>Edit the news items of news archive ID %s</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate</source>
+        <target>Kopie</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate news archive ID %s</source>
@@ -86,6 +88,10 @@
       <trans-unit id="tl_news_archive.delete.1">
         <source>Delete news archive ID %s</source>
         <target>Verwijder nieuwsarchief ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.tableLabel">
+        <source>News archive</source>
+        <target>Nieuwsarchief</target>
       </trans-unit>
     </body>
   </file>
