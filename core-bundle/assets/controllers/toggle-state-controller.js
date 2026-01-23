@@ -3,7 +3,8 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     #closeDelay = null;
 
-    static targets = ['controller', 'controls', 'label'];
+    static targets = ['controller', 'label', 'controls'];
+    static outlets = ['contao--toggle-state'];
     static classes = ['active', 'inactive'];
 
     static values = {
@@ -14,16 +15,16 @@ export default class extends Controller {
     };
 
     connect() {
-        if (!this.controlsTarget.id) {
+        if (this.hasControlsTarget && !this.controlsTarget.id) {
             this.controlsTarget.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
         }
 
-        if (!this.controlsTarget.hasAttribute('tabindex')) {
+        if (this.hasControlsTarget && !this.controlsTarget.hasAttribute('tabindex')) {
             this.controlsTarget.setAttribute('tabindex', '-1');
         }
 
         for (const controllerTarget of this.controllerTargets) {
-            controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
+            controllerTarget.setAttribute('aria-controls', this.hasControlsTarget ? this.controlsTarget.id : this.contaoToggleStateOutletElement.id);
             controllerTarget.setAttribute('aria-expanded', 'false');
         }
     }
@@ -31,7 +32,7 @@ export default class extends Controller {
     toggle() {
         const isOpen = 'true' === this.controllerTarget.ariaExpanded;
 
-        this.#toggleState(!isOpen);
+        this.toggleState(!isOpen);
     }
 
     open(event) {
@@ -39,7 +40,7 @@ export default class extends Controller {
             return;
         }
 
-        this.#toggleState(true, event);
+        this.toggleState(true, event);
     }
 
     close(event) {
@@ -49,11 +50,11 @@ export default class extends Controller {
 
         if (event?.params.closeDelay) {
             clearTimeout(this.#closeDelay);
-            this.#closeDelay = setTimeout(() => this.#toggleState(false), event.params.closeDelay);
+            this.#closeDelay = setTimeout(() => this.toggleState(false), event.params.closeDelay);
             return;
         }
 
-        this.#toggleState(false, event);
+        this.toggleState(false, event);
     }
 
     documentClick(event) {
@@ -65,18 +66,22 @@ export default class extends Controller {
             return;
         }
 
-        this.#toggleState(false);
+        this.toggleState(false);
     }
 
-    #toggleState(state, event = null) {
+    toggleState(state, event = null) {
         clearTimeout(this.#closeDelay);
 
-        if (this.hasActiveClass) {
+        if (this.hasControlsTarget && this.hasActiveClass) {
             this.controlsTarget.classList.toggle(this.activeClass, state);
         }
 
-        if (this.hasInactiveClass) {
+        if (this.hasControlsTarget && this.hasInactiveClass) {
             this.controlsTarget.classList.toggle(this.inactiveClass, !state);
+        }
+
+        if (this.hasContaoToggleStateOutlet) {
+            this.contaoToggleStateOutlet.toggleState(state, event);
         }
 
         for (const controllerTarget of this.controllerTargets) {
@@ -102,12 +107,14 @@ export default class extends Controller {
             return;
         }
 
-        setTimeout(() => {
-            if (state) {
-                this.controlsTarget.focus();
-            } else {
-                this.controllerTarget.focus();
-            }
-        }, 50);
+        if (this.hasControlsTarget) {
+            setTimeout(() => {
+                if (state) {
+                    this.controlsTarget.focus();
+                } else {
+                    this.controllerTarget.focus();
+                }
+            }, 50);
+        }
     }
 }

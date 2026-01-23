@@ -11,11 +11,7 @@
     .set('id', 'top')
     .addClass('be_main')
     .addClass('popup', isPopup)
-    .set('data-controller', 'contao--tooltips contao--toggle-state')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-    .set('data-contao--toggle-state-active-class', 'active')
-    .set('data-contao--toggle-state-active-title-value', 'MSC.hideMainNavigation'|trans)
-    .set('data-contao--toggle-state-inactive-title-value', 'MSC.showMainNavigation'|trans)
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -99,7 +95,7 @@
 
         {% block left %}
             {% if not renderMainOnly %}
-                <aside id="left" data-contao--toggle-state-target="controls">
+                <aside id="left" data-controller="contao--toggle-state" data-contao--toggle-state-target="controls" data-contao--toggle-state-active-class="active">
                     {{ menu|raw }}
                     <div class="version">
                         {% block version %}

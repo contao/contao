@@ -161,7 +161,7 @@ class BackendHeaderListener
 
         $burger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" data-controller="contao--toggle-state" data-contao--toggle-state-target="controller" data-contao--toggle-state-contao--toggle-state-outlet="#left" data-action="contao--toggle-state#toggle:prevent click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close" data-contao--toggle-state-active-title-value="'.$this->translator->trans('MSC.hideMainNavigation', [], 'contao_default').'" data-contao--toggle-state-inactive-title-value="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
