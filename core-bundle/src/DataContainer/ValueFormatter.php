@@ -263,12 +263,11 @@ class ValueFormatter implements ResetInterface
                 return '';
             }
 
-            [$table, $field] = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'], 2);
             $fk = $this->foreignKeyParser->parse($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']);
             $value = $this->fetchForeignValue($fk->getTableName(), $fk->getColumnExpression(), $value);
 
             if ($fk->getColumnName()) {
-                return $this->getLabel($table, $field, $value, $dc);
+                return $this->getLabel($fk->getTableName(), $fk->getColumnName(), $value, $dc);
             }
 
             return $value;

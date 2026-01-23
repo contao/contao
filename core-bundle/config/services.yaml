@@ -187,12 +187,6 @@ services:
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
 
-    contao.database_util:
-        class: Contao\CoreBundle\Util\DatabaseUtil
-        public: true
-        arguments:
-            - '@database_connection'
-
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
@@ -287,7 +281,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '@contao.database_util'
+            - '@contao.data_container.foreign_key_parser'
             - '@translator'
 
     contao.data_container.virtual_fields_handler:
@@ -1595,5 +1589,4 @@ services:
     Contao\CoreBundle\Twig\Finder\FinderFactory: '@contao.twig.finder_factory'
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
-    Contao\CoreBundle\Util\DatabaseUtil: '@contao.database_util'
     Contao\CoreBundle\Util\ProcessUtil: '@contao.process_util'
