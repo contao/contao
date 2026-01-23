@@ -38,22 +38,22 @@
 
 .tl_listing .tl_left {
     flex-grow: 1;
-    display: flex;
-    gap: 4px;
     box-sizing: border-box;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
     min-height: 18px;
-
-    .foldable {
-        margin-right: -4px;
-    }
 }
 
 .tree_view .tl_left.with-offset {
     padding-left: calc(var(--level) * 16px);
+    display: flex;
+    gap: 4px;
+
+    .foldable {
+        margin-right: -4px;
+    }
 }
 
 .tl_tree .tl_left.tl_left_dragging {
