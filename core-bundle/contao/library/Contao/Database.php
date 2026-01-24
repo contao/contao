@@ -177,16 +177,14 @@ class Database
 
 		if ($blnIsField)
 		{
-			$varSet = implode('.', array_map(self::quoteIdentifier(...), explode('.', $varSet)));
+			$varSet = static::quoteIdentifier($varSet);
 		}
 		else
 		{
 			$varSet = $this->resConnection->quote($varSet);
 		}
 
-		$strKey = implode('.', array_map(self::quoteIdentifier(...), explode('.', $strKey)));
-
-		return "FIND_IN_SET(" . $strKey . ", " . $varSet . ")";
+		return "FIND_IN_SET(" . static::quoteIdentifier($strKey) . ", " . $varSet . ")";
 	}
 
 	/**
@@ -682,21 +680,6 @@ class Database
 			return $strName;
 		}
 
-		$connection = System::getContainer()->get('database_connection');
-
-		// Backwards-compatibility for doctrine/dbal < 4.3
-		if (!method_exists($connection, 'quoteSingleIdentifier'))
-		{
-			return $connection->quoteIdentifier($strName);
-		}
-
-		if (str_contains($strName, '.'))
-		{
-			trigger_deprecation('contao/core-bundle', '5.7', 'Passing a dot-separated identifier is deprecated. Use %s individually for each part of a qualified name instead.', __METHOD__, __METHOD__);
-
-			return implode('.', array_map($connection->quoteSingleIdentifier(...), explode('.', $strName)));
-		}
-
-		return $connection->quoteSingleIdentifier($strName);
+		return System::getContainer()->get('database_connection')->quoteIdentifier($strName);
 	}
 }
