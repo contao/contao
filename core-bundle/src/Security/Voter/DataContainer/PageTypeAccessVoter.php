@@ -92,6 +92,16 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
         $currentPid = $action instanceof UpdateAction ? (int) $action->getCurrentPid() : null;
         $pid = (int) ($action->getNewPid() ?? $currentPid);
 
+        // Always allow copy to clipboard operation (pasting is still disallowed if the page type already exists)
+        if (
+            $action instanceof CreateAction
+            && \in_array($type, self::FIRST_LEVEL_TYPES, true)
+            && \array_key_exists('sorting', $action->getNew())
+            && null === $action->getNew()['sorting']
+        ) {
+            return true;
+        }
+
         if (
             (null !== $action->getNewPid() || null !== ($action->getNew()['sorting'] ?? null))
             && (!$action instanceof UpdateAction || \in_array($type, self::FIRST_LEVEL_TYPES, true))
