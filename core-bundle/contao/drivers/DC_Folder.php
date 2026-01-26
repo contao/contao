@@ -544,8 +544,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false
 			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
 
+		$panel = $this->panel();
+
 		// Build the tree
-		$return = $this->panel() . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
+		$return = $panel . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
@@ -604,7 +606,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		return '<div
 				class="tree-view"
-				data-controller="contao--toggle-nodes contao--toggle-state contao--element-count"
+				data-controller="contao--toggle-nodes' . ($panel ? ' contao--toggle-state contao--element-count"' : '') . '
 				data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 				data-contao--toggle-nodes-load-action-value="loadFileManager"
 				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
@@ -614,11 +616,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
-				data-contao--toggle-state-active-class="active"
+				' . ($panel ? 'data-contao--toggle-state-active-class="active"
 				data-contao--toggle-state-active-title-value="' . $GLOBALS['TL_LANG']['DCA']['toggleFilter'][2] . '"
 				data-contao--toggle-state-inactive-title-value="' . $GLOBALS['TL_LANG']['DCA']['toggleFilter'][1] . '"
 				data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"
-				data-action="click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close"
+				data-action="click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close"' : '') . '
 			>' . $return . '</div>';
 	}
 
