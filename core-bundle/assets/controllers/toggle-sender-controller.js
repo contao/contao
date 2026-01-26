@@ -38,6 +38,11 @@ export default class extends Controller {
 
     close(event) {
         for (const receiver of this.contaoToggleReceiverOutlets) {
+            // Ignore 'mouseleave' event on the sender, if we are entering the receiver
+            if ('mouseleave' === event.type && receiver.element.contains(event.relatedTarget)) {
+                continue;
+            }
+
             receiver.close(event);
         }
     }

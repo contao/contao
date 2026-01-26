@@ -54,7 +54,7 @@
         .addClass('trail-toggle')
         .set('type', 'button')
         .set('data-controller', 'contao--toggle-sender')
-        .set('data-action', 'contao--toggle-sender#toggle:prevent mouseenter->contao--toggle-sender#open:prevent')
+        .set('data-action', 'contao--toggle-sender#toggle:prevent mouseenter->contao--toggle-sender#open:prevent mouseleave->contao--toggle-sender#close:prevent')
         .set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#breadcrumb .trail-list')
         .set('title', title)
     %}
