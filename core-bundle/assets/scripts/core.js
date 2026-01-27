@@ -613,6 +613,12 @@ window.Backend =
 				document.dispatchEvent(new CustomEvent('contao--simple-modal:hide'));
 			}
 		});
+		M.addButton(Contao.lang.cancel, 'btn', function() {
+			if (this.buttons[0].hasClass('btn-disabled')) {
+				return;
+			}
+			this.hide();
+		});
 		M.addButton(Contao.lang.apply, 'btn primary', function() {
 			if (this.buttons[1].hasClass('btn-disabled')) {
 				return;
@@ -644,12 +650,6 @@ window.Backend =
 				}
 			}
 			opt.callback(ul.get('data-table'), val);
-			this.hide();
-		});
-		M.addButton(Contao.lang.cancel, 'btn', function() {
-			if (this.buttons[0].hasClass('btn-disabled')) {
-				return;
-			}
 			this.hide();
 		});
 		M.show({
