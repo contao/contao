@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Model\Collection;
+use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
