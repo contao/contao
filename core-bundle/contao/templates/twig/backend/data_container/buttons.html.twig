@@ -24,8 +24,7 @@
                     .set('data-controller', 'contao--toggle-receiver')
                     .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '.tl_submit_container .split-toggle')
                     .set('data-contao--toggle-receiver-inactive-class', 'invisible')
-                    .set(
-                        'data-action', [
+                    .set('data-action', [
                             'focusin->contao--toggle-receiver#open',
                             'focusout->contao--toggle-receiver#close',
                             'click@document->contao--toggle-receiver#documentClick',

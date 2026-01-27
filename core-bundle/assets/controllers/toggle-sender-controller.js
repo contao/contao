@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static outlets = ['contao--toggle-receiver'];
+
     static values = {
         activeLabel: String,
         inactiveLabel: String,
@@ -38,7 +39,7 @@ export default class extends Controller {
 
     close(event) {
         for (const receiver of this.contaoToggleReceiverOutlets) {
-            // Ignore 'mouseleave' event on the sender, if we are entering the receiver
+            // Ignore the "mouseleave" event on the sender if we enter the receiver
             if ('mouseleave' === event.type && receiver.element.contains(event.relatedTarget)) {
                 continue;
             }

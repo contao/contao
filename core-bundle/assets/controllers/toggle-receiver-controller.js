@@ -93,10 +93,8 @@ export default class extends Controller {
         setTimeout(() => {
             if (state) {
                 this.element.focus();
-            } else {
-                if (this.hasContaoToggleSenderOutlet) {
-                    this.contaoToggleSenderOutlet.element.focus();
-                }
+            } else if (this.hasContaoToggleSenderOutlet) {
+                this.contaoToggleSenderOutlet.element.focus();
             }
         }, 50);
     }
