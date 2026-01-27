@@ -544,8 +544,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false
 			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
 
+		$panel = $this->panel();
+
 		// Build the tree
-		$return = $this->panel() . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
+		$return = $panel . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
@@ -2870,7 +2872,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFile'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + ($dragHandle ? 0 : 16)) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
