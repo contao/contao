@@ -74,7 +74,10 @@
     color: inherit;
 }
 
-.content-inner .tl_message:first-child {
-    border-radius: calc(var(--border-radius-lg) - 1px) calc(var(--border-radius-lg) - 1px) 0 0;
-    overflow: clip;
+.content,
+.content-inner {
+    .tl_message:first-child {
+        border-radius: calc(var(--border-radius-lg) - 1px) calc(var(--border-radius-lg) - 1px) 0 0;
+        overflow: clip;
+    }
 }
