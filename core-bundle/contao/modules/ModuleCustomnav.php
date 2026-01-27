@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -25,9 +26,9 @@ class ModuleCustomnav extends Module
 	protected $strTemplate = 'mod_customnav';
 
 	/**
-	 * @var Model\Collection|null
+	 * @var Collection|null
 	 */
-	protected $objPages = null;
+	protected $objPages;
 
 	/**
 	 * Redirect to the selected page
@@ -92,7 +93,7 @@ class ModuleCustomnav extends Module
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
-		foreach ($this->objPages ?? [] as $objModel)
+		foreach ($this->objPages ?? array() as $objModel)
 		{
 			$objModel->loadDetails();
 
