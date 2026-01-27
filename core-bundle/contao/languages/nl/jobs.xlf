@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="jobs.progress.0">
         <source>Progress</source>
+        <target>Voortgang</target>
       </trans-unit>
       <trans-unit id="jobs.status.0">
         <source>Status</source>
@@ -42,6 +43,7 @@
       </trans-unit>
       <trans-unit id="jobs.type_label.crawl">
         <source>Crawling the website</source>
+        <target>De website crawlen</target>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>

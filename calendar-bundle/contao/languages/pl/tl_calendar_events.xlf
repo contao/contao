@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.1">
         <source>Here you can change the author of the event.</source>
@@ -139,7 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.0">
         <source>Repeat event</source>
-        <target>Wydarzeni cykliczne</target>
+        <target>Wydarzenie cykliczne</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.1">
         <source>Create a recurring event.</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.0">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokaż od</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokaż do</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure_legend">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.days">
         <source>day(s)</source>
@@ -375,6 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy.1">
         <source>Copy event ID %s</source>
+        <target>Kopiuj wydarzenie ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cut.1">
         <source>Move event ID %s</source>
@@ -398,9 +399,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.3">
         <source>Unpublish</source>
+        <target>Ukryj</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.4">
         <source>Publish</source>
+        <target>Opublikuj</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
@@ -416,9 +419,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.3">
         <source>Unfeature</source>
+        <target>Usuń wyróżnienie</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.4">
         <source>Feature</source>
+        <target>Wyróżnij</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

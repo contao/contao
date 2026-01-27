@@ -2,6 +2,37 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.0-RC2] (2026-01-27)
+
+**New features:**
+
+- [#9243] Add the `check-all` controller to the CUD and CHMOD widget ([aschempp])
+- [#9271] Cache the root parent calls for trail calculation ([Toflar])
+
+**Fixed issues:**
+
+- [#9317] Only add the border radius if the jump targets are not sticky ([leofeyer])
+- [#9320] Check for the theme slug when rendering Twig surrogate templates ([zoglo])
+- [#9318] Return early in the `ModuleCustomnav::generate()` method if there are no pages ([fritzmg])
+- [#9258] Add the `toggle-sender` and `toggle-receiver` Stimulus controllers ([fritzmg])
+- [#9319] Cast the column object in the legacy gallery to an array ([zoglo])
+- [#9314] Fix the mobile menu layout for views without a Turbo frame ([zoglo])
+- [#9312] Unify the gray shades of the light design ([leofeyer])
+- [#9304] Only add the filter panel controller if there is a panel ([aschempp])
+- [#9299] Fix a hierarchy styling issue in `DC_Folder` ([fritzmg])
+- [#9091] Fix quoting database fields in the value formatter ([aschempp])
+- [#9297] Allow to create and edit favorites ([aschempp])
+- [#9295] Deep clone the textarea node in the Template Studio ([zoglo])
+- [#9294] Increase the border radius of the content areas ([leofeyer])
+- [#9284] Check for `FORM_SUBMIT` in `LoginController::getTargetPath()` ([fritzmg])
+- [#9287] Use `NoLayoutSpecifiedException` in `AbstractLayoutPageController` ([fritzmg])
+- [#9283] Add `|raw` to `recurring` in `event_full.html.twig` as it might contain HTML ([lukasbableck])
+- [#9276] Fix a syntax error in the `be_tinyMCE.html.twig` language setting ([lukasbableck])
+- [#9277] Fix the syntax in `news_short.html.twig` for the news archive ID CSS class ([lukasbableck])
+- [#9274] Replace insert tags in headlines ([bytehead])
+- [#9267] Prevent errors when teasers are null ([fritzmg])
+- [#9266] Fix the legacy template editor ([aschempp])
+
 ## [5.7.0-RC1] (2026-01-20)
 
 **New features:**
@@ -11,6 +42,7 @@ This project adheres to [Semantic Versioning].
 - [#9268] Update the Node packages ([leofeyer])
 - [#8816] Add the `ChangePasswordController` as content element ([bytehead])
 - [#8801] Add the `CloseAccountController` as content element ([bytehead])
+- [#9253] Refactor the `DC_Table` record listing templates ([m-vo])
 - [#9147] Implement tree trail support for the back end breadcrumb navigation ([zoglo])
 - [#9186] Add scroll buttons to the jump targets navigation ([zoglo])
 - [#9192] Allow opening the back end search with keyboard shortcuts ([zoglo])
@@ -109,8 +141,8 @@ This project adheres to [Semantic Versioning].
 - [#8494] Re-add `webpack-dev-server` and configure hot module replacement ([zoglo])
 - [#8799] Do not render empty labels in widgets ([zoglo])
 - [#8785] Use the Imagine info provider for format detection ([ausi])
-- [#8786] Add new basic entities `[lsqb]` and `[rsqb]` ([ausi])
-- [#8630] Implemented searching by UUID in the file manager ([Toflar])
+- [#8786] Add the new basic entities `[lsqb]` and `[rsqb]` ([ausi])
+- [#8630] Implement searching by UUID in the file manager ([Toflar])
 - [#8608] Add support for YouTube's `mute=1` parameter ([fritzmg])
 
 **Fixed issues:**
@@ -119,19 +151,18 @@ This project adheres to [Semantic Versioning].
 - [#9262] Bump the `hotwired/turbo` version ([m-vo])
 - [#9257] Apply the missing changes to the new Twig templates ([ausi])
 - [#9256] Also test for `iPhone` and `iPad` in the deep link controller ([leofeyer])
-- [#9253] Refactor the `DC_Table` record listing templates ([m-vo])
 - [#9247] Ignore DCAs whose tables are defined via a Doctrine entity ([lukasbableck])
-- [#9252] Fix missing virtual fields handler service argument ([Toflar])
+- [#9252] Fix the missing virtual fields handler service argument ([Toflar])
 - [#9248] Ignore `#tl_limit` for the filter count ([fritzmg])
 - [#9251] Fix the submit button order in the data container panel ([m-vo])
 - [#9236] Fix rendering empty DC views ([aschempp])
-- [#9105] Fix missing template fields for forms ([aschempp])
+- [#9105] Fix the missing template fields for forms ([aschempp])
 - [#9241] Fix the `enable` action for the row wizard ([zoglo])
 - [#9197] Add `filePicker` and `pageTree` support to the row wizard ([zoglo])
 - [#9233] Fix the row variable in parent mode ([aschempp])
-- [#9230] Fix popup for wildcard links ([aschempp])
+- [#9230] Fix the popup for wildcard links ([aschempp])
 - [#9223] Use the drag handle label from the current table ([de-es])
-- [#9224] Rename abstract form type to fit Symfony naming schema ([bytehead])
+- [#9224] Rename the abstract form type to fit the Symfony naming schema ([bytehead])
 - [#9227] Use virtual fields for the new `tl_content` fields ([fritzmg])
 - [#9222] Remove autoconfigured tags ([aschempp])
 - [#9221] Remove leftover permissions ([aschempp])
@@ -148,7 +179,7 @@ This project adheres to [Semantic Versioning].
 - [#9145] Also use a fieldset for filters in `DC_Folder` ([zoglo])
 - [#9136] Do not style the pagination in the back end preview ([fritzmg])
 - [#9156] Always render favorites from the templates ([m-vo])
-- [#9157] Don't apply `width: 1%` in the row wizard if there is no drag handle ([zoglo])
+- [#9157] Do not apply `width: 1%` in the row wizard if there is no drag handle ([zoglo])
 - [#9117] Use POST requests for the back end pagination ([aschempp])
 - [#9146] Check if the Stimulus targets exist before applying changes ([zoglo])
 - [#9152] Rebuild the template hierarchy in the layout template migration ([m-vo])
@@ -156,7 +187,7 @@ This project adheres to [Semantic Versioning].
 - [#9138] Remove surrogate template for previously removed original template ([m-vo])
 - [#9137] Set the jump targets value in the edit mask ([zoglo])
 - [#9118] Fix custom backend controllers ([aschempp])
-- [#9131] Add `Vary` header for back end responses ([fritzmg])
+- [#9131] Add a `Vary` header for back end responses ([fritzmg])
 - [#9127] Restore the mobile menu behavior ([zoglo])
 - [#9125] Fix some autofocus quirks ([zoglo])
 - [#9124] Fix whitespace in listing layout caused by the operations menu ([zoglo])
@@ -184,6 +215,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -292,6 +324,7 @@ This project adheres to [Semantic Versioning].
 [#9084]: https://github.com/contao/contao/pull/9084
 [#9085]: https://github.com/contao/contao/pull/9085
 [#9086]: https://github.com/contao/contao/pull/9086
+[#9091]: https://github.com/contao/contao/pull/9091
 [#9094]: https://github.com/contao/contao/pull/9094
 [#9095]: https://github.com/contao/contao/pull/9095
 [#9096]: https://github.com/contao/contao/pull/9096
@@ -362,6 +395,7 @@ This project adheres to [Semantic Versioning].
 [#9233]: https://github.com/contao/contao/pull/9233
 [#9236]: https://github.com/contao/contao/pull/9236
 [#9241]: https://github.com/contao/contao/pull/9241
+[#9243]: https://github.com/contao/contao/pull/9243
 [#9247]: https://github.com/contao/contao/pull/9247
 [#9248]: https://github.com/contao/contao/pull/9248
 [#9251]: https://github.com/contao/contao/pull/9251
@@ -369,6 +403,27 @@ This project adheres to [Semantic Versioning].
 [#9253]: https://github.com/contao/contao/pull/9253
 [#9256]: https://github.com/contao/contao/pull/9256
 [#9257]: https://github.com/contao/contao/pull/9257
+[#9258]: https://github.com/contao/contao/pull/9258
 [#9262]: https://github.com/contao/contao/pull/9262
+[#9266]: https://github.com/contao/contao/pull/9266
+[#9267]: https://github.com/contao/contao/pull/9267
 [#9268]: https://github.com/contao/contao/pull/9268
 [#9269]: https://github.com/contao/contao/pull/9269
+[#9271]: https://github.com/contao/contao/pull/9271
+[#9274]: https://github.com/contao/contao/pull/9274
+[#9276]: https://github.com/contao/contao/pull/9276
+[#9277]: https://github.com/contao/contao/pull/9277
+[#9283]: https://github.com/contao/contao/pull/9283
+[#9284]: https://github.com/contao/contao/pull/9284
+[#9287]: https://github.com/contao/contao/pull/9287
+[#9294]: https://github.com/contao/contao/pull/9294
+[#9295]: https://github.com/contao/contao/pull/9295
+[#9297]: https://github.com/contao/contao/pull/9297
+[#9299]: https://github.com/contao/contao/pull/9299
+[#9304]: https://github.com/contao/contao/pull/9304
+[#9312]: https://github.com/contao/contao/pull/9312
+[#9314]: https://github.com/contao/contao/pull/9314
+[#9317]: https://github.com/contao/contao/pull/9317
+[#9318]: https://github.com/contao/contao/pull/9318
+[#9319]: https://github.com/contao/contao/pull/9319
+[#9320]: https://github.com/contao/contao/pull/9320

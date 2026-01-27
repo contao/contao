@@ -435,6 +435,7 @@
       </trans-unit>
       <trans-unit id="CTE.change_password.1">
         <source>Generates a form to change the password.</source>
+        <target>パスワードを変更するフォームを生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.close_account.0">
         <source>Close account</source>
@@ -442,6 +443,7 @@
       </trans-unit>
       <trans-unit id="CTE.close_account.1">
         <source>Generates a form to delete a member account.</source>
+        <target>メンバーのアカウントを削除するフォームを生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -729,6 +731,7 @@
       </trans-unit>
       <trans-unit id="CTE.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>2ファクター認証の設定や変更を行うフォームを生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -2852,9 +2855,11 @@
       </trans-unit>
       <trans-unit id="MSC.trail">
         <source>Show trail</source>
+        <target>トレイルを表示</target>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
+        <target>同階層を表示</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -2970,6 +2975,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpIndexSetting">
         <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>robotsタグの設定のため、URLをインデックス対象にしません。</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -3113,12 +3119,15 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results …</source>
+        <target>結果を読み込み中...</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3198,9 +3207,11 @@
       </trans-unit>
       <trans-unit id="MSC.scrollLeft">
         <source>Scroll left</source>
+        <target>左にスクロール</target>
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+        <target>右にスクロール</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
