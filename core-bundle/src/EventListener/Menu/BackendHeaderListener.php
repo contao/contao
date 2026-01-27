@@ -93,7 +93,7 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel(\sprintf('<button%s>%s</button>', (string) $profileButtonAttributes, $user->username))
+            ->setLabel(\sprintf('<button%s>%s</button>', $profileButtonAttributes, $user->username))
             ->setAttribute('class', 'submenu')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
@@ -183,7 +183,7 @@ class BackendHeaderListener
 
         $burger = $factory
             ->createItem('burger')
-            ->setLabel(\sprintf('<button%s><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', (string) $burgerAttributes))
+            ->setLabel(\sprintf('<button%s><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $burgerAttributes))
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)

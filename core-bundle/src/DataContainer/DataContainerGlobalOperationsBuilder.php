@@ -100,7 +100,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         ;
 
         $this->append([
-            'html' => \sprintf('<button%s>'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--element-count-target="count"></sup></button>', (string) $buttonAttributes),
+            'html' => \sprintf('<button%s>'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--element-count-target="count"></sup></button>', $buttonAttributes),
             'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
             'primary' => true,
         ]);
