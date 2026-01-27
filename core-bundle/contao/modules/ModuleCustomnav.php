@@ -25,6 +25,11 @@ class ModuleCustomnav extends Module
 	protected $strTemplate = 'mod_customnav';
 
 	/**
+	 * @var Model\Collection|null
+	 */
+	protected $objPages = null;
+
+	/**
 	 * Redirect to the selected page
 	 *
 	 * @return string
@@ -87,7 +92,7 @@ class ModuleCustomnav extends Module
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
-		foreach ($this->objPages as $objModel)
+		foreach ($this->objPages ?? [] as $objModel)
 		{
 			$objModel->loadDetails();
 
