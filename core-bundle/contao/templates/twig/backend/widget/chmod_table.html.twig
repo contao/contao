@@ -1,7 +1,7 @@
 {% trans_default_domain 'contao_default' %}
 
 <input type="hidden" name="{{ name }}" value="">
-<table id="ctrl_defaultChmod" class="tl_chmod" data-controller="contao--check-all">
+<table id="ctrl_{{ id }}" class="tl_chmod" data-controller="contao--check-all">
     <tr>
         <th>
             <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
