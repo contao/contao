@@ -429,6 +429,10 @@
         <source>Paste into this calendar</source>
         <target>Klistra in i denna kalender</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Kalenderhändelse</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

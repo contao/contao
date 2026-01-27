@@ -89,6 +89,10 @@
         <source>Delete news archive ID %s</source>
         <target>Eliminar ID del archivo de noticias %s</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.tableLabel">
+        <source>News archive</source>
+        <target>Archivo de noticias</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -281,6 +281,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@contao.data_container.foreign_key_parser'
             - '@translator'
 
     contao.data_container.virtual_fields_handler:

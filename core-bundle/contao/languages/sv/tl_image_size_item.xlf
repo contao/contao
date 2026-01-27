@@ -73,21 +73,29 @@
         <source>Activate media query ID %s</source>
         <target>Aktivera media query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Klistra in efter rubriken</target>
+      <trans-unit id="tl_image_size_item.toggle.3">
+        <source>Deactivate</source>
+        <target>Avaktivera</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.4">
+        <source>Activate</source>
+        <target>Aktivera</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
         <target>Klistra in efter media query-ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.0">
+      <trans-unit id="tl_image_size_item.pastenewtop.1">
         <source>Create a new media query at the top</source>
         <target>Skapa en ny media query högst upp</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.1">
+      <trans-unit id="tl_image_size_item.pastenewafter.1">
         <source>Create a new media query after media query ID %s</source>
         <target>Skapa en ny media query efter media query-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tableLabel">
+        <source>Media query</source>
+        <target>Mediafrågor</target>
       </trans-unit>
     </body>
   </file>

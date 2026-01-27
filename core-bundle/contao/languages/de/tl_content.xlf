@@ -417,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Die Anzahl an Elementen pro Seite. Geben Sie 0 ein, um den automatischen Seitenumbruch zu deaktivieren.</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>Serverseitiger Seitenumbruch</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Die Bilder auf mehrere Seiten aufteilen und jeweils nur einen Teil davon rendern.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Sortieren nach</target>
@@ -909,6 +917,10 @@
         <source>Loop video</source>
         <target>Endlosschleife</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>Die Audioausgabe stummschalten</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Autoplay</target>
@@ -977,19 +989,15 @@
         <source>Unhide</source>
         <target>Anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Oben einfügen</target>
-      </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>Nach dem Inhaltselement ID %s einfügen</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>Neues Inhaltselement oben erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Neues Inhaltselement nach dem Inhaltselement ID %s erstellen</target>
       </trans-unit>
@@ -1060,6 +1068,34 @@
       <trans-unit id="tl_content.pwResetPage.1">
         <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
         <target>Hier können Sie eine Seite auswählen, zu der Besucher weitergeleitet werden, wenn sie den &lt;em&gt;Passwort vergessen?&lt;/em&gt;-Link anklicken.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>Modus</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Hier legen Sie fest, wie die Löschung ausgeführt wird.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Home-Verzeichnis löschen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Das Home-Verzeichnis löschen, wenn das Konto gelöscht wird.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Konto deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Konto unwiderruflich löschen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>Inhaltselement</target>
       </trans-unit>
     </body>
   </file>
