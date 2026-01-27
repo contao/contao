@@ -8,7 +8,8 @@
     font-weight: 400;
     background: var(--table-header);
 
-    &:first-child {
+    &:has([data-action~="contao--check-all#toggleAll"]) {
+        color: var(--gray);
         text-align: left;
     }
 }
