@@ -127,7 +127,7 @@
                         },
                         picture.img.width|default and picture.img.height|default,
                     ) }}>
-                        {{ include('@Contao/picture_default.html.twig', picture) }}
+                        {{ include('@Contao/picture_default.html.twig', picture, false) }}
                     </div>
                 {% endfor %}
             </div>
