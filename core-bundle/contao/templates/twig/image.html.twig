@@ -7,7 +7,7 @@
         }}>
     {% endif %}
 
-    {{ include('@Contao/picture_default.html.twig', picture) }}
+    {{ include('@Contao/picture_default.html.twig', picture, with_context: false) }}
 
     {% if imageHref|default or href|default %}
         </a>
