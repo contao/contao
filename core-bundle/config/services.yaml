@@ -71,6 +71,17 @@ services:
             - '@translator'
             - '@contao.intl.locales'
 
+    contao.content_composition:
+        class: Contao\CoreBundle\ContentComposition\ContentComposition
+        arguments:
+            - '@contao.framework'
+            - '@monolog.logger.contao.error'
+            - '@contao.image.picture_factory'
+            - '@contao.image.preview_factory'
+            - '@contao.security.token_checker'
+            - '@contao.assets.assets_context'
+            - '@contao.twig.default_renderer'
+
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
