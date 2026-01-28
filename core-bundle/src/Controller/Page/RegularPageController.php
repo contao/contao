@@ -12,15 +12,48 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\Page;
 
-use Contao\CoreBundle\Twig\LayoutTemplate;
-use Contao\LayoutModel;
-use Symfony\Component\HttpFoundation\Request;
+use Contao\CoreBundle\ContentComposition\ContentComposition;
+use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegularPageController extends AbstractLayoutPageController
+class RegularPageController extends AbstractController
 {
-    protected function getResponse(LayoutTemplate $template, LayoutModel $model, Request $request): Response
+    public function __construct(
+        private readonly PageFinder $pageFinder,
+        private readonly ContentComposition $contentComposition,
+        private readonly CoreResponseContextFactory $responseContextFactory,
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly RendererInterface $deferredRenderer,
+    ) {
+    }
+
+    public function __invoke(): Response
     {
-        return $template->getResponse();
+        if (!$page = $this->pageFinder->getCurrentPage()) {
+            throw $this->createNotFoundException();
+        }
+
+        $responseContext = $this->responseContextFactory->createContaoWebpageResponseContext($page);
+
+        $layoutTemplate = $this->contentComposition
+            ->createContentCompositionBuilder($page)
+            ->setResponseContext($responseContext)
+            ->setFragmentRenderer($this->deferredRenderer)
+            ->buildLayoutTemplate()
+        ;
+
+        $response = $layoutTemplate->getResponse();
+        $this->responseContextAccessor->finalizeCurrentContext($response);
+
+        // Set cache headers
+        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+        $this->setCacheHeaders($response, $page);
+
+        return $response;
     }
 }
