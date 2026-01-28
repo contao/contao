@@ -245,7 +245,6 @@ services:
 
     Contao\CoreBundle\Controller\Page\RegularPageController:
         arguments:
-            - '@contao.routing.page_finder'
             - '@contao.content_composition'
             - '@contao.routing.response_context_factory'
             - '@contao.routing.response_context_accessor'
