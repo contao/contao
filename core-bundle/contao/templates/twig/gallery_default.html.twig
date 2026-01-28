@@ -2,7 +2,7 @@
     {% for row in body %}
         {% for col in row %}
             {% if col.addImage %}
-                <li>{{ include('@Contao/image.html.twig', col|map(v => v)) }}</li>
+                <li>{{ include('@Contao/image.html.twig', col|map(v => v), with_context: false) }}</li>
             {% endif %}
         {% endfor %}
     {% endfor %}

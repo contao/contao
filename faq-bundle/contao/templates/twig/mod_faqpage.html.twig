@@ -16,7 +16,7 @@
                         {% endif %}
 
                         {% if faq.addImage %}
-                            {{ include('@Contao/image.html.twig', faq) }}
+                            {{ include('@Contao/image.html.twig', faq, with_context: false) }}
                         {% endif %}
 
                         {% if faq.addBefore %}
