@@ -78,7 +78,6 @@ services:
             - '@monolog.logger.contao.error'
             - '@contao.image.picture_factory'
             - '@contao.image.preview_factory'
-            - '@contao.security.token_checker'
             - '@contao.assets.assets_context'
             - '@contao.twig.default_renderer'
 

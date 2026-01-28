@@ -45,7 +45,6 @@ class ContentCompositionBuilder
         private readonly LoggerInterface $logger,
         private readonly PictureFactory $pictureFactory,
         private readonly PreviewFactory $previewFactory,
-        private readonly TokenChecker $tokenChecker,
         private readonly ContaoContext $assetsContext,
         private RendererInterface $renderer,
         private readonly PageModel $page,
@@ -134,8 +133,6 @@ class ContentCompositionBuilder
     {
         $template->set('page', $page->row());
         $template->set('layout', $layout->row());
-
-        $template->set('preview_mode', $this->tokenChecker->isPreviewMode());
 
         $locale = LocaleUtil::formatAsLocale($page->language);
         $isRtl = 'right-to-left' === (\ResourceBundle::create($locale, 'ICUDATA')['layout']['characters'] ?? null);

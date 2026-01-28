@@ -16,7 +16,6 @@ use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Twig\Renderer\DefaultRenderer;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
@@ -31,7 +30,6 @@ final class ContentComposition
         private readonly LoggerInterface $logger,
         private readonly PictureFactory $pictureFactory,
         private readonly PreviewFactory $previewFactory,
-        private readonly TokenChecker $tokenChecker,
         private readonly ContaoContext $assetsContext,
         private readonly DefaultRenderer $defaultRenderer,
     ) {
@@ -44,7 +42,6 @@ final class ContentComposition
             $this->logger,
             $this->pictureFactory,
             $this->previewFactory,
-            $this->tokenChecker,
             $this->assetsContext,
             $this->defaultRenderer,
             $page,
