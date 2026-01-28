@@ -4,7 +4,7 @@
 
     {% if previews %}
         {% for preview in previews %}
-            {{ include('@Contao/image.html.twig', preview.getLegacyTemplateData(), with_context: false) }}
+            {{ include('@Contao/image.html.twig', preview.getLegacyTemplateData(), false) }}
         {% endfor %}
     {% endif %}
 
