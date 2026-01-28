@@ -49,6 +49,7 @@
 .tree_view .tl_left.with-offset {
     padding-left: calc(var(--level) * 16px);
     display: flex;
+    align-items: center;
     gap: 4px;
 
     .foldable {
@@ -85,7 +86,7 @@
     color: var(--text);
 }
 
-.tl_listing .tl_left img:not(.preview-image, .preview-important) {
+.tl_listing .tl_left:not(.with-offset) img:not(.preview-image, .preview-important) {
     margin-top: -3px;
 }
 
