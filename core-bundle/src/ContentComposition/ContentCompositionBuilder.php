@@ -27,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
  * @experimental
@@ -51,7 +51,7 @@ class ContentCompositionBuilder
         private readonly ContaoContext $assetsContext,
         private RendererInterface $renderer,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
+        private readonly LocaleAwareInterface $translator,
         private readonly PageModel $page,
     ) {
     }

@@ -20,7 +20,7 @@ use Contao\CoreBundle\Twig\Renderer\DefaultRenderer;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
  * @experimental
@@ -35,7 +35,7 @@ final class ContentComposition
         private readonly ContaoContext $assetsContext,
         private readonly DefaultRenderer $defaultRenderer,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
+        private readonly LocaleAwareInterface $translator,
     ) {
     }
 
