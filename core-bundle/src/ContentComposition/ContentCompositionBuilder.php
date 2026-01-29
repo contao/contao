@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\ContentComposition;
 
+use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -12,7 +13,6 @@ use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -89,12 +89,7 @@ class ContentCompositionBuilder
             throw new NoLayoutSpecifiedException('No layout specified');
         }
 
-        // Load contao_default translations (#8690)
-        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
-
-        // Set the context
-        $this->pictureFactory->setDefaultDensities($layout->defaultImageDensities);
-        $this->previewFactory->setDefaultDensities($layout->defaultImageDensities);
+        $this->setupFramework($this->page, $layout);
 
         // Create the template and add default data
         $template = new LayoutTemplate(
@@ -127,6 +122,25 @@ class ContentCompositionBuilder
         }
 
         return $template;
+    }
+
+    private function setupFramework(PageModel $page, LayoutModel $layout): void
+    {
+        // Set the admin e-mail address global variable
+        $page->loadDetails();
+
+        if ($page->adminEmail) {
+            [$GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']] = StringUtil::splitFriendlyEmail($page->adminEmail);
+        } else {
+            [$GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']] = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
+        }
+
+        // Configure image library defaults
+        $this->pictureFactory->setDefaultDensities($layout->defaultImageDensities);
+        $this->previewFactory->setDefaultDensities($layout->defaultImageDensities);
+
+        // Load contao_default translations (#8690)
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
     }
 
     private function addPageContextToTemplate(LayoutTemplate $template, PageModel $page, LayoutModel $layout): void
