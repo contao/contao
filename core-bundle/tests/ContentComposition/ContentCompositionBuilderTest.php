@@ -31,6 +31,7 @@ class ContentCompositionBuilderTest extends TestCase
     {
         unset(
             $GLOBALS['TL_ADMIN_EMAIL'],
+            $GLOBALS['TL_ADMIN_NAME'],
             $GLOBALS['TL_LANGUAGE'],
             $GLOBALS['TL_HEAD'],
             $GLOBALS['TL_BODY'],

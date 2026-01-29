@@ -153,7 +153,7 @@ class RegularPageControllerTest extends TestCase
             $responseContextFactory,
             $responseContextAccessor ?? $this->createStub(ResponseContextAccessor::class),
             $deferredRenderer ?? $this->createStub(RendererInterface::class),
-            $framework ?? $this->createContaoFrameworkStub(),
+            $framework,
             $handler,
         );
 
