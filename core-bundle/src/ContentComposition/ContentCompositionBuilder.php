@@ -21,10 +21,13 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
+use Contao\ThemeModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @experimental
@@ -47,6 +50,8 @@ class ContentCompositionBuilder
         private readonly PreviewFactory $previewFactory,
         private readonly ContaoContext $assetsContext,
         private RendererInterface $renderer,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
         private readonly PageModel $page,
     ) {
     }
@@ -126,7 +131,7 @@ class ContentCompositionBuilder
 
     private function setupFramework(PageModel $page, LayoutModel $layout): void
     {
-        // Set the admin e-mail address global variable
+        // Set global variables
         $page->loadDetails();
 
         if ($page->adminEmail) {
@@ -135,12 +140,26 @@ class ContentCompositionBuilder
             [$GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']] = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
         }
 
+        // Deprecated since Contao 4.0, to be removed in Contao 6.0
+        $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($page->language);
+
+        // Set locale
+        $locale = LocaleUtil::formatAsLocale($page->language);
+
+        $this->requestStack->getCurrentRequest()?->setLocale($locale);
+        $this->translator->setLocale($locale);
+
+        // Load contao_default translations (#8690)
+        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+
         // Configure image library defaults
         $this->pictureFactory->setDefaultDensities($layout->defaultImageDensities);
         $this->previewFactory->setDefaultDensities($layout->defaultImageDensities);
 
-        // Load contao_default translations (#8690)
-        $this->framework->getAdapter(System::class)->loadLanguageFile('default');
+        // Set PageModel data
+        $page->layoutId = $layout->id;
+        $page->template = $layout->template;
+        $page->templateGroup = $this->framework->getAdapter(ThemeModel::class)->findById($layout->pid)?->templates;
     }
 
     private function addPageContextToTemplate(LayoutTemplate $template, PageModel $page, LayoutModel $layout): void

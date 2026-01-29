@@ -80,6 +80,8 @@ services:
             - '@contao.image.preview_factory'
             - '@contao.assets.assets_context'
             - '@contao.twig.default_renderer'
+            - '@request_stack'
+            - '@translator'
 
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver

@@ -19,6 +19,8 @@ use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Twig\Renderer\DefaultRenderer;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @experimental
@@ -32,6 +34,8 @@ final class ContentComposition
         private readonly PreviewFactory $previewFactory,
         private readonly ContaoContext $assetsContext,
         private readonly DefaultRenderer $defaultRenderer,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -44,6 +48,8 @@ final class ContentComposition
             $this->previewFactory,
             $this->assetsContext,
             $this->defaultRenderer,
+            $this->requestStack,
+            $this->translator,
             $page,
         );
     }
