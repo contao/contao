@@ -245,7 +245,7 @@ class ContentCompositionBuilderTest extends TestCase
                         static fn (array $reference): string => "<rendered {$reference['type']} {$reference['id']}>",
                         $parameters['references'],
                     ));
-                }
+                },
             )
         ;
 

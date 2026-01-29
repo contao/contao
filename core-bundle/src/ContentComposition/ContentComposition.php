@@ -25,7 +25,7 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 /**
  * @experimental
  */
-final class ContentComposition
+class ContentComposition
 {
     public function __construct(
         private readonly ContaoFramework $framework,

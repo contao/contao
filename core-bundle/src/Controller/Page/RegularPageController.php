@@ -34,7 +34,11 @@ class RegularPageController extends AbstractController
         private readonly ResponseContextAccessor $responseContextAccessor,
         private readonly RendererInterface $deferredRenderer,
         private readonly ContaoFramework $framework,
+        private \Closure|null $handleNonModernLayoutType = null,
     ) {
+        if (!$this->handleNonModernLayoutType) {
+            $this->handleNonModernLayoutType = static fn (PageModel $page): Response => (new FrontendIndex())->renderPage($page);
+        }
     }
 
     public function __invoke(PageModel $page): Response
@@ -65,10 +69,12 @@ class RegularPageController extends AbstractController
 
     private function handleNonModernLayoutType(PageModel $page): Response|null
     {
+        $this->framework->initialize();
+
         $layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->layout);
 
         if (null !== $layout && 'modern' !== $layout->type) {
-            return (new FrontendIndex())->renderPage($page);
+            return ($this->handleNonModernLayoutType)($page);
         }
 
         return null;
