@@ -315,9 +315,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.multipleFiles.0">
         <source>Allow multiple files</source>
+        <target>Meerdere bestanden toestaan</target>
       </trans-unit>
       <trans-unit id="tl_form_field.multipleFiles.1">
         <source>Allow the user to upload multiple files.</source>
+        <target>Sta de gebruiker toe om meerdere bestanden te uploaden.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
@@ -409,9 +411,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.altchaFloating.0">
         <source>Floating mode</source>
+        <target>Zwevende modus</target>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaFloating.1">
         <source>Enable the floating UI.</source>
+        <target>Schakel de zwevende gebruikersinterface in.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>
@@ -539,6 +543,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.tableLabel">
         <source>Form field</source>
+        <target>Formulier veld</target>
       </trans-unit>
     </body>
   </file>

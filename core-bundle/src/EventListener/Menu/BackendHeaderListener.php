@@ -16,6 +16,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -79,19 +80,29 @@ class BackendHeaderListener
 
         $tree->addChild($alerts);
 
+        $profileButtonAttributes = (new HtmlAttributes())
+            ->set('id', 'profileButton')
+            ->set('type', 'button')
+            ->set('title', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
+            ->set('data-controller', 'contao--toggle-sender')
+            ->set('data-action', 'contao--toggle-sender#toggle:prevent')
+            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#profileMenu')
+        ;
+
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showProfile', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$user->username.'</button>')
+            ->setLabel(\sprintf('<button%s>%s</button>', $profileButtonAttributes, $user->username))
             ->setAttribute('class', 'submenu')
-            ->setAttribute('data-controller', 'contao--toggle-state')
-            ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-            ->setAttribute('data-contao--toggle-state-active-class', 'active')
-            ->setAttribute('data-contao--toggle-state-active-title-value', $this->translator->trans('MSC.hideProfile', [], 'contao_default'))
-            ->setAttribute('data-contao--toggle-state-inactive-title-value', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
-            ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
+            ->setChildrenAttribute('id', 'profileMenu')
+            ->setChildrenAttribute('data-controller', 'contao--toggle-receiver')
+            ->setChildrenAttribute('data-contao--toggle-receiver-active-class', 'active')
+            ->setChildrenAttribute('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+            ->setChildrenAttribute('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#profileButton')
         ;
 
         $tree->addChild($submenu);
@@ -159,9 +170,20 @@ class BackendHeaderListener
 
         $submenu->addChild($colorScheme);
 
+        $burgerAttributes = (new HtmlAttributes())
+            ->set('id', 'burger')
+            ->set('type', 'button')
+            ->set('title', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
+            ->set('data-controller', 'contao--toggle-sender')
+            ->set('data-action', 'contao--toggle-sender#toggle:prevent')
+            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('MSC.hideMainNavigation', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#left')
+        ;
+
         $burger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" title="'.$this->translator->trans('MSC.showMainNavigation', [], 'contao_default').'" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel(\sprintf('<button%s><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $burgerAttributes))
             ->setAttribute('class', 'burger')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)

@@ -277,6 +277,9 @@
         <source>Drag file &quot;%s&quot;</source>
         <target>Dra filen ”%s”</target>
       </trans-unit>
+      <trans-unit id="tl_files.source.0">
+        <source>Edit source</source>
+      </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Redigera källtexten för filen &quot;%s&quot;</target>

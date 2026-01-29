@@ -147,6 +147,7 @@
       </trans-unit>
       <trans-unit id="ERR.multipleFilesNotAllowed">
         <source>Uploading multiple files is not allowed for this field!</source>
+        <target>Het is niet toegestaan ​​om meerdere bestanden tegelijk te uploaden in dit veld!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
@@ -434,6 +435,7 @@
       </trans-unit>
       <trans-unit id="CTE.change_password.1">
         <source>Generates a form to change the password.</source>
+        <target>Genereert een formulier om het wachtwoord te wijzigen.</target>
       </trans-unit>
       <trans-unit id="CTE.close_account.0">
         <source>Close account</source>
@@ -441,6 +443,7 @@
       </trans-unit>
       <trans-unit id="CTE.close_account.1">
         <source>Generates a form to delete a member account.</source>
+        <target>Genereert een formulier om een ​​ledenaccount te verwijderen.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -728,6 +731,7 @@
       </trans-unit>
       <trans-unit id="CTE.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Genereert een formulier om tweefactorauthenticatie in te stellen of te wijzigen.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1831,6 +1835,7 @@
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
         <source>Go up one level</source>
+        <target>Ga één niveau omhoog</target>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
@@ -2742,15 +2747,19 @@
       </trans-unit>
       <trans-unit id="MSC.showProfile">
         <source>Show user profile</source>
+        <target>Gebruikersprofiel weergeven</target>
       </trans-unit>
       <trans-unit id="MSC.hideProfile">
         <source>Hide user profile</source>
+        <target>Gebruikersprofiel verbergen</target>
       </trans-unit>
       <trans-unit id="MSC.showMainNavigation">
         <source>Show main navigation</source>
+        <target>Toon hoofdnavigatie</target>
       </trans-unit>
       <trans-unit id="MSC.hideMainNavigation">
         <source>Hide main navigation</source>
+        <target>Verberg hoofdnavigatie</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
@@ -2846,9 +2855,11 @@
       </trans-unit>
       <trans-unit id="MSC.trail">
         <source>Show trail</source>
+        <target>Toon het pad</target>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
+        <target>Toon subpagina’s</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -2856,9 +2867,11 @@
       </trans-unit>
       <trans-unit id="MSC.unfavorite">
         <source>Remove URL from favorites</source>
+        <target>Verwijder de URL uit je favorieten</target>
       </trans-unit>
       <trans-unit id="MSC.confirmUnfavorite">
         <source>Do you really want to remove the current URL from your favorites?</source>
+        <target>Wil je de huidige URL echt uit je favorieten verwijderen?</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
@@ -2962,6 +2975,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpIndexSetting">
         <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>De URL wordt niet geïndexeerd vanwege de instellingen van de robots-tag.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -2985,6 +2999,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirmJobAdded">
         <source>The task has been queued. Check the jobs overview for status updates.</source>
+        <target>De taak is in de wachtrij geplaatst. Raadpleeg het takenoverzicht voor statusupdates.</target>
       </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
@@ -2992,9 +3007,11 @@
       </trans-unit>
       <trans-unit id="MSC.viewAttachments">
         <source>View attachments</source>
+        <target>Bekijk bijlagen</target>
       </trans-unit>
       <trans-unit id="MSC.downloadAttachment">
         <source>Download attachment %s</source>
+        <target>Bijlage %s downloaden</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -3102,12 +3119,15 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results …</source>
+        <target>Resultaten laden ...</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3123,9 +3143,11 @@
       </trans-unit>
       <trans-unit id="MSC.searchFacetTitle.tags">
         <source>Tags</source>
+        <target>Tags</target>
       </trans-unit>
       <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
         <source>No results found or not enough permissions to view the corresponding results.</source>
+        <target>Geen resultaten gevonden of onvoldoende rechten om de betreffende resultaten te bekijken.</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
@@ -3173,18 +3195,23 @@
       </trans-unit>
       <trans-unit id="MSC.field">
         <source>Field</source>
+        <target>Veld</target>
       </trans-unit>
       <trans-unit id="MSC.keyword">
         <source>Keyword</source>
+        <target>Trefwoord</target>
       </trans-unit>
       <trans-unit id="MSC.enter_fullscreen">
         <source>Enter fullscreen mode</source>
+        <target>Schakel over naar de volledige schermmodus</target>
       </trans-unit>
       <trans-unit id="MSC.scrollLeft">
         <source>Scroll left</source>
+        <target>Scrol naar links</target>
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+        <target>Scrol naar rechts</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3344,9 +3371,11 @@
       </trans-unit>
       <trans-unit id="DCA.toggleFilter.1">
         <source>Show the filter panel</source>
+        <target>Toon het filterpaneel</target>
       </trans-unit>
       <trans-unit id="DCA.toggleFilter.2">
         <source>Hide the filter panel</source>
+        <target>Verberg het filterpaneel</target>
       </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
@@ -3406,9 +3435,11 @@
       </trans-unit>
       <trans-unit id="DCA.versions.0">
         <source>Versions</source>
+        <target>Versies</target>
       </trans-unit>
       <trans-unit id="DCA.versions.1">
         <source>Show the versions of element ID %s</source>
+        <target>Toon de versies van element ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
@@ -3500,15 +3531,19 @@
       </trans-unit>
       <trans-unit id="DCA.permissions_legend">
         <source>Permissions</source>
+        <target>Permissies</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.0">
         <source>Back end permissions</source>
+        <target>Back-end permissies</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.1">
         <source>The changes made here are saved in the user and group settings.</source>
+        <target>De wijzigingen die u hier aanbrengt, worden opgeslagen in de gebruikers- en groepsinstellingen.</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.groups">
         <source>Groups</source>
+        <target>Groepen</target>
       </trans-unit>
       <trans-unit id="DCA.permissions.users">
         <source>Users</source>
