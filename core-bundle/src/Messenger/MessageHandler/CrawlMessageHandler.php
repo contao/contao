@@ -165,17 +165,21 @@ class CrawlMessageHandler
     private function finishJob(Job $job, array $activeSubscribers): void
     {
         if ($this->fs->exists($this->getDebugLogPath($job))) {
-            $this->jobs->addAttachment($job, 'debug_log.csv', fopen($this->getDebugLogPath($job), 'r'));
+            $fh = fopen($this->getDebugLogPath($job), 'r');
+            $this->jobs->addAttachment($job, 'debug_log.csv', $fh);
+            fclose($fh);
         }
 
         foreach ($this->factory->getSubscribers($activeSubscribers) as $subscriber) {
-            if (!$this->fs->exists($this->getSubscriberLogFilePath($job, $subscriber->getName()))) {
+            $logFile = $this->getSubscriberLogFilePath($job, $subscriber->getName());
+
+            if (!$this->fs->exists($logFile)) {
                 continue;
             }
 
-            $this->jobs->addAttachment($job, $subscriber->getName().'_log.csv', fopen(
-                $this->getSubscriberLogFilePath($job, $subscriber->getName()), 'r'),
-            );
+            $fh = fopen($logFile, 'r');
+            $this->jobs->addAttachment($job, $subscriber->getName().'_log.csv', $fh);
+            fclose($fh);
         }
 
         // Now that we have attached the files to the job (and thus they have been copied
