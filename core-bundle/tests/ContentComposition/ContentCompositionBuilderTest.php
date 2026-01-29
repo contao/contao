@@ -10,6 +10,9 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\LayoutModel;
@@ -17,6 +20,7 @@ use Contao\PageModel;
 use Contao\System;
 use Contao\ThemeModel;
 use Psr\Log\LoggerInterface;
+use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
@@ -28,6 +32,10 @@ class ContentCompositionBuilderTest extends TestCase
         unset(
             $GLOBALS['TL_ADMIN_EMAIL'],
             $GLOBALS['TL_LANGUAGE'],
+            $GLOBALS['TL_HEAD'],
+            $GLOBALS['TL_BODY'],
+            $GLOBALS['TL_STYLE_SHEETS'],
+            $GLOBALS['TL_CSS'],
         );
 
         parent::tearDown();
@@ -118,8 +126,7 @@ class ContentCompositionBuilderTest extends TestCase
         ;
 
         $builder = $this->getContentCompositionBuilder(
-            $this->mockFramework(),
-            $page,
+            page: $page,
             pictureFactory: $pictureFactory,
             previewFactory: $previewFactory,
             requestStack: $requestStack,
@@ -158,14 +165,147 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame($expectedTemplateData, $template->getData());
     }
 
-    private function getContentCompositionBuilder(ContaoFramework $framework, PageModel $page, LoggerInterface|null $logger = null, PictureFactory|null $pictureFactory = null, PreviewFactory|null $previewFactory = null, RequestStack|null $requestStack = null, LocaleAwareInterface|null $translator = null): ContentCompositionBuilder
+    public function testAddsResponseContextDataToTemplate(): void
     {
+        $responseContext = new ResponseContext();
+        $responseContext->add($htmlHeadBag = new HtmlHeadBag());
+        $responseContext->add($jsonLdManager = new JsonLdManager($responseContext));
+
+        $jsonLdManager
+            ->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+            ->set($jsonLdManager->createSchemaOrgTypeFromArray(['@type' => 'ImageObject', 'name' => 'Name']), Graph::IDENTIFIER_DEFAULT)
+        ;
+
+        $GLOBALS['TL_HEAD'][] = '<meta content="additional-tag">';
+        $GLOBALS['TL_BODY'][] = '<script>/* additional script */</script>';
+        $GLOBALS['TL_STYLE_SHEETS'][] = '<link rel="stylesheet" href="additional_stylesheet.css">';
+        $GLOBALS['TL_CSS'][] = 'additional_stylesheet_filename.css|123';
+
+        $parameters = $this
+            ->getContentCompositionBuilder()
+            ->setResponseContext($responseContext)
+            ->buildLayoutTemplate()
+            ->getData()
+        ;
+
+        $expectedResponseContextData = [
+            'head' => $htmlHeadBag,
+            'end_of_head' => [
+                '<link rel="stylesheet" href="https://static-url/additional_stylesheet_filename.css?v=202cb962">',
+                '<link rel="stylesheet" href="additional_stylesheet.css">',
+                '<meta content="additional-tag">',
+            ],
+            'end_of_body' => [
+                '<script>/* additional script */</script>',
+            ],
+            'json_ld_scripts' => <<<'EOF'
+                <script type="application/ld+json">
+                {
+                    "@context": "https:\/\/schema.org",
+                    "@graph": [
+                        {
+                            "@type": "ImageObject",
+                            "name": "Name"
+                        }
+                    ]
+                }
+                </script>
+                EOF,
+        ];
+
+        $this->assertArrayHasKey('response_context', $parameters);
+        $this->assertSame($expectedResponseContextData, iterator_to_array($parameters['response_context']->all()));
+    }
+
+    public function testAddsCompositedContentToTemplate(): void
+    {
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
+            'id' => 1,
+            'pid' => 42,
+            'defaultImageDensities' => '<densities>',
+            'template' => '<template>',
+            'type' => 'modern',
+            'modules' => serialize([
+                ['enable' => true, 'mod' => '1', 'col' => 'A'],
+                ['enable' => false, 'mod' => '2', 'col' => 'B'],
+                ['enable' => true, 'mod' => 'content-3', 'col' => 'C'],
+                ['enable' => false, 'mod' => 'content-4', 'col' => 'D'],
+                ['enable' => true, 'mod' => 'content-5', 'col' => 'A'],
+            ]),
+        ]);
+
+        $renderer = $this->createStub(RendererInterface::class);
+        $renderer
+            ->method('render')
+            ->willReturnCallback(
+                function (string $template, array $parameters): string {
+                    $this->assertSame('@Contao/<slot-template>.html.twig', $template);
+
+                    return implode(',', array_map(
+                        static fn (array $reference): string => "<rendered {$reference['type']} {$reference['id']}>",
+                        $parameters['references'],
+                    ));
+                }
+            )
+        ;
+
+        $template = $this
+            ->getContentCompositionBuilder($this->mockFramework($layout))
+            ->setSlotTemplate('<slot-template>')
+            ->setFragmentRenderer($renderer)
+            ->buildLayoutTemplate()
+        ;
+
+        $parameters = $template->getData();
+
+        $this->assertSame(
+            [
+                'A' => [
+                    ['type' => 'frontend_module', 'id' => 1],
+                    ['type' => 'content_element', 'id' => 5],
+                ],
+                'C' => [
+                    ['type' => 'content_element', 'id' => 3],
+                ],
+            ],
+            $parameters['element_references'],
+        );
+
+        $this->assertTrue($template->hasSlot('A'));
+        $this->assertFalse($template->hasSlot('B'));
+        $this->assertTrue($template->hasSlot('C'));
+        $this->assertFalse($template->hasSlot('D'));
+
+        $this->assertSame(
+            '<rendered frontend_module 1>,<rendered content_element 5>',
+            (string) $template->getSlot('A'),
+        );
+
+        $this->assertSame(
+            '<rendered content_element 3>',
+            (string) $template->getSlot('C'),
+        );
+    }
+
+    private function getContentCompositionBuilder(ContaoFramework|null $framework = null, PageModel|null $page = null, LoggerInterface|null $logger = null, PictureFactory|null $pictureFactory = null, PreviewFactory|null $previewFactory = null, RequestStack|null $requestStack = null, LocaleAwareInterface|null $translator = null): ContentCompositionBuilder
+    {
+        $page ??= $this->createClassWithPropertiesStub(PageModel::class, [
+            'layout' => 1,
+            'language' => 'en',
+        ]);
+
+        $contaoContext = $this->createStub(ContaoContext::class);
+        $contaoContext
+            ->method('getStaticUrl')
+            ->willReturn('https://static-url/')
+        ;
+
         return new ContentCompositionBuilder(
-            $framework,
+            $framework ?? $this->mockFramework(),
             $logger ?? $this->createStub(LoggerInterface::class),
             $pictureFactory ?? $this->createStub(PictureFactory::class),
             $previewFactory ?? $this->createStub(PreviewFactory::class),
-            $this->createStub(ContaoContext::class),
+            $contaoContext,
             $this->createStub(RendererInterface::class),
             $requestStack ?? $this->createStub(RequestStack::class),
             $translator ?? $this->createStub(LocaleAwareInterface::class),
@@ -173,9 +313,9 @@ class ContentCompositionBuilderTest extends TestCase
         );
     }
 
-    private function mockFramework(): ContaoFramework
+    private function mockFramework(LayoutModel|null $layout = null): ContaoFramework
     {
-        $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
+        $layout ??= $this->createClassWithPropertiesStub(LayoutModel::class, [
             'id' => 1,
             'pid' => 42,
             'defaultImageDensities' => '<densities>',
@@ -186,7 +326,7 @@ class ContentCompositionBuilderTest extends TestCase
         $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
-            ->willReturnCallback(static fn (int $id) => 1 === $id ? $layout : null)
+            ->willReturnCallback(static fn (int $id) => $layout->id === $id ? $layout : null)
         ;
 
         $theme = $this->createClassWithPropertiesStub(ThemeModel::class, [
