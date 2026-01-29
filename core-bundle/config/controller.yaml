@@ -249,6 +249,7 @@ services:
             - '@contao.routing.response_context_factory'
             - '@contao.routing.response_context_accessor'
             - '@contao.twig.deferred_renderer'
+            - '@contao.framework'
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:

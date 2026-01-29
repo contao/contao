@@ -14,13 +14,18 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\ContentComposition\ContentComposition;
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
+use Contao\FrontendIndex;
+use Contao\LayoutModel;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Response;
 
+#[AsPage(contentComposition: true)]
 class RegularPageController extends AbstractController
 {
     public function __construct(
@@ -28,11 +33,16 @@ class RegularPageController extends AbstractController
         private readonly CoreResponseContextFactory $responseContextFactory,
         private readonly ResponseContextAccessor $responseContextAccessor,
         private readonly RendererInterface $deferredRenderer,
+        private readonly ContaoFramework $framework,
     ) {
     }
 
     public function __invoke(PageModel $page): Response
     {
+        if ($response = $this->handleNonModernLayoutType($page)) {
+            return $response;
+        }
+
         $responseContext = $this->responseContextFactory->createContaoWebpageResponseContext($page);
 
         $layoutTemplate = $this->contentComposition
@@ -43,6 +53,7 @@ class RegularPageController extends AbstractController
         ;
 
         $response = $layoutTemplate->getResponse();
+
         $this->responseContextAccessor->finalizeCurrentContext($response);
 
         // Set cache headers
@@ -50,5 +61,16 @@ class RegularPageController extends AbstractController
         $this->setCacheHeaders($response, $page);
 
         return $response;
+    }
+
+    private function handleNonModernLayoutType(PageModel $page): Response|null
+    {
+        $layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->layout);
+
+        if (null !== $layout && 'modern' !== $layout->type) {
+            return (new FrontendIndex())->renderPage($page);
+        }
+
+        return null;
     }
 }

@@ -34,6 +34,8 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class ContentCompositionBuilder
 {
+    private readonly LayoutModel $layout;
+
     private RendererInterface|null $fragmentRenderer = null;
 
     private ResponseContext|null $responseContext = null;
@@ -45,7 +47,7 @@ class ContentCompositionBuilder
      */
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly LoggerInterface $logger,
+        LoggerInterface $logger,
         private readonly PictureFactory $pictureFactory,
         private readonly PreviewFactory $previewFactory,
         private readonly ContaoContext $assetsContext,
@@ -54,6 +56,18 @@ class ContentCompositionBuilder
         private readonly LocaleAwareInterface $translator,
         private readonly PageModel $page,
     ) {
+        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($this->page->layout)) {
+            $logger->error(\sprintf('Could not find layout ID "%s"', $this->page->layout));
+
+            throw new NoLayoutSpecifiedException('No layout specified');
+        }
+
+        // Guard against using with anything other than the modern layout
+        if ('modern' !== $layout->type) {
+            throw new \LogicException(\sprintf('Layout type "%s" is not supported in the %s.', $layout->type, self::class));
+        }
+
+        $this->layout = $layout;
     }
 
     public function setResponseContext(ResponseContext $responseContext): self
@@ -88,17 +102,11 @@ class ContentCompositionBuilder
     {
         $this->framework->initialize();
 
-        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($this->page->layout)) {
-            $this->logger->error(\sprintf('Could not find layout ID "%s"', $this->page->layout));
-
-            throw new NoLayoutSpecifiedException('No layout specified');
-        }
-
-        $this->setupFramework($this->page, $layout);
+        $this->setupFramework($this->page, $this->layout);
 
         // Create the template and add default data
         $template = new LayoutTemplate(
-            $layout->template,
+            $this->layout->template,
             function (LayoutTemplate $template, Response|null $preBuiltResponse): Response {
                 $response = $preBuiltResponse ?? new Response();
                 $parameters = $template->getData();
@@ -119,8 +127,8 @@ class ContentCompositionBuilder
             },
         );
 
-        $this->addPageContextToTemplate($template, $this->page, $layout);
-        $this->addCompositedContentToTemplate($template, $layout);
+        $this->addPageContextToTemplate($template, $this->page, $this->layout);
+        $this->addCompositedContentToTemplate($template, $this->layout);
 
         if ($this->responseContext) {
             $this->addResponseContextToTemplate($template, $this->responseContext);
@@ -219,6 +227,11 @@ class ContentCompositionBuilder
                 }
 
                 return $this->data[$key] ?? null;
+            }
+
+            public function __set(string $key, mixed $value): void
+            {
+                throw new \InvalidArgumentException(\sprintf('Cannot set readonly property "%s".', $key));
             }
 
             public function __isset(string $key): bool

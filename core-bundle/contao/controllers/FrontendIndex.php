@@ -61,11 +61,6 @@ class FrontendIndex extends Frontend
 
 		try
 		{
-			if (LayoutModel::findById($objPage->layout)?->type === 'modern')
-			{
-				return System::getContainer()->get(RegularPageController::class)($objPage);
-			}
-
 			$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
 			$objHandler = new $pageType();
 

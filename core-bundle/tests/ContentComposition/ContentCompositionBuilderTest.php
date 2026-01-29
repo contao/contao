@@ -33,7 +33,7 @@ class ContentCompositionBuilderTest extends TestCase
         parent::tearDown();
     }
 
-    public function testBuildTemplateFailsIfThereIsNoLayout(): void
+    public function testInstantiatingFailsIfThereIsNoLayout(): void
     {
         $framework = $this->createContaoFrameworkStub([
             LayoutModel::class => $this->createAdapterStub(['findById']),
@@ -48,12 +48,31 @@ class ContentCompositionBuilderTest extends TestCase
             ->with('Could not find layout ID "123"')
         ;
 
-        $builder = $this->getContentCompositionBuilder($framework, $page, $logger);
-
         $this->expectException(NoLayoutSpecifiedException::class);
         $this->expectExceptionMessage('No layout specified');
 
-        $builder->buildLayoutTemplate();
+        $this->getContentCompositionBuilder($framework, $page, $logger);
+    }
+
+    public function testInstantiatingFailsIfLayoutIsNotOfModernType(): void
+    {
+        $layoutAdapter = $this->createAdapterStub(['findById']);
+        $layoutAdapter
+            ->method('findById')
+            ->with(2)
+            ->willReturn(
+                $this->createClassWithPropertiesStub(LayoutModel::class, ['type' => 'default']),
+            )
+        ;
+
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
+
+        $page = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 2]);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Layout type "default" is not supported in the Contao\CoreBundle\ContentComposition\ContentCompositionBuilder.');
+
+        $this->getContentCompositionBuilder($framework, $page);
     }
 
     public function testSetsUpFrameworkAndAddsDefaultDataToTemplate(): void
@@ -129,6 +148,7 @@ class ContentCompositionBuilderTest extends TestCase
                 'pid' => 42,
                 'defaultImageDensities' => '<densities>',
                 'template' => '<template>',
+                'type' => 'modern',
             ],
             'locale' => 'de_DE',
             'rtl' => false,
@@ -138,7 +158,7 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame($expectedTemplateData, $template->getData());
     }
 
-    private function getContentCompositionBuilder(ContaoFramework $framework, PageModel $page, LoggerInterface|null $logger = null, PictureFactory|null $pictureFactory = null, PreviewFactory|null $previewFactory = null, RequestStack|null $requestStack = null, LocaleAwareInterface|null $translator = null,): ContentCompositionBuilder
+    private function getContentCompositionBuilder(ContaoFramework $framework, PageModel $page, LoggerInterface|null $logger = null, PictureFactory|null $pictureFactory = null, PreviewFactory|null $previewFactory = null, RequestStack|null $requestStack = null, LocaleAwareInterface|null $translator = null): ContentCompositionBuilder
     {
         return new ContentCompositionBuilder(
             $framework,
@@ -160,6 +180,7 @@ class ContentCompositionBuilderTest extends TestCase
             'pid' => 42,
             'defaultImageDensities' => '<densities>',
             'template' => '<template>',
+            'type' => 'modern',
         ]);
 
         $layoutAdapter = $this->createAdapterStub(['findById']);
