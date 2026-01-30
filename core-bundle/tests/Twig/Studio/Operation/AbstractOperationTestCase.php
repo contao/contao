@@ -131,7 +131,7 @@ abstract class AbstractOperationTestCase extends TestCase
         return $storage;
     }
 
-    protected function createTemplateSkeletonFactoryMock(string $basedOnName = '@Contao/content_element/no_user_template.html.twig', bool $stub = false): TemplateSkeletonFactory&MockObject
+    protected function createTemplateSkeletonFactoryMock(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): TemplateSkeletonFactory&MockObject
     {
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton
@@ -149,7 +149,7 @@ abstract class AbstractOperationTestCase extends TestCase
         return $factory;
     }
 
-    protected function createTemplateSkeletonFactoryStub(string $basedOnName = '@Contao/content_element/no_user_template.html.twig', bool $stub = false): TemplateSkeletonFactory&Stub
+    protected function createTemplateSkeletonFactoryStub(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): TemplateSkeletonFactory&Stub
     {
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton

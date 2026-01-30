@@ -7,7 +7,7 @@
 %}
 <div{{ wrapper_attributes }}>
     {% if add_jump_targets|default(true) %}
-        <div class="jump-targets">
+        <div class="jump-targets" data-controller="contao--sticky-observer">
             <div class="inner" data-contao--jump-targets-target="navigation"></div>
         </div>
     {% endif %}

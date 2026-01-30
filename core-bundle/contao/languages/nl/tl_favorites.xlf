@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_favorites.tableLabel">
         <source>Favorite</source>
+        <target>Favoriet</target>
       </trans-unit>
     </body>
   </file>

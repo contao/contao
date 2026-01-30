@@ -277,6 +277,9 @@
         <source>Drag file &quot;%s&quot;</source>
         <target>Arrastre el archivo &quot;%s&quot;</target>
       </trans-unit>
+      <trans-unit id="tl_files.source.0">
+        <source>Edit source</source>
+      </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Editar el texto fuente del archivo &quot;%s&quot;</target>

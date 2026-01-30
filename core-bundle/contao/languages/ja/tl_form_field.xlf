@@ -411,9 +411,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.altchaFloating.0">
         <source>Floating mode</source>
+        <target>フローティングモード</target>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaFloating.1">
         <source>Enable the floating UI.</source>
+        <target>フローティングモードのユーザーインターフェイスを有効にします。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>

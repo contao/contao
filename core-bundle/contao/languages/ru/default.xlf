@@ -435,6 +435,7 @@
       </trans-unit>
       <trans-unit id="CTE.change_password.1">
         <source>Generates a form to change the password.</source>
+        <target>Создаёт форму для смены пароля.</target>
       </trans-unit>
       <trans-unit id="CTE.close_account.0">
         <source>Close account</source>
@@ -442,6 +443,7 @@
       </trans-unit>
       <trans-unit id="CTE.close_account.1">
         <source>Generates a form to delete a member account.</source>
+        <target>Создает форму для удаления учетной записи участника.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -729,6 +731,7 @@
       </trans-unit>
       <trans-unit id="CTE.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Создает форму для настройки или изменения двухфакторной авторизации.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -2852,9 +2855,11 @@
       </trans-unit>
       <trans-unit id="MSC.trail">
         <source>Show trail</source>
+        <target>Показать путь/историю</target>
       </trans-unit>
       <trans-unit id="MSC.siblings">
         <source>Show siblings</source>
+        <target>Показать связанные элементы</target>
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
@@ -3118,9 +3123,11 @@
       </trans-unit>
       <trans-unit id="MSC.searchShortcut">
         <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchShortcutMacos">
         <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3200,9 +3207,11 @@
       </trans-unit>
       <trans-unit id="MSC.scrollLeft">
         <source>Scroll left</source>
+        <target>Прокрутить влево</target>
       </trans-unit>
       <trans-unit id="MSC.scrollRight">
         <source>Scroll right</source>
+        <target>Прокрутить вправо</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

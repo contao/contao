@@ -419,9 +419,11 @@
       </trans-unit>
       <trans-unit id="tl_content.serverPagination.0">
         <source>Server-side pagination</source>
+        <target>Server-side paginering</target>
       </trans-unit>
       <trans-unit id="tl_content.serverPagination.1">
         <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Verdeel de afbeeldingen over meerdere pagina's en toon slechts een deel ervan tegelijk.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>

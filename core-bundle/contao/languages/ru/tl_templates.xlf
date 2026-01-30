@@ -69,6 +69,10 @@
         <source>Paste into folder &quot;%s&quot;</source>
         <target>Вставить в каталог &quot;%s&quot;</target>
       </trans-unit>
+      <trans-unit id="tl_templates.compare.0">
+        <source>Compare</source>
+        <target>Сравнить</target>
+      </trans-unit>
       <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Сравнить &quot;%s&quot; с другим шаблоном</target>
