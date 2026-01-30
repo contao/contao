@@ -881,8 +881,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get the new position
 		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
-		// Avoid circular references when there is no parent table
-		if (!$this->ptable && $db->fieldExists('pid', $this->strTable))
+		// Avoid circular references when there is no parent table or the table references itself
+		if ((!$this->ptable || $this->ptable == $this->strTable) && $db->fieldExists('pid', $this->strTable))
 		{
 			$cr = $db->getChildRecords($this->intId, $this->strTable);
 			$cr[] = $this->intId;
