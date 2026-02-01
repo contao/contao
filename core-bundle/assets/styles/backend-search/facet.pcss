@@ -19,7 +19,7 @@
     display: flex;
     flex-flow: column nowrap;
 
-    &:has(.backend-search_facet_types:empty) {
+    &:has(.backend-search_facet_types > .no-facets) {
         display: none;
     }
 }
@@ -35,7 +35,7 @@
     border-width: 1px 1px 0 0;
     flex-grow: 1;
 
-    &:empty {
+    &:has(> .no-facets) {
         border-top: none;
     }
 }

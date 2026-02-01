@@ -26,4 +26,7 @@
             </ul>
         </form>
     </nav>
+{% else %}
+    {# Modifier to determine that the stream is empty due to not using JavaScript or being able to strip white spaces #}
+    <span class="no-facets" hidden></span>
 {% endif %}
