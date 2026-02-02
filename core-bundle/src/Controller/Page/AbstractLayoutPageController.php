@@ -46,7 +46,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $this->initializeContaoFramework();
 
         if (!$layout = $this->getContaoAdapter(LayoutModel::class)->findById($page->layout)) {
-            $this->container->get('monolog.logger.contao.error')->error(\sprintf('Could not find layout ID "%s"', (string) $page->layout));
+            $this->container->get('monolog.logger.contao.error')->error(\sprintf('Could not find layout ID "%s"', $page->layout));
 
             throw new NoLayoutSpecifiedException('No layout specified');
         }

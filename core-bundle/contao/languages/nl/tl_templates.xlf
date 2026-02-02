@@ -69,6 +69,10 @@
         <source>Paste into folder &quot;%s&quot;</source>
         <target>Plak in de map &quot;%s&quot;</target>
       </trans-unit>
+      <trans-unit id="tl_templates.compare.0">
+        <source>Compare</source>
+        <target>Vergelijken</target>
+      </trans-unit>
       <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Vergelijk &quot;%s&quot; met een andere template</target>

@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.cud_legend">
         <source>Table permissions</source>
+        <target>Tabelrechten</target>
       </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>

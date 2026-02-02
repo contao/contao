@@ -251,9 +251,11 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.0">
         <source>Table permissions</source>
+        <target>Tabelrechten</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.1">
         <source>Here you can select which operations are allowed for which table.</source>
+        <target>Hier kunt u selecteren welke bewerkingen voor welke tabel zijn toegestaan.</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.create">
         <source>Create</source>
@@ -261,6 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.update">
         <source>Update</source>
+        <target>Update</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.delete">
         <source>Delete</source>
@@ -268,15 +271,19 @@
       </trans-unit>
       <trans-unit id="tl_user.cud.other">
         <source>Additional permissions</source>
+        <target>Aanvullende rechten</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_create">
         <source>Create records in &quot;%s&quot;</source>
+        <target>Maak records aan in &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_update">
         <source>Update records of &quot;%s&quot;</source>
+        <target>Records bijwerken van &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.cud.table_delete">
         <source>Delete records of &quot;%s&quot;</source>
+        <target>Records verwijderen van &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -364,6 +371,7 @@
       </trans-unit>
       <trans-unit id="tl_user.cud_legend">
         <source>Table permissions</source>
+        <target>Tabelrechten</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>

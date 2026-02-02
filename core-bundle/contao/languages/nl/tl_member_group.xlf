@@ -107,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.tableLabel">
         <source>Member group</source>
+        <target>Ledengroep</target>
       </trans-unit>
     </body>
   </file>

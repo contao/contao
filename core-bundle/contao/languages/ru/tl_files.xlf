@@ -277,6 +277,10 @@
         <source>Drag file &quot;%s&quot;</source>
         <target>Перетащить файл &quot;%s&quot;</target>
       </trans-unit>
+      <trans-unit id="tl_files.source.0">
+        <source>Edit source</source>
+        <target>Редактировать исходник</target>
+      </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Редактировать исходный текст файла &quot;%s&quot;</target>

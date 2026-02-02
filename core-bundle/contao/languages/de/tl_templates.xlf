@@ -69,6 +69,10 @@
         <source>Paste into folder &quot;%s&quot;</source>
         <target>In den Ordner &quot;%s&quot; einfügen</target>
       </trans-unit>
+      <trans-unit id="tl_templates.compare.0">
+        <source>Compare</source>
+        <target>Vergleichen</target>
+      </trans-unit>
       <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Das Template &quot;%s&quot; mit einem anderen vergleichen</target>

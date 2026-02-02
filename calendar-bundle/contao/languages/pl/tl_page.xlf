@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_page.feedRecurrenceLimit.0">
         <source>Maximum number of recurrences</source>
+        <target>Maksymalna liczba powtórzeń</target>
       </trans-unit>
       <trans-unit id="tl_page.feedRecurrenceLimit.1">
         <source>Define the maximum number of recurrences for repeated events.</source>
+        <target>Określ maksymalną liczbę powtórzeń dla powtarzających się wydarzeń.</target>
       </trans-unit>
       <trans-unit id="tl_page.archives_legend">
         <source>Calendars</source>
@@ -37,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_page.source_teaser">
         <source>Teasers only</source>
+        <target>Tylko zajawki</target>
       </trans-unit>
       <trans-unit id="tl_page.source_text">
         <source>Full stories</source>
@@ -44,12 +47,15 @@
       </trans-unit>
       <trans-unit id="tl_page.all_items">
         <source>Show all items</source>
+        <target>Pokaż wszystkie pozycje</target>
       </trans-unit>
       <trans-unit id="tl_page.featured">
         <source>Show featured items only</source>
+        <target>Pokaż tylko pozycje promowane</target>
       </trans-unit>
       <trans-unit id="tl_page.unfeatured">
         <source>Skip featured items</source>
+        <target>Pomiń pozycje promowane</target>
       </trans-unit>
     </body>
   </file>
