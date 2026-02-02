@@ -69,6 +69,7 @@ class MigrationCollection
             if (null !== $pendingNames) {
                 $expected = array_shift($pendingNames);
                 $actual = $migration->getName();
+
                 if ($expected !== $actual) {
                     throw new UnexpectedPendingMigrationException(\sprintf('Expected %s got "%s".', $expected ? "\"$expected\"" : 'no migration', $actual));
                 }

@@ -76,7 +76,7 @@ class MigrationCollectionTest extends TestCase
         $results = $migrations->run($pendingNames);
 
         if ($results instanceof \Traversable) {
-            $results = iterator_to_array($results);
+            iterator_to_array($results);
         }
     }
 
