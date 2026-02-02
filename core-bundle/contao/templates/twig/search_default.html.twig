@@ -1,7 +1,7 @@
 <div class="search_default">
 
     {% if hasImage %}
-        {{ include('@Contao/image.html.twig', image, false) }}
+        {{ include('@Contao/image.html.twig', image|map(v => v), false) }}
     {% endif %}
 
     <h3><a href="{{ href }}">{{ link }}</a></h3>

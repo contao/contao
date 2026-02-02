@@ -79,7 +79,7 @@ export default class extends Controller {
         let input = event.target;
         let rowClick = false;
 
-        if (input.tagName !== 'INPUT') {
+        if (input.tagName !== 'INPUT' && null === input.closest('button, a')) {
             input = event.currentTarget.querySelector(`[data-${this.identifier}-target="input"]`);
             rowClick = true;
         }
