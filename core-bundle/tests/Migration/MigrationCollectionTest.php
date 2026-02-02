@@ -17,6 +17,7 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MigrationCollectionTest extends TestCase
 {
@@ -63,9 +64,7 @@ class MigrationCollectionTest extends TestCase
         $this->assertSame('failing', $results[1]->getMessage());
     }
 
-    /**
-     * @dataProvider getUnexpectedPendingMigrations
-     */
+    #[DataProvider('getUnexpectedPendingMigrations')]
     public function testRunMigrationsUnexpectedPending(array $pendingNames, string $expectedExceptionMessage): void
     {
         $migrations = new MigrationCollection($this->getMigrationServices());
