@@ -292,6 +292,88 @@ class ContentCompositionBuilderTest extends TestCase
         );
     }
 
+    public function testBuildWithCustomLayoutTemplate(): void
+    {
+        $template = $this
+            ->getContentCompositionBuilder()
+            ->useCustomLayoutTemplate('page/foo')
+            ->addElementToSlot('A', 10)
+            ->addElementToSlot('A', 20, false)
+            ->buildLayoutTemplate()
+        ;
+
+        $this->assertSame('page/foo', $template->getName());
+
+        $this->assertSame(
+            [
+                'A' => [
+                    ['type' => 'content_element', 'id' => 10],
+                    ['type' => 'frontend_module', 'id' => 20],
+                ],
+            ],
+            $template->getData()['element_references'],
+        );
+    }
+
+    public function testBuildWithCustomRenderers(): void
+    {
+        $renderer = $this->createMock(RendererInterface::class);
+        $renderer
+            ->expects($this->once())
+            ->method('render')
+            ->with('@Contao/<template>.html.twig', $this->anything())
+            ->willReturn('<content>')
+        ;
+
+        $slotRenderer = $this->createMock(RendererInterface::class);
+        $slotRenderer
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/<slot-template>.html.twig',
+                [
+                    '_slot_name' => 'A',
+                    'references' => [['type' => 'content_element', 'id' => 1]],
+                ],
+            )
+            ->willReturn('<slot A>')
+        ;
+
+        $template = $this
+            ->getContentCompositionBuilder()
+            ->setRenderer($renderer)
+            ->setSlotRenderer($slotRenderer)
+            ->setSlotTemplate('<slot-template>')
+            ->addElementToSlot('A', 1)
+            ->buildLayoutTemplate()
+        ;
+
+        $this->assertSame('<slot A>', $template->getSlot('A')->__toString());
+        $this->assertSame('<content>', $template->getResponse()->getContent());
+    }
+
+    public function testTestWithCustomImageDensities(): void
+    {
+        $pictureFactory = $this->createMock(PictureFactory::class);
+        $pictureFactory
+            ->expects($this->once())
+            ->method('setDefaultDensities')
+            ->with('<custom-densities>')
+        ;
+
+        $previewFactory = $this->createMock(PreviewFactory::class);
+        $previewFactory
+            ->expects($this->once())
+            ->method('setDefaultDensities')
+            ->with('<custom-densities>')
+        ;
+
+        $this->getContentCompositionBuilder(pictureFactory: $pictureFactory, previewFactory: $previewFactory)
+            ->setDefaultImageDensities('<custom-densities>')
+            ->buildLayoutTemplate()
+        ;
+    }
+
     private function getContentCompositionBuilder(ContaoFramework|null $framework = null, PageModel|null $page = null, LoggerInterface|null $logger = null, PictureFactory|null $pictureFactory = null, PreviewFactory|null $previewFactory = null, RequestStack|null $requestStack = null, LocaleAwareInterface|null $translator = null): ContentCompositionBuilder
     {
         $page ??= $this->createClassWithPropertiesStub(PageModel::class, [

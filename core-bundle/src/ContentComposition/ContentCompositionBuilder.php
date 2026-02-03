@@ -36,11 +36,11 @@ class ContentCompositionBuilder
 {
     private string|null $layoutTemplate = null;
 
-    private RendererInterface $slotRenderer;
-
     private ResponseContext|null $responseContext = null;
 
     private string|null $defaultImageDensities = null;
+
+    private RendererInterface $slotRenderer;
 
     /**
      * @param array<array-key, array{type: "content_element"|"frontend_module", id: int}> $framework
@@ -90,6 +90,17 @@ class ContentCompositionBuilder
     }
 
     /**
+     * Set the default image densities that the image libraries will get configured
+     * with on build.
+     */
+    public function setDefaultImageDensities(string $densities): self
+    {
+        $this->defaultImageDensities = $densities;
+
+        return $this;
+    }
+
+    /**
      * Set renderer that will be used to render the layout template.
      */
     public function setRenderer(RendererInterface $renderer): self
@@ -110,22 +121,11 @@ class ContentCompositionBuilder
     }
 
     /**
-     * Set the default image densities that the image libraries will get configured
-     * with on build.
-     */
-    public function setDefaultImageDensities(string $densities): self
-    {
-        $this->defaultImageDensities = $densities;
-
-        return $this;
-    }
-
-    /**
      * Add a content element or frontend module - referenced by their ID - to a
      * certain slot. References and stringable objects, that lazily render the slots
      * will be available as template parameters.
      */
-    public function addElementReferenceToSlot(string $slot, int $id, bool $isContentElement = true): self
+    public function addElementToSlot(string $slot, int $id, bool $isContentElement = true): self
     {
         $this->elementReferencesBySlot[$slot][] = [
             'type' => $isContentElement ? 'content_element' : 'frontend_module',
@@ -174,7 +174,7 @@ class ContentCompositionBuilder
                 if ($definition['enable'] ?? false) {
                     $isContentElement = str_starts_with($definition['mod'], 'content-');
 
-                    $this->addElementReferenceToSlot(
+                    $this->addElementToSlot(
                         $definition['col'],
                         (int) ($isContentElement ? substr($definition['mod'], 8) : $definition['mod']),
                         $isContentElement,
