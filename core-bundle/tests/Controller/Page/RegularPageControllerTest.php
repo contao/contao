@@ -177,7 +177,7 @@ class RegularPageControllerTest extends TestCase
 
         $contentCompositionBuilder
             ->expects($expectedFragmentRenderer ? $this->once() : $this->any())
-            ->method('setFragmentRenderer')
+            ->method('setSlotRenderer')
             ->with($expectedFragmentRenderer ?: $this->anything())
             ->willReturnSelf()
         ;

@@ -52,7 +52,7 @@ class RegularPageController extends AbstractController
         $layoutTemplate = $this->contentComposition
             ->createContentCompositionBuilder($page)
             ->setResponseContext($responseContext)
-            ->setFragmentRenderer($this->deferredRenderer)
+            ->setSlotRenderer($this->deferredRenderer)
             ->buildLayoutTemplate()
         ;
 

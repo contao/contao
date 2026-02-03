@@ -57,10 +57,12 @@ class ContentCompositionBuilderTest extends TestCase
             ->with('Could not find layout ID "123"')
         ;
 
+        $builder = $this->getContentCompositionBuilder($framework, $page, $logger);
+
         $this->expectException(NoLayoutSpecifiedException::class);
         $this->expectExceptionMessage('No layout specified');
 
-        $this->getContentCompositionBuilder($framework, $page, $logger);
+        $builder->buildLayoutTemplate();
     }
 
     public function testInstantiatingFailsIfLayoutIsNotOfModernType(): void
@@ -78,10 +80,12 @@ class ContentCompositionBuilderTest extends TestCase
 
         $page = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 2]);
 
+        $builder = $this->getContentCompositionBuilder($framework, $page);
+
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Layout type "default" is not supported in the Contao\CoreBundle\ContentComposition\ContentCompositionBuilder.');
 
-        $this->getContentCompositionBuilder($framework, $page);
+        $builder->buildLayoutTemplate();
     }
 
     public function testSetsUpFrameworkAndAddsDefaultDataToTemplate(): void
@@ -143,6 +147,8 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame('<templates-dir>', $page->templateGroup);
 
         $expectedTemplateData = [
+            'locale' => 'de_DE',
+            'rtl' => false,
             'page' => [
                 'layout' => 1,
                 'language' => 'de-DE',
@@ -158,8 +164,6 @@ class ContentCompositionBuilderTest extends TestCase
                 'template' => '<template>',
                 'type' => 'modern',
             ],
-            'locale' => 'de_DE',
-            'rtl' => false,
             'element_references' => [],
         ];
 
@@ -253,7 +257,7 @@ class ContentCompositionBuilderTest extends TestCase
         $template = $this
             ->getContentCompositionBuilder($this->mockFramework($layout))
             ->setSlotTemplate('<slot-template>')
-            ->setFragmentRenderer($renderer)
+            ->setSlotRenderer($renderer)
             ->buildLayoutTemplate()
         ;
 

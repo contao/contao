@@ -34,11 +34,18 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class ContentCompositionBuilder
 {
-    private readonly LayoutModel $layout;
+    private string|null $layoutTemplate = null;
 
-    private RendererInterface|null $fragmentRenderer = null;
+    private RendererInterface $slotRenderer;
 
     private ResponseContext|null $responseContext = null;
+
+    private string|null $defaultImageDensities = null;
+
+    /**
+     * @param array<array-key, array{type: "content_element"|"frontend_module", id: int}> $framework
+     */
+    private array $elementReferencesBySlot = [];
 
     private string $slotTemplate = 'page/_element_group';
 
@@ -47,7 +54,7 @@ class ContentCompositionBuilder
      */
     public function __construct(
         private readonly ContaoFramework $framework,
-        LoggerInterface $logger,
+        private readonly LoggerInterface $logger,
         private readonly PictureFactory $pictureFactory,
         private readonly PreviewFactory $previewFactory,
         private readonly ContaoContext $assetsContext,
@@ -56,20 +63,25 @@ class ContentCompositionBuilder
         private readonly LocaleAwareInterface $translator,
         private readonly PageModel $page,
     ) {
-        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($this->page->layout)) {
-            $logger->error(\sprintf('Could not find layout ID "%s"', $this->page->layout));
-
-            throw new NoLayoutSpecifiedException('No layout specified');
-        }
-
-        // Guard against using with anything other than the modern layout
-        if ('modern' !== $layout->type) {
-            throw new \LogicException(\sprintf('Layout type "%s" is not supported in the %s.', $layout->type, self::class));
-        }
-
-        $this->layout = $layout;
+        $this->slotRenderer = $this->renderer;
     }
 
+    /**
+     * Set a custom layout template to use during build, instead of trying to find an
+     * associated page layout and using its data. Use this option for your own page
+     * controllers, that support content composition, but do not have a layout.
+     */
+    public function useCustomLayoutTemplate(string $identifier): self
+    {
+        $this->layoutTemplate = $identifier;
+
+        return $this;
+    }
+
+    /**
+     * If a response context is set, default data queried from it will be available in
+     * the template through lazy accessors.
+     */
     public function setResponseContext(ResponseContext $responseContext): self
     {
         $this->responseContext = $responseContext;
@@ -77,6 +89,9 @@ class ContentCompositionBuilder
         return $this;
     }
 
+    /**
+     * Set renderer that will be used to render the layout template.
+     */
     public function setRenderer(RendererInterface $renderer): self
     {
         $this->renderer = $renderer;
@@ -84,13 +99,45 @@ class ContentCompositionBuilder
         return $this;
     }
 
-    public function setFragmentRenderer(RendererInterface $renderer): self
+    /**
+     * Set renderer that will be used to render the slot template.
+     */
+    public function setSlotRenderer(RendererInterface $renderer): self
     {
-        $this->fragmentRenderer = $renderer;
+        $this->slotRenderer = $renderer;
 
         return $this;
     }
 
+    /**
+     * Set the default image densities that the image libraries will get configured
+     * with on build.
+     */
+    public function setDefaultImageDensities(string $densities): self
+    {
+        $this->defaultImageDensities = $densities;
+
+        return $this;
+    }
+
+    /**
+     * Add a content element or frontend module - referenced by their ID - to a
+     * certain slot. References and stringable objects, that lazily render the slots
+     * will be available as template parameters.
+     */
+    public function addElementReferenceToSlot(string $slot, int $id, bool $isContentElement = true): self
+    {
+        $this->elementReferencesBySlot[$slot][] = [
+            'type' => $isContentElement ? 'content_element' : 'frontend_module',
+            'id' => $id,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Set the template identifier of the slot template to be used.
+     */
     public function setSlotTemplate(string $identifier): self
     {
         $this->slotTemplate = $identifier;
@@ -98,15 +145,57 @@ class ContentCompositionBuilder
         return $this;
     }
 
+    /**
+     * Configure the framework, gather data and create a fully configured layout template.
+     */
     public function buildLayoutTemplate(): LayoutTemplate
     {
         $this->framework->initialize();
 
-        $this->setupFramework($this->page, $this->layout);
+        // If no template was explicitly set, we try to find the associated user layout
+        // and gather the settings from it
+        if (null === $this->layoutTemplate) {
+            if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($this->page->layout)) {
+                $this->logger->error(\sprintf('Could not find layout ID "%s"', $this->page->layout));
+
+                throw new NoLayoutSpecifiedException('No layout specified');
+            }
+
+            // Guard against using with anything other than the modern layout
+            if ('modern' !== $layout->type) {
+                throw new \LogicException(\sprintf('Layout type "%s" is not supported in the %s.', $layout->type, self::class));
+            }
+
+            $this->layoutTemplate = $layout->template;
+            $this->defaultImageDensities ??= $layout->defaultImageDensities;
+
+            // Add slot content
+            foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
+                if ($definition['enable'] ?? false) {
+                    $isContentElement = str_starts_with($definition['mod'], 'content-');
+
+                    $this->addElementReferenceToSlot(
+                        $definition['col'],
+                        (int) ($isContentElement ? substr($definition['mod'], 8) : $definition['mod']),
+                        $isContentElement,
+                    );
+                }
+            }
+
+            // Backwards compatibility: set layout information on PageModel
+            $this->page->layoutId = $layout->id;
+            $this->page->template = $layout->template;
+            $this->page->templateGroup = $this->framework->getAdapter(ThemeModel::class)->findById($layout->pid)?->templates;
+        } else {
+            $layout = null;
+        }
+
+        // Set Configure services and set globals
+        $this->setupFramework($this->page);
 
         // Create the template and add default data
         $template = new LayoutTemplate(
-            $this->layout->template,
+            $this->layoutTemplate,
             function (LayoutTemplate $template, Response|null $preBuiltResponse): Response {
                 $response = $preBuiltResponse ?? new Response();
                 $parameters = $template->getData();
@@ -127,17 +216,14 @@ class ContentCompositionBuilder
             },
         );
 
-        $this->addPageContextToTemplate($template, $this->page, $this->layout);
-        $this->addCompositedContentToTemplate($template, $this->layout);
-
-        if ($this->responseContext) {
-            $this->addResponseContextToTemplate($template, $this->responseContext);
-        }
+        $this->addDefaultDataToTemplate($template, $this->page, $layout);
+        $this->addCompositedContentToTemplate($template, $this->elementReferencesBySlot);
+        $this->addResponseContextToTemplate($template, $this->responseContext);
 
         return $template;
     }
 
-    private function setupFramework(PageModel $page, LayoutModel $layout): void
+    private function setupFramework(PageModel $page): void
     {
         // Set global variables
         $page->loadDetails();
@@ -161,31 +247,35 @@ class ContentCompositionBuilder
         $this->framework->getAdapter(System::class)->loadLanguageFile('default');
 
         // Configure image library defaults
-        $this->pictureFactory->setDefaultDensities($layout->defaultImageDensities);
-        $this->previewFactory->setDefaultDensities($layout->defaultImageDensities);
-
-        // Set PageModel data
-        $page->layoutId = $layout->id;
-        $page->template = $layout->template;
-        $page->templateGroup = $this->framework->getAdapter(ThemeModel::class)->findById($layout->pid)?->templates;
+        if ($this->defaultImageDensities) {
+            $this->pictureFactory->setDefaultDensities($this->defaultImageDensities);
+            $this->previewFactory->setDefaultDensities($this->defaultImageDensities);
+        }
     }
 
-    private function addPageContextToTemplate(LayoutTemplate $template, PageModel $page, LayoutModel $layout): void
+    private function addDefaultDataToTemplate(LayoutTemplate $template, PageModel $page, LayoutModel|null $layout): void
     {
-        $template->set('page', $page->row());
-        $template->set('layout', $layout->row());
-
         $locale = LocaleUtil::formatAsLocale($page->language);
         $isRtl = 'right-to-left' === (\ResourceBundle::create($locale, 'ICUDATA')['layout']['characters'] ?? null);
 
         $template->set('locale', $locale);
         $template->set('rtl', $isRtl);
+
+        $template->set('page', $page->row());
+
+        if ($layout) {
+            $template->set('layout', $layout->row());
+        }
     }
 
-    private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext $responseContext): void
+    private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext|null $responseContext): void
     {
+        if (!$responseContext) {
+            return;
+        }
+
         $responseContextData = [
-            'head' => $responseContext->get(HtmlHeadBag::class),
+            'head' => $responseContext?->get(HtmlHeadBag::class),
             'end_of_head' => fn () => [
                 ...array_map(
                     function (string $url): string {
@@ -251,21 +341,8 @@ class ContentCompositionBuilder
         });
     }
 
-    private function addCompositedContentToTemplate(LayoutTemplate $template, LayoutModel $layout): void
+    private function addCompositedContentToTemplate(LayoutTemplate $template, array $elementReferencesBySlot): void
     {
-        $elementReferencesBySlot = [];
-
-        foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
-            if ($definition['enable'] ?? false) {
-                $isContentElement = str_starts_with($definition['mod'], 'content-');
-
-                $elementReferencesBySlot[$definition['col']][] = [
-                    'type' => $isContentElement ? 'content_element' : 'frontend_module',
-                    'id' => (int) ($isContentElement ? substr($definition['mod'], 8) : $definition['mod']),
-                ];
-            }
-        }
-
         $template->set('element_references', $elementReferencesBySlot);
 
         foreach ($elementReferencesBySlot as $slot => $elementIds) {
@@ -295,7 +372,7 @@ class ContentCompositionBuilder
      */
     private function renderSlot(string $slot, array $elementReferences): string
     {
-        $result = ($this->fragmentRenderer ?? $this->renderer)->render("@Contao/{$this->slotTemplate}.html.twig", [
+        $result = $this->slotRenderer->render("@Contao/{$this->slotTemplate}.html.twig", [
             '_slot_name' => $slot,
             'references' => $elementReferences,
         ]);
