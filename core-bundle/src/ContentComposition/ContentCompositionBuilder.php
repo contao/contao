@@ -275,7 +275,7 @@ class ContentCompositionBuilder
         }
 
         $responseContextData = [
-            'head' => $responseContext?->get(HtmlHeadBag::class),
+            'head' => $responseContext->has(HtmlHeadBag::class) ? $responseContext->get(HtmlHeadBag::class) : null,
             'end_of_head' => fn () => [
                 ...array_map(
                     function (string $url): string {
