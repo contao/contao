@@ -83,6 +83,7 @@
                                             {# Record displayed as box with optional preview #}
                                             {% set record_label_attributes = attrs()
                                                 .addClass('cte_type')
+                                                .addClass('draggable', record.allow_dragging)
                                                 .addClass(record.state, record.state)
                                             %}
                                             <div{{ record_label_attributes }}>
@@ -91,8 +92,10 @@
                                                         <button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">
                                                             {{ backend_icon('drag.svg', record.drag_handle_label) }}
                                                         </button>
+                                                        <div>{{ record.label|raw }}</div>
+                                                    {% else %}
+                                                        {{ record.label|raw }}
                                                     {% endif %}
-                                                    {{ record.label|raw }}
                                                 {% endblock %}
                                             </div>
 
@@ -103,7 +106,12 @@
                                             {% endif %}
                                         {% else %}
                                             {# Record displayed flat #}
-                                            <div class="tl_content_left">
+                                            {% set record_label_attributes = attrs()
+                                                .addClass('tl_content_left')
+                                                .addClass('draggable', record.allow_dragging)
+                                                .addClass(record.state, record.state)
+                                            %}
+                                            <div{{ record_label_attributes }}>
                                                 {{ block('label') }}
                                             </div>
                                         {% endif %}
