@@ -135,7 +135,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $pageId = $this->getCurrentPageId($action);
 
         return $this->canAccessPage($token, $pageId, false)
-            || \in_array($pageId, $this->getPagemountTrail($token), true);
+            || ('tl_page' === $action->getDataSource() && \in_array($pageId, $this->getPagemountTrail($token), true));
     }
 
     private function canUpdate(UpdateAction $action, TokenInterface $token): bool
