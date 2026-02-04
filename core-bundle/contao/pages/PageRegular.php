@@ -277,7 +277,7 @@ class PageRegular extends Frontend
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
-		$this->Template->class = trim($replaceInsertTags($objLayout->cssClass) . ' ' . $replaceInsertTags($objPage->cssClass));
+		$this->Template->class = htmlspecialchars(trim($replaceInsertTags($objLayout->cssClass . ' ' . $objPage->cssClass)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Additional meta tags
 		$this->Template->metaTags = $headBag->getMetaTags();
