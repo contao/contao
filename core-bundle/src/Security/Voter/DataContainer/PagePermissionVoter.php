@@ -229,7 +229,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             $trails[] = $database->getParentRecords($pageId, 'tl_page');
         }
 
-        return $this->pagemountTrailCache[$user->id] = array_map(intval(...), array_unique(array_merge($trails)));
+        return $this->pagemountTrailCache[$user->id] = array_map(intval(...), array_unique(array_merge(...$trails)));
     }
 
     private function getCurrentPageId(DeleteAction|ReadAction|UpdateAction $action): int
