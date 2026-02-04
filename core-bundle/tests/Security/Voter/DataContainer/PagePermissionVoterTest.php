@@ -550,7 +550,7 @@ class PagePermissionVoterTest extends TestCase
             [
                 [1, 'tl_page', [41]],
                 [2, 'tl_page', [42]],
-                [3, 'tl_page', [43]]
+                [3, 'tl_page', [43]],
             ],
         ];
 
@@ -561,7 +561,7 @@ class PagePermissionVoterTest extends TestCase
             ],
             false,
             [1],
-            [[1, 'tl_page', [2]]]
+            [[1, 'tl_page', [2]]],
         ];
 
         yield 'Can read article' => [
