@@ -34,8 +34,14 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, ResetInterface
 {
+    /**
+     * @var array<int, array<int>>
+     */
     private array $pagemountsCache = [];
 
+    /**
+     * @var array<int, array<int>>
+     */
     private array $pagemountTrailCache = [];
 
     /**
