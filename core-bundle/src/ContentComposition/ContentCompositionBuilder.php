@@ -245,10 +245,10 @@ class ContentCompositionBuilder
         }
 
         // Deprecated since Contao 4.0, to be removed in Contao 6.0
-        $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($page->language);
+        $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($page->language ?? '');
 
         // Set locale
-        $locale = LocaleUtil::formatAsLocale($page->language);
+        $locale = LocaleUtil::formatAsLocale($page->language ?? '');
 
         $this->requestStack->getCurrentRequest()?->setLocale($locale);
         $this->translator->setLocale($locale);
@@ -265,7 +265,7 @@ class ContentCompositionBuilder
 
     private function addDefaultDataToTemplate(LayoutTemplate $template, PageModel $page, LayoutModel|null $layout): void
     {
-        $locale = LocaleUtil::formatAsLocale($page->language);
+        $locale = LocaleUtil::formatAsLocale($page->language ?? '');
         $isRtl = 'right-to-left' === (\ResourceBundle::create($locale, 'ICUDATA')['layout']['characters'] ?? null);
 
         $template->set('locale', $locale);
