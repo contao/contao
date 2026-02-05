@@ -297,6 +297,7 @@ class ContentCompositionBuilderTest extends TestCase
         $template = $this
             ->getContentCompositionBuilder()
             ->useCustomLayoutTemplate('page/foo')
+            ->addArticleToSlot('A')
             ->addElementToSlot('A', 10)
             ->addElementToSlot('A', 20, false)
             ->buildLayoutTemplate()
@@ -307,6 +308,7 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame(
             [
                 'A' => [
+                    ['type' => 'frontend_module', 'id' => 0],
                     ['type' => 'content_element', 'id' => 10],
                     ['type' => 'frontend_module', 'id' => 20],
                 ],
