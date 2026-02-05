@@ -16,7 +16,7 @@ use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
-use Contao\CoreBundle\Twig\Renderer\DefaultRenderer;
+use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,7 +33,7 @@ class ContentComposition
         private readonly PictureFactory $pictureFactory,
         private readonly PreviewFactory $previewFactory,
         private readonly ContaoContext $assetsContext,
-        private readonly DefaultRenderer $defaultRenderer,
+        private readonly RendererInterface $defaultRenderer,
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
     ) {
