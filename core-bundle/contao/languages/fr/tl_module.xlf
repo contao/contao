@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Choisir le type de module.</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>Libellé ARIA</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>S'il y a plus d'un élément de navigation sur la page, chacun doit avoir un libellé unique.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Niveau de départ</target>
@@ -131,15 +139,19 @@
       </trans-unit>
       <trans-unit id="tl_module.pwResetPage.0">
         <source>Reset password page</source>
+        <target>Page de réinitialisation du mot de passe</target>
       </trans-unit>
       <trans-unit id="tl_module.pwResetPage.1">
         <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Ici, vous pouvez choisir la page vers laquelle les visiteurs seront redirigés en cliquant sur le lien &lt;em&gt;Mot de passe oublié ?&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Page d'aperçu</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
+        <target>Sélectionnez une page d'aperçu pour inclure un lien vers celle-ci dans le modèle.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
@@ -175,9 +187,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.0">
         <source>Require full authentication</source>
+        <target>Exiger une authentification complète</target>
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.1">
         <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Les utilisateurs ne disposant que d'un cookie &quot;se souvenir de moi&quot; doivent vérifier leur identité pour accéder au module.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -517,6 +531,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Choisir un module pour &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -636,33 +651,33 @@ If you did not request this e-mail, please contact the website administrator.
         <source>Irrevocably delete account</source>
         <target>Supprimer le compte de manière irrévocable</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>Créer un nouveau module</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>Afficher les détails du module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>Éditer le module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
-        <target>Dupliquer le module ID %s</target>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
+        <target>Copier le module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>Déplacer le module ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>Supprimer le module ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Module</target>
       </trans-unit>
     </body>
   </file>

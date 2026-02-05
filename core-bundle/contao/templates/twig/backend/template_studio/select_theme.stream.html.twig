@@ -1,0 +1,7 @@
+{# Reload tree #}
+{{ render(path('_contao_template_studio_tree.stream')) }}
+
+{# Reload open tabs #}
+{% for identifier in open_tabs %}
+    {{ render(path('_contao_template_studio_editor_tab.stream', {identifier})) }}
+{% endfor %}

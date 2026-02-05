@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Symfony\Contracts\Service\ResetInterface;
 
 class LayoutOptionsListenerTest extends TestCase
 {
@@ -25,7 +24,17 @@ class LayoutOptionsListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
-            ->with('SELECT l.id, l.name, t.name AS theme FROM tl_layout l LEFT JOIN tl_theme t ON l.pid=t.id ORDER BY t.name, l.name')
+            ->with(
+                <<<'SQL'
+                    SELECT
+                        l.id,
+                        l.name,
+                        t.name AS theme
+                    FROM tl_layout l
+                    LEFT JOIN tl_theme t ON l.pid = t.id
+                    ORDER BY t.name, l.name
+                    SQL,
+            )
             ->willReturn([
                 ['id' => 1, 'name' => 'Layout 1', 'theme' => 'Theme A'],
                 ['id' => 2, 'name' => 'Layout 2', 'theme' => 'Theme A'],
@@ -55,7 +64,17 @@ class LayoutOptionsListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
-            ->with('SELECT l.id, l.name, t.name AS theme FROM tl_layout l LEFT JOIN tl_theme t ON l.pid=t.id ORDER BY t.name, l.name')
+            ->with(
+                <<<'SQL'
+                    SELECT
+                        l.id,
+                        l.name,
+                        t.name AS theme
+                    FROM tl_layout l
+                    LEFT JOIN tl_theme t ON l.pid = t.id
+                    ORDER BY t.name, l.name
+                    SQL,
+            )
             ->willReturn([
                 ['id' => 1, 'name' => 'Layout 1', 'theme' => 'Theme A'],
             ])
@@ -73,7 +92,17 @@ class LayoutOptionsListenerTest extends TestCase
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAllAssociative')
-            ->with('SELECT l.id, l.name, t.name AS theme FROM tl_layout l LEFT JOIN tl_theme t ON l.pid=t.id ORDER BY t.name, l.name')
+            ->with(
+                <<<'SQL'
+                    SELECT
+                        l.id,
+                        l.name,
+                        t.name AS theme
+                    FROM tl_layout l
+                    LEFT JOIN tl_theme t ON l.pid = t.id
+                    ORDER BY t.name, l.name
+                    SQL,
+            )
             ->willReturnOnConsecutiveCalls(
                 [
                     ['id' => 1, 'name' => 'Layout 1', 'theme' => 'Theme A'],
@@ -85,8 +114,6 @@ class LayoutOptionsListenerTest extends TestCase
         ;
 
         $listener = new LayoutOptionsListener($connection);
-
-        $this->assertInstanceOf(ResetInterface::class, $listener);
 
         $this->assertSame(['Theme A' => [1 => 'Layout 1']], $listener());
         $this->assertSame(['Theme A' => [1 => 'Layout 1']], $listener());

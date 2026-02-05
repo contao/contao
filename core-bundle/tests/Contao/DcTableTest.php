@@ -12,19 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DcTableTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
@@ -34,14 +33,10 @@ class DcTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getPalette
-     */
+    #[DataProvider('getPalette')]
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.0: Getting data from $_POST with the "Contao\Input" class has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST with the "Contao\\\\Input" class is deprecated/');
 
         $result = $this->createMock(Result::class);
         $result
@@ -65,9 +60,19 @@ class DcTableTest extends TestCase
             ->willReturn(true)
         ;
 
+        $virtualFieldsHandler = $this->createMock(VirtualFieldsHandler::class);
+        $virtualFieldsHandler
+            ->expects($this->once())
+            ->method('expandFields')
+            ->willReturnCallback(
+                static fn (array $record) => $record,
+            )
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('security.helper', $security);
+        $container->set('contao.data_container.virtual_fields_handler', $virtualFieldsHandler);
 
         System::setContainer($container);
 

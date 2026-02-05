@@ -1,0 +1,46 @@
+.invisible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.unselectable {
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.float_left {
+    float: left;
+}
+
+.float_right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+    height: 0.1px;
+    line-height: 0.1px;
+    font-size: 0.1px;
+}
+
+.cf {
+    &::before,
+    &::after {
+        content: " ";
+        display: table;
+    }
+
+    &::after {
+        clear: both;
+    }
+}

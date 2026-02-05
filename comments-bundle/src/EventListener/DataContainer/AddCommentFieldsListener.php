@@ -176,7 +176,7 @@ class AddCommentFieldsListener
                 ->applyToPalette('external', $table)
             ;
 
-            $GLOBALS['TL_DCA'][$table]['fields']['noComments']['eval'] = ['tl_class' => 'w50 m12'];
+            $GLOBALS['TL_DCA'][$table]['fields']['noComments']['eval'] = ['tl_class' => 'w50'];
         }
     }
 }

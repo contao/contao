@@ -20,7 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizesTest extends TestCase
@@ -41,7 +40,7 @@ class ImageSizesTest extends TestCase
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
     }
 
@@ -77,7 +76,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = true;
 
         $options = $this->imageSizes->getOptionsForUser($user);
@@ -92,7 +91,7 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow only one image size
@@ -104,7 +103,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow only some default options
@@ -115,7 +114,7 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('custom', $options);
         $this->assertArrayNotHasKey('My theme', $options);
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->isAdmin = false;
 
         // Allow nothing
@@ -128,8 +127,6 @@ class ImageSizesTest extends TestCase
 
     public function testServiceIsResetable(): void
     {
-        $this->assertInstanceOf(ResetInterface::class, $this->imageSizes);
-
         $this->eventDispatcher
             ->expects($this->exactly(3))
             ->method('dispatch')

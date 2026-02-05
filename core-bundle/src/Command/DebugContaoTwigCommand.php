@@ -162,6 +162,7 @@ class DebugContaoTwigCommand extends Command
     {
         $nameCellStyle = new TableCellStyle(['fg' => 'yellow']);
         $blockCellStyle = new TableCellStyle(['fg' => 'magenta']);
+        $slotCellStyle = new TableCellStyle(['fg' => 'blue']);
         $codeCellStyle = new TableCellStyle(['fg' => 'white']);
 
         foreach ($chains as $identifier => $chain) {
@@ -180,13 +181,25 @@ class DebugContaoTwigCommand extends Command
                     ['', ''],
                 ];
 
-                if ($blocks = $templateInformation->getBlocks()) {
+                if ($blocks = $templateInformation->getBlockNames()) {
                     $rows = [
                         ...$rows,
                         ...$this->formatMultiline(
                             'Blocks',
                             wordwrap(implode(', ', $blocks)),
                             $blockCellStyle,
+                        ),
+                        ['', ''],
+                    ];
+                }
+
+                if ($slots = $templateInformation->getSlots()) {
+                    $rows = [
+                        ...$rows,
+                        ...$this->formatMultiline(
+                            'Slots',
+                            wordwrap(implode(', ', $slots)),
+                            $slotCellStyle,
                         ),
                         ['', ''],
                     ];

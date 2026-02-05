@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -85,7 +86,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 
 		$container = System::getContainer();
 		$projectDir = $container->getParameter('kernel.project_dir');
-		$strCachePath = StringUtil::stripRootDir($container->getParameter('kernel.cache_dir'));
+		$parameterBag = $container->getParameterBag();
 
 		// Folders
 		foreach ($GLOBALS['TL_PURGE']['folders'] as $key=>$config)
@@ -102,8 +103,12 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 			// Get the current folder size
 			foreach ($config['affected'] as $folder)
 			{
+				if (str_contains($folder, '%'))
+				{
+					$folder = Path::canonicalize(StringUtil::stripRootDir($parameterBag->resolveValue($folder)));
+				}
+
 				$total = 0;
-				$folder = \sprintf($folder, $strCachePath);
 
 				// Only check existing folders
 				if (is_dir($projectDir . '/' . $folder))

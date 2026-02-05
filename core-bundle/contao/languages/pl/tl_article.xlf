@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_article.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_article.author.1">
         <source>Here you can change the author of the article.</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_article.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokaż od</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
         <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokaż do</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
         <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -159,11 +159,11 @@
       </trans-unit>
       <trans-unit id="tl_article.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_article.print">
         <source>Print the page</source>
-        <target>Drukuą tę stronę</target>
+        <target>Drukuj tę stronę</target>
       </trans-unit>
       <trans-unit id="tl_article.pdf">
         <source>Export as PDF</source>
@@ -175,36 +175,37 @@
       </trans-unit>
       <trans-unit id="tl_article.twitter">
         <source>Share on X (formerly Twitter)</source>
-      </trans-unit>
-      <trans-unit id="tl_article.new.0">
-        <source>New</source>
-        <target>Nowy</target>
+        <target>Udostępnij na X (dawniej Twitter)</target>
       </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
         <target>Utwórz nowy artykuł</target>
       </trans-unit>
-      <trans-unit id="tl_article.show">
+      <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
         <target>Pokaż informacje o artykule ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit">
+      <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
         <target>Edytuj artykuł ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.children">
+      <trans-unit id="tl_article.children.0">
+        <source>Content elements</source>
+        <target>Elementy treści</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children.1">
         <source>Edit the content elements of article ID %s</source>
         <target>Edytuj elementy treści artykułu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.copy">
-        <source>Duplicate article ID %s</source>
+      <trans-unit id="tl_article.copy.1">
+        <source>Copy article ID %s</source>
         <target>Duplikuj artykuł ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut">
+      <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
         <target>Przenieś artykuł ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete">
+      <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
         <target>Skasuj artykuł ID %s</target>
       </trans-unit>
@@ -220,13 +221,45 @@
         <source>Publish article ID %s</source>
         <target>Opublikuj artykuł ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.toggle.3">
+        <source>Unpublish</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.4">
+        <source>Publish</source>
+        <target>Opublikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.0">
+        <source>Paste after article</source>
+        <target>Wklej za artykułem</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>Wklej po artykule ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.pasteinto.0">
+        <source>Paste into page</source>
+        <target>Wklej do strony</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
         <target>Wklej do strony ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewafter.1">
+        <source>Add a new article after article ID %s</source>
+        <target>Dodaj nowy artykuł za artykułem ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.0">
+        <source>New at the top</source>
+        <target>Nowy na górze</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.1">
+        <source>Add a new article in page ID %s</source>
+        <target>Dodaj nowy artykuł na stronie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Artykuł</target>
       </trans-unit>
     </body>
   </file>

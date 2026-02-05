@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_form.recipient.1">
         <source>Separate multiple e-mail addresses with comma.</source>
-        <target>Birden fazla e-posta adresini virgül ile ayırarak yazabilirsiniz.</target>
+        <target>Virgül ile ayırarak birden fazla e-posta adresi yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_form.subject.0">
         <source>Subject</source>
@@ -201,6 +201,14 @@
         <source>Submit the form via Ajax instead of reloading the page.</source>
         <target>Bu seçenek etkinleştirildiğinde, form gönderilirken sayfanın yeniden yüklenmesi yerine AJAX kullanılır. </target>
       </trans-unit>
+      <trans-unit id="tl_form.storeSession.0">
+        <source>Store data in the session</source>
+        <target>Veriler oturumda tutulsun</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeSession.1">
+        <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>Gönderilen verilerin oturumda tutulmasını sağlar. Böylece &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; kod imi ile alınabilir.</target>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
         <target>Düzenlenme tarihi</target>
@@ -237,37 +245,45 @@
         <source>Template settings</source>
         <target>Kalıp ayarları</target>
       </trans-unit>
-      <trans-unit id="tl_form.new.0">
-        <source>New</source>
-        <target>Yeni</target>
-      </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Yeni bir form ekle</target>
       </trans-unit>
-      <trans-unit id="tl_form.show">
+      <trans-unit id="tl_form.show.1">
         <source>Show the details of form ID %s</source>
         <target>%s kimlikli formun ayrıntılarını görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit">
+      <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
         <target>%s kimlikli formu düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_form.children">
+      <trans-unit id="tl_form.children.0">
+        <source>Form fields</source>
+        <target>Form alanları</target>
+      </trans-unit>
+      <trans-unit id="tl_form.children.1">
         <source>Edit the form fields of form ID %s</source>
         <target>%s kimlikli formun ayarlarını düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_form.copy">
+      <trans-unit id="tl_form.copy.0">
+        <source>Duplicate</source>
+        <target>Çoğalt</target>
+      </trans-unit>
+      <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
         <target>%s kimlikli formu kopyala</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete">
+      <trans-unit id="tl_form.delete.1">
         <source>Delete form ID %s</source>
         <target>%s kimlikli formu sil</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>Şu DCA yapılandırmasında kullanılabilecek tabloları belirtin: &lt;code&gt;%s&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Form</target>
       </trans-unit>
     </body>
   </file>

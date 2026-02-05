@@ -1,12 +1,11 @@
-{% trans_default_domain "contao_default" %}
-{% extends "@Contao/content_element/_base.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% extends '@Contao/content_element/_base.html.twig' %}
 
 {% block content %}
     {% block link %}
         {% set link_attributes = attrs()
             .set('href', '#top')
             .set('data-toplink')
-            .setIfExists('title', link_text)
             .mergeWith(link_attributes|default)
         %}
         <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>
@@ -18,7 +17,7 @@
 
     {% block script %}
         {% if not as_editor_view %}
-            {% add "toplink_script" to body %}
+            {% add 'toplink_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
                     .mergeWith(script_attributes|default)

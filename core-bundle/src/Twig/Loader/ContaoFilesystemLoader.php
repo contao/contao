@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Loader;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\TemplateLoader;
 use Psr\Cache\CacheItemPoolInterface;
@@ -31,8 +32,6 @@ use Twig\Source;
  * directories. This allows us to group multiple representations of the same
  * template (identifier) from different namespaces in a single data structure: the
  * Contao template hierarchy.
- *
- * @experimental
  */
 class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 {
@@ -55,11 +54,15 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private array $lookupCache = [];
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly CacheItemPoolInterface $cachePool,
         private readonly TemplateLocator $templateLocator,
         private readonly ThemeNamespace $themeNamespace,
         private readonly ContaoFramework $framework,
+        private readonly PageFinder $pageFinder,
         private readonly string $projectDir,
     ) {
     }
@@ -303,8 +306,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      * are arrays [<absolute path> => <template logical name>] in the order they
      * should appear in the inheritance chain for the respective template identifier.
      *
-     * If a $themeSlug is given the result will additionally include templates of that
-     * theme if there are any.
+     * If a $themeSlug is given, the result will additionally include templates of that
+     * theme if there are any. If $themeSlug is set to true, all themes will be included.
      *
      * For example:
      *   [
@@ -316,7 +319,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      *
      * @return array<string, array<string, string>>
      */
-    public function getInheritanceChains(string|null $themeSlug = null): array
+    public function getInheritanceChains(true|string|null $themeSlug = null): array
     {
         $this->ensureHierarchyIsBuilt();
 
@@ -325,7 +328,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         foreach ($this->inheritanceChains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
-                if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
+                if (true !== $themeSlug && null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
                     continue;
                 }
 
@@ -442,6 +445,14 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         $hierarchy = [];
 
         foreach ($templatesByNamespace as $namespace => $templates) {
+            uksort(
+                $templates,
+                // Order by identifier (asc) and extension (desc). This way ".html.twig"
+                // templates come before ".html5" templates for the same identifier.
+                static fn ($a, $b) => ContaoTwigUtil::getIdentifier((string) $a) <=> ContaoTwigUtil::getIdentifier((string) $b) ?:
+                    Path::getExtension((string) $b, true) <=> Path::getExtension((string) $a, true),
+            );
+
             foreach ($templates as $shortName => $path) {
                 $identifier = ContaoTwigUtil::getIdentifier((string) $shortName);
 
@@ -532,7 +543,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      */
     private function getThemeSlug(): string|false
     {
-        if (null === ($page = $GLOBALS['objPage'] ?? null) || null === ($path = $page->templateGroup)) {
+        if ((!$pageModel = $this->pageFinder->getCurrentPage()) || null === ($path = $pageModel->templateGroup)) {
             return $this->currentThemeSlug = false;
         }
 

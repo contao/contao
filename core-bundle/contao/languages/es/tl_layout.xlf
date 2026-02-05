@@ -9,13 +9,13 @@
         <source>Please enter the layout title.</source>
         <target>Por favor introduce un nombre único para el diseño.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Diseño por defecto</target>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
+        <target>Tipo de diseño</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Si seleccionas esta opción, el diseño será utilizado por defecto.</target>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
+        <target>Aquí puede seleccionar el tipo de diseño.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -226,12 +226,12 @@
         <target>Aquí puede definir las densidades de píxeles predeterminadas, p.e. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
-        <target>Módulos incluidos</target>
+        <source>Included elements</source>
+        <target>Elementos incluidos</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Por favor asigna cada módulo a un elemento de la página. Utiliza los botones para añadir, mover o eliminar un módulo. Si trabajas sin JavaScript, deberías guardar los cambios antes de modificar el orden!</target>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
+        <target>Aquí puedes asignar módulos frontend y elementos de contenido al diseño.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -378,8 +378,8 @@
         <target>Por favor selecciona la alineación de la web.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
-        <target>Título</target>
+        <source>Title and type</source>
+        <target>Título y tipo</target>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -406,8 +406,8 @@
         <target>Feeds</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
-        <target>Módulos del Front end</target>
+        <source>Include settings</source>
+        <target>Ajustes de include</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -429,6 +429,14 @@
         <source>MooTools</source>
         <target>MooTools</target>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+        <target>Estructura de twig con espacios para contenido</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Default layout</source>
+        <target>Diseño por defecto</target>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
@@ -445,33 +453,33 @@
         <source>Matomo</source>
         <target>Matomo</target>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-        <target>Nuevo</target>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
         <target>Crear un nuevo diseño de página</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show">
+      <trans-unit id="tl_layout.show.1">
         <source>Show the details of page layout ID %s</source>
         <target>Mostrar los detalles del diseño de página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit">
+      <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>
         <target>Editar el layout de página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
-        <target>Duplicarel disenno de página con ID %s</target>
+      <trans-unit id="tl_layout.copy.1">
+        <source>Copy page layout ID %s</source>
+        <target>Copiar plantilla de página ID %s </target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut">
+      <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
         <target>Mover el diseño de página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.delete">
+      <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
         <target>Eliminar el diesño de página con ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+        <target>Diseño</target>
       </trans-unit>
     </body>
   </file>

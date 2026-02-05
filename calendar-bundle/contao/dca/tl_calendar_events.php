@@ -19,7 +19,6 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
-use Contao\Input;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -38,22 +37,9 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_calendar_events', 'generateFeed')
-		),
-		'oncut_callback' => array
-		(
-			array('tl_calendar_events', 'scheduleUpdate')
-		),
-		'ondelete_callback' => array
-		(
-			array('tl_calendar_events', 'scheduleUpdate')
-		),
 		'onsubmit_callback' => array
 		(
 			array('tl_calendar_events', 'adjustTime'),
-			array('tl_calendar_events', 'scheduleUpdate')
 		),
 		'oninvalidate_cache_tags_callback' => array
 		(
@@ -79,9 +65,14 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('startTime DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'title',
-			'child_record_callback'   => array('tl_calendar_events', 'listEvents')
+		),
+		'label' => array
+		(
+			'fields'                  => array('title'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_calendar_events', 'listEvents'),
 		),
 		'operations' => array
 		(
@@ -94,14 +85,17 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
+				'primary'             => true,
 				'showInHeader'        => true
 			),
 			'feature' => array
 			(
 				'href'                => 'act=toggle&amp;field=featured',
 				'icon'                => 'featured.svg',
+				'primary'             => true
 			),
-			'show'
+			'show',
+			'versions',
 		)
 	),
 
@@ -109,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addTime', 'addImage', 'recurring', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,linkText,canonicalLink;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
+		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,linkText,canonicalLink;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,searchIndexer;{publish_legend},published,start,stop',
 		'internal'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'article'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
@@ -156,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'alias' => array
@@ -311,7 +305,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'imageTitle' => array
 		(
@@ -319,7 +313,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'size' => array
 		(
@@ -338,7 +332,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'fullsize' => array
 		(
@@ -353,7 +347,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'floating' => array
 		(
@@ -403,7 +397,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'source' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'radio',
 			'options_callback'        => array('tl_calendar_events', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar_events'],
@@ -445,7 +438,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cssClass' => array
@@ -453,6 +446,16 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'searchIndexer' => array
+		(
+			'search'                  => true,
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
+			'inputType'               => 'select',
+			'options'                 => array('always_index', 'never_index'),
+			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'published' => array
 		(
@@ -480,8 +483,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @property Calendar $Calendar
  *
  * @internal
  */
@@ -634,7 +635,7 @@ class tl_calendar_events extends Backend
 	 *
 	 * @return string
 	 */
-	public function listEvents($arrRow)
+	public function listEvents($arrRow, $label)
 	{
 		$span = Calendar::calculateSpan($arrRow['startTime'], $arrRow['endTime']);
 
@@ -651,7 +652,7 @@ class tl_calendar_events extends Backend
 			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get('timeFormat'), $arrRow['endTime']) : '');
 		}
 
-		return '<div class="tl_content_left">' . $arrRow['title'] . ' <span class="label-info">[' . $date . ']</span></div>';
+		return $label . ' <span class="label-info">[' . $date . ']</span>';
 	}
 
 	/**
@@ -773,68 +774,6 @@ class tl_calendar_events extends Backend
 		}
 
 		Database::getInstance()->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
-	}
-
-	/**
-	 * Check for modified calendar feeds and update the XML files if necessary
-	 */
-	public function generateFeed()
-	{
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$session = $objSession->get('calendar_feed_updater');
-
-		if (empty($session) || !is_array($session))
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
-
-		$calendar = new Calendar();
-
-		foreach ($session as $id)
-		{
-			$calendar->generateFeedsByCalendar($id);
-		}
-
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
-		$objSession->set('calendar_feed_updater', null);
-	}
-
-	/**
-	 * Schedule a calendar feed update
-	 *
-	 * This method is triggered when a single event or multiple events are
-	 * modified (edit/editAll), moved (cut/cutAll) or deleted (delete/deleteAll).
-	 * Since duplicated events are unpublished by default, it is not necessary
-	 * to schedule updates on copyAll as well.
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function scheduleUpdate(DataContainer $dc)
-	{
-		// Return if there is no ID
-		if (!$dc->activeRecord?->pid || Input::get('act') == 'copy')
-		{
-			return;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Store the ID in the session
-		$session = $objSession->get('calendar_feed_updater');
-		$session[] = $dc->activeRecord->pid;
-		$objSession->set('calendar_feed_updater', array_unique($session));
 	}
 
 	/**

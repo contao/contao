@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Por favor selecciona el tipo de módulo actual.</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>Etiqueta ARIA</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Si hay más de un elemento de navegación en la página, cada uno debe tener una etiqueta única.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Nivel de inicio</target>
@@ -647,33 +655,33 @@ Si no solicitó este correo electrónico, comuníquese con el administrador del 
         <source>Irrevocably delete account</source>
         <target>Eliminar cuenta de manera permanente</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>Nuevo</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>Crear un módulo nuevo</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>Muestra los detalles del módulo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>Editar el módulo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
-        <target>Duplica el módulo con ID %s</target>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
+        <target>Copiar módulo ID %s </target>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>Mover módulo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>Elimina el módulo con ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Módulo</target>
       </trans-unit>
     </body>
   </file>

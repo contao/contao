@@ -45,6 +45,8 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
         if ('calendar_feed' === $insertTag->getName()) {
+            trigger_deprecation('contao/core-bundle', '5.6', 'Using the "calendar_feed" insert tag is deprecated and will no longer work in Contao 6. Use the "link_url" insert tag instead.', __METHOD__);
+
             return $this->replaceCalendarFeedInsertTag($insertTag->getParameters()->get(0));
         }
 
@@ -87,9 +89,8 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
         return match ($insertTag) {
             'event' => new InsertTagResult(
                 \sprintf(
-                    '<a href="%s" title="%s"%s>%s</a>',
+                    '<a href="%s"%s>%s</a>',
                     StringUtil::specialcharsAttribute($generateUrl()),
-                    StringUtil::specialcharsAttribute($model->title),
                     \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $model->title,
                 ),
@@ -97,9 +98,8 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
             ),
             'event_open' => new InsertTagResult(
                 \sprintf(
-                    '<a href="%s" title="%s"%s>',
+                    '<a href="%s"%s>',
                     StringUtil::specialcharsAttribute($generateUrl()),
-                    StringUtil::specialcharsAttribute($model->title),
                     \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                 ),
                 OutputType::html,

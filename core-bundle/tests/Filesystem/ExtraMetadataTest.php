@@ -17,13 +17,10 @@ use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ExtraMetadataTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    public function testSetAndGetValues(): void
+    public function testGetValues(): void
     {
         $data = [
             'foo' => 42,
@@ -51,14 +48,20 @@ class ExtraMetadataTest extends TestCase
         $this->assertSame($data, $extraMetadata->all());
     }
 
-    /**
-     * @group legacy
-     */
+    public function testSetLocalizedMetadata(): void
+    {
+        $extraMetadata = new ExtraMetadata(['foo' => 42]);
+        $extraMetadata->setLocalized(new MetadataBag(['en' => new Metadata(['bar' => 'baz'])]));
+
+        $this->assertSame(42, $extraMetadata->get('foo'));
+        $this->assertSame('baz', $extraMetadata->getLocalized()->get('en')->get('bar'));
+    }
+
     public function testTriggersDeprecationWhenInitializingWithMetadataKey(): void
     {
         $localizedMetadata = new MetadataBag([]);
 
-        $this->expectDeprecation('%sUsing the key "metadata" to set localized metadata has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to set localized metadata is deprecated/');
 
         $extraMetadata = new ExtraMetadata([
             'metadata' => $localizedMetadata,
@@ -67,9 +70,6 @@ class ExtraMetadataTest extends TestCase
         $this->assertSame($localizedMetadata, $extraMetadata->getLocalized());
     }
 
-    /**
-     * @group legacy
-     */
     public function testTriggersDeprecationWhenAccessingMetadataKey(): void
     {
         $localizedMetadata = new MetadataBag([]);
@@ -78,7 +78,7 @@ class ExtraMetadataTest extends TestCase
             'localized' => $localizedMetadata,
         ]);
 
-        $this->expectDeprecation('%sUsing the key "metadata" to get localized metadata has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to get localized metadata is deprecated/');
 
         $this->assertSame($localizedMetadata, $extraMetadata->get('metadata'));
     }

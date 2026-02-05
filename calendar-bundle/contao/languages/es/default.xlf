@@ -89,6 +89,14 @@
         <source>Back to the event overview</source>
         <target>Volver al resumen del evento</target>
       </trans-unit>
+      <trans-unit id="PTY.calendar_feed.0">
+        <source>Calendar feed</source>
+        <target>Feed de calendario</target>
+      </trans-unit>
+      <trans-unit id="PTY.calendar_feed.1">
+        <source>Create an RSS, Atom or JSON feed from your calendars.</source>
+        <target>Crea un feed RSS, Atom o JSON desde tus calendarios.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

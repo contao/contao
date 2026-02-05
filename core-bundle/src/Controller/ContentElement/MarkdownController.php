@@ -17,10 +17,10 @@ use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\InsertTag\CommonMarkExtension;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FilesModel;
 use Contao\Input;
 use Contao\StringUtil;
-use Contao\Template;
 use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
@@ -46,7 +46,7 @@ class MarkdownController extends AbstractContentElementController
         return $services;
     }
 
-    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
+    protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $this->initializeContaoFramework();
 
@@ -64,8 +64,9 @@ class MarkdownController extends AbstractContentElementController
         $input = $this->getContaoAdapter(Input::class);
         $html = $this->createConverter($model, $request)->convert($markdown)->getContent();
 
-        $template->content = StringUtil::encodeEmail(
-            $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes')),
+        $template->set(
+            'content',
+            StringUtil::encodeEmail($input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'))),
         );
 
         return $template->getResponse();
@@ -91,7 +92,7 @@ class MarkdownController extends AbstractContentElementController
         $environment->addExtension(new CommonMarkExtension($this->container->get('contao.insert_tag.parser')));
         $environment->addExtension(new CommonMarkCoreExtension());
 
-        // Support GitHub flavoured Markdown (using the individual extensions because we
+        // Support GitHub flavored Markdown (using the individual extensions because we
         // don't want the DisallowedRawHtmlExtension which is included by default)
         $environment->addExtension(new AutolinkExtension());
         $environment->addExtension(new StrikethroughExtension());

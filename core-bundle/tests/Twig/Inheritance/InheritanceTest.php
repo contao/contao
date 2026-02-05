@@ -15,12 +15,16 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
@@ -44,21 +48,23 @@ class InheritanceTest extends TestCase
 
     public function testInheritsMultipleTimesWithTheme(): void
     {
-        $environment = $this->getDemoEnvironment();
-
-        $page = new \stdClass();
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->templateGroup = 'templates/my/theme';
 
-        $GLOBALS['objPage'] = $page;
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->expects($this->once())
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
 
+        $environment = $this->getDemoEnvironment(pageFinder: $pageFinder);
         $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
 
         // Theme > Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<theme><global><app><bar><foo>Content: This &amp; that</foo></bar></app></global></theme>';
 
         $this->assertSame($expected, $html);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testThrowsIfTemplatesAreAmbiguous(): void
@@ -83,7 +89,7 @@ class InheritanceTest extends TestCase
         $this->getDemoEnvironment(['InvalidBundle2' => $bundlePath]);
     }
 
-    private function getDemoEnvironment(array|null $paths = null): Environment
+    private function getDemoEnvironment(array|null $paths = null, PageFinder|null $pageFinder = null): Environment
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
@@ -97,31 +103,39 @@ class InheritanceTest extends TestCase
             $paths['App'] = Path::join($projectDir, 'contao/templates');
         }
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
             ->willReturn(['templates/my/theme'])
         ;
 
-        $themeNamespace = new ThemeNamespace();
-
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')
             ->willReturn($paths)
         ;
 
+        $themeNamespace = new ThemeNamespace();
         $templateLocator = new TemplateLocator($projectDir, $resourceFinder, $themeNamespace, $connection);
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $projectDir);
+
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            $themeNamespace,
+            $this->createStub(ContaoFramework::class),
+            $pageFinder ?? $this->createStub(PageFinder::class),
+            $projectDir,
+        );
 
         $environment = new Environment($loader);
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
                 $loader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

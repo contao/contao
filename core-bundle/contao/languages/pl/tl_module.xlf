@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Wybierz typ dla tego modułu.</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>Etykieta ARIA</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Jeśli na stronie znajduje się więcej niż jeden element nawigacji, każdy powinien mieć unikalną etykietę.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Poziom początkowy</target>
@@ -179,9 +187,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.0">
         <source>Require full authentication</source>
+        <target>Wymagane pełne uwierzytelnienie</target>
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.1">
         <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Użytkownicy posiadający wyłącznie plik cookie &quot;zapamiętaj mnie&quot; muszą potwierdzić swoją tożsamość, aby uzyskać dostęp do modułu.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -521,6 +531,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Wybierz moduł dla &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -646,33 +657,33 @@ Jeśli nie prosiłeś o ten e-mail, skontaktuj się z administratorem strony.
         <source>Irrevocably delete account</source>
         <target>Nieodwracalne usunięcie konta</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>Nowy</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>Utwórz nowy moduł</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>Pokaż szczegóły modułu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>Edytuj moduł ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
         <target>Duplikuj moduł ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>Przenieś moduł ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>Skasuj moduł ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Moduł</target>
       </trans-unit>
     </body>
   </file>

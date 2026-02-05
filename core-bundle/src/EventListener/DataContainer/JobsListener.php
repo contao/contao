@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\EventListener\DataContainer;
+
+use Contao\BackendUser;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Job\Owner;
+use Contao\DataContainer;
+use Contao\DC_Table;
+use Contao\System;
+use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Environment;
+
+class JobsListener
+{
+    public function __construct(
+        private readonly Jobs $jobs,
+        private readonly Security $security,
+        private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
+        private readonly ContaoFramework $contaoFramework,
+        private readonly Environment $twig,
+    ) {
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'list.label.label')]
+    public function onLabelCallback(array $row, string $label, DC_Table $dc, array $columns): array
+    {
+        $job = $this->jobs->getByUuid($row['uuid']);
+
+        if (!$job) {
+            return $columns;
+        }
+
+        $columns[2] = $this->twig->render('@Contao/backend/jobs/progress.html.twig', ['job' => $job]);
+        $columns[3] = $this->twig->render('@Contao/backend/jobs/status.html.twig', ['job' => $job]);
+
+        $columns[5] = $this->twig->render('@Contao/backend/jobs/attachments.html.twig', [
+            'job' => $job,
+            'attachments' => $this->jobs->getAttachments($job),
+        ]);
+
+        return $columns;
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]
+    public function onChildrenCallback(DataContainerOperation $operation): void
+    {
+        $childCount = $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM tl_job WHERE pid = ?',
+            [(string) $operation->getRecord()['id']],
+        );
+
+        if ($childCount < 1) {
+            $operation->hide();
+        }
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'config.onload')]
+    public function onLoadCallback(): void
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $userId = $this->getContaoBackendUserId();
+
+        if (!$request || 0 === $userId) {
+            return;
+        }
+
+        $this->contaoFramework->getAdapter(System::class)->loadLanguageFile('jobs');
+
+        // Job children view
+        if ($request->query->has('ptable')) {
+            $pidFilter = 'pid != 0';
+            $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
+            $GLOBALS['TL_DCA']['tl_job']['list']['label']['fields'] = ['uuid', 'status'];
+            $GLOBALS['TL_DCA']['tl_job']['list']['label']['format'] = '%s <span class="label-info">%s</span>';
+            unset($GLOBALS['TL_DCA']['tl_job']['list']['operations']['children']);
+        } else {
+            $pidFilter = 'pid = 0';
+        }
+
+        $query = \sprintf('%s AND (owner = %d OR (public = 1 AND owner = %d))',
+            $pidFilter,
+            $userId,
+            Owner::SYSTEM,
+        );
+
+        $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['filter'][] = $query;
+    }
+
+    /**
+     * @return int 0 if no Contao back end user was given
+     */
+    private function getContaoBackendUserId(): int
+    {
+        $user = $this->security->getUser();
+
+        if ($user instanceof BackendUser) {
+            return (int) $user->id;
+        }
+
+        return 0;
+    }
+}

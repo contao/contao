@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -29,7 +30,7 @@ class UndoVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
-        $voter = new UndoVoter($this->createMock(AccessDecisionManagerInterface::class));
+        $voter = new UndoVoter($this->createStub(AccessDecisionManagerInterface::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_undo'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -68,7 +69,7 @@ class UndoVoterTest extends TestCase
 
     public function testDeniesAccessIfUserIsNotABackendUser(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -97,14 +98,12 @@ class UndoVoterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider voteOnActionProvider
-     */
+    #[DataProvider('voteOnActionProvider')]
     public function testVoteOnAction(array $user, CreateAction|DeleteAction|ReadAction|UpdateAction $action, int $expectedVote): void
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, $user);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, $user);
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
             ->willReturn($user)

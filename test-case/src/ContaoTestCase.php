@@ -18,12 +18,15 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\User;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -110,77 +113,132 @@ abstract class ContaoTestCase extends TestCase
         return $container;
     }
 
+    protected function getContainerWithFixtures(): ContainerBuilder
+    {
+        $fixturesDir = $this->getFixturesDir();
+
+        $container = $this->getContainerWithContaoConfiguration($fixturesDir);
+        $container->set('database_connection', $this->createStub(Connection::class));
+        $container->setParameter('contao.resources_paths', Path::join($this->getFixturesDir(), 'vendor/contao/test-bundle/Resources/contao'));
+
+        return $container;
+    }
+
     /**
      * Mocks the Contao framework with optional adapters.
      *
      * A Config adapter with the default Contao configuration will be added
      * automatically if no Config adapter is given.
      *
-     * @return ContaoFramework&MockObject
+     * @return ContaoFramework&Stub
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createContaoFrameworkMock() or createContaoFrameworkStub() instead.
      */
     protected function mockContaoFramework(array $adapters = [], array $instances = []): ContaoFramework
     {
-        $this->addConfigAdapter($adapters);
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockContaoFramework()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createContaoFrameworkMock()" or "ContaoTestCase::createContaoFrameworkStub()" instead.');
 
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->method('isInitialized')
-            ->willReturn(true)
-        ;
+        return $this->createContaoFrameworkMock($adapters, $instances);
+    }
 
-        $framework
-            ->method('getAdapter')
-            ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
-        ;
+    /**
+     * Creates a Contao framework mock object with optional adapters.
+     *
+     * A Config adapter with the default Contao configuration will be added
+     * automatically if no Config adapter is given.
+     */
+    protected function createContaoFrameworkMock(array $adapters = [], array $instances = []): ContaoFramework&MockObject
+    {
+        $mock = $this->createMock(ContaoFramework::class);
+        $this->addAdaptersAndInstances($mock, $adapters, $instances);
 
-        if ($instances) {
-            $framework
-                ->method('createInstance')
-                ->willReturnCallback(
-                    static function (string $key) use ($instances): mixed {
-                        if (!isset($instances[$key])) {
-                            return null;
-                        }
+        return $mock;
+    }
 
-                        if ($instances[$key] instanceof \Closure) {
-                            return $instances[$key]();
-                        }
+    /**
+     * Creates a Contao framework stub object with optional adapters.
+     *
+     * A Config adapter with the default Contao configuration will be added
+     * automatically if no Config adapter is given.
+     */
+    protected function createContaoFrameworkStub(array $adapters = [], array $instances = []): ContaoFramework&Stub
+    {
+        $stub = $this->createStub(ContaoFramework::class);
+        $this->addAdaptersAndInstances($stub, $adapters, $instances);
 
-                        return $instances[$key];
-                    },
-                )
-            ;
-        }
-
-        return $framework;
+        return $stub;
     }
 
     /**
      * Mocks an adapter with the given methods.
      *
      * @return Adapter&MockObject
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createAdapterMock() or createAdapterStub() instead.
      */
     protected function mockAdapter(array $methods): Adapter
     {
-        return $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->addMethods($methods)
-            ->getMock()
-        ;
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockAdapter()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createAdapterMock()" or "ContaoTestCase::createAdapterStub()" instead.');
+
+        return $this->createAdapterMock($methods);
+    }
+
+    /**
+     * Creates an adapter mock object with the given methods.
+     */
+    protected function createAdapterMock(array $methods): Adapter&MockObject
+    {
+        return $this->createMock($this->createAdapterClass($methods));
+    }
+
+    /**
+     * Creates an adapter stub object with the given methods.
+     */
+    protected function createAdapterStub(array $methods): Adapter&Stub
+    {
+        return $this->createStub($this->createAdapterClass($methods));
     }
 
     /**
      * Mocks a configured adapter with the given methods and return values.
      *
      * @return Adapter&MockObject
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createConfiguredAdapterMock() or createConfiguredAdapterStub() instead.
      */
     protected function mockConfiguredAdapter(array $configuration): Adapter
     {
-        $adapter = $this->mockAdapter(array_keys($configuration));
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockConfiguredAdapter()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createConfiguredAdapterMock()" or "ContaoTestCase::createConfiguredAdapterStub()" instead.');
+
+        return $this->createConfiguredAdapterMock($configuration);
+    }
+
+    /**
+     * Creates a configured adapter mock object with the given methods and return values.
+     */
+    protected function createConfiguredAdapterMock(array $configuration): Adapter&MockObject
+    {
+        $adapter = $this->createAdapterMock(array_keys($configuration));
+
+        foreach ($configuration as $method => $return) {
+            $adapter
+                ->method($method)
+                ->willReturn($return)
+            ;
+        }
+
+        return $adapter;
+    }
+
+    /**
+     * Creates a configured adapter stub object with the given methods and return values.
+     */
+    protected function createConfiguredAdapterStub(array $configuration): Adapter&Stub
+    {
+        $adapter = $this->createAdapterStub(array_keys($configuration));
 
         foreach ($configuration as $method => $return) {
             $adapter
@@ -200,9 +258,14 @@ abstract class ContaoTestCase extends TestCase
      * @param class-string<T> $class
      *
      * @return T&MockObject
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createClassWithPropertiesMock() or createClassWithPropertiesStub() instead.
      */
-    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject|Stub
     {
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockClassWithProperties()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createClassWithPropertiesMock()" or "ContaoTestCase::createClassWithPropertiesStub()" instead.');
+
         $classMethods = get_class_methods($class);
 
         if (!$except) {
@@ -211,75 +274,63 @@ abstract class ContaoTestCase extends TestCase
             $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
         }
 
-        $mock
-            ->method('__get')
-            ->willReturnCallback(
-                static function (string $key) use (&$properties) {
-                    return $properties[$key] ?? null;
-                },
-            )
-        ;
+        return $this->addMethods($mock, $classMethods, $properties);
+    }
 
-        if (\in_array('__set', $classMethods, true)) {
-            $mock
-                ->method('__set')
-                ->willReturnCallback(
-                    static function (string $key, $value) use (&$properties): void {
-                        $properties[$key] = $value;
-                    },
-                )
-            ;
-        }
+    /**
+     * Creates a mock object of a class with magic properties.
+     *
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T&MockObject
+     */
+    protected function createClassWithPropertiesMock(string $class, array $properties = []): MockObject
+    {
+        return $this->addMethods($this->createMock($class), get_class_methods($class), $properties);
+    }
 
-        if (\in_array('__isset', $classMethods, true)) {
-            $mock
-                ->method('__isset')
-                ->willReturnCallback(
-                    static function (string $key) use (&$properties) {
-                        return isset($properties[$key]);
-                    },
-                )
-            ;
-        }
-
-        if (\in_array('row', $classMethods, true)) {
-            $mock
-                ->method('row')
-                ->willReturnCallback(
-                    static function () use (&$properties) {
-                        return $properties;
-                    },
-                )
-            ;
-        }
-
-        if (\in_array('setRow', $classMethods, true)) {
-            $mock
-                ->method('setRow')
-                ->willReturnCallback(
-                    static function (array $data) use (&$properties): void {
-                        $properties = $data;
-                    },
-                )
-            ;
-        }
-
-        return $mock;
+    /**
+     * Creates a stub object of a class with magic properties.
+     *
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T&Stub
+     */
+    protected function createClassWithPropertiesStub(string $class, array $properties = []): Stub
+    {
+        return $this->addMethods($this->createStub($class), get_class_methods($class), $properties);
     }
 
     /**
      * Mocks a token storage with a Contao user.
+     *
+     * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+     *             use createTokenStorageStub() instead.
      */
-    protected function mockTokenStorage(string $class): TokenStorageInterface
+    protected function mockTokenStorage(string $class): TokenStorageInterface&Stub
+    {
+        trigger_deprecation('contao/test-case', '5.7', 'Using "ContaoTestCase::mockTokenStorage()" is deprecated and will no longer work in Contao 6. Use "ContaoTestCase::createTokenStorageStub()" instead.');
+
+        return $this->createTokenStorageStub($class);
+    }
+
+    /**
+     * Creates a token storage stub with a Contao user.
+     */
+    protected function createTokenStorageStub(string $class): TokenStorageInterface&Stub
     {
         if (!is_a($class, User::class, true)) {
             throw new \InvalidArgumentException(\sprintf('Class "%s" is not a Contao\User class', $class));
         }
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $token
             ->method('getUser')
-            ->willReturn($this->createMock($class))
+            ->willReturn($this->createStub($class))
         ;
 
         $token
@@ -287,7 +338,7 @@ abstract class ContaoTestCase extends TestCase
             ->willReturn([is_a($class, BackendUser::class, true) ? 'ROLE_USER' : 'ROLE_MEMBER'])
         ;
 
-        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage = $this->createStub(TokenStorageInterface::class);
         $tokenStorage
             ->method('getToken')
             ->willReturn($token)
@@ -359,9 +410,7 @@ abstract class ContaoTestCase extends TestCase
                     continue;
                 }
 
-                $defaultValue = $property->getDefaultValue();
-
-                if (!$property->hasDefaultValue() || $property->getValue() === $defaultValue) {
+                if (!$property->hasDefaultValue() || $property->getValue() === ($defaultValue = $property->getDefaultValue())) {
                     continue;
                 }
 
@@ -381,7 +430,7 @@ abstract class ContaoTestCase extends TestCase
 
         $this->loadDefaultConfiguration();
 
-        $adapter = $this->mockAdapter(['isComplete', 'get']);
+        $adapter = $this->createAdapterStub(['isComplete', 'get']);
         $adapter
             ->method('isComplete')
             ->willReturn(true)
@@ -393,6 +442,119 @@ abstract class ContaoTestCase extends TestCase
         ;
 
         $adapters[Config::class] = $adapter;
+    }
+
+    /**
+     * Creates an adapter with the given methods and returns the class name.
+     */
+    private function createAdapterClass(array $methods): string
+    {
+        sort($methods);
+
+        $namespace = 'Contao\DynamicTestClass';
+        $className = 'Adapter'.sha1(implode(':', $methods));
+        $fqcn = $namespace.'\\'.$className;
+
+        if (!class_exists($fqcn, false)) {
+            $class = 'namespace %s; class %s extends \%s { %s }';
+            $methods = array_map(static fn (string $method): string => \sprintf('public function %s() {}', $method), $methods);
+
+            eval(\sprintf($class, $namespace, $className, Adapter::class, implode(' ', $methods)));
+        }
+
+        return $fqcn;
+    }
+
+    private function addAdaptersAndInstances(MockObject|Stub $object, $adapters, $instances): void
+    {
+        $this->addConfigAdapter($adapters);
+
+        $object
+            ->method('isInitialized')
+            ->willReturn(true)
+        ;
+
+        $object
+            ->method('getAdapter')
+            ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)
+        ;
+
+        if ($instances) {
+            $object
+                ->method('createInstance')
+                ->willReturnCallback(
+                    static function (string $key, array $args = []) use ($instances): mixed {
+                        if (!isset($instances[$key])) {
+                            return null;
+                        }
+
+                        if ($instances[$key] instanceof \Closure) {
+                            return $instances[$key]($args);
+                        }
+
+                        return $instances[$key];
+                    },
+                )
+            ;
+        }
+    }
+
+    private function addMethods(MockObject|Stub $object, array $methods, array $properties): MockObject|Stub
+    {
+        $object
+            ->method('__get')
+            ->willReturnCallback(
+                static function (string $key) use (&$properties) {
+                    return $properties[$key] ?? null;
+                },
+            )
+        ;
+
+        if (\in_array('__set', $methods, true)) {
+            $object
+                ->method('__set')
+                ->willReturnCallback(
+                    static function (string $key, $value) use (&$properties): void {
+                        $properties[$key] = $value;
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('__isset', $methods, true)) {
+            $object
+                ->method('__isset')
+                ->willReturnCallback(
+                    static function (string $key) use (&$properties) {
+                        return isset($properties[$key]);
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('row', $methods, true)) {
+            $object
+                ->method('row')
+                ->willReturnCallback(
+                    static function () use (&$properties) {
+                        return $properties;
+                    },
+                )
+            ;
+        }
+
+        if (\in_array('setRow', $methods, true)) {
+            $object
+                ->method('setRow')
+                ->willReturnCallback(
+                    static function (array $data) use (&$properties): void {
+                        $properties = $data;
+                    },
+                )
+            ;
+        }
+
+        return $object;
     }
 
     /**

@@ -9,13 +9,13 @@
         <source>Please enter the layout title.</source>
         <target>Введите название макета.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Макет по умолчанию</target>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
+        <target>Тип макета</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Сделать макетом по умолчанию.</target>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
+        <target>Вы можете выбрать тип макета.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -226,12 +226,12 @@
         <target>Вы можете определить плотность пикселей по умолчанию, напр.,&lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
-        <target>Включенные модули</target>
+        <source>Included elements</source>
+        <target>Включенные элементы</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Если JavaScript отключен, следует сохранить изменения до изменения списка!</target>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
+        <target>Вы можете назначить макету модули интерфейса и элементы контента.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -378,8 +378,8 @@
         <target>Выберите выравнивание страницы.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
-        <target>Название</target>
+        <source>Title and type</source>
+        <target>Название и тип</target>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -406,8 +406,8 @@
         <target>Каналы</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
-        <target>Модули внешнего интерфейса</target>
+        <source>Include settings</source>
+        <target>Настройки вложения</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -429,6 +429,14 @@
         <source>MooTools</source>
         <target>MooTools</target>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+        <target>Макет Twig со слотами</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Default layout</source>
+        <target>Макет по умолчанию</target>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
@@ -445,33 +453,33 @@
         <source>Matomo</source>
         <target>Matomo</target>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-        <target>Новый</target>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
         <target>Создать новый макет страницы</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show">
+      <trans-unit id="tl_layout.show.1">
         <source>Show the details of page layout ID %s</source>
         <target>Показать детали макета страницы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit">
+      <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>
         <target>Редактировать макет страницы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
-        <target>Дублировать макет страницы ID %s</target>
+      <trans-unit id="tl_layout.copy.1">
+        <source>Copy page layout ID %s</source>
+        <target>Копировать макет страницы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut">
+      <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
         <target>Переместить макет страницы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.delete">
+      <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
         <target>Удалить макет страницы ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+        <target>Макет</target>
       </trans-unit>
     </body>
   </file>

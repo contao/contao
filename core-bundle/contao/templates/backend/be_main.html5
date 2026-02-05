@@ -1,5 +1,49 @@
+<?php
+
+$this->rootAttributes = $this
+    ->attrs()
+    ->set('lang', $this->language)
+    ->set('data-controller', 'contao--scroll-offset')
+    ->set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
+    ->mergeWith($this->rootAttributes)
+;
+
+$this->bodyAttributes = $this
+    ->attrs($this->attributes)
+    ->set('id', 'top')
+    ->addClass('be_main')
+    ->addClass('popup', $this->isPopup)
+    ->set('data-controller', 'contao--tooltips')
+    ->set('data-action', 'touchstart@document->contao--tooltips#touchStart')
+    ->mergeWith($this->bodyAttributes)
+;
+
+$this->containerAttributes = $this
+    ->attrs()
+    ->addClass($this->containerClass)
+    ->mergeWith($this->containerAttributes)
+;
+
+$this->mainAttributes = $this
+    ->attrs()
+    ->set('id', 'main')
+    ->set('aria-labelledby', 'main_headline')
+    ->mergeWith($this->mainAttributes)
+;
+
+$this->asideAttributes = $this
+    ->attrs()
+    ->set('id', 'left')
+    ->set('data-controller', 'contao--toggle-receiver')
+    ->set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#burger')
+    ->set('data-contao--toggle-receiver-active-class', 'active')
+    ->set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+    ->mergeWith($this->asideAttributes)
+;
+
+?>
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset" data-action="store-scroll-offset@window->contao--scroll-offset#store">
+<html<?= $this->rootAttributes ?>>
 <head>
 
   <?php $this->block('head'); ?>
@@ -12,33 +56,40 @@
       <meta name="referrer" content="origin">
     <?php $this->endblock(); ?>
 
-    <link rel="stylesheet" href="<?= $this->asset('css/mooRainbow.min.css', 'contao-components/colorpicker') ?>">
-    <link rel="stylesheet" href="<?= $this->asset('css/chosen.min.css', 'contao-components/chosen') ?>">
-    <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>">
-    <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>">
-    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>">
+    <link rel="stylesheet" href="<?= $this->asset('css/choices.min.css', 'contao-components/choices') ?>" data-turbo-track="reload">
+    <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>" data-turbo-track="reload">
+    <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>" data-turbo-track="reload">
+    <link rel="stylesheet" href="<?= $this->asset('css/dropzone.min.css', 'contao-components/dropzone') ?>" data-turbo-track="reload">
+    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>" data-turbo-track="reload">
+    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'contao_core') ?>" data-turbo-track="reload">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>
-    <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
-    <script src="<?= $this->asset('js/mooRainbow.min.js', 'contao-components/colorpicker') ?>"></script>
-    <script src="<?= $this->asset('js/chosen.min.js', 'contao-components/chosen') ?>"></script>
-    <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>"></script>
-    <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>"></script>
-    <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
+    <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>" data-turbo-track="reload"></script>
+    <script src="<?= $this->asset('js/choices.min.js', 'contao-components/choices') ?>" data-turbo-track="reload"></script>
+    <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>" data-turbo-track="reload"></script>
+    <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>" data-turbo-track="reload"></script>
+    <script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>" data-turbo-track="reload"></script>
+    <?php $this->block('ace_assets'); ?>
+      <script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+      <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+      <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
+    <?php $this->endblock(); ?>
+    <script src="<?= $this->asset('js/dropzone.min.js', 'contao-components/dropzone') ?>" data-turbo-track="reload"></script>
+    <script src="<?= $this->asset('backend.js', 'contao_core') ?>" data-turbo-track="reload"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>
-
 </head>
-<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
+<body<?= $this->bodyAttributes ?>>
+  <a class="invisible show-on-focus" href="#main" data-turbo="false"><?= $this->trans('MSC.skipToContent') ?></a>
 
   <?php $this->block('header'); ?>
-    <?php if (!$this->isPopup): ?>
+    <?php if (!$this->renderMainOnly): ?>
       <header id="header">
         <div class="inner">
           <h1>
-            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
               <span class="app-title">Contao</span>
               <?php if ($this->badgeTitle): ?>
                 <span class="badge-title"><?= $this->badgeTitle ?></span>
@@ -48,15 +99,20 @@
           <?= $this->headerMenu ?>
         </div>
       </header>
+
+      <?php $this->block('header_outlets'); ?>
+        <?php $this->insert('@Contao/backend/component/message/_outlet.html.twig') ?>
+        <?php $this->insert('@Contao/backend/component/dialog/_outlet.html.twig') ?>
+      <?php $this->endblock(); ?>
     <?php endif; ?>
   <?php $this->endblock(); ?>
 
   <?php $this->block('container'); ?>
-    <div id="container">
+    <div id="container"<?= $this->containerAttributes ?>>
 
       <?php $this->block('left'); ?>
-        <?php if (!$this->isPopup): ?>
-          <aside id="left">
+        <?php if (!$this->renderMainOnly): ?>
+          <aside<?= $this->asideAttributes ?>>
             <?= $this->menu ?>
             <div class="version">
               <?php $this->block('version'); ?>
@@ -68,22 +124,33 @@
       <?php $this->endblock(); ?>
 
       <?php $this->block('main'); ?>
-        <main id="main" aria-labelledby="main_headline">
-          <h1 id="main_headline"><?= $this->headline ?></h1>
-          <div class="content">
-            <?php if ($this->pickerMenu): ?>
-              <div id="picker-menu">
-                <?= $this->pickerMenu ?>
-              </div>
-            <?php endif; ?>
-            <?php if ($this->error): ?>
-              <p class="tl_gerror"><?= $this->error ?></p>
-            <?php endif; ?>
-            <?php $this->block('main_content'); ?>
-              <?= $this->main ?>
+        <turbo-frame id="contao-main" target="_top">
+          <main<?= $this->mainAttributes ?>>
+            <?php $this->block('main_headline'); ?>
+              <h1 id="main_headline">
+                <?php if ($this->breadcrumb): ?>
+                  <?= $this->breadcrumb ?>
+                <?php else: ?>
+                  <?= $this->headline ?>
+                <?php endif; ?>
+                <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
+              </h1>
             <?php $this->endblock(); ?>
-          </div>
-        </main>
+            <div class="content">
+              <?php if ($this->pickerMenu): ?>
+                <div id="picker-menu">
+                  <?= $this->pickerMenu ?>
+                </div>
+              <?php endif; ?>
+              <?php if ($this->error): ?>
+                <p class="tl_gerror"><?= $this->error ?></p>
+              <?php endif; ?>
+              <?php $this->block('main_content'); ?>
+                <?= $this->main ?>
+              <?php $this->endblock(); ?>
+            </div>
+          </main>
+        </turbo-frame>
       <?php $this->endblock(); ?>
 
     </div>

@@ -73,6 +73,13 @@ services:
             - '%kernel.project_dir%'
             - '@contao.twig.inspector'
 
+    contao.command.dump_twig_ide_file:
+        class: Contao\CoreBundle\Command\DumpTwigIdeFileCommand
+        arguments:
+            - '@contao.twig.ide.namespace_lookup_file_generator'
+            - '%kernel.build_dir%'
+            - '%kernel.project_dir%'
+
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
         arguments:
@@ -84,7 +91,6 @@ services:
         arguments:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
-            - '%contao.image.target_dir%'
 
     contao.command.migrate:
         class: Contao\CoreBundle\Command\MigrateCommand

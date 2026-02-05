@@ -61,27 +61,27 @@
         <source>Group settings</source>
         <target>Configuración de grupo</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.new.0">
-        <source>New</source>
-        <target>Nuevo</target>
-      </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
         <target>Crear un nuevo grupo de miembros</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.show">
+      <trans-unit id="tl_member_group.show.1">
         <source>Show the details of member group ID %s</source>
         <target>Mostrar los detalles del ID del grupo de miembros %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit">
+      <trans-unit id="tl_member_group.edit.1">
         <source>Edit member group ID %s</source>
         <target>Editar ID de grupo de miembros %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.copy">
+      <trans-unit id="tl_member_group.copy.0">
+        <source>Duplicate</source>
+        <target>Duplicar</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.copy.1">
         <source>Duplicate member group ID %s</source>
         <target>Duplicar ID de grupo de miembros %s</target>
       </trans-unit>
-      <trans-unit id="tl_member_group.delete">
+      <trans-unit id="tl_member_group.delete.1">
         <source>Delete member group ID %s</source>
         <target>Eliminar ID de grupo de miembros</target>
       </trans-unit>
@@ -96,6 +96,18 @@
       <trans-unit id="tl_member_group.toggle.2">
         <source>Activate member group ID %s</source>
         <target>Activar grupo de miembros ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.3">
+        <source>Deactivate</source>
+        <target>Desactivar</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.4">
+        <source>Activate</source>
+        <target>Activar</target>
+      </trans-unit>
+      <trans-unit id="tl_member_group.tableLabel">
+        <source>Member group</source>
+        <target>Grupo de miembros</target>
       </trans-unit>
     </body>
   </file>

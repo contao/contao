@@ -27,10 +27,113 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendLogoutListenerTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider getLogoutData
-     */
-    public function testAddsTheLogoutButton(TokenInterface $token, string $label, string $url): void
+    public function testAddsTheLogoutButtonWithSwitchUserToken(): void
+    {
+        $switchUserToken = $this->createStub(SwitchUserToken::class);
+        $switchUserToken
+            ->method('getOriginalToken')
+            ->willReturn($this->createStub(UsernamePasswordToken::class))
+        ;
+
+        $this->assertLogoutButton($switchUserToken, 'MSC.switchBT', '/contao?do=user&_switch_user=_exit');
+    }
+
+    public function testAddsTheLogoutButtonWithRegularToken(): void
+    {
+        $this->assertLogoutButton($this->createStub(UsernamePasswordToken::class), 'MSC.logoutBT', '/contao/logout');
+    }
+
+    public function testDoesNotAddTheLogoutButtonIfTheUserRoleIsNotGranted(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(false)
+        ;
+
+        $factory = new MenuFactory();
+
+        $menu = $factory->createItem('headerMenu');
+        $menu->addChild($factory->createItem('submenu'));
+
+        $event = new MenuEvent($factory, $menu);
+
+        $listener = new BackendLogoutListener(
+            $security,
+            $this->createStub(RouterInterface::class),
+            $this->createStub(BaseLogoutUrlGenerator::class),
+            $this->getTranslator(),
+        );
+
+        $listener($event);
+
+        $children = $event->getTree()->getChild('submenu')->getChildren();
+
+        $this->assertCount(0, $children);
+    }
+
+    public function testDoesNotAddTheLogoutButtonIfTheNameDoesNotMatch(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
+        ;
+
+        $factory = new MenuFactory();
+
+        $menu = $factory->createItem('mainMenu');
+        $menu->addChild($factory->createItem('submenu'));
+
+        $event = new MenuEvent($factory, $menu);
+
+        $listener = new BackendLogoutListener(
+            $security,
+            $this->createStub(RouterInterface::class),
+            $this->createStub(BaseLogoutUrlGenerator::class),
+            $this->getTranslator(),
+        );
+
+        $listener($event);
+
+        $children = $event->getTree()->getChild('submenu')->getChildren();
+
+        $this->assertCount(0, $children);
+    }
+
+    public function testDoesNotAddTheLogoutButtonIfThereIsNoSubmenu(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('ROLE_USER')
+            ->willReturn(true)
+        ;
+
+        $factory = new MenuFactory();
+        $menu = $factory->createItem('headerMenu');
+        $event = new MenuEvent($factory, $menu);
+
+        $listener = new BackendLogoutListener(
+            $security,
+            $this->createStub(RouterInterface::class),
+            $this->createStub(BaseLogoutUrlGenerator::class),
+            $this->getTranslator(),
+        );
+
+        $listener($event);
+
+        $children = $event->getTree()->getChildren();
+
+        $this->assertCount(0, $children);
+    }
+
+    private function assertLogoutButton(TokenInterface $token, string $label, string $url): void
     {
         $security = $this->createMock(Security::class);
         $security
@@ -106,116 +209,15 @@ class BackendLogoutListenerTest extends ContaoTestCase
             [
                 'class' => 'icon-logout',
                 'accesskey' => 'q',
+                'data-turbo-prefetch' => 'false',
             ],
             $children['logout']->getLinkAttributes(),
         );
     }
 
-    public function getLogoutData(): iterable
-    {
-        $switchUserToken = $this->createMock(SwitchUserToken::class);
-        $switchUserToken
-            ->method('getOriginalToken')
-            ->willReturn($this->createMock(UsernamePasswordToken::class))
-        ;
-
-        yield [$this->createMock(UsernamePasswordToken::class), 'MSC.logoutBT', '/contao/logout'];
-        yield [$switchUserToken, 'MSC.switchBT', '/contao?do=user&_switch_user=_exit'];
-    }
-
-    public function testDoesNotAddTheLogoutButtonIfTheUserRoleIsNotGranted(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
-
-        $factory = new MenuFactory();
-
-        $menu = $factory->createItem('headerMenu');
-        $menu->addChild($factory->createItem('submenu'));
-
-        $event = new MenuEvent($factory, $menu);
-
-        $listener = new BackendLogoutListener(
-            $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator(),
-        );
-
-        $listener($event);
-
-        $children = $event->getTree()->getChild('submenu')->getChildren();
-
-        $this->assertCount(0, $children);
-    }
-
-    public function testDoesNotAddTheLogoutButtonIfTheNameDoesNotMatch(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
-
-        $factory = new MenuFactory();
-
-        $menu = $factory->createItem('mainMenu');
-        $menu->addChild($factory->createItem('submenu'));
-
-        $event = new MenuEvent($factory, $menu);
-
-        $listener = new BackendLogoutListener(
-            $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator(),
-        );
-
-        $listener($event);
-
-        $children = $event->getTree()->getChild('submenu')->getChildren();
-
-        $this->assertCount(0, $children);
-    }
-
-    public function testDoesNotAddTheLogoutButtonIfThereIsNoSubmenu(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
-        ;
-
-        $factory = new MenuFactory();
-        $menu = $factory->createItem('headerMenu');
-        $event = new MenuEvent($factory, $menu);
-
-        $listener = new BackendLogoutListener(
-            $security,
-            $this->createMock(RouterInterface::class),
-            $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator(),
-        );
-
-        $listener($event);
-
-        $children = $event->getTree()->getChildren();
-
-        $this->assertCount(0, $children);
-    }
-
     private function getTranslator(): TranslatorInterface
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturnCallback(static fn (string $id): string => $id)

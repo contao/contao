@@ -20,7 +20,6 @@ use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as LegacyDriverException;
 use Doctrine\DBAL\Driver\PDO\Exception as PDOException;
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -34,12 +33,25 @@ class TemplateLocatorTest extends TestCase
 
         $locator = $this->getTemplateLocator($projectDir, [
             'templates/my/theme',
-            'themes/foo',
             'templates/non-existing',
         ]);
 
         $expectedThemeDirectories = [
             'my_theme' => Path::join($projectDir, 'templates/my/theme'),
+        ];
+
+        $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
+    }
+
+    public function testFindsThemeDirectoriesOutsideTemplatesDirectory(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        $locator = $this->getTemplateLocator($projectDir, [
+            'themes/foo',
+        ]);
+
+        $expectedThemeDirectories = [
             '_themes_foo' => Path::join($projectDir, 'themes/foo'),
         ];
 
@@ -48,49 +60,76 @@ class TemplateLocatorTest extends TestCase
 
     public function testTriggersDeprecationIfThemeDirectoryContainsInvalidCharacters(): void
     {
-        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
-        $locator = $this->getTemplateLocator($projectDir, ['themes/invalid.theme']);
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/themes');
+        $locator = $this->getTemplateLocator($projectDir, ['templates/invalid.theme']);
 
         $this->expectException(InvalidThemePathException::class);
-        $this->expectExceptionMessage('The theme path "../themes/invalid.theme" contains one or more invalid characters: "."');
+        $this->expectExceptionMessage('The theme path "invalid.theme" contains one or more invalid characters: "."');
 
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    /**
-     * @dataProvider provideDatabaseExceptions
-     */
-    public function testIgnoresDbalExceptions(Exception $exception): void
+    public function testIgnoresTableNotFoundExceptions(): void
     {
+        $exception = new TableNotFoundException($this->createStub(LegacyDriverException::class), null);
+
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchFirstColumn')
             ->willThrowException($exception)
         ;
 
         $locator = new TemplateLocator(
             '',
-            $this->createMock(ResourceFinder::class),
-            $this->createMock(ThemeNamespace::class),
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(ThemeNamespace::class),
             $connection,
         );
 
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public function provideDatabaseExceptions(): iterable
+    public function testIgnoresConnectionExceptions(): void
     {
-        yield 'table not found' => [
-            new TableNotFoundException($this->createMock(LegacyDriverException::class), null),
-        ];
+        $exception = new ConnectionException($this->createStub(LegacyDriverException::class), null);
 
-        yield 'failing connection' => [
-            new ConnectionException($this->createMock(LegacyDriverException::class), null),
-        ];
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->willThrowException($exception)
+        ;
 
-        yield 'access denied' => [
-            new DriverException(PDOException::new(new \PDOException("Access denied for user 'root'@'localhost'")), null),
-        ];
+        $locator = new TemplateLocator(
+            '',
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(ThemeNamespace::class),
+            $connection,
+        );
+
+        $this->assertEmpty($locator->findThemeDirectories());
+    }
+
+    public function testIgnoresDriverExceptions(): void
+    {
+        $exception = new DriverException(PDOException::new(new \PDOException("Access denied for user 'root'@'localhost'")), null);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->willThrowException($exception)
+        ;
+
+        $locator = new TemplateLocator(
+            '',
+            $this->createStub(ResourceFinder::class),
+            $this->createStub(ThemeNamespace::class),
+            $connection,
+        );
+
+        $this->assertEmpty($locator->findThemeDirectories());
     }
 
     public function testFindsResourcesPaths(): void
@@ -210,13 +249,13 @@ class TemplateLocatorTest extends TestCase
 
     private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $paths = []): TemplateLocator
     {
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
             ->willReturn($themePaths)
         ;
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
             ->with('templates')

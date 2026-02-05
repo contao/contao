@@ -122,11 +122,10 @@ class ModuleRegistration extends Module
 		{
 			$arrCaptcha = array
 			(
-				'id' => 'registration',
+				'name' => 'registration_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
-				'type' => 'captcha',
-				'mandatory' => true,
-				'required' => true
+				'inputType' => 'captcha',
+				'eval' => array('mandatory'=>true, 'required'=>true)
 			);
 
 			/** @var class-string<FormCaptcha> $strClass */
@@ -138,7 +137,7 @@ class ModuleRegistration extends Module
 				$strClass = FormCaptcha::class;
 			}
 
-			$objCaptcha = new $strClass($arrCaptcha);
+			$objCaptcha = new $strClass($strClass::getAttributesFromDca($arrCaptcha, $arrCaptcha['name']));
 
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
@@ -184,7 +183,8 @@ class ModuleRegistration extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
+			/** @var class-string<DataContainer> $strClass */
+			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? ''] ?? null;
 
 			// Continue if the class is not defined
 			if (!class_exists($strClass))
@@ -446,8 +446,11 @@ class ModuleRegistration extends Module
 	protected function sendActivationMail($arrData)
 	{
 		$container = System::getContainer();
+
 		$optIn = $container->get('contao.opt_in');
-		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
+		$removeOn = new \DateTime('+' . $container->getParameter('contao.registration.expiration') . ' days');
+
+		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])), $removeOn);
 
 		// Prepare the simple token data
 		$arrTokenData = $arrData;

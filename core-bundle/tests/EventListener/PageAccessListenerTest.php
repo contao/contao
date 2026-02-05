@@ -67,7 +67,7 @@ class PageAccessListenerTest extends TestCase
             ->willReturn($request)
         ;
 
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $GLOBALS['objPage'] = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
         $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
@@ -95,7 +95,7 @@ class PageAccessListenerTest extends TestCase
             ->willReturn($request)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
         $listener = new PageAccessListener($this->mockFramework(42, $pageModel), $security);
         $listener($event);
@@ -111,7 +111,7 @@ class PageAccessListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -123,7 +123,7 @@ class PageAccessListenerTest extends TestCase
             ->willReturn($request)
         ;
 
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $GLOBALS['objPage'] = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
         $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
@@ -142,7 +142,7 @@ class PageAccessListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
@@ -170,7 +170,7 @@ class PageAccessListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'protected' => true,
             'groups' => [1, 2, 3],
@@ -201,11 +201,13 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3]])
-            ->willReturn(true, false)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, true],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3], false],
+            ])
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'protected' => true,
             'groups' => [1, 2, 3],
@@ -236,11 +238,13 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
-            ->willReturn(false, false)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, false],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1], false],
+            ])
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'protected' => true,
             'groups' => [-1, 1],
@@ -271,11 +275,13 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3]])
-            ->willReturn(true, true)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, true],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3], true],
+            ])
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'protected' => true,
             'groups' => [1, 2, 3],
@@ -303,11 +309,13 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
-            ->willReturn(false, true)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, false],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1], true],
+            ])
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'protected' => true,
             'groups' => [-1, 1],
@@ -347,7 +355,7 @@ class PageAccessListenerTest extends TestCase
             return $framework;
         }
 
-        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
             ->method('findById')

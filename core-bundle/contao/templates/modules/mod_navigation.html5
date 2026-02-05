@@ -1,6 +1,17 @@
+<?php
+
+$this->wrapperAttributes = $this
+    ->attrs($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style ?? '')
+    ->setIfExists('aria-label', $this->ariaLabel)
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
 
 <!-- indexer::stop -->
-<nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<nav<?= $this->wrapperAttributes ?>>
 
   <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>

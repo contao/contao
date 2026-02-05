@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_faq.author.1">
         <source>Here you can change the author of the FAQ.</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.0">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -107,37 +107,33 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.new.0">
-        <source>New</source>
-        <target>Nowy</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>Utwórz nowe pytanie</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show">
+      <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
         <target>Pokaż szczegóły pytania ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit">
+      <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
         <target>Edytuj pytanie ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy">
+      <trans-unit id="tl_faq.copy.1">
         <source>Duplicate question ID %s</source>
         <target>Duplikuj pytanie ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut">
+      <trans-unit id="tl_faq.cut.1">
         <source>Move question ID %s</source>
         <target>Przenieś pytanie ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete">
+      <trans-unit id="tl_faq.delete.1">
         <source>Delete question ID %s</source>
         <target>Usuń pytanie ID %s</target>
       </trans-unit>
@@ -152,6 +148,14 @@
       <trans-unit id="tl_faq.toggle.2">
         <source>Publish question ID %s</source>
         <target>Opublikuj pytanie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.3">
+        <source>Unpublish</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.4">
+        <source>Publish</source>
+        <target>Opublikuj</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -168,6 +172,10 @@
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
         <target>Utwórz nowe pytanie po pytaniu ID %s</target>
+      </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>Pytanie</target>
       </trans-unit>
     </body>
   </file>

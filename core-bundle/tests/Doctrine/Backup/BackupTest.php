@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Backup;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class BackupTest extends ContaoTestCase
 {
@@ -42,9 +43,7 @@ class BackupTest extends ContaoTestCase
         $this->assertSame(0, Backup::createNew()->getSize());
     }
 
-    /**
-     * @dataProvider invalidFileNameProvider
-     */
+    #[DataProvider('invalidFileNameProvider')]
     public function testInvalidFileName(string $filename): void
     {
         $this->expectException(BackupManagerException::class);

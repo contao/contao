@@ -18,7 +18,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +31,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutListenerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_USERNAME']);
@@ -187,7 +184,7 @@ class LogoutListenerTest extends TestCase
             ->with('User "foobar" has logged out')
         ;
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->username = 'foobar';
 
         $token = $this->createMock(TokenInterface::class);
@@ -225,7 +222,7 @@ class LogoutListenerTest extends TestCase
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($this->createStub(UserInterface::class))
         ;
 
         $security = $this->createMock(Security::class);
@@ -349,11 +346,11 @@ class LogoutListenerTest extends TestCase
     private function mockLogoutListener(HttpUtils|null $httpUtils = null, ScopeMatcher|null $scopeMatcher = null, Security|null $security = null, LoggerInterface|null $logger = null): LogoutListener
     {
         if (!$httpUtils) {
-            $httpUtils = $this->createMock(HttpUtils::class);
+            $httpUtils = $this->createStub(HttpUtils::class);
         }
 
         if (!$scopeMatcher) {
-            $scopeMatcher = $this->createMock(ScopeMatcher::class);
+            $scopeMatcher = $this->createStub(ScopeMatcher::class);
         }
 
         if (!$security) {

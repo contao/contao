@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
 use Contao\Image;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
@@ -35,8 +36,10 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_settings'] = [];
         $before = $GLOBALS['TL_DCA']['tl_settings'];
 
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class, ['table' => 'tl_settings']);
+
         $listener = $this->createListener();
-        $listener->onLoadCallback();
+        $listener->onLoadCallback($dataContainer);
 
         $this->assertSame($before, $GLOBALS['TL_DCA']['tl_settings']);
     }
@@ -65,6 +68,8 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
             ],
         ];
 
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class, ['table' => 'tl_settings']);
+
         $listener = $this->createListener(
             [
                 'adminEmail' => 'admin@example.org',
@@ -72,7 +77,8 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'fooBar' => false,
             ],
         );
-        $listener->onLoadCallback();
+
+        $listener->onLoadCallback($dataContainer);
 
         $this->assertSame(
             [
@@ -116,27 +122,27 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
             ->with('tl_settings.configuredInApp', [], 'contao_tl_settings')
         ;
 
-        $imageAdapter = $this->mockAdapter(['getHtml']);
+        $imageAdapter = $this->createAdapterMock(['getHtml']);
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->willReturn('<img src="system/themes/icons/show.svg" alt="" title="title">')
+            ->willReturn('<img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">')
         ;
 
         $listener = $this->createListener(null, $translator, [Image::class => $imageAdapter]);
 
         $this->assertSame(
-            '<img src="system/themes/icons/show.svg" alt="" title="title">',
+            ' <img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">',
             $listener->renderHelpIcon(),
         );
     }
 
     private function createListener(array|null $localConfig = null, TranslatorInterface|null $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
     {
-        $this->mockContaoFramework()->initialize();
+        $this->createContaoFrameworkStub()->initialize();
 
-        $translator ??= $this->createMock(TranslatorInterface::class);
-        $framework = $this->mockContaoFramework($adapters);
+        $translator ??= $this->createStub(TranslatorInterface::class);
+        $framework = $this->createContaoFrameworkStub($adapters);
 
         return new DisableAppConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
     }

@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_timeSeparator">
         <source>–</source>
-        <target>–</target>
+        <target>-</target>
       </trans-unit>
       <trans-unit id="MSC.cal_emptyDay">
         <source>There are no events on this day.</source>
@@ -88,6 +88,12 @@
       <trans-unit id="MSC.eventOverview">
         <source>Back to the event overview</source>
         <target>Späť na prehľad udalostí</target>
+      </trans-unit>
+      <trans-unit id="PTY.calendar_feed.0">
+        <source>Calendar feed</source>
+      </trans-unit>
+      <trans-unit id="PTY.calendar_feed.1">
+        <source>Create an RSS, Atom or JSON feed from your calendars.</source>
       </trans-unit>
     </body>
   </file>

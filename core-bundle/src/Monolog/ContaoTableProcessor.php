@@ -14,7 +14,8 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,15 +36,15 @@ class ContaoTableProcessor implements ProcessorInterface
     /**
      * Move the Contao context into the "extra" section.
      */
-    public function __invoke(array $record): array
+    public function __invoke(LogRecord $record): LogRecord
     {
-        if (!isset($record['context']['contao']) || !$record['context']['contao'] instanceof ContaoContext) {
+        if (!isset($record->context['contao']) || !$record->context['contao'] instanceof ContaoContext) {
             return $record;
         }
 
-        $context = $record['context']['contao'];
+        $context = $record->context['contao'];
         $request = $this->requestStack->getCurrentRequest();
-        $level = $record['level'];
+        $level = $record->level;
 
         $this->updateAction($context, $level);
         $this->updateBrowser($context, $request);
@@ -52,19 +53,18 @@ class ContaoTableProcessor implements ProcessorInterface
         $this->updateUri($context, $request);
         $this->updatePageId($context, $request);
 
-        $record['extra']['contao'] = $context;
-        unset($record['context']['contao']);
+        $record->extra['contao'] = $context;
 
         return $record;
     }
 
-    private function updateAction(ContaoContext $context, int $level): void
+    private function updateAction(ContaoContext $context, Level $level): void
     {
         if (null !== $context->getAction()) {
             return;
         }
 
-        if ($level >= Logger::ERROR) {
+        if ($level->isHigherThan(Level::Warning)) {
             $context->setAction(ContaoContext::ERROR);
         } else {
             $context->setAction(ContaoContext::GENERAL);

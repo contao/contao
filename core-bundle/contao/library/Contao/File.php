@@ -847,7 +847,7 @@ class File extends System
 	 */
 	protected function getMimeInfo()
 	{
-		return $GLOBALS['TL_MIME'][$this->extension] ?? array('application/octet-stream', 'iconPLAIN.svg');
+		return $GLOBALS['TL_MIME'][$this->extension] ?? array('application/octet-stream', 'plain.svg');
 	}
 
 	/**

@@ -275,6 +275,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si vous souhaitez empêcher l'affichage de l'événement sur le site avant une certaine date/heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
@@ -282,6 +283,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si vous souhaitez empêcher l'affichage de l'événement sur le site après une certaine date/heure, vous pouvez la saisir ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -351,35 +353,35 @@
         <source>year(s)</source>
         <target>année(s)</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
         <target>Créer un nouvel événement</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.show">
+      <trans-unit id="tl_calendar_events.show.1">
         <source>Show the details of event ID %s</source>
         <target>Afficher les détails de l'événement ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.edit">
+      <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
         <target>Éditer l'événement ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.children">
+      <trans-unit id="tl_calendar_events.children.0">
+        <source>Content elements</source>
+        <target>Éléments de contenu</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.children.1">
         <source>Edit the content elements of event ID %s</source>
         <target>Modifier les éléments de contenu de l'événement ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.copy">
-        <source>Duplicate event ID %s</source>
-        <target>Dupliquer l'événement ID %s</target>
+      <trans-unit id="tl_calendar_events.copy.1">
+        <source>Copy event ID %s</source>
+        <target>Copier l'événement ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.cut">
+      <trans-unit id="tl_calendar_events.cut.1">
         <source>Move event ID %s</source>
         <target>Déplacer l'événement ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.delete">
+      <trans-unit id="tl_calendar_events.delete.1">
         <source>Delete event ID %s</source>
         <target>Supprimer l'événement ID %s</target>
       </trans-unit>
@@ -389,9 +391,19 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Unpublish event ID %s</source>
+        <target>Dé-publier l'événement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.2">
         <source>Publish event ID %s</source>
+        <target>Publier l'événement ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.3">
+        <source>Unpublish</source>
+        <target>Dé-publier</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.4">
+        <source>Publish</source>
+        <target>Publier</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
@@ -399,13 +411,27 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.1">
         <source>Unfeature event ID %s</source>
+        <target>Retirer l'événement ID %s de la liste des vedettes</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature.2">
         <source>Feature event ID %s</source>
+        <target>Mettre l'événement ID %s en vedette</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.3">
+        <source>Unfeature</source>
+        <target>Non vedette</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.4">
+        <source>Feature</source>
+        <target>Vedette</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Coller dans ce calendrier</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Événement</target>
       </trans-unit>
     </body>
   </file>

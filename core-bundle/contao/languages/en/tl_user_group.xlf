@@ -56,28 +56,31 @@
       <trans-unit id="tl_user_group.amg_legend">
         <source>Allowed member groups</source>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.show">
+      <trans-unit id="tl_user_group.show.1">
         <source>Show the details of user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit">
+      <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy">
+      <trans-unit id="tl_user_group.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.copy.1">
         <source>Duplicate user group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.delete">
+      <trans-unit id="tl_user_group.delete.1">
         <source>Delete user group ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle.0">
@@ -88,6 +91,15 @@
       </trans-unit>
       <trans-unit id="tl_user_group.toggle.2">
         <source>Activate user group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.3">
+        <source>Deactivate</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.4">
+        <source>Activate</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
       </trans-unit>
     </body>
   </file>

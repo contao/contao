@@ -17,10 +17,11 @@ use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
- * @experimental
+ * @internal
  */
 final class PhpTemplateProxyNodeVisitor implements NodeVisitorInterface
 {
@@ -66,7 +67,7 @@ final class PhpTemplateProxyNodeVisitor implements NodeVisitorInterface
             $blockNodes[$name] = new BlockNode($name, new PhpTemplateParentReferenceNode(), 0);
         }
 
-        $node->setNode('blocks', new Node($blockNodes));
+        $node->setNode('blocks', new Nodes($blockNodes));
         $node->setNode('body', new PhpTemplateProxyNode($this->extensionName));
     }
 }

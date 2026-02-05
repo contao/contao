@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\DbafsMetadataSubscriber;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\TextTrack;
+use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
@@ -60,7 +62,7 @@ class DbafsMetadataSubscriberTest extends TestCase
         $localizedMetadata = $extraMetadata->getLocalized();
 
         $this->assertInstanceOf(MetadataBag::class, $localizedMetadata);
-        $this->assertInstanceOf(Metadata::class, $localizedMetadata['de']);
+        $this->assertArrayHasKey('de', $localizedMetadata);
         $this->assertSame('my title', $localizedMetadata['de']->getTitle());
         $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $localizedMetadata['de']->getUuid());
     }
@@ -81,14 +83,14 @@ class DbafsMetadataSubscriberTest extends TestCase
 
     public function testSetsMetadataBagDefaultLocales(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->language = 'fr';
         $pageModel->rootFallbackLanguage = 'de';
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
             ->willReturn($request)
@@ -167,7 +169,7 @@ class DbafsMetadataSubscriberTest extends TestCase
     private function getDbafsMetadataSubscriber(RequestStack|null $requestStack = null): DbafsMetadataSubscriber
     {
         return new DbafsMetadataSubscriber(
-            $requestStack ?? $this->createMock(RequestStack::class),
+            $requestStack ?? $this->createStub(RequestStack::class),
         );
     }
 
@@ -180,6 +182,8 @@ class DbafsMetadataSubscriberTest extends TestCase
             'importantPartY' => 0.2,
             'importantPartWidth' => 0.3,
             'importantPartHeight' => 0.4,
+            'textTrackLanguage' => 'de',
+            'textTrackType' => TextTrackType::captions->value,
             'meta' => serialize([
                 'de' => [Metadata::VALUE_TITLE => 'my title'],
             ]),
@@ -190,6 +194,7 @@ class DbafsMetadataSubscriberTest extends TestCase
     {
         return new ExtraMetadata([
             'importantPart' => new ImportantPart(0.1, 0.2, 0.3, 0.4),
+            'textTrack' => new TextTrack('de', TextTrackType::captions),
             'localized' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',

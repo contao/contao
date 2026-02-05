@@ -87,7 +87,6 @@ class ModuleArticleList extends Module
 
 		$intCount = 0;
 		$articles = array();
-		$objHelper = $objTarget ?: $objPage; // PHP 5.6 compatibility (see #939)
 
 		while ($objArticles->next())
 		{

@@ -72,6 +72,7 @@ class TemplateOptionsListener
             ->identifier((string) $identifier)
             ->extension('html.twig')
             ->withVariants()
+            ->excludePartials()
             ->asTemplateOptions()
         ;
 

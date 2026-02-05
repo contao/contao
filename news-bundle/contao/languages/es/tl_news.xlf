@@ -273,35 +273,35 @@
         <source>Publish settings</source>
         <target>Opciones de publicación</target>
       </trans-unit>
-      <trans-unit id="tl_news.new.0">
-        <source>New</source>
-        <target>Nuevo</target>
-      </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Crear un artículo nuevo</target>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
         <target>Muestra los detalles del artículo de noticia ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>Editar artículo de noticia ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+        <target>Elementos de contenido</target>
+      </trans-unit>
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
         <target>Edite los elementos de contenido de la ID de la noticia %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
         <target>Duplicar artículo de noticia ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
         <target>Mover artículo de noticia ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
         <target>Eliminar artículo de noticia ID %s</target>
       </trans-unit>
@@ -317,6 +317,14 @@
         <source>Publish news item ID %s</source>
         <target>Publicar noticia ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Unpublish</source>
+        <target>Anular publicación</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Publish</source>
+        <target>Publicar</target>
+      </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>Destacar / no destacar artículo ID %s</target>
@@ -329,9 +337,21 @@
         <source>Feature news item ID %s</source>
         <target>Destacar ID %s de artículo de noticias</target>
       </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+        <target>Sin función</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
+        <target>Característica</target>
+      </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Pegar dentro de este nuevo archivo</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>Noticias</target>
       </trans-unit>
     </body>
   </file>

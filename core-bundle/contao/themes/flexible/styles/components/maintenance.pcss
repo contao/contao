@@ -1,0 +1,41 @@
+.maintenance_active {
+    padding-top: 12px;
+}
+
+:is(.maintenance_active, .maintenance_inactive):not(:first-of-type) {
+    border-top: 1px solid var(--border);
+}
+
+.maintenance_inactive .tl_tbox {
+    border: 0 !important;
+    padding: 6px 15px 14px;
+}
+
+.maintenance_inactive .tl_message {
+    margin: 0 15px 3px;
+}
+
+.maintenance_inactive .tl_message :is(.tl_error, .tl_confirm, .tl_info, .tl_new) {
+    border-radius: var(--border-radius);
+}
+
+.maintenance_inactive h2.sub_headline {
+    margin: 16px 15px 3px;
+}
+
+.maintenance_inactive .tl_submit_container {
+    background: none;
+    padding: 0 15px 24px;
+    border: 0;
+}
+
+#tl_crawl {
+    .tl_tbox {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .tl_checkbox_container {
+        margin-top: 0;
+    }
+}

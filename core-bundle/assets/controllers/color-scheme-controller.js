@@ -8,7 +8,7 @@ const prefersDark = () => {
     }
 
     return prefersDark === 'true';
-}
+};
 
 const setColorScheme = () => {
     document.documentElement.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
@@ -23,51 +23,50 @@ export default class extends Controller {
     static values = {
         i18n: {
             type: Object,
-            default: { light: 'Disable dark mode', dark: 'Enable dark mode' }
-        }
+            default: { light: 'Disable dark mode', dark: 'Enable dark mode' },
+        },
     };
 
-    initialize () {
-        this.toggle = this.toggle.bind(this);
+    initialize() {
         this.setLabel = this.setLabel.bind(this);
     }
 
-    connect () {
-        this.element.addEventListener('click', this.toggle);
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', this.setLabel);
+    connect() {
+        this.matchMedia = window.matchMedia('(prefers-color-scheme: dark)');
+        this.matchMedia.addEventListener('change', this.setLabel);
         this.setLabel();
     }
 
-    disconnect () {
-        this.element.removeEventListener('click', this.toggle);
+    disconnect() {
+        this.matchMedia.removeEventListener('change', this.setLabel);
     }
 
-    toggle (e) {
+    toggle(e) {
         e.preventDefault();
 
         const isDark = !prefersDark();
 
-        if (isDark === window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        if (isDark === this.matchMedia.matches) {
             localStorage.removeItem('contao--prefers-dark');
         } else {
             localStorage.setItem('contao--prefers-dark', String(isDark));
         }
 
         setColorScheme();
+        this.setLabel();
 
-        // Change the label after the dropdown is hidden
-        setTimeout(this.setLabel, 300);
+        this.dispatch('change', {
+            detail: {
+                mode: isDark ? 'dark' : 'light',
+            },
+        });
     }
 
-    setLabel () {
+    setLabel() {
         if (!this.hasLabelTarget) {
             return;
         }
 
-        const label = this.i18nValue[prefersDark() ? 'light' : 'dark'];
-
-        this.labelTarget.title = label;
-        this.labelTarget.innerText = label;
+        this.labelTarget.innerText = this.i18nValue[prefersDark() ? 'light' : 'dark'];
     }
 }

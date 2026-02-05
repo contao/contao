@@ -15,7 +15,10 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -31,15 +34,13 @@ class ScopeMatcherTest extends TestCase
         $this->matcher = $this->mockScopeMatcher();
     }
 
-    /**
-     * @dataProvider mainRequestProvider
-     */
+    #[DataProvider('mainRequestProvider')]
     public function testRecognizesTheContaoScopes(string|null $scope, int $requestType, bool $isMain, bool $isFrontend, bool $isBackend): void
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);
 
-        $event = new KernelEvent($this->createMock(KernelInterface::class), $request, $requestType);
+        $event = new KernelEvent($this->createStub(KernelInterface::class), $request, $requestType);
 
         $this->assertSame($isMain, $this->matcher->isContaoMainRequest($event));
         $this->assertSame($isMain && $isBackend, $this->matcher->isBackendMainRequest($event));
@@ -97,5 +98,18 @@ class ScopeMatcherTest extends TestCase
             false,
             false,
         ];
+    }
+
+    public function testReturnsFalseIfThereIsNoRequest(): void
+    {
+        $scopeMatcher = new ScopeMatcher(
+            $this->createStub(RequestMatcherInterface::class),
+            $this->createStub(RequestMatcherInterface::class),
+            new RequestStack(),
+        );
+
+        $this->assertFalse($scopeMatcher->isFrontendRequest());
+        $this->assertFalse($scopeMatcher->isBackendRequest());
+        $this->assertFalse($scopeMatcher->isContaoRequest());
     }
 }

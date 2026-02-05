@@ -9,6 +9,14 @@
         <source>Please choose the type of content element.</source>
         <target>コンテント要素の種類を選択してください。</target>
       </trans-unit>
+      <trans-unit id="tl_content.title.0">
+        <source>Title</source>
+        <target>題名</target>
+      </trans-unit>
+      <trans-unit id="tl_content.title.1">
+        <source>Here you can enter an optional title for the content element.</source>
+        <target>コンテント要素に任意の題名を入力できます。</target>
+      </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
         <target>見出し</target>
@@ -409,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>1ページの項目の数です。0にすると複数のページに分けません。</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>サーバー側のページ分割</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>画像を複数のページに分割して、一度に一部だけ表示します。</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>順序</target>
@@ -449,6 +465,14 @@
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>映像や音声のファイル、異なるコーデックを使用する場合は複数のファイルを追加できます。</target>
       </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+        <target>テキストトラックのファイル</target>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+        <target>最上部の.vttファイルをは初期設定のトラックとして読み込みます。追加の設定は.vttファイル内で行えます。</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
         <target>YouTubeのID</target>
@@ -478,8 +502,8 @@
         <target>プレーヤーの大きさ</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>ピクセル単位のメディアプレーヤーの幅と高さです。(例: 640x480)</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>ピクセルによるメディアプレーヤーの幅と高さ。(例: 640x360)</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
@@ -513,9 +537,17 @@
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>指定した秒数で動画の再生を停止します。0にすると動画を停止しません。</target>
       </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>題名</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
+        <target>題名を入力できます。</target>
+      </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
-        <target>キャプション</target>
+        <target>表題</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.1">
         <source>Here you can enter a caption.</source>
@@ -766,6 +798,10 @@
         <source>Preview image</source>
         <target>プレビューの画像</target>
       </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
+        <target>テキストトラック</target>
+      </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
         <target>可視性</target>
@@ -882,6 +918,10 @@
         <source>Loop video</source>
         <target>動画を繰り返し再生</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>音声出力をミュート</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>自動再生</target>
@@ -906,31 +946,27 @@
         <source>Prevent session data tracking</source>
         <target>セッションデータのトラッキングを防止</target>
       </trans-unit>
-      <trans-unit id="tl_content.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
         <target>新しいコンテント要素を追加</target>
       </trans-unit>
-      <trans-unit id="tl_content.show">
+      <trans-unit id="tl_content.show.1">
         <source>Show the details of content element ID %s</source>
         <target>ID %sのコンテント要素の詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_content.cut">
+      <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>
         <target>ID %sのコンテント要素を移動</target>
       </trans-unit>
-      <trans-unit id="tl_content.copy">
-        <source>Duplicate content element ID %s</source>
-        <target>ID %sのコンテント要素を複製</target>
+      <trans-unit id="tl_content.copy.1">
+        <source>Copy content element ID %s</source>
+        <target>ID %sのコンテント要素をコピー</target>
       </trans-unit>
-      <trans-unit id="tl_content.delete">
+      <trans-unit id="tl_content.delete.1">
         <source>Delete content element ID %s</source>
         <target>ID %sのコンテント要素を削除</target>
       </trans-unit>
-      <trans-unit id="tl_content.edit">
+      <trans-unit id="tl_content.edit.1">
         <source>Edit content element ID %s</source>
         <target>ID %sのコンテント要素を編集</target>
       </trans-unit>
@@ -946,19 +982,23 @@
         <source>Unhide content element ID %s</source>
         <target>ID %sのコンテント要素を表示</target>
       </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>先頭に貼り付け</target>
+      <trans-unit id="tl_content.toggle.3">
+        <source>Hide</source>
+        <target>非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.4">
+        <source>Unhide</source>
+        <target>表示</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>ID %sのコンテント要素の後に貼り付け</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>先頭に新しいコンテント要素を作成</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>ID %sのコンテント要素の後ろに新しいコンテント要素を作成</target>
       </trans-unit>
@@ -989,6 +1029,74 @@
       <trans-unit id="tl_content.dl_value">
         <source>Details</source>
         <target>詳細</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirect_legend">
+        <source>Redirect settings</source>
+        <target>リダイレクトの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.0">
+        <source>Redirect page</source>
+        <target>リダイレクト先のページ</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
+        <target>リンクのクリックやフォームを提出した後に移動するページを選択してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>最後に参照していたページに移動</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>リダイレクト先のページの代わりに、メンバーが最後に参照していたページに移動します。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.config_legend">
+        <source>Element configuration</source>
+        <target>要素の構成</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.0">
+        <source>Allow auto login</source>
+        <target>自動ログインの許可</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.1">
+        <source>Allow members to log into the front end automatically.</source>
+        <target>メンバーにフロントエンドに自動ログインを許可します。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>パスワードの初期化のページ</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>&lt;em&gt;パスワードを忘れましたか?&lt;/em&gt;のリンクをクリックしたときに移動するページを選択できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>削除の方法</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>削除の方法を指定します。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>ホームディレクトリを削除</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>アカウントを削除するときにホームディレクトリを削除します。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>アカウントを停止</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>アカウントを完全に削除</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>コンテント要素</target>
       </trans-unit>
     </body>
   </file>

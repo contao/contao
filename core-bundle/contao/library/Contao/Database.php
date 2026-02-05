@@ -87,7 +87,7 @@ class Database
 	 */
 	public function __get($strKey)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.', __CLASS__, $strKey);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" is deprecated and will no longer work in Contao 6.', __CLASS__, $strKey);
 
 		return null;
 	}
@@ -437,7 +437,7 @@ class Database
 
 		if ($intId !== null)
 		{
-			$strQuery .= " AND id!=?";
+			$strQuery .= " AND id != ?";
 			$params[] = $intId;
 		}
 
@@ -519,7 +519,7 @@ class Database
 	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
 		// Limit to a nesting level of 10
-		$ids = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
+		$ids = $this->prepare("SELECT id, @pid := pid FROM $strTable WHERE id = ?" . str_repeat(" UNION SELECT id, @pid := pid FROM $strTable WHERE id = @pid", 9))
 					->execute($intId)
 					->fetchEach('id');
 

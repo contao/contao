@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -62,24 +63,26 @@ class DefaultOperationsListener
             return $defaults;
         }
 
-        // Forward compatibility with Contao 5.5 (see #8061)
-        // TODO: remove this again in Contao 5.5!
-        foreach ($dca as $k => $v) {
-            if (\is_string($v)) {
-                $dca[$k] = ltrim($v, '!');
-            }
-        }
-
         $operations = [];
 
         // If none of the defined operations are name-only, we prepend the default operations.
-        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
+        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[ltrim($v, '!')])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
 
         foreach ($dca as $k => $v) {
-            if (\is_string($v) && isset($defaults[$v])) {
-                $operations[$v] = $defaults[$v];
+            if ('-' === $v) {
+                $operations[$k] = $v;
+                continue;
+            }
+
+            if (\is_string($v) && ($key = ltrim($v, '!')) && isset($defaults[$key])) {
+                $operations[$key] = $defaults[$key];
+
+                if (str_starts_with($v, '!')) {
+                    $operations[$key]['primary'] = true;
+                }
+
                 continue;
             }
 
@@ -111,7 +114,11 @@ class DefaultOperationsListener
                 'edit' => [
                     'href' => 'act=edit',
                     'icon' => 'edit.svg',
+                    'prefetch' => true,
+                    'attributes' => 'data-contao--deeplink-target="primary"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'primary' => true,
+                    'showInHeader' => true,
                 ],
             ];
         }
@@ -124,7 +131,10 @@ class DefaultOperationsListener
                     'children' => [
                         'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
                         'icon' => 'children.svg',
+                        'prefetch' => true,
+                        'attributes' => 'data-contao--deeplink-target="secondary"',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
+                        'primary' => true,
                     ],
                 ];
             }
@@ -134,6 +144,7 @@ class DefaultOperationsListener
             if ($canCopy) {
                 $operations['copy'] = [
                     'href' => 'act=paste&amp;mode=copy',
+                    'method' => 'POST',
                     'icon' => 'copy.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
                     'button_callback' => $this->isGrantedCallback(CreateAction::class, $table, ['sorting' => null]),
@@ -142,6 +153,7 @@ class DefaultOperationsListener
                 if ($isTreeMode) {
                     $operations['copyChildren'] = [
                         'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'method' => 'POST',
                         'icon' => 'copychildren.svg',
                         'attributes' => 'data-action="contao--scroll-offset#store"',
                         'button_callback' => $this->copyChildrenCallback($table),
@@ -152,6 +164,7 @@ class DefaultOperationsListener
             if ($canSort) {
                 $operations['cut'] = [
                     'href' => 'act=paste&amp;mode=cut',
+                    'method' => 'POST',
                     'icon' => 'cut.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table, ['sorting' => null]),
@@ -160,6 +173,7 @@ class DefaultOperationsListener
         } elseif ($canCopy) {
             $operations['copy'] = [
                 'href' => 'act=copy',
+                'method' => 'POST',
                 'icon' => 'copy.svg',
                 'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
             ];
@@ -168,6 +182,7 @@ class DefaultOperationsListener
         if ($canDelete) {
             $operations['delete'] = [
                 'href' => 'act=delete',
+                'method' => 'DELETE',
                 'icon' => 'delete.svg',
                 'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false"',
                 'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
@@ -180,15 +195,28 @@ class DefaultOperationsListener
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->toggleCallback($table, $toggleField),
+                'primary' => true,
             ];
         }
 
-        return $operations + [
-            'show' => [
-                'href' => 'act=show',
-                'icon' => 'show.svg',
-            ],
+        $operations['show'] = [
+            'href' => 'act=show',
+            'icon' => 'show.svg',
+            'method' => 'GET',
+            'prefetch' => false,
         ];
+
+        if ($canEdit && ($GLOBALS['TL_DCA'][$table]['config']['enableVersioning'] ?? false)) {
+            $operations['versions'] = [
+                'href' => 'act=edit&versions=1',
+                'icon' => 'diff.svg',
+                'method' => 'GET',
+                'prefetch' => false,
+                'button_callback' => $this->diffCallback($table),
+            ];
+        }
+
+        return $operations;
     }
 
     private function isGrantedCallback(string $actionClass, string $table, array|null $new = null): \Closure
@@ -215,7 +243,7 @@ class DefaultOperationsListener
 
             if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
                 if ($ctable === $table) {
-                    $operation->setHtml('');
+                    $operation->hide();
                 } else {
                     $operation->disable();
                 }
@@ -233,7 +261,7 @@ class DefaultOperationsListener
             }
 
             $childCount = $this->connection->fetchOne(
-                "SELECT COUNT(*) FROM $table WHERE pid=?",
+                "SELECT COUNT(*) FROM $table WHERE pid = ?",
                 [(string) $operation->getRecord()['id']],
             );
 
@@ -246,7 +274,7 @@ class DefaultOperationsListener
     private function toggleCallback(string $table, string $toggleField): \Closure
     {
         return function (DataContainerOperation $operation) use ($toggleField, $table): void {
-            $new = [$toggleField => !($operation['record'][$toggleField] ?? false)];
+            $new = [$toggleField => !($operation->getRecord()[$toggleField] ?? false)];
 
             if (!$this->isGranted(UpdateAction::class, $table, $operation, $new)) {
                 // Do not use DataContainerOperation::disable() because it would not show the
@@ -278,6 +306,29 @@ class DefaultOperationsListener
         }
 
         return $field;
+    }
+
+    private function diffCallback(string $table): \Closure
+    {
+        $versionIds = null;
+
+        return function (DataContainerOperation $operation) use (&$versionIds, $table): void {
+            if (null === $versionIds) {
+                $versionIds = $this->connection->fetchFirstColumn(
+                    'SELECT pid, COUNT(*) AS total FROM tl_version WHERE fromTable=? GROUP BY pid HAVING total > 1',
+                    [$table],
+                );
+            }
+
+            $operation['attributes'] = 'onclick="Backend.openModalIframe({title:\''.StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $operation->getRecord()['id'], $table)).'\', url:this.href+\'&popup=1&nb=1\'});return false"';
+
+            if (
+                !\in_array($operation->getRecord()['id'], $versionIds, false)
+                || !$this->isGranted(UpdateAction::class, $table, $operation)
+            ) {
+                $operation->disable();
+            }
+        };
     }
 
     private function isGranted(string $actionClass, string $table, DataContainerOperation $operation, array|null $new = null): bool

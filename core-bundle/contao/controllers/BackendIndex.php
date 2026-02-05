@@ -81,6 +81,7 @@ class BackendIndex extends Backend
 
 		$objTemplate = new BackendTemplate('be_login');
 		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
+		$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['loginBT']);
 
 		$token = $container->get('security.token_storage')->getToken();
 
@@ -94,6 +95,7 @@ class BackendIndex extends Backend
 			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
 			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
+			$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		}
 
 		$objTemplate->theme = Backend::getTheme();
@@ -103,13 +105,14 @@ class BackendIndex extends Backend
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
 		$objTemplate->curUsername = Input::post('username') ?: '';
-		$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
+		$objTemplate->webauthnSuccessUrl = StringUtil::specialchars($targetPath);
+		$objTemplate->loginMenu = $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig');
 
 		return $objTemplate->getResponse();
 	}

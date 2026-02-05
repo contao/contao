@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurrences.1">
         <source>Set to 0 for unlimited recurrences.</source>
-        <target>Lūdzu uzstādiet atkārtošanu skaitu (0=neierobežots)</target>
+        <target>Neierobežotam atkārtojumu skaitam iestatiet vērtību 0.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.repeatEnd">
         <source>End of recurring event</source>
@@ -353,35 +353,35 @@
         <source>year(s)</source>
         <target>gads(i)</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.new.0">
-        <source>New</source>
-        <target>Jauns</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
         <target>Izveidot jaunu notikumu</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.show">
+      <trans-unit id="tl_calendar_events.show.1">
         <source>Show the details of event ID %s</source>
         <target>Rādīt notikuma ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.edit">
+      <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
         <target>Rediģēt notikumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.children">
+      <trans-unit id="tl_calendar_events.children.0">
+        <source>Content elements</source>
+        <target>Satura elementi</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.children.1">
         <source>Edit the content elements of event ID %s</source>
         <target>Pasākuma ID %s satura elementu rediģēšana</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.copy">
-        <source>Duplicate event ID %s</source>
+      <trans-unit id="tl_calendar_events.copy.1">
+        <source>Copy event ID %s</source>
         <target>Kopēt notikumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.cut">
+      <trans-unit id="tl_calendar_events.cut.1">
         <source>Move event ID %s</source>
         <target>Pārvietot notikumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.delete">
+      <trans-unit id="tl_calendar_events.delete.1">
         <source>Delete event ID %s</source>
         <target>Dzēst notikumu ID %s</target>
       </trans-unit>
@@ -397,6 +397,14 @@
         <source>Publish event ID %s</source>
         <target>Publicēt notikumu ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.3">
+        <source>Unpublish</source>
+        <target>Nepublicēt</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.4">
+        <source>Publish</source>
+        <target>Publicēt</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
         <target>Iezīmēt/neiezīmēt notikumu ID %s</target>
@@ -409,9 +417,21 @@
         <source>Feature event ID %s</source>
         <target>Iezīmēt notikumu ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.3">
+        <source>Unfeature</source>
+        <target>Neiezīmēt</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.4">
+        <source>Feature</source>
+        <target>Iezīmēt</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Ielīmēt šajā kalendārā</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Notikums</target>
       </trans-unit>
     </body>
   </file>

@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Välj modultyp.</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>ARIA etikett</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Om det finns mer än ett navigeringselement på sidan ska varje element ha en unik etikett.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Startnivå</target>
@@ -649,33 +657,33 @@ Kontakta webbplatsadministratören om du inte begärde detta e-postmeddelande.
         <source>Irrevocably delete account</source>
         <target>Radera kontot permanent</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>Ny</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>Skapa en ny modul</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>Visa detaljer för modul med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>Redigera modul med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
-        <target>Kopiera modul med ID %s</target>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
+        <target>Kopiera modul ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>Flytta modul med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>Ta bort modul med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Modul</target>
       </trans-unit>
     </body>
   </file>

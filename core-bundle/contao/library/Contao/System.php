@@ -111,7 +111,7 @@ abstract class System
 			return null;
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.2', 'Using objects that have been imported via "Contao\System::import()" has been deprecated and will no longer work in Contao 6. Use "Contao\System::importStatic()" or dependency injection instead.');
+		trigger_deprecation('contao/core-bundle', '5.2', 'Using objects that have been imported via "Contao\System::import()" is deprecated and will no longer work in Contao 6. Use "Contao\System::importStatic()" or dependency injection instead.');
 
 		return $this->arrObjects[$strKey];
 	}
@@ -304,71 +304,20 @@ abstract class System
 	 *
 	 * @param boolean $blnEncodeAmpersands If true, ampersands will be encoded
 	 * @param string  $strTable            An optional table name
+	 * @param int     $intLevel            How many levels to go up the trail
 	 *
 	 * @return string The referer URL
 	 */
-	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
+	public static function getReferer($blnEncodeAmpersands=false, $strTable=null, $intLevel=1)
 	{
-		$objSession = static::getContainer()->get('request_stack')->getSession();
-		$ref = Input::get('ref');
-		$key = Input::get('popup') ? 'popupReferer' : 'referer';
-		$session = $objSession->get($key);
+		$container = static::getContainer();
 		$return = null;
-		$request = static::getContainer()->get('request_stack')->getCurrentRequest();
-		$isBackend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
-		$isFrontend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
-
-		if (null !== $session)
-		{
-			// Unique referer ID
-			if ($ref && isset($session[$ref]))
-			{
-				$session = $session[$ref];
-			}
-			elseif ($isBackend && \is_array($session))
-			{
-				$session = end($session);
-			}
-
-			// Use a specific referer
-			if ($strTable && isset($session[$strTable]) && !isset($session['current']) && Input::get('act') != 'select')
-			{
-				$session['current'] = $session[$strTable];
-			}
-
-			// Remove parameters helper
-			$cleanUrl = static function ($url, $params = array('rt', 'ref', 'revise')) {
-				if (!$url || !str_contains($url, '?'))
-				{
-					return $url;
-				}
-
-				list($path, $query) = explode('?', $url, 2);
-
-				parse_str($query, $pairs);
-
-				foreach ($params as $param)
-				{
-					unset($pairs[$param]);
-				}
-
-				if (empty($pairs))
-				{
-					return $path;
-				}
-
-				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
-			};
-
-			// Determine current or last
-			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl(Environment::get('requestUri'))) ? ($session['current'] ?? null) : ($session['last'] ?? null);
-
-			// Remove the "toggle" and "toggle all" parameters
-			$return = $cleanUrl($strUrl, array('tg', 'ptg'));
-		}
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request);
+		$isFrontend = $request && $container->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
 		// Fallback to the generic referer in the front end
-		if (!$return && $isFrontend)
+		if ($isFrontend)
 		{
 			$return = Environment::get('httpReferer');
 		}
@@ -378,7 +327,30 @@ abstract class System
 		{
 			if ($isBackend)
 			{
-				$return = static::getContainer()->get('router')->generate('contao_backend');
+				$trail = $container->get('contao.data_container.dca_url_analyzer')->getTrail(limit: $intLevel + 1);
+
+				if ($trail[\count($trail) - $intLevel - 1]['url'] ?? null)
+				{
+					$return = $trail[\count($trail) - $intLevel - 1]['url'];
+				}
+				elseif (Input::get('do') && Input::get('act'))
+				{
+					$return = $container->get('router')->generate('contao_backend', array('do' => Input::get('do')));
+				}
+				else
+				{
+					$return = $container->get('router')->generate('contao_backend');
+				}
+
+				if (Input::get('popup'))
+				{
+					$return .= (str_contains($return, '?') ? '&' : '?') . 'popup=1';
+				}
+
+				if (Input::get('picker'))
+				{
+					$return .= (str_contains($return, '?') ? '&' : '?') . 'picker=' . rawurlencode(Input::get('picker'));
+				}
 			}
 			else
 			{
@@ -589,7 +561,7 @@ abstract class System
 	 */
 	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" has been deprecated and will no longer work in Contao 6. Use Symfony\'s HttpFoundation and kernel.response events instead.');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" is deprecated and will no longer work in Contao 6. Use Symfony\'s HttpFoundation and kernel.response events instead.');
 
 		if (!$strPath)
 		{
@@ -619,7 +591,7 @@ abstract class System
 		// HOOK: allow adding custom logic
 		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
-			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "setCookie" hook has been deprecated and will no longer work in Contao 6. Use the kernel.response events instead.');
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "setCookie" hook is deprecated and will no longer work in Contao 6. Use the kernel.response events instead.');
 
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
 			{
@@ -645,7 +617,7 @@ abstract class System
 			$intSize /= 1024;
 		}
 
-		return static::getFormattedNumber($intSize, $intDecimals) . ' ' . $GLOBALS['TL_LANG']['UNITS'][$i];
+		return static::getFormattedNumber($intSize, $intDecimals) . ' ' . static::getContainer()->get('translator')->trans('UNITS.' . $i, array(), 'contao_default');
 	}
 
 	/**
@@ -658,7 +630,12 @@ abstract class System
 	 */
 	public static function getFormattedNumber($varNumber, $intDecimals=2)
 	{
-		return number_format(round($varNumber, $intDecimals), $intDecimals, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']);
+		return number_format(
+			round($varNumber, $intDecimals),
+			$intDecimals,
+			static::getContainer()->get('translator')->trans('MSC.decimalSeparator', array(), 'contao_default'),
+			static::getContainer()->get('translator')->trans('MSC.thousandsSeparator', array(), 'contao_default'),
+		);
 	}
 
 	/**

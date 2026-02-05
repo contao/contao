@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
-use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -42,7 +41,7 @@ class ContentUrlGeneratorTest extends TestCase
         ;
 
         $pageRegistry = $this->mockPageRegistry($route);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, []);
         $url = $service->generate($content);
@@ -58,7 +57,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator($route);
         $pageRegistry = $this->mockPageRegistry($route);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$pageModel1, ContentUrlResult::redirect($pageModel2)],
@@ -78,7 +77,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator($route, $parameters);
         $pageRegistry = $this->mockPageRegistry($route);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$pageModel2, null],
@@ -97,7 +96,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator($route);
         $pageRegistry = $this->mockPageRegistry($route);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$pageModel1, ContentUrlResult::redirect($pageModel2)],
@@ -114,7 +113,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$content, new ContentUrlResult('https://example.net')],
@@ -133,7 +132,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$pageModel1, ContentUrlResult::redirect($pageModel2)],
@@ -152,11 +151,12 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $result = ContentUrlResult::url('https://example.net');
 
         $resolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$content, $result],
+            [$result->content, new ContentUrlResult('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -171,15 +171,16 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $result = ContentUrlResult::url('https://example.net');
 
         $pageResolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), null],
+            [$content, $result],
+            [$result->content, null],
         );
 
         $stringResolver = $this->mockResolver(
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$result->content, new ContentUrlResult('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$pageResolver, $stringResolver]);
@@ -196,7 +197,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator($route);
         $pageRegistry = $this->mockPageRegistry($route);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$content, ContentUrlResult::resolve($target)],
@@ -219,7 +220,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator($route, $parameters);
         $pageRegistry = $this->mockPageRegistry($route);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$content, ContentUrlResult::resolve($target)],
@@ -248,7 +249,7 @@ class ContentUrlGeneratorTest extends TestCase
 
         $urlGenerator = $this->mockUrlGenerator($route, ['parameters' => '/articles/15.html']);
         $pageRegistry = $this->mockPageRegistry($route);
-        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $resolver = $this->mockResolver(
             [$content, ContentUrlResult::resolve($target)],
@@ -332,8 +333,7 @@ class ContentUrlGeneratorTest extends TestCase
         $resolver
             ->expects($this->exactly(\count($cases)))
             ->method('resolve')
-            ->withConsecutive(...array_map(static fn (array $case) => [$case[0]], $cases))
-            ->willReturnOnConsecutiveCalls(...array_column($cases, 1))
+            ->willReturnMap($cases)
         ;
 
         return $resolver;

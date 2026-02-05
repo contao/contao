@@ -1,7 +1,17 @@
+<?php
 
-<section class="<?= $this->class ?> ce_accordion ce_text block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+$this->wrapperAttributes = $this
+    ->attrs($this->cssID)
+    ->addClass([$this->class, 'ce_accordion', 'ce_text', 'block'])
+    ->addStyle($this->style ?? '')
+    ->mergeWith($this->wrapperAttributes)
+;
 
-  <div class="<?= $this->toggler ?>"<?php if ($this->headlineStyle): ?> style="<?= $this->headlineStyle ?>"<?php endif; ?>>
+?>
+
+<section<?= $this->wrapperAttributes ?>>
+
+  <div<?= $this->attrs()->addClass($this->toggler)->addStyle($this->headlineStyle) ?>>
     <?= $this->headline ?>
   </div>
 

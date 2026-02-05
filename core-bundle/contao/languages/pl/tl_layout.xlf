@@ -9,13 +9,13 @@
         <source>Please enter the layout title.</source>
         <target>Wprowadź nazwę nowego układu strony.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Domyślny układ</target>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
+        <target>Typ układu</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Jeśli wybierzesz tę opcję, ten układ będzie używany jako domyślny.</target>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
+        <target>Tutaj możesz wybrać typ układu.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -226,12 +226,12 @@
         <target>Domyślne gęstości pikselu obrazka, np. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
-        <target>Załączanie modułów</target>
+        <source>Included elements</source>
+        <target>Załączone elementy</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Przyporządkuj moduł do elementu strony. Używaj przycisków po prawej stronie by dodać, przesunąć (w górę albo w dół) lub skasować moduł. Jeśli pracujesz z przeglądarką, która ma wyłączoną obsługę Javascript, powinieneś zapisać swoje zmiany przed zmianą kolejności modułów!</target>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
+        <target>Tutaj możesz przypisać moduły frontendu oraz elementy treści do układu.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -378,8 +378,8 @@
         <target>Wybierz wyrównanie strony.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
-        <target>Nagłówek</target>
+        <source>Title and type</source>
+        <target>Tytuł i typ modułu</target>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -406,8 +406,8 @@
         <target>Kanały RSS</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
-        <target>Załączanie moduły</target>
+        <source>Include settings</source>
+        <target>Ustawienia załączania</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -429,6 +429,14 @@
         <source>MooTools</source>
         <target>MooTools</target>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+        <target>Układ Twig ze slotami</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Default layout</source>
+        <target>Domyślny układ</target>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
@@ -445,33 +453,33 @@
         <source>Matomo</source>
         <target>Matomo</target>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-        <target>Nowy</target>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
         <target>Utwórz nowy układ strony</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show">
+      <trans-unit id="tl_layout.show.1">
         <source>Show the details of page layout ID %s</source>
         <target>Pokaż szczegóły układu strony ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit">
+      <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>
         <target>Edytuj układ strony ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
+      <trans-unit id="tl_layout.copy.1">
+        <source>Copy page layout ID %s</source>
         <target>Duplikuj układ strony ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut">
+      <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
         <target>Przenieś układ strony ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.delete">
+      <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
         <target>Usuń układ strony ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+        <target>Układ</target>
       </trans-unit>
     </body>
   </file>

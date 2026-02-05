@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>モジュールの種類を選択してください。</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>ARIAラベル</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>ページに複数のナビゲーション要素がある場合は、それぞれ重複しないラベルとしなければなりません。</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>開始レベル</target>
@@ -651,33 +659,33 @@ If you did not request this e-mail, please contact the website administrator.
         <source>Irrevocably delete account</source>
         <target>アカウントを完全に削除</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>新しいモジュールを作成</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>ID %sのモジュールの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>ID %sのモジュールを変更</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
-        <target>ID %sのモジュールを複製</target>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
+        <target>ID %sのモジュールをコピー</target>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>ID %sのモジュールを移動</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>ID %sのモジュールを削除</target>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>モジュール</target>
       </trans-unit>
     </body>
   </file>

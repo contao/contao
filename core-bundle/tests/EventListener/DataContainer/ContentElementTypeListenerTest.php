@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class ContentElementTypeListenerTest extends TestCase
@@ -29,9 +30,7 @@ class ContentElementTypeListenerTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider getDcTableProperties
-     */
+    #[DataProvider('getDcTableProperties')]
     public function testGetOptions(string|null $parentTable, int|null $pid): void
     {
         $GLOBALS['TL_CTE'] = [
@@ -61,7 +60,7 @@ class ContentElementTypeListenerTest extends TestCase
             )
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => $parentTable, 'currentPid' => $pid]);
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, ['parentTable' => $parentTable, 'currentPid' => $pid]);
 
         $listener = new ContentElementTypeListener($security);
         $options = $listener->getOptions($dataContainer);
@@ -102,7 +101,7 @@ class ContentElementTypeListenerTest extends TestCase
             )
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => 'tl_foo', 'currentPid' => 42]);
+        $dataContainer = $this->createClassWithPropertiesStub(DC_Table::class, ['parentTable' => 'tl_foo', 'currentPid' => 42]);
 
         $listener = new ContentElementTypeListener($security);
         $listener->setDefault($dataContainer);

@@ -27,6 +27,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
 		'notDeletable'                => true,
+		'backendSearchIgnore'         => true,
+		'permissions'                 => array(),
 		'sql' => array
 		(
 			'keys' => array
@@ -53,7 +55,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('tstamp DESC'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'data'
 		),
 		'label' => array
@@ -65,7 +67,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			'undo' => array
 			(
 				'href'                => '&amp;act=undo',
-				'icon'                => 'undo.svg'
+				'icon'                => 'undo.svg',
+				'method'              => 'POST'
 			),
 			'jumpToParent' => array
 			(

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
@@ -36,6 +37,10 @@ class DbafsManager
      * @var array<string|int, DbafsInterface>
      */
     private array $dbafs = [];
+
+    public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
+    {
+    }
 
     public function register(DbafsInterface $dbafs, string $pathPrefix): void
     {
@@ -208,6 +213,9 @@ class DbafsManager
         if (!$success) {
             throw new \InvalidArgumentException(\sprintf('No resource exists for the given path "%s".', $path));
         }
+
+        $changeSet = new ChangeSet([], [$path => []], []);
+        $this->eventDispatcher->dispatch(new DbafsChangeEvent($changeSet));
     }
 
     /**
@@ -268,6 +276,8 @@ class DbafsManager
         foreach ($dbafsAndPathsByPrefix as $prefix => [$dbafs, $matchingPaths]) {
             $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), (string) $prefix);
         }
+
+        $this->eventDispatcher->dispatch(new DbafsChangeEvent($changeSet));
 
         return $changeSet;
     }

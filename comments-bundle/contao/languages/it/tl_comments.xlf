@@ -165,15 +165,15 @@
         <source>Event</source>
         <target>Evento</target>
       </trans-unit>
-      <trans-unit id="tl_comments.show">
+      <trans-unit id="tl_comments.show.1">
         <source>Show the details of comment ID %s</source>
         <target>Mostra i dettagli del commento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.edit">
+      <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>
         <target>Modifica commento ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.delete">
+      <trans-unit id="tl_comments.delete.1">
         <source>Delete comment ID %s</source>
         <target>Cancella commento ID %s</target>
       </trans-unit>
@@ -188,6 +188,16 @@
       <trans-unit id="tl_comments.toggle.2">
         <source>Publish comment ID %s</source>
         <target>Pubblica commento ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.3">
+        <source>Unpublish</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.4">
+        <source>Publish</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.tableLabel">
+        <source>Comment</source>
+        <target>Commento</target>
       </trans-unit>
     </body>
   </file>

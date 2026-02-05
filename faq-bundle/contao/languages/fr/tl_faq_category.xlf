@@ -37,32 +37,41 @@
         <source>Title and redirect</source>
         <target>Titre et redirection</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
         <target>Créer une nouvelle catégorie</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.show">
+      <trans-unit id="tl_faq_category.show.1">
         <source>Show the details of category ID %s</source>
         <target>Afficher les détails de la catégorie ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.edit">
+      <trans-unit id="tl_faq_category.edit.1">
         <source>Edit category ID %s</source>
         <target>Éditer la catégorie ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.children">
-        <source>Edit the questions of category ID %s</source>
+      <trans-unit id="tl_faq_category.children.0">
+        <source>Questions</source>
+        <target>Questions</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.copy">
+      <trans-unit id="tl_faq_category.children.1">
+        <source>Edit the questions of category ID %s</source>
+        <target>Éditer les questions de la catégorie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.copy.0">
+        <source>Duplicate</source>
+        <target>Dupliquer</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.copy.1">
         <source>Duplicate category ID %s</source>
         <target>Dupliquer la catégorie ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.delete">
+      <trans-unit id="tl_faq_category.delete.1">
         <source>Delete category ID %s</source>
         <target>Supprimer la catégorie ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq_category.tableLabel">
+        <source>FAQ category</source>
+        <target>Catégorie de FAQ</target>
       </trans-unit>
     </body>
   </file>

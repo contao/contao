@@ -38,7 +38,7 @@ trait MetadataTrait
 		$data = $this->row();
 
 		// Normalize keys
-		if (isset($data['imageTitle']))
+		if (\array_key_exists('imageTitle', $data))
 		{
 			$data[Metadata::VALUE_TITLE] = $data['imageTitle'];
 		}
@@ -56,6 +56,14 @@ trait MetadataTrait
 		}
 
 		unset($data['imageTitle'], $data['imageUrl']);
+
+		foreach ($data as $key => $value)
+		{
+			if ($value === '' || $value === null)
+			{
+				unset($data[$key]);
+			}
+		}
 
 		// Make sure we resolve insert tags pointing to files
 		if (isset($data[Metadata::VALUE_URL]))

@@ -113,6 +113,14 @@
         <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
         <target>Om storleksattributet inte är definierat, definierar den här inställningen helt enkelt de pixeltätheter som du vill stödja. Måtten på bilderna justeras automatiskt. T.ex. &lt;code&gt;1x, 1,5x, 2x&lt;/code&gt; skapar följande HTML-kod: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1,5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Om storleksattributet är definierat, samma bildstorlekar genereras men width ddeskriptorer används för srcset-attributet. T.ex. en 200 pixel bred bild med tätheterna &lt;code&gt;1x, 1,5x, 2x&lt;/code&gt; skapar följande HTML-kod: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;För mer information om srcset-attributet besök &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</target>
       </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.0">
+        <source>Autocomplete attributes</source>
+        <target>Attribut för autokomplettering</target>
+      </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.1">
+        <source>For more information about autocomplete attributes, see &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</source>
+        <target>För mer information om autocomplete-attribut, se &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

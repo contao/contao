@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext\HtmlHeadBag;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -71,5 +72,27 @@ class HtmlHeadBagTest extends TestCase
         $request = Request::create('https://contao.org/foobar/page?query=test&foo=bar&baz=bak&page_42=12');
 
         $this->assertSame('https://contao.org/foobar/page?foo=bar&page_42=12', $manager->getCanonicalUriForRequest($request));
+    }
+
+    public function testMetaTagHandling(): void
+    {
+        $manager = new HtmlHeadBag();
+
+        $this->assertSame([], $manager->getMetaTags());
+
+        $manager->addMetaTag((new HtmlAttributes())->set('property', 'og:image')->set('content', 'https://example.com/o%20"g.png'));
+        $manager->addMetaTag((new HtmlAttributes())->set('name', 'foo')->set('content', 'bar'));
+
+        $this->assertCount(2, $manager->getMetaTags());
+        $this->assertSame(' property="og:image" content="https://example.com/o%20&quot;g.png" name="foo" content="bar"', implode('', $manager->getMetaTags()));
+
+        $manager->removeMetaTag('property', 'og:image');
+
+        $this->assertCount(1, $manager->getMetaTags());
+        $this->assertSame(' name="foo" content="bar"', implode('', $manager->getMetaTags()));
+
+        $manager->setMetaTags([]);
+
+        $this->assertSame([], $manager->getMetaTags());
     }
 }

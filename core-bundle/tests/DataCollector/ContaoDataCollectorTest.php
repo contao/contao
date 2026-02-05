@@ -12,19 +12,23 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DataCollector;
 
-use Contao\ContentImage;
-use Contao\ContentText;
+use Contao\ArticleModel;
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
 use Contao\Model;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Contao\System;
+use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 class ContaoDataCollectorTest extends TestCase
 {
@@ -37,70 +41,86 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testCollectsDataInBackEnd(): void
     {
-        $GLOBALS['TL_DEBUG'] = [
-            'classes_set' => [System::class],
-            'classes_aliased' => ['ContentText' => ContentText::class],
-            'classes_composerized' => ['ContentImage' => ContentImage::class],
-            'additional_data' => 'data',
-        ];
+        $collector = new ContaoDataCollector(
+            $this->createStub(TokenChecker::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(PageFinder::class),
+            $this->createStub(Cron::class),
+        );
 
-        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
+        $collector->setFramework($this->createStub(ContaoFramework::class));
         $collector->collect(new Request(), new Response());
-
-        $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
-        $this->assertSame(['ContentImage' => ContentImage::class], $collector->getClassesComposerized());
 
         $version = ContaoCoreBundle::getVersion();
 
         $this->assertSame(
             [
                 'version' => $version,
-                'framework' => true,
-                'models' => 0,
+                'framework' => false,
                 'frontend' => false,
                 'preview' => false,
+                'page' => '',
+                'page_url' => '',
                 'layout' => '',
+                'layout_url' => '',
+                'articles' => [],
                 'template' => '',
             ],
             $collector->getSummary(),
         );
 
         $this->assertSame($version, $collector->getContaoVersion());
-        $this->assertSame([System::class], $collector->getClassesSet());
-        $this->assertSame(['additional_data' => 'data'], $collector->getAdditionalData());
+        $this->assertSame([], $collector->getAdditionalData());
         $this->assertSame('contao', $collector->getName());
-
-        unset($GLOBALS['TL_DEBUG']);
     }
 
     public function testCollectsDataInFrontEnd(): void
     {
-        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layout->name = 'Default';
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        $adapter = $this->mockConfiguredAdapter(['findById' => $layout]);
-        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findById' => $layout]);
+        $articleModelAdapter = $this->createConfiguredAdapterStub(['findByPid' => []]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $adapter, ArticleModel::class => $articleModelAdapter]);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->id = 2;
+        $page->title = 'Page';
         $page->layoutId = 2;
 
-        $GLOBALS['objPage'] = $page;
+        $pageFinder = $this->createStub(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
 
-        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
+        $collector = new ContaoDataCollector(
+            $this->createStub(TokenChecker::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
+            $pageFinder,
+            $this->createStub(Cron::class),
+        );
+
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(
             [
                 'version' => ContaoCoreBundle::getVersion(),
-                'framework' => false,
-                'models' => 0,
+                'framework' => true,
                 'frontend' => true,
                 'preview' => false,
+                'page' => 'Page (ID 2)',
+                'page_url' => '',
                 'layout' => 'Default (ID 2)',
+                'layout_url' => '',
+                'articles' => [],
                 'template' => 'fe_page',
             ],
             $collector->getSummary(),
@@ -109,25 +129,23 @@ class ContaoDataCollectorTest extends TestCase
         $collector->reset();
 
         $this->assertSame([], $collector->getSummary());
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testSetsTheFrontendPreviewFromTokenChecker(): void
     {
-        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layout->name = 'Default';
         $layout->id = 2;
         $layout->template = 'fe_page';
 
-        $adapter = $this->mockConfiguredAdapter(['findById' => $layout]);
-        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
+        $adapter = $this->createConfiguredAdapterStub(['findById' => $layout]);
+        $articleModelAdapter = $this->createConfiguredAdapterStub(['findByPid' => []]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $adapter, ArticleModel::class => $articleModelAdapter]);
 
-        $page = $this->mockClassWithProperties(PageModel::class);
+        $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->id = 2;
+        $page->title = 'Page';
         $page->layoutId = 2;
-
-        $GLOBALS['objPage'] = $page;
 
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
@@ -136,18 +154,35 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $collector = new ContaoDataCollector($tokenChecker);
+        $pageFinder = $this->createStub(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
+
+        $collector = new ContaoDataCollector(
+            $tokenChecker,
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
+            $pageFinder,
+            $this->createStub(Cron::class),
+        );
+
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(
             [
                 'version' => ContaoCoreBundle::getVersion(),
-                'framework' => false,
-                'models' => 0,
+                'framework' => true,
                 'frontend' => true,
                 'preview' => true,
+                'page' => 'Page (ID 2)',
+                'page_url' => '',
                 'layout' => 'Default (ID 2)',
+                'layout_url' => '',
+                'articles' => [],
                 'template' => 'fe_page',
             ],
             $collector->getSummary(),
@@ -158,7 +193,15 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
-        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
+        $collector = new ContaoDataCollector(
+            $this->createStub(TokenChecker::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Imagine::class),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(PageFinder::class),
+            $this->createStub(Cron::class),
+        );
+
         $method = new \ReflectionMethod($collector, 'getData');
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));

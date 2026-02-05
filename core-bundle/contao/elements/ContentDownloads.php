@@ -10,11 +10,17 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\Model\Collection;
 
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentDownloads::class, DownloadsController::class);
+
 /**
  * Front end content element "downloads".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\DownloadsController instead.
  */
 class ContentDownloads extends ContentDownload
 {

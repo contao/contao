@@ -41,6 +41,14 @@
         <source>Here you can override the global back end theme.</source>
         <target>Вы можете изменить тему панели управления.</target>
       </trans-unit>
+      <trans-unit id="tl_user.backendWidth.0">
+        <source>Maximum width</source>
+        <target>Maximum width (Максимальная ширина)</target>
+      </trans-unit>
+      <trans-unit id="tl_user.backendWidth.1">
+        <source>Here you can limit the width of the back end container.</source>
+        <target>Вы можете ограничить ширину контейнера панели управления.</target>
+      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
         <target>Загрузчик файлов</target>
@@ -88,6 +96,14 @@
       <trans-unit id="tl_user.doNotCollapse.1">
         <source>Do not collapse content elements in the back end preview.</source>
         <target>Не сворачивать элементы контента в предпросмотре панели управления.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotHideMessages.0">
+        <source>Keep pop-up messages</source>
+        <target>Оставлять всплывающие сообщения</target>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotHideMessages.1">
+        <source>Do not automatically hide pop-up messages.</source>
+        <target>Не скрывать всплывающие сообщения автоматически.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -225,14 +241,6 @@
         <source>Here you can grant access to one or more forms.</source>
         <target>Вы можете предоставить доступ к одной или нескольким формам.</target>
       </trans-unit>
-      <trans-unit id="tl_user.formp.0">
-        <source>Form permissions</source>
-        <target>Разрешения форм</target>
-      </trans-unit>
-      <trans-unit id="tl_user.formp.1">
-        <source>Here you can define the form permissions.</source>
-        <target>Вы можете задать разрешения форм.</target>
-      </trans-unit>
       <trans-unit id="tl_user.amg.0">
         <source>Allowed member groups</source>
         <target>Разрешенные группы участников</target>
@@ -240,6 +248,42 @@
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
         <target>Участники этих групп могут быть использованы в предварительном просмотре внешнего интерфейса.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.0">
+        <source>Table permissions</source>
+        <target>Разрешения таблиц</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.1">
+        <source>Here you can select which operations are allowed for which table.</source>
+        <target>Вы можете выбрать, какие операции разрешены для каждой таблицы.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.create">
+        <source>Create</source>
+        <target>Создать</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.update">
+        <source>Update</source>
+        <target>Обновить</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.delete">
+        <source>Delete</source>
+        <target>Удалить</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.other">
+        <source>Additional permissions</source>
+        <target>Дополнительные разрешения</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_create">
+        <source>Create records in &quot;%s&quot;</source>
+        <target>Создать записи в &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_update">
+        <source>Update records of &quot;%s&quot;</source>
+        <target>Обновить записи в &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_user.cud.table_delete">
+        <source>Delete records of &quot;%s&quot;</source>
+        <target>Удалить записи в &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -325,6 +369,10 @@
         <source>Allowed member groups</source>
         <target>Разрешенные группы участников</target>
       </trans-unit>
+      <trans-unit id="tl_user.cud_legend">
+        <source>Table permissions</source>
+        <target>Разрешения таблиц</target>
+      </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
         <target>Настройки учетной записи</target>
@@ -373,27 +421,27 @@
         <source>Use two-factor authentication</source>
         <target>Использовать двухфакторную авторизацию</target>
       </trans-unit>
-      <trans-unit id="tl_user.new.0">
-        <source>New</source>
-        <target>Новый</target>
-      </trans-unit>
       <trans-unit id="tl_user.new.1">
         <source>Create a new user</source>
         <target>Создать нового пользователя</target>
       </trans-unit>
-      <trans-unit id="tl_user.show">
+      <trans-unit id="tl_user.show.1">
         <source>Show the details of user ID %s</source>
         <target>Показать детали пользователя ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.edit">
+      <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>
         <target>Редактировать пользователя ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.copy">
+      <trans-unit id="tl_user.copy.0">
+        <source>Duplicate</source>
+        <target>Дублировать</target>
+      </trans-unit>
+      <trans-unit id="tl_user.copy.1">
         <source>Duplicate user ID %s</source>
         <target>Дублировать пользователя ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.delete">
+      <trans-unit id="tl_user.delete.1">
         <source>Delete user ID %s</source>
         <target>Удалить пользователя ID %s</target>
       </trans-unit>
@@ -409,9 +457,25 @@
         <source>Activate user ID %s</source>
         <target>Активировать пользователя ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.su">
+      <trans-unit id="tl_user.toggle.3">
+        <source>Deactivate</source>
+        <target>Деактивировать</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.4">
+        <source>Activate</source>
+        <target>Активировать</target>
+      </trans-unit>
+      <trans-unit id="tl_user.su.0">
+        <source>Switch user</source>
+        <target>Переключить пользователя</target>
+      </trans-unit>
+      <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>
         <target>Переключить пользователя ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user.tableLabel">
+        <source>User</source>
+        <target>Пользователь</target>
       </trans-unit>
     </body>
   </file>

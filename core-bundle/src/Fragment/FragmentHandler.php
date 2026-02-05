@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Fragment;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
-use Contao\PageModel;
+use Contao\CoreBundle\Routing\PageFinder;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,12 +29,15 @@ class FragmentHandler extends BaseFragmentHandler
      * @internal
      */
     public function __construct(
-        /** @phpstan-ignore property.phpDocType */
+        /**
+         * @phpstan-ignore property.phpDocType
+         */
         private readonly ContainerInterface $renderers,
         private readonly BaseFragmentHandler $fragmentHandler,
         RequestStack $requestStack,
         private readonly FragmentRegistryInterface $fragmentRegistry,
         private readonly ContainerInterface $preHandlers,
+        private readonly PageFinder $pageFinder,
         bool $debug = false,
     ) {
         parent::__construct($requestStack, [], $debug);
@@ -80,8 +83,8 @@ class FragmentHandler extends BaseFragmentHandler
      */
     private function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
     {
-        if (!isset($uri->attributes['pageModel']) && $this->hasGlobalPageObject()) {
-            $uri->attributes['pageModel'] = $GLOBALS['objPage']->id;
+        if (!isset($uri->attributes['pageModel']) && ($pageModel = $this->pageFinder->getCurrentPage())) {
+            $uri->attributes['pageModel'] = $pageModel->id;
         }
 
         if ($this->preHandlers->has($uri->controller)) {
@@ -89,11 +92,6 @@ class FragmentHandler extends BaseFragmentHandler
             $preHandler = $this->preHandlers->get($uri->controller);
             $preHandler->preHandleFragment($uri, $config);
         }
-    }
-
-    private function hasGlobalPageObject(): bool
-    {
-        return isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel;
     }
 
     private function containsNonScalars(array $values): bool

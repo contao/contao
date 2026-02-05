@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Database\Result;
 use Contao\Model\Collection;
 use Contao\Model\MetadataTrait;
 
@@ -83,10 +84,12 @@ use Contao\Model\MetadataTrait;
  * @property string            $playerCaption
  * @property string            $playerAspect
  * @property boolean           $splashImage
+ * @property string            $playerTitle
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
  * @property string|array|null $vimeoOptions
+ * @property string|null       $textTrackSRC
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
@@ -178,10 +181,12 @@ use Contao\Model\MetadataTrait;
  * @method static ContentModel|null findOneByPlayerCaption($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerAspect($val, array $opt=array())
  * @method static ContentModel|null findOneBySplashImage($val, array $opt=array())
+ * @method static ContentModel|null findOneByPlayerTitle($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerPreload($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerColor($val, array $opt=array())
  * @method static ContentModel|null findOneByYoutubeOptions($val, array $opt=array())
  * @method static ContentModel|null findOneByVimeoOptions($val, array $opt=array())
+ * @method static ContentModel|null findOneByTextTrackSRC($val, array $opt = array())
  * @method static ContentModel|null findOneBySliderDelay($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderSpeed($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderStartSlide($val, array $opt=array())
@@ -200,96 +205,98 @@ use Contao\Model\MetadataTrait;
  * @method static ContentModel|null findOneByStop($val, array $opt=array())
  * @method static ContentModel|null findOneByShowPreview($val, array $opt=array())
  *
- * @method static Collection<ContentModel>|ContentModel[]|null findByPid($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPtable($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySorting($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByType($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByHeadline($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySectionHeadline($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByText($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByAddImage($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByInline($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByOverwriteMeta($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySingleSRC($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByAlt($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByImageTitle($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySize($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByImageUrl($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByFullsize($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByCaption($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByFloating($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByHtml($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByUnfilteredHtml($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByListtype($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByListitems($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByTableitems($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySummary($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByThead($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByTfoot($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByTleft($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySortable($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySortIndex($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySortOrder($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByCloseSections($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByMooHeadline($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByMooStyle($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByMooClasses($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByHighlight($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByMarkdownSource($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByCode($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByUrl($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByTarget($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByOverwriteLink($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByTitleText($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByLinkTitle($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByEmbed($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByRel($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByUseImage($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByMultiSRC($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByUseHomeDir($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPerRow($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPerPage($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByNumberOfItems($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySortBy($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByMetaIgnore($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByGalleryTpl($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByCustomTpl($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerSRC($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByYoutube($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByVimeo($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPosterSRC($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerSize($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerOptions($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerStart($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerStop($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerCaption($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerAspect($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySplashImage($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerPreload($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerColor($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByYoutubeOptions($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByVimeoOptions($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySliderDelay($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySliderSpeed($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySliderStartSlide($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySliderContinuous($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByCteAlias($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByArticleAlias($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByArticle($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByForm($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByModule($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByProtected($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByGroups($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByCssID($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBySpace($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByInvisible($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByStart($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByStop($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findByShowPreview($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<ContentModel>|ContentModel[]|null findAll(array $opt=array())
+ * @method static Collection<ContentModel>|null findByPid($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPtable($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySorting($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByType($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByHeadline($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySectionHeadline($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByText($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByAddImage($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByInline($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByOverwriteMeta($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySingleSRC($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByAlt($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByImageTitle($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySize($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByImageUrl($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByFullsize($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByCaption($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByFloating($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByHtml($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByUnfilteredHtml($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByListtype($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByListitems($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByTableitems($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySummary($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByThead($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByTfoot($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByTleft($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySortable($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySortIndex($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySortOrder($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByCloseSections($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByMooHeadline($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByMooStyle($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByMooClasses($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByHighlight($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByMarkdownSource($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByCode($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByUrl($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByTarget($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByOverwriteLink($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByTitleText($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByLinkTitle($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByEmbed($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByRel($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByUseImage($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByMultiSRC($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByUseHomeDir($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPerRow($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPerPage($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByNumberOfItems($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySortBy($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByMetaIgnore($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByGalleryTpl($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByCustomTpl($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerSRC($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByYoutube($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByVimeo($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPosterSRC($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerSize($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerOptions($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerStart($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerStop($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerCaption($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerAspect($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySplashImage($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerTitle($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerPreload($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByPlayerColor($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByYoutubeOptions($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByVimeoOptions($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByTextTrackSRC($val, array $opt = array())
+ * @method static Collection<ContentModel>|null findBySliderDelay($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySliderSpeed($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySliderStartSlide($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySliderContinuous($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByCteAlias($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByArticleAlias($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByArticle($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByForm($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByModule($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByProtected($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByGroups($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByCssID($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBySpace($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByInvisible($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByStart($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByStop($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findByShowPreview($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<ContentModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<ContentModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -358,10 +365,12 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByPlayerCaption($val, array $opt=array())
  * @method static integer countByPlayerAspect($val, array $opt=array())
  * @method static integer countBySplashImage($val, array $opt=array())
+ * @method static integer countByPlayerTitle($val, array $opt=array())
  * @method static integer countByPlayerPreload($val, array $opt=array())
  * @method static integer countByPlayerColor($val, array $opt=array())
  * @method static integer countByYoutubeOptions($val, array $opt=array())
  * @method static integer countByVimeoOptions($val, array $opt=array())
+ * @method static integer countByTextTrackSRC($val, array $opt = array())
  * @method static integer countBySliderDelay($val, array $opt=array())
  * @method static integer countBySliderSpeed($val, array $opt=array())
  * @method static integer countBySliderStartSlide($val, array $opt=array())
@@ -397,7 +406,7 @@ class ContentModel extends Model
 	 * @param string  $strParentTable The parent table name
 	 * @param array   $arrOptions     An optional options array
 	 *
-	 * @return Collection<ContentModel>|ContentModel[]|null A collection of models or null if there are no content elements
+	 * @return Collection<ContentModel>|null A collection of models or null if there are no content elements
 	 */
 	public static function findPublishedByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
 	{
@@ -450,5 +459,45 @@ class ContentModel extends Model
 		}
 
 		return static::countBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
+	}
+
+	public static function findModulesByArticleByPublishedPidAndColumns($intPageId, $arrArticleColumns, array $arrOptions=array()): Result
+	{
+		$arrColumns = array();
+		$arrValues = array();
+		$objDatabase = Database::getInstance();
+
+		$strQuery = "SELECT tl_content.id, tl_module.type, tl_article.inColumn as `column` FROM tl_content, tl_module, tl_article WHERE ";
+
+		$arrColumns[] = "tl_content.pid=tl_article.id";
+		$arrColumns[] = "tl_content.module=tl_module.id";
+
+		$arrColumns[] = "tl_content.type=?";
+		$arrValues[] = 'module';
+
+		$arrColumns[] = "tl_content.ptable=?";
+		$arrValues[] = 'tl_article';
+
+		$arrColumns[] = "tl_article.pid=?";
+		$arrValues[] = $intPageId;
+
+		$arrColumns[] = "tl_article.inColumn IN (" . implode(', ', array_map(static fn () => '?', $arrArticleColumns)) . ")";
+
+		$arrValues = array(...$arrValues, ...$arrArticleColumns);
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "tl_content.invisible=0 AND (tl_content.start='' OR tl_content.start<=$time) AND (tl_content.stop='' OR tl_content.stop>$time)";
+			$arrColumns[] = "tl_article.published=1 AND (tl_article.start='' OR tl_article.start<=$time) AND (tl_article.stop='' OR tl_article.stop>$time)";
+		}
+
+		// Skip unsaved elements (see #2708)
+		$arrColumns[] = "tl_content.tstamp!=0";
+
+		$strQuery .= implode (" AND ", $arrColumns);
+		$strQuery .= " ORDER BY tl_content.pid, tl_content.sorting";
+
+		return $objDatabase->prepare($strQuery)->execute(...$arrValues);
 	}
 }

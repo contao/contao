@@ -15,15 +15,17 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ThemeTest extends TestCase
 {
-    /**
-     * @dataProvider providePaths
-     */
+    #[DataProvider('providePaths')]
     public function testGenerateSlug(string $path, string $expectedSlug): void
     {
-        $this->assertSame($expectedSlug, (new ThemeNamespace())->generateSlug($path));
+        $themeNamespace = new ThemeNamespace();
+
+        $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path), 'create slug');
+        $this->assertSame($path, $themeNamespace->getPath($expectedSlug), 'get path from slug');
     }
 
     public static function providePaths(): iterable
@@ -33,7 +35,20 @@ class ThemeTest extends TestCase
         yield 'with dashes' => ['foo-bar', 'foo-bar'];
 
         yield 'nested' => ['foo/bar/baz', 'foo_bar_baz'];
+    }
 
+    #[DataProvider('provideRelativePaths')]
+    public function testGenerateRelativeSlug(string $path, string $expectedSlug): void
+    {
+        $themeNamespace = new ThemeNamespace();
+
+        $this->expectUserDeprecationMessageMatches('/Using paths outside of the template directory is deprecated and will no longer work in Contao 6\./');
+
+        $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
+    }
+
+    public static function provideRelativePaths(): iterable
+    {
         yield 'relative (up one)' => ['../foo', '_foo'];
 
         yield 'relative (up multiple)' => ['../../../foo', '___foo'];
@@ -71,9 +86,7 @@ class ThemeTest extends TestCase
         $this->assertSame('@Contao_Theme_foo_bar', (new ThemeNamespace())->getFromSlug('foo_bar'));
     }
 
-    /**
-     * @dataProvider provideNamespaces
-     */
+    #[DataProvider('provideNamespaces')]
     public function testMatchThemeNamespace(string $name, string|null $expectedSlug): void
     {
         $this->assertSame($expectedSlug, (new ThemeNamespace())->match($name));

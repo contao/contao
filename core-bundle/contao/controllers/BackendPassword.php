@@ -59,11 +59,11 @@ class BackendPassword extends Backend
 		$dc->activeRecord = $user;
 
 		$widget = new Password(Password::getAttributesFromDca($GLOBALS['TL_DCA']['tl_user']['fields']['password'], 'password'));
-		$widget->template = 'be_widget_chpw';
 		$widget->dataContainer = $dc;
+		$widget->label = null;
+		$widget->prependLabel = true;
 		$widget->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$widget->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
-		$widget->wizard = Backend::getTogglePasswordWizard('password');
 		$widget->currentRecord = $user->id;
 
 		$objTemplate = new BackendTemplate('be_password');

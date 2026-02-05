@@ -149,41 +149,65 @@
         <source>Edit the theme settings</source>
         <target>Bewerk de thema instellingen</target>
       </trans-unit>
-      <trans-unit id="tl_theme.new.0">
-        <source>New</source>
-        <target>Nieuw</target>
-      </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Maak een nieuw thema</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show">
+      <trans-unit id="tl_theme.show.1">
         <source>Show the details of theme ID %s</source>
         <target>Toon de details van thema ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit">
+      <trans-unit id="tl_theme.edit.1">
         <source>Edit theme ID %s</source>
         <target>Bewerk thema ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete">
+      <trans-unit id="tl_theme.delete.1">
         <source>Delete theme ID %s</source>
         <target>Verwijder thema ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules">
+      <trans-unit id="tl_theme.modules.0">
+        <source>Front end modules</source>
+        <target>Front-end modules</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules.1">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Bewerk front-end modules van thema ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout">
+      <trans-unit id="tl_theme.elements.0">
+        <source>Content elements</source>
+        <target>Inhoud elementen</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.elements.1">
+        <source>Edit the content elements of theme ID %s</source>
+        <target>Bewerk de inhoudselementen van het thema ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.0">
+        <source>Page layouts</source>
+        <target>Pagina-lay-outs</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.1">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Bewerk pagina lay-outs van thema ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes">
+      <trans-unit id="tl_theme.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Beeldformaten</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes.1">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Bewerk de beeldgrootte van thema ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.exportTheme">
+      <trans-unit id="tl_theme.exportTheme.0">
+        <source>Export theme</source>
+        <target>Thema exporteren</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>
         <target>Exporteer thema ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+        <target>Thema</target>
       </trans-unit>
     </body>
   </file>

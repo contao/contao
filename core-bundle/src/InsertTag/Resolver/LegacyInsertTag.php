@@ -115,7 +115,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'email_open':
-                        $result = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$strEmail.'" title="'.$strEmail.'" class="email">';
+                        $result = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$strEmail.'" class="email">';
                         break;
 
                     case 'email_url':
@@ -144,7 +144,13 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 if ('CNT' === $keys[0] && 2 === \count($keys)) {
                     try {
-                        $result = $this->container->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
+                        $countryCode = strtoupper($keys[1]);
+
+                        if (\strlen($countryCode) > 2) {
+                            $countryCode = substr($countryCode, 0, 2).'-'.substr($countryCode, 2);
+                        }
+
+                        $result = $this->container->get('contao.intl.countries')->getCountries()[$countryCode] ?? '';
                         break;
                     } catch (\Throwable) {
                         // Fall back to loading the label via $GLOBALS['TL_LANG']
@@ -247,7 +253,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = Date::parse($GLOBALS['objPage']->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', $value);
                     } elseif (\is_array($value)) {
                         $result = implode(', ', $value);
-                    } elseif (\is_array($opts) && ArrayUtil::isAssoc($opts)) {
+                    } elseif (ArrayUtil::isAssoc($opts)) {
                         $result = $opts[$value] ?? $value;
                     } elseif (\is_array($rfrc)) {
                         $result = isset($rfrc[$value]) ? (\is_array($rfrc[$value]) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
@@ -310,11 +316,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 // Replace the tag
                 switch ($insertTag->getName()) {
                     case 'article':
-                        $result = \sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
+                        $result = \sprintf('<a href="%s"%s>%s</a>', $strUrl, $strTarget, $objArticle->title);
                         break;
 
                     case 'article_open':
-                        $result = \sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
+                        $result = \sprintf('<a href="%s"%s>', $strUrl, $strTarget);
                         break;
 
                     case 'article_url':
@@ -621,7 +627,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
+                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates is deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
                 $requestStack = $this->container->get('request_stack');
                 $subRequest = null;
@@ -699,11 +705,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             static function (&$value): void {
                 if (is_numeric($value)) {
                     $value = (int) $value;
-
-                    return;
+                } else {
+                    $value = StringUtil::specialcharsAttribute($value);
                 }
-
-                $value = StringUtil::specialcharsAttribute($value);
             },
         );
 

@@ -110,85 +110,35 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			$ajaxId = func_get_arg(1);
 		}
 
-		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
-		$legends = array();
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			foreach ($boxes as $k=>$v)
-			{
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (preg_match('/^\[.*]$/', $vv))
-					{
-						continue;
-					}
-
-					if (preg_match('/^{.*}$/', $vv))
-					{
-						$legends[$k] = substr($vv, 1, -1);
-						unset($boxes[$k][$kk]);
-					}
-					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (empty($boxes[$k]))
-				{
-					unset($boxes[$k]);
-				}
-			}
-
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 			// Render boxes
 			$class = 'tl_tbox';
-			$fs = $objSessionBag->get('fieldset_states');
 
-			foreach ($boxes as $k=>$v)
+			foreach ($boxes as $box)
 			{
 				$strAjax = '';
 				$blnAjax = false;
-				$key = '';
-				$cls = '';
+				$key = $box['key'];
 				$legend = '';
 
-				if (isset($legends[$k]))
+				if ($key)
 				{
-					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
-
 					$legend = "\n" . '<legend><button type="button" data-action="contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</button></legend>';
-				}
 
-				if ($legend)
-				{
-					if (isset($fs[$this->strTable][$key]))
+					if ($box['class'])
 					{
-						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-					}
-					elseif ($cls)
-					{
-						// Convert the ":hide" suffix from the DCA
-						if ($cls == 'hide')
-						{
-							$cls = 'collapsed';
-						}
-
-						$class .= ' ' . $cls;
+						$class .= ' ' . $box['class'];
 					}
 				}
 
-				$return .= "\n\n" . '<fieldset id="pal_' . $key . '" class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
+				$return .= "\n\n" . '<fieldset id="pal_' . $key . '" class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					if ($vv == '[EOF]')
 					{
@@ -207,7 +157,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					{
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$blnAjax = $ajaxId == $thisId && Environment::get('isAjaxRequest');
-						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 						continue;
 					}
@@ -246,7 +196,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return .= "\n</div>\n</fieldset>";
 			}
 		}
 
@@ -258,43 +208,17 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['notWriteable'], 'system/config/localconfig.php'));
 		}
 
-		// Submit buttons
-		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-
-		// Call the buttons_callback (see #4691)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$arrButtons = $callback($arrButtons, $this);
-				}
-			}
-		}
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, false, $this);
 
 		// Add the buttons and end the form
 		$return .= '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
-  ' . implode(' ', $arrButtons) . '
-</div>
-</div>
+  ' . $strButtons . '
 </form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
-</div>
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
@@ -329,20 +253,9 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			$this->reload();
 		}
 
-		// Set the focus if there is an error
-		if ($this->noReload)
-		{
-			$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
-  });
-</script>';
-		}
-
 		$return = '
-<div data-controller="contao--jump-targets">
-	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
+<div data-controller="contao--jump-targets" data-contao--jump-targets-prev-label-value="' . $GLOBALS['TL_LANG']['MSC']['scrollLeft'] . '" data-contao--jump-targets-next-label-value="' . $GLOBALS['TL_LANG']['MSC']['scrollRight'] . '">
+	<div class="jump-targets" data-controller="contao--sticky-observer"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
 	' . $return . '
 </div>';
 
@@ -456,102 +369,14 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 	 */
 	public function getPalette()
 	{
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'] ?? '';
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->getPalette($this->strTable, (int) $this->intId, $this)
+		;
+	}
 
-		// Check whether there are selector fields
-		if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
-		{
-			$sValues = array();
-			$subpalettes = array();
-
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
-			{
-				$trigger = Config::get($name);
-
-				// Overwrite the trigger if the page is not reloaded
-				if (Input::post('FORM_SUBMIT') == $this->strTable)
-				{
-					$key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
-
-					if (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['submitOnChange'] ?? null))
-					{
-						$trigger = Input::post($key);
-					}
-				}
-
-				if ($trigger)
-				{
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
-					{
-						$sValues[] = $name;
-
-						// Look for a subpalette
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
-						{
-							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
-						}
-					}
-					else
-					{
-						$sValues[] = $trigger;
-						$key = $name . '_' . $trigger;
-
-						// Look for a subpalette
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-						{
-							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
-						}
-					}
-				}
-			}
-
-			// Build possible palette names from the selector values
-			if (empty($sValues))
-			{
-				$names = array('default');
-			}
-			elseif (\count($sValues) > 1)
-			{
-				$names = $this->combiner($sValues);
-			}
-			else
-			{
-				$names = array($sValues[0]);
-			}
-
-			// Get an existing palette
-			foreach ($names as $paletteName)
-			{
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
-				{
-					$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
-					break;
-				}
-			}
-
-			// Include sub-palettes
-			foreach ($subpalettes as $k=>$v)
-			{
-				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
-			}
-		}
-
-		// Call onpalette_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$strPalette = $callback($strPalette, $this);
-				}
-			}
-		}
-
-		return $strPalette;
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
+	{
+		return $GLOBALS['TL_CONFIG'];
 	}
 }

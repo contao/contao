@@ -12,17 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Intl;
 
-use Contao\ArrayUtil;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator;
 
 class LocalesTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,7 +41,7 @@ class LocalesTest extends TestCase
         $localeIds = $this->getLocalesService()->getLocaleIds();
 
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
+        $this->assertTrue(array_is_list($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -65,7 +62,7 @@ class LocalesTest extends TestCase
         $localeIds = $this->getLocalesService()->getLanguageLocaleIds();
 
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
+        $this->assertTrue(array_is_list($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
@@ -77,7 +74,6 @@ class LocalesTest extends TestCase
         $locales = $this->getLocalesService()->getLocales('de');
 
         $this->assertNotEmpty($locales);
-        $this->assertTrue(ArrayUtil::isAssoc($locales));
 
         foreach ($locales as $localeId => $label) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -87,7 +83,7 @@ class LocalesTest extends TestCase
 
     public function testGetsEnabledLocales(): void
     {
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getLocale')
             ->willReturn('en')
@@ -124,8 +120,6 @@ class LocalesTest extends TestCase
         $languages = $this->getLocalesService()->getLanguages('de');
 
         $this->assertNotEmpty($languages);
-        $this->assertTrue(ArrayUtil::isAssoc($languages));
-
         $this->assertArrayNotHasKey('en_POSIX', $languages);
         $this->assertArrayNotHasKey('en_US_POSIX', $languages);
 
@@ -166,7 +160,7 @@ class LocalesTest extends TestCase
 
     public function testGetsLocalesTranslated(): void
     {
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->willReturnCallback(
@@ -178,7 +172,7 @@ class LocalesTest extends TestCase
             )
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getCatalogue')
             ->with('de')
@@ -214,9 +208,7 @@ class LocalesTest extends TestCase
         $this->assertLessThan($positionEl, $positionDe);
     }
 
-    /**
-     * @dataProvider getLocalesConfig
-     */
+    #[DataProvider('getLocalesConfig')]
     public function testGetsLocaleIdsConfigured(array $configLocales, array $expected): void
     {
         $localeIds = $this->getLocalesService(null, null, $configLocales)->getLocaleIds();
@@ -231,9 +223,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
     }
 
-    /**
-     * @dataProvider getLocalesConfig
-     */
+    #[DataProvider('getLocalesConfig')]
     public function testGetsLocalesConfigured(array $configLocales, array $expected): void
     {
         $locales = $this->getLocalesService(null, null, $configLocales)->getLocales('de');
@@ -264,9 +254,7 @@ class LocalesTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getLocalesConfig
-     */
+    #[DataProvider('getLocalesConfig')]
     public function testGetsLanguagesConfigured(array $configLocales, array $expected): void
     {
         $locales = $this->getLocalesService(null, null, $configLocales)->getLanguages('de');
@@ -323,7 +311,7 @@ class LocalesTest extends TestCase
 
     public function testsGetsFallbackLocaleFromRequest(): void
     {
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getLocale')
             ->willReturn('de')
@@ -370,10 +358,10 @@ class LocalesTest extends TestCase
     private function getLocalesService(Translator|null $translator = null, array|null $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string|null $defaultLocale = null): Locales
     {
         if (!$translator) {
-            $translator = $this->createMock(Translator::class);
+            $translator = $this->createStub(Translator::class);
             $translator
                 ->method('getCatalogue')
-                ->willReturn($this->createMock(MessageCatalogueInterface::class))
+                ->willReturn($this->createStub(MessageCatalogueInterface::class))
             ;
         }
 

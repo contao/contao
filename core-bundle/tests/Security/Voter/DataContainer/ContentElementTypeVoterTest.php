@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\ContentElementTypeVoter;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -27,7 +28,7 @@ class ContentElementTypeVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $voter = new ContentElementTypeVoter($this->createMock(AccessDecisionManagerInterface::class));
+        $voter = new ContentElementTypeVoter($this->createStub(AccessDecisionManagerInterface::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_content'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -35,7 +36,7 @@ class ContentElementTypeVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
@@ -56,12 +57,10 @@ class ContentElementTypeVoterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider checksElementAccessPermissionProvider
-     */
+    #[DataProvider('checksElementAccessPermissionProvider')]
     public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $types): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
         $matcher = $this->exactly(\count($types));
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
@@ -71,7 +70,7 @@ class ContentElementTypeVoterTest extends TestCase
             ->with(
                 $token,
                 [ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE],
-                $this->callback(static fn (string $type) => $types[$matcher->getInvocationCount() - 1] === $type),
+                $this->callback(static fn (string $type) => $types[$matcher->numberOfInvocations() - 1] === $type),
             )
             ->willReturn(true)
         ;

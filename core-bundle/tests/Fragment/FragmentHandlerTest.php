@@ -19,9 +19,11 @@ use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Fragment\UnknownFragmentException;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,9 +57,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render(new FragmentReference('foo.bar'));
     }
 
-    /**
-     * @dataProvider getRenderingStrategies
-     */
+    #[DataProvider('getRenderingStrategies')]
     public function testPassesTheRenderingStrategyToTheRenderer(string $renderingStrategy): void
     {
         $uri = new FragmentReference('foo.bar');
@@ -82,9 +82,7 @@ class FragmentHandlerTest extends TestCase
         yield ['esi'];
     }
 
-    /**
-     * @dataProvider getOptions
-     */
+    #[DataProvider('getOptions')]
     public function testPassesTheOptionsToTheRenderer(array $options): void
     {
         $uri = new FragmentReference('foo.bar');
@@ -109,9 +107,7 @@ class FragmentHandlerTest extends TestCase
         yield [['bar' => 'baz']];
     }
 
-    /**
-     * @dataProvider getNonScalarAttributes
-     */
+    #[DataProvider('getNonScalarAttributes')]
     public function testOverridesRenderingOnNonScalarAttributes(string $renderingStrategy, string $expectedRenderer): void
     {
         $uri = new FragmentReference('foo.bar');
@@ -152,12 +148,15 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->expects($this->once())
+            ->method('getCurrentPage')
+            ->willReturn($this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]))
+        ;
 
-        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, pageFinder: $pageFinder);
         $fragmentHandler->render($uri);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testDoesNotOverrideAGivenPageId(): void
@@ -173,12 +172,14 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->expects($this->never())
+            ->method('getCurrentPage')
+        ;
 
-        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
+        $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers, pageFinder: $pageFinder);
         $fragmentHandler->render($uri);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testExecutesThePreHandlers(): void
@@ -245,18 +246,18 @@ class FragmentHandlerTest extends TestCase
      * @param ServiceLocator<mixed>|null $renderers
      * @param ServiceLocator<mixed>|null $preHandlers
      */
-    private function getFragmentHandler(FragmentRegistry|null $registry = null, ServiceLocator|null $renderers = null, ServiceLocator|null $preHandlers = null, Request|null $request = null, BaseFragmentHandler|null $fragmentHandler = null): FragmentHandler
+    private function getFragmentHandler(FragmentRegistry|null $registry = null, ServiceLocator|null $renderers = null, ServiceLocator|null $preHandlers = null, Request|null $request = null, BaseFragmentHandler|null $fragmentHandler = null, PageFinder|null $pageFinder = null): FragmentHandler
     {
         $registry ??= new FragmentRegistry();
         $renderers ??= new ServiceLocator([]);
         $preHandlers ??= new ServiceLocator([]);
         $request ??= new Request();
-        $fragmentHandler ??= $this->createMock(BaseFragmentHandler::class);
+        $fragmentHandler ??= $this->createStub(BaseFragmentHandler::class);
+        $pageFinder ??= $this->createStub(PageFinder::class);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
-        return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, true);
+        return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, $pageFinder, true);
     }
 
     /**

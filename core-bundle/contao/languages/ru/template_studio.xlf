@@ -1,0 +1,190 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/template_studio.php" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="getting-started.0">
+        <source>Getting started</source>
+        <target>Начало работы</target>
+      </trans-unit>
+      <trans-unit id="getting-started.1">
+        <source>Select a template from the browser. You can then inspect all its representations and create your own versions and variants.</source>
+        <target>Выберите шаблон в браузере. После этого вы сможете изучить все его представления и создать собственные версии и варианты.</target>
+      </trans-unit>
+      <trans-unit id="theme-selector">
+        <source>Theme context</source>
+        <target>Контекст темы</target>
+      </trans-unit>
+      <trans-unit id="no_theme_context">
+        <source>Default/None</source>
+        <target>По умолчанию/Нет</target>
+      </trans-unit>
+      <trans-unit id="not_prefixed">
+        <source>without prefix</source>
+        <target>без префикса</target>
+      </trans-unit>
+      <trans-unit id="operation.save.0">
+        <source>Save</source>
+        <target>Сохранить</target>
+      </trans-unit>
+      <trans-unit id="operation.save.1">
+        <source>Save your template for %s</source>
+        <target>Сохранить шаблон для %s</target>
+      </trans-unit>
+      <trans-unit id="operation.delete.0">
+        <source>Delete</source>
+        <target>Удалить</target>
+      </trans-unit>
+      <trans-unit id="operation.delete.1">
+        <source>Delete your template for %s</source>
+        <target>Удалить шаблон для %s</target>
+      </trans-unit>
+      <trans-unit id="operation.create.0">
+        <source>Create your template</source>
+        <target>Создать шаблон</target>
+      </trans-unit>
+      <trans-unit id="operation.create.1">
+        <source>Modify %s by creating your own template</source>
+        <target>Модифицировать %s, создав свой шаблон</target>
+      </trans-unit>
+      <trans-unit id="operation.create_content_element_variant.0">
+        <source>Create variant</source>
+        <target>Создать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.create_content_element_variant.1">
+        <source>Create a new variant template for the %s content element</source>
+        <target>Создать новый вариант шаблона для %s элемента контента</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_content_element_variant.0">
+        <source>Rename variant</source>
+        <target>Переименовать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_content_element_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Переименовать %s вариант шаблона</target>
+      </trans-unit>
+      <trans-unit id="operation.create_frontend_module_variant.0">
+        <source>Create variant</source>
+        <target>Создать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.create_frontend_module_variant.1">
+        <source>Create a new variant template for the %s front end module</source>
+        <target>Создать новый вариант шаблона для %s модуля внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_frontend_module_variant.0">
+        <source>Rename variant</source>
+        <target>Переименовать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_frontend_module_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Переименовать %s вариант шаблона</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>Создать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>Создать новый вариант шаблона для макета %s</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>Переименовать вариант</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Переименовать %s вариант шаблона</target>
+      </trans-unit>
+      <trans-unit id="message.create.success">
+        <source>Your template for %s was created.</source>
+        <target>Шаблон для %s был создан.</target>
+      </trans-unit>
+      <trans-unit id="message.create.error">
+        <source>Your template for %s could not be created.</source>
+        <target>Не удалось создать шаблон для %s.</target>
+      </trans-unit>
+      <trans-unit id="message.create_variant.success">
+        <source>The %s variant template was created.</source>
+        <target>Вариант шаблона %s был создан.</target>
+      </trans-unit>
+      <trans-unit id="message.create_variant.error">
+        <source>A variant template for %s could not be created.</source>
+        <target>Не удалось создать вариант шаблона для %s.</target>
+      </trans-unit>
+      <trans-unit id="message.rename_variant.success">
+        <source>The variant template was renamed to %s.</source>
+        <target>Вариант шаблона %s был переименован.</target>
+      </trans-unit>
+      <trans-unit id="message.rename_variant.error">
+        <source>The variant template %s could not be renamed.</source>
+        <target>Не удалось переименовать вариант шаблона для %s.</target>
+      </trans-unit>
+      <trans-unit id="message.save.success">
+        <source>Your template for %s was saved.</source>
+        <target>Шаблон для %s был сохранен.</target>
+      </trans-unit>
+      <trans-unit id="message.save.error">
+        <source>Your template for %s could not be saved.</source>
+        <target>Не удалось сохранить шаблон для %s.</target>
+      </trans-unit>
+      <trans-unit id="message.delete.success">
+        <source>Your template for %s was deleted.</source>
+        <target>Шаблон для %s был удален.</target>
+      </trans-unit>
+      <trans-unit id="message.delete.error">
+        <source>Your template for %s could not be deleted.</source>
+        <target>Не удалось удалить шаблон для %s.</target>
+      </trans-unit>
+      <trans-unit id="message.open_tab.error">
+        <source>The template %s cannot be found or opened in an editor tab.</source>
+        <target>Шаблон %s не может быть найден или открыт во вкладке редактора.</target>
+      </trans-unit>
+      <trans-unit id="message.open_block_info.error">
+        <source>The block %s was not found yet. Did you save the template?</source>
+        <target>Блок %s еще не найден. Вы сохранили шаблон?</target>
+      </trans-unit>
+      <trans-unit id="dialog.delete.confirm">
+        <source>This deletes your template for %s and cannot be undone.</source>
+        <target>Это действие удалит ваш шаблон для %s без возможности восстановления.</target>
+      </trans-unit>
+      <trans-unit id="dialog.create_variant">
+        <source>You are creating a new variant template for %s. Please define a unique name.</source>
+        <target>Вы создаете новый вариант шаблона для %s. Пожалуйста, укажите уникальное имя.</target>
+      </trans-unit>
+      <trans-unit id="dialog.rename_variant">
+        <source>Please define a new unique name for the variant template %s.</source>
+        <target>Пожалуйста, укажите новое уникальное имя для варианта шаблона %s.</target>
+      </trans-unit>
+      <trans-unit id="editor_tab.relation.legacy_pair">
+        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
+        <target>Шаблон %identifier% представлен в двух форматах. При внесении изменений предпочтительнее использовать формат Twig для обеспечения совместимости с Contao 6.</target>
+      </trans-unit>
+      <trans-unit id="editor_tab.relation.not_analyzable">
+        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <target>Анализ связей шаблона невозможен, так как он содержит ошибки.</target>
+      </trans-unit>
+      <trans-unit id="editor_tab.relation.no_extend_warning">
+        <source>This template overwrites all previously defined content because it does not extend %previous%.</source>
+        <target>Данный шаблон перезаписывает весь ранее определенный контент, поскольку не расширяет %previous%.</target>
+      </trans-unit>
+      <trans-unit id="editor_tab.relation.no_use_warning">
+        <source>This template ignores all previously defined content because it does not use %previous%.</source>
+        <target>Данный шаблон игнорирует весь ранее определенный контент, поскольку не использует %previous%.</target>
+      </trans-unit>
+      <trans-unit id="info.block.title">
+        <source>Hierarchy of block %block%</source>
+        <target>Иерархия блока %block%</target>
+      </trans-unit>
+      <trans-unit id="info.block.hierarchy">
+        <source>Block %block% is originally defined in the %namespace% namespace and is modified %modify_count% time(s) when rendering the %target_template% template.</source>
+        <target>Блок %block% первоначально определен в пространстве имен %namespace% и изменен %modify_count% раз(а) при отрисовке шаблона %target_template%.</target>
+      </trans-unit>
+      <trans-unit id="info.block.flat_hierarchy">
+        <source>Block %block% is originally defined in the %target_template% template.</source>
+        <target>Блок %block% первоначально определен в шаблоне %target_template%.</target>
+      </trans-unit>
+      <trans-unit id="info.block.overwrite_warning">
+        <source>This template defines content for the %block% block without using the %expression_to_use% expression. This overwrites previously defined content.</source>
+        <target>Данный шаблон определяет контент для блока %block% без использования выражения %expression_to_use%. Это перезапишет весь ранее определенный контент.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

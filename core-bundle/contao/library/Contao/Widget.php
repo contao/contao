@@ -102,8 +102,12 @@ use Doctrine\DBAL\Types\Types;
  */
 abstract class Widget extends Controller
 {
-	use TemplateInheritance;
+	use TemplateInheritance {
+		TemplateInheritance::renderTwigSurrogateIfExists as baseRenderTwigSurrogateIfExists;
+	}
 	use TemplateTrait;
+
+	private bool $enableSurrogateRendering = true;
 
 	/**
 	 * Id
@@ -435,40 +439,30 @@ abstract class Widget extends Controller
 		switch ($strKey)
 		{
 			case 'id':
-				return isset($this->strId);
-
 			case 'name':
-				return isset($this->strName);
-
 			case 'label':
-				return isset($this->strLabel);
-
 			case 'value':
-				return isset($this->varValue);
-
 			case 'class':
-				return isset($this->strClass);
-
 			case 'template':
-				return isset($this->strTemplate);
-
 			case 'wizard':
-				return isset($this->strWizard);
+			case 'forAttribute':
+			case 'dataContainer':
+				return true;
 
 			case 'required':
 				return isset($this->arrConfiguration[$strKey]);
-
-			case 'forAttribute':
-				return isset($this->blnForAttribute);
-
-			case 'dataContainer':
-				return isset($this->objDca);
 
 			case 'activeRecord':
 				return isset($this->objDca->activeRecord);
 
 			default:
-				return isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]);
+				if (isset($this->arrAttributes[$strKey]) || isset($this->arrConfiguration[$strKey]))
+				{
+					return true;
+				}
+
+				// If the magic getter returns a value it "is set" by definition
+				return null !== $this->__get($strKey);
 		}
 	}
 
@@ -492,6 +486,8 @@ abstract class Widget extends Controller
 	{
 		$this->class = 'error';
 		$this->arrErrors[] = $strError;
+
+		System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
 	}
 
 	/**
@@ -1258,7 +1254,7 @@ abstract class Widget extends Controller
 		$arrAttributes['strField'] = $strField;
 		$arrAttributes['strTable'] = $strTable;
 		$arrAttributes['label'] = (($label = \is_array($arrData['label'] ?? null) ? $arrData['label'][0] : $arrData['label'] ?? null) !== null) ? $label : $strField;
-		$arrAttributes['description'] = $arrData['label'][1] ?? null;
+		$arrAttributes['description'] = \is_array($arrData['label'] ?? null) ? ($arrData['label'][1] ?? null) : null;
 		$arrAttributes['type'] = $arrData['inputType'] ?? null;
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
@@ -1401,9 +1397,9 @@ abstract class Widget extends Controller
 				$arrAttributes['maxlength'] = $arrAttributes['sql']['length'];
 			}
 
-			if (!isset($arrAttributes['unique']) && isset($arrAttributes['sql']['customSchemaOptions']['unique']))
+			if (!isset($arrAttributes['unique']) && (isset($arrAttributes['sql']['customSchemaOptions']['unique']) || isset($arrAttributes['sql']['platformOptions']['unique'])))
 			{
-				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'];
+				$arrAttributes['unique'] = $arrAttributes['sql']['platformOptions']['unique'] ?? $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}
 		}
 
@@ -1564,5 +1560,25 @@ abstract class Widget extends Controller
 			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
 			StringUtil::specialchars((string) $strString, false, true),
 		);
+	}
+
+	protected function renderTwigSurrogateIfExists(): string|null
+	{
+		return $this->enableSurrogateRendering ? $this->baseRenderTwigSurrogateIfExists() : null;
+	}
+
+	/**
+	 * @interal
+	 */
+	public function renderLegacyFromTwig(array $blocks): string
+	{
+		$this->arrBlocks = $blocks;
+		$this->enableSurrogateRendering = false;
+
+		$return = $this->inherit();
+
+		$this->enableSurrogateRendering = true;
+
+		return $return;
 	}
 }

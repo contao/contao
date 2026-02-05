@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Messenger;
 
+use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\CoreBundle\Messenger\WebWorker;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\AbstractLogger;
@@ -27,6 +30,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 use Symfony\Component\Messenger\RoutableMessageBus;
@@ -47,6 +52,8 @@ class WebWorkerTest extends TestCase
 
             /**
              * @param string $message
+             *
+             * @throws void
              */
             public function log($level, $message, array $context = []): void
             {
@@ -79,7 +86,7 @@ class WebWorkerTest extends TestCase
         );
 
         $this->addEventsToEventDispatcher($webWorker);
-        $this->triggerRealWorkers(['transport-1', 'transport-2']);
+        $this->triggerRealWorkers();
     }
 
     public function testWorkerIsStoppedIfIdle(): void
@@ -95,22 +102,67 @@ class WebWorkerTest extends TestCase
         $this->addEventsToEventDispatcher($webWorker);
         $this->triggerWebWorker();
 
-        // This test would run for 30 seconds if it failed. If the worker is correctly
-        // stopped, it will return immediately and log "Stopping worker.".
+        // This test would run for 30 seconds if it failed. If the worker is
+        // correctly stopped, it will return immediately and log "Stopping worker".
         // @phpstan-ignore method.notFound
         $this->assertContains('Stopping worker.', $this->logger->getLogs());
+    }
+
+    public function testHasCliWorkersRunning(): void
+    {
+        $cache = new ArrayAdapter(); // No real workers running yet
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+        $this->assertFalse($webWorker->hasCliWorkersRunning());
+        $this->triggerRealWorkers();
+        $this->assertTrue($webWorker->hasCliWorkersRunning());
+    }
+
+    public function testSkipsMessagesThatRequireRealWorkersInWebWorker(): void
+    {
+        $webWorker = new WebWorker(
+            new ArrayAdapter(),
+            $this->command,
+            [],
+        );
+
+        // Message that implements the WebworkerAwareInterface
+        $message = new ReindexMessage(new ReindexConfig());
+        $envelope = new Envelope($message);
+
+        $event = new WorkerMessageReceivedEvent($envelope, 'receiver');
+        $webWorker->onWorkerMessageReceived($event);
+
+        $this->assertSame(ScopeAwareMessageInterface::SCOPE_CLI, $message->getScope());
+
+        // Use reflection to simulate the web worker running. Testing it without
+        // reflection would require setting up the entire message handler with all the
+        // middleware which is not something we need to test
+        $reflection = new \ReflectionObject($webWorker);
+        $property = $reflection->getProperty('webWorkerRunning');
+        $property->setValue($webWorker, true);
+
+        $webWorker->onWorkerMessageReceived($event);
+
+        $this->assertSame(ScopeAwareMessageInterface::SCOPE_WEB, $message->getScope());
     }
 
     private function triggerWebWorker(): void
     {
         $this->eventDispatcher->dispatch(new TerminateEvent(
-            $this->createMock(HttpKernelInterface::class),
+            $this->createStub(HttpKernelInterface::class),
             new Request(),
             new Response(),
         ));
     }
 
-    private function triggerRealWorkers(array $transports): void
+    private function triggerRealWorkers(): void
     {
         $listener = static function (WorkerRunningEvent $event): void {
             if ($event->isWorkerIdle()) {
@@ -121,7 +173,7 @@ class WebWorkerTest extends TestCase
         $this->eventDispatcher->addListener(WorkerRunningEvent::class, $listener);
 
         $input = new ArrayInput([
-            'receivers' => $transports,
+            'receivers' => ['transport-1', 'transport-2'],
         ]);
 
         $this->command->run($input, new NullOutput());
@@ -131,12 +183,12 @@ class WebWorkerTest extends TestCase
     private function createConsumeCommand(): void
     {
         $receiverLocator = new Container();
-        $receiverLocator->set('transport-1', $this->createMock(ReceiverInterface::class));
-        $receiverLocator->set('transport-2', $this->createMock(ReceiverInterface::class));
-        $receiverLocator->set('transport-3', $this->createMock(ReceiverInterface::class));
+        $receiverLocator->set('transport-1', $this->createStub(ReceiverInterface::class));
+        $receiverLocator->set('transport-2', $this->createStub(ReceiverInterface::class));
+        $receiverLocator->set('transport-3', $this->createStub(ReceiverInterface::class));
 
         $this->command = new ConsumeMessagesCommand(
-            $this->createMock(RoutableMessageBus::class),
+            $this->createStub(RoutableMessageBus::class),
             $receiverLocator,
             $this->eventDispatcher,
             $this->logger,

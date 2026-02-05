@@ -8,11 +8,11 @@
       <trans-unit id="tl_layout.name.1">
         <source>Please enter the layout title.</source>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -171,10 +171,10 @@
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
+        <source>Included elements</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -285,7 +285,7 @@
         <source>Please select the alignment of the page.</source>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
+        <source>Title and type</source>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -306,7 +306,7 @@
         <source>Feeds</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
+        <source>Include settings</source>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -323,6 +323,12 @@
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Default layout</source>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
       </trans-unit>
@@ -335,26 +341,26 @@
       <trans-unit id="tl_layout.analytics_matomo">
         <source>Matomo</source>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
       </trans-unit>
-      <trans-unit id="tl_layout.show">
+      <trans-unit id="tl_layout.show.1">
         <source>Show the details of page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.edit">
+      <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
+      <trans-unit id="tl_layout.copy.1">
+        <source>Copy page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.cut">
+      <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_layout.delete">
+      <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
       </trans-unit>
     </body>
   </file>

@@ -19,6 +19,8 @@ class HookTest extends TestCase
 {
     public function testReturnsTheTagName(): void
     {
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsHook] attribute instead\./');
+
         $annotation = new Hook();
 
         $this->assertSame('contao.hook', $annotation->getName());

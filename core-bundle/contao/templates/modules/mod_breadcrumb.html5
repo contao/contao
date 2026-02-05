@@ -1,6 +1,17 @@
+<?php
+
+$this->wrapperAttributes = $this
+    ->attrs($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style ?? '')
+    ->set('aria-label', $this->trans('MSC.breadcrumbMenu'))
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
 
 <!-- indexer::stop -->
-<nav class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?> aria-label="Breadcrumb">
+<nav<?= $this->wrapperAttributes ?>>
 
   <?php $this->block('headline'); ?>
     <?php if ($this->headline): ?>
@@ -14,7 +25,7 @@
         <?php if ($item['isActive']): ?>
           <li class="active" aria-current="page"><?= $item['link'] ?></li>
         <?php else: ?>
-          <li><a href="<?= $item['href'] ?>" title="<?= $item['title'] ?>"><?= $item['link'] ?></a></li>
+          <li><a href="<?= $item['href'] ?>"><?= $item['link'] ?></a></li>
         <?php endif; ?>
       <?php endforeach; ?>
     </ul>

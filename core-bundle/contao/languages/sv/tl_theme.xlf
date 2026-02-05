@@ -149,41 +149,65 @@
         <source>Edit the theme settings</source>
         <target>Redigera temainställningarna</target>
       </trans-unit>
-      <trans-unit id="tl_theme.new.0">
-        <source>New</source>
-        <target>Ny</target>
-      </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Skapa ett nytt tema</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show">
+      <trans-unit id="tl_theme.show.1">
         <source>Show the details of theme ID %s</source>
         <target>Visa detaljer för temat med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit">
+      <trans-unit id="tl_theme.edit.1">
         <source>Edit theme ID %s</source>
         <target>Redigera tema med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete">
+      <trans-unit id="tl_theme.delete.1">
         <source>Delete theme ID %s</source>
         <target>Ta bort tema med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules">
+      <trans-unit id="tl_theme.modules.0">
+        <source>Front end modules</source>
+        <target>Frontend-moduler</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules.1">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Redigera frontend-moduler för tema med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout">
+      <trans-unit id="tl_theme.elements.0">
+        <source>Content elements</source>
+        <target>Innehållselement</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.elements.1">
+        <source>Edit the content elements of theme ID %s</source>
+        <target>Redigera innehållselementen för tema-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.0">
+        <source>Page layouts</source>
+        <target>Sidlayouter</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.1">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Redigera layouter för tema med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes">
+      <trans-unit id="tl_theme.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Bildstorlekar</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes.1">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Redigera bildstorlekar för tema med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.exportTheme">
+      <trans-unit id="tl_theme.exportTheme.0">
+        <source>Export theme</source>
+        <target>Exportera tema</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>
         <target>Exportera tema med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+        <target>Tema</target>
       </trans-unit>
     </body>
   </file>

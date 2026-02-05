@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\TextTrack;
+use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Filesystem\Dbafs\AbstractDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
@@ -57,6 +59,14 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPart', $importantPart);
         }
 
+        $language = $row['textTrackLanguage'] ?? null;
+
+        // Add text track information
+        if ($language) {
+            $textTrack = new TextTrack($language, TextTrackType::tryFrom($row['textTrackType'] ?? ''));
+            $event->set('textTrack', $textTrack);
+        }
+
         // Add localized metadata
         $localizedMetadata = [];
 
@@ -75,6 +85,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
         $extraMetadata = $event->getExtraMetadata();
         $importantPart = $extraMetadata['importantPart'] ?? null;
+        $textTrack = $extraMetadata['textTrack'] ?? null;
         $localizedMetadata = $extraMetadata['localized'] ?? null;
 
         if ($importantPart instanceof ImportantPart) {
@@ -82,6 +93,11 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartY', $importantPart->getY());
             $event->set('importantPartWidth', $importantPart->getWidth());
             $event->set('importantPartHeight', $importantPart->getHeight());
+        }
+
+        if ($textTrack instanceof TextTrack) {
+            $event->set('textTrackLanguage', $textTrack->getSourceLanguage());
+            $event->set('textTrackType', $textTrack->getType()->value);
         }
 
         if ($localizedMetadata instanceof MetadataBag) {

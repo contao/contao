@@ -23,6 +23,22 @@ class SwiperController extends AbstractContentElementController
 {
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
+        $sliderSettings = [
+            'speed' => (float) $model->sliderSpeed,
+            'initialSlide' => $model->sliderStartSlide,
+            'loop' => $model->sliderContinuous,
+        ];
+
+        if ($model->sliderDelay) {
+            $sliderSettings['autoplay'] = [
+                'delay' => (float) $model->sliderDelay,
+                'pauseOnMouseEnter' => true,
+            ];
+        }
+
+        $template->set('slider_settings', $sliderSettings);
+
+        // Backwards compatibility
         $template->set('delay', $model->sliderDelay);
         $template->set('speed', $model->sliderSpeed);
         $template->set('offset', $model->sliderStartSlide);

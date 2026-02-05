@@ -214,12 +214,12 @@ class ImageSize extends Widget
 					$arrValues[] = $arrOptgroup['value'] ?? '';
 				}
 
-				$arrOptions[] = \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = \sprintf('<optgroup label="%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
 		$arrFields[] = \sprintf(
-			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-action="focus->contao--scroll-offset#store"%s>%s</select>',
+			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-contao--image-size-target="select" data-action="focus->contao--scroll-offset#store change->contao--image-size#update"%s>%s</select>',
 			$this->strName,
 			$this->strId . '_3',
 			$this->getAttribute('disabled'),
@@ -229,23 +229,24 @@ class ImageSize extends Widget
 		for ($i=0; $i<2; $i++)
 		{
 			$arrFields[] = \sprintf(
-				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--image-size-target="%s">',
 				$this->strName,
 				$i,
 				$this->strId . '_' . $i,
 				$i,
 				self::specialcharsValue(@$this->varValue[$i]), // see #4979
-				$this->getAttributes()
+				$this->getAttributes(),
+				$i ? 'height' : 'width',
 			);
 		}
 
 		return \sprintf(
-			'<div id="ctrl_%s" class="tl_image_size%s"%s>%s</div>%s',
+			'<div id="ctrl_%s" class="tl_image_size%s"%s>%s%s</div>',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getStimulusAttributes($arrValues),
 			implode(' ', $arrFields),
-			$this->wizard
+			$this->wizard ?: '<button type="button" data-contao--tooltips-target="tooltip" data-contao--image-size-target="button" data-action="contao--image-size#openModal" disabled>' . Image::getHtml('edit--disabled.svg', attributes: ' data-contao--image-size-target="image"') . '</button>'
 		);
 	}
 

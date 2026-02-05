@@ -34,7 +34,7 @@ class CombinerTest extends TestCase
         $this->filesystem->mkdir($this->getTempDir().'/public');
         $this->filesystem->mkdir($this->getTempDir().'/system/tmp');
 
-        $context = $this->createMock(ContaoContext::class);
+        $context = $this->createStub(ContaoContext::class);
         $context
             ->method('getStaticUrl')
             ->willReturn('')
@@ -100,11 +100,13 @@ class CombinerTest extends TestCase
 
         System::getContainer()->setParameter('kernel.debug', true);
 
-        $hash = substr(md5((string) $mtime), 0, 8);
+        $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertSame(
-            'file1.css?v='.$hash.'"><link rel="stylesheet" href="file2.css?v='.$hash.'" media="screen"><link rel="stylesheet" href="file3.css?v='.$hash.'" media="screen',
-            $combiner->getCombinedFile(),
+        $this->assertMatchesRegularExpression('/^assets\/css\/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
+
+        $this->assertStringEqualsFile(
+            $this->getTempDir().'/'.$combinedFile,
+            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\nfile3\n}\n",
         );
     }
 
@@ -237,12 +239,9 @@ class CombinerTest extends TestCase
 
         System::getContainer()->setParameter('kernel.debug', true);
 
-        $hash1 = substr(md5((string) $mtime1), 0, 8);
-        $hash2 = substr(md5((string) $mtime2), 0, 8);
-
-        $this->assertSame(
-            'assets/css/file1.scss.css?v='.$hash1.'"><link rel="stylesheet" href="assets/css/file2.scss.css?v='.$hash2,
-            $combiner->getCombinedFile(),
+        $this->assertStringEqualsFile(
+            $this->getTempDir().'/'.$combiner->getCombinedFile(),
+            "body{color:red}\nbody{color:green}\n",
         );
     }
 
@@ -273,9 +272,9 @@ class CombinerTest extends TestCase
 
         System::getContainer()->setParameter('kernel.debug', true);
 
-        $hash1 = substr(md5((string) $mtime1), 0, 8);
-        $hash2 = substr(md5((string) $mtime2), 0, 8);
+        $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertSame('file1.js?v='.$hash1.'"></script><script src="file2.js?v='.$hash2, $combiner->getCombinedFile());
+        $this->assertMatchesRegularExpression('/^assets\/js\/file1\.js,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
+        $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
     }
 }

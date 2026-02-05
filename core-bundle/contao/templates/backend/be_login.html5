@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>">
+<html lang="<?= $this->language ?>" data-turbo="false">
 <head>
+  <meta name="turbo-visit-control" content="reload">
 
   <?php $this->block('head'); ?>
     <meta charset="<?= $this->charset ?>">
@@ -27,7 +28,23 @@
 <body class="be_login"<?= $this->attributes ?>>
 
   <?php $this->block('container'); ?>
-    <div id="container">
+    <div id="container"
+      data-controller="contao--webauthn contao--webauthn-error"
+      data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>"
+      data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>"
+      data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>"
+      data-contao--webauthn-error-unsupported-message-value="<?= $this->trans('ERR.passkeysUnsupported') ?>"
+      data-contao--webauthn-error-assertion-failure-message-value="<?= $this->trans('ERR.passkeyAssertionFailure') ?>"
+      data-contao--webauthn-error-options-failure-message-value="<?= $this->trans('ERR.passkeyAssertionFailure') ?>"
+      data-contao--webauthn-error-csrf-url-value="<?= $this->route('contao_frontend_request_token_script') ?>"
+      data-action="
+        webauthn:unsupported->contao--webauthn-error#handleUnsupported
+        webauthn:assertion:failure->contao--webauthn-error#handleAssertionFailure
+        webauthn:options:failure->contao--webauthn-error#handleOptionsFailure
+        webauthn:options:failure->contao--webauthn-error#loadCsrf
+        webauthn:options:success->contao--webauthn-error#loadCsrf
+      "
+    >
       <main id="main">
         <form class="tl_login_form" method="post">
           <div class="formbody">
@@ -43,18 +60,24 @@
               <label for="username"><?= $this->username ?></label>
               <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" autocomplete="username" placeholder="<?= $this->username ?>" required>
             </div>
-            <div class="widget widget-password">
+            <div class="widget widget-password" data-controller="contao--password-visibility">
               <label for="password"><?= $this->password ?></label>
-              <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" required>
+              <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" data-contao--password-visibility-target="input" required>
+              <button type="button" class="password-button" data-action="contao--password-visibility#toggle">
+                <span data-contao--password-visibility-target="icon"><?= Contao\Image::getHtml('password-show.svg', $this->trans('MSC.showPassword')) ?></span>
+                <span class="hidden" data-contao--password-visibility-target="icon"><?= Contao\Image::getHtml('password-hide.svg', $this->trans('MSC.hidePassword')) ?></span>
+              </button>
             </div>
-            <div class="submit_container cf">
+            <div class="submit_container">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
-              <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>
             </div>
           </div>
         </form>
+        <?php $this->insert('@Contao/backend/chrome/login_menu.html.twig') ?>
       </main>
       <?= $this->messages ?>
+      <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+      <p class="fe-link"><a href="/"><?= $this->feLink ?></a></p>
     </div>
   <?php $this->endblock(); ?>
 

@@ -25,6 +25,7 @@ use Contao\InsertTags;
 use Contao\PageModel;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -39,17 +40,15 @@ class FormatDateInsertTagTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider getConvertedInsertTags
-     */
+    #[DataProvider('getConvertedInsertTags')]
     public function testReplacedInsertTag(string $insertTag, string|false $expected): void
     {
         $listener = new FormatDateInsertTag($this->getFramework(), new RequestStack());
 
         $parser = new InsertTagParser(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(FragmentHandler::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(FragmentHandler::class),
             (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
         );
 
@@ -68,7 +67,7 @@ class FormatDateInsertTagTest extends TestCase
 
     public function testUsesConfigFormat(): void
     {
-        $configAdapter = $this->mockAdapter(['get']);
+        $configAdapter = $this->createAdapterMock(['get']);
         $configAdapter
             ->expects($this->exactly(2))
             ->method('get')
@@ -88,13 +87,12 @@ class FormatDateInsertTagTest extends TestCase
 
     public function testUsesPageFormat(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['datimFormat' => 'd.m.Y H:i']);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['datimFormat' => 'd.m.Y H:i']);
 
         $request = new Request();
         $request->attributes->set('pageModel', $pageModel);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new FormatDateInsertTag($this->getFramework(), $requestStack);
 
@@ -123,7 +121,7 @@ class FormatDateInsertTagTest extends TestCase
 
     private function getFramework(array $adapters = []): ContaoFramework
     {
-        $dateAdapter = $this->mockAdapter(['parse']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
         $dateAdapter
             ->method('parse')
             ->willReturnMap([
@@ -134,6 +132,6 @@ class FormatDateInsertTagTest extends TestCase
             ])
         ;
 
-        return $this->mockContaoFramework([Date::class => $dateAdapter, ...$adapters]);
+        return $this->createContaoFrameworkStub([Date::class => $dateAdapter, ...$adapters]);
     }
 }

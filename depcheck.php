@@ -17,6 +17,12 @@ use App\FrontendModule\LegacyModule;
 use App\Messenger\UnionTypeMessage;
 use App\Model\FooModel;
 use AppBundle\AppBundle;
+use CmsIg\Seal\Adapter\Loupe\LoupeAdapter;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
+use Doctrine\DBAL\Platforms\MySQL57Platform;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
+use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
@@ -29,22 +35,28 @@ return (new Configuration())
         'Imagick',
         InvalidListener::class,
         LegacyModule::class,
+        LoupeAdapter::class,
+        Mysql::class,
+        MySQL57Platform::class,
+        SchemaAlterTableRenameColumnEventArgs::class,
         'SensitiveParameter',
+        ServerInfoAwareConnection::class,
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
         UnionTypeMessage::class,
         ValidListener::class,
+        VersionAwarePlatformDriver::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
 
     // Ignore the Contao components.
     ->ignoreErrorsOnPackage('contao-components/ace', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('contao-components/chosen', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('contao-components/altcha', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('contao-components/choices', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/colorbox', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('contao-components/colorpicker', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/contao', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/datepicker', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/dropzone', [ErrorType::UNUSED_DEPENDENCY])
@@ -61,12 +73,23 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('contao-components/tinymce4', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/tristen-tablesort', [ErrorType::UNUSED_DEPENDENCY])
 
+    // These packages are required for the search integration.
+    ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+
     // The manager plugin is a dev dependency because it is only required in the
     // managed edition.
     ->ignoreErrorsOnPackage('contao/manager-plugin', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
+    // We want to control the version of Loupe we support in contao/loupe-bridge.
+    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::UNUSED_DEPENDENCY])
+
     // This package provides the trigger_deprecation() function.
     ->ignoreErrorsOnPackage('symfony/deprecation-contracts', [ErrorType::UNUSED_DEPENDENCY])
+
+    // We set up doctrine messenger transports via the skeleton config in the
+    // managed edition.
+    ->ignoreErrorsOnPackage('symfony/doctrine-messenger', [ErrorType::UNUSED_DEPENDENCY])
 
     // This package provides the "sanitize_html" Twig filter.
     ->ignoreErrorsOnPackage('symfony/html-sanitizer', [ErrorType::UNUSED_DEPENDENCY])
@@ -91,4 +114,7 @@ return (new Configuration())
     // This package provides the "u" Twig filter which is e.g. used in the
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
+
+    // We only use the assets from the web-auth/webauthn-stimulus package.
+    ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
 ;

@@ -115,6 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
         <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Odtwarza pliki XML w folderze &lt;code&gt;share&lt;/code&gt;, po czym opróżnia współdzieloną pamięć podręczną, aby usunąć odnośniki do nieistniejących zasobów.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -158,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlHint">
         <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>Twoja witryna jest obecnie przeszukiwana z użyciem %d równoległych żądań. Jeśli serwer może obsłużyć więcej niż %d równoległych żądań, poproś administratora systemu o zwiększenie ustawienia &lt;code&gt;%s&lt;/code&gt; w konfiguracji systemu, aby przyspieszyć proces indeksowania. Więcej informacji znajdziesz w &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;podręczniku Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
@@ -182,6 +184,18 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Sprawdź, czy nie ma uszkodzonych linków</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+        <target>Wyszukiwanie w panelu administracyjnym</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+        <target>Aby korzystać z wyszukiwania w panelu administracyjnym, włącz &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;framework cron Contao&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>Odbuduj indeks</target>
       </trans-unit>
     </body>
   </file>

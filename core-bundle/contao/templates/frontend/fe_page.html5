@@ -1,5 +1,23 @@
+<?php
+
+$this->rootAttributes = $this
+    ->attrs()
+    ->set('lang', $this->language)
+    ->set('dir', 'rtl', $this->isRTL)
+    ->mergeWith($this->rootAttributes)
+;
+
+$this->bodyAttributes = $this
+    ->attrs()
+    ->set('id', 'top')
+    ->addClass($this->class)
+    ->setIfExists('onload', $this->onload)
+    ->mergeWith($this->bodyAttributes)
+;
+
+?>
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>"<?php if ($this->isRTL): ?> dir="rtl"<?php endif; ?>>
+<html<?= $this->rootAttributes ?>>
 <head>
 
   <?php $this->block('head'); ?>
@@ -11,6 +29,9 @@
       <meta name="robots" content="<?= $this->robots ?>">
       <meta name="description" content="<?= Contao\StringUtil::substr($this->description, 320) ?>">
       <meta name="generator" content="Contao Open Source CMS">
+      <?php foreach ($this->metaTags ?? [] as $metaTag): ?>
+        <meta<?= $metaTag ?>>
+      <?php endforeach; ?>
     <?php $this->endblock(); ?>
 
     <?php if ($this->canonical): ?>
@@ -25,7 +46,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?><?php if ($this->onload): ?> onload="<?= $this->onload ?>"<?php endif; ?>>
+<body<?= $this->bodyAttributes ?>>
 
   <?php $this->block('body'); ?>
     <?php $this->sections('top'); ?>

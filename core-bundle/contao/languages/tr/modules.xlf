@@ -41,6 +41,14 @@
         <source>Set up the pages of your website(s)</source>
         <target>Sitelerinizin sayfalarını kurun</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+        <target>Kalıp stüdyosu</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Twig kalıpları ekleyin ya da düzenleyin</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Kalıplar</target>
@@ -152,6 +160,14 @@
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
         <target>Silinmiş kayıtları geri yükleyin</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+        <target>Görevler</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+        <target>Sistem görevleri özeti</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>

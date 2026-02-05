@@ -11,7 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\Model\Collection;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "news list".
@@ -123,19 +126,20 @@ class ModuleNewsList extends ModuleNews
 				$total = min($limit, $total);
 			}
 
-			// Get the current page
-			$id = 'page_n' . $this->id;
-			$page = (int) (Input::get($id) ?? 1);
+			$param = 'page_n' . $this->id;
 
-			// Do not index or cache the page if the page number is outside the range
-			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
+			try
 			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $total, $this->perPage));
+			}
+			catch (PageOutOfRangeException $e)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 			}
 
 			// Set limit and offset
-			$limit = $this->perPage;
-			$offset += (max($page, 1) - 1) * $this->perPage;
+			$limit = $pagination->getPerPage();
+			$offset += $pagination->getOffset();
 			$skip = $this->skipFirst;
 
 			// Overall limit
@@ -145,8 +149,7 @@ class ModuleNewsList extends ModuleNews
 			}
 
 			// Add the pagination menu
-			$objPagination = new Pagination($total, $this->perPage, Config::get('maxPaginationLinks'), $id);
-			$this->Template->pagination = $objPagination->generate("\n  ");
+			$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 		}
 
 		$objArticles = $this->fetchItems($this->news_archives, $blnFeatured, $limit ?: 0, $offset);
@@ -251,5 +254,10 @@ class ModuleNewsList extends ModuleNews
 		}
 
 		return NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, array('order'=>$order));
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

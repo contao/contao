@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property array    $titleFields
  * @property array    $descriptionFields
  * @property string   $aliasField
+ * @property string   $robotsField
  * @property callable $url_callback
  * @property callable $title_tag_callback
  */
@@ -34,6 +35,11 @@ class SerpPreview extends Widget
 	 */
 	public function generate()
 	{
+		if (Input::isPost())
+		{
+			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreviewPost'] . '</p></div>';
+		}
+
 		/** @var class-string<Model> $class */
 		$class = Model::getClassFromTable($this->strTable);
 		$model = $class::findById($this->activeRecord->id);
@@ -43,11 +49,6 @@ class SerpPreview extends Widget
 			throw new \RuntimeException('Could not fetch the associated model');
 		}
 
-		$id = $model->id;
-		$title = StringUtil::substr(str_replace(array('&nbsp;', '&shy;'), array(' ', ''), $this->getTitle($model)), 64);
-		$description = StringUtil::substr($this->getDescription($model), 160);
-		$alias = $this->getAlias($model);
-
 		try
 		{
 			// Get the URL with a %s placeholder for the alias or ID
@@ -55,92 +56,40 @@ class SerpPreview extends Widget
 
 			list($baseUrl) = explode('%s', $url);
 			$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
-
-			// Use the base URL for the index page
-			if ($model instanceof PageModel && $alias == 'index')
-			{
-				$url = $trail;
-			}
-			else
-			{
-				$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
-			}
 		}
 		catch (RouteParametersException)
 		{
-			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
+			return $this->render(array(
+				'error' => true,
+			));
 		}
 		catch (ExceptionInterface)
 		{
-			$url = '';
 			$trail = '';
 		}
 
 		// Get the input field suffix (edit multiple mode)
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
 
-		$titleField = $this->getTitleField($suffix);
-		$titleFallbackField = $this->getTitleFallbackField($suffix);
-		$aliasField = $this->getAliasField($suffix);
-		$descriptionField = $this->getDescriptionField($suffix);
-		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
-
-		if ($titleTag = $this->getTitleTag($model))
-		{
-			$title = StringUtil::substr(\sprintf($titleTag, $title), 64);
-		}
-
-		return <<<EOT
-			<div class="serp-preview">
-			  <p id="serp_url_$id" class="url">$url</p>
-			  <p id="serp_title_$id" class="title">$title</p>
-			  <p id="serp_description_$id" class="description">$description</p>
-			</div>
-			<script>
-			  window.addEvent('domready', function() {
-			    new Contao.SerpPreview({
-			      id: '$id',
-			      trail: '$trail',
-			      titleField: '$titleField',
-			      titleFallbackField: '$titleFallbackField',
-			      aliasField: '$aliasField',
-			      descriptionField: '$descriptionField',
-			      descriptionFallbackField: '$descriptionFallbackField',
-			      titleTag: '$titleTag'
-			    });
-			  });
-			</script>
-			EOT;
+		return $this->render(array(
+			'fields' => array(
+				'title' => array($this->getTitleField($suffix), $this->getTitleFallbackField($suffix)),
+				'alias' => array($this->getAliasField($suffix)),
+				'description' => array($this->getDescriptionField($suffix), $this->getDescriptionFallbackField($suffix)),
+				'robots' => array($this->getRobotsField($suffix)),
+			),
+			'id' => $model->id,
+			'trail' => $trail,
+			'titleTag' => $this->getTitleTag($model),
+		));
 	}
 
-	private function getTitle(Model $model)
+	private function render($parameters = array()): string
 	{
-		if (!isset($this->titleFields))
-		{
-			return (string) $model->title;
-		}
-
-		return (string) ($model->{$this->titleFields[0]} ?: $model->{$this->titleFields[1]});
-	}
-
-	private function getDescription(Model $model)
-	{
-		if (!isset($this->descriptionFields))
-		{
-			return (string) $model->description;
-		}
-
-		return (string) ($model->{$this->descriptionFields[0]} ?: $model->{$this->descriptionFields[1]});
-	}
-
-	private function getAlias(Model $model)
-	{
-		if (!isset($this->aliasField))
-		{
-			return $model->alias;
-		}
-
-		return $model->{$this->aliasField};
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/widget/serp_preview.html.twig', $parameters)
+		;
 	}
 
 	/**
@@ -184,7 +133,7 @@ class SerpPreview extends Widget
 	{
 		if (!isset($this->title_tag_callback))
 		{
-			return '';
+			return '%s';
 		}
 
 		if (\is_array($this->title_tag_callback))
@@ -197,7 +146,7 @@ class SerpPreview extends Widget
 			return ($this->title_tag_callback)($model);
 		}
 
-		return '';
+		return '%s';
 	}
 
 	private function getTitleField($suffix)
@@ -248,6 +197,16 @@ class SerpPreview extends Widget
 		}
 
 		return 'ctrl_' . $this->aliasField . $suffix;
+	}
+
+	private function getRobotsField($suffix)
+	{
+		if (!isset($this->robotsField))
+		{
+			return 'ctrl_robots' . $suffix;
+		}
+
+		return 'ctrl_' . $this->robotsField . $suffix;
 	}
 
 	private function convertUrlToItems($url): array

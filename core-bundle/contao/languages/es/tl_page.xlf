@@ -70,8 +70,8 @@
         <target>Etiqueta Robots</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Aquí puedes definir cómo los motores de búsqueda acceden a la página.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>Aquí puede definir cómo los motores de búsqueda manejan la página. La configuración también determina si la página aparece en el archivo &lt;code&gt;sitemap.xml&lt;/code&gt; o no.</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -393,14 +393,6 @@
         <source>Please assign the access rights for the page and its subpages.</source>
         <target>Por favor, asigne los derechos de acceso a la página y sus subpáginas.</target>
       </trans-unit>
-      <trans-unit id="tl_page.noSearch.0">
-        <source>Do not search</source>
-        <target>No buscar en esta página</target>
-      </trans-unit>
-      <trans-unit id="tl_page.noSearch.1">
-        <source>Exclude the page from the search index.</source>
-        <target>Si seleccionas esta opción, la página actual será excluida de las operaciones de búsqueda en la web.</target>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>Clase CSS</target>
@@ -513,6 +505,30 @@
         <source>Log CSP violations to the Contao system log.</source>
         <target>Registre las infracciones de CSP en el registro del sistema de Contao.</target>
       </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>Formato del flujo</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>Eliga el formato del flujo</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>Número máximo de elementos</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>Aquí puede limitar el número de elementos del flujo.  Eliga 0 para exportar todos.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>Descripción del flujo</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the feed.</source>
+        <target>Aquí puedes introducir una breve descripción del feed.</target>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Nombre y tipo</target>
@@ -597,6 +613,14 @@
         <source>Content Security Policy</source>
         <target>Política de seguridad de contenido</target>
       </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>Ajustes del flujo</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>Opciones de la imagen</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>Redirección 301 permanente</target>
@@ -621,35 +645,31 @@
         <source>Inherit page layout</source>
         <target>Heredar diseño de página</target>
       </trans-unit>
-      <trans-unit id="tl_page.new.0">
-        <source>New</source>
-        <target>Nuevo</target>
-      </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
         <target>Crear una página nueva</target>
       </trans-unit>
-      <trans-unit id="tl_page.show">
+      <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
         <target>Mostrar los detalles de la página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit">
+      <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Editar página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut">
+      <trans-unit id="tl_page.cut.1">
         <source>Move page ID %s</source>
         <target>Mover página ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy">
-        <source>Duplicate page ID %s</source>
-        <target>Duplicar página con ID %s</target>
+      <trans-unit id="tl_page.copy.1">
+        <source>Copy page ID %s</source>
+        <target>Copiar página ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChildren">
-        <source>Duplicate page ID %s with its subpages</source>
-        <target>Duplicar la página con ID %s y subpáginas</target>
+      <trans-unit id="tl_page.copyChildren.1">
+        <source>Copy page ID %s with its subpages</source>
+        <target>Copiar página ID %s con sus subpáginas</target>
       </trans-unit>
-      <trans-unit id="tl_page.delete">
+      <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
         <target>Eliminar página con ID %s</target>
       </trans-unit>
@@ -659,15 +679,19 @@
       </trans-unit>
       <trans-unit id="tl_page.toggle.1">
         <source>Unpublish page ID %s</source>
-        <target>Despublicar ID %s de página</target>
+        <target>Despublicarde ID de página %s</target>
       </trans-unit>
       <trans-unit id="tl_page.toggle.2">
         <source>Publish page ID %s</source>
         <target>Publicar ID de página %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste at the top</source>
-        <target>Pegar al inicio</target>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+        <target>Anular publicación</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
+        <target>Publicar</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -677,7 +701,23 @@
         <source>Paste after page ID %s</source>
         <target>Pegar después de la página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles">
+      <trans-unit id="tl_page.pastenewtop.1">
+        <source>Add a new page at the top</source>
+        <target>Añadir una nueva página en la parte superior</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.1">
+        <source>Add a new page after page ID %s</source>
+        <target>Agregar una nueva página después del ID %s de página</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.1">
+        <source>Add a new page inside page ID %s</source>
+        <target>Agregar una nueva página dentro de la ID %s de página</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.0">
+        <source>Articles</source>
+        <target>Artículos</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>
         <target>Editar artículos de la página con ID %s</target>
       </trans-unit>
@@ -768,6 +808,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 año</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Página</target>
       </trans-unit>
     </body>
   </file>

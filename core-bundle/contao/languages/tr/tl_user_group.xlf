@@ -73,6 +73,10 @@
         <source>Allowed member groups</source>
         <target>İzin verilen üye grupları</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+        <target>Tablo izinleri</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>İzin verilen alanlar</target>
@@ -81,27 +85,27 @@
         <source>Group settings</source>
         <target>Grup ayarları</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.new.0">
-        <source>New</source>
-        <target>Yeni</target>
-      </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
         <target>Yeni bir kullanıcı grubu ekle</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show">
+      <trans-unit id="tl_user_group.show.1">
         <source>Show the details of user group ID %s</source>
         <target>%s kimlikli kullanıcı grubunun ayrıntılarını görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit">
+      <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>
         <target>%s kimlikli kullanıcı grubunu düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy">
+      <trans-unit id="tl_user_group.copy.0">
+        <source>Duplicate</source>
+        <target>Çoğalt</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.copy.1">
         <source>Duplicate user group ID %s</source>
         <target>%s kimlikli kullanıcı grubunu kopyala</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.delete">
+      <trans-unit id="tl_user_group.delete.1">
         <source>Delete user group ID %s</source>
         <target>%s kimlikli kullanıcı grubunu sil</target>
       </trans-unit>
@@ -116,6 +120,18 @@
       <trans-unit id="tl_user_group.toggle.2">
         <source>Activate user group ID %s</source>
         <target>%s kimlikli kullanıcı grubunu etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.3">
+        <source>Deactivate</source>
+        <target>Etkisizleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.4">
+        <source>Activate</source>
+        <target>Etkinleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+        <target>Kullanıcı grubu</target>
       </trans-unit>
     </body>
   </file>

@@ -12,31 +12,33 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Tests\Routing;
 
+use Contao\Model;
 use Contao\NewsletterBundle\Routing\NewsletterResolver;
 use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewsletterResolverTest extends ContaoTestCase
 {
     public function testResolveNewsletter(): void
     {
-        $target = $this->mockClassWithProperties(PageModel::class);
-        $channel = $this->mockClassWithProperties(NewsletterChannelModel::class, ['jumpTo' => 42]);
-        $content = $this->createMock(NewsletterModel::class);
+        $target = $this->createClassWithPropertiesStub(PageModel::class);
+        $channel = $this->createClassWithPropertiesStub(NewsletterChannelModel::class, ['jumpTo' => 42]);
+        $content = $this->createStub(NewsletterModel::class);
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(42)
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findById' => $channel]),
+            NewsletterChannelModel::class => $this->createConfiguredAdapterStub(['findById' => $channel]),
         ]);
 
         $resolver = new NewsletterResolver($framework);
@@ -47,30 +49,36 @@ class NewsletterResolverTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getParametersForContentProvider
+     * @param class-string<Model> $class
      */
-    public function testGetParametersForContent(object $content, array $expected): void
+    #[DataProvider('getParametersForContentProvider')]
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $resolver = new NewsletterResolver($this->mockContaoFramework());
+        $content = $this->createClassWithPropertiesStub($class, $properties);
+        $pageModel = $this->createStub(PageModel::class);
+
+        $resolver = new NewsletterResolver($this->createContaoFrameworkStub());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the newsletter alias' => [
-            $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => 'foobar']),
+            NewsletterModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses newsletter ID if alias is empty' => [
-            $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => '']),
+            NewsletterModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports NewsletterModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            PageModel::class,
+            [],
             [],
         ];
     }

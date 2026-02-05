@@ -52,9 +52,10 @@ class BackendLogoutListener
             ->createItem('logout')
             ->setLabel($this->getLogoutLabel())
             ->setUri($this->getLogoutUrl())
-            ->setAttribute('class', 'logout')
+            ->setAttribute('class', 'separator')
             ->setLinkAttribute('class', 'icon-logout')
             ->setLinkAttribute('accesskey', 'q')
+            ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setExtra('translation_domain', false)
         ;
 

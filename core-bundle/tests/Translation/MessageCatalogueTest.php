@@ -13,11 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Translation;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Exception\LogicException;
@@ -25,8 +24,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class MessageCatalogueTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);
@@ -55,7 +52,7 @@ class MessageCatalogueTest extends TestCase
             ->willReturn(['foobar', 'bazfoo'])
         ;
 
-        $finder = $this->createMock(Finder::class);
+        $finder = $this->createStub(Finder::class);
         $finder
             ->method('name')
             ->with('/\.(php|xlf)$/')
@@ -73,14 +70,14 @@ class MessageCatalogueTest extends TestCase
             ]))
         ;
 
-        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('findIn')
             ->with('languages/en')
             ->willReturn($finder)
         ;
 
-        $catalogue = $this->createCatalogue($parentCatalogue, null, $resourceFinder);
+        $catalogue = $this->createCatalogue($parentCatalogue, $resourceFinder);
 
         $this->assertSame(['foobar', 'bazfoo', 'contao_default', 'contao_tl_page'], $catalogue->getDomains());
     }
@@ -96,8 +93,10 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->willReturnMap([
+                ['foo', 'foobar', true],
+                ['bar', 'foobar', false],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -127,8 +126,10 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('defines')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->willReturnMap([
+                ['foo', 'foobar', true],
+                ['bar', 'foobar', false],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -158,8 +159,10 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('get')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls('Foo', 'bar')
+            ->willReturnMap([
+                ['foo', 'foobar', 'Foo'],
+                ['bar', 'foobar', 'bar'],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -178,9 +181,7 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame('MSC.foobar', $catalogue->get('MSC.foobar', 'contao_default'));
     }
 
-    /**
-     * @dataProvider getForwardedDomainMethods
-     */
+    #[DataProvider('getForwardedDomainMethods')]
     public function testForwardsIfDomainIsNotContao(string $method, array $params, array $paramsContaoDomain, mixed $return = null): void
     {
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
@@ -188,7 +189,7 @@ class MessageCatalogueTest extends TestCase
             ->expects($this->once())
             ->method($method)
             ->with(...$params)
-            ->willReturn($return)
+            ->willReturnCallback(static fn () => $return)
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -229,49 +230,62 @@ class MessageCatalogueTest extends TestCase
     }
 
     /**
-     * @dataProvider getCompletelyForwardedMethods
+     * @param list<class-string>                   $paramMockClasses
+     * @param class-string|list<class-string>|null $returnMockClassOrClasses
      */
-    public function testForwardsCompletelyToParent(string $method, array $params, mixed $return = null): void
+    #[DataProvider('getCompletelyForwardedMethods')]
+    public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, array|string|null $returnMockClassOrClasses = null): void
     {
+        $params = array_map($this->createStub(...), $paramMockClasses);
+        $return = null;
+
+        if (\is_string($returnMockClassOrClasses)) {
+            $return = $this->createStub($returnMockClassOrClasses);
+        }
+
+        if (\is_array($returnMockClassOrClasses)) {
+            $return = array_map($this->createStub(...), $returnMockClassOrClasses);
+        }
+
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
         $parentCatalogue
             ->expects($this->once())
             ->method($method)
             ->with(...$params)
-            ->willReturn($return)
+            ->willReturnCallback(static fn () => $return)
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
         $this->assertSame($return, $catalogue->$method(...$params));
     }
 
-    public function getCompletelyForwardedMethods(): iterable
+    public static function getCompletelyForwardedMethods(): iterable
     {
         yield [
             'addCatalogue',
-            [$this->createMock(MessageCatalogueInterface::class)],
+            [MessageCatalogueInterface::class],
         ];
 
         yield [
             'addFallbackCatalogue',
-            [$this->createMock(MessageCatalogueInterface::class)],
+            [MessageCatalogueInterface::class],
         ];
 
         yield [
             'getFallbackCatalogue',
             [],
-            $this->createMock(MessageCatalogueInterface::class),
+            MessageCatalogueInterface::class,
         ];
 
         yield [
             'getResources',
             [],
-            [$this->createMock(ResourceInterface::class)],
+            [ResourceInterface::class],
         ];
 
         yield [
             'addResource',
-            [$this->createMock(ResourceInterface::class)],
+            [ResourceInterface::class],
         ];
     }
 
@@ -335,18 +349,18 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame('', $string);
     }
 
-    private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
+    private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
     {
         if (!$catalogue) {
-            $catalogue = $this->createMock(MessageCatalogueInterface::class);
+            $catalogue = $this->createStub(MessageCatalogueInterface::class);
             $catalogue
                 ->method('getLocale')
                 ->willReturn('en')
             ;
         }
 
-        $framework ??= $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
-        $resourceFinder ??= $this->createMock(ResourceFinder::class);
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
+        $resourceFinder ??= $this->createStub(ResourceFinder::class);
 
         return new MessageCatalogue($catalogue, $framework, $resourceFinder);
     }

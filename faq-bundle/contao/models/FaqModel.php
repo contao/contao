@@ -39,6 +39,7 @@ use Contao\Model\MetadataTrait;
  * @property string         $floating
  * @property boolean        $addEnclosure
  * @property string|null    $enclosure
+ * @property string         $searchIndexer
  * @property boolean        $noComments
  * @property boolean        $published
  *
@@ -69,35 +70,37 @@ use Contao\Model\MetadataTrait;
  * @method static FaqModel|null findOneByFloating($val, $opt=array())
  * @method static FaqModel|null findOneByAddEnclosure($val, $opt=array())
  * @method static FaqModel|null findOneByEnclosure($val, $opt=array())
+ * @method static FaqModel|null findOneBySearchIndexer($val, $opt=array())
  * @method static FaqModel|null findOneByNoComments($val, $opt=array())
  * @method static FaqModel|null findOneByPublished($val, $opt=array())
  *
- * @method static Collection<FaqModel>|FaqModel[]|null findByPid($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findBySorting($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByTstamp($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByQuestion($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByAuthor($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByAnswer($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByPageTitle($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByRobots($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByDescription($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByAddImage($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByOverwriteMeta($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findBySingleSRC($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByAlt($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByImageTitle($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findBySize($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByImageUrl($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByFullsize($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByCaption($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByFloating($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByAddEnclosure($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByEnclosure($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByNoComments($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findByPublished($val, $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<FaqModel>|FaqModel[]|null findAll(array $opt=array())
+ * @method static Collection<FaqModel>|null findByPid($val, $opt=array())
+ * @method static Collection<FaqModel>|null findBySorting($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByTstamp($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByQuestion($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByAuthor($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByAnswer($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByPageTitle($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByRobots($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByDescription($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByAddImage($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByOverwriteMeta($val, $opt=array())
+ * @method static Collection<FaqModel>|null findBySingleSRC($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByAlt($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByImageTitle($val, $opt=array())
+ * @method static Collection<FaqModel>|null findBySize($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByImageUrl($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByFullsize($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByCaption($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByFloating($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByAddEnclosure($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByEnclosure($val, $opt=array())
+ * @method static Collection<FaqModel>|null findBySearchIndexer($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByNoComments($val, $opt=array())
+ * @method static Collection<FaqModel>|null findByPublished($val, $opt=array())
+ * @method static Collection<FaqModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<FaqModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<FaqModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, $opt=array())
  * @method static integer countByPid($val, $opt=array())
@@ -122,6 +125,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByFloating($val, $opt=array())
  * @method static integer countByAddEnclosure($val, $opt=array())
  * @method static integer countByEnclosure($val, $opt=array())
+ * @method static integer countBySearchIndexer($val, $opt=array())
  * @method static integer countByNoComments($val, $opt=array())
  * @method static integer countByPublished($val, $opt=array())
  */
@@ -169,7 +173,7 @@ class FaqModel extends Model
 	 * @param int   $intPid     The parent ID
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FaqModel>|FaqModel[]|null A collection of models or null if there are no FAQs
+	 * @return Collection<FaqModel>|null A collection of models or null if there are no FAQs
 	 */
 	public static function findPublishedByPid($intPid, array $arrOptions=array())
 	{
@@ -195,7 +199,7 @@ class FaqModel extends Model
 	 * @param array $arrPids    An array of FAQ category IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FaqModel>|FaqModel[]|null A collection of models or null if there are no FAQs
+	 * @return Collection<FaqModel>|null A collection of models or null if there are no FAQs
 	 */
 	public static function findPublishedByPids($arrPids, array $arrOptions=array())
 	{

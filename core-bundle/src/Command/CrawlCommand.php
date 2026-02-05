@@ -16,6 +16,7 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
@@ -180,7 +181,7 @@ class CrawlCommand extends Command
                 $this->filesystem->remove($input->getOption('debug-csv-path'));
             }
 
-            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Logger::DEBUG);
+            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Level::Debug);
             $handlers[] = $csvDebugHandler;
         }
 

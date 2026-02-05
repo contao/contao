@@ -1,0 +1,36 @@
+{% trans_default_domain 'contao_template_studio' %}
+
+{% macro tree_node(tree) %}
+<ol>
+    {% for name, node in tree %}
+        <li>
+            {% if node is iterable %}
+                {% if node|length > 1 or node|first is iterable %}
+                    <span class="node">{{ name|default("(#{'not_prefixed'|trans})") }}</span>
+                    {{ _self.tree_node(node) }}
+                {% else %}
+                    {% with {node: node|first} %}{{ block('navigate_button') }}{% endwith %}
+                {% endif %}
+            {% else %}
+                {# Leaf #}
+                {% block navigate_button %}
+                    {% with {identifier: node.identifier} %}
+                        {% embed '@Contao/backend/template_studio/_template_identifier_button.html.twig' %}
+                            {% block inner %}
+                                {{ backend_icon('code.svg') }}
+                                <span{{ attrs().addClass('user', node.hasUserTemplate) }}>{{ identifier }}</span>
+                            {% endblock %}
+                        {% endembed %}
+                    {% endwith %}
+                {% endblock %}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ol>
+{% endmacro %}
+
+<form method="get" data-turbo-stream>
+    <nav>
+        {{ _self.tree_node(tree) }}
+    </nav>
+</form>

@@ -70,8 +70,8 @@
         <target>Robots tag</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Hier kunt u bepalen hoe zoekmachines de pagina afhandelen.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>Hier kunt u definiëren hoe zoekmachines met de pagina omgaan. De instelling bepaalt ook of de pagina in het &lt;code&gt;sitemap.xml&lt;/code&gt; bestand verschijnt of niet.</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -393,14 +393,6 @@
         <source>Please assign the access rights for the page and its subpages.</source>
         <target>Toewijzen van toegangsrechten voor de pagina en zijn subpagina's.</target>
       </trans-unit>
-      <trans-unit id="tl_page.noSearch.0">
-        <source>Do not search</source>
-        <target>Deze pagina niet doorzoeken</target>
-      </trans-unit>
-      <trans-unit id="tl_page.noSearch.1">
-        <source>Exclude the page from the search index.</source>
-        <target>Indexeer deze pagina niet voor de zoekmachine.</target>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>CSS class</target>
@@ -427,9 +419,11 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>Verberg wanneer ingelogd</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Verberg de pagina in het navigatiemenu als een lid is ingelogd.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -510,6 +504,30 @@
       <trans-unit id="tl_page.cspReportLog.1">
         <source>Log CSP violations to the Contao system log.</source>
         <target>Registreer CSP-schendingen in het Contao-systeemlogboek.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>Feed format</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>Kies een feed format.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>Maximaal aantal items</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>Hier kunt u het aantal feed items beperken.Stel in op 0 om alles te exporteren.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>Beschrijving feed</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the feed.</source>
+        <target>Hier kunt u een korte beschrijving van de feed invoeren.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -595,6 +613,14 @@
         <source>Content Security Policy</source>
         <target>Content Security Policy</target>
       </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>Feed instellingen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>Afbeeldingseigenschappen</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Permanente redirect</target>
@@ -619,35 +645,31 @@
         <source>Inherit page layout</source>
         <target>Pagina lay-out overnemen</target>
       </trans-unit>
-      <trans-unit id="tl_page.new.0">
-        <source>New</source>
-        <target>Nieuw</target>
-      </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
         <target>Maak een nieuwe pagina</target>
       </trans-unit>
-      <trans-unit id="tl_page.show">
+      <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
         <target>Toon details van pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit">
+      <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Bewerk pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut">
+      <trans-unit id="tl_page.cut.1">
         <source>Move page ID %s</source>
         <target>Verplaats pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy">
-        <source>Duplicate page ID %s</source>
+      <trans-unit id="tl_page.copy.1">
+        <source>Copy page ID %s</source>
         <target>Kopieer pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChildren">
-        <source>Duplicate page ID %s with its subpages</source>
+      <trans-unit id="tl_page.copyChildren.1">
+        <source>Copy page ID %s with its subpages</source>
         <target>Kopieer pagina ID %s met subpagina's</target>
       </trans-unit>
-      <trans-unit id="tl_page.delete">
+      <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
         <target>Verwijder pagina ID %s</target>
       </trans-unit>
@@ -663,9 +685,13 @@
         <source>Publish page ID %s</source>
         <target>Publiceer pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste at the top</source>
-        <target>Bovenaan plakken</target>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+        <target>Niet publiceren</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
+        <target>Publiceren</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -675,7 +701,23 @@
         <source>Paste after page ID %s</source>
         <target>Plak achter pagina ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles">
+      <trans-unit id="tl_page.pastenewtop.1">
+        <source>Add a new page at the top</source>
+        <target>Voeg bovenaan een nieuwe pagina toe</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.1">
+        <source>Add a new page after page ID %s</source>
+        <target>Voeg een nieuwe pagina toe na pagina ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.1">
+        <source>Add a new page inside page ID %s</source>
+        <target>Voeg een nieuwe pagina toe binnen pagina ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.0">
+        <source>Articles</source>
+        <target>Artikelen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>
         <target>Bewerk artikelen van pagina ID %s</target>
       </trans-unit>
@@ -766,6 +808,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 jaar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Pagina</target>
       </trans-unit>
     </body>
   </file>

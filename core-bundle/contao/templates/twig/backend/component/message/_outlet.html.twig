@@ -1,0 +1,22 @@
+{% set default_id = 'messages' %}
+{% set id = id|default(default_id) %}
+{% set message_outlet_attributes = attrs()
+    .set('id', id)
+    .set('data-controller', 'contao--message-outlet')
+    .set('data-action', 'contao--message@document->contao--message-outlet#renderMessage', id == default_id)
+    .mergeWith(message_outlet_attributes|default)
+%}
+<div{{ message_outlet_attributes }}>
+    <template data-contao--message-outlet-target="messagePrototype" data-type="info">
+        {{ include('@Contao/backend/component/message/_message.html.twig', {
+            content: '{{message}}',
+            success: true,
+        }) }}
+    </template>
+    <template data-contao--message-outlet-target="messagePrototype" data-type="error">
+        {{ include('@Contao/backend/component/message/_message.html.twig', {
+            content: '{{message}}',
+            success: false,
+        }) }}
+    </template>
+</div>

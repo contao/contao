@@ -25,6 +25,7 @@ use Contao\FrontendUser;
 use Contao\InsertTags;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -45,9 +46,9 @@ class LinkInsertTagTest extends TestCase
         $this->expectExceptionMessage('Missing parameters for link insert tag.');
 
         $listener = new LinkInsertTag(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(TokenChecker::class),
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(TokenChecker::class),
+            $this->createStub(ContentUrlGenerator::class),
         );
 
         /** @var ResolvedInsertTag $tag */
@@ -56,31 +57,29 @@ class LinkInsertTagTest extends TestCase
         $listener->replaceInsertTag($tag);
     }
 
-    /**
-     * @dataProvider getConvertedInsertTags
-     */
+    #[DataProvider('getConvertedInsertTags')]
     public function testReplacedInsertTag(string $insertTag, string|false $expected, OutputType $outputType): void
     {
-        $page1 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page1 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page1->alias = 'foobar';
         $page1->title = 'Foobar';
         $page1->pageTitle = 'Foobar Meta';
 
-        $page2 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page2 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page2->alias = 'moobar';
         $page2->title = 'Moobar';
         $page2->target = true;
 
-        $page3 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page3 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page3->alias = 'koobar';
         $page3->title = 'Koobar';
         $page3->cssClass = 'koobar';
 
-        $page4 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $page4 = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page4->alias = 'index';
         $page4->title = 'Index';
 
-        $pageAdapter = $this->mockAdapter(['findByIdOrAlias']);
+        $pageAdapter = $this->createAdapterStub(['findByIdOrAlias']);
         $pageAdapter
             ->method('findByIdOrAlias')
             ->willReturnMap([
@@ -92,9 +91,9 @@ class LinkInsertTagTest extends TestCase
             ])
         ;
 
-        $contaoFramework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $contaoFramework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
-        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator = $this->createStub(ContentUrlGenerator::class);
         $contentUrlGenerator
             ->method('generate')
             ->willReturnCallback(
@@ -119,7 +118,7 @@ class LinkInsertTagTest extends TestCase
 
         $listener = new LinkInsertTag(
             $contaoFramework,
-            $this->createMock(TokenChecker::class),
+            $this->createStub(TokenChecker::class),
             $contentUrlGenerator,
         );
 
@@ -137,24 +136,24 @@ class LinkInsertTagTest extends TestCase
 
     public static function getConvertedInsertTags(): iterable
     {
-        yield ['link::1', '<a href="/foobar" title="Foobar Meta">Foobar</a>', OutputType::html];
-        yield ['link::1::absolute', '<a href="https://example.com/foobar" title="Foobar Meta">Foobar</a>', OutputType::html];
-        yield ['link::1::blank', '<a href="/foobar" title="Foobar Meta" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
-        yield ['link::1::blank::absolute', '<a href="https://example.com/foobar" title="Foobar Meta" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
-        yield ['link_open::1', '<a href="/foobar" title="Foobar Meta">', OutputType::html];
+        yield ['link::1', '<a href="/foobar">Foobar</a>', OutputType::html];
+        yield ['link::1::absolute', '<a href="https://example.com/foobar">Foobar</a>', OutputType::html];
+        yield ['link::1::blank', '<a href="/foobar" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
+        yield ['link::1::blank::absolute', '<a href="https://example.com/foobar" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
+        yield ['link_open::1', '<a href="/foobar">', OutputType::html];
         yield ['link_close', '</a>', OutputType::html];
         yield ['link_url::1', '/foobar', OutputType::url];
         yield ['link_title::1', 'Foobar Meta', OutputType::html];
         yield ['link_name::1', 'Foobar', OutputType::html];
 
-        yield ['link::2', '<a href="/moobar" title="Moobar" target="_blank" rel="noreferrer noopener">Moobar</a>', OutputType::html];
-        yield ['link_open::2', '<a href="/moobar" title="Moobar" target="_blank" rel="noreferrer noopener">', OutputType::html];
+        yield ['link::2', '<a href="/moobar" target="_blank" rel="noreferrer noopener">Moobar</a>', OutputType::html];
+        yield ['link_open::2', '<a href="/moobar" target="_blank" rel="noreferrer noopener">', OutputType::html];
         yield ['link_url::2', '/moobar', OutputType::url];
         yield ['link_title::2', 'Moobar', OutputType::html];
         yield ['link_name::2', 'Moobar', OutputType::html];
 
-        yield ['link::3', '<a href="/koobar" title="Koobar" class="koobar">Koobar</a>', OutputType::html];
-        yield ['link_open::3', '<a href="/koobar" title="Koobar" class="koobar">', OutputType::html];
+        yield ['link::3', '<a href="/koobar" class="koobar">Koobar</a>', OutputType::html];
+        yield ['link_open::3', '<a href="/koobar" class="koobar">', OutputType::html];
         yield ['link_url::3', '/koobar', OutputType::url];
         yield ['link_title::3', 'Koobar', OutputType::html];
         yield ['link_name::3', 'Koobar', OutputType::html];
@@ -164,8 +163,8 @@ class LinkInsertTagTest extends TestCase
         yield ['link::5', '', OutputType::text];
         yield ['link_open::5', '<a>', OutputType::html];
 
-        yield ['link::https://foobar.com', '<a href="https://foobar.com" title="https://foobar.com">foobar.com</a>', OutputType::html];
-        yield ['link_open::https://foobar.com', '<a href="https://foobar.com" title="https://foobar.com">', OutputType::html];
+        yield ['link::https://foobar.com', '<a href="https://foobar.com">foobar.com</a>', OutputType::html];
+        yield ['link_open::https://foobar.com', '<a href="https://foobar.com">', OutputType::html];
         yield ['link_url::https://foobar.com', 'https://foobar.com', OutputType::url];
     }
 
@@ -179,9 +178,9 @@ class LinkInsertTagTest extends TestCase
         ;
 
         $listener = new LinkInsertTag(
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ContaoFramework::class),
             $tokenChecker,
-            $this->createMock(ContentUrlGenerator::class),
+            $this->createStub(ContentUrlGenerator::class),
         );
 
         /** @var ResolvedInsertTag $tag */
@@ -201,11 +200,11 @@ class LinkInsertTagTest extends TestCase
             ->willReturn(true)
         ;
 
-        $loginPage = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
+        $loginPage = $this->createClassWithPropertiesStub(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $loginPage->alias = '/login';
         $loginPage->title = 'Login';
 
-        $pageAdapter = $this->mockAdapter(['findByIdOrAlias']);
+        $pageAdapter = $this->createAdapterMock(['findByIdOrAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByIdOrAlias')
@@ -213,10 +212,10 @@ class LinkInsertTagTest extends TestCase
             ->willReturn($loginPage)
         ;
 
-        $frontendUser = $this->mockClassWithProperties(FrontendUser::class, ['loginPage']);
+        $frontendUser = $this->createClassWithPropertiesStub(FrontendUser::class, ['loginPage']);
         $frontendUser->loginPage = '1701';
 
-        $contaoFramework = $this->mockContaoFramework([PageModel::class => $pageAdapter], [FrontendUser::class => $frontendUser]);
+        $contaoFramework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter], [FrontendUser::class => $frontendUser]);
 
         $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
         $contentUrlGenerator
@@ -237,15 +236,15 @@ class LinkInsertTagTest extends TestCase
 
         $result = $listener->replaceInsertTag($tag);
 
-        $this->assertSame('<a href="/login" title="Login">Login</a>', $result->getValue());
+        $this->assertSame('<a href="/login">Login</a>', $result->getValue());
     }
 
     private function getInsertTagParser(): InsertTagParser
     {
         return new InsertTagParser(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(FragmentHandler::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(FragmentHandler::class),
             (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
         );
     }

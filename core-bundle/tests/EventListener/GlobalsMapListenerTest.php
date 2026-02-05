@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GlobalsMapListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getValuesData
-     */
+    #[DataProvider('getValuesData')]
     public function testMergesTheValuesIntoTheGlobalsArray(array $globals, array $fragments, array $expected): void
     {
         $GLOBALS['TL_CTE'] = $globals;

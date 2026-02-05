@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Controller\Backend\SearchController;
+use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -30,7 +32,7 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\Fixtures\ClassWithMethod;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -48,8 +50,6 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testValidatesTheSymfonyListenerPriorities(): void
     {
         $events = AbstractSessionListener::getSubscribedEvents();
@@ -465,9 +465,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.messenger.web_worker'));
     }
 
-    public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
+    public function testConfiguresTheSearchIndexListenerCorrectly(): void
     {
-        $container = $this->getContainerBuilder();
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+                'kernel.charset' => 'UTF-8',
+            ]),
+        );
+
+        $container->setDefinition('cache.app', new Definition());
 
         $extension = new ContaoCoreExtension();
         $extension->load(
@@ -484,6 +491,18 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $definition = $container->getDefinition('contao.listener.search_index');
+        $this->assertEquals(new Reference('contao.listener.search_index.default_rate_limiter'), $definition->getArgument('$rateLimiterFactory'));
+
+        $rateLimiterDefinition = $container->getDefinition('contao.listener.search_index.default_rate_limiter');
+        $this->assertSame(
+            [
+                'id' => 'contao.listener.search_index.default_rate_limiter',
+                'policy' => 'fixed_window',
+                'limit' => 1,
+                'interval' => '5 minutes',
+            ],
+            $rateLimiterDefinition->getArgument(0),
+        );
 
         $this->assertSame(SearchIndexListener::class, $definition->getClass());
         $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument('$enabledFeatures'));
@@ -511,26 +530,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->has('contao.listener.search_index'));
     }
 
-    public function testRegistersTheImageTargetPath(): void
-    {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.debug' => false,
-                'kernel.charset' => 'UTF-8',
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-                'kernel.default_locale' => 'en',
-            ]),
-        );
-
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
-
-        $this->assertSame(Path::normalize($this->getTempDir()).'/assets/images', $container->getParameter('contao.image.target_dir'));
-    }
-
-    /**
-     * @dataProvider provideComposerJsonContent
-     */
+    #[DataProvider('provideComposerJsonContent')]
     public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
     {
         $container = new ContainerBuilder(
@@ -565,6 +565,20 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
+    public function testReadsTheIconManifestJson(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        (new ContaoCoreExtension())->load([], $container);
+
+        $icons = $container->getParameter('contao.backend.icons');
+
+        $this->assertArrayHasKey('save.svg', $icons);
+        $this->assertSame('/system/themes/flexible/icons/help.svg', $icons['help.svg']['path']);
+        $this->assertSame('14', $icons['help.svg']['width']);
+        $this->assertSame('14', $icons['help.svg']['height']);
+    }
+
     public function testPrependsMonologConfigurationWithActionChannels(): void
     {
         $channels = [
@@ -578,7 +592,7 @@ class ContaoCoreExtensionTest extends TestCase
             'contao.general',
         ];
 
-        $monologExtension = $this->createMock(Extension::class);
+        $monologExtension = $this->createStub(Extension::class);
         $monologExtension
             ->method('getAlias')
             ->willReturn('monolog')
@@ -628,10 +642,20 @@ class ContaoCoreExtensionTest extends TestCase
             ->willReturn($container)
         ;
 
+        $matcher = $this->exactly(4);
+        $expected = [
+            ['upload/path', 'upload/path', 'files'],
+            ['var/backups', 'backups', 'backups'],
+            ['var/job-attachments', 'job-attachments', 'job-attachments'],
+            ['templates', 'user_templates', 'user_templates'],
+        ];
+
         $config
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('mountLocalAdapter')
-            ->withConsecutive(['upload/path', 'upload/path', 'files'], ['var/backups', 'backups', 'backups'])
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $dbafsDefinition = $this->createMock(Definition::class);
@@ -654,7 +678,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testHstsSecurityConfiguration(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
 
         $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
         $listener = $container->findDefinition('contao.listener.transport_security_header');
@@ -691,10 +714,45 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.listener.transport_security_header'));
     }
 
+    public function testDoesNotRegisterAnyBackendSearchRelatedServicesIfNotEnabled(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertFalse($container->hasDefinition(SearchController::class));
+        $this->assertFalse($container->hasDefinition('contao.search_backend.adapter_factory'));
+        $this->assertFalse($container->hasDefinition('contao.search.backend'));
+        $this->assertFalse($container->hasDefinition('contao.search.backend.files_provider'));
+    }
+
+    public function testRegistersTheBackendSearchRelatedServicesCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        (new ContaoCoreExtension())->load(
+            [
+                'contao' => [
+                    'backend_search' => [
+                        'dsn' => 'whatever://search-adapter-you-like',
+                        'index_name' => 'my_backend_search_index',
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertTrue($container->hasDefinition('contao.search_backend.adapter'));
+        $adapter = $container->getDefinition('contao.search_backend.adapter');
+        $this->assertSame('whatever://search-adapter-you-like', $adapter->getArgument(0));
+
+        $this->assertTrue($container->hasDefinition('contao.search.backend'));
+        $this->assertTrue($container->hasDefinition('contao.search_backend.engine'));
+        $backendSearchEngine = $container->getDefinition('contao.search_backend.engine');
+        $this->assertSame('my_backend_search_index', $backendSearchEngine->getArgument(1)->getArgument('$indexName'));
+    }
+
     public function testCspConfiguration(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
@@ -737,12 +795,34 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(['text-decoration' => 'underline'], $processor->getArgument(0));
     }
 
+    public function testDoesNotRegisterTemplateStudioIfNotEnabled(): void
+    {
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'template_studio' => [
+                    'enabled' => false,
+                ],
+            ],
+        ]);
+
+        $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
+    }
+
+    public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
+    }
+
     public function testRegistersAsContentElementAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsContentElement::class, $autoConfiguredAttributes);
 
@@ -766,7 +846,7 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        $autoConfiguredAttributes[AsContentElement::class](
+        $autoConfiguredAttributes[AsContentElement::class][0](
             $definition,
             new AsContentElement(...[
                 'type' => 'content_element/text',
@@ -785,8 +865,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsFrontendModuleAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsFrontendModule::class, $autoConfiguredAttributes);
 
@@ -805,11 +884,12 @@ class ContaoCoreExtensionTest extends TestCase
                     'method' => 'aMethod',
                     'renderer' => 'inline',
                     'priority' => 0,
+                    'shouldPreload' => false,
                 ],
             )
         ;
 
-        $autoConfiguredAttributes[AsFrontendModule::class](
+        $autoConfiguredAttributes[AsFrontendModule::class][0](
             $definition,
             new AsFrontendModule(...[
                 'type' => 'frontend_module/navigation',
@@ -825,8 +905,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsPageAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsPage::class, $autoConfiguredAttributes);
 
@@ -853,7 +932,7 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        $autoConfiguredAttributes[AsPage::class](
+        $autoConfiguredAttributes[AsPage::class][0](
             $definition,
             new AsPage(
                 'foo',
@@ -874,8 +953,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsPickerProviderAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsPickerProvider::class, $autoConfiguredAttributes);
 
@@ -886,7 +964,7 @@ class ContaoCoreExtensionTest extends TestCase
             ->with('contao.picker_provider', ['priority' => 32])
         ;
 
-        $autoConfiguredAttributes[AsPickerProvider::class](
+        $autoConfiguredAttributes[AsPickerProvider::class][0](
             $definition,
             new AsPickerProvider(32),
             new \ReflectionClass(ClassWithMethod::class),
@@ -896,8 +974,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsCronjobAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsCronJob::class, $autoConfiguredAttributes);
 
@@ -908,13 +985,13 @@ class ContaoCoreExtensionTest extends TestCase
             ->with('contao.cronjob', ['interval' => 'daily', 'method' => 'someMethod'])
         ;
 
-        $autoConfiguredAttributes[AsCronJob::class](
+        $autoConfiguredAttributes[AsCronJob::class][0](
             $definition,
             new AsCronJob('daily', 'someMethod'),
             new \ReflectionClass(ClassWithMethod::class),
         );
 
-        $autoConfiguredAttributes[AsCronJob::class](
+        $autoConfiguredAttributes[AsCronJob::class][0](
             $definition,
             new AsCronJob('daily'),
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
@@ -924,8 +1001,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsHookAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsHook::class, $autoConfiguredAttributes);
 
@@ -936,13 +1012,13 @@ class ContaoCoreExtensionTest extends TestCase
             ->with('contao.hook', ['hook' => 'activateAccount', 'priority' => 32, 'method' => 'someMethod'])
         ;
 
-        $autoConfiguredAttributes[AsHook::class](
+        $autoConfiguredAttributes[AsHook::class][0](
             $definition,
             new AsHook('activateAccount', 'someMethod', 32),
             new \ReflectionClass(ClassWithMethod::class),
         );
 
-        $autoConfiguredAttributes[AsHook::class](
+        $autoConfiguredAttributes[AsHook::class][0](
             $definition,
             new AsHook('activateAccount', null, 32),
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
@@ -952,8 +1028,7 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsCallbackAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $this->assertArrayHasKey(AsCallback::class, $autoConfiguredAttributes);
 
@@ -975,27 +1050,24 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        $autoConfiguredAttributes[AsCallback::class](
+        $autoConfiguredAttributes[AsCallback::class][0](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', 'someMethod', 32),
             new \ReflectionClass(ClassWithMethod::class),
         );
 
-        $autoConfiguredAttributes[AsCallback::class](
+        $autoConfiguredAttributes[AsCallback::class][0](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', null, 32),
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
         );
     }
 
-    /**
-     * @dataProvider provideAttributesForMethods
-     */
+    #[DataProvider('provideAttributesForMethods')]
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+        $autoConfiguredAttributes = $container->getAttributeAutoconfigurators();
 
         $definition = $this->createMock(ChildDefinition::class);
         $definition
@@ -1009,7 +1081,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage($attributeClass.' attribute cannot declare a method on "Contao\CoreBundle\Tests\Fixtures\ClassWithMethod::someMethod()".');
 
-        $autoConfiguredAttributes[$attributeClass](
+        $autoConfiguredAttributes[$attributeClass][0](
             $definition,
             $attribute,
             (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),

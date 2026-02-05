@@ -37,31 +37,27 @@
         <source>Visibility</source>
         <target>Zichtbaarheid</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.new.0">
-        <source>New</source>
-        <target>Nieuw</target>
-      </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
         <target>Maak een nieuwe media query</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show">
+      <trans-unit id="tl_image_size_item.show.1">
         <source>Show the details of media query ID %s</source>
         <target>Toon details van media query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit">
+      <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
         <target>Bewerk media query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut">
+      <trans-unit id="tl_image_size_item.cut.1">
         <source>Move media query ID %s</source>
         <target>Verplaats media query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy">
-        <source>Duplicate media query ID %s</source>
-        <target>Dupliceer media query ID %s</target>
+      <trans-unit id="tl_image_size_item.copy.1">
+        <source>Copy media query ID %s</source>
+        <target>Kopieer mediaquery ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete">
+      <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
         <target>Verwijder media query ID %s</target>
       </trans-unit>
@@ -77,21 +73,29 @@
         <source>Activate media query ID %s</source>
         <target>Activeer media query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Bovenaan plakken</target>
+      <trans-unit id="tl_image_size_item.toggle.3">
+        <source>Deactivate</source>
+        <target>Deactiveer</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.4">
+        <source>Activate</source>
+        <target>Activeren</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
         <target>Plak achter media query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.0">
+      <trans-unit id="tl_image_size_item.pastenewtop.1">
         <source>Create a new media query at the top</source>
         <target>Maak een nieuwe media query bovenaan</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.1">
+      <trans-unit id="tl_image_size_item.pastenewafter.1">
         <source>Create a new media query after media query ID %s</source>
         <target>Voeg een nieuwe media query toe achter media query ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tableLabel">
+        <source>Media query</source>
+        <target>Media query</target>
       </trans-unit>
     </body>
   </file>

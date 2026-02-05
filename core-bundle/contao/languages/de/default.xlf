@@ -145,6 +145,10 @@
         <source>Cannot move %s to %s because the target exists!</source>
         <target>%s kann nicht nach %s verschoben werden, da das Ziel existiert!</target>
       </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+        <target>Das Hochladen mehrerer Dateien ist bei diesem Feld nicht erlaubt!</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
         <target>Zugriff verweigert! Die aktuelle Hostadresse (%s) stimmt nicht mit der verweisenden Hostadresse (%s) überein!</target>
@@ -373,9 +377,37 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Es ist keine Administrator-E-Mail-Adresse hinterlegt. Bitte wenden Sie sich an den Administrator der Webseite.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript ist derzeit deaktiviert oder blockiert. Ohne JavaScript wird die Anti-Spam-Überprüfung fehlschlagen. Bitte aktivieren Sie JavaScript vorübergehend für die Übermittlung des Formulars.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Antispam-Überprüfung fehlgeschlagen. Sind Sie ein Mensch oder ein Roboter?</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+        <target>Die Verifizierung ist fehlgeschlagen. Versuchen Sie es später noch einmal.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA ist ohne eine sichere HTTPS-Verbindung nicht verfügbar. Wenn Ihre Produktionswebsite kein HTTPS verwendet (nicht empfohlen), verwenden Sie stattdessen bitte die Sicherheitsfrage.</target>
+      </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
         <target>Es gibt mindestens ein Modul &quot;Personendaten&quot;, das die Änderung des Passworts erlaubt. Das ist eine Sicherheitsschwachstelle und wird in Contao 6 nicht mehr funktionieren. Verwenden Sie stattdessen das Modul &quot;Passwort ändern&quot;.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Passkeys werden auf diesem Gerät nicht unterstützt.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Die Anmeldung mit dem Passkey ist fehlgeschlagen.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>Der Passkey konnte nicht erstellt werden.</target>
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
@@ -396,6 +428,22 @@
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
         <target>Text-Elemente</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+        <target>Passwort ändern</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+        <target>Erzeugt ein Formular zur Passwort-Änderung.</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+        <target>Konto schließen</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+        <target>Erzeugt ein Formular zur Löschung eines Benutzerkontos.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -677,9 +725,37 @@
         <source>Displays the teaser text of an article.</source>
         <target>Zeigt den Teasertext eines Artikels an.</target>
       </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Zwei-Faktor-Authentifizierung</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Erzeugt ein Formular zur Einrichtung der Zwei-Faktor-Authentifizierung.</target>
+      </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
         <target>Legacy-Elemente</target>
+      </trans-unit>
+      <trans-unit id="CTE.user">
+        <source>User</source>
+        <target>Benutzer</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.0">
+        <source>Manage passkeys</source>
+        <target>Passkeys verwalten</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.1">
+        <source>Allows to manage the passkeys of a member.</source>
+        <target>Erlaubt die Verwaltung der Passkeys eines Mitglieds.</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.0">
+        <source>Login form</source>
+        <target>Login-Formular</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.1">
+        <source>Generates a login form.</source>
+        <target>Erzeugt ein Login-Formular.</target>
       </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
@@ -784,6 +860,14 @@
       <trans-unit id="FFL.hidden.1">
         <source>A single-line input field that is not visible in the form.</source>
         <target>Ein einzeiliges Eingabefeld, das im Formular nicht sichtbar ist.</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+        <target>ALTCHA Antispam</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>Bietet ein ALTCHA Antispam-Formularfeld, um zu überprüfen, ob das Formular von einem Menschen abgeschickt wurde (CAPTCHA).</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -1181,6 +1265,10 @@
         <source>Open the link in a new browser window.</source>
         <target>Den Link in einem neuen Browserfenster öffnen.</target>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>In einem neuen Tab öffnen</target>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>,</target>
@@ -1362,16 +1450,24 @@
         <target>Die Reihe löschen</target>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
-        <source>Module</source>
-        <target>Modul</target>
+        <source>Module or content element</source>
+        <target>Modul oder Inhaltselement</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
         <target>Layoutbereich</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
-        <source>Enable/disable the module</source>
-        <target>Das Modul aktivieren/deaktivieren</target>
+        <source>Enable/disable the module or content element</source>
+        <target>Das Modul oder Inhaltselement aktivieren/deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_modules">
+        <source>Front end modules</source>
+        <target>Frontend-Module</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
+        <target>Inhaltselemente</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
@@ -1738,12 +1834,16 @@
         <target>Zurück</target>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
-        <target>Zurück zur vorherigen Seite</target>
+        <source>Go up one level</source>
+        <target>Eine Ebene nach oben</target>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Abbruch</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+        <source>Are you sure?</source>
+        <target>Sind Sie sicher?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -1797,6 +1897,10 @@
         <source>Search</source>
         <target>Suchen</target>
       </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+        <target>Datei</target>
+      </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
         <target>Keine Einträge gefunden.</target>
@@ -1816,10 +1920,6 @@
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
         <target>Speichern und Kindelemente bearbeiten</target>
-      </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
-        <target>Speichern und zurück</target>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
@@ -2148,6 +2248,10 @@
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
         <target>Filter zurücksetzen</target>
+      </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
+        <target>Filtern</target>
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
@@ -2541,6 +2645,10 @@
         <source>Results per page</source>
         <target>Ergebnisse pro Seite</target>
       </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>oder</target>
+      </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
         <target>Veröffentlicht</target>
@@ -2626,20 +2734,36 @@
         <target>Sie müssen einen Website-Startpunkt anlegen, um Metadaten einzugeben.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
-        <target>Breadcrumb-Menü</target>
+        <source>Breadcrumb</source>
+        <target>Navigationspfad</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
-        <target>Hauptnavigation</target>
+        <source>Main</source>
+        <target>Hauptmenü</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
-        <target>Header-Navigation</target>
+        <source>Header</source>
+        <target>Kopfzeile</target>
+      </trans-unit>
+      <trans-unit id="MSC.showProfile">
+        <source>Show user profile</source>
+        <target>Benutzerprofil anzeigen</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideProfile">
+        <source>Hide user profile</source>
+        <target>Benutzerprofil ausblenden</target>
+      </trans-unit>
+      <trans-unit id="MSC.showMainNavigation">
+        <source>Show main navigation</source>
+        <target>Hauptnavigation anzeigen</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideMainNavigation">
+        <source>Hide main navigation</source>
+        <target>Hauptnavigation ausblenden</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
-        <target>Seitenumbruch-Menü</target>
+        <source>Pagination</source>
+        <target>Paginierung</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2729,9 +2853,25 @@
         <source>Favorites</source>
         <target>Favoriten</target>
       </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+        <target>Pfad anzeigen</target>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+        <target>Elemente derselben Ebene anzeigen</target>
+      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
         <target>URL als Favorit speichern</target>
+      </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+        <target>URL als Favorit entfernen</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+        <target>Möchten Sie die URL wirklich als Favorit entfernen?</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
@@ -2772,6 +2912,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Deaktivieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Bearbeiten</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2825,6 +2969,14 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route ein Element erfordert.</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Die Vorschau-URL kann nicht erstellt werden, weil das Formular Fehler enthält.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpIndexSetting">
+        <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>Die URL wird aufgrund der Robots-Tag-Einstellungen nicht indexiert.</target>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>Unbekannte Option: %s</target>
@@ -2844,6 +2996,22 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
         <target>Handbuch</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+        <target>Die Aufgabe wurde in die Warteschlange gestellt. In der Jobübersicht finden Sie den aktuellen Status.</target>
+      </trans-unit>
+      <trans-unit id="MSC.jobs">
+        <source>Job overview</source>
+        <target>Job-Übersicht</target>
+      </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+        <target>Anhänge ansehen</target>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
+        <target>Anhang %s herunterladen</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -2880,6 +3048,170 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>Helles Design</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Geschützt durch &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+        <target>Ich bin kein Roboter</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+        <target>Ich bin ein Mensch</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+        <target>Überprüfen …</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
+        <target>Überprüfen … Bitte warten.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Passkeys</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Mit Passkeys können Sie sich sicher und einfach anmelden, ohne dass ein Passwort und ein Zwei-Faktor-Token erforderlich sind.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Mit einem Passkey anmelden</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Name/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Benennen Sie diesen Passkey …</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Erstellt am</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Passkey hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="MSC.editPasskey">
+        <source>Edit passkey &quot;%s&quot;</source>
+        <target>Passkey &quot;%s&quot; bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="MSC.savePasskey">
+        <source>Save passkey &quot;%s&quot;</source>
+        <target>Passkey &quot;%s&quot; speichern</target>
+      </trans-unit>
+      <trans-unit id="MSC.deletePasskey">
+        <source>Delete passkey &quot;%s&quot;</source>
+        <target>Passkey &quot;%s&quot; löschen</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>Tippen Sie, um die Suche zu starten</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>Bitte geben Sie mindestens %s Zeichen ein</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results …</source>
+        <target>Ergebnisse werden geladen …</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
+        <target>⌘+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>%s ansehen</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>%s bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+        <target>Art des Jobs</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
+        <target>Keine Ergebnisse gefunden oder keine Berechtigung zur Ansicht der Ergebnisse.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>Keine Ergebnisse gefunden.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>Keine Optionen zur Auswahl.</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>Element entfernen</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuExpand">
+        <source>Expand menu: </source>
+        <target>Menu öffnen: </target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuCollapse">
+        <source>Collapse menu: </source>
+        <target>Menü schließen: </target>
+      </trans-unit>
+      <trans-unit id="MSC.skipToContent">
+        <source>Skip to content</source>
+        <target>Zum Inhalt springen</target>
+      </trans-unit>
+      <trans-unit id="MSC.clipboardCopy">
+        <source>Copied to clipboard.</source>
+        <target>In die Zwischenablage kopiert.</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer</source>
+        <target>Suchindexer</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
+        <target>Hier können Sie die Einstellung des Robots-Meta-Tags für den internen Suchindex überschreiben.</target>
+      </trans-unit>
+      <trans-unit id="MSC.always_index">
+        <source>Always index</source>
+        <target>Immer indizieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.never_index">
+        <source>Never index</source>
+        <target>Nie indizieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+        <target>Feld</target>
+      </trans-unit>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
+        <target>Suchbegriff</target>
+      </trans-unit>
+      <trans-unit id="MSC.enter_fullscreen">
+        <source>Enter fullscreen mode</source>
+        <target>Vollbildmodus aktivieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+        <target>Nach links scrollen</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
+        <target>Nach rechts scrollen</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3033,6 +3365,18 @@
         <source>Collapse all nodes</source>
         <target>Alle Knoten schließen</target>
       </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Filter</source>
+        <target>Filtern</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Show the filter panel</source>
+        <target>Filter einblenden</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.2">
+        <source>Hide the filter panel</source>
+        <target>Filter ausblenden</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Neu</target>
@@ -3041,31 +3385,79 @@
         <source>Create a new element</source>
         <target>Ein neues Element erstellen</target>
       </trans-unit>
-      <trans-unit id="DCA.show">
+      <trans-unit id="DCA.show.0">
+        <source>Details</source>
+        <target>Details</target>
+      </trans-unit>
+      <trans-unit id="DCA.show.1">
         <source>Show the details of element ID %s</source>
         <target>Details des Elements ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="DCA.edit">
+      <trans-unit id="DCA.edit.0">
+        <source>Edit</source>
+        <target>Bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit.1">
         <source>Edit element ID %s</source>
         <target>Element ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="DCA.cut">
+      <trans-unit id="DCA.cut.0">
+        <source>Move</source>
+        <target>Verschieben</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut.1">
         <source>Move element ID %s</source>
         <target>Element ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="DCA.copy">
-        <source>Duplicate element ID %s</source>
-        <target>Element ID %s duplizieren</target>
+      <trans-unit id="DCA.copy.0">
+        <source>Copy</source>
+        <target>Kopieren</target>
       </trans-unit>
-      <trans-unit id="DCA.delete">
+      <trans-unit id="DCA.copy.1">
+        <source>Copy element ID %s</source>
+        <target>Element ID %s kopieren</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.0">
+        <source>Copy recursively</source>
+        <target>Rekursiv kopieren</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.1">
+        <source>Copy element ID %s with child nodes</source>
+        <target>Element ID %s mit Kindelementen kopieren</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.0">
+        <source>Delete</source>
+        <target>Löschen</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
         <target>Element ID %s löschen</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+        <target>Versionen</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
+        <target>Versionen des Elements ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>Element ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="DCA.children">
+      <trans-unit id="DCA.global_operations">
+        <source>Show all global operations</source>
+        <target>Alle globalen Operationen anzeigen</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>Operationen für Element ID %s anzeigen</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.0">
+        <source>Child elements</source>
+        <target>Kindelemente</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
         <target>Kindelemente des Elements ID %s bearbeiten</target>
       </trans-unit>
@@ -3081,29 +3473,81 @@
         <source>Publish element ID %s</source>
         <target>Element ID %s veröffentlichen</target>
       </trans-unit>
-      <trans-unit id="DCA.pasteinto.0">
+      <trans-unit id="DCA.toggle.3">
+        <source>Unpublish</source>
+        <target>Unveröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.4">
+        <source>Publish</source>
+        <target>Veröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastetop">
         <source>Paste at the top</source>
         <target>Oben einfügen</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteroot">
+        <source>Paste at the top</source>
+        <target>Oben einfügen</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste into</source>
+        <target>Einfügen in</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
         <target>In das Element ID %s einfügen</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Oben einfügen</target>
+        <source>Paste after</source>
+        <target>Einfügen nach</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
         <target>Nach dem Element ID %s einfügen</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.0">
+      <trans-unit id="DCA.pastenewtop.0">
+        <source>New at the top</source>
+        <target>Neu oben</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
         <target>Neues Element oben erstellen</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.1">
+      <trans-unit id="DCA.pastenewafter.0">
+        <source>New after</source>
+        <target>Neu danach</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
         <target>Neues Element nach dem Element ID %s erstellen</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.0">
+        <source>New inside</source>
+        <target>Neu in</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.1">
+        <source>Create a new element inside element ID %s</source>
+        <target>Neues Element im Element ID %s erstellen</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions_legend">
+        <source>Permissions</source>
+        <target>Zugriffsrechte</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.0">
+        <source>Back end permissions</source>
+        <target>Backend-Rechte</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.1">
+        <source>The changes made here are saved in the user and group settings.</source>
+        <target>Die hier vorgenommenen Änderungen werden in den Benutzer- und Gruppeneinstellungen gespeichert.</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.groups">
+        <source>Groups</source>
+        <target>Gruppen</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.users">
+        <source>Users</source>
+        <target>Benutzer</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

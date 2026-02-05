@@ -16,9 +16,10 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
 use Symfony\Component\HttpFoundation\Request;
-use webignition\RobotsTxt\Directive\Directive;
+use webignition\RobotsTxt\Directive\DirectiveInterface;
 use webignition\RobotsTxt\DirectiveList\DirectiveList;
 use webignition\RobotsTxt\File\File;
 use webignition\RobotsTxt\File\Parser;
@@ -26,18 +27,16 @@ use webignition\RobotsTxt\Record\Record;
 
 class RobotsTxtListenerTest extends TestCase
 {
-    /**
-     * @dataProvider disallowProvider
-     */
+    #[DataProvider('disallowProvider')]
     public function testRobotsTxt(string $providedRobotsTxt, bool|null $withWebProfiler, string $expectedRobotsTxt): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class);
         $rootPage->id = 42;
         $rootPage->fallback = true;
         $rootPage->dns = 'www.foobar.com';
         $rootPage->useSSL = true;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->exactly(2))
             ->method('initialize')
@@ -169,37 +168,44 @@ class RobotsTxtListenerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider routePrefixProvider
-     */
+    #[DataProvider('routePrefixProvider')]
     public function testHandlesDynamicRoutePrefixes(string $routePrefix): void
     {
-        $rootPage = $this->mockClassWithProperties(PageModel::class);
+        $rootPage = $this->createClassWithPropertiesStub(PageModel::class);
+
+        $expected = [
+            'disallow:'.$routePrefix.'/',
+            'disallow:/_contao/',
+        ];
 
         $directiveList = $this->createMock(DirectiveList::class);
         $directiveList
             ->expects($this->exactly(2))
             ->method('add')
-            ->withConsecutive(
-                [$this->callback(static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/')],
-                ['disallow:/_contao/'],
-            )
+            ->with($this->callback(
+                static function (DirectiveInterface $directive) use (&$expected) {
+                    $pos = array_search((string) $directive, $expected, true);
+                    unset($expected[$pos]);
+
+                    return false !== $pos;
+                },
+            ))
         ;
 
-        $record = $this->createMock(Record::class);
+        $record = $this->createStub(Record::class);
         $record
             ->method('getDirectiveList')
             ->willReturn($directiveList)
         ;
 
-        $file = $this->createPartialMock(File::class, ['getRecords']);
+        $file = $this->createStub(File::class);
         $file
             ->method('getRecords')
             ->willReturn([$record])
         ;
 
         $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $listener = new RobotsTxtListener($framework, null, $routePrefix);
         $listener($event);

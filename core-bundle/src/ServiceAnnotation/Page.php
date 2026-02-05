@@ -17,13 +17,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
- * Annotation class for @Page().
+ * Annotation to register a page.
  *
  * @Annotation
  *
  * @Target({"CLASS", "METHOD"})
  *
  * @see Route
+ *
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsPage] attribute instead
  */
 final class Page implements ServiceTagInterface
 {
@@ -78,6 +81,8 @@ final class Page implements ServiceTagInterface
 
     public function getName(): string
     {
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @Page annotation is deprecated and will no longer work in Contao 6. Use the #[AsPage] attribute instead.');
+
         return 'contao.page';
     }
 

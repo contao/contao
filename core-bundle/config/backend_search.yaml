@@ -1,0 +1,103 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    Contao\CoreBundle\Controller\Backend\SearchController:
+        public: true
+        arguments:
+            - '@security.helper'
+            - '@contao.search.backend'
+        calls:
+            - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+    contao.messenger.backend_search.delete_documents_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler
+        arguments:
+            - '@contao.search.backend'
+
+    contao.messenger.backend_search.reindex_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\ReindexMessageHandler
+        arguments:
+            - '@contao.search.backend'
+            - '@contao.job.jobs'
+
+    contao.search.backend:
+        class: Contao\CoreBundle\Search\Backend\BackendSearch
+        public: true
+        arguments:
+            - !tagged_iterator contao.backend_search_provider
+            - '@security.helper'
+            - '@contao.search_backend.engine'
+            - '@event_dispatcher'
+            - '@messenger.bus.default'
+            - '@contao.job.jobs'
+            - '@contao.messenger.web_worker'
+            - '@contao.search.backend.seal_reindex_provider'
+
+    contao.search.backend.files_storage_provider:
+        class: Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider
+        arguments:
+            - '@contao.filesystem.virtual.files'
+            - '@security.helper'
+            - '@contao.image.studio'
+            - '@router'
+            - '@translator'
+            - '%contao.upload_path%'
+
+    contao.search.backend.format_binary_uuid_results_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\FormatBinaryUuidSearchResultsListener
+
+    contao.search.backend.format_core_widget_results_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\FormatCoreWidgetSearchResultsListener
+
+    contao.search.backend.seal_reindex_provider:
+        class: Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider
+        arguments:
+            - !tagged_iterator contao.backend_search_provider
+            - '@event_dispatcher'
+        tags:
+            - { name: cmsig_seal.reindex_provider }
+
+    contao.search.backend.table_data_container_provider:
+        class: Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider
+        arguments:
+            - '@contao.framework'
+            - '@contao.resource_finder'
+            - '@database_connection'
+            - '@security.access.decision_manager'
+            - '@event_dispatcher'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@translator'
+            - '@contao.data_container.virtual_fields_handler'
+
+    contao.search.backend.trigger_reindex_on_files_storage_update_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnFilesStorageUpdateListener
+        arguments:
+            - '@contao.search.backend'
+            - '@contao.filesystem.virtual.files'
+
+    contao.search.backend.trigger_reindex_on_table_data_container_invalidation_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnTableDataContainerInvalidationListener
+        arguments:
+            - '@contao.search.backend'
+
+    contao.search_backend.adapter:
+        class: CmsIg\Seal\Adapter\AdapterInterface
+        factory: ['@contao.search_backend.adapter_factory', createAdapter]
+
+    contao.search_backend.adapter_factory:
+        class: CmsIg\Seal\Adapter\AdapterFactory
+        arguments:
+            - !tagged_iterator { tag: cmsig_seal.adapter_factory, default_index_method: getName }
+
+    contao.search_backend.engine:
+        class: CmsIg\Seal\Engine
+        arguments:
+            - '@contao.search_backend.adapter'
+        tags:
+            - { name: cmsig_seal.engine, index_by: name }
+
+    contao.security.backend_search.provider_delegating_voter:
+        class: Contao\CoreBundle\Security\Voter\BackendSearch\ProviderDelegatingVoter
+        arguments:
+            - !tagged_iterator contao.backend_search_provider

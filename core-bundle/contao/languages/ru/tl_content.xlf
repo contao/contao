@@ -9,6 +9,14 @@
         <source>Please choose the type of content element.</source>
         <target>Выберите тип элемента контента.</target>
       </trans-unit>
+      <trans-unit id="tl_content.title.0">
+        <source>Title</source>
+        <target>Название</target>
+      </trans-unit>
+      <trans-unit id="tl_content.title.1">
+        <source>Here you can enter an optional title for the content element.</source>
+        <target>Вы можете ввести необязательное название элемента контента.</target>
+      </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
         <target>Заголовок</target>
@@ -409,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Количество элементов на странице. Установите 0 для отключения нумерации.</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>Серверная разбивка на страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Разделить изображения на несколько страниц и выводить только их часть за раз.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Сортировать по</target>
@@ -449,6 +465,14 @@
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>Вы можете добавить один аудио/видео файл или несколько, если используете разные кодеки.</target>
       </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+        <target>Файлы текстовых треков</target>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+        <target>Верхний файл .vtt загружается как трек по умолчанию. Дополнительные настройки можно сделать внутри файла .vtt.</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
         <target>YouTube ID</target>
@@ -478,8 +502,8 @@
         <target>Размер проигрывателя</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Ширина и высота проигрывателя в пикселах (напр. 640x480).</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>Ширина и высота проигрывателя в пикселах (напр. 640x360).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
@@ -512,6 +536,14 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Остановить воспроизведение видео с указанного количества секунд. Установите 0 для отключения.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>Название</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
+        <target>Вы можете ввести название.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -623,7 +655,7 @@
       </trans-unit>
       <trans-unit id="tl_content.protected.1">
         <source>Show the content element to certain member groups only.</source>
-        <target>Показывать содержание элемента контента только для членов группы.</target>
+        <target>Показывать содержание элемента только для членов группы.</target>
       </trans-unit>
       <trans-unit id="tl_content.groups.0">
         <source>Allowed member groups</source>
@@ -765,6 +797,10 @@
         <source>Preview image</source>
         <target>Предпросмотр изображения</target>
       </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
+        <target>Текстовые треки</target>
+      </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
         <target>Видимость</target>
@@ -881,6 +917,10 @@
         <source>Loop video</source>
         <target>Зацикленное видео</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>Отключение звука</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Автовоспроизведение</target>
@@ -905,31 +945,27 @@
         <source>Prevent session data tracking</source>
         <target>Запретить отслеживание данных сессии</target>
       </trans-unit>
-      <trans-unit id="tl_content.new.0">
-        <source>New</source>
-        <target>Новый</target>
-      </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
         <target>Создать новый элемент контента</target>
       </trans-unit>
-      <trans-unit id="tl_content.show">
+      <trans-unit id="tl_content.show.1">
         <source>Show the details of content element ID %s</source>
         <target>Показать детали элемента контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.cut">
+      <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>
         <target>Переместить элемент контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.copy">
-        <source>Duplicate content element ID %s</source>
-        <target>Дублировать элемент контента ID %s</target>
+      <trans-unit id="tl_content.copy.1">
+        <source>Copy content element ID %s</source>
+        <target>Копировать элемент контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.delete">
+      <trans-unit id="tl_content.delete.1">
         <source>Delete content element ID %s</source>
         <target>Удалить элемент контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.edit">
+      <trans-unit id="tl_content.edit.1">
         <source>Edit content element ID %s</source>
         <target>Редактировать элемент контента ID %s</target>
       </trans-unit>
@@ -945,19 +981,23 @@
         <source>Unhide content element ID %s</source>
         <target>Показать элемент контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Вставить после</target>
+      <trans-unit id="tl_content.toggle.3">
+        <source>Hide</source>
+        <target>Скрыть</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.4">
+        <source>Unhide</source>
+        <target>Отменить скрытие</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>Вставить после элемента контента ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>Создать новый элемент контента вверху</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>Создать новый элемент контента после элемента ID %s</target>
       </trans-unit>
@@ -988,6 +1028,74 @@
       <trans-unit id="tl_content.dl_value">
         <source>Details</source>
         <target>Детали</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirect_legend">
+        <source>Redirect settings</source>
+        <target>Настройки перенаправления</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Перейти на страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
+        <target>Выберите страницу, к которой будут перенаправлены посетители при нажатии на ссылку или после отправки формы.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Направление на последнюю посещенную страницу</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Направление участника на последнюю посещенную им страницу вместо перехода на страницу перенаправления.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.config_legend">
+        <source>Element configuration</source>
+        <target>Конфигурация элемента</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.0">
+        <source>Allow auto login</source>
+        <target>Разрешить автоматический вход</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.1">
+        <source>Allow members to log into the front end automatically.</source>
+        <target>Разрешить пользователям автоматическую авторизацию во внешнем интерфейсе веб-сайта.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Страница сброса пароля</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Вы можете выбрать страницу, к которой будут перенаправлены посетители при нажатии ссылки &lt;em&gt;Забыли пароль?&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>Метод удаления</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Вы можете определить метод удаления учетной записи.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Удалить домашний каталог</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Удалить домашний каталог при удалении учетной записи.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Деактивировать учетную запись</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Полностью удалить учетную запись</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>Элемент контента</target>
       </trans-unit>
     </body>
   </file>

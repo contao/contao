@@ -9,6 +9,14 @@
         <source>Please choose the type of content element.</source>
         <target>Lütfen içerik bileşeninin türünü seçin.</target>
       </trans-unit>
+      <trans-unit id="tl_content.title.0">
+        <source>Title</source>
+        <target>Başlık</target>
+      </trans-unit>
+      <trans-unit id="tl_content.title.1">
+        <source>Here you can enter an optional title for the content element.</source>
+        <target>Buradan bir içerik bileşeni için isteğe bağlı bir başlık ekleyebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
         <target>Başlık</target>
@@ -409,6 +417,14 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Bir sayfada görüntülenecek öge sayısını yazın. Sayfalandırmayı etkisizleştirmek için 0 yazın.</target>
       </trans-unit>
+      <trans-unit id="tl_content.serverPagination.0">
+        <source>Server-side pagination</source>
+        <target>Sunucu tarafında sayfalama</target>
+      </trans-unit>
+      <trans-unit id="tl_content.serverPagination.1">
+        <source>Split the images across multiple pages and render only a subset at a time.</source>
+        <target>Görselleri birden fazla sayfaya ayırın ve bir kerede yalnızca bir alt küme oluşturun.</target>
+      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Sıralama</target>
@@ -449,6 +465,14 @@
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>Farklı kodlayıcı/çözücü bileşenleri kullanıyorsanız, görüntü/ses dosyasını ya da birkaç dosyayı buraya ekleyebilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+        <target>Yazı iz dosyaları</target>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+        <target>En üstteki .vtt dosyası varsayılan iz olarak yüklenir. Ek ayarlar .vtt dosyası içinden yapılabilir.</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
         <target>YouTube kimliği</target>
@@ -478,8 +502,8 @@
         <target>Oynatıcı boyutu</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Ortam oynatıcının piksel olarak genişlik ve yüksekliği (640x480 gibi).</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>Ortam oynatıcının piksel olarak genişlik ve yüksekliği (640x360 gibi).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
@@ -512,6 +536,14 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Görüntünün oynatılmasını belirtilen saniyede bitirir. Sonuna kadar oynatmak için 0 olarak ayarlayın.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>Başlık</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
+        <target>Buraya bir başlık yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -765,6 +797,10 @@
         <source>Preview image</source>
         <target>Ön izleme görseli</target>
       </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
+        <target>Yazı izleri</target>
+      </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
         <target>Görünürlük</target>
@@ -881,6 +917,10 @@
         <source>Loop video</source>
         <target>Görüntü sondan başa dönsün</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_mute">
+        <source>Mute the audio output</source>
+        <target>Ses kapatılsın</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Otomatik oynatılsın</target>
@@ -905,31 +945,27 @@
         <source>Prevent session data tracking</source>
         <target>Oturum verilerinin izlenmesi engellensin</target>
       </trans-unit>
-      <trans-unit id="tl_content.new.0">
-        <source>New</source>
-        <target>Yeni</target>
-      </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
         <target>Yeni bir içerik bileşeni ekle</target>
       </trans-unit>
-      <trans-unit id="tl_content.show">
+      <trans-unit id="tl_content.show.1">
         <source>Show the details of content element ID %s</source>
         <target>%s kimlikli içerik bileşeninin bilgilerini görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_content.cut">
+      <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>
         <target>%s kimlikli içerik bileşenini taşı</target>
       </trans-unit>
-      <trans-unit id="tl_content.copy">
-        <source>Duplicate content element ID %s</source>
+      <trans-unit id="tl_content.copy.1">
+        <source>Copy content element ID %s</source>
         <target>%s kimlikli içerik bileşenini kopyala</target>
       </trans-unit>
-      <trans-unit id="tl_content.delete">
+      <trans-unit id="tl_content.delete.1">
         <source>Delete content element ID %s</source>
         <target>%s kimlikli içerik bileşenini sil</target>
       </trans-unit>
-      <trans-unit id="tl_content.edit">
+      <trans-unit id="tl_content.edit.1">
         <source>Edit content element ID %s</source>
         <target>%s kimlikli içerik bileşenini düzenle</target>
       </trans-unit>
@@ -945,19 +981,23 @@
         <source>Unhide content element ID %s</source>
         <target>%s kimlikli içerik bileşenini görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Üste yapıştır</target>
+      <trans-unit id="tl_content.toggle.3">
+        <source>Hide</source>
+        <target>Gizle</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.4">
+        <source>Unhide</source>
+        <target>Görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>%s kimlikli içerik bileşeninden sonra yapıştır</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>En üste yeni bir içerik bileşeni ekle</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>%s kimlikli içerik bileşeninden sonra yeni bir içerik bileşeni ekle</target>
       </trans-unit>
@@ -988,6 +1028,74 @@
       <trans-unit id="tl_content.dl_value">
         <source>Details</source>
         <target>Ayrıntılar</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirect_legend">
+        <source>Redirect settings</source>
+        <target>Yönlendirme ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Yönlendirilecek sayfa</target>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
+        <target>Lütfen ziyaretçilerinizin bir bağlantıya tıkladığında ya da bir form gönderdiğinde yönlendirileceği sayfayı seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>Son ziyaret edilen sayfaya yönlendirilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Bu seçenek etkinleştirildiğinde, üye yönlendirilecek sayfa yerine son ziyaret ettiği sayfaya yönlendirilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.config_legend">
+        <source>Element configuration</source>
+        <target>Bileşen yapılandırması</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.0">
+        <source>Allow auto login</source>
+        <target>Oturum otomatik açılabilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.1">
+        <source>Allow members to log into the front end automatically.</source>
+        <target>Bu seçenek etkinleştirildiğinde, üyeler ön yüzde otomatik olarak oturum açabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Parola sıfırlama sayfası</target>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Buradan ziyaretçiler &lt;em&gt;Parolamı unuttum&lt;/em&gt; bağlantısına tıkladığında yönlendirilecekleri sayfayı seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.0">
+        <source>Mode</source>
+        <target>Kip</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>Buradan silme işleminin nasıl yapılacağını tanımlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Giriş klasörü silinsin</target>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Bu seçenek etkinleştirildiğinde, hesap silindiğinde giriş klasörü de silinir.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_deactivate">
+        <source>Deactivate account</source>
+        <target>Hesabı etkisizleştir</target>
+      </trans-unit>
+      <trans-unit id="tl_content.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>Hesabı geri alınamayacak şekilde sil</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tableLabel">
+        <source>Content element</source>
+        <target>İçerik ögesi</target>
       </trans-unit>
     </body>
   </file>

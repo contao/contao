@@ -81,33 +81,40 @@
         <source>Manage calendar feeds</source>
         <target>Управљај сажецима календара</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New</source>
-        <target>Ново</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
         <target>Креирај нови календар</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.show">
+      <trans-unit id="tl_calendar.show.1">
         <source>Show the details of calendar ID %s</source>
         <target>Прикажи детаље календара ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.edit">
+      <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>
         <target>Уреди календар ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.children">
+      <trans-unit id="tl_calendar.children.0">
+        <source>Events</source>
+        <target>Дешавања</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.children.1">
         <source>Edit the events of calendar ID %s</source>
         <target>Уреди догађаје ID календара</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.copy">
+      <trans-unit id="tl_calendar.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
         <target>Копирај календар ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.delete">
+      <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
         <target>Обриши календар ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>Календар</target>
       </trans-unit>
     </body>
   </file>

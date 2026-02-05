@@ -1,8 +1,29 @@
 {
   "entrypoints": {
     "backend": {
+      "css": [
+        "/bundles/contaocore/backend.980c4a16.css"
+      ],
       "js": [
-        "/bundles/contaocore/backend.f6d01fb8.js"
+        "/bundles/contaocore/backend.1806b34b.js"
+      ]
+    },
+    "navigation": {
+      "css": [
+        "/bundles/contaocore/navigation.54bbedc9.css"
+      ],
+      "js": [
+        "/bundles/contaocore/navigation.8c222ed2.js"
+      ]
+    },
+    "passkey_login": {
+      "js": [
+        "/bundles/contaocore/passkey_login.6dc9446a.js"
+      ]
+    },
+    "passkey_create": {
+      "js": [
+        "/bundles/contaocore/passkey_create.59ea0d4e.js"
       ]
     }
   }

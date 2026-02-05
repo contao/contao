@@ -19,6 +19,8 @@ class PickerProviderTest extends TestCase
 {
     public function testReturnsTheTagName(): void
     {
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsPickerProvider] attribute instead\./');
+
         $annotation = new PickerProvider();
 
         $this->assertSame('contao.picker_provider', $annotation->getName());

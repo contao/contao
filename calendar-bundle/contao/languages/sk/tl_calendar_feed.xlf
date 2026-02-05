@@ -97,27 +97,23 @@
         <source>Full articles</source>
         <target>Plné znenie</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.new.0">
-        <source>New</source>
-        <target>Nová</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_feed.new.1">
         <source>Create a new feed</source>
         <target>Vytvoriť nový RSS kanál</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.show">
+      <trans-unit id="tl_calendar_feed.show.1">
         <source>Show the details of feed ID %s</source>
         <target>Zobraziť detaily kanálu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.edit">
+      <trans-unit id="tl_calendar_feed.edit.1">
         <source>Edit feed ID %s</source>
         <target>Upraviť RSS kanál ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.copy">
+      <trans-unit id="tl_calendar_feed.copy.1">
         <source>Duplicate feed ID %s</source>
         <target>Kopírovať RSS kanál ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.delete">
+      <trans-unit id="tl_calendar_feed.delete.1">
         <source>Delete feed ID %s</source>
         <target>Odstrániť RSS kanál ID %s</target>
       </trans-unit>

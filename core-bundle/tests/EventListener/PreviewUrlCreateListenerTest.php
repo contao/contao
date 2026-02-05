@@ -18,6 +18,7 @@ use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PreviewUrlCreateListenerTest extends TestCase
 {
@@ -25,7 +26,7 @@ class PreviewUrlCreateListenerTest extends TestCase
     {
         $event = new PreviewUrlCreateEvent('page', 42);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -50,7 +51,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $connection);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -81,18 +82,16 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent('article', 3);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $connection);
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $connection);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
     }
 
-    /**
-     * @dataProvider getValidDoParameters
-     */
+    #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateAnyPreviewUrlIfTheFrameworkIsNotInitialized(string $do): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
+        $framework = $this->createStub(ContaoFramework::class);
         $framework
             ->method('isInitialized')
             ->willReturn(false)
@@ -100,32 +99,27 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 42);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($framework, $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * @dataProvider getInvalidDoParameters
-     */
+    #[DataProvider('getInvalidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfNeitherPageNorArticleParameterIsSet(string $do): void
     {
-        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener($framework, $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $this->createStub(DcaUrlAnalyzer::class), $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * @dataProvider getValidDoParameters
-     */
+    #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfThereIsNoId(string $do): void
     {
-        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer = $this->createStub(DcaUrlAnalyzer::class);
         $dcaUrlAnalyzer
             ->method('getCurrentTableId')
             ->willReturn(['tl_article', null])
@@ -133,7 +127,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 0);
 
-        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener = new PreviewUrlCreateListener($this->createContaoFrameworkStub(), $dcaUrlAnalyzer, $this->createStub(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());

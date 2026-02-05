@@ -25,11 +25,11 @@
         <source>E-mail text</source>
         <target>Mensaje de correo electrónico</target>
       </trans-unit>
-      <trans-unit id="tl_opt_in.show">
+      <trans-unit id="tl_opt_in.show.1">
         <source>Show the details of token ID %s</source>
         <target>Mostrar los detalles de la identificación del token %s</target>
       </trans-unit>
-      <trans-unit id="tl_opt_in.resend">
+      <trans-unit id="tl_opt_in.resend.1">
         <source>Resend token ID %s</source>
         <target>Reenviar ID de token %s</target>
       </trans-unit>

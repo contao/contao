@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
         <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Ici, vous pouvez téléverser un ou plusieurs fichiers .cto, .zip ou .sql à importer.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -122,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.selectExampleWebsite.1">
         <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
-        <target>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</target>
+        <target>Ici, vous pouvez importer un fichier &lt;code&gt;.sql&lt;/code&gt;. Toutes les données existantes seront supprimées ! Si vous souhaitez uniquement importer un thème, ne sélectionnez pas de fichier ici.</target>
       </trans-unit>
       <trans-unit id="tl_theme.exampleWebsiteImportType.0">
         <source>Import type</source>
@@ -148,41 +149,65 @@
         <source>Edit the theme settings</source>
         <target>Éditer les paramètres du thème</target>
       </trans-unit>
-      <trans-unit id="tl_theme.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Créer un nouveau thème</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show">
+      <trans-unit id="tl_theme.show.1">
         <source>Show the details of theme ID %s</source>
         <target>Afficher les détails du thème ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit">
+      <trans-unit id="tl_theme.edit.1">
         <source>Edit theme ID %s</source>
         <target>Éditer le thème ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete">
+      <trans-unit id="tl_theme.delete.1">
         <source>Delete theme ID %s</source>
         <target>Supprimer le thème ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules">
+      <trans-unit id="tl_theme.modules.0">
+        <source>Front end modules</source>
+        <target>Modules du front office</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules.1">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Éditer les modules du thème ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout">
+      <trans-unit id="tl_theme.elements.0">
+        <source>Content elements</source>
+        <target>Éléments de contenu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.elements.1">
+        <source>Edit the content elements of theme ID %s</source>
+        <target>Éditer les éléments de contenu du thème ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.0">
+        <source>Page layouts</source>
+        <target>Présentations de page</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.1">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Éditer les présentations de page du thème ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes">
+      <trans-unit id="tl_theme.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Dimensions des images</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes.1">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Éditer la taille des images du thème ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.exportTheme">
+      <trans-unit id="tl_theme.exportTheme.0">
+        <source>Export theme</source>
+        <target>Exporter le thème</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>
         <target>Exporter le thème ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+        <target>Thème</target>
       </trans-unit>
     </body>
   </file>

@@ -185,6 +185,18 @@
         <source>Check for broken links</source>
         <target>Проверить битые ссылки</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+        <target>Поиск панели управления</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+        <target>Для использования поиска в панели управления включите &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;фреймворк cronjob Contao&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>Перестроить индекс</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

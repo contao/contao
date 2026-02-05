@@ -81,33 +81,41 @@
         <source>Manage calendar feeds</source>
         <target>カレンダーのフィードを管理</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
         <target>新しいカレンダーを作成</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.show">
+      <trans-unit id="tl_calendar.show.1">
         <source>Show the details of calendar ID %s</source>
         <target>ID %sのカレンダーの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.edit">
+      <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>
         <target>ID %sのカレンダーを編集</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.children">
+      <trans-unit id="tl_calendar.children.0">
+        <source>Events</source>
+        <target>イベント</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.children.1">
         <source>Edit the events of calendar ID %s</source>
         <target>ID %sのカレンダーのイベントを編集</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.copy">
+      <trans-unit id="tl_calendar.copy.0">
+        <source>Duplicate</source>
+        <target>複製</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
         <target>ID %sのカレンダーを複製</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.delete">
+      <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
         <target>ID %sのカレンダーを削除</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>カレンダー</target>
       </trans-unit>
     </body>
   </file>

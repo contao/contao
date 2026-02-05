@@ -1,15 +1,15 @@
 <p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg" alt></p>
 
 <p align="center">
-<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.3" alt></a>
-<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/5.3/graph/badge.svg" alt></a>
+<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.7" alt></a>
+<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/5.7/graph/badge.svg" alt></a>
 <a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt></a>
 </p>
 
 ## About
 
 Contao is a powerful open source CMS that allows you to create professional websites and scalable web applications.
-Visit the [project website][1] for more information.
+Visit the [project website](https://contao.org) for more information.
 
 ## Purpose
 
@@ -30,10 +30,16 @@ The monorepo is automatically split into separate packages:
 
 **Please do not use `contao/contao` in production**! Use the split packages instead.
 
+## Platinum partners
+
+Thanks to our platinum partners for helping us fund the development of Contao.
+
+<a href="https://postyou.de"><img src="https://contao.org/files/uploads/partner-logos/6889-postyou.svg" width="300" alt></a>
+
 ## Development
 
 To create a pull request and to test your changes within a running Contao application, it is the easiest to use the
-[Contao Managed Edition][2]. Start by installing it in your current directory:
+[Contao Managed Edition](https://github.com/contao/managed-edition). Start by installing it in your current directory:
 
 ```bash
 composer create-project --no-install contao/managed-edition <directory> <branch>
@@ -48,7 +54,7 @@ bundles:
 
 ```json
 "require": {
-    "php": "^8.1",
+    "php": "^8.3",
     "contao/contao": "5.x-dev"
 },
 ```
@@ -72,6 +78,7 @@ from your application.
 First install the code quality tools in `vendor/contao/contao`:
 
 ```bash
+composer update
 composer bin all install
 ```
 
@@ -135,7 +142,8 @@ npm run build
 
 ## End-to-end tests
 
-The Contao end-to-end tests are availabe as an [NPM package][3]. You can install and run them like this:
+The Contao end-to-end tests are availabe as an [NPM package](https://www.npmjs.com/package/contao-e2e-tests). You can
+install and run them like this:
 
 ```bash
 npm install contao-e2e-tests --save-dev
@@ -146,11 +154,12 @@ npx contao-e2e-tests
 
 Contao is licensed under the terms of the LGPLv3.
 
+## Sponsors
+
+ * Thanks to [JetBrains](https://www.jetbrains.com/?from=Contao) for kindly providing licenses for their products.
+ * Thanks to [Blackfire](https://www.blackfire.io) for kindly providing a free open source subscription.
+ * This project is tested with [BrowserStack](https://www.browserstack.com).
+
 ## Getting support
 
-Visit the [support page][4] to learn about the available support options.
-
-[1]: https://contao.org
-[2]: https://github.com/contao/managed-edition
-[3]: https://www.npmjs.com/package/contao-e2e-tests
-[4]: https://to.contao.org/support
+Visit the [support page](https://to.contao.org/support) to learn about the available support options.

@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
-use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -26,7 +26,9 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Pdo\Mysql;
+use PHPUnit\Framework\Attributes\BackupGlobals;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -44,13 +46,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
-/**
- * @backupGlobals enabled
- */
+#[BackupGlobals(true)]
 class PluginTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -74,7 +72,6 @@ class PluginTest extends ContaoTestCase
     {
         $plugin = new Plugin();
 
-        $this->assertInstanceOf(DependentPluginInterface::class, $plugin);
         $this->assertSame(['contao/core-bundle'], $plugin->getPackageDependencies());
     }
 
@@ -83,7 +80,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(13, $bundles);
+        $this->assertCount(14, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -121,24 +118,28 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[9]->getName());
+        $this->assertSame(SealBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[9]->getLoadAfter());
+        $this->assertSame([], $bundles[9]->getLoadAfter());
 
-        $this->assertSame(DebugBundle::class, $bundles[10]->getName());
+        $this->assertSame(ContaoManagerBundle::class, $bundles[10]->getName());
         $this->assertSame([], $bundles[10]->getReplace());
-        $this->assertSame([], $bundles[10]->getLoadAfter());
-        $this->assertFalse($bundles[10]->loadInProduction());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[10]->getLoadAfter());
 
-        $this->assertSame(WebProfilerBundle::class, $bundles[11]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
         $this->assertSame([], $bundles[11]->getLoadAfter());
         $this->assertFalse($bundles[11]->loadInProduction());
 
-        $this->assertSame(FlysystemBundle::class, $bundles[12]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[12]->getName());
         $this->assertSame([], $bundles[12]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[12]->getLoadAfter());
-        $this->assertTrue($bundles[12]->loadInProduction());
+        $this->assertSame([], $bundles[12]->getLoadAfter());
+        $this->assertFalse($bundles[12]->loadInProduction());
+
+        $this->assertSame(FlysystemBundle::class, $bundles[13]->getName());
+        $this->assertSame([], $bundles[13]->getReplace());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[13]->getLoadAfter());
+        $this->assertTrue($bundles[13]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -159,7 +160,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(15, $configs);
+        $this->assertCount(16, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
@@ -223,6 +224,27 @@ class PluginTest extends ContaoTestCase
 
     public function testGetRouteCollectionInProd(): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->atLeastOnce())
+            ->method('load')
+            ->willReturnCallback(
+                static function (string $file): RouteCollection {
+                    $collection = new RouteCollection();
+                    $collection->add(basename($file).'_foobar', new Route('/foobar'));
+
+                    return $collection;
+                },
+            )
+        ;
+
+        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $resolver
+            ->expects($this->atLeastOnce())
+            ->method('resolve')
+            ->willReturn($loader)
+        ;
+
         $kernel = $this->createMock(KernelInterface::class);
         $kernel
             ->expects($this->once())
@@ -231,9 +253,11 @@ class PluginTest extends ContaoTestCase
         ;
 
         $plugin = new Plugin();
-        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $collection = $plugin->getRouteCollection($resolver, $kernel);
+        $routes = array_values($collection->all());
 
-        $this->assertNull($plugin->getRouteCollection($resolver, $kernel));
+        $this->assertCount(1, $routes);
+        $this->assertSame('/foobar', $routes[0]->getPath());
     }
 
     public function testGetRouteCollectionInDev(): void
@@ -270,9 +294,10 @@ class PluginTest extends ContaoTestCase
         $collection = $plugin->getRouteCollection($resolver, $kernel);
         $routes = array_values($collection->all());
 
-        $this->assertCount(2, $routes);
-        $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
-        $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
+        $this->assertCount(3, $routes);
+        $this->assertSame('/foobar', $routes[0]->getPath());
+        $this->assertSame('/_wdt/foobar', $routes[1]->getPath());
+        $this->assertSame('/_profiler/foobar', $routes[2]->getPath());
     }
 
     public function testReturnsApiCommands(): void
@@ -352,9 +377,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame(['example.com' => 'example.local'], $bag['contao.dns_mapping']);
     }
 
-    /**
-     * @dataProvider getDatabaseParameters
-     */
+    #[DataProvider('getDatabaseParameters')]
     public function testSetsTheDatabaseUrl(string|null $user, string|null $password, string|null $name, string $expected): void
     {
         $container = $this->getContainer();
@@ -476,7 +499,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                             ],
                         ],
                     ],
@@ -554,7 +577,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'pdo_mysql',
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
                                 1002 => '',
                             ],
                         ],
@@ -569,9 +592,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
-    /**
-     * @dataProvider provideDatabaseDrivers
-     */
+    #[DataProvider('provideDatabaseDrivers')]
     public function testEnablesStrictMode(array $connectionConfig, int $expectedOptionKey): void
     {
         $extensionConfigs = [
@@ -607,10 +628,12 @@ class PluginTest extends ContaoTestCase
 
     public static function provideDatabaseDrivers(): iterable
     {
+        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
+
         yield 'pdo with driver' => [
             [
                 'driver' => 'mysql',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -618,7 +641,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with driver alias mysql2' => [
             [
                 'driver' => 'mysql2',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -626,7 +649,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with driver alias pdo_mysql' => [
             [
                 'driver' => 'pdo_mysql',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -634,7 +657,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url' => [
             [
                 'url' => 'mysql://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -642,7 +665,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url and driver alias mysql2' => [
             [
                 'url' => 'mysql2://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -650,7 +673,7 @@ class PluginTest extends ContaoTestCase
         yield 'pdo with url and driver alias pdo_mysql' => [
             [
                 'url' => 'pdo-mysql://user:secret@localhost/mydb',
-                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                'options' => [$key => false],
             ],
             1002,
         ];
@@ -670,9 +693,7 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideUserExtensionConfigs
-     */
+    #[DataProvider('provideUserExtensionConfigs')]
     public function testSetsDefaultCollation(array $userExtensionConfig): void
     {
         $extensionConfigs = [
@@ -680,7 +701,7 @@ class PluginTest extends ContaoTestCase
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+                            'options' => [\defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
                             'default_table_options' => [
                                 'charset' => 'utf8mb4',
                                 'collate' => 'utf8mb4_unicode_ci',
@@ -809,9 +830,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    /**
-     * @dataProvider getMailerParameters
-     */
+    #[DataProvider('getMailerParameters')]
     public function testSetsTheMailerDsn(string $transport, string|null $host, string|null $user, string|null $password, int|null $port, string|null $encryption, string $expected): void
     {
         $container = $this->getContainer();
@@ -1004,9 +1023,7 @@ class PluginTest extends ContaoTestCase
         $this->assertEmpty($extensionConfig[0]);
     }
 
-    /**
-     * @dataProvider getOrmMappingConfigurations
-     */
+    #[DataProvider('getOrmMappingConfigurations')]
     public function testOnlyAddsTheDefaultDoctrineMappingIfAutoMappingIsEnabledAndNotAlreadyConfigured(array $ormConfig, string $defaultEntityManager, bool $shouldAdd): void
     {
         $extensionConfigs = [
@@ -1026,7 +1043,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                                 1002 => '',
                             ],
                         ],
@@ -1239,7 +1256,7 @@ class PluginTest extends ContaoTestCase
 
     private function getContainer(): PluginContainerBuilder
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader = $this->createStub(PluginLoader::class);
 
         $container = new PluginContainerBuilder($pluginLoader, []);
         $container->setParameter('database_host', 'localhost');

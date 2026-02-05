@@ -81,33 +81,41 @@
         <source>Manage calendar feeds</source>
         <target>Kalender-Feeds verwalten</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New</source>
-        <target>Neu</target>
-      </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
         <target>Einen neuen Kalender erstellen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.show">
+      <trans-unit id="tl_calendar.show.1">
         <source>Show the details of calendar ID %s</source>
         <target>Details des Kalenders ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.edit">
+      <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>
         <target>Kalender ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.children">
+      <trans-unit id="tl_calendar.children.0">
+        <source>Events</source>
+        <target>Events</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.children.1">
         <source>Edit the events of calendar ID %s</source>
         <target>Events des Kalenders ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.copy">
+      <trans-unit id="tl_calendar.copy.0">
+        <source>Duplicate</source>
+        <target>Duplizieren</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
         <target>Kalender ID %s duplizieren</target>
       </trans-unit>
-      <trans-unit id="tl_calendar.delete">
+      <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
         <target>Kalender ID %s löschen</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>Kalender</target>
       </trans-unit>
     </body>
   </file>

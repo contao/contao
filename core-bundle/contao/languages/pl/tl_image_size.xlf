@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.box.1">
         <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>Obraz zostanie przeskalowany proporcjonalnie tak, aby żaden z jego boków nie przekroczył podanych wymiarów. Działa to podobnie jak wartość &lt;em&gt;contain&lt;/em&gt; w CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.0">
         <source>Crop</source>
@@ -166,6 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>Obraz zostanie przeskalowany do dokładnie podanych wymiarów. W razie potrzeby zostanie przycięty, z zachowaniem istotnego obszaru, jeśli został określony. Działa to podobnie jak wartość &lt;em&gt;cover&lt;/em&gt; w CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
@@ -179,37 +181,41 @@
         <source>Remove all metadata fields</source>
         <target>Usuń wszystkie pola metadanych</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.new.0">
-        <source>New</source>
-        <target>Nowy</target>
-      </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
         <target>Utwórz nowy rozmiar obrazu</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.show">
+      <trans-unit id="tl_image_size.show.1">
         <source>Show the details of image size ID %s</source>
         <target>Pokaż szczegóły rozmiaru ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.edit">
+      <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
         <target>Edytuj rozmiar obrazka ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.children">
+      <trans-unit id="tl_image_size.children.0">
+        <source>Media queries</source>
+        <target>Media queries</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.children.1">
         <source>Edit the media queries of image size ID %s</source>
         <target>Edytuj media queries rozmiaru obrazka ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.cut">
+      <trans-unit id="tl_image_size.cut.1">
         <source>Move image size ID %s</source>
         <target>Przenieś rozmiar obrazka ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.copy">
-        <source>Duplicate image size ID %s</source>
+      <trans-unit id="tl_image_size.copy.1">
+        <source>Copy image size ID %s</source>
         <target>Duplikuj rozmiar obrazka ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.delete">
+      <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
         <target>Usuń rozmiar obrazka ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Rozmiar obrazu</target>
       </trans-unit>
     </body>
   </file>

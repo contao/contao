@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
-use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Environment;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeVisitor\EscaperNodeVisitor;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
@@ -27,7 +27,7 @@ use Twig\NodeVisitor\NodeVisitorInterface;
  * filter expressions if the template they belong to is amongst the configured
  * affected templates.
  *
- * @experimental
+ * @internal
  */
 final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
 {
@@ -107,13 +107,7 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        // TODO: Always use "$node->getAttribute('twig_callable')->getName()" as soon as
-        // we require at least Twig 3.12.
-        $filterName = class_exists(FirstClassTwigCallableReady::class)
-            ? $node->getAttribute('twig_callable')->getName()
-            : $node->getNode('filter')->getAttribute('value');
-
-        if (!\in_array($filterName, ['escape', 'e'], true)) {
+        if (!\in_array($node->getAttribute('twig_callable')->getName(), ['escape', 'e'], true)) {
             return false;
         }
 
@@ -137,7 +131,7 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
     {
         $line = $node->getTemplateLine();
 
-        $arguments = new Node([
+        $arguments = new Nodes([
             new ConstantExpression("contao_$strategy", $line),
             new ConstantExpression(null, $line),
             new ConstantExpression(true, $line),

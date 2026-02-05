@@ -95,9 +95,9 @@ an array representation. If you are just using array access, nothing needs to be
 To ease accessing metadata and lightbox results in a chained manner or in templates, the `getMetadata()` and
 `getLightbox()` methods will now return `null` instead of throwing an exception if no data is available.
 
-The `contao_figure` Twig function has been deprecated and replaced with the `figure` Twig function. The new function
-returns a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing
-usages, render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
+The `contao_figure` Twig function is deprecated and replaced with the `figure` Twig function. The new function returns
+a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing usages,
+render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
 
 ```twig
 {# before #}
@@ -174,12 +174,6 @@ Use the kernel start time instead of `TL_START`:
 $startTime = System::getContainer()->get('kernel')->getStartTime();
 ```
 
-Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
-
-```php
-$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
-```
-
 Use the request stack to get the route instead of using `TL_SCRIPT`:
 
 ```php
@@ -197,20 +191,15 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class Test {
-    private $requestStack;
-    private $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
+    public function __construct(private ScopeMatcher $scopeMatcher) {
     }
 
     public function isBackend() {
-        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isBackendRequest();
     }
 
     public function isFrontend() {
-        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isFrontendRequest();
     }
 }
 ```
@@ -518,5 +507,18 @@ The public folder is now called `public` by default. It can be renamed in the `c
 [Basic entities][1] such as `[-]` or `[nbsp]` are no longer converted automatically when a page is rendered. Instead,
 you have to add `'basicEntities' => true` to the `eval` section of the fields you want to use them in, so they are
 converted when a record is saved in the back end.
+
+## Version 5.* to 5.6
+
+### Calendar feeds
+
+Calendar feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
+module. The `{{calendar_feed:id}}` insert tag is deprecated. You can use `{{link_url::id}}` instead.
+
+## Version 5.6 to 5.7
+
+### Referer ID
+
+The request attribute `_contao_referer_id` was removed.
 
 [1]: https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities

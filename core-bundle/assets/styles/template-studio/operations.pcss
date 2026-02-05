@@ -1,0 +1,23 @@
+#template-studio {
+    .operation {
+        &.operation--create {
+            background-image: url("../../../contao/themes/flexible/icons/new.svg");
+        }
+
+        &.operation--save {
+            background-image: url("../../../contao/themes/flexible/icons/editor.svg");
+        }
+
+        &.operation--delete {
+            background-image: url("../../../contao/themes/flexible/icons/delete.svg");
+        }
+
+        &[class*="operation--create_"][class*="_variant"] {
+            background-image: url("../../../contao/themes/flexible/icons/copy.svg");
+        }
+
+        &[class*="operation--rename_"][class*="_variant"] {
+            background-image: url("../../../contao/themes/flexible/icons/edit.svg");
+        }
+    }
+}

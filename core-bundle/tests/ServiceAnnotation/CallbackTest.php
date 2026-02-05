@@ -19,6 +19,8 @@ class CallbackTest extends TestCase
 {
     public function testReturnsTheTagName(): void
     {
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsCallback] attribute instead\./');
+
         $annotation = new Callback();
         $annotation->table = 'tl_foobar';
         $annotation->target = 'foo.bar';

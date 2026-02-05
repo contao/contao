@@ -201,6 +201,14 @@
         <source>Submit the form via Ajax instead of reloading the page.</source>
         <target>ページを再読み込みする代わりにAjaxでフォームを提出します。</target>
       </trans-unit>
+      <trans-unit id="tl_form.storeSession.0">
+        <source>Store data in the session</source>
+        <target>セッションにデータを保持</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeSession.1">
+        <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>提出したデータをセッションに保持して、&lt;code&gt;{{form_session_data::*}}&lt;/code&gt;という挿入タグで取り出せるようにします。</target>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
         <target>改訂日</target>
@@ -237,37 +245,45 @@
         <source>Template settings</source>
         <target>テンプレートの設定</target>
       </trans-unit>
-      <trans-unit id="tl_form.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>新しいフォームを作成</target>
       </trans-unit>
-      <trans-unit id="tl_form.show">
+      <trans-unit id="tl_form.show.1">
         <source>Show the details of form ID %s</source>
         <target>ID %sのフォームの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit">
+      <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
         <target>ID %sのフォームを編集</target>
       </trans-unit>
-      <trans-unit id="tl_form.children">
+      <trans-unit id="tl_form.children.0">
+        <source>Form fields</source>
+        <target>フォームの項目</target>
+      </trans-unit>
+      <trans-unit id="tl_form.children.1">
         <source>Edit the form fields of form ID %s</source>
         <target>ID %sのフォームのフォーム項目を編集</target>
       </trans-unit>
-      <trans-unit id="tl_form.copy">
+      <trans-unit id="tl_form.copy.0">
+        <source>Duplicate</source>
+        <target>複製</target>
+      </trans-unit>
+      <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
         <target>ID %sのフォームを複製</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete">
+      <trans-unit id="tl_form.delete.1">
         <source>Delete form ID %s</source>
         <target>ID %sのフォームを削除</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>以下のDCAの構成で利用できるテーブルを定義してください: &lt;code&gt;%s&lt;/code&gt;</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>フォーム</target>
       </trans-unit>
     </body>
   </file>

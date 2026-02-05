@@ -71,7 +71,6 @@ class BackendMenuListener
             'do' => 'debug',
             'key' => $this->debug ? 'disable' : 'enable',
             'referer' => base64_encode($request->server->get('QUERY_STRING', '')),
-            'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
         $class = 'icon-debug';
@@ -86,6 +85,7 @@ class BackendMenuListener
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', $class)
             ->setLinkAttribute('title', $this->translator->trans('debug_mode', [], 'ContaoManagerBundle'))
+            ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Routing;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
@@ -23,7 +24,22 @@ class PageFinder
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly RequestMatcherInterface $requestMatcher,
+        private readonly RequestStack $requestStack,
     ) {
+    }
+
+    /**
+     * Returns the current page model from the given request or the current request.
+     */
+    public function getCurrentPage(Request|null $request = null): PageModel|null
+    {
+        $pageModel = ($request ?? $this->requestStack->getCurrentRequest())?->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        return null;
     }
 
     /**

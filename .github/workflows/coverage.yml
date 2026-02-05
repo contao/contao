@@ -2,13 +2,10 @@ name: Coverage
 
 on:
     pull_request: ~
-    push:
-        branches:
-            - 5.3
-        tags:
-            - 5.3.*
+    push: ~
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:
@@ -20,17 +17,18 @@ jobs:
         name: Codecov
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3
@@ -39,7 +37,7 @@ jobs:
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v4
+              uses: codecov/codecov-action@v5
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true

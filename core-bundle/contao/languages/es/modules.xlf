@@ -41,6 +41,14 @@
         <source>Set up the pages of your website(s)</source>
         <target>Configure las páginas de su(s) sitio(s) web</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+        <target>Estudio de plantillas</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Agregar o editar plantillas Twig</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Plantillas</target>
@@ -152,6 +160,14 @@
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
         <target>Si un registro de la base de datos fue eliminado por error, este módulo te permite recuperarlo. Eso no incluye archivos ni carpetas.</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+        <target>Trabajos</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+        <target>Descripción general de los trabajos del sistema</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>

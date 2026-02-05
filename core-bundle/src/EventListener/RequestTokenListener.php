@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -48,13 +49,17 @@ class RequestTokenListener
 
         $request = $event->getRequest();
 
-        // Only check the request token if a) the request is a POST request, b) the
-        // request is not an Ajax request, c) the _token_check attribute is not false, d)
-        // the _token_check attribute is true or the request is a Contao request and e)
-        // the request has cookies, an authenticated user or the session has been started
+        // Only check the request token if
+        // - the request is a POST request,
+        // - the request is not an Ajax request,
+        // - the request is a CORS Content-Type that requires a preflight request,
+        // - the _token_check attribute is not false,
+        // - the _token_check attribute is true or the request is a Contao request and
+        // - the request has cookies, an authenticated user or the session has been started.
         if (
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
+            || !self::isSimpleCorsRequest($request)
             || false === $request->attributes->get('_token_check')
             || $this->csrfTokenManager->canSkipTokenValidation($request, $this->csrfCookiePrefix.$this->csrfTokenName)
             || (true !== $request->attributes->get('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
@@ -69,6 +74,21 @@ class RequestTokenListener
         }
 
         throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
+    }
+
+    public static function isSimpleCorsRequest(Request $request): bool
+    {
+        $contentType = HeaderUtils::split($request->headers->get('content-type', ''), ';')[0] ?? '';
+
+        return \in_array(
+            strtolower($contentType),
+            [
+                'application/x-www-form-urlencoded',
+                'multipart/form-data',
+                'text/plain',
+            ],
+            true,
+        );
     }
 
     private function getTokenFromRequest(Request $request): string|null

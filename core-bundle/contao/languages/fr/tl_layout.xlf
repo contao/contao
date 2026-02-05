@@ -9,13 +9,13 @@
         <source>Please enter the layout title.</source>
         <target>Saisir le titre de la présentation.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Présentation par défaut</target>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
+        <target>Type de présentation</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Faire de cette présentation la présentation par défaut.</target>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
+        <target>Ici, vous pouvez sélectionner le type de présentation.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -226,12 +226,12 @@
         <target>Définir les densités de pixels par défaut, par exemple &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
-        <target>Modules inclus</target>
+        <source>Included elements</source>
+        <target>Éléments inclus</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Si JavaScript est désactivé, assurez-vous de sauvegarder vos changements avant de modifier l'ordre.</target>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
+        <target>Ici, vous pouvez affecter des modules front office et des éléments de contenu à la présentation.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -378,8 +378,8 @@
         <target>Sélectionner l'alignement de la page.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
-        <target>Titre</target>
+        <source>Title and type</source>
+        <target>Titre et type</target>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -406,8 +406,8 @@
         <target>Flux</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
-        <target>Modules du front office</target>
+        <source>Include settings</source>
+        <target>Paramètres des éléments inclus</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -429,6 +429,14 @@
         <source>MooTools</source>
         <target>MooTools</target>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+        <target>Présentation Twig avec slots</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Default layout</source>
+        <target>Présentation par défaut</target>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
@@ -445,33 +453,33 @@
         <source>Matomo</source>
         <target>Matomo</target>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
         <target>Créer une nouvelle présentation de page</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show">
+      <trans-unit id="tl_layout.show.1">
         <source>Show the details of page layout ID %s</source>
         <target>Afficher les détails de la présentation de page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit">
+      <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>
         <target>Éditer la présentation de page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
+      <trans-unit id="tl_layout.copy.1">
+        <source>Copy page layout ID %s</source>
         <target>Dupliquer la présentation de page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut">
+      <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
         <target>Déplacer la présentation de page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.delete">
+      <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
         <target>Supprimer la présentation de page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+        <target>Présentation</target>
       </trans-unit>
     </body>
   </file>

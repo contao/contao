@@ -9,14 +9,6 @@
         <source>Here you can grant access to one or more FAQ categories.</source>
         <target>Овде можете доделити приступ једној или више категорија ЧПП.</target>
       </trans-unit>
-      <trans-unit id="tl_user.faqp.0">
-        <source>FAQ category permissions</source>
-        <target>Дозволе у оквиру категорија ЧПП</target>
-      </trans-unit>
-      <trans-unit id="tl_user.faqp.1">
-        <source>Here you can define the FAQ category permissions.</source>
-        <target>Овде можете дефинисати дозволе у оквиру категорија ЧПП.</target>
-      </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
         <target>Дозволе ЧПП</target>

@@ -9,13 +9,13 @@
         <source>Please enter the layout title.</source>
         <target>レイアウトの名前を入力してください。</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>既定のレイアウト</target>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
+        <target>レイアウトの種類</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>このレイアウトを既定のレイアウトにします。</target>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
+        <target>レイアウトの種類を選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -226,12 +226,12 @@
         <target>画素密度をの初期値を指定できます。例: &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
-        <target>含めるモジュール</target>
+        <source>Included elements</source>
+        <target>含まれた要素</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>JavaScriptを無効にしている場合は、順番を変更する前に行った変更を忘れずに保存してください。</target>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
+        <target>エリアうとにフロントエンドモジュールとコンテント要素を割り当てられます。</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -378,8 +378,8 @@
         <target>ページの配置を選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
-        <target>題名</target>
+        <source>Title and type</source>
+        <target>名前と種類</target>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -406,8 +406,8 @@
         <target>フィード</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
-        <target>フロントエンドモジュール</target>
+        <source>Include settings</source>
+        <target>含める設定</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -429,6 +429,14 @@
         <source>MooTools</source>
         <target>MooTools</target>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+        <target>スロットによるTwigレイアウト</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Default layout</source>
+        <target>既定のレイアウト</target>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
@@ -445,33 +453,33 @@
         <source>Matomo</source>
         <target>Matomo</target>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
         <target>新しいページのレイアウトを作成</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show">
+      <trans-unit id="tl_layout.show.1">
         <source>Show the details of page layout ID %s</source>
         <target>ID %sのページのレイアウトの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit">
+      <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>
         <target>ID %sのページのレイアウトを編集</target>
       </trans-unit>
-      <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
-        <target>ID %sのページのレイアウトを複製</target>
+      <trans-unit id="tl_layout.copy.1">
+        <source>Copy page layout ID %s</source>
+        <target>ID %sのページレイアウトをコピー</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut">
+      <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
         <target>ID %sのページのレイアウトを移動</target>
       </trans-unit>
-      <trans-unit id="tl_layout.delete">
+      <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
         <target>ID %sのページのレイアウトを削除</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+        <target>レイアウト</target>
       </trans-unit>
     </body>
   </file>

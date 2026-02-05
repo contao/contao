@@ -18,6 +18,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\FaqBundle\ContaoFaqBundle;
 use Contao\NewsBundle\ContaoNewsBundle;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AddCommentFieldsListenerTest extends ContaoTestCase
 {
@@ -81,9 +82,7 @@ class AddCommentFieldsListenerTest extends ContaoTestCase
         $this->assertSame($palettes, $GLOBALS['TL_DCA']['tl_module']['palettes']['fooreader']);
     }
 
-    /**
-     * @dataProvider appliesParentFieldsValues
-     */
+    #[DataProvider('appliesParentFieldsValues')]
     public function testAppliesParentFields(array $bundles, string $table): void
     {
         $palettes = '{foo_legend},bar';
@@ -128,9 +127,7 @@ class AddCommentFieldsListenerTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @dataProvider appliesChildFieldsValues
-     */
+    #[DataProvider('appliesChildFieldsValues')]
     public function testAppliesChildFields(array $bundles, string $table, bool $extended = false): void
     {
         $palettes = '{foo_legend},bar;{publish_legend},baz';

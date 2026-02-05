@@ -31,15 +31,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
-use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\Stub;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     private int $codePageBackup = 0;
 
     protected function setUp(): void
@@ -71,11 +70,11 @@ class DbafsTest extends TestCase
             ->method('fetchAssociative')
             ->willReturnMap([
                 [
-                    'SELECT * FROM tl_files WHERE id=?', [1], [],
+                    'SELECT * FROM tl_files WHERE id = ?', [1], [],
                     ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar1', 'type' => 'file'],
                 ],
                 [
-                    'SELECT * FROM tl_files WHERE uuid=?', [$uuid2->toBinary()], [],
+                    'SELECT * FROM tl_files WHERE uuid = ?', [$uuid2->toBinary()], [],
                     ['id' => 2, 'uuid' => $uuid2->toBinary(), 'path' => 'foo/bar2', 'type' => 'file'],
                 ],
             ])
@@ -118,8 +117,9 @@ class DbafsTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['foo/bar'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['foo/bar'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $this->generateUuid(1)->toBinary(),
@@ -158,6 +158,7 @@ class DbafsTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchAllAssociative')
             ->with(
                 'SELECT * FROM tl_files WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path',
@@ -192,6 +193,7 @@ class DbafsTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchAllAssociative')
             ->with('SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path', ['foo/%'], [])
             ->willReturn([
@@ -228,12 +230,13 @@ class DbafsTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchAssociative')
             ->willReturn(['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'])
         ;
 
         $getColumn = function (string $name): Column {
-            $column = $this->createMock(Column::class);
+            $column = $this->createStub(Column::class);
             $column
                 ->method('getName')
                 ->willReturn($name)
@@ -242,7 +245,7 @@ class DbafsTest extends TestCase
             return $column;
         };
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('listTableColumns')
             ->with('tl_files')
@@ -277,7 +280,7 @@ class DbafsTest extends TestCase
             )
         ;
 
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher = $this->createStub(EventDispatcherInterface::class);
         $eventDispatcher
             ->method('dispatch')
             ->willReturnCallback(
@@ -331,6 +334,7 @@ class DbafsTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchAssociative')
             ->willReturn(false)
         ;
@@ -349,8 +353,9 @@ class DbafsTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['files/foo/bar'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['files/foo/bar'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $uuid->toBinary(),
@@ -380,7 +385,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE id=?', [1], [])
+            ->with('SELECT * FROM tl_files WHERE id = ?', [1], [])
             ->willReturnOnConsecutiveCalls(
                 ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar', 'type' => 'file'],
                 ['id' => 1, 'uuid' => $uuid2->toBinary(), 'path' => 'other/path', 'type' => 'file'],
@@ -401,12 +406,11 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideSearchPaths
-     *
      * @param array<int, string> $paths
      * @param array<int, string> $expectedSearchPaths
      * @param array<int, string> $expectedParentPaths
      */
+    #[DataProvider('provideSearchPaths')]
     public function testNormalizesSearchPaths(array $paths, array $expectedSearchPaths, array $expectedParentPaths): void
     {
         $dbafs = $this->getDbafs();
@@ -474,10 +478,9 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideInvalidSearchPaths
-     *
      * @param array<int, string> $paths
      */
+    #[DataProvider('provideInvalidSearchPaths')]
     public function testRejectsInvalidPaths(array $paths, string $expectedException): void
     {
         $dbafs = $this->getDbafs();
@@ -512,10 +515,9 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideFilesystemsAndExpectedChangeSets
-     *
      * @param string|array<int, string> $paths
      */
+    #[DataProvider('provideFilesystemsAndExpectedChangeSets')]
     public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, array|string $paths, ChangeSet $expected): void
     {
         /*
@@ -541,7 +543,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
                 ['file1', $this->generateUuid(1)->toBinary(), 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0, null],
                 ['file2', $this->generateUuid(2)->toBinary(), 'ab86a1e1ef70dff97959067b723c5c24', 0, null],
@@ -562,12 +564,12 @@ class DbafsTest extends TestCase
         $this->assertSameChangeSet($expected, $changeSet);
     }
 
-    public function provideFilesystemsAndExpectedChangeSets(): iterable
+    public static function provideFilesystemsAndExpectedChangeSets(): iterable
     {
-        $getFilesystem = function (): VirtualFilesystemInterface {
+        $getFilesystem = static function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
-                $this->getMountManagerWithRootAdapter(),
-                $this->createMock(DbafsManager::class),
+                (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+                new DbafsManager(new EventDispatcher()),
             );
 
             $filesystem->write('file1', 'fly');
@@ -863,14 +865,14 @@ class DbafsTest extends TestCase
     {
         $filesystem = new VirtualFilesystem(
             $this->getMountManagerWithRootAdapter(),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $filesystem->write('old', 'foo'); // untouched
         $filesystem->write('file2.txt', 'bar'); // moved
         $filesystem->write('new.txt', 'baz'); // new
 
-        $hashGenerator = $this->createMock(HashGeneratorInterface::class);
+        $hashGenerator = $this->createStub(HashGeneratorInterface::class);
         $hashGenerator
             ->method('hashFileContent')
             ->willReturnCallback(
@@ -914,7 +916,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), lastModified FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), lastModified FROM tl_files", [], [])
             ->willReturn([
                 ['old', $this->generateUuid(1)->toBinary(), 'aa22b', 0, 99],
                 ['file1', $this->generateUuid(2)->toBinary(), '8446b', 0, 100],
@@ -943,7 +945,7 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $update, array $criteria): void {
+                function (string $table, array $update, array $criteria): int {
                     $this->assertSame('tl_files', $table);
 
                     $file = $criteria['path'] ?? null;
@@ -953,19 +955,19 @@ class DbafsTest extends TestCase
                         $this->assertSame('file1', $criteria['path']);
                         $this->assertSame('txt', $update['extension']);
 
-                        return;
+                        return 1;
                     }
 
                     if ('file1' === $file) {
                         $this->assertSame('file2.txt', $update['path']);
 
-                        return;
+                        return 1;
                     }
 
                     if ('new.txt' === $file) {
                         $this->assertSame(201, $update['lastModified']);
 
-                        return;
+                        return 1;
                     }
 
                     $this->fail();
@@ -976,7 +978,7 @@ class DbafsTest extends TestCase
         $dbafs = new Dbafs(
             $hashGenerator,
             $connection,
-            $this->createMock(EventDispatcherInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
             $filesystem,
             'tl_files',
         );
@@ -1016,8 +1018,9 @@ class DbafsTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['foo'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['foo'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $this->generateUuid(1)->toBinary(),
@@ -1039,7 +1042,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
                 ['files/foo', 'ee61', '48a6bbe07d25733e37e2c949ee412d5d', 1, null],
                 ['files/bar.file', 'ab54', 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0, null],
@@ -1052,7 +1055,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['files/baz'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['files/baz'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $uuid->toBinary(),
@@ -1123,13 +1126,13 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $updates, array $criteria) use (&$invokedUpdate): void {
+                function (string $table, array $updates, array $criteria) use (&$invokedUpdate): int {
                     if (isset($criteria['type'])) {
                         $this->assertSame('file', $criteria['type']);
                         $this->assertSame('files/baz', $criteria['path']);
                         $this->assertSame('', $updates['extension']);
 
-                        return;
+                        return 1;
                     }
 
                     $this->assertSame('tl_files', $table);
@@ -1144,6 +1147,8 @@ class DbafsTest extends TestCase
                     }
 
                     ++$invokedUpdate;
+
+                    return 1;
                 },
             )
         ;
@@ -1156,7 +1161,7 @@ class DbafsTest extends TestCase
 
         $filesystem = new VirtualFilesystem(
             $this->getMountManagerWithRootAdapter(),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $filesystem->createDirectory('foo');
@@ -1187,7 +1192,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
                 ['a', 'ee61', 'fdc43e4749862887eb87d5dde07c5cd8', 1, null],
                 ['b', 'ab54', 'd41d8cd98f00b204e9800998ecf8427e', 1, null],
@@ -1214,13 +1219,13 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(4))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $updates, array $criteria) use (&$expected): void {
+                function (string $table, array $updates, array $criteria) use (&$expected): int {
                     if (isset($criteria['type'])) {
                         $this->assertSame('file', $criteria['type']);
                         $this->assertSame('a/file', $criteria['path']);
                         $this->assertSame('', $updates['extension']);
 
-                        return;
+                        return 1;
                     }
 
                     $this->assertSame('tl_files', $table);
@@ -1232,13 +1237,15 @@ class DbafsTest extends TestCase
 
                     $this->assertSame($expectedCriteria, $criteria);
                     $this->assertSame($expectedUpdates, $updates);
+
+                    return 1;
                 },
             )
         ;
 
         $filesystem = new VirtualFilesystem(
             $this->getMountManagerWithRootAdapter(),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $filesystem->createDirectory('a');
@@ -1251,7 +1258,7 @@ class DbafsTest extends TestCase
 
     public function testSyncWithoutChanges(): void
     {
-        $filesystem = $this->createMock(VirtualFilesystemInterface::class);
+        $filesystem = $this->createStub(VirtualFilesystemInterface::class);
         $filesystem
             ->method('listContents')
             ->willReturn(new FilesystemItemIterator([]))
@@ -1381,9 +1388,9 @@ class DbafsTest extends TestCase
 
     private function getDbafs(Connection|null $connection = null, VirtualFilesystemInterface|null $filesystem = null, EventDispatcherInterface|null $eventDispatcher = null): Dbafs
     {
-        $connection ??= $this->createMock(Connection::class);
+        $connection ??= $this->createStub(Connection::class);
 
-        if ($connection instanceof MockObject) {
+        if ($connection instanceof Stub) {
             $connection
                 ->method('quoteIdentifier')
                 ->with('tl_files')
@@ -1392,7 +1399,7 @@ class DbafsTest extends TestCase
         }
 
         if (!$eventDispatcher) {
-            $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+            $eventDispatcher = $this->createStub(EventDispatcherInterface::class);
             $eventDispatcher
                 ->method('dispatch')
                 ->willReturnCallback(
@@ -1405,7 +1412,7 @@ class DbafsTest extends TestCase
             ;
         }
 
-        $filesystem ??= $this->createMock(VirtualFilesystemInterface::class);
+        $filesystem ??= $this->createStub(VirtualFilesystemInterface::class);
 
         $dbafs = new Dbafs(new HashGenerator('md5'), $connection, $eventDispatcher, $filesystem, 'tl_files');
         $dbafs->useLastModified(false);

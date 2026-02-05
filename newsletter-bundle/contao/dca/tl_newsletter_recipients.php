@@ -16,6 +16,8 @@ use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
+use Contao\NewsletterDenyListModel;
+use Contao\NewsletterRecipientsModel;
 use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
@@ -50,18 +52,35 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('email'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'email',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
-			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient')
+		),
+		'label' => array
+		(
+			'fields'                  => array('email'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_newsletter_recipients', 'listRecipient')
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'import' => array
 			(
 				'href'                => 'key=import',
 				'class'               => 'header_css_import'
 			),
+		),
+		'operations' => array
+		(
+			'-',
+			'block' => array
+			(
+				'href'                => 'key=block',
+				'icon'                => 'bundles/contaonewsletter/block.svg',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['tl_newsletter_recipients']['blockConfirm'] ?? null) . '\'))return false"'
+			)
 		)
 	),
 
@@ -107,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'addedOn' => array
@@ -216,7 +235,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		$icon = Image::getPath('member');
-		$icond = Image::getPath('member_');
+		$icond = Image::getPath('member--disabled');
 
 		// Change icon according to start/stop of the associated member (#951)
 		if (!isset(self::$subscribedMembers[$row['pid']]))
@@ -241,11 +260,36 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		return sprintf(
-			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",
+			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>' . "\n",
 			$row['active'] ? $icon : $icond,
 			$icon,
 			$icond,
 			$label
 		);
+	}
+
+	/**
+	 * Add a recipient to the deny list
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function blockRecipient(DataContainer $dc): void
+	{
+		$referer = $this->getReferer();
+
+		$objRecipient = NewsletterRecipientsModel::findById($dc->id);
+		$hashedEmail = md5($objRecipient->email);
+
+		if (!NewsletterDenyListModel::findByHashAndPid($hashedEmail, $objRecipient->pid))
+		{
+			$objDenyList = new NewsletterDenyListModel();
+			$objDenyList->pid = $objRecipient->pid;
+			$objDenyList->hash = $hashedEmail;
+			$objDenyList->save();
+		}
+
+		$objRecipient->delete();
+
+		$this->redirect($referer);
 	}
 }

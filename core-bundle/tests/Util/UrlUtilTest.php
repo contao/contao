@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\UrlUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlUtilTest extends TestCase
 {
-    /**
-     * @dataProvider getMakeAbsolute
-     */
+    #[DataProvider('getMakeAbsolute')]
     public function testMakeAbsolute(string $url, string $base, string $expected): void
     {
         $this->assertSame($expected, UrlUtil::makeAbsolute($url, $base));
@@ -75,5 +74,51 @@ class UrlUtilTest extends TestCase
     {
         $this->assertSame('https://fööbar.de/foo', UrlUtil::makeAbsolute('/foo', 'https://fööbar.de/'));
         $this->assertSame('https://xn--fbar-5qaa.de/foo', UrlUtil::makeAbsolute('/foo', 'https://xn--fbar-5qaa.de/'));
+    }
+
+    #[DataProvider('normalizePathAndQueryProvider')]
+    public function testNormalizePathAndQuery(string $url, string $expected): void
+    {
+        $actual = UrlUtil::getNormalizePathAndQuery($url);
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public static function normalizePathAndQueryProvider(): iterable
+    {
+        yield [
+            '/foo/bar',
+            '/foo/bar',
+        ];
+
+        yield [
+            '/foo/bar?bar=baz',
+            '/foo/bar?bar=baz',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&bar=baz',
+            '/foo/bar?bar=baz&foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&rt=1234',
+            '/foo/bar?foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&ref=1234',
+            '/foo/bar?foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?foo=bar&revise=1234',
+            '/foo/bar?foo=bar',
+        ];
+
+        yield [
+            '/foo/bar?bar=baz&rt=1&ref=2&revise=3',
+            '/foo/bar?bar=baz',
+        ];
     }
 }

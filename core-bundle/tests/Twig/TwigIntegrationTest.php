@@ -20,9 +20,13 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -35,10 +39,13 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -88,15 +95,33 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
+        $requestStack = new RequestStack([$request = new Request()]);
+
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('exists')
+            ->with('@Contao/form_text.html.twig')
+            ->willReturn(true)
+        ;
+
+        $filesystemLoader
+            ->method('getFirst')
+            ->with('form_text')
+            ->willReturn('/path/to/form_text.html.twig')
+        ;
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
-        $container->set(ContextFactory::class, new ContextFactory());
+        $container->set(ContextFactory::class, new ContextFactory($this->createStub(ScopeMatcher::class)));
+        $container->set('request_stack', $requestStack);
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
 
         System::setContainer($container);
 
@@ -104,7 +129,8 @@ class TwigIntegrationTest extends TestCase
         $textField = new FormText(['class' => 'my_class', 'label' => 'foo']);
         $textField->addError('bar');
 
-        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse());
+        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse(), 'HTML is built correctly');
+        $this->assertTrue($request->attributes->get('_contao_widget_error'), 'error attribute is set');
     }
 
     public function testRendersTwigTemplateWithLegacyParent(): void
@@ -143,28 +169,51 @@ class TwigIntegrationTest extends TestCase
 
         $templateLocator = new TemplateLocator(
             $this->getTempDir(),
-            $this->createMock(ResourceFinder::class),
+            $this->createStub(ResourceFinder::class),
             $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
         );
 
-        $filesystemLoader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $this->createMock(ContaoFramework::class), $this->getTempDir());
+        $filesystemLoader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            $themeNamespace,
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(PageFinder::class),
+            $this->getTempDir(),
+        );
+
         $environment = new Environment($filesystemLoader);
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
                 $filesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('exists')
+            ->with('@Contao/twig_template.html.twig')
+            ->willReturn(true)
+        ;
+
+        $filesystemLoader
+            ->method('getFirst')
+            ->with('twig_template')
+            ->willReturn('/path/to/twig_template.html.twig')
+        ;
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
-        $container->set(ContextFactory::class, new ContextFactory());
+        $container->set(ContextFactory::class, new ContextFactory($this->mockScopeMatcher()));
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
 
         $container->set('contao.insert_tag.parser', $insertTagParser);
@@ -204,9 +253,10 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
@@ -255,9 +305,10 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
@@ -286,7 +337,7 @@ class TwigIntegrationTest extends TestCase
             &lt;i&gt;foo&lt;/i&gt;<br>
             TEMPLATE;
 
-        $parser = $this->createMock(InsertTagParser::class);
+        $parser = $this->createStub(InsertTagParser::class);
         $parser
             ->method('replaceChunked')
             ->willReturnCallback(
@@ -309,9 +360,10 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
@@ -320,9 +372,7 @@ class TwigIntegrationTest extends TestCase
         $this->assertSame($expectedOutput, $output);
     }
 
-    /**
-     * @dataProvider provideDeserializeFilterValues
-     */
+    #[DataProvider('provideDeserializeFilterValues')]
     public function testDeserializeFilter(mixed $values, string $expectedOutput): void
     {
         $templateContent = <<<'TEMPLATE'
@@ -338,9 +388,10 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 

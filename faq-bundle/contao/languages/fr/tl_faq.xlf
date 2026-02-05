@@ -113,31 +113,27 @@
         <source>Publish settings</source>
         <target>Paramètres de publication</target>
       </trans-unit>
-      <trans-unit id="tl_faq.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
         <target>Créer une nouvelle question</target>
       </trans-unit>
-      <trans-unit id="tl_faq.show">
+      <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
         <target>Afficher les détails de la question ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.edit">
+      <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
         <target>Éditer la question ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.copy">
+      <trans-unit id="tl_faq.copy.1">
         <source>Duplicate question ID %s</source>
         <target>Dupliquer la question ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.cut">
+      <trans-unit id="tl_faq.cut.1">
         <source>Move question ID %s</source>
         <target>Déplacer la question ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.delete">
+      <trans-unit id="tl_faq.delete.1">
         <source>Delete question ID %s</source>
         <target>Supprimer la question ID %s</target>
       </trans-unit>
@@ -147,9 +143,19 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.1">
         <source>Unpublish question ID %s</source>
+        <target>Dé-publier la question ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.2">
         <source>Publish question ID %s</source>
+        <target>Publier la question ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.3">
+        <source>Unpublish</source>
+        <target>Dé-publier</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.4">
+        <source>Publish</source>
+        <target>Publier</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
@@ -166,6 +172,10 @@
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
         <target>Créer une nouvelle question après la question ID %s</target>
+      </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>Question</target>
       </trans-unit>
     </body>
   </file>

@@ -16,13 +16,14 @@ use Twig\Environment;
 use Twig\Node\DeprecatedNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * @internal
  */
-class DeprecationsNodeVisitor implements NodeVisitorInterface
+final class DeprecationsNodeVisitor implements NodeVisitorInterface
 {
     public function getPriority(): int
     {
@@ -72,17 +73,15 @@ class DeprecationsNodeVisitor implements NodeVisitorInterface
     {
         $line = $node->getTemplateLine();
 
-        /** @phpstan-ignore arguments.count */
         $deprecatedNode = new DeprecatedNode(
             new ConstantExpression("Since contao/core-bundle 4.13: $message", $line),
             $line,
-            $node->getNodeTag(),
         );
 
         // Set the source context, so that the template name can be inserted when
         // compiling the DeprecatedNode.
         $deprecatedNode->setSourceContext($node->getSourceContext());
 
-        return new Node([$node, $deprecatedNode]);
+        return new Nodes([$node, $deprecatedNode]);
     }
 }

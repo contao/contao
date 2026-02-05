@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure.0">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokaż od</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -219,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokaż do</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
-        <target>Załacznik kanału RSS</target>
+        <target>Załączniki</target>
       </trans-unit>
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
@@ -271,37 +271,37 @@
       </trans-unit>
       <trans-unit id="tl_news.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
-      </trans-unit>
-      <trans-unit id="tl_news.new.0">
-        <source>New</source>
-        <target>Nowy</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Utwórz nową aktualność</target>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
         <target>Pokaż szczegóły aktualności ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>Edytuj aktualność ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+        <target>Elementy treści</target>
+      </trans-unit>
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
         <target>Edytuj elementy treści aktualności ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
         <target>Duplikuj aktualność ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
         <target>Przenieś aktualność ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
         <target>Usuń aktualność ID %s</target>
       </trans-unit>
@@ -317,6 +317,14 @@
         <source>Publish news item ID %s</source>
         <target>Opublikuj aktualność ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Unpublish</source>
+        <target>Ukryj</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Publish</source>
+        <target>Opublikuj</target>
+      </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>Wyróżnij/nie wyróżniaj aktualności ID %s</target>
@@ -329,9 +337,21 @@
         <source>Feature news item ID %s</source>
         <target>Wyróżnij aktualność ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+        <target>Usuń wyróżnienie</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
+        <target>Wyróżnij</target>
+      </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Wklej do tego archiwum</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>Aktualności</target>
       </trans-unit>
     </body>
   </file>

@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Fixtures\Contao\FoobarWidget;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\System;
 use Contao\TextField;
 use Contao\Widget;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,7 +32,7 @@ class WidgetTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack());
-        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
+        $container->set('contao.routing.scope_matcher', $this->createStub(ScopeMatcher::class));
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.image.valid_extensions', ['jpg', 'gif', 'png']);
 
@@ -45,17 +47,16 @@ class WidgetTest extends TestCase
     }
 
     /**
-     * @param array<string>|string $value
-     *
-     * @dataProvider postProvider
+     * @param array<string|array>|string $value
      */
+    #[DataProvider('postProvider')]
     public function testReadsThePostData(string $key, string $input, array|string $value, string|null $expected = null): void
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();
         error_reporting($errorReporting & ~E_NOTICE);
 
-        $widget = $this->createMock(Widget::class);
+        $widget = $this->createStub(Widget::class);
 
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
@@ -142,10 +143,10 @@ class WidgetTest extends TestCase
         $stack->push(new Request());
 
         $widget = $this
-            ->getMockBuilder(Widget::class)
+            ->getMockBuilder(FoobarWidget::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['validator'])
-            ->getMockForAbstractClass()
+            ->getMock()
         ;
 
         $widget
@@ -175,9 +176,7 @@ class WidgetTest extends TestCase
         ;
     }
 
-    /**
-     * @dataProvider getAttributesFromDca
-     */
+    #[DataProvider('getAttributesFromDca')]
     public function testGetsAttributesFromDca(array $parameters, array $expected): void
     {
         $attrs = Widget::getAttributesFromDca(...$parameters);
@@ -246,9 +245,9 @@ class WidgetTest extends TestCase
         ];
 
         yield [
-            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;'],
+            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;'],
             [
-                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;',
             ],
         ];
 
@@ -256,11 +255,11 @@ class WidgetTest extends TestCase
             [
                 ['eval' => ['basicEntities' => true]],
                 'name',
-                '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+                '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;',
             ],
             [
                 'basicEntities' => true,
-                'value' => '[&],[lt],[gt],[nbsp],[-]',
+                'value' => '[&],[lt],[gt],[nbsp],[-],[lsqb],[rsqb]',
             ],
         ];
     }

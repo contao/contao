@@ -17,6 +17,7 @@ use Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -25,13 +26,11 @@ use Twig\Error\RuntimeError;
 
 class UnwrapTwigExceptionListenerTest extends TestCase
 {
-    /**
-     * @dataProvider provideExceptionsToUnwrap
-     */
+    #[DataProvider('provideExceptionsToUnwrap')]
     public function testUnwrapsException(\Exception $exception): void
     {
         $event = new ExceptionEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             new RuntimeError('An exception has been thrown during rendering of a template.', -1, null, $exception),
@@ -57,13 +56,11 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideThrowableToIgnore
-     */
+    #[DataProvider('provideThrowableToIgnore')]
     public function testIgnoresOtherExceptions(\Throwable $throwable): void
     {
         $event = new ExceptionEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
             $throwable,

@@ -1,0 +1,138 @@
+@import "common.pcss";
+@import "tree.pcss";
+@import "editor-tab.pcss";
+@import "operations.pcss";
+@import "info.pcss";
+@import "dialog.pcss";
+
+@keyframes point-left {
+    0% {
+        transform: translateX(1ch);
+        opacity: 0;
+    }
+
+    25% {
+        transform: translateX(-1ch);
+        opacity: 0.75;
+    }
+
+    100% {
+        transform: translateX(-1ch);
+        opacity: 0.75;
+    }
+}
+
+#template-studio {
+    --hover-color: var(--green);
+
+    height: calc(100vh - 7rem);
+    overflow: hidden;
+    display: grid;
+    grid-template-areas: "nav tabs info";
+    grid-template-columns: auto 1fr min-content;
+    position: relative;
+
+    * {
+        scrollbar-width: thin;
+    }
+
+    > :empty {
+        display: none;
+    }
+
+    &:fullscreen {
+        padding: 6px;
+    }
+
+    #template-studio--nav {
+        grid-area: nav;
+        border-right: 1px solid var(--border);
+        overflow: auto;
+        resize: horizontal;
+        min-width: 100px;
+        max-width: max-content;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #template-studio--theme-selector {
+        border-bottom: 1px solid var(--border);
+        padding: 6px;
+        max-width: 300px;
+
+        label > span {
+            font-size: 0.8em;
+            margin-left: 4px;
+            color: var(--info);
+        }
+    }
+
+    #template-studio--tree {
+        padding-top: 4px;
+        overflow: auto;
+    }
+
+    #template-studio--tabs {
+        grid-area: tabs;
+        position: relative;
+        overflow-y: auto;
+
+        .explainer {
+            max-width: 60ch;
+            background-color: var(--content-bg);
+            padding: 12px;
+            line-height: 1.3;
+
+            h3 {
+                margin-bottom: 12px;
+            }
+
+            svg {
+                margin-left: 1ch;
+                vertical-align: middle;
+                transform: translateX(10px);
+                animation: point-left 4s infinite;
+            }
+        }
+    }
+
+    #template-studio--info {
+        grid-area: info;
+        border-left: 1px solid var(--border);
+        overflow-y: auto;
+        min-width: 220px;
+
+        @media (width >= 1540px) {
+            min-width: 320px;
+        }
+
+        @media (width >= 1640px) {
+            min-width: 420px;
+        }
+
+        .block {
+            text-align: right;
+        }
+
+        .template_name {
+            row-gap: 8px;
+
+            .structure {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+        }
+
+        .badges {
+            justify-content: flex-end;
+        }
+    }
+}
+
+#main_headline button.fullscreen {
+    transition: transform 0.1s;
+
+    &:hover {
+        transform: scale(1.25);
+    }
+}

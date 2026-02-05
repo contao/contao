@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
@@ -24,6 +24,7 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use FeedIo\Feed\Item;
 use FeedIo\Specification;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,13 +52,11 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame(['.xml', '.json'], $controller->getUrlSuffixes());
     }
 
-    /**
-     * @dataProvider getXMLFeedFormats
-     * @dataProvider getJSONFeedFormats
-     */
+    #[DataProvider('getXMLFeedFormats', validateArgumentCount: false)]
+    #[DataProvider('getJSONFeedFormats', validateArgumentCount: false)]
     public function testConfiguresPageRoute(string $format, string $suffix): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -76,7 +75,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public function testThrowsExceptionOnInvalidFeedFormat(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -95,7 +94,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public function testReturnsEmptyFeed(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -106,17 +105,17 @@ class NewsFeedControllerTest extends ContaoTestCase
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
+        $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTagManager = $this->createMock(CacheTagManager::class);
+        $cacheTagManager
             ->expects($this->once())
             ->method('tagWith')
             ->with(['contao.db.tl_news_archive.8472'])
         ;
 
-        $container->set('contao.cache.entity_tags', $entityCacheTags);
+        $container->set('contao.cache.tag_manager', $cacheTagManager);
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -127,12 +126,10 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider getXMLFeedFormats
-     */
+    #[DataProvider('getXMLFeedFormats', validateArgumentCount: false)]
     public function testProperlyEncodesXMLEntities(string $format): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News &lt;/channel&gt;',
             'alias' => 'latest-news',
@@ -142,17 +139,9 @@ class NewsFeedControllerTest extends ContaoTestCase
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
-
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
-            ->expects($this->once())
-            ->method('tagWith')
-            ->with([])
-        ;
-
-        $container->set('contao.cache.entity_tags', $entityCacheTags);
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
+        $container->set('event_dispatcher', $this->createStub(EventDispatcher::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -169,13 +158,11 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);
     }
 
-    /**
-     * @dataProvider getXMLFeedFormats
-     * @dataProvider getJSONFeedFormats
-     */
-    public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType): void
+    #[DataProvider('getXMLFeedFormats')]
+    #[DataProvider('getJSONFeedFormats')]
+    public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType, bool $isDebug = false): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
             'title' => 'Latest News',
             'alias' => 'latest-news',
@@ -183,10 +170,10 @@ class NewsFeedControllerTest extends ContaoTestCase
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.framework', $this->createContaoFrameworkStub());
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
 
-        $dispatcher = $this->createMock(EventDispatcher::class);
+        $dispatcher = $this->createStub(EventDispatcher::class);
         $dispatcher
             ->method('dispatch')
             ->willReturnCallback(
@@ -210,7 +197,7 @@ class NewsFeedControllerTest extends ContaoTestCase
 
         $container->set('event_dispatcher', $dispatcher);
 
-        $controller = $this->getController();
+        $controller = $this->getController($isDebug);
         $controller->setContainer($container);
 
         $response = $controller(Request::create($url), $pageModel);
@@ -223,19 +210,22 @@ class NewsFeedControllerTest extends ContaoTestCase
     {
         yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml'];
         yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml'];
+        yield 'RSS (debug)' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/xml', true];
+        yield 'Atom (debug)' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/xml', true];
     }
 
     public static function getJSONFeedFormats(): iterable
     {
         yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json'];
+        yield 'JSON (debug)' => ['json', '.json', 'https://example.org/latest-news.json', 'application/json', true];
     }
 
-    private function getController(): NewsFeedController
+    private function getController(bool $isDebug = false): NewsFeedController
     {
-        $contaoContext = $this->createMock(ContaoContext::class);
+        $contaoContext = $this->createStub(ContaoContext::class);
         $specification = new Specification(new NullLogger());
 
-        return new NewsFeedController($contaoContext, $specification, 'UTF-8');
+        return new NewsFeedController($contaoContext, $specification, 'UTF-8', $isDebug);
     }
 
     private function getArticlesAsArray(int $count = 1): array
@@ -243,7 +233,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $articles = [];
 
         for ($i = 0; $i < $count; ++$i) {
-            $articles[] = $this->mockClassWithProperties(NewsModel::class, [
+            $articles[] = $this->createClassWithPropertiesStub(NewsModel::class, [
                 'id' => 1 + $i,
                 'pid' => 1 + $i,
                 'title' => 'Example title',

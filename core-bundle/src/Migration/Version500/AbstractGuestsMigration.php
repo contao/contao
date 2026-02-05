@@ -44,12 +44,14 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                 continue;
             }
 
-            $test = $this->connection->fetchOne("
-                SELECT TRUE
-                FROM $table
-                WHERE `guests`='1'
-                LIMIT 1
-            ");
+            $test = $this->connection->fetchOne(
+                <<<SQL
+                    SELECT TRUE
+                    FROM $table
+                    WHERE `guests` = '1'
+                    LIMIT 1
+                    SQL,
+            );
 
             if (false !== $test) {
                 return true;
@@ -74,11 +76,16 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                 continue;
             }
 
-            $values = $this->connection->fetchAllAssociative("
-                SELECT id, protected, `groups`
-                FROM $table
-                WHERE `guests`='1'
-            ");
+            $values = $this->connection->fetchAllAssociative(
+                <<<SQL
+                    SELECT
+                        id,
+                        protected,
+                        `groups`
+                    FROM $table
+                    WHERE `guests` = '1'
+                    SQL,
+            );
 
             foreach ($values as $row) {
                 $groups = $row['protected'] ? StringUtil::deserialize($row['groups'], true) : [];

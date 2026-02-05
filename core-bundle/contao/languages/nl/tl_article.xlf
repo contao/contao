@@ -177,35 +177,35 @@
         <source>Share on X (formerly Twitter)</source>
         <target>Deel op X (voorheen Twitter)</target>
       </trans-unit>
-      <trans-unit id="tl_article.new.0">
-        <source>New</source>
-        <target>Nieuw</target>
-      </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
         <target>Maak een nieuw artikel</target>
       </trans-unit>
-      <trans-unit id="tl_article.show">
+      <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
         <target>Toon details van artikel ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit">
+      <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
         <target>Bewerk artikel ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.children">
+      <trans-unit id="tl_article.children.0">
+        <source>Content elements</source>
+        <target>Inhoud elementen</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children.1">
         <source>Edit the content elements of article ID %s</source>
         <target>Bewerk de inhoudselementen van artikel ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.copy">
-        <source>Duplicate article ID %s</source>
-        <target>Dupliceer artikel ID %s</target>
+      <trans-unit id="tl_article.copy.1">
+        <source>Copy article ID %s</source>
+        <target>Kopieer artikel ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut">
+      <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
         <target>Verplaats artikel ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete">
+      <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
         <target>Verwijder artikel ID %s</target>
       </trans-unit>
@@ -221,13 +221,45 @@
         <source>Publish article ID %s</source>
         <target>Publiceer artikel ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.toggle.3">
+        <source>Unpublish</source>
+        <target>Niet publiceren</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.4">
+        <source>Publish</source>
+        <target>Publiceren</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.0">
+        <source>Paste after article</source>
+        <target>Plakken achter artikel</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>Plakken achter artikel ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.pasteinto.0">
+        <source>Paste into page</source>
+        <target>Plak in pagina</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
         <target>Plak in pagina ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewafter.1">
+        <source>Add a new article after article ID %s</source>
+        <target>Voeg een nieuw artikel toe na artikel ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.0">
+        <source>New at the top</source>
+        <target>Nieuw bovenaan</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.1">
+        <source>Add a new article in page ID %s</source>
+        <target>Voeg een nieuw artikel toe op pagina ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Artikel</target>
       </trans-unit>
     </body>
   </file>

@@ -15,21 +15,24 @@ namespace Contao\CoreBundle\Tests\Image\Studio;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class LightboxResultTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidConfigurations
-     */
+    #[DataProvider('provideInvalidConfigurations')]
     public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl(ImageInterface|string|null $resource, string|null $url): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
 
         $this->expectException(\InvalidArgumentException::class);
 
@@ -49,24 +52,33 @@ class LightboxResultTest extends TestCase
         $size = [100, 200, 'crop'];
         $layoutId = 1;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->lightboxSize = serialize($size);
 
-        $layoutModelAdapter = $this->mockAdapter(['findById']);
+        $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
             ->with($layoutId)
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutModelAdapter]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->layout = $layoutId;
 
-        $GLOBALS['objPage'] = $pageModel;
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
 
-        $image = $this->createMock(ImageResult::class);
+        $requestStack = new RequestStack([$request]);
+
+        $pageFinder = new PageFinder(
+            $framework,
+            $this->createStub(RequestMatcherInterface::class),
+            $requestStack,
+        );
+
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -76,19 +88,17 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
-            ->expects($this->exactly(2))
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
                 ['contao.image.studio', $studio],
+                ['contao.routing.page_finder', $pageFinder],
             ])
         ;
 
         new LightboxResult($locator, $resource, null);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testFallBackLightboxSizeConfigurationFailsIfNoLightboxSizeSet(): void
@@ -96,24 +106,33 @@ class LightboxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $layoutId = 1;
 
-        $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
         $layoutModel->lightboxSize = '';
 
-        $layoutModelAdapter = $this->mockAdapter(['findById']);
+        $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
             ->with($layoutId)
             ->willReturn($layoutModel)
         ;
 
-        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutModelAdapter]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->layout = $layoutId;
 
-        $GLOBALS['objPage'] = $pageModel;
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
 
-        $image = $this->createMock(ImageResult::class);
+        $requestStack = new RequestStack([$request]);
+
+        $pageFinder = new PageFinder(
+            $framework,
+            $this->createStub(RequestMatcherInterface::class),
+            $requestStack,
+        );
+
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -123,26 +142,24 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
-            ->expects($this->exactly(2))
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
                 ['contao.image.studio', $studio],
+                ['contao.routing.page_finder', $pageFinder],
             ])
         ;
 
         new LightboxResult($locator, $resource, null);
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testFallBackLightboxSizeConfigurationFailsIfNoPage(): void
     {
         $resource = 'foo/bar.png';
-        $framework = $this->mockContaoFramework();
-        $image = $this->createMock(ImageResult::class);
+        $framework = $this->createContaoFrameworkStub();
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -152,17 +169,16 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $locator
-            ->expects($this->once())
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
                 ['contao.image.studio', $studio],
+                ['contao.routing.page_finder', $this->createStub(PageFinder::class)],
             ])
         ;
 
-        // Note: $GLOBALS['objPage'] is not set at this point
         new LightboxResult($locator, $resource, null);
     }
 
@@ -170,7 +186,7 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -195,7 +211,7 @@ class LightboxResultTest extends TestCase
 
     public function testHasNoImage(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->assertFalse($lightboxResult->hasImage());
@@ -205,7 +221,7 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -230,7 +246,7 @@ class LightboxResultTest extends TestCase
 
     public function testGetImageThrowsIfNoImageWasSet(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->expectException(\RuntimeException::class);
@@ -273,7 +289,7 @@ class LightboxResultTest extends TestCase
 
     public function testGetLinkHrefForUrl(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->assertSame('foo://bar', $lightboxResult->getLinkHref());
@@ -281,7 +297,7 @@ class LightboxResultTest extends TestCase
 
     public function testGetGroupIdentifierIfExplicitlySet(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar', null, '12345');
 
         $this->assertSame('12345', $lightboxResult->getGroupIdentifier());
@@ -289,7 +305,7 @@ class LightboxResultTest extends TestCase
 
     public function testGroupIdentifierIsEmptyIfNotExplicitlySet(): void
     {
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
         $this->assertSame('', $lightboxResult->getGroupIdentifier());
@@ -300,7 +316,7 @@ class LightboxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
         $resizeOptions = new ResizeOptions();
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
 
         $studio = $this->createMock(Studio::class);
         $studio

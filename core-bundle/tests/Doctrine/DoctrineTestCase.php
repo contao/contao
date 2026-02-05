@@ -17,29 +17,29 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 abstract class DoctrineTestCase extends TestCase
 {
     /**
      * Mocks a Doctrine registry with database connection.
      *
-     * @param Connection&MockObject $connection
+     * @param Connection&Stub $connection
      */
-    protected function mockDoctrineRegistry(Connection|null $connection = null): Registry&MockObject
+    protected function mockDoctrineRegistry(Connection|null $connection = null): Registry&Stub
     {
-        $connection ??= $this->createMock(Connection::class);
+        $connection ??= $this->createStub(Connection::class);
 
-        if ($connection instanceof MockObject) {
+        if ($connection instanceof Stub) {
             $connection
                 ->method('getDatabasePlatform')
                 ->willReturn(new MySQLPlatform())
@@ -52,11 +52,11 @@ abstract class DoctrineTestCase extends TestCase
 
             $connection
                 ->method('getConfiguration')
-                ->willReturn($this->createMock(Configuration::class))
+                ->willReturn($this->createStub(Configuration::class))
             ;
         }
 
-        $registry = $this->createMock(Registry::class);
+        $registry = $this->createStub(Registry::class);
         $registry
             ->method('getConnection')
             ->willReturn($connection)
@@ -68,15 +68,15 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks the Contao framework with the database installer.
      */
-    protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework&MockObject
+    protected function mockContaoFrameworkWithInstaller(array $dca = []): ContaoFramework&Stub
     {
-        $installer = $this->createMock(Installer::class);
+        $installer = $this->createStub(Installer::class);
         $installer
             ->method('getFromDca')
             ->willReturn($dca)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
         $framework
             ->method('createInstance')
             ->willReturn($installer)
@@ -86,7 +86,7 @@ abstract class DoctrineTestCase extends TestCase
     }
 
     /**
-     * @param Connection&MockObject $connection
+     * @param Connection&Stub $connection
      */
     protected function getDcaSchemaProvider(array $dca = [], Connection|null $connection = null): DcaSchemaProvider
     {
@@ -120,10 +120,7 @@ abstract class DoctrineTestCase extends TestCase
 
         $driverChain = new MappingDriverChain();
         $driverChain->addDriver(
-            new AnnotationDriver(
-                new AnnotationReader(),
-                __DIR__.'/../Fixtures/Entity',
-            ),
+            new AttributeDriver([__DIR__.'/../Fixtures/Entity']),
             'Contao\\CoreBundle\\Tests\\Fixtures\\Entity',
         );
 
@@ -134,7 +131,7 @@ abstract class DoctrineTestCase extends TestCase
         $config->setProxyNamespace('ContaoTests\Doctrine');
         $config->setMetadataDriverImpl($driverChain);
 
-        return EntityManager::create($params, $config);
+        return new EntityManager(DriverManager::getConnection($params), $config);
     }
 
     private function getDefaultTableOptions(): array

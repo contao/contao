@@ -201,6 +201,14 @@
         <source>Submit the form via Ajax instead of reloading the page.</source>
         <target>Verstuur het formulier via Ajax in plaats van de pagina opnieuw te laden.</target>
       </trans-unit>
+      <trans-unit id="tl_form.storeSession.0">
+        <source>Store data in the session</source>
+        <target>Sla gegevens op in de sessie</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeSession.1">
+        <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>Sla de ingediende gegevens op in de sessie zodat ze kunnen worden opgehaald via de &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert-tag.</target>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
         <target>Datum van aanpassing</target>
@@ -237,37 +245,45 @@
         <source>Template settings</source>
         <target>Template-instellingen</target>
       </trans-unit>
-      <trans-unit id="tl_form.new.0">
-        <source>New</source>
-        <target>Nieuw</target>
-      </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Maak een nieuw formulier</target>
       </trans-unit>
-      <trans-unit id="tl_form.show">
+      <trans-unit id="tl_form.show.1">
         <source>Show the details of form ID %s</source>
         <target>Toon details van formulier ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit">
+      <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
         <target>Wijzig formulier ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.children">
+      <trans-unit id="tl_form.children.0">
+        <source>Form fields</source>
+        <target>Formulier velden</target>
+      </trans-unit>
+      <trans-unit id="tl_form.children.1">
         <source>Edit the form fields of form ID %s</source>
         <target>Bewerk de velden van formulier ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.copy">
+      <trans-unit id="tl_form.copy.0">
+        <source>Duplicate</source>
+        <target>Kopie</target>
+      </trans-unit>
+      <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
         <target>Dupliceer formulier ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete">
+      <trans-unit id="tl_form.delete.1">
         <source>Delete form ID %s</source>
         <target>Verwijder formulier ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>Definieer de beschikbare tabellen in de volgende DCA-configuratie: &lt;code&gt;%s&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Formulier</target>
       </trans-unit>
     </body>
   </file>

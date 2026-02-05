@@ -30,7 +30,7 @@ trait DynamicPtableTrait
     {
         // Limit to a nesting level of 10
         $records = $connection->fetchAllAssociative(
-            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=:id".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid AND ptable=:ptable", 9),
+            "SELECT id, @pid := pid AS pid, ptable FROM $table WHERE id = :id".str_repeat(" UNION SELECT id, @pid := pid AS pid, ptable FROM $table WHERE id = @pid AND ptable = :ptable", 9),
             ['id' => $id, 'ptable' => $table],
         );
 
@@ -60,7 +60,7 @@ trait DynamicPtableTrait
         // If we have more than 1 but less than 10 results, the last result in our array
         // must be the first nested element, and its parent is what we are looking for.
         $record = $connection->fetchAssociative(
-            "SELECT id, pid, ptable FROM $table WHERE id=?",
+            "SELECT id, pid, ptable FROM $table WHERE id = ?",
             [$record['pid']],
         );
 

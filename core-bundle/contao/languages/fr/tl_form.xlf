@@ -201,6 +201,14 @@
         <source>Submit the form via Ajax instead of reloading the page.</source>
         <target>Soumettre le formulaire via Ajax au lieu de recharger la page.</target>
       </trans-unit>
+      <trans-unit id="tl_form.storeSession.0">
+        <source>Store data in the session</source>
+        <target>Stocker les données dans la session</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeSession.1">
+        <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>Stocker les données soumises dans la session afin qu'elles puissent être récupérées via la balise d'insertion &lt;code&gt;{{form_session_data::*}}&lt;/code&gt;.</target>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
         <target>Date de révision</target>
@@ -231,43 +239,51 @@
       </trans-unit>
       <trans-unit id="tl_form.confirm_legend">
         <source>Confirmation</source>
-        <target>Confirmation du mot de passe</target>
+        <target>Confirmation</target>
       </trans-unit>
       <trans-unit id="tl_form.template_legend">
         <source>Template settings</source>
         <target>Paramètres des modèles</target>
       </trans-unit>
-      <trans-unit id="tl_form.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Créer un nouveau formulaire</target>
       </trans-unit>
-      <trans-unit id="tl_form.show">
+      <trans-unit id="tl_form.show.1">
         <source>Show the details of form ID %s</source>
         <target>Afficher les détails du formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit">
+      <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
         <target>Éditer le formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.children">
+      <trans-unit id="tl_form.children.0">
+        <source>Form fields</source>
+        <target>Champs de formulaire</target>
+      </trans-unit>
+      <trans-unit id="tl_form.children.1">
         <source>Edit the form fields of form ID %s</source>
         <target>Modifier les champs du formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.copy">
+      <trans-unit id="tl_form.copy.0">
+        <source>Duplicate</source>
+        <target>Dupliquer</target>
+      </trans-unit>
+      <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
         <target>Dupliquer le formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete">
+      <trans-unit id="tl_form.delete.1">
         <source>Delete form ID %s</source>
         <target>Supprimer le formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>Définissez les tables disponibles dans la configuration DCA suivante: &lt;code&gt;%s&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Formulaire</target>
       </trans-unit>
     </body>
   </file>

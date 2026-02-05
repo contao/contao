@@ -1,13 +1,10 @@
 name: Split
 
 on:
-    push:
-        branches:
-            - 5.3
-        tags:
-            - 5.3.*
+    push: ~
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:
@@ -19,20 +16,21 @@ jobs:
         name: Monorepo split
         runs-on: ubuntu-latest
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.3
                   extensions: json, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Cache the monorepo split
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               with:
                   path: .monorepo-split-cache
                   key: dev-${GITHUB_REF##*/}

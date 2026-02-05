@@ -16,7 +16,6 @@ use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -25,12 +24,9 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Service\ResetInterface;
 
 class MergeHttpHeadersListenerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testIgnoresSubrequests(): void
     {
         $responseEvent = $this->getResponseEvent(null, HttpKernelInterface::SUB_REQUEST);
@@ -45,12 +41,9 @@ class MergeHttpHeadersListenerTest extends TestCase
         $listener($responseEvent);
     }
 
-    /**
-     * @group legacy
-     */
     public function testMergesTheHeadersSent(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -87,12 +80,9 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertFalse($responseEvent->getResponse()->headers->has('Content-Type'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testDoesNotOverrideMultiValueHeaders(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
 
         $response = new Response();
         $response->headers->set('Set-Cookie', 'content=foobar');
@@ -123,7 +113,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     public function testAddsAndRemovesMultiValueHeaders(): void
     {
-        $listener = new MergeHttpHeadersListener($this->mockContaoFramework());
+        $listener = new MergeHttpHeadersListener($this->createContaoFrameworkStub());
 
         $this->assertSame(
             [
@@ -175,12 +165,9 @@ class MergeHttpHeadersListenerTest extends TestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
     public function testInheritsHeadersFromSubrequest(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -212,12 +199,9 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('application/json', $response->headers->get('Content-Type'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testInheritsMultiHeadersFromSubrequest(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -255,12 +239,9 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
     }
 
-    /**
-     * @group legacy
-     */
     public function testDoesNotMergeCacheControlHeaders(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -282,12 +263,9 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testSetsTheStatusCodeFromHttpHeader(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -308,12 +286,9 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame(404, $response->getStatusCode());
     }
 
-    /**
-     * @group legacy
-     */
     public function testServiceIsResetable(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
 
         $response = new Response();
 
@@ -334,9 +309,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headerStorage = new MemoryHeaderStorage(['Foo: Bar']);
 
         $listener = new MergeHttpHeadersListener($framework, $headerStorage);
-
-        $this->assertInstanceOf(ResetInterface::class, $listener);
-
         $listener($this->getResponseEvent($response));
         $listener($this->getResponseEvent($response));
 
@@ -363,7 +335,7 @@ class MergeHttpHeadersListenerTest extends TestCase
 
     private function getResponseEvent(Response|null $response = null, int $requestType = HttpKernelInterface::MAIN_REQUEST): ResponseEvent
     {
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
 
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));

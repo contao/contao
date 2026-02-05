@@ -1,15 +1,44 @@
 {
     "devDependencies": {
+        "@biomejs/biome": "^2.3",
         "@hotwired/stimulus": "^3.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0",
-        "@symfony/webpack-encore": "^5.1"
+        "@hotwired/turbo": "^8.0.21",
+        "@simplewebauthn/browser": "^13.1",
+        "@stimulus-components/color-picker": "^2.0",
+        "@stimulus-components/password-visibility": "^3.0",
+        "@stylistic/stylelint-config": "^4.0",
+        "@stylistic/stylelint-plugin": "^5.0",
+        "@symfony/webpack-encore": "^5.1",
+        "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
+        "accessible-menu": "^4.2",
+        "ace-builds": "^1.43.3",
+        "file-loader": "^6.2",
+        "focus-trap": "^7.6",
+        "image-minimizer-webpack-plugin": "^4.1",
+        "npm-run-all": "^4.1",
+        "postcss": "^8.5",
+        "postcss-loader": "^8.1",
+        "postcss-preset-env": "^11.1",
+        "sortablejs": "^1.15",
+        "stimulus-textarea-autogrow": "^4.1",
+        "stylelint": "^17.0",
+        "stylelint-config-standard": "^40.0",
+        "svgo": "^4.0",
+        "webpack-dev-server": "^5.2"
     },
+    "browserslist": [
+        "defaults"
+    ],
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "lint:js": "biome check --write --unsafe core-bundle/assets",
+        "lint:css": "stylelint --fix lax core-bundle/assets/styles core-bundle/contao/themes/flexible/styles",
+        "lint": "run-s lint:js lint:css"
     },
     "private": true,
-    "packageManager": "npm@11.1.0"
+    "packageManager": "npm@11.6.0"
 }

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\FaviconController;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -36,7 +36,7 @@ class FaviconControllerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -44,14 +44,14 @@ class FaviconControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(EntityCacheTags::class));
+        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createStub(CacheTagManager::class));
         $controller($request);
     }
 
     public function testThrowsNotFoundHttpExceptionIfNoFaviconProvided(): void
     {
         $request = Request::create('https://www.example.org/favicon.ico');
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'favicon' => null]);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'favicon' => null]);
 
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
@@ -61,7 +61,7 @@ class FaviconControllerTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->never())
             ->method('initialize')
@@ -69,7 +69,7 @@ class FaviconControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(EntityCacheTags::class));
+        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createStub(CacheTagManager::class));
         $controller($request);
     }
 
@@ -119,15 +119,15 @@ class FaviconControllerTest extends TestCase
 
     private function getController(string $iconPath): FaviconController
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 42;
         $pageModel->favicon = 'favicon-uuid';
 
-        $faviconModel = $this->mockClassWithProperties(FilesModel::class);
+        $faviconModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $faviconModel->path = $iconPath;
         $faviconModel->extension = substr($iconPath, -3);
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid']);
+        $filesModelAdapter = $this->createAdapterMock(['findByUuid']);
         $filesModelAdapter
             ->expects($this->once())
             ->method('findByUuid')
@@ -135,7 +135,7 @@ class FaviconControllerTest extends TestCase
             ->willReturn($faviconModel)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkMock([
             FilesModel::class => $filesModelAdapter,
         ]);
 
@@ -152,13 +152,13 @@ class FaviconControllerTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTags = $this->createMock(CacheTagManager::class);
+        $cacheTags
             ->expects($this->once())
             ->method('tagWithModelInstance')
             ->with($pageModel)
         ;
 
-        return new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $entityCacheTags);
+        return new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $cacheTags);
     }
 }

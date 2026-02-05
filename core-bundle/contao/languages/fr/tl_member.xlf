@@ -243,28 +243,29 @@
       </trans-unit>
       <trans-unit id="tl_member.captchaDetails">
         <source>Verification</source>
-      </trans-unit>
-      <trans-unit id="tl_member.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
+        <target>Vérification</target>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
         <target>Créer un nouveau membre</target>
       </trans-unit>
-      <trans-unit id="tl_member.show">
+      <trans-unit id="tl_member.show.1">
         <source>Show the details of member ID %s</source>
         <target>Afficher les détails du membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.edit">
+      <trans-unit id="tl_member.edit.1">
         <source>Edit member ID %s</source>
         <target>Éditer le membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.copy">
+      <trans-unit id="tl_member.copy.0">
+        <source>Duplicate</source>
+        <target>Dupliquer</target>
+      </trans-unit>
+      <trans-unit id="tl_member.copy.1">
         <source>Duplicate member ID %s</source>
         <target>Dupliquer le membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.delete">
+      <trans-unit id="tl_member.delete.1">
         <source>Delete member ID %s</source>
         <target>Supprimer le membre ID %s</target>
       </trans-unit>
@@ -280,9 +281,25 @@
         <source>Activate member ID %s</source>
         <target>Activer le membre ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.su">
+      <trans-unit id="tl_member.toggle.3">
+        <source>Deactivate</source>
+        <target>Inactif</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.4">
+        <source>Activate</source>
+        <target>Activer</target>
+      </trans-unit>
+      <trans-unit id="tl_member.su.0">
+        <source>Preview front end</source>
+        <target>Prévisualiser le front office</target>
+      </trans-unit>
+      <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>
         <target>Aperçu du front office en tant que membre ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+        <target>Membre</target>
       </trans-unit>
     </body>
   </file>

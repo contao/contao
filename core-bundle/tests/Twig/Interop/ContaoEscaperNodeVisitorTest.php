@@ -17,16 +17,18 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -35,8 +37,6 @@ use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['objPage']);
@@ -133,19 +133,16 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
-    /**
-     * @group legacy
-     */
     public function testHtmlAttrFilter(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
 
-        $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
+        HookHelper::registerHook('replaceInsertTags', static fn (string $tag) => 'flavor' === $tag ? 'vanilla' : false);
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
         System::setContainer($container);
 
@@ -160,11 +157,6 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    public function executeReplaceInsertTagsCallback(string $tag): string|false
-    {
-        return 'flavor' === $tag ? 'vanilla' : false;
-    }
-
     private function getEnvironment(string $templateContent): Environment
     {
         $loader = new ArrayLoader([
@@ -176,16 +168,17 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $contaoExtension = new ContaoExtension(
             $environment,
-            $this->createMock(ContaoFilesystemLoader::class),
-            $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoVariable::class),
+            $this->createStub(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoCsrfTokenManager::class),
+            $this->createStub(ContaoVariable::class),
+            new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
 
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
+        $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

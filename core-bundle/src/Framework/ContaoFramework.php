@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Framework;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\DcaLoader;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
@@ -62,6 +63,7 @@ class ContaoFramework implements ResetInterface
         }
 
         Controller::resetControllerCache();
+        DcaLoader::reset();
         Environment::reset();
         Input::setUnusedRouteParameters([]);
         InsertTags::reset();
@@ -112,7 +114,7 @@ class ContaoFramework implements ResetInterface
      *
      * @return T
      */
-    public function createInstance(string $class, array $args = [])
+    public function createInstance(string $class, array $args = []): object|null
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
             return \call_user_func_array([$class, 'getInstance'], $args);

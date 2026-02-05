@@ -49,7 +49,7 @@ class InsertTagsController
             ['_controller' => self::class.'::renderForwardedAction', 'insertTag' => $insertTag, 'pageModel' => $pageModel],
             null,
             [],
-            array_merge($request->server->all(), ['REQUEST_URI' => '/']),
+            [...$request->server->all(), 'REQUEST_URI' => '/'],
         );
 
         try {
@@ -75,6 +75,7 @@ class InsertTagsController
         $response = new Response();
         $response->headers->set('Content-Type', 'text/html');
         $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+
         $response->setPublic();
         $response->setContent($this->insertTagParser->replaceInline($insertTag));
 

@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.teaser.1">
         <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Etkinlik tanıtımı, etkinlik listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku...&quot; bağlantısı otomatik olarak eklenir.</target>
+        <target>Etkinlik tanıtımı, etkinlik listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.0">
         <source>Event text</source>
@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Zarflar ekle</target>
+        <target>Dosya ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.1">
         <source>Add one or more downloadable files to the event.</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.0">
         <source>Enclosures</source>
-        <target>Zarflar</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -223,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.0">
         <source>Link text</source>
-        <target>Bağlantı yazısı</target>
+        <target>Bağlantı metmi</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>Etkinlik öne çıkarılsın</target>
+        <target>Etkinliği öne çıkarılmışlara ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
-        <target>Etkinlik yayınlansın</target>
+        <target>Etkinliği yayınla</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.1">
         <source>Make the event publicly visible on the website.</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure_legend">
         <source>Enclosures</source>
-        <target>Zarflar</target>
+        <target>Dosyalar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
@@ -353,35 +353,35 @@
         <source>year(s)</source>
         <target>yıl</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.new.0">
-        <source>New</source>
-        <target>Yeni</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
         <target>Yeni bir etkinlik ekle</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.show">
+      <trans-unit id="tl_calendar_events.show.1">
         <source>Show the details of event ID %s</source>
         <target>%s kimlikli etkinliğin ayrıntılarını görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.edit">
+      <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
         <target>%s kimlikli etkinliği düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.children">
+      <trans-unit id="tl_calendar_events.children.0">
+        <source>Content elements</source>
+        <target>İçerik bileşenleri</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.children.1">
         <source>Edit the content elements of event ID %s</source>
         <target>%s kimlikli etkinliğin içerik bileşenlerini düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.copy">
-        <source>Duplicate event ID %s</source>
+      <trans-unit id="tl_calendar_events.copy.1">
+        <source>Copy event ID %s</source>
         <target>%s kimlikli etkinliği kopyala</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.cut">
+      <trans-unit id="tl_calendar_events.cut.1">
         <source>Move event ID %s</source>
         <target>%s kimlikli etkinliği taşı</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.delete">
+      <trans-unit id="tl_calendar_events.delete.1">
         <source>Delete event ID %s</source>
         <target>%s kimlikli etkinliği sil</target>
       </trans-unit>
@@ -397,6 +397,14 @@
         <source>Publish event ID %s</source>
         <target>%s kimlikli etkinliği yayınla</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.3">
+        <source>Unpublish</source>
+        <target>Yayından kaldır</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.4">
+        <source>Publish</source>
+        <target>Yayınla</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
         <target>%s kimlikli etkinliği öne çıkarılmışlara ekle/kaldır</target>
@@ -409,9 +417,21 @@
         <source>Feature event ID %s</source>
         <target>%s kimlikli etkinliği öne çıkarılmışlara ekle</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.3">
+        <source>Unfeature</source>
+        <target>Öne çıkarılmışlardan kaldır</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.4">
+        <source>Feature</source>
+        <target>Öne çıkarılmışlara ekle</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>Bu takvime yapıştır</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Etkinlik</target>
       </trans-unit>
     </body>
   </file>

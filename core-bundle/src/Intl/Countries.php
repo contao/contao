@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Intl;
 
+use Contao\ArrayUtil;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -27,7 +28,7 @@ class Countries
         array $defaultCountries,
         array $configCountries,
     ) {
-        $this->countries = $this->filterCountries($defaultCountries, $configCountries);
+        $this->countries = ArrayUtil::alterListByConfig($defaultCountries, $configCountries);
     }
 
     /**
@@ -40,12 +41,21 @@ class Countries
         $countries = [];
 
         foreach ($this->countries as $countryCode) {
-            $langKey = 'CNT.'.strtolower($countryCode);
+            [$country, $subdivision] = explode('-', $countryCode, 2) + [null, null];
+
+            $langKey = 'CNT.'.strtolower($country.$subdivision);
+            $langKeyShort = 'CNT.'.strtolower($country);
 
             if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_countries')) {
                 $countries[$countryCode] = $this->translator->trans($langKey, [], 'contao_countries', $displayLocale);
+            } elseif ($subdivision && $this->translator->getCatalogue($displayLocale)->has($langKeyShort, 'contao_countries')) {
+                $countries[$countryCode] = $this->translator->trans($langKeyShort, [], 'contao_countries', $displayLocale)." ($countryCode)";
             } else {
                 $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale);
+
+                if ($subdivision) {
+                    $countries[$countryCode] .= " ($countryCode)";
+                }
             }
         }
 
@@ -60,34 +70,5 @@ class Countries
     public function getCountryCodes(): array
     {
         return $this->countries;
-    }
-
-    /**
-     * Add, remove or replace countries as configured in the container configuration.
-     *
-     * @return list<string>
-     */
-    private function filterCountries(array $countries, array $filter): array
-    {
-        $newList = array_filter($filter, static fn ($country) => !\in_array($country[0], ['-', '+'], true));
-
-        if ($newList) {
-            $countries = $newList;
-        }
-
-        foreach ($filter as $country) {
-            $prefix = $country[0];
-            $countryCode = substr($country, 1);
-
-            if ('-' === $prefix && \in_array($countryCode, $countries, true)) {
-                unset($countries[array_search($countryCode, $countries, true)]);
-            } elseif ('+' === $prefix && !\in_array($countryCode, $countries, true)) {
-                $countries[] = $countryCode;
-            }
-        }
-
-        sort($countries);
-
-        return $countries;
     }
 }

@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CommentsBundle\Util\BbCode;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
 
@@ -59,22 +61,23 @@ class Comments extends Frontend
 			}
 
 			// Get the current page
-			$id = 'page_c' . $key . $intParent; // see #4141
-			$page = (int) (Input::get($id) ?? 1);
+			$param = 'page_c' . $key . $intParent; // see #4141
 
-			// Do not index or cache the page if the page number is outside the range
-			if ($page < 1 || $page > max(ceil($total/$objConfig->perPage), 1))
+			try
 			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $total, $objConfig->perPage));
+			}
+			catch (PageOutOfRangeException $e)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 			}
 
 			// Set limit and offset
-			$limit = $objConfig->perPage;
-			$offset = ($page - 1) * $objConfig->perPage;
+			$limit = $pagination->getPerPage();
+			$offset = $pagination->getOffset();
 
 			// Initialize the pagination menu
-			$objPagination = new Pagination($total, $objConfig->perPage, Config::get('maxPaginationLinks'), $id);
-			$objTemplate->pagination = $objPagination->generate("\n  ");
+			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 		}
 
 		$objTemplate->allowComments = true;
@@ -116,7 +119,7 @@ class Comments extends Frontend
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-					$objPartial->reply = System::getContainer()->get('contao.insert_tag.parser')->replace($objComments->reply);
+					$objPartial->reply = $objComments->reply;
 					$objPartial->author = $objAuthor;
 				}
 
@@ -454,7 +457,7 @@ class Comments extends Frontend
 	 */
 	public function purgeSubscriptions()
 	{
-		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6. Use "CommentsNotifyModel::findExpiredSubscriptions()" instead.', __METHOD__);
+		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" is deprecated and will no longer work in Contao 6. Use "CommentsNotifyModel::findExpiredSubscriptions()" instead.', __METHOD__);
 
 		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
 

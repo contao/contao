@@ -18,16 +18,17 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\NativeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PreviewLinkControllerTest extends TestCase
 {
-    /**
-     * @dataProvider authenticateGuestProvider
-     */
+    #[DataProvider('authenticateGuestProvider')]
     public function testAuthenticatesGuest(string $url, bool $showUnpublished): void
     {
         $request = Request::create('/');
@@ -112,10 +113,10 @@ class PreviewLinkControllerTest extends TestCase
             ->expects(null === $link ? $this->never() : $this->once())
             ->method('fetchAssociative')
             ->with(
-                'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
-                $this->isType('array'),
+                'SELECT * FROM tl_preview_link WHERE id = ? AND published = 1 AND expiresAt > UNIX_TIMESTAMP()',
+                new IsType(NativeType::Array),
             )
-            ->willReturn($link)
+            ->willReturn($link ?? false)
         ;
 
         return $connection;

@@ -12,6 +12,7 @@ namespace Contao;
 
 use ScssPhp\ScssPhp\Compiler;
 use ScssPhp\ScssPhp\OutputStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Combines .css or .js files into one single file
@@ -78,6 +79,8 @@ class Combiner extends System
 	 */
 	protected $strWebDir;
 
+	protected Filesystem $filesystem;
+
 	/**
 	 * Public constructor required
 	 */
@@ -85,6 +88,7 @@ class Combiner extends System
 	{
 		$container = System::getContainer();
 
+		$this->filesystem = new Filesystem();
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
 		$this->strWebDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 	}
@@ -212,9 +216,10 @@ class Combiner extends System
 
 				if ($blnDebug || !file_exists($this->strRootDir . '/' . $strPath))
 				{
-					$objFile = new File($strPath);
-					$objFile->write($this->handleScssLess(file_get_contents($this->strRootDir . '/' . $arrFile['name']), $arrFile));
-					$objFile->close();
+					$this->filesystem->dumpFile(
+						$this->strRootDir . '/' . $strPath,
+						$this->handleScssLess(file_get_contents($this->strRootDir . '/' . $arrFile['name']), $arrFile)
+					);
 				}
 
 				$return[] = $strUrl . $strPath . '|' . $arrFile['version'];
@@ -251,11 +256,6 @@ class Combiner extends System
 	 */
 	public function getCombinedFile($strUrl=null)
 	{
-		if (System::getContainer()->getParameter('kernel.debug'))
-		{
-			return $this->getDebugMarkup($strUrl);
-		}
-
 		return $this->getCombinedFileUrl($strUrl);
 	}
 
@@ -265,9 +265,13 @@ class Combiner extends System
 	 * @param string $strUrl An optional URL to prepend
 	 *
 	 * @return string The debug markup
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6.
 	 */
 	protected function getDebugMarkup($strUrl)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s::%s()" is deprecated and will no longer work in Contao 6.', __CLASS__, __METHOD__);
+
 		$return = $this->getFileUrls($strUrl);
 
 		foreach ($return as $k=>$v)
@@ -324,9 +328,7 @@ class Combiner extends System
 			return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 		}
 
-		// Create the file
-		$objFile = new File('assets/' . $strTarget . '/' . $strKey . $this->strMode);
-		$objFile->truncate();
+		$combinedContent = '';
 
 		foreach ($this->arrFiles as $arrFile)
 		{
@@ -356,11 +358,13 @@ class Combiner extends System
 				$content = $this->handleScssLess($content, $arrFile);
 			}
 
-			$objFile->append($content);
+			$combinedContent .= "$content\n";
 		}
 
 		unset($content);
-		$objFile->close();
+
+		// Create the file
+		$this->filesystem->dumpFile($this->strRootDir . '/assets/' . $strTarget . '/' . $strKey . $this->strMode, $combinedContent);
 
 		return $strUrl . 'assets/' . $strTarget . '/' . $strKey . $this->strMode;
 	}

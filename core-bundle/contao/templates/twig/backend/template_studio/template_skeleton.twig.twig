@@ -1,0 +1,17 @@
+{# @var \Contao\CoreBundle\Twig\Inspector\TemplateInformation template #}
+{% block content_reference %}
+    {%- if type == 'extends' -%}
+        {% verbatim %}{% extends "{% endverbatim %}{{ base_template }}{% verbatim %}" %}{% endverbatim %}
+    {%- else -%}
+        {% verbatim %}{% use "{% endverbatim %}{{ base_template }}{% verbatim %}" %}{% endverbatim %}
+    {%- endif -%}
+{% endblock %}
+
+{% block info %}
+{%- verbatim %}
+{#
+    Adjust how any blocks of parent or used component templates are rendered.
+    Try typing "block" or "use" to get autocompletion for available options.
+#}
+{%- endverbatim %}
+{% endblock %}

@@ -121,13 +121,7 @@ class PageListenerTest extends ContaoTestCase
                 ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE,
                 $this->callback(static fn (int $id): bool => \in_array($id, [42, 84], true)),
             )
-            ->willReturnCallback(
-                static fn (string $attribute, int $id): bool => match ($id) {
-                    42 => true,
-                    84 => false,
-                    default => false,
-                },
-            )
+            ->willReturnCallback(static fn (string $attribute, int $id): bool => 42 === $id)
         ;
 
         $listener = new PageListener($connection, $authorizationChecker);

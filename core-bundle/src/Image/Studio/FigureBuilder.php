@@ -16,9 +16,11 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\InsertTag\InsertTag;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
@@ -55,6 +57,11 @@ class FigureBuilder
      * The resource's file model if applicable.
      */
     private FilesModel|null $filesModel = null;
+
+    /**
+     * The image resource, if given.
+     */
+    private ImageInterface|null $image = null;
 
     /**
      * User defined size configuration.
@@ -290,20 +297,34 @@ class FigureBuilder
      */
     public function fromImage(ImageInterface $image): self
     {
+        $this->image = $image;
+
         return $this->fromPath($image->getPath());
+    }
+
+    /**
+     * Sets the image resource from a virtual filesystem item.
+     */
+    public function fromFilesystemItem(FilesystemItem $item): self
+    {
+        return $this->fromStorage($item->getStorage(), $item->getPath());
     }
 
     /**
      * Sets the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|FilesModel|FilesystemItem|ImageInterface|null $identifier Can be a FilesModel, a FilesystemItem, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
-    public function from(FilesModel|ImageInterface|int|string|null $identifier): self
+    public function from(FilesModel|FilesystemItem|ImageInterface|int|string|null $identifier): self
     {
         if (null === $identifier) {
             $this->lastException = new InvalidResourceException('The defined resource is "null".');
 
             return $this;
+        }
+
+        if ($identifier instanceof FilesystemItem) {
+            return $this->fromFilesystemItem($identifier);
         }
 
         if ($identifier instanceof FilesModel) {
@@ -326,7 +347,7 @@ class FigureBuilder
     }
 
     /**
-     * Sets the image resource from a path inside a VFS storage.
+     * Sets the image resource from a path inside a virtual filesystem storage.
      */
     public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): self
     {
@@ -643,7 +664,7 @@ class FigureBuilder
 
         $imageResult = $this->locator
             ->get('contao.image.studio')
-            ->createImage($settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
+            ->createImage($settings->image ?? $settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
         ;
 
         // Define the values via closure to make their evaluation lazy
@@ -705,6 +726,16 @@ class FigureBuilder
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
         $metadata = $this->filesModel->getMetadata(...$locales);
         $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
+
+        foreach ($overwriteMetadata as $key => $value) {
+            if (str_starts_with($value, '{{empty')) {
+                $parsedValue = $this->locator->get('contao.insert_tag.parser')->parse($value);
+
+                if (1 === $parsedValue->count() && $parsedValue->get(0) instanceof InsertTag && 'empty' === $parsedValue->get(0)->getName()) {
+                    $overwriteMetadata[$key] = '';
+                }
+            }
+        }
 
         if ($metadata) {
             return $metadata
@@ -848,7 +879,7 @@ class FigureBuilder
      */
     private function getFallbackLocaleList(): array
     {
-        $page = $GLOBALS['objPage'] ?? null;
+        $page = $this->locator->get('contao.routing.page_finder')->getCurrentPage();
 
         if (!$page instanceof PageModel) {
             return [];

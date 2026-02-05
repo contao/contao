@@ -73,6 +73,10 @@
         <source>Allowed member groups</source>
         <target>Ledengroepen die zijn toegestaan</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+        <target>Tabelrechten</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Toegestane velden</target>
@@ -81,27 +85,27 @@
         <source>Group settings</source>
         <target>Groepsinstellingen</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.new.0">
-        <source>New</source>
-        <target>Nieuw</target>
-      </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
         <target>Maak een nieuwe gebruikersgroep</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.show">
+      <trans-unit id="tl_user_group.show.1">
         <source>Show the details of user group ID %s</source>
         <target>Toon details van gebruikersgroep ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.edit">
+      <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>
         <target>Bewerk gebruikersgroep ID%s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.copy">
+      <trans-unit id="tl_user_group.copy.0">
+        <source>Duplicate</source>
+        <target>Kopie</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.copy.1">
         <source>Duplicate user group ID %s</source>
         <target>Kopieer gebruikersgroep ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.delete">
+      <trans-unit id="tl_user_group.delete.1">
         <source>Delete user group ID %s</source>
         <target>Verwijder gebruikersgroep ID %s</target>
       </trans-unit>
@@ -116,6 +120,18 @@
       <trans-unit id="tl_user_group.toggle.2">
         <source>Activate user group ID %s</source>
         <target>Activeer gebruikersgroep ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.3">
+        <source>Deactivate</source>
+        <target>Deactiveer</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.4">
+        <source>Activate</source>
+        <target>Activeren</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+        <target>Gebruikersgroep</target>
       </trans-unit>
     </body>
   </file>

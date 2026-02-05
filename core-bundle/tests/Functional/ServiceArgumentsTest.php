@@ -31,10 +31,6 @@ class ServiceArgumentsTest extends FunctionalTestCase
     {
         $container = $this->getContainer();
 
-        if (!$container instanceof Container) {
-            $this->fail(\sprintf('Expected container to be of class %s, got %s', Container::class, $container::class));
-        }
-
         $files = Finder::create()
             ->files()
             ->name('*.yaml')
@@ -243,9 +239,9 @@ class ServiceArgumentsTest extends FunctionalTestCase
         }
 
         if ($argument) {
-            $this->addWarning(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
+            $this->fail(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
         } else {
-            $this->addWarning(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
+            $this->fail(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
         }
     }
 

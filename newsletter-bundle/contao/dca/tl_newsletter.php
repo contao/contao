@@ -48,44 +48,25 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sent', 'date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'subject',
-			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
 		),
+		'label' => array
+		(
+			'fields'                  => array('subject'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_newsletter', 'listNewsletters'),
+		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg'
-			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"'
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			),
+			'-',
 			'send' => array
 			(
 				'href'                => 'key=send',
-				'icon'                => 'bundles/contaonewsletter/send.svg'
+				'icon'                => 'bundles/contaonewsletter/send.svg',
+				'primary'             => true,
 			)
 		)
 	),
@@ -167,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('decodeEntities'=>true, 'class'=>'noresize'),
+			'eval'                    => array('decodeEntities'=>true, 'autogrow' => false),
 			'sql'                     => "mediumtext NULL"
 		),
 		'addFile' => array
@@ -266,16 +247,15 @@ class tl_newsletter extends Backend
 	 *
 	 * @param array $arrRow
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function listNewsletters($arrRow)
 	{
-		return '
-<div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="cte_preview">' . (!$arrRow['sendText'] ? '
-' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
-<pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
-</div>' . "\n";
+		return array(
+			'<strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']),
+			(!$arrRow['sendText'] ? StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '<pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>',
+			($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished',
+		);
 	}
 
 	/**

@@ -95,6 +95,13 @@ final class ContaoCorePermissions
     public const USER_CAN_EDIT_FIELD_OF_TABLE = 'contao_user.alexf';
 
     /**
+     * Access is granted if the current user can create/update/delete records of
+     * a table. Subject must be a table and operation separated by two colons
+     * (e.g. "tl_page::create").
+     */
+    public const USER_CAN_OPERATE_ON_TABLE = 'contao_user.cud';
+
+    /**
      * Access is granted if the current user can access the back end module. Subject
      * must be a module name (e.g. "article").
      */
@@ -141,7 +148,7 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_FRONTEND_MODULES = 'contao_user.themes.modules';
 
     /**
-     * Access is granted if the current user can access the css editor in themes.
+     * Access is granted if the current user can access the CSS editor in themes.
      */
     public const USER_CAN_ACCESS_STYLE_SHEETS = 'contao_user.themes.css';
 
@@ -194,12 +201,19 @@ final class ContaoCorePermissions
     /**
      * Access is granted if the current user can create forms.
      */
-    public const USER_CAN_CREATE_FORMS = 'contao_user.formp.create';
+    public const USER_CAN_CREATE_FORMS = 'contao_user.cud.tl_form::create';
 
     /**
      * Access is granted if the current user can delete forms.
      */
-    public const USER_CAN_DELETE_FORMS = 'contao_user.formp.delete';
+    public const USER_CAN_DELETE_FORMS = 'contao_user.cud.tl_form::delete';
+
+    /**
+     * Access is granted if the current user is allowed to see a given search document.
+     *
+     * @experimental
+     */
+    public const USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT = 'contao_backend_search.can_access_document';
 
     /**
      * Access is granted if the front end member is in at least one of the groups, or
@@ -213,4 +227,9 @@ final class ContaoCorePermissions
      * the table (e.g. "contao_dc.tl_content").
      */
     public const DC_PREFIX = 'contao_dc.';
+
+    /**
+     * Access is granted if the given WebauthnCredential user belongs to the current user.
+     */
+    public const WEBAUTHN_CREDENTIAL_OWNERSHIP = 'contao_webauthn_credential_ownership';
 }

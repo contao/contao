@@ -15,9 +15,11 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Error\SyntaxError;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\UseTokenParser;
@@ -28,7 +30,7 @@ use Twig\TokenParser\UseTokenParser;
  *
  * @see UseTokenParser
  *
- * @experimental
+ * @internal
  */
 final class DynamicUseTokenParser extends AbstractTokenParser
 {
@@ -38,7 +40,7 @@ final class DynamicUseTokenParser extends AbstractTokenParser
 
     public function parse(Token $token): Node
     {
-        $templateExpression = $this->parser->getExpressionParser()->parseExpression();
+        $templateExpression = $this->parser->parseExpression();
         $stream = $this->parser->getStream();
 
         if (!$templateExpression instanceof ConstantExpression) {
@@ -70,9 +72,9 @@ final class DynamicUseTokenParser extends AbstractTokenParser
             $templateExpression = $contaoTemplateExpression;
         }
 
-        $this->parser->addTrait(new Node(['template' => $templateExpression, 'targets' => new Node($targets)]));
+        $this->parser->addTrait(new Nodes(['template' => $templateExpression, 'targets' => new Nodes($targets)]));
 
-        return new Node();
+        return new EmptyNode($token->getLine());
     }
 
     public function getTag(): string

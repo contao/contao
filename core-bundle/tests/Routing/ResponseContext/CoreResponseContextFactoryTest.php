@@ -26,13 +26,15 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -56,18 +58,17 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
-            new HtmlDecoder($this->createMock(InsertTagParser::class)),
-            $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class),
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
+            new HtmlDecoder($this->createStub(InsertTagParser::class)),
+            $this->createStub(RequestStack::class),
+            $this->createStub(InsertTagParser::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
-        $responseContext = $factory->createResponseContext();
-
-        $this->assertInstanceOf(ResponseHeaderBag::class, $responseContext->getHeaderBag());
+        $factory->createResponseContext();
     }
 
     public function testWebpageResponseContext(): void
@@ -80,13 +81,14 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
-            new HtmlDecoder($this->createMock(InsertTagParser::class)),
-            $this->createMock(RequestStack::class),
-            $this->createMock(InsertTagParser::class),
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
+            new HtmlDecoder($this->createStub(InsertTagParser::class)),
+            $this->createStub(RequestStack::class),
+            $this->createStub(InsertTagParser::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -114,7 +116,21 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
     }
 
-    public function testContaoWebpageResponseContext(): void
+    public static function contaoWebpageResponseContext(): iterable
+    {
+        yield 'Unprotected page' => [
+            [],
+            [],
+        ];
+
+        yield 'Protected page' => [
+            [1, 2, 3],
+            [2],
+        ];
+    }
+
+    #[DataProvider('contaoWebpageResponseContext')]
+    public function testContaoWebpageResponseContext(array $groups, array $memberGroups): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
@@ -124,13 +140,16 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
+            ->expects($this->exactly(3))
             ->method('replaceInline')
-            ->withConsecutive(['My title'], ['My description'], ['{{link_url::42}}'])
-            ->willReturnOnConsecutiveCalls('My title', 'My description', 'de/foobar.html')
+            ->willReturnMap([
+                ['My title', 'My title'],
+                ['My description', 'My description'],
+                ['{{link_url::42}}', 'de/foobar.html'],
+            ])
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create('https://example.com/'));
+        $requestStack = new RequestStack([Request::create('https://example.com/')]);
 
         $cpHandlerFactory = new CspHandlerFactory(new CspParser(new PolicyManager()));
 
@@ -142,15 +161,26 @@ class CoreResponseContextFactoryTest extends TestCase
             ->willReturn('https://example.com/csp/report')
         ;
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
+        $user->groups = serialize($memberGroups);
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn([] === $memberGroups ? null : $user)
+        ;
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 1;
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
         $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
-        $pageModel->noSearch = false;
-        $pageModel->protected = false;
+        $pageModel->searchIndexer = '';
+        $pageModel->protected = [] !== $groups;
+        $pageModel->groups = $groups;
         $pageModel->enableCsp = true;
         $pageModel->csp = "script-src 'self'";
         $pageModel->cspReportOnly = true;
@@ -158,13 +188,14 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
             $cpHandlerFactory,
             $urlGenerator,
+            $security,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -189,9 +220,11 @@ class CoreResponseContextFactoryTest extends TestCase
                 'title' => 'My title',
                 'pageId' => 1,
                 'noSearch' => false,
-                'protected' => false,
-                'groups' => [],
+                'protected' => [] !== $groups,
+                'groups' => $groups,
                 'fePreview' => false,
+                'memberGroups' => $memberGroups,
+                'searchIndexer' => '',
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
@@ -203,9 +236,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertSame('https://example.com/csp/report', $directives->getDirective('report-uri'));
     }
 
-    /**
-     * @dataProvider getContaoWebpageResponseContextCanonicalUrls
-     */
+    #[DataProvider('getContaoWebpageResponseContextCanonicalUrls')]
     public function testContaoWebpageResponseContextCanonicalUrls(string $url, string $expected): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -216,30 +247,34 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
+            ->expects($this->exactly(3))
             ->method('replaceInline')
-            ->withConsecutive([''], [''], ['{{link_url::42}}'])
-            ->willReturnOnConsecutiveCalls('My title', 'My description', $url)
+            ->willReturnMap([
+                ['', 'My title'],
+                ['', 'My description'],
+                ['{{link_url::42}}', $url],
+            ])
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(Request::create('https://example.com/'));
+        $requestStack = new RequestStack([Request::create('https://example.com/')]);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 0;
         $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
-        $pageModel->noSearch = false;
+        $pageModel->searchIndexer = '';
         $pageModel->protected = false;
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
             $requestStack,
             $insertTagsParser,
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -260,32 +295,33 @@ class CoreResponseContextFactoryTest extends TestCase
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
 
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
-        $pageModel->noSearch = false;
+        $pageModel->searchIndexer = '';
         $pageModel->protected = false;
 
-        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser = $this->createStub(InsertTagParser::class);
         $insertTagsParser
             ->method('replaceInline')
             ->willReturnArgument(0)
         ;
 
         $factory = new CoreResponseContextFactory(
-            $this->createMock(ResponseContextAccessor::class),
-            $this->createMock(EventDispatcherInterface::class),
-            $this->createMock(TokenChecker::class),
+            $this->createStub(ResponseContextAccessor::class),
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
             new HtmlDecoder($insertTagsParser),
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
             $insertTagsParser,
-            $this->createMock(CspHandlerFactory::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -309,6 +345,8 @@ class CoreResponseContextFactoryTest extends TestCase
                 'protected' => false,
                 'groups' => [],
                 'fePreview' => false,
+                'memberGroups' => [],
+                'searchIndexer' => '',
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );

@@ -12,18 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Intl;
 
-use Contao\ArrayUtil;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator;
 
 class CountriesTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -36,7 +33,9 @@ class CountriesTest extends TestCase
         $countryCodes = $this->getCountriesService()->getCountryCodes();
 
         $this->assertNotEmpty($countryCodes);
-        $this->assertFalse(ArrayUtil::isAssoc($countryCodes));
+
+        /** @phpstan-ignore function.alreadyNarrowedType */
+        $this->assertTrue(array_is_list($countryCodes));
 
         foreach ($countryCodes as $countryCode) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
@@ -48,7 +47,6 @@ class CountriesTest extends TestCase
         $countryNames = $this->getCountriesService()->getCountries('en');
 
         $this->assertNotEmpty($countryNames);
-        $this->assertTrue(ArrayUtil::isAssoc($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
@@ -59,19 +57,19 @@ class CountriesTest extends TestCase
 
     public function testGetsCountryNamesTranslated(): void
     {
-        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
             ->willReturnCallback(
                 function (string $label, string $domain) {
                     $this->assertSame('contao_countries', $domain);
 
-                    return 'CNT.de' === $label;
+                    return 'CNT.de' === $label || 'CNT.at9' === $label;
                 },
             )
         ;
 
-        $translator = $this->createMock(Translator::class);
+        $translator = $this->createStub(Translator::class);
         $translator
             ->method('getCatalogue')
             ->with('de')
@@ -89,14 +87,21 @@ class CountriesTest extends TestCase
                         return 'Schland';
                     }
 
+                    if ('CNT.at9' === $label) {
+                        return 'Wien';
+                    }
+
                     return $label;
                 },
             )
         ;
 
-        $countryNames = $this->getCountriesService($translator)->getCountries('de');
+        $countryNames = $this->getCountriesService($translator, ['+AT-5', '+AT-9', '+DE-BE'])->getCountries('de');
 
         $this->assertSame('Schland', $countryNames['DE']);
+        $this->assertSame('Wien', $countryNames['AT-9']);
+        $this->assertSame('Schland (DE-BE)', $countryNames['DE-BE']);
+        $this->assertSame('Österreich (AT-5)', $countryNames['AT-5']);
 
         $positionDe = array_search('DE', array_keys($countryNames), true);
         $positionRu = array_search('RU', array_keys($countryNames), true);
@@ -107,9 +112,7 @@ class CountriesTest extends TestCase
         $this->assertLessThan($positionTr, $positionDe);
     }
 
-    /**
-     * @dataProvider getCountriesConfig
-     */
+    #[DataProvider('getCountriesConfig')]
     public function testGetsCountryCodesConfigured(array $configCountries, array $expected): void
     {
         $countryCodes = $this->getCountriesService(null, $configCountries)->getCountryCodes();
@@ -117,9 +120,7 @@ class CountriesTest extends TestCase
         $this->assertSame($expected, $countryCodes);
     }
 
-    /**
-     * @dataProvider getCountriesConfig
-     */
+    #[DataProvider('getCountriesConfig')]
     public function testGetsCountryNamesConfigured(array $configCountries, array $expected): void
     {
         $countryNames = $this->getCountriesService(null, $configCountries)->getCountries('de');
@@ -131,7 +132,7 @@ class CountriesTest extends TestCase
         $this->assertNotSame($countryCodes, array_keys($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
-            $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
+            $this->assertMatchesRegularExpression('/^[A-Z]{2}(?:-[A-Z0-9]{1,3})?$/', $countryCode);
             $this->assertNotEmpty($countryName);
         }
     }
@@ -167,15 +168,24 @@ class CountriesTest extends TestCase
             ['-AT', '-DE', '+AT', '+DE'],
             SymfonyCountries::getCountryCodes(),
         ];
+
+        $codes = array_values(array_diff(SymfonyCountries::getCountryCodes(), ['AT']));
+        $codes[] = 'AT-9';
+        sort($codes);
+
+        yield [
+            ['-AT', '+AT-9'],
+            $codes,
+        ];
     }
 
     private function getCountriesService(Translator|null $translator = null, array $configCountries = []): Countries
     {
         if (!$translator) {
-            $translator = $this->createMock(Translator::class);
+            $translator = $this->createStub(Translator::class);
             $translator
                 ->method('getCatalogue')
-                ->willReturn($this->createMock(MessageCatalogueInterface::class))
+                ->willReturn($this->createStub(MessageCatalogueInterface::class))
             ;
         }
 

@@ -45,10 +45,17 @@ class RootPageDependentSelectListener
         }
 
         $rows = $this->connection->executeQuery(
-            "SELECT m.id, m.name, m.type
-            FROM tl_module m
-            WHERE m.type != 'root_page_dependent_modules' AND m.pid = ?
-            ORDER BY m.name",
+            <<<'SQL'
+                SELECT
+                    m.id,
+                    m.name,
+                    m.type
+                FROM tl_module m
+                WHERE
+                    m.type != 'root_page_dependent_modules'
+                    AND m.pid = ?
+                ORDER BY m.name
+                SQL,
             [$pid],
         );
 
@@ -101,11 +108,10 @@ class RootPageDependentSelectListener
             $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1']);
 
             $wizards[$rootPage] = \sprintf(
-                ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+                ' <a href="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
                 StringUtil::specialcharsUrl($href),
-                StringUtil::specialchars($title),
                 StringUtil::specialchars(str_replace("'", "\\'", $title)),
-                Image::getHtml('alias.svg', $title),
+                Image::getHtml('edit.svg', $title),
             );
         }
 
@@ -114,12 +120,17 @@ class RootPageDependentSelectListener
 
     private function getRootPages(): array
     {
-        $statement = $this->connection->prepare('
-            SELECT p.id, p.title, p.language
-            FROM tl_page p
-            WHERE p.pid = 0
-            ORDER BY p.sorting ASC
-        ');
+        $statement = $this->connection->prepare(
+            <<<'SQL'
+                SELECT
+                    p.id,
+                    p.title,
+                    p.language
+                FROM tl_page p
+                WHERE p.pid = 0
+                ORDER BY p.sorting ASC
+                SQL,
+        );
 
         $rows = $statement->executeQuery();
         $pages = [];

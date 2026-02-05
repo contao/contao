@@ -1,28 +1,33 @@
-import { Controller } from '@hotwired/stimulus'
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['scrollTo', 'autoFocus'];
+    #autoFocus = false;
+
+    static targets = ['scrollTo', 'autoFocus', 'widgetError'];
 
     static values = {
         sessionKey: {
             type: String,
-            default: 'contao_backend_offset'
+            default: 'contao_backend_offset',
         },
         behavior: {
             type: String,
-            default: 'instant'
+            default: 'instant',
         },
         block: {
             type: String,
-            default: 'center'
-        }
+            default: 'center',
+        },
     };
 
     // Backwards compatibility: automatically register the Stimulus controller if the legacy methods are used
     static afterLoad(identifier, application) {
         const loadFallback = () => {
             return new Promise((resolve, reject) => {
-                const controller = application.getControllerForElementAndIdentifier(document.documentElement, identifier);
+                const controller = application.getControllerForElementAndIdentifier(
+                    document.documentElement,
+                    identifier,
+                );
 
                 if (controller) {
                     resolve(controller);
@@ -30,41 +35,66 @@ export default class extends Controller {
                 }
 
                 const { controllerAttribute } = application.schema;
-                document.documentElement.setAttribute(controllerAttribute, `${document.documentElement.getAttribute(controllerAttribute) || ''} ${ identifier }`);
+
+                document.documentElement.setAttribute(
+                    controllerAttribute,
+                    `${document.documentElement.getAttribute(controllerAttribute) || ''} ${identifier}`,
+                );
 
                 setTimeout(() => {
-                    const controller = application.getControllerForElementAndIdentifier(document.documentElement, identifier);
-                    controller && resolve(controller) || reject(controller);
+                    const controller = application.getControllerForElementAndIdentifier(
+                        document.documentElement,
+                        identifier,
+                    );
+
+                    (controller && resolve(controller)) || reject(controller);
                 }, 100);
             });
-        }
+        };
 
         if (window.Backend && !window.Backend.initScrollOffset) {
             window.Backend.initScrollOffset = () => {
-                console.warn('Backend.initScrollOffset() is deprecated. Please use the Stimulus controller instead.');
+                if (window.console) {
+                    console.warn(
+                        'Backend.initScrollOffset() is deprecated. Please use the Stimulus controller instead.',
+                    );
+                }
+
                 loadFallback();
-            }
+            };
         }
 
         if (window.Backend && !window.Backend.getScrollOffset) {
             window.Backend.getScrollOffset = () => {
-                console.warn('Backend.getScrollOffset() is deprecated. Please use the Stimulus controller instead.');
+                if (window.console) {
+                    console.warn(
+                        'Backend.getScrollOffset() is deprecated. Please use the Stimulus controller instead.',
+                    );
+                }
+
                 loadFallback().then((controller) => controller.discard());
-            }
+            };
         }
     }
 
-    initialize () {
+    initialize() {
         this.store = this.store.bind(this);
     }
 
-    connect () {
+    connect() {
+        this.restore();
+    }
+
+    async restore() {
         if (!this.offset) return;
+
+        // Execute scroll restore after Turbo scrolled to top
+        await new Promise(requestAnimationFrame);
 
         window.scrollTo({
             top: this.offset,
             behavior: this.behaviorValue,
-            block: this.blockValue
+            block: this.blockValue,
         });
 
         this.offset = null;
@@ -73,43 +103,63 @@ export default class extends Controller {
     scrollToTargetConnected() {
         this.scrollToTarget.scrollIntoView({
             behavior: this.behaviorValue,
-            block: this.blockValue
+            block: this.blockValue,
         });
     }
 
     autoFocusTargetConnected() {
-        if (this.offset || this.autoFocus) return;
+        if (this.offset || this.#autoFocus) return;
 
         const input = this.autoFocusTarget;
 
         if (
-            input.disabled || input.readonly
-            || !input.offsetWidth || !input.offsetHeight
-            || input.closest('.chzn-search')
-            || input.autocomplete && input.autocomplete !== 'off'
+            input.disabled ||
+            input.readonly ||
+            !input.offsetWidth ||
+            !input.offsetHeight ||
+            input.closest('.chzn-search') ||
+            (input.autocomplete && input.autocomplete !== 'off')
         ) {
             return;
         }
 
-        this.autoFocus = true;
+        this.#autoFocus = true;
         input.focus();
+
+        requestAnimationFrame(() => {
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
     }
 
-    store () {
+    widgetErrorTargetConnected() {
+        this.widgetErrorTarget.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+        });
+    }
+
+    store() {
         this.offset = this.element.scrollTop;
     }
 
-    discard () {
+    discard() {
         this.offset = null;
     }
 
-    get offset () {
-        const value = window.sessionStorage.getItem(this.sessionKeyValue);
-
-        return value ? parseInt(value) : null;
+    scrollToWidgetError() {
+        if (this.hasWidgetErrorTarget) {
+            this.widgetErrorTargetConnected();
+        }
     }
 
-    set offset (value) {
+    get offset() {
+        const value = window.sessionStorage.getItem(this.sessionKeyValue);
+
+        return value ? Number.parseInt(value, 10) : null;
+    }
+
+    set offset(value) {
         if (value === null || value === undefined) {
             window.sessionStorage.removeItem(this.sessionKeyValue);
         } else {

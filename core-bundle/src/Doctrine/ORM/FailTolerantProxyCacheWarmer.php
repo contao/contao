@@ -39,7 +39,7 @@ class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
         // automatic version detection
         try {
             $this->connection->getDatabasePlatform();
-        } catch (DoctrineDbalException|\mysqli_sql_exception) {
+        } catch (DoctrineDbalException) {
             return [];
         }
 

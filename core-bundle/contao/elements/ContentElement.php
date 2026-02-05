@@ -99,7 +99,6 @@ use Contao\Model\Collection;
  * @property string|integer    $start
  * @property string|integer    $stop
  *
- * @property string  $typePrefix
  * @property string  $classes
  * @property integer $origId
  * @property string  $hl
@@ -265,7 +264,7 @@ abstract class ContentElement extends Frontend
 		// Tag the content element (see #2137)
 		if ($this->objModel !== null)
 		{
-			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+			System::getContainer()->get('contao.cache.tag_manager')->tagWithModelInstance($this->objModel);
 		}
 
 		return $this->Template->parse();

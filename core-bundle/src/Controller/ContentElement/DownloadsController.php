@@ -53,7 +53,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         // Explicitly define title/text metadata for a single file
         if ('download' === $model->type && $model->overwriteLink && $downloads) {
             if ($model->titleText) {
-                trigger_deprecation('contao/core-bundle', '5.3', 'Setting a download title attribute has been deprecated and will no longer work in Contao 6.');
+                trigger_deprecation('contao/core-bundle', '5.3', 'Setting a download title attribute is deprecated and will no longer work in Contao 6.');
             }
 
             $downloads[0]['title'] = $model->titleText;

@@ -29,29 +29,14 @@
       </thead>
       <tbody>
         <?php foreach ($this->versions as $version): ?>
-          <tr class="click2edit hover-row">
+          <tr class="hover-row" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
             <td><?= $version['date'] ?></td>
             <td><?= $version['username'] ?: '-' ?></td>
             <td><?= $version['shortTable'] ?></td>
             <td><?= $version['pid'] ?></td>
             <td><?= $version['description'] ?: '-' ?></td>
             <td><?= $version['active'] ? '<strong>'.$version['version'].'</strong>' : $version['version'] ?></td>
-            <td>
-              <?php if ($version['deleted']): ?>
-                <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.restore')) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
-              <?php else: ?>
-                <?php if ($version['editUrl']): ?>
-                  <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>
-                <?php else: ?>
-                  <?= Contao\Image::getHtml('edit--disabled.svg', '', 'style="padding:0 2px"') ?>
-                <?php endif; ?>
-                <?php if ($version['to'] > 1): ?>
-                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($this->recordOfTable, $version['pid'], $version['fromTable']) ?>','url':this.href});return false"><?= Contao\Image::getHtml('diff.svg') ?></a>
-                <?php else: ?>
-                  <?= Contao\Image::getHtml('diff--disabled.svg') ?>
-                <?php endif; ?>
-              <?php endif; ?>
-            </td>
+            <td class="tl_right_nowrap"><?= $version['operations'] ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody>

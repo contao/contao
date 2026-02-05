@@ -16,7 +16,6 @@ use Contao\DC_Table;
 use Contao\Image;
 use Contao\Message;
 use Contao\OptInModel;
-use Contao\StringUtil;
 use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_opt_in'] = array
@@ -29,6 +28,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
 		'notDeletable'                => true,
+		'backendSearchIgnore'         => true,
 		'onshow_callback' => array
 		(
 			array('tl_opt_in', 'showRelatedRecords')
@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 				'id' => 'primary',
 				'tstamp' => 'index',
 				'token' => 'unique',
-				'removeOn' => 'index'
+				'removeOn,confirmedOn' => 'index'
 			)
 		)
 	),
@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('createdOn DESC'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'email'
 		),
 		'label' => array
@@ -207,6 +207,6 @@ class tl_opt_in extends Backend
 	 */
 	public function resendButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['createdOn'] > strtotime('-24 hours')) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : '';
+		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['removeOn'] > time()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : '';
 	}
 }

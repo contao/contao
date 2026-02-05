@@ -1,0 +1,181 @@
+{% trans_default_domain 'contao_default' %}
+
+<div class="two-factor">
+    <h2 class="sub_headline">{{ 'MSC.twoFactorAuthentication'|trans }}</h2>
+    {{ messages }}
+
+    {% if enable|default %}
+        <p>{{ 'MSC.twoFactorScan'|trans }}</p>
+        <form class="tl_two_factor_form" method="post">
+            <div class="formbody">
+                <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                <div class="qr-code">
+                    <img src="data:image/svg+xml;base64,{{ qrCode }}" alt>
+                </div>
+                <div class="widget w50">
+                    <p>{{ 'MSC.twoFactorTextCode'|trans }}</p>
+                    <code style="word-break:break-all">{{ secret }}</code>
+                </div>
+                <div class="widget w50 clr">
+                    <h3><label for="verify"{% if error|default %} class="error"{% endif %}>{{ 'MSC.twoFactorVerification'|trans }}</label></h3>
+                    <input type="text" name="verify" id="verify" class="tl_text{% if error|default %} error{% endif %}" value="" autocapitalize="off" autocomplete="one-time-code" required>
+                    <p class="{{ error|default ? 'tl_error' : 'tl_help' }} tl_tip">{{ 'MSC.twoFactorVerificationHelp'|trans }}</p>
+                </div>
+                <div class="submit_container cf">
+                    <button type="submit" class="tl_submit">{{ 'MSC.enable'|trans }}</button>
+                    <a href="{{ path('contao_backend', {do: 'security'}) }}" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
+                </div>
+            </div>
+        </form>
+    {% elseif isEnabled|default %}
+        <div class="tl_message">
+            <p class="tl_confirm">{{ 'MSC.twoFactorActive'|trans }}</p>
+        </div>
+        <form class="tl_two_factor_form" method="post">
+            <div class="formbody">
+                <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                <div class="submit_container cf">
+                    <a href="{{ path('contao_backend', {do: 'security', act: 'enable'}) }}" class="tl_submit">{{ 'MSC.edit'|trans }}</a>
+                    <button type="submit" class="tl_submit">{{ 'MSC.disable'|trans }}</button>
+                </div>
+            </div>
+        </form>
+        <div class="tl_backup_codes">
+            <h2 class="sub_headline">{{ 'MSC.twoFactorBackupCodesLabel'|trans }}</h2>
+            <p>{{ 'MSC.twoFactorBackupCodesExplain'|trans }}</p>
+            {% if showBackupCodes|default %}
+                <div class="tl_message">
+                    <p class="tl_info">{{ 'MSC.twoFactorBackupCodesInfo'|trans }}</p>
+                </div>
+                <ul class="backup-codes">
+                    {% for backupCode in backupCodes %}
+                        <li><code>{{ backupCode }}</code></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                {% if backupCodes|length %}
+                    <div class="tl_message">
+                        <p class="tl_info">{{ 'MSC.twoFactorBackupCodesRegenerateInfo'|trans }}</p>
+                    </div>
+                {% endif %}
+                <form class="tl_two_factor_form" method="post" data-turbo="false">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_generate_backup_codes">
+                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                    <div class="submit_container cf">
+                        <button type="submit" class="tl_submit">{{ (backupCodes|length == 0 ? 'MSC.twoFactorBackupCodesGenerate' : 'MSC.twoFactorBackupCodesRegenerate')|trans }}</button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+        <div class="tl_trusted_devices">
+            <h2 class="sub_headline">{{ 'MSC.trustedDevices'|trans }}</h2>
+            {% if not trustedDevices|default %}
+                <p>{{ 'MSC.noTrustedDevices'|trans }}</p>
+            {% else %}
+                <div class="tl_listing_container">
+                    <table class="tl_listing showColumns with-border with-padding">
+                        <thead>
+                        <tr>
+                            <th>{{ 'MSC.device'|trans }}</th>
+                            <th>{{ 'MSC.browser'|trans }}</th>
+                            <th>{{ 'MSC.operatingSystem'|trans }}</th>
+                            <th>{{ 'MSC.createdOn'|trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for trustedDevice in trustedDevices %}
+                            <tr class="hover-row">
+                                <td>{{ trustedDevice.getDeviceFamily() }}</td>
+                                <td>{{ trustedDevice.getUaFamily() }}</td>
+                                <td>{{ trustedDevice.getOsFamily() }}</td>
+                                <td>{{ trustedDevice.getCreated().format(contao.datim_format) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <form action="{{ action }}" class="tl_two_factor_form" method="post">
+                    <div class="formbody">
+                        <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_clear_trusted_devices">
+                        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                        <div class="submit_container cf">
+                            <button type="submit" class="tl_submit">{{ 'MSC.clearTrustedDevices'|trans }}</button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>{{ 'MSC.twoFactorExplain'|trans }}</p>
+        <div class="tl_submit_container">
+            <a href="{{ path('contao_backend', {do: 'security', act: 'enable'}) }}" class="tl_submit">{{ 'MSC.enable'|trans }}</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="two-factor passkeys">
+    <h2 class="sub_headline">{{ 'MSC.passkeys'|trans }}</h2>
+    <p>{{ 'MSC.passkeysDescription'|trans }}</p>
+    <div class="list_passkeys">
+        <turbo-frame id="passkeys" data-turbo-action="advance">
+            {% if credentials|default %}
+                <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">
+                    <thead>
+                    <tr>
+                        <th class="name">{{ 'MSC.passkeysName'|trans }}</th>
+                        <th class="created">{{ 'MSC.passkeysCreatedAt'|trans }}</th>
+                        <th class="actions"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for credential in credentials %}
+                        <tr class="hover-row">
+                            <td class="name">
+                                {% if editPassKeyId == credential.id %}
+                                    <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ credential.id }}">
+                                        <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
+                                        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                                        <input type="hidden" name="credential_id" value="{{ credential.id }}">
+                                        <input type="text" name="passkey_name" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
+                                    </form>
+                                {% else %}
+                                    {{ credential.name|default(credential.id) }}
+                                {% endif %}
+                            </td>
+                            <td class="created">{{ credential.createdAt.format('j. F Y, H:i') }}</td>
+                            <td class="actions">
+                                <form method="post">
+                                    <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
+                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                                    {% if editPassKeyId == credential.id %}
+                                        <button type="submit" name="save_passkey" form="form-edit-passkey-{{ credential.id }}" value="{{ credential.id }}">{{ backend_icon('save.svg', 'MSC.save'|trans) }}</button>
+                                    {% else %}
+                                        <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ backend_icon('edit.svg', 'MSC.edit'|trans) }}</button>
+                                    {% endif %}
+                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </turbo-frame>
+    </div>
+    <div class="add_passkey"
+         data-controller="contao--webauthn contao--webauthn-error"
+         data-contao--webauthn-creation-result-url-value="{{ path('webauthn.controller.creation.response.contao_backend_add_authenticator') }}"
+         data-contao--webauthn-creation-options-url-value="{{ path('webauthn.controller.creation.request.contao_backend_add_authenticator') }}"
+         data-contao--webauthn-creation-success-redirect-uri-value="{{ webauthnCreationSuccessRedirectUri }}"
+         data-contao--webauthn-error-unsupported-message-value="{{ 'ERR.passkeysUnsupported'|trans }}"
+         data-contao--webauthn-error-attestation-failure-message-value="{{ 'ERR.passkeyAttestationFailure'|trans }}"
+         data-action="webauthn:unsupported->contao--webauthn-error#handleUnsupported webauthn:attestation:failure->contao--webauthn-error#handleAttestationFailure"
+    >
+        <div class="tl_submit_container">
+            <button class="tl_submit" type="submit" data-action="contao--webauthn#signup">{{ 'MSC.addPasskey'|trans }}</button>
+        </div>
+        <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+    </div>
+</div>

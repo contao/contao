@@ -11,9 +11,9 @@
 use Contao\Backend;
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\DiffRenderer;
@@ -28,7 +28,6 @@ use Contao\TemplateLoader;
 use Contao\Validator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Twig\Error\LoaderError;
 
 System::loadLanguageFile('tl_files');
 
@@ -39,8 +38,8 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	(
 		'dataContainer'               => DC_Folder::class,
 		'uploadPath'                  => 'templates',
-		'editableFileTypes'           => 'html5,twig',
-		'closed'                      => true,
+		'editableFileTypes'           => 'html5',
+		'notMovable'                  => true,
 		'onload_callback' => array
 		(
 			array('tl_templates', 'addBreadcrumb'),
@@ -55,23 +54,36 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			'new' => array
 			(
 				'href'                => 'act=paste&amp;mode=create',
-				'class'               => 'header_new_folder'
+				'class'               => 'header_new_folder',
+				'primary'             => true,
 			),
 			'new_tpl' => array
 			(
 				'href'                => 'key=new_tpl',
-				'class'               => 'header_new'
+				'class'               => 'header_new',
+				'primary'             => true,
 			),
 		),
 		'operations' => array
 		(
 			'edit',
+			'source' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
+				'href'                => 'act=source',
+				'prefetch'            => true,
+				'icon'                => 'editor.svg',
+				'primary'             => true,
+				'button_callback'     => array('tl_templates', 'editSource')
+			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				// TODO: remove this again once #7854 has been fixed
+				'button_callback'     => array('tl_templates', 'disableTwigFiles')
 			),
 			'cut' => array
 			(
@@ -79,27 +91,15 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				'button_callback'     => array('tl_templates', 'disableTwigFiles')
 			),
 			'delete',
-			'source' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
-				'href'                => 'act=source',
-				'icon'                => 'editor.svg',
-				'button_callback'     => array('tl_templates', 'editSource')
-			),
+			'-',
 			'compare' => array
 			(
 				'href'                => 'key=compare',
 				'icon'                => 'diffTemplate.svg',
 				'button_callback'     => array('tl_templates', 'compareButton')
-			),
-			'drag' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
-				'icon'                => 'drag.svg',
-				'attributes'          => 'class="drag-handle" aria-hidden="true"',
-				'button_callback'     => array('tl_templates', 'dragFile')
 			)
 		)
 	),
@@ -198,7 +198,7 @@ class tl_templates extends Backend
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 
@@ -223,28 +223,11 @@ class tl_templates extends Backend
 	public function addNewTemplate()
 	{
 		$arrAllTemplates = array();
-
-		// Add modern templates
 		$container = System::getContainer();
-		$chains = $container->get('contao.twig.filesystem_loader')->getInheritanceChains();
-
-		foreach ($chains as $identifier => $chain)
-		{
-			if (!str_contains($identifier, '/'))
-			{
-				continue;
-			}
-
-			$parts = explode('/', $identifier);
-			$rootCategory = array_shift($parts);
-
-			$arrAllTemplates[$rootCategory]["@Contao/$identifier.html.twig"] = sprintf('%s [%s.html.twig]', implode('/', $parts), $identifier);
-
-			ksort($arrAllTemplates[$rootCategory]);
-		}
 
 		$files = $container->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$referer = System::getContainer()->get('router')->generate('contao_backend', array('do' => 'tpl_editor'));
 
 		// Add legacy templates
 		foreach ($files as $file)
@@ -273,44 +256,6 @@ class tl_templates extends Backend
 		// Handle creating a new template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void {
-				$filesystem = new Filesystem();
-				$targetFile = Path::join($container->getParameter('kernel.project_dir'), $target, substr($template, 8));
-
-				if ($filesystem->exists($targetFile))
-				{
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['exists'], $targetFile);
-
-					return;
-				}
-
-				try
-				{
-					$info = $container->get('contao.twig.inspector')->inspectTemplate($template);
-				}
-				catch (InspectionException $e)
-				{
-					if ($e->getPrevious() instanceof LoaderError)
-					{
-						throw new RuntimeException('Invalid template ' . $template);
-					}
-
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['hasErrors'], $template, $e->getPrevious()->getMessage());
-
-					return;
-				}
-
-				$content = $container->get('twig')->render(
-					'@Contao/backend/template_skeleton.html.twig',
-					array(
-						'type' => str_starts_with($template, '@Contao/component') ? 'use' : 'extends',
-						'template' => $info,
-					)
-				);
-
-				$filesystem->dumpFile($targetFile, $content);
-			};
-
 			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use (&$strError, $arrAllTemplates): void {
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -366,18 +311,11 @@ class tl_templates extends Backend
 
 			$strOriginal = Input::post('original', true);
 
-			if (str_starts_with($strOriginal, '@'))
-			{
-				$createModernTemplate($strOriginal, $strTarget);
-			}
-			else
-			{
-				$createLegacyTemplate($strOriginal, $strTarget);
-			}
+			$createLegacyTemplate($strOriginal, $strTarget);
 
 			if (!$strError)
 			{
-				$this->redirect($this->getReferer());
+				$this->redirect($referer);
 			}
 		}
 
@@ -403,7 +341,7 @@ class tl_templates extends Backend
 </div>' : '') . '
 
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . $referer . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 
 <form id="tl_create_template" class="tl_form tl_edit_form" method="post">
@@ -413,7 +351,9 @@ class tl_templates extends Backend
 <div class="tl_tbox cf">
 <div class="w50 widget">
   <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
-  <select name="original" id="ctrl_original" class="tl_select tl_chosen" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
+  <div class="tl_select_wrapper" data-controller="contao--choices">
+    <select name="original" id="ctrl_original" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>
+  </div>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
@@ -424,7 +364,7 @@ class tl_templates extends Backend
 </div>
 </div>
 
-<div class="tl_formbody_submit">
+<div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
   <button type="submit" name="create" id="create" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['tl_templates']['newTpl'] . '</button>
 </div>
@@ -550,43 +490,40 @@ class tl_templates extends Backend
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
+		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());
 	}
 
 	/**
-	 * Return the "compare template" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Configure the "compare template" button
 	 */
-	public function compareButton($row, $href, $label, $title, $icon, $attributes)
+	public function compareButton(DataContainerOperation $operation)
 	{
-		return str_ends_with($row['id'], '.html5') && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		$row = $operation->getRecord();
+
+		if (!str_ends_with($row['id'], '.html5') || !is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])))
+		{
+			$operation->disable();
+		}
+		else
+		{
+			$operation['attributes']->set('onclick', 'Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false');
+		}
 	}
 
 	/**
-	 * Return the drag file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Disallow operation for twig files.
 	 */
-	public function dragFile($row, $href, $label, $title, $icon, $attributes)
+	public function disableTwigFiles(DataContainerOperation $operation)
 	{
-		return '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ';
+		$row = $operation->getRecord();
+
+		if ($row['type'] === 'file' && Path::getExtension($row['id']) === 'twig')
+		{
+			$operation->hide();
+		}
 	}
 
 	/**
@@ -618,24 +555,19 @@ class tl_templates extends Backend
 	}
 
 	/**
-	 * Return the edit file source button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Configure the edit file source button
 	 */
-	public function editSource($row, $href, $label, $title, $icon, $attributes)
+	public function editSource(DataContainerOperation $operation)
 	{
 		/** @var DC_Folder $dc */
-		$dc = func_num_args() <= 12 ? null : func_get_arg(12);
+		$dc = $operation->getDataContainer();
 		$arrEditableFileTypes = $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')));
+		$row = $operation->getRecord();
 
-		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		if (!in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) || !is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])))
+		{
+			$operation->disable();
+		}
 	}
 
 	/**

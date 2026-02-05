@@ -70,8 +70,8 @@
         <target>Balises Robots</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Définir la façon dont les moteurs de recherche traiteront la page.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>Ici, vous pouvez définir comment les moteurs de recherche traitent la page. Ce réglage détermine également si la page apparaît dans le fichier &lt;code&gt;sitemap.xml&lt;/code&gt; ou non.</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -393,14 +393,6 @@
         <source>Please assign the access rights for the page and its subpages.</source>
         <target>Attribuer les droits d'accès pour la page et ses sous-pages.</target>
       </trans-unit>
-      <trans-unit id="tl_page.noSearch.0">
-        <source>Do not search</source>
-        <target>Ne pas rechercher cette page</target>
-      </trans-unit>
-      <trans-unit id="tl_page.noSearch.1">
-        <source>Exclude the page from the search index.</source>
-        <target>Exclure la page de l'index de recherche du site.</target>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>Classe(s) CSS</target>
@@ -427,9 +419,11 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>Masquer si connecté</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Masquer la page dans le menu de navigation si un membre est connecté.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -481,27 +475,59 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.0">
         <source>Enable CSP</source>
+        <target>Activer CSP</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.1">
         <source>Enable Content Security Policy for this website.</source>
+        <target>Activer la politique de sécurité du contenu (CSP) pour ce site web.</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.0">
         <source>Content Security Policy</source>
+        <target>Content Security Policy (CSP)</target>
       </trans-unit>
       <trans-unit id="tl_page.csp.1">
         <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Ici, vous pouvez saisir des directives CSP personnalisées.</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.0">
         <source>Reporting only</source>
+        <target>Rapport uniquement</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportOnly.1">
         <source>Only report policy violations without enforcing them.</source>
+        <target>Signaler uniquement les violations de la politique sans les appliquer.</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.0">
         <source>Enable report logging</source>
+        <target>Activer la journalisation des rapports</target>
       </trans-unit>
       <trans-unit id="tl_page.cspReportLog.1">
         <source>Log CSP violations to the Contao system log.</source>
+        <target>Enregistrer les violations CSP dans le journal système de Contao.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>Format du flux</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>Choisir le format du flux.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>Nombre maximum d'éléments.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>Limiter le nombre d'éléments du flux. Mettre 0 pour tout exporter.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>Description du flux</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the feed.</source>
+        <target>Ici, vous pouvez saisir une courte description du flux.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -585,6 +611,15 @@
       </trans-unit>
       <trans-unit id="tl_page.csp_legend">
         <source>Content Security Policy</source>
+        <target>Politique de sécurité du contenu (CSP)</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>Paramètres du flux</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>Paramètres d'image</target>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
@@ -610,35 +645,31 @@
         <source>Inherit page layout</source>
         <target>Hériter le thème de page</target>
       </trans-unit>
-      <trans-unit id="tl_page.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
         <target>Créer une nouvelle page</target>
       </trans-unit>
-      <trans-unit id="tl_page.show">
+      <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
         <target>Afficher les détails de la page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit">
+      <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Éditer la page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut">
+      <trans-unit id="tl_page.cut.1">
         <source>Move page ID %s</source>
         <target>Déplacer la page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy">
-        <source>Duplicate page ID %s</source>
-        <target>Dupliquer la page ID %s</target>
+      <trans-unit id="tl_page.copy.1">
+        <source>Copy page ID %s</source>
+        <target>Copier la page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChildren">
-        <source>Duplicate page ID %s with its subpages</source>
-        <target>Dupliquer la page ID %s avec ses sous-pages</target>
+      <trans-unit id="tl_page.copyChildren.1">
+        <source>Copy page ID %s with its subpages</source>
+        <target>Copier la page ID %s avec ses sous-pages</target>
       </trans-unit>
-      <trans-unit id="tl_page.delete">
+      <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
         <target>Supprimer la page ID %s</target>
       </trans-unit>
@@ -654,9 +685,13 @@
         <source>Publish page ID %s</source>
         <target>Publier la page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste at the top</source>
-        <target>Coller au début</target>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+        <target>Dé-publier</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
+        <target>Publier</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -666,7 +701,23 @@
         <source>Paste after page ID %s</source>
         <target>Coller après la page ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles">
+      <trans-unit id="tl_page.pastenewtop.1">
+        <source>Add a new page at the top</source>
+        <target>Ajouter une nouvelle page au début</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.1">
+        <source>Add a new page after page ID %s</source>
+        <target>Ajouter une nouvelle page après la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.1">
+        <source>Add a new page inside page ID %s</source>
+        <target>Ajouter une nouvelle page dans la page ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.0">
+        <source>Articles</source>
+        <target>Articles</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>
         <target>Éditer les articles de la page ID %s</target>
       </trans-unit>
@@ -757,6 +808,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 an</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Page interne</target>
       </trans-unit>
     </body>
   </file>

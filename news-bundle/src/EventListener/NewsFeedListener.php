@@ -14,14 +14,16 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Environment;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\NewsModel;
@@ -35,6 +37,7 @@ use FeedIo\Feed\ItemInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @internal
@@ -47,8 +50,9 @@ class NewsFeedListener
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly InsertTagParser $insertTags,
         private readonly string $projectDir,
-        private readonly EntityCacheTags $cacheTags,
+        private readonly CacheTagManager $cacheTags,
         private readonly string $charset,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
     }
 
@@ -56,7 +60,7 @@ class NewsFeedListener
     public function onFetchArticlesForFeed(FetchArticlesForFeedEvent $event): void
     {
         $pageModel = $event->getPageModel();
-        $archives = StringUtil::deserialize($pageModel->newsArchives, true);
+        $archives = $this->sortOutProtected(StringUtil::deserialize($pageModel->newsArchives, true));
 
         $featured = match ($pageModel->feedFeatured) {
             'featured' => true,
@@ -196,5 +200,26 @@ class NewsFeedListener
         }
 
         return $enclosures;
+    }
+
+    /**
+     * @param list<int> $archiveIds
+     *
+     * @return list<int>
+     */
+    private function sortOutProtected(array $archiveIds): array
+    {
+        $newsArchiveModel = $this->framework->getAdapter(NewsArchiveModel::class);
+        $allowedIds = [];
+
+        foreach ($newsArchiveModel->findMultipleByIds($archiveIds) ?? [] as $archive) {
+            if ($archive->protected && !$this->authorizationChecker->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $archive->groups)) {
+                continue;
+            }
+
+            $allowedIds[] = (int) $archive->id;
+        }
+
+        return $allowedIds;
     }
 }

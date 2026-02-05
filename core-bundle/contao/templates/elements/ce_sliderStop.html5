@@ -2,7 +2,7 @@
     </div>
   </div>
 
-  <nav class="slider-control">
+  <nav class="slider-control" aria-label="Slider">
     <a href="#" class="slider-prev"><?= $this->previous ?></a>
     <span class="slider-menu"></span>
     <a href="#" class="slider-next"><?= $this->next ?></a>

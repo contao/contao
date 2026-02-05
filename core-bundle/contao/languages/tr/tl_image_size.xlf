@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
-        <target>Görsel, belirtilen tam boyutlara göre yeniden boyutlandırılır. Gerekirse kırpılır ve belirtilmiş ise önemli bölümler korunur. CSS içindeki &lt;em&gt;cover&lt;/em&gt; değerine benzer.</target>
+        <target>Görsel, belirtilen tam boyutlara göre yeniden boyutlandırılır. Gerekirse kırpılır ve belirtilmiş ise önemli kısımlar korunur. CSS içindeki &lt;em&gt;cover&lt;/em&gt; değerine benzer.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
@@ -181,37 +181,41 @@
         <source>Remove all metadata fields</source>
         <target>Tüm üst veri alanlarını kaldır</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.new.0">
-        <source>New</source>
-        <target>Yeni</target>
-      </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
         <target>Yeni bir görsel boyutu ekle</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.show">
+      <trans-unit id="tl_image_size.show.1">
         <source>Show the details of image size ID %s</source>
         <target>%s kimlikli görsel boyutunun ayrıntılarını görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.edit">
+      <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
         <target>%s kimlikli görsel boyutunu düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.children">
+      <trans-unit id="tl_image_size.children.0">
+        <source>Media queries</source>
+        <target>Ortam sorguları</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.children.1">
         <source>Edit the media queries of image size ID %s</source>
         <target>%s kimlikli görsel boyutunun ayarlarını düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.cut">
+      <trans-unit id="tl_image_size.cut.1">
         <source>Move image size ID %s</source>
         <target>%s kimlikli görsel boyutunu taşı</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.copy">
-        <source>Duplicate image size ID %s</source>
+      <trans-unit id="tl_image_size.copy.1">
+        <source>Copy image size ID %s</source>
         <target>%s kimlikli görsel boyutunu kopyala</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.delete">
+      <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
         <target>%s kimlikli görsel boyutunu sil</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Görsel boyutu</target>
       </trans-unit>
     </body>
   </file>

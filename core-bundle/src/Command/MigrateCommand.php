@@ -16,7 +16,9 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Exception\DriverException;
@@ -265,20 +267,31 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->migrations->run() as $result) {
-                ++$count;
+            try {
+                foreach ($this->migrations->run($migrationLabels) as $result) {
+                    ++$count;
 
+                    if ($asJson) {
+                        $this->writeNdjson('migration-result', [
+                            'message' => $result->getMessage(),
+                            'isSuccessful' => $result->isSuccessful(),
+                        ]);
+                    } else {
+                        $this->io->writeln(' * '.$result->getMessage());
+
+                        if (!$result->isSuccessful()) {
+                            $this->io->error('Migration failed');
+                        }
+                    }
+                }
+            } catch (UnexpectedPendingMigrationException $exception) {
                 if ($asJson) {
                     $this->writeNdjson('migration-result', [
-                        'message' => $result->getMessage(),
-                        'isSuccessful' => $result->isSuccessful(),
+                        'message' => $exception->getMessage(),
+                        'isSuccessful' => false,
                     ]);
                 } else {
-                    $this->io->writeln(' * '.$result->getMessage());
-
-                    if (!$result->isSuccessful()) {
-                        $this->io->error('Migration failed');
-                    }
+                    $this->io->error($exception->getMessage());
                 }
             }
 
@@ -336,7 +349,10 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
-            $commandsHash = hash('sha256', json_encode($commands, JSON_THROW_ON_ERROR));
+            $sortedCommands = $commands;
+            sort($sortedCommands);
+
+            $commandsHash = hash('sha256', json_encode($sortedCommands, JSON_THROW_ON_ERROR));
 
             if ($asJson) {
                 $this->writeNdjson('schema-pending', [
@@ -706,30 +722,44 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal
-        // 4.0 is released
-        $driverConnection = $this->connection->getWrappedConnection();
+        // Backwards compatibility for doctrine/dbal 3.x
+        if (interface_exists(ServerInfoAwareConnection::class)) {
+            /** @phpstan-ignore method.notFound */
+            $driverConnection = $this->connection->getWrappedConnection();
 
-        if (!$driverConnection instanceof ServerInfoAwareConnection) {
-            return true;
+            /** @phpstan-ignore class.notFound */
+            if (!$driverConnection instanceof ServerInfoAwareConnection) {
+                return true;
+            }
+
+            $driver = $this->connection->getDriver();
+
+            /** @phpstan-ignore class.notFound */
+            if (!$driver instanceof VersionAwarePlatformDriver) {
+                return true;
+            }
+
+            /** @phpstan-ignore class.notFound */
+            $version = $driverConnection->getServerVersion();
+
+            /** @phpstan-ignore class.notFound */
+            $correctPlatform = $driver->createDatabasePlatformForVersion($version);
+        } else {
+            $version = $this->connection->getServerVersion();
+            $correctPlatform = $this->connection->getDriver()->getDatabasePlatform(new StaticServerVersionProvider($version));
         }
 
-        $driver = $this->connection->getDriver();
-
-        if (!$driver instanceof VersionAwarePlatformDriver) {
-            return true;
-        }
-
-        $version = $driverConnection->getServerVersion();
-        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
         $currentPlatform = $this->connection->getDatabasePlatform();
 
         if ($correctPlatform::class === $currentPlatform::class) {
             return true;
         }
 
-        // If serverVersion is not configured, we will actually never end up here
         $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
+
+        if (!$currentVersion || !$version) {
+            return true;
+        }
 
         $message = <<<EOF
             Wrong database version configured!

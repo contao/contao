@@ -38,8 +38,8 @@ class Cron
     private array $cronJobs = [];
 
     /**
-     * @param \Closure(): CronJobRepository      $repository
-     * @param \Closure(): EntityManagerInterface $entityManager
+     * @param \Closure():CronJobRepository      $repository
+     * @param \Closure():EntityManagerInterface $entityManager
      */
     public function __construct(
         private readonly \Closure $repository,
@@ -128,7 +128,7 @@ class Cron
         $entityManager = ($this->entityManager)();
         $cronJobsToBeRun = [];
 
-        $now = new \DateTimeImmutable();
+        $now = new \DateTime();
 
         // Return if another cron process is already running
         try {
@@ -155,7 +155,7 @@ class Cron
                 }
 
                 // Check if the cron should be run
-                $expression = CronExpression::factory($interval);
+                $expression = new CronExpression($interval);
 
                 if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;

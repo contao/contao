@@ -19,8 +19,8 @@ use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Basic\BracesPositionFixer;
 use PhpCsFixer\Fixer\Basic\PsrAutoloadingFixer;
+use PhpCsFixer\Fixer\ClassNotation\ModifierKeywordsFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
-use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\ControlStructure\ControlStructureContinuationPositionFixer;
 use PhpCsFixer\Fixer\ControlStructure\TrailingCommaInMultilineFixer;
@@ -81,6 +81,7 @@ return ECSConfig::configure()
         IncrementStyleFixer::class,
         MethodChainingIndentationFixer::class,
         ModernizeStrposFixer::class,
+        ModifierKeywordsFixer::class,
         MultiLineLambdaFunctionArgumentsFixer::class,
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,
@@ -106,7 +107,6 @@ return ECSConfig::configure()
         UselessParenthesesSniff::class,
         UselessVariableSniff::class,
         UseSprintfInExceptionsSniff::class,
-        VisibilityRequiredFixer::class,
         VoidReturnFixer::class,
         YodaStyleFixer::class,
     ])
@@ -119,5 +119,5 @@ return ECSConfig::configure()
     ->withConfiguredRule(HeaderCommentFixer::class, ['header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later"])
     ->withConfiguredRule(ListSyntaxFixer::class, ['syntax' => 'long'])
     ->withConfiguredRule(NoExtraBlankLinesFixer::class, ['tokens' => ['curly_brace_block', 'extra', 'parenthesis_brace_block', 'square_brace_block', 'use']])
-    ->withCache(sys_get_temp_dir().'/ecs/contao53-legacy')
+    ->withCache(sys_get_temp_dir().'/ecs/contao57-legacy')
 ;

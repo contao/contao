@@ -52,6 +52,7 @@ framework:
             contao_prio_low: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
         routing:
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_high
+            # TODO: Remove these interfaces and their routing configuration in Contao 6
             'Contao\CoreBundle\Messenger\Message\HighPriorityMessageInterface': contao_prio_high
             'Contao\CoreBundle\Messenger\Message\NormalPriorityMessageInterface': contao_prio_normal
             'Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface': contao_prio_low
@@ -153,8 +154,6 @@ fos_http_cache:
         enabled: true
     tags:
         enabled: true
-        annotations:
-            enabled: false
         max_header_value_length: 4096
 
 # Scheb 2FA configuration
@@ -165,3 +164,42 @@ scheb_two_factor:
     backup_codes:
         enabled: true
         manager: contao.security.two_factor.backup_code_manager
+
+# Webauthn configuration
+webauthn:
+    logger: logger
+    credential_repository: contao.repository.webauthn_credential
+    user_repository: contao.repository.webauthn_user_entity
+    creation_profiles:
+        contao_backend:
+            rp:
+                name: Contao Open Source CMS
+            authenticator_selection_criteria:
+                require_resident_key: true
+                user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+                resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED
+        contao_frontend:
+            rp:
+                name: Contao Open Source CMS
+            authenticator_selection_criteria:
+                require_resident_key: true
+                user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+                resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED
+    request_profiles:
+        contao_backend:
+            user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+        contao_frontend:
+            user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+    controllers:
+        enabled: true
+        creation:
+            contao_backend_add_authenticator:
+                options_path: '%contao.backend.route_prefix%/webauthn/add/options'
+                result_path: '%contao.backend.route_prefix%/webauthn/add/result'
+                user_entity_guesser: contao.webauthn.user_entity_guesser
+                profile: contao_backend
+            contao_frontend_add_authenticator:
+                options_path: /_contao/webauthn/add/options
+                result_path: /_contao/webauthn/add/result
+                user_entity_guesser: contao.webauthn.user_entity_guesser
+                profile: contao_frontend

@@ -18,17 +18,33 @@ use Symfony\Component\Filesystem\Path;
 class ThemeNamespace
 {
     /**
+     * @internal
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * Generates a theme slug from a relative path.
      *
      * @throws InvalidThemePathException if the path contains invalid characters
      */
     public function generateSlug(string $relativePath): string
     {
+        if ('..' === $relativePath) {
+            return '';
+        }
+
         if (!Path::isRelative($relativePath)) {
             throw new \InvalidArgumentException(\sprintf('Path "%s" must be relative.', $relativePath));
         }
 
         $path = Path::normalize($relativePath);
+
+        if (str_contains($path, '..')) {
+            trigger_deprecation('contao/core-bundle', '5.5', 'Using paths outside of the template directory is deprecated and will no longer work in Contao 6. Use the VFS to mount them in the user templates storage instead.');
+        }
+
         $invalidCharacters = [];
 
         $slug = implode('_', array_map(
@@ -75,5 +91,15 @@ class ThemeNamespace
         }
 
         return null;
+    }
+
+    /**
+     * @internal as long as slugs can result in paths outside the template directory, which is not supported by this function.
+     *
+     * Builds the relative path to the theme templates directory from a given slug.
+     */
+    public function getPath(string $slug): string
+    {
+        return str_replace('_', '/', $slug);
     }
 }

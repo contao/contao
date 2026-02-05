@@ -10,10 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace ContaoManager;
+namespace Contao\CommentsBundle\ContaoManager;
 
 use Contao\CalendarBundle\ContaoCalendarBundle;
-use Contao\CommentsBundle\ContaoManager\Plugin;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\FaqBundle\ContaoFaqBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
@@ -25,7 +24,7 @@ class PluginTest extends TestCase
 {
     public function testReturnsTheBundleConfiguration(): void
     {
-        $config = (new Plugin())->getBundles($this->createMock(ParserInterface::class))[0];
+        $config = (new Plugin())->getBundles($this->createStub(ParserInterface::class))[0];
 
         $plugins = [
             ContaoCalendarBundle::class,

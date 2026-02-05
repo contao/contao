@@ -1,0 +1,62 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="es">
+    <body>
+      <trans-unit id="tl_page.eventCalendars.0">
+        <source>Calendars</source>
+        <target>Calendarios</target>
+      </trans-unit>
+      <trans-unit id="tl_page.eventCalendars.1">
+        <source>Here you can choose the calendars to be included in the feed.</source>
+        <target>Elegir los calendarios que deben incluirse en el flujo.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.0">
+        <source>Export settings</source>
+        <target>Ajustes de exportación</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.1">
+        <source>Here you can choose what will be exported.</source>
+        <target>Aquí puede elegir lo que va a ser exportado.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.0">
+        <source>Featured items</source>
+        <target>Solo artículos destacados</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.1">
+        <source>Here you can choose how featured items are handled.</source>
+        <target>Mostrar sólo los artículos destacados</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedRecurrenceLimit.0">
+        <source>Maximum number of recurrences</source>
+        <target>Número máximo de recurrencias</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedRecurrenceLimit.1">
+        <source>Define the maximum number of recurrences for repeated events.</source>
+        <target>Define el número máximo de recurrencias para eventos repetidos.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.archives_legend">
+        <source>Calendars</source>
+        <target>Calendarios</target>
+      </trans-unit>
+      <trans-unit id="tl_page.source_teaser">
+        <source>Teasers only</source>
+        <target>Solo avances</target>
+      </trans-unit>
+      <trans-unit id="tl_page.source_text">
+        <source>Full stories</source>
+        <target>Historias completas</target>
+      </trans-unit>
+      <trans-unit id="tl_page.all_items">
+        <source>Show all items</source>
+        <target>Mostrar todos los elementos</target>
+      </trans-unit>
+      <trans-unit id="tl_page.featured">
+        <source>Show featured items only</source>
+        <target>Mostrar solo elementos destacados</target>
+      </trans-unit>
+      <trans-unit id="tl_page.unfeatured">
+        <source>Skip featured items</source>
+        <target>Omitir elementos destacados</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

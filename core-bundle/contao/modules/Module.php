@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -23,6 +24,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $name
  * @property string  $headline
  * @property string  $type
+ * @property string  $ariaLabel
  * @property integer $levelOffset
  * @property integer $showLevel
  * @property boolean $hardLimit
@@ -259,7 +261,7 @@ abstract class Module extends Frontend
 			return array();
 		}
 
-		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
+		return array(System::getContainer()->get('contao.cache.tag_manager')->getTagForModelInstance($this->objModel));
 	}
 
 	/**
@@ -514,5 +516,14 @@ abstract class Module extends Frontend
 		}
 
 		return '';
+	}
+
+	/**
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use a page type controller instead.
+	 */
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return false;
 	}
 }

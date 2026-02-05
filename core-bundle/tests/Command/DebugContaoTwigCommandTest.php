@@ -18,6 +18,7 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -61,9 +62,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    /**
-     * @dataProvider provideInput
-     */
+    #[DataProvider('provideInput')]
     public function testOutputsHierarchy(array $input, string $expectedOutput): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
@@ -110,12 +109,14 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/foo.html.twig
                   Path            /path1/foo.html.twig
                   Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
                   Original name   @B/foo.html5
                   @Contao name    @Contao/foo.html.twig
                   Path            /path2/foo.html5
                   Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
                  --------------- --------------------------------------------------
                 bar
                 ===
@@ -126,6 +127,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/bar.html.twig
                   Path            /path/bar.html.twig
                   Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Slots           @C/bar.html.twig_slot1, @C/bar.html.twig_slot2
                   Preview         … code of @C/bar.html.twig …
                  --------------- --------------------------------------------------
                 baz
@@ -137,6 +139,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/baz.html.twig
                   Path            /path/baz.html5
                   Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
                  --------------- ------------------------------------------
 
                 OUTPUT,
@@ -155,12 +158,14 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/foo.html.twig
                   Path            /path1/foo.html.twig
                   Blocks          @A/foo.html.twig_block1, @A/foo.html.twig_block2
+                  Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
                   Original name   @B/foo.html5
                   @Contao name    @Contao/foo.html.twig
                   Path            /path2/foo.html5
                   Blocks          @B/foo.html5_block1, @B/foo.html5_block2
+                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
                  --------------- --------------------------------------------------
 
                 OUTPUT,
@@ -179,6 +184,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/bar.html.twig
                   Path            /path/bar.html.twig
                   Blocks          @C/bar.html.twig_block1, @C/bar.html.twig_block2
+                  Slots           @C/bar.html.twig_slot1, @C/bar.html.twig_slot2
                   Preview         … code of @C/bar.html.twig …
                  --------------- --------------------------------------------------
                 baz
@@ -190,6 +196,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   @Contao name    @Contao/baz.html.twig
                   Path            /path/baz.html5
                   Blocks          @D/baz.html5_block1, @D/baz.html5_block2
+                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
                  --------------- ------------------------------------------
 
                 OUTPUT,
@@ -243,9 +250,7 @@ class DebugContaoTwigCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    /**
-     * @dataProvider provideThemeOptions
-     */
+    #[DataProvider('provideThemeOptions')]
     public function testIncludesThemeTemplates(array $input, string|null $expectedThemeSlug): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
@@ -280,28 +285,26 @@ class DebugContaoTwigCommandTest extends TestCase
             ['--theme' => 'my/theme'],
             'my_theme',
         ];
-
-        yield 'theme path (relative up)' => [
-            ['--theme' => '../themes/foo'],
-            '_themes_foo',
-        ];
     }
 
     private function getCommand(ContaoFilesystemLoader|null $filesystemLoader = null): DebugContaoTwigCommand
     {
-        $inspector = $this->createMock(Inspector::class);
+        $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
             ->willReturnCallback(
                 static fn (string $name): TemplateInformation => new TemplateInformation(
                     new Source("… code of $name …", $name),
                     ["{$name}_block1", "{$name}_block2"],
+                    ["{$name}_slot1", "{$name}_slot2"],
+                    null,
+                    [],
                 ),
             )
         ;
 
         return new DebugContaoTwigCommand(
-            $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),
+            $filesystemLoader ?? $this->createStub(ContaoFilesystemLoader::class),
             new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance'),
             $inspector,

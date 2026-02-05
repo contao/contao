@@ -13,7 +13,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 // Extend the default palettes
 PaletteManipulator::create()
 	->addLegend('calendars_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
-	->addField(array('calendars', 'calendarp', 'calendarfeeds', 'calendarfeedp'), 'calendars_legend', PaletteManipulator::POSITION_APPEND)
+	->addField('calendars', 'calendars_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('extend', 'tl_user')
 	->applyToPalette('custom', 'tl_user')
 ;
@@ -28,15 +28,7 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
-$GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
-(
-	'inputType'               => 'checkbox',
-	'options'                 => array('create', 'delete'),
-	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
-);
-
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 (
 	'inputType'               => 'checkbox',
@@ -44,13 +36,4 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 	'eval'                    => array('multiple'=>true),
 	'sql'                     => "blob NULL",
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-);
-
-$GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeedp'] = array
-(
-	'inputType'               => 'checkbox',
-	'options'                 => array('create', 'delete'),
-	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
 );

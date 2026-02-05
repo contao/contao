@@ -7,10 +7,27 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-    contao_calendar.cron.generate_feeds:
-        class: Contao\CalendarBundle\Cron\GenerateFeedsCron
+    contao_calendar.controller.page.calendar_feed:
+        class: Contao\CalendarBundle\Controller\Page\CalendarFeedController
+        arguments:
+            - '@contao.assets.files_context'
+            - '@contao_calendar.feed_specification'
+            - '%kernel.charset%'
+
+    contao_calendar.feed_specification:
+        class: FeedIo\Specification
+        arguments:
+            - '@logger'
+
+    contao_calendar.generator.calendar_events:
+        class: Contao\CalendarBundle\Generator\CalendarEventsGenerator
+        public: true
         arguments:
             - '@contao.framework'
+            - '@contao.routing.page_finder'
+            - '@contao.routing.content_url_generator'
+            - '@translator'
+            - '@?fos_http_cache.http.symfony_response_tagger'
 
     contao_calendar.insert_tag.event:
         class: Contao\CalendarBundle\InsertTag\EventInsertTag
@@ -18,12 +35,37 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.listener.calendar_feed:
+        class: Contao\CalendarBundle\EventListener\CalendarFeedListener
+        arguments:
+            - '@contao_calendar.generator.calendar_events'
+            - '@contao.framework'
+            - '@contao.image.factory'
+            - '@contao.routing.content_url_generator'
+            - '@contao.insert_tag.parser'
+            - '@contao.cache.tag_manager'
+            - '@security.authorization_checker'
+            - '%kernel.project_dir%'
+            - '%kernel.charset%'
+
     contao_calendar.listener.data_container.event_search:
         class: Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener
         arguments:
             - '@contao.framework'
             - '@database_connection'
             - '@contao.routing.content_url_generator'
+
+    contao_calendar.listener.data_container.layout_feed_options:
+        class: Contao\CalendarBundle\EventListener\DataContainer\LayoutFeedOptionsListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+
+    contao_calendar.listener.data_container.page:
+        class: Contao\CalendarBundle\EventListener\DataContainer\PageListener
+        arguments:
+            - '@database_connection'
+            - '@security.helper'
 
     contao_calendar.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
@@ -36,6 +78,7 @@ services:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
@@ -56,6 +99,21 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+
+    contao_calendar.migration.feed:
+        class: Contao\CalendarBundle\Migration\FeedMigration
+        arguments:
+            - '@database_connection'
+
+    contao_calendar.migration.field_permission:
+        class: Contao\CalendarBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
+
+    contao_calendar.migration.overwrite_meta:
+        class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
+        arguments:
+            - '@database_connection'
 
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
@@ -85,3 +143,11 @@ services:
         class: Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_calendar.security.legacy_backend_access_voter:
+        class: Contao\CalendarBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
+
+    # Autowiring aliases
+    Contao\CalendarBundle\Generator\CalendarEventsGenerator: '@contao_calendar.generator.calendar_events'

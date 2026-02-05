@@ -24,9 +24,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Asset\PackageInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ServiceLocator;
@@ -52,7 +49,7 @@ use Twig\Loader\LoaderInterface;
     name: 'contao:lint-service-ids',
     description: 'Checks the Contao service IDs.',
 )]
-class LintServiceIdsCommand extends Command
+class LintServiceIdsCommand
 {
     /**
      * Strip from name if the alias is part of the namespace.
@@ -166,12 +163,11 @@ class LintServiceIdsCommand extends Command
 
     public function __construct(private readonly string $projectDir)
     {
-        parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function __invoke(SymfonyStyle $io): int
     {
-        $this->io = new SymfonyStyle($input, $output);
+        $this->io = $io;
 
         $files = Finder::create()
             ->files()

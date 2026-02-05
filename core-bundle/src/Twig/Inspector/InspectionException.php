@@ -12,10 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inspector;
 
+/**
+ * @experimental
+ */
 class InspectionException extends \RuntimeException
 {
-    public function __construct(string $templateName, \Throwable|null $previous = null)
+    /**
+     * @internal
+     */
+    public function __construct(string $templateName, \Throwable|null $previous = null, string|null $reason = null)
     {
-        parent::__construct(\sprintf('Could not inspect template "%s".', $templateName), 0, $previous);
+        parent::__construct(\sprintf('Could not inspect template "%s".%s', $templateName, null !== $reason ? " $reason" : ''), 0, $previous);
     }
 }

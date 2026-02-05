@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Framework\Adapter;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "contao.pagination.factory" instead.', Pagination::class);
+
 /**
  * Provide methods to render a pagination menu.
  */
@@ -290,6 +292,8 @@ class Pagination
 		);
 
 		$objTemplate->class = 'pagination-' . $this->strParameter;
+
+		// Backwards compatibility
 		$objTemplate->pagination = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagination']);
 
 		// Adding rel="prev" and rel="next" links is not possible

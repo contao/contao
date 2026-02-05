@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsCallback(table: 'tl_page', target: 'fields.canonicalLink.load')]
@@ -45,13 +44,10 @@ class DisableCanonicalFieldsListener
 
         $adapter = $this->framework->getAdapter(Image::class);
 
-        $renderHelpIcon = fn () => $adapter->getHtml(
-            'show.svg',
-            '',
-            \sprintf(
-                'title="%s"',
-                StringUtil::specialchars($this->translator->trans('tl_page.relCanonical', [], 'contao_tl_page')),
-            ),
+        $renderHelpIcon = fn () => ' '.$adapter->getHtml(
+            'info.svg',
+            $this->translator->trans('tl_page.relCanonical', [], 'contao_tl_page'),
+            'data-contao--tooltips-target="tooltip"',
         );
 
         $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['disabled'] = true;

@@ -64,7 +64,7 @@ $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 $GLOBALS['TL_CONFIG']['uploadTypes']
 	= 'jpg,jpeg,gif,png,ico,svg,svgz,webp,avif,heic,jxl,'
 	. 'odt,ods,odp,odg,ott,ots,otp,otg,pdf,csv,'
-	. 'doc,docx,dot,dotx,xls,xlsx,xlt,xltx,ppt,pptx,pot,potx,'
+	. 'doc,docx,dot,dotx,xls,xlsx,xlt,xltx,ppt,pptx,pot,potx,vtt,'
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,fla,flv,swf,'
 	. 'ttf,ttc,otf,eot,woff,woff2,'
 	. 'css,scss,less,txt,zip,rar,7z,cto,md,ics';

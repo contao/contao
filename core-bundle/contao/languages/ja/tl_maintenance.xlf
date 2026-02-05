@@ -185,6 +185,18 @@
         <source>Check for broken links</source>
         <target>切れたリンクを検査</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+        <target>バックエンドを検索</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+        <target>バックエンドの検索を使用するには、&lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contaoのcronjobのフレームワーク&lt;/a&gt;を有効にしてください。</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>インデックスを再構築</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

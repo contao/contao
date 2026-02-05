@@ -177,35 +177,35 @@
         <source>Share on X (formerly Twitter)</source>
         <target>Compartir en X (anteriormente Twitter)</target>
       </trans-unit>
-      <trans-unit id="tl_article.new.0">
-        <source>New</source>
-        <target>Nuevo</target>
-      </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
         <target>Crear un artículo nuevo</target>
       </trans-unit>
-      <trans-unit id="tl_article.show">
+      <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
         <target>Ver los detalles del artículo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit">
+      <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
         <target>Editar artículo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.children">
+      <trans-unit id="tl_article.children.0">
+        <source>Content elements</source>
+        <target>Elementos de contenido</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children.1">
         <source>Edit the content elements of article ID %s</source>
         <target>Edite los elementos de contenido del artículo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.copy">
-        <source>Duplicate article ID %s</source>
-        <target>Duplicar artículo con ID %s</target>
+      <trans-unit id="tl_article.copy.1">
+        <source>Copy article ID %s</source>
+        <target>Copiar el artículo ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut">
+      <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
         <target>Mover artículo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete">
+      <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
         <target>Eliminar artículo con ID %s</target>
       </trans-unit>
@@ -221,13 +221,45 @@
         <source>Publish article ID %s</source>
         <target>Publicar artículo ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.toggle.3">
+        <source>Unpublish</source>
+        <target>Anular publicación</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.4">
+        <source>Publish</source>
+        <target>Publicar</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.0">
+        <source>Paste after article</source>
+        <target>Pegar después del artículo</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>Pegar después del artículo con ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_article.pasteinto.0">
+        <source>Paste into page</source>
+        <target>Pegar en la página</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
         <target>Pegar dentro de la página con ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewafter.1">
+        <source>Add a new article after article ID %s</source>
+        <target>Agregar un nuevo artículo después del ID del artículo %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.0">
+        <source>New at the top</source>
+        <target>Nuevo en la cima</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.1">
+        <source>Add a new article in page ID %s</source>
+        <target>Agregar un nuevo artículo en la página ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>Artículo</target>
       </trans-unit>
     </body>
   </file>

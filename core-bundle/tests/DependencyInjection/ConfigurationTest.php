@@ -16,7 +16,7 @@ use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
@@ -24,15 +24,13 @@ use Symfony\Component\Config\Definition\PrototypedArrayNode;
 
 class ConfigurationTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     private Configuration $configuration;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->configuration = new Configuration($this->getTempDir());
+        $this->configuration = new Configuration();
     }
 
     public function testAddsTheImagineService(): void
@@ -55,9 +53,73 @@ class ConfigurationTest extends TestCase
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
     }
 
-    /**
-     * @dataProvider getPaths
-     */
+    public function testInvalidImageExtension(): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['', '+', '-'],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function testReplacesAllImageExtensions(): void
+    {
+        $extensions = ['jpeg', 'jpg', 'png'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => $extensions,
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testAddsImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'heic', 'jpeg', 'jpg', 'png', 'svg', 'svgz', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['+heic'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testRemovesImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['-svg', '-svgz'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    #[DataProvider('getPaths')]
     public function testResolvesThePaths(string $unix, string $windows): void
     {
         $params = [
@@ -85,9 +147,7 @@ class ConfigurationTest extends TestCase
         yield ['/tmp/contao/foo/..', 'C:\Temp\contao\foo\..'];
     }
 
-    /**
-     * @dataProvider getInvalidUploadPaths
-     */
+    #[DataProvider('getInvalidUploadPaths')]
     public function testFailsIfTheUploadPathIsInvalid(string $uploadPath): void
     {
         $params = [
@@ -137,9 +197,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    /**
-     * @dataProvider getReservedImageSizeNames
-     */
+    #[DataProvider('getReservedImageSizeNames')]
     public function testFailsIfAPredefinedImageSizeNameIsReserved(string $name): void
     {
         $params = [
@@ -385,9 +443,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    /**
-     * @dataProvider invalidAllowedInlineStylesRegexProvider
-     */
+    #[DataProvider('invalidAllowedInlineStylesRegexProvider')]
     public function testFailsOnInvalidAllowedInlineStylesRegex(string $regex, string $exceptionMessage): void
     {
         $params = [
@@ -419,9 +475,7 @@ class ConfigurationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider cronConfigurationProvider
-     */
+    #[DataProvider('cronConfigurationProvider')]
     public function testValidCronConfiguration(array $params, bool|string $expected): void
     {
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);

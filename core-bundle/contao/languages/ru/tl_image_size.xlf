@@ -181,37 +181,41 @@
         <source>Remove all metadata fields</source>
         <target>Удалить все поля метаданных</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.new.0">
-        <source>New</source>
-        <target>Новый</target>
-      </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
         <target>Создать новый размер изображения</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.show">
+      <trans-unit id="tl_image_size.show.1">
         <source>Show the details of image size ID %s</source>
         <target>Показать детали размера изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.edit">
+      <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
         <target>Редактировать размер изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.children">
+      <trans-unit id="tl_image_size.children.0">
+        <source>Media queries</source>
+        <target>Media queries (Медиа-запросы)</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.children.1">
         <source>Edit the media queries of image size ID %s</source>
         <target>Редактировать медиа-запросы размера изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.cut">
+      <trans-unit id="tl_image_size.cut.1">
         <source>Move image size ID %s</source>
         <target>Переместить размер изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.copy">
-        <source>Duplicate image size ID %s</source>
-        <target>Дублировать размер изображения ID %s</target>
+      <trans-unit id="tl_image_size.copy.1">
+        <source>Copy image size ID %s</source>
+        <target>Копировать размер изображения ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.delete">
+      <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
         <target>Удалить размер изображения ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Размер изображения</target>
       </trans-unit>
     </body>
   </file>

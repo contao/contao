@@ -11,6 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\PaginationConfig;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "event list".
@@ -274,20 +277,20 @@ class ModuleEventlist extends Events
 		// Pagination
 		if ($this->perPage > 0)
 		{
-			$id = 'page_e' . $this->id;
-			$page = (int) (Input::get($id) ?? 1);
+			$param = 'page_e' . $this->id;
 
-			// Do not index or cache the page if the page number is outside the range
-			if ($page < 1 || $page > max(ceil($total/$this->perPage), 1))
+			try
 			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($param, $total, $this->perPage));
+			}
+			catch (PageOutOfRangeException $e)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
 			}
 
-			$offset = ($page - 1) * $this->perPage;
-			$limit = min($this->perPage + $offset, $total);
+			list($offset, $limit) = $pagination->getIndexRange();
 
-			$objPagination = new Pagination($total, $this->perPage, Config::get('maxPaginationLinks'), $id);
-			$this->Template->pagination = $objPagination->generate("\n  ");
+			$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 		}
 
 		$strMonth = '';
@@ -349,12 +352,6 @@ class ModuleEventlist extends Events
 			$objTemplate->groupCount = static function () use (&$groupCounts, $groupIndex): int {
 				return $groupCounts[$groupIndex];
 			};
-
-			// Show the teaser text of redirect events (see #6315)
-			if (\is_bool($event['details']) && $event['source'] == 'default')
-			{
-				$objTemplate->hasDetails = false;
-			}
 
 			$objTemplate->hasReader = $event['source'] == 'default';
 
@@ -447,14 +444,18 @@ class ModuleEventlist extends Events
 		}
 
 		// No events found
-		if (!$strEvents)
+		if (!$templates)
 		{
 			$strEvents = "\n" . '<div class="empty">' . $strEmpty . '</div>' . "\n";
+		}
+		else
+		{
+			$strEvents = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
 		}
 
 		// See #3672
 		$this->Template->headline = $this->headline;
-		$this->Template->events = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
+		$this->Template->events = $strEvents;
 		$this->Template->eventCount = $eventCount;
 
 		// Clear the $_GET array (see #2445)
@@ -464,5 +465,10 @@ class ModuleEventlist extends Events
 			Input::setGet('month', null);
 			Input::setGet('day', null);
 		}
+	}
+
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

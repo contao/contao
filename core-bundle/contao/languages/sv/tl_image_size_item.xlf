@@ -37,31 +37,27 @@
         <source>Visibility</source>
         <target>Synlighet</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.new.0">
-        <source>New</source>
-        <target>Ny</target>
-      </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
         <target>Skapa en ny media query</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show">
+      <trans-unit id="tl_image_size_item.show.1">
         <source>Show the details of media query ID %s</source>
         <target>Visa detaljerna för media query-ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit">
+      <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
         <target>Redigera media query-ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut">
+      <trans-unit id="tl_image_size_item.cut.1">
         <source>Move media query ID %s</source>
         <target>Flytta  media query-ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy">
-        <source>Duplicate media query ID %s</source>
-        <target>Duplicera media query-ID %s</target>
+      <trans-unit id="tl_image_size_item.copy.1">
+        <source>Copy media query ID %s</source>
+        <target>Kopiera mediaquery ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete">
+      <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
         <target>Ta bort media query-ID %s</target>
       </trans-unit>
@@ -77,21 +73,29 @@
         <source>Activate media query ID %s</source>
         <target>Aktivera media query ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Klistra in efter rubriken</target>
+      <trans-unit id="tl_image_size_item.toggle.3">
+        <source>Deactivate</source>
+        <target>Avaktivera</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.4">
+        <source>Activate</source>
+        <target>Aktivera</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
         <target>Klistra in efter media query-ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.0">
+      <trans-unit id="tl_image_size_item.pastenewtop.1">
         <source>Create a new media query at the top</source>
         <target>Skapa en ny media query högst upp</target>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.1">
+      <trans-unit id="tl_image_size_item.pastenewafter.1">
         <source>Create a new media query after media query ID %s</source>
         <target>Skapa en ny media query efter media query-ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.tableLabel">
+        <source>Media query</source>
+        <target>Mediafrågor</target>
       </trans-unit>
     </body>
   </file>

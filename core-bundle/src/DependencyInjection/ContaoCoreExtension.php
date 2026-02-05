@@ -22,6 +22,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
@@ -32,22 +33,27 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
+use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Toflar\CronjobSupervisor\Supervisor;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
@@ -59,12 +65,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        return new Configuration((string) $container->getParameter('kernel.project_dir'));
+        return new Configuration();
     }
 
     public function prepend(ContainerBuilder $container): void
     {
-        $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
+        $configuration = new Configuration();
 
         $config = $container->getExtensionConfig($this->getAlias());
         $config = $container->getParameterBag()->resolveValue($config);
@@ -99,12 +105,13 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $projectDir = (string) $container->getParameter('kernel.project_dir');
 
-        $configuration = new Configuration($projectDir);
+        $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('commands.yaml');
         $loader->load('controller.yaml');
+        $loader->load('form.yaml');
         $loader->load('listener.yaml');
         $loader->load('migrations.yaml');
         $loader->load('services.yaml');
@@ -135,14 +142,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
         $container->setParameter('contao.backend.crawl_concurrency', $config['backend']['crawl_concurrency']);
+        $container->setParameter('contao.backend.icons', $this->getBackendIcons());
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
+        $container->setParameter('contao.registration.expiration', $config['registration']['expiration']);
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
+        $this->handleBackendSearchConfig($config, $container, $loader);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setPreserveMetadataFields($config, $container);
@@ -153,6 +163,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCronConfig($config, $container);
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
+        $this->handleAltcha($config, $container);
+        $this->handleTemplateStudioConfig($config, $container, $loader);
+        $this->handleMailerConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -239,6 +252,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->mountLocalAdapter('var/backups', 'backups', 'backups')
             ->addVirtualFilesystem('backups', 'backups')
         ;
+
+        // Job attachments
+        $config
+            ->mountLocalAdapter('var/job-attachments', 'job-attachments', 'job-attachments')
+            ->addVirtualFilesystem('job-attachments', 'job-attachments')
+        ;
+
+        // User templates
+        $config
+            ->mountLocalAdapter('templates', 'user_templates', 'user_templates')
+            ->addVirtualFilesystem('user_templates', 'user_templates')
+        ;
     }
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
@@ -304,6 +329,34 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $defaultIndexer->setArgument(2, $config['search']['index_protected']);
         }
 
+        $searchIndexListenerDefinition = $container->getDefinition('contao.listener.search_index');
+        $rateLimiterServiceId = null;
+
+        if ($config['search']['listener']['rate_limiter']) {
+            $rateLimiterServiceId = 'limiter.'.$config['search']['listener']['rate_limiter'];
+        } elseif ($container->has('cache.app')) {
+            $rateLimiterServiceId = 'contao.listener.search_index.default_rate_limiter';
+
+            $factoryDefinition = new Definition(RateLimiterFactory::class);
+            $factoryDefinition->setArguments([
+                [
+                    'id' => $rateLimiterServiceId,
+                    'policy' => 'fixed_window',
+                    'limit' => 1,
+                    'interval' => '5 minutes',
+                ],
+                new Definition(CacheStorage::class, [
+                    new Reference('cache.app'),
+                ]),
+            ]);
+
+            $container->setDefinition($rateLimiterServiceId, $factoryDefinition);
+        }
+
+        if ($rateLimiterServiceId) {
+            $searchIndexListenerDefinition->setArgument('$rateLimiterFactory', new Reference($rateLimiterServiceId));
+        }
+
         $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
 
         if (!$config['search']['listener']['index']) {
@@ -319,8 +372,38 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $container->removeDefinition('contao.listener.search_index');
         } else {
             // Configure the search index listener
-            $container->getDefinition('contao.listener.search_index')->setArgument('$enabledFeatures', $features);
+            $searchIndexListenerDefinition->setArgument('$enabledFeatures', $features);
         }
+    }
+
+    private function handleBackendSearchConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        if (!$config['backend_search']['enabled']) {
+            return;
+        }
+
+        $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('contao.backend_search_provider');
+        $loader->load('backend_search.yaml');
+
+        if (
+            !$container->hasDefinition('contao.search_backend.adapter')
+            || !$container->hasDefinition('contao.search_backend.engine')
+        ) {
+            return;
+        }
+
+        $indexName = $config['backend_search']['index_name'];
+
+        $adapter = $container->getDefinition('contao.search_backend.adapter');
+        $adapter->setArgument(0, $config['backend_search']['dsn']);
+
+        $engine = $container->getDefinition('contao.search_backend.engine');
+        $engine
+            ->setArgument(1, (new Definition(BackendSearch::class))
+                ->setFactory([null, 'getSearchEngineSchema'])
+                ->setArgument('$indexName', $indexName),
+            )
+        ;
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void
@@ -542,6 +625,29 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         return Path::join($projectDir, $publicDir);
     }
 
+    private function getBackendIcons(): array
+    {
+        $basePath = Path::canonicalize(__DIR__.'/../../contao/themes/flexible/icons');
+        $manifest = json_decode(file_get_contents(Path::join($basePath, 'manifest.json')), true, 2, JSON_THROW_ON_ERROR);
+
+        $icons = [];
+
+        foreach ($manifest as $name => $publicPath) {
+            $svg = new \DOMDocument();
+            $svg->loadXML(file_get_contents(Path::join($basePath, $name)));
+
+            $icons[$name] = [
+                'path' => $publicPath,
+                'width' => $svg->documentElement->getAttribute('width'),
+                'height' => $svg->documentElement->getAttribute('height'),
+            ];
+        }
+
+        ksort($icons);
+
+        return $icons;
+    }
+
     private function handleSecurityConfig(array $config, ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.listener.transport_security_header')) {
@@ -569,5 +675,78 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $processor = $container->getDefinition('contao.csp.wysiwyg_style_processor');
             $processor->setArgument(0, $config['csp']['allowed_inline_styles']);
         }
+    }
+
+    private function handleAltcha(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.altcha')) {
+            return;
+        }
+
+        $altcha = $container->getDefinition('contao.altcha');
+        $altcha->setArgument(3, $config['altcha']['algorithm']);
+        $altcha->setArgument(4, $config['altcha']['range_max']);
+        $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
+    }
+
+    private function handleTemplateStudioConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        // Used to display/hide the menu entry in the back end
+        $container->setParameter('contao.template_studio.enabled', $config['template_studio']['enabled']);
+
+        if (!$config['template_studio']['enabled']) {
+            return;
+        }
+
+        $this->registerOperationAttribute(
+            AsOperationForTemplateStudioElement::class,
+            'contao.operation.template_studio_element',
+            $container,
+        );
+
+        $loader->load('template_studio.yaml');
+    }
+
+    private function handleMailerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (null === $config['mailer']['override_from'] || !$container->hasDefinition('contao.mailer')) {
+            return;
+        }
+
+        $container
+            ->getDefinition('contao.mailer')
+            ->setArgument('$overrideFrom', $config['mailer']['override_from'])
+        ;
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $attributeClass
+     */
+    private function registerOperationAttribute(string $attributeClass, string $tag, ContainerBuilder $container): void
+    {
+        $container->registerAttributeForAutoconfiguration(
+            $attributeClass,
+            static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($tag): void {
+                /** @var \ReflectionClass<T> $reflector */
+                $tagAttributes = get_object_vars($attribute);
+
+                $tagAttributes['name'] ??= (
+                    static function () use ($reflector) {
+                        // Derive name from class name - e.g. a "FooBarBazOperation" would become "foo_bar_baz"
+                        preg_match('/([^\\\\]+)Operation$/', $reflector->getName(), $matches);
+
+                        return Container::underscore($matches[1]);
+                    }
+                )();
+
+                $definition->addTag($tag, $tagAttributes);
+
+                if ($reflector->hasMethod('setName')) {
+                    $definition->addMethodCall('setName', [$tagAttributes['name']]);
+                }
+            },
+        );
     }
 }

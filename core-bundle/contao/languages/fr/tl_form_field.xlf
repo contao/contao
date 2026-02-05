@@ -169,6 +169,14 @@
         <source>Show this text as long as the field is empty (requires HTML5).</source>
         <target>Afficher ce texte tant que le champ est vide (HTML5 requis).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.help.0">
+        <source>Help text</source>
+        <target>Texte d'aide</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.help.1">
+        <source>Here you can enter a help text that is associated with the field.</source>
+        <target>Ici, vous pouvez saisir un texte d'aide associé au champ.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
         <target>Expression régulière personnalisée</target>
@@ -305,6 +313,14 @@
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Ajouter un suffixe numérique au nouveau fichier si le nom de fichier existe déjà.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+        <target>Autoriser plusieurs fichiers</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+        <target>Autoriser l'utilisateur à téléverser plusieurs fichiers.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
         <target>Valeur par défaut</target>
@@ -369,6 +385,44 @@
         <source>Please select an image from the files directory.</source>
         <target>Sélectionner une image dans le répertoire de fichiers.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.0">
+        <source>Auto verification</source>
+        <target>Vérification automatique</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.1">
+        <source>Automatically verify without user interaction.</source>
+        <target>Vérifier automatiquement, sans interaction de l'utilisateur.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.0">
+        <source>Hide logo</source>
+        <target>Masquer le logo</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.1">
+        <source>Hide the ALTCHA logo.</source>
+        <target>Masquer le logo ALTCHA.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.0">
+        <source>Hide footer</source>
+        <target>Masquer le pied de page</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.1">
+        <source>Hide the footer (ALTCHA link).</source>
+        <target>Masquer le pied de page (lien ALTCHA).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.0">
+        <source>Floating mode</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.1">
+        <source>Enable the floating UI.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.0">
+        <source>Autocomplete attributes</source>
+        <target>Attributs d'autocomplétion</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.1">
+        <source>Here you can enter autocomplete attributes so that the browser knows how to pre-populate the form field with user-preferred values.</source>
+        <target>Ici, vous pouvez saisir des attributs d'autocomplétion afin que le navigateur sache comment pré-remplir le champ de formulaire avec les valeurs préférées de l'utilisateur.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.invisible.0">
         <source>Invisible</source>
         <target>Invisible</target>
@@ -405,6 +459,10 @@
         <source>Rows and columns</source>
         <target>Rangs et colonnes</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.rgxp_legend">
+        <source>Validation settings</source>
+        <target>Paramètres de validation</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.template_legend">
         <source>Template settings</source>
         <target>Paramètres des modèles</target>
@@ -421,31 +479,27 @@
         <source>Visibility</source>
         <target>Visibilité</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.new.0">
-        <source>New</source>
-        <target>Nouveau</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
         <target>Créer un nouveau champ de formulaire</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show">
+      <trans-unit id="tl_form_field.show.1">
         <source>Show the details of form field ID %s</source>
         <target>Éditer le champ ID de formulaire %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit">
+      <trans-unit id="tl_form_field.edit.1">
         <source>Edit form field ID %s</source>
         <target>Éditer le champ ID de formulaire %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut">
+      <trans-unit id="tl_form_field.cut.1">
         <source>Move form field ID %s</source>
         <target>Déplacer le champ de formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.copy">
-        <source>Duplicate form field ID %s</source>
+      <trans-unit id="tl_form_field.copy.1">
+        <source>Copy form field ID %s</source>
         <target>Dupliquer le champ de formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.delete">
+      <trans-unit id="tl_form_field.delete.1">
         <source>Delete form field ID %s</source>
         <target>Supprimer le champ de formulaire ID %s</target>
       </trans-unit>
@@ -461,25 +515,33 @@
         <source>Unhide form field ID %s</source>
         <target>Afficher le champ de formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Coller au début</target>
+      <trans-unit id="tl_form_field.toggle.3">
+        <source>Hide</source>
+        <target>Masquer</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.4">
+        <source>Unhide</source>
+        <target>Afficher</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
         <target>Coller après le champ de formulaire ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.0">
+      <trans-unit id="tl_form_field.pastenewtop.1">
         <source>Create a new form field at the top</source>
         <target>Créer un nouveau champ de formulaire au début</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.1">
+      <trans-unit id="tl_form_field.pastenewafter.1">
         <source>Create a new form field after form field ID %s</source>
         <target>Créer un nouveau champ de formulaire après le champ de formulaire ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
         <target>Importer les options à partir d'un fichier CSV</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.tableLabel">
+        <source>Form field</source>
+        <target>Champ de formulaire</target>
       </trans-unit>
     </body>
   </file>

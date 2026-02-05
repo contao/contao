@@ -117,7 +117,7 @@ class RadioTable extends Widget
 
 				if (\strlen($value))
 				{
-					$label = Image::getHtml($value . '.svg', $label, 'title="' . StringUtil::specialchars($label) . '"');
+					$label = Image::getHtml($value . '.svg', $label, 'data-contao--tooltips-target="tooltip"');
 					$return .= '
       <td><input type="radio" name="' . $this->strName . '" id="' . $this->strName . '_' . $i . '_' . $j . '" class="tl_radio" value="' . self::specialcharsValue($value) . '" data-action="focus->contao--scroll-offset#store"' . $this->isChecked($this->arrOptions[$j]) . $this->getAttributes() . '> <label for="' . $this->strName . '_' . $i . '_' . $j . '">' . $label . '</label></td>';
 				}

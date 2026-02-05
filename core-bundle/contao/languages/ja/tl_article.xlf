@@ -177,35 +177,35 @@
         <source>Share on X (formerly Twitter)</source>
         <target>X(かつてのTwitter)で共有</target>
       </trans-unit>
-      <trans-unit id="tl_article.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
         <target>新しいアーティクルを作成</target>
       </trans-unit>
-      <trans-unit id="tl_article.show">
+      <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
         <target>ID %sのアーティクルの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_article.edit">
+      <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
         <target>ID %sのアーティクルを編集</target>
       </trans-unit>
-      <trans-unit id="tl_article.children">
+      <trans-unit id="tl_article.children.0">
+        <source>Content elements</source>
+        <target>コンテント要素</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children.1">
         <source>Edit the content elements of article ID %s</source>
         <target>ID %sのアーティクルのコンテント要素を編集</target>
       </trans-unit>
-      <trans-unit id="tl_article.copy">
-        <source>Duplicate article ID %s</source>
-        <target>ID %sのアーティクルを複製</target>
+      <trans-unit id="tl_article.copy.1">
+        <source>Copy article ID %s</source>
+        <target>%sのアーティクルをコピー</target>
       </trans-unit>
-      <trans-unit id="tl_article.cut">
+      <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
         <target>ID %sのアーティクルを移動</target>
       </trans-unit>
-      <trans-unit id="tl_article.delete">
+      <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
         <target>ID %sのアーティクルを削除</target>
       </trans-unit>
@@ -221,13 +221,45 @@
         <source>Publish article ID %s</source>
         <target>ID %sのアーティクルを公開</target>
       </trans-unit>
+      <trans-unit id="tl_article.toggle.3">
+        <source>Unpublish</source>
+        <target>非公開</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.4">
+        <source>Publish</source>
+        <target>公開</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.0">
+        <source>Paste after article</source>
+        <target>アーティクルの後に貼り付け</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
         <target>ID %sのアーティクルの後に貼り付け</target>
       </trans-unit>
+      <trans-unit id="tl_article.pasteinto.0">
+        <source>Paste into page</source>
+        <target>ページの中に貼り付け</target>
+      </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
         <target>ID %sのページの中に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewafter.1">
+        <source>Add a new article after article ID %s</source>
+        <target>ID %sのアーティクルの後に新しいアーティクルを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.0">
+        <source>New at the top</source>
+        <target>最上位に作成</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.1">
+        <source>Add a new article in page ID %s</source>
+        <target>ID %sの中に新しいアーティクルを作成</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tableLabel">
+        <source>Article</source>
+        <target>アーティクル</target>
       </trans-unit>
     </body>
   </file>

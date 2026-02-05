@@ -185,7 +185,7 @@ class FrontendTemplate extends Template
 			}
 
 			// Tag the page (see #2137)
-			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($objPage);
+			System::getContainer()->get('contao.cache.tag_manager')->tagWithModelInstance($objPage);
 		}
 
 		return $response;

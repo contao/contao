@@ -29,8 +29,10 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
@@ -46,8 +48,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContaoKernelTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     private array|string|false $shellVerbosityBackup;
 
     protected function setUp(): void
@@ -78,7 +78,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testResetsTheBundleLoaderOnShutdown(): void
     {
-        $bundleLoader = $this->createMock(BundleLoader::class);
+        $bundleLoader = $this->createStub(BundleLoader::class);
 
         $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
@@ -93,7 +93,7 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testDoesNotResetsTheBundleLoaderOnShutdownIfKernelIsNotBooted(): void
     {
-        $bundleLoader = $this->createMock(BundleLoader::class);
+        $bundleLoader = $this->createStub(BundleLoader::class);
 
         $kernel = $this->getKernel($this->getTempDir());
         $kernel->setBundleLoader($bundleLoader);
@@ -123,9 +123,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertArrayNotHasKey(AppBundle::class, $bundles);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testRegistersAppBundle(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
@@ -198,20 +196,18 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame(['foo/bar'], $pluginLoader->getDisabledPackages());
     }
 
-    /**
-     * @dataProvider containerConfigurationProvider
-     */
+    #[DataProvider('containerConfigurationProvider')]
     public function testRegisterContainerConfiguration(string $projectDir, string $env, array $expectedResult): void
     {
         $files = [];
 
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
         $container
             ->method('fileExists')
             ->willReturnCallback(static fn (string $path) => \in_array(basename($path), $expectedResult, true))
         ;
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
@@ -233,7 +229,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($expectedResult, $files);
     }
 
-    public function containerConfigurationProvider(): iterable
+    public static function containerConfigurationProvider(): iterable
     {
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
@@ -278,7 +274,7 @@ class ContaoKernelTest extends ContaoTestCase
         ];
 
         yield [
-            $this->getTempDir(),
+            static::getTempDir(),
             'prod',
             [],
         ];
@@ -296,7 +292,7 @@ class ContaoKernelTest extends ContaoTestCase
         $projectDir = __DIR__.'/../Fixtures/HttpKernel/AutowireSrc';
         $container = new ContainerBuilder(new ParameterBag(['kernel.project_dir' => $projectDir]));
 
-        $locator = $this->createMock(FileLocatorInterface::class);
+        $locator = $this->createStub(FileLocatorInterface::class);
         $locator
             ->method('locate')
             ->willReturnArgument(0)
@@ -347,7 +343,7 @@ class ContaoKernelTest extends ContaoTestCase
         // Create a fake definition to stop services.php from loading anything
         $container->setDefinition('App\\Foobar', new Definition());
 
-        $locator = $this->createMock(FileLocatorInterface::class);
+        $locator = $this->createStub(FileLocatorInterface::class);
         $locator
             ->method('locate')
             ->willReturnArgument(0)
@@ -380,9 +376,9 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testRegisterContainerConfigurationLoadsPlugins(): void
     {
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
 
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('load')
             ->willReturnCallback(
@@ -472,10 +468,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertFalse($kernel->isDebug());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testCreatesDevKernelFromConsoleArgument(): void
     {
         $input = new ArgvInput(['help', '--env=dev']);
@@ -494,10 +488,8 @@ class ContaoKernelTest extends ContaoTestCase
         ContaoKernel::fromInput($this->getTempDir(), $input);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testReturnsTheContaoKernelInDevMode(): void
     {
         $_SERVER['APP_ENV'] = 'dev';
@@ -508,10 +500,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertInstanceOf(ContaoKernel::class, $kernel);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testReturnsTheContaoCacheInProdMode(): void
     {
         unset($_SERVER['APP_ENV'], $_ENV['APP_ENV'], $_ENV['DISABLE_HTTP_CACHE'], $_SERVER['DISABLE_HTTP_CACHE']);
@@ -522,10 +512,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertInstanceOf(ContaoCache::class, $kernel);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testCreatesDevKernelFromAppEnvVar(): void
     {
         $_SERVER['APP_ENV'] = 'dev';
@@ -537,10 +525,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertTrue($kernel->isDebug());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testCreatesProdKernelFromAppEnvVar(): void
     {
         $_SERVER['APP_ENV'] = 'prod';
@@ -557,7 +543,7 @@ class ContaoKernelTest extends ContaoTestCase
      */
     private function getKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {
-        $pluginLoader = $this->createMock(PluginLoader::class);
+        $pluginLoader = $this->createStub(PluginLoader::class);
         $pluginLoader
             ->method('getInstancesOf')
             ->willReturn([])

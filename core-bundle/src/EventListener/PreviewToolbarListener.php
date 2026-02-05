@@ -73,7 +73,7 @@ class PreviewToolbarListener
         // Only inject the toolbar into HTML responses
         if (
             'html' !== $request->getRequestFormat()
-            || !str_contains((string) $response->headers->get('Content-Type'), 'text/html')
+            || ($response->headers->has('Content-Type') && !str_contains((string) $response->headers->get('Content-Type'), 'text/html'))
             || false !== stripos((string) $response->headers->get('Content-Disposition'), 'attachment;')
         ) {
             return;
@@ -93,7 +93,12 @@ class PreviewToolbarListener
 
         $cspHandler = $this->createCspHandler($response);
 
-        $toolbar = $this->twig->render('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig', [
+        // Backwards compatibility: render the legacy bundle template if it exists
+        $template = $this->twig->getLoader()->exists('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig')
+            ? '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig'
+            : '@Contao/frontend_preview/toolbar_js.html.twig';
+
+        $toolbar = $this->twig->render($template, [
             'action' => $this->router->generate('contao_backend_switch'),
             'request' => $request,
             'preview_script' => $this->previewScript,

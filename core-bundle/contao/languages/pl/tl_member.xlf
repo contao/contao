@@ -243,28 +243,29 @@
       </trans-unit>
       <trans-unit id="tl_member.captchaDetails">
         <source>Verification</source>
-      </trans-unit>
-      <trans-unit id="tl_member.new.0">
-        <source>New</source>
-        <target>Nowy</target>
+        <target>Weryfikacja</target>
       </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
         <target>Utwórz nowego użytkownika</target>
       </trans-unit>
-      <trans-unit id="tl_member.show">
+      <trans-unit id="tl_member.show.1">
         <source>Show the details of member ID %s</source>
         <target>Pokaż szczegóły użytkownika ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.edit">
+      <trans-unit id="tl_member.edit.1">
         <source>Edit member ID %s</source>
         <target>Edytuj użytkownika ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.copy">
+      <trans-unit id="tl_member.copy.0">
+        <source>Duplicate</source>
+        <target>Duplikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_member.copy.1">
         <source>Duplicate member ID %s</source>
         <target>Duplikuj użytkownika ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.delete">
+      <trans-unit id="tl_member.delete.1">
         <source>Delete member ID %s</source>
         <target>Usuń użytkownika ID %s</target>
       </trans-unit>
@@ -280,9 +281,25 @@
         <source>Activate member ID %s</source>
         <target>Aktywuj użytkownika ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_member.su">
+      <trans-unit id="tl_member.toggle.3">
+        <source>Deactivate</source>
+        <target>Dezaktywuj</target>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.4">
+        <source>Activate</source>
+        <target>Aktywuj</target>
+      </trans-unit>
+      <trans-unit id="tl_member.su.0">
+        <source>Preview front end</source>
+        <target>Podgląd serwisu</target>
+      </trans-unit>
+      <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>
         <target>Podgląd serwisu jako użytkownik ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+        <target>Użytkownik</target>
       </trans-unit>
     </body>
   </file>
