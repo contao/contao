@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
@@ -32,7 +33,7 @@ class DcaUrlAnalyzer
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly Security $securityHelper,
+        private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly RecordLabeler $recordLabeler,
@@ -262,7 +263,7 @@ class DcaUrlAnalyzer
             !$module
             || (
                 true !== ($module['disablePermissionChecks'] ?? null)
-                && !$this->securityHelper->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $do)
+                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $do)
             )
         ) {
             return [null, null];
@@ -482,10 +483,16 @@ class DcaUrlAnalyzer
 
         try {
             while ($id && $row = $this->getCurrentRecord($id, $table)) {
+                $pn = (int) $row['id'];
+
+                if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $pn)) {
+                    $pn = 0;
+                }
+
                 $links[] = [
                     'url' => $this->router->generate('contao_backend', [
                         ...$query,
-                        'pn' => (int) $row['id'],
+                        'pn' => $pn,
                         'rt' => $this->tokenManager->getDefaultTokenValue(),
                     ]),
                     'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
@@ -515,7 +522,17 @@ class DcaUrlAnalyzer
             [$pid],
         );
 
-        $rows = array_map(fn ($row) => $this->getCurrentRecord($row['id'], $table), $rows);
+        $rows = array_filter(array_map(
+            function ($row) use ($table) {
+                try {
+                    return $this->getCurrentRecord($row['id'], $table);
+                } catch (AccessDeniedException) {
+                    // Skip tree siblings without read permission
+                    return null;
+                }
+            },
+            $rows,
+        ));
 
         usort(
             $rows,
@@ -531,8 +548,17 @@ class DcaUrlAnalyzer
         $links = [];
 
         foreach ($rows as $row) {
+            if (
+                ($query['act'] ?? null)
+                && !$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new UpdateAction($table, $row))
+            ) {
+                $url = null;
+            } else {
+                $url = $this->router->generate('contao_backend', [...$query, 'id' => (int) $row['id']]);
+            }
+
             $links[] = [
-                'url' => $this->router->generate('contao_backend', [...$query, 'id' => (int) $row['id']]),
+                'url' => $url,
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
                 'active' => (int) $row['id'] === $id,
             ];
