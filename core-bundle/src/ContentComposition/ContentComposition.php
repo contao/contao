@@ -16,6 +16,7 @@ use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
@@ -36,12 +37,13 @@ class ContentComposition
         private readonly RendererInterface $defaultRenderer,
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
+        private readonly PageRegistry $pageRegistry,
     ) {
     }
 
     public function createContentCompositionBuilder(PageModel $page): ContentCompositionBuilder
     {
-        return new ContentCompositionBuilder(
+        $builder = new ContentCompositionBuilder(
             $this->framework,
             $this->logger,
             $this->pictureFactory,
@@ -52,5 +54,11 @@ class ContentComposition
             $this->translator,
             $page,
         );
+
+        if ($template = $this->pageRegistry->getRoute($page)->getDefault('_template')) {
+            $builder->useCustomLayoutTemplate($template);
+        }
+
+        return $builder;
     }
 }
