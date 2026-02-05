@@ -28,6 +28,17 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class ContentCompositionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset(
+            $GLOBALS['TL_ADMIN_NAME'],
+            $GLOBALS['TL_ADMIN_EMAIL'],
+            $GLOBALS['TL_LANGUAGE'],
+        );
+
+        parent::tearDown();
+    }
+
     public function testUsesCustomTemplateFromRouteDefaults(): void
     {
         $page = $this->createClassWithPropertiesStub(PageModel::class);
