@@ -136,6 +136,16 @@ class ContentCompositionBuilder
     }
 
     /**
+     * Shortcut to add the article dummy frontend module to a certain slot.
+     */
+    public function addArticleToSlot(string $slot): self
+    {
+        $this->addElementToSlot($slot, 0, false);
+
+        return $this;
+    }
+
+    /**
      * Set the template identifier of the slot template to be used.
      */
     public function setSlotTemplate(string $identifier): self
