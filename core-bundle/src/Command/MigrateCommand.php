@@ -348,7 +348,8 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
-            // Backwards compatibility with doctrine/dbal < 4.5.0, see https://github.com/doctrine/dbal/pull/7302
+            // Backwards compatibility with doctrine/dbal < 4.5.0, see
+            // https://github.com/doctrine/dbal/pull/7302
             $sortedCommands = $commands;
             sort($sortedCommands);
             $commandsHash = hash('sha256', json_encode($sortedCommands, JSON_THROW_ON_ERROR));
