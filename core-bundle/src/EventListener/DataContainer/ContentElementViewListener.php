@@ -50,7 +50,7 @@ class ContentElementViewListener
             'headerFields' => ['name', 'author', 'tstamp'],
         ];
 
-        $GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback'] = $this->generateListLabel(...);
+        $GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback'] = $this->generateContentTypeLabel(...);
         $GLOBALS['TL_DCA']['tl_content']['list']['label']['group_callback'] = $this->generateGroupLabel(...);
     }
 
@@ -85,11 +85,6 @@ class ContentElementViewListener
         }
 
         return [$type, $preview, $key];
-    }
-
-    private function generateListLabel(array $row): string
-    {
-        return $this->generateContentTypeLabel($row);
     }
 
     private function generateGroupLabel($group, $mode, $field, $row): string
