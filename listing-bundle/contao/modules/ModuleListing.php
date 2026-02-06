@@ -151,15 +151,6 @@ class ModuleListing extends Module
 		$id = 'page_l' . $this->id;
 		$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
-		try
-		{
-			$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
-		}
-		catch (PageOutOfRangeException $e)
-		{
-			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
-		}
-
 		// Get the selected records
 		$strQuery = "SELECT " . Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map(array(Database::class, 'quoteIdentifier'), $arrFields));
 
@@ -225,6 +216,15 @@ class ModuleListing extends Module
 		// Limit
 		if ($per_page)
 		{
+			try
+			{
+				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
+			}
+			catch (PageOutOfRangeException $e)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
+			}
+
 			$objDataStmt->limit($per_page, $pagination->getOffset());
 		}
 
