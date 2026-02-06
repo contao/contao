@@ -187,7 +187,7 @@ class ContentElementViewListenerTest extends TestCase
             ->willThrowException(new \RuntimeException('foobar'))
         ;
 
-        $framework = $this->createContaoFrameworkMock(
+        $framework = $this->createContaoFrameworkStub(
             [Controller::class => $controllerAdapter],
             [ContentModel::class => $contentModel],
         );
