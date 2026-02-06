@@ -112,6 +112,10 @@
         <source>Delete calendar ID %s</source>
         <target>Odstrániť kalendár ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>Kalendár</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

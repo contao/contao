@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
@@ -479,17 +480,21 @@ class DcaUrlAnalyzer
 
         $links = [];
 
-        while ($id && $row = $this->getCurrentRecord($id, $table)) {
-            $links[] = [
-                'url' => $this->router->generate('contao_backend', [
-                    ...$query,
-                    'pn' => (int) $row['id'],
-                    'rt' => $this->tokenManager->getDefaultTokenValue(),
-                ]),
-                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
-            ];
+        try {
+            while ($id && $row = $this->getCurrentRecord($id, $table)) {
+                $links[] = [
+                    'url' => $this->router->generate('contao_backend', [
+                        ...$query,
+                        'pn' => (int) $row['id'],
+                        'rt' => $this->tokenManager->getDefaultTokenValue(),
+                    ]),
+                    'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                ];
 
-            $id = (int) $row['pid'];
+                $id = (int) $row['pid'];
+            }
+        } catch (AccessDeniedException) {
+            // Skip tree trail items without read permission
         }
 
         return array_reverse($links);

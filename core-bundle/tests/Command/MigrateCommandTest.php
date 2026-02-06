@@ -789,6 +789,7 @@ class MigrateCommandTest extends TestCase
 
         $migrations
             ->method('run')
+            ->with($pendingMigrations[0])
             ->willReturn(...$migrationResults)
         ;
 

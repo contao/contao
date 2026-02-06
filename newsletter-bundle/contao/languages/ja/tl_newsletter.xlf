@@ -249,6 +249,10 @@
         <source>Paste into this channel</source>
         <target>このチャンネルに貼り付け</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+        <target>ニュースレター</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

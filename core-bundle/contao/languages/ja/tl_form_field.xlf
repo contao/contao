@@ -313,6 +313,14 @@
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>ファイルが既に存在すると、新しいファイル名に数字のサフィックスを追加します。</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+        <target>複数のファイルを許可</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+        <target>ユーザーに複数のファイルのアップロードを許可します。</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
         <target>初期設定</target>
@@ -400,6 +408,14 @@
       <trans-unit id="tl_form_field.altchaHideFooter.1">
         <source>Hide the footer (ALTCHA link).</source>
         <target>フッター(ALTCHAのリンク)を非表示にします。</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.0">
+        <source>Floating mode</source>
+        <target>フローティングモード</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.1">
+        <source>Enable the floating UI.</source>
+        <target>フローティングモードのユーザーインターフェイスを有効にします。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>
@@ -524,6 +540,10 @@
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
         <target>CSVファイルからインポートのオプション</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.tableLabel">
+        <source>Form field</source>
+        <target>フォームの項目</target>
       </trans-unit>
     </body>
   </file>

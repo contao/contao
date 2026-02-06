@@ -205,6 +205,10 @@
         <source>Export theme ID %s</source>
         <target>Exportovat vzhled ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+        <target>Vzhled</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

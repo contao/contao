@@ -531,7 +531,6 @@ window.Backend =
 			'width': width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -554,7 +553,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -579,7 +577,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -606,7 +603,6 @@ window.Backend =
 		var M = new SimpleModal({
 			'width': opt.width,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() {
 				document.body.setStyle('overflow', 'hidden');
@@ -964,7 +960,7 @@ window.Backend =
 				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
-				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				x: cloneBase.getPosition(cloneBase.getOffsetParent()).x,
 				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
 			}).setStyle('display', 'none');
 

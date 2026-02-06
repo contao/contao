@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\Input;
-use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -90,8 +89,18 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
     {
         $this->ensureInitialized();
 
+        $buttonAttributes = (new HtmlAttributes())
+            ->addClass('header_filter_toggle')
+            ->set('title', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
+            ->set('data-controller', 'contao--toggle-sender')
+            ->set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#tl_content_filter')
+            ->set('data-contao--toggle-sender-active-title-value', $this->translator->trans('DCA.toggleFilter.2', [], 'contao_default'))
+            ->set('data-contao--toggle-sender-inactive-title-value', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
+            ->set('data-action', 'contao--toggle-sender#toggle:prevent contao--operations-menu#close')
+        ;
+
         $this->append([
-            'html' => '<button class="header_filter_toggle" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent contao--operations-menu#close" title="'.StringUtil::specialchars($this->translator->trans('DCA.toggleFilter.1', [], 'contao_default')).'"><span data-contao--toggle-state-target="label">'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'</span><sup data-contao--element-count-target="count"></sup></button>',
+            'html' => \sprintf('<button%s>'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--element-count-target="count"></sup></button>', $buttonAttributes),
             'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
             'primary' => true,
         ]);

@@ -323,6 +323,18 @@
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
       </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+      </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
       </trans-unit>
@@ -532,6 +544,12 @@
       </trans-unit>
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication.</source>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -2123,6 +2141,12 @@
       <trans-unit id="MSC.favorites">
         <source>Favorites</source>
       </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
       </trans-unit>
@@ -2316,7 +2340,13 @@
         <source>Please enter at least %s characters</source>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
+        <source>Loading results …</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -2374,6 +2404,12 @@
       </trans-unit>
       <trans-unit id="MSC.enter_fullscreen">
         <source>Enter fullscreen mode</source>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

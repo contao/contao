@@ -11,11 +11,8 @@
     .set('id', 'top')
     .addClass('be_main')
     .addClass('popup', isPopup)
-    .set('data-controller', 'contao--tooltips contao--toggle-state')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-    .set('data-contao--toggle-state-active-class', 'active')
-    .set('data-contao--toggle-state-active-title-value', 'MSC.hideMainNavigation'|trans)
-    .set('data-contao--toggle-state-inactive-title-value', 'MSC.showMainNavigation'|trans)
+    .set('data-controller', 'contao--tooltips')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
 
@@ -28,6 +25,15 @@
     .set('id', 'main')
     .set('aria-labelledby', 'main_headline')
     .mergeWith(mainAttributes|default)
+%}
+
+{% set asideAttributes = attrs()
+    .set('id', 'left')
+    .set('data-controller', 'contao--toggle-receiver')
+    .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#burger')
+    .set('data-contao--toggle-receiver-active-class', 'active')
+    .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+    .mergeWith(asideAttributes|default)
 %}
 
 <!DOCTYPE html>
@@ -99,7 +105,7 @@
 
         {% block left %}
             {% if not renderMainOnly %}
-                <aside id="left" data-contao--toggle-state-target="controls">
+                <aside{{ asideAttributes }}>
                     {{ menu|raw }}
                     <div class="version">
                         {% block version %}
@@ -115,7 +121,11 @@
                 <main{{ mainAttributes }}>
                     {% block main_headline %}
                         <h1 id="main_headline">
-                            {{ headline|raw }}
+                            {% if breadcrumb|default %}
+                                {{ breadcrumb|raw }}
+                            {% else %}
+                                {{ headline|raw }}
+                            {% endif %}
                             {{ include('@Contao/backend/component/_favorites.html.twig') }}
                         </h1>
                     {% endblock %}

@@ -198,6 +198,7 @@ services:
             - '@contao.framework'
             - '@translator'
             - '@router'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
@@ -450,6 +451,12 @@ services:
         arguments:
             - '@contao.routing.scope_matcher'
 
+    contao.listener.menu.backend_breadcrumb:
+        class: Contao\CoreBundle\EventListener\Menu\BackendBreadcrumbListener
+        arguments:
+            - '@security.helper'
+            - '@contao.data_container.dca_url_analyzer'
+
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
         arguments:
@@ -651,6 +658,8 @@ services:
 
     contao.listener.virtual_fields_mapping:
         class: Contao\CoreBundle\EventListener\VirtualFieldsMappingListener
+        arguments:
+            - '@doctrine.orm.entity_manager'
 
     contao.listener.webauthn_route_backend:
         class: Contao\CoreBundle\EventListener\WebauthnRouteListener

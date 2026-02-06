@@ -145,6 +145,10 @@
         <source>Cannot move %s to %s because the target exists!</source>
         <target>移動先が存在するため%sを%sに移動できません。</target>
       </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+        <target>この項目では複数のファイルのアップロードを許可していません!</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
         <target>アクセスを拒否しました。現在のホストのアドレス(%s)がリファラーのホストのアドレス(%s)と一致していません。</target>
@@ -425,6 +429,22 @@
         <source>Text elements</source>
         <target>テキストの要素</target>
       </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+        <target>パスワードの変更</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+        <target>パスワードを変更するフォームを生成します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+        <target>アカウントの廃止</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+        <target>メンバーのアカウントを削除するフォームを生成します。</target>
+      </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
         <target>見出し</target>
@@ -704,6 +724,14 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
         <target>アーティクルのティーザーのテキストを表示します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>2ファクター認証</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>2ファクター認証の設定や変更を行うフォームを生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -1806,8 +1834,8 @@
         <target>戻る</target>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
-        <target>前のページに戻る</target>
+        <source>Go up one level</source>
+        <target>1つ上に移動</target>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
@@ -1869,6 +1897,10 @@
         <source>Search</source>
         <target>検索</target>
       </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+        <target>ファイル</target>
+      </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
         <target>レコードがありません。</target>
@@ -1888,10 +1920,6 @@
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
         <target>保存して子の要素を編集</target>
-      </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
-        <target>保存して戻る</target>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
@@ -2220,6 +2248,10 @@
       <trans-unit id="MSC.resetTitle">
         <source>Reset the filters</source>
         <target>フィルターをリセット</target>
+      </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
+        <target>フィルター</target>
       </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
@@ -2713,6 +2745,22 @@
         <source>Header</source>
         <target>ヘッダー</target>
       </trans-unit>
+      <trans-unit id="MSC.showProfile">
+        <source>Show user profile</source>
+        <target>ユーザーのプロフィールを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideProfile">
+        <source>Hide user profile</source>
+        <target>ユーザーのプロフィールを非表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.showMainNavigation">
+        <source>Show main navigation</source>
+        <target>主要なナビゲーションを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideMainNavigation">
+        <source>Hide main navigation</source>
+        <target>主要なナビゲーションを非表示</target>
+      </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
         <target>ページ分割</target>
@@ -2805,9 +2853,25 @@
         <source>Favorites</source>
         <target>お気に入り</target>
       </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+        <target>トレイルを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+        <target>同階層を表示</target>
+      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
         <target>URLをお気に入りとして保存</target>
+      </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+        <target>お気に入りからURLを削除</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+        <target>ほんとうに現在のURLをお気に入りから削除しますか?</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
@@ -2905,6 +2969,14 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>ルートに必須のパラメーターがあるため、プレビューのURLを生成できません。</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>フォームにエラーがあるため、プレビューのURLを生成できません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpIndexSetting">
+        <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>robotsタグの設定のため、URLをインデックス対象にしません。</target>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>不明なオプション: %s</target>
@@ -2925,9 +2997,21 @@
         <source>Manual</source>
         <target>マニュアル</target>
       </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+        <target>タスクをキューに入れました。状態の更新状況はジョブの概要で確認してください。</target>
+      </trans-unit>
       <trans-unit id="MSC.jobs">
         <source>Job overview</source>
         <target>ジョブの概要</target>
+      </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+        <target>添付ファイルを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
+        <target>%sという添付ファイルをダウンロード</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -3034,8 +3118,16 @@
         <target>少なくとも%s文字入力してください。</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
+        <source>Loading results …</source>
         <target>結果を読み込み中...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
+        <target>⌘+K</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3044,6 +3136,18 @@
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
         <target>%sを編集</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+        <target>種類</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+        <target>タグ</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
+        <target>何も見つからないか、対応する結果を表示する十分な権限がありません。</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
@@ -3088,6 +3192,26 @@
       <trans-unit id="MSC.never_index">
         <source>Never index</source>
         <target>常にインデックスしない</target>
+      </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+        <target>項目</target>
+      </trans-unit>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
+        <target>キーワード</target>
+      </trans-unit>
+      <trans-unit id="MSC.enter_fullscreen">
+        <source>Enter fullscreen mode</source>
+        <target>全画面モードに移行</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+        <target>左にスクロール</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
+        <target>右にスクロール</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3241,6 +3365,18 @@
         <source>Collapse all nodes</source>
         <target>すべてのノードを折り畳む</target>
       </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Filter</source>
+        <target>フィルター</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Show the filter panel</source>
+        <target>フィルターのパネルを表示</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.2">
+        <source>Hide the filter panel</source>
+        <target>フィルターのパネルを非表示</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>新規作成</target>
@@ -3296,6 +3432,14 @@
       <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
         <target>ID %sの要素の詳細を削除</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+        <target>バージョン</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
+        <target>%sの要素のバージョンを表示</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
@@ -3384,6 +3528,26 @@
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
         <target>ID %sの要素の中に新しい要素を作成</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions_legend">
+        <source>Permissions</source>
+        <target>許可</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.0">
+        <source>Back end permissions</source>
+        <target>バックエンドの許可</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.1">
+        <source>The changes made here are saved in the user and group settings.</source>
+        <target>ここの変更はユーザーとグループの設定に保存します。</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.groups">
+        <source>Groups</source>
+        <target>グループ</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.users">
+        <source>Users</source>
+        <target>ユーザー</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

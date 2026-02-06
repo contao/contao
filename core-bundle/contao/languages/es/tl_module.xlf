@@ -679,6 +679,10 @@ Si no solicitó este correo electrónico, comuníquese con el administrador del 
         <source>Delete module ID %s</source>
         <target>Elimina el módulo con ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Módulo</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -8,21 +8,18 @@
     .content {
         margin: 0 15px 15px;
 
-        &:not(:has(.content-filter)) {
+        &:not(:has(.content-inner)) {
             background: var(--content-bg);
             border: 1px solid var(--content-border);
-            border-radius: var(--border-radius);
+            border-radius: var(--border-radius-lg);
         }
     }
 
-    .content-inner, .content-filter {
+    .content-inner,
+    .content-filter {
         background: var(--content-bg);
         border: 1px solid var(--content-border);
-        border-radius: var(--border-radius);
-    }
-
-    .content:has(.tl_formbody_submit) {
-        overflow: clip;
+        border-radius: var(--border-radius-lg);
     }
 }
 
@@ -48,7 +45,7 @@
     }
 }
 
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
     #main {
         .tl_show_all:has(>.content-filter),
         .tree-view:has(>.content-filter) {
@@ -60,8 +57,9 @@
 
             &:has(>.operations, > #picker-menu) {
                 grid-template-rows: auto 1fr;
-                grid-template-areas: "top top"
-                                     "listing filter";
+                grid-template-areas:
+                    "top top"
+                    "listing filter";
 
                 > *:not(.content-filter, .operations) {
                     grid-area: listing;
@@ -71,7 +69,8 @@
                     grid-area: filter;
                 }
 
-                > .operations, > #picker-menu {
+                > .operations,
+                > #picker-menu {
                     grid-area: top;
                 }
             }

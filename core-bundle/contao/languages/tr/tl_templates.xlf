@@ -69,9 +69,20 @@
         <source>Paste into folder &quot;%s&quot;</source>
         <target>&quot;%s&quot; klasörüne yapıştır</target>
       </trans-unit>
+      <trans-unit id="tl_templates.compare.0">
+        <source>Compare</source>
+      </trans-unit>
       <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>&quot;%s&quot; kalıbını başka bir kalıpla karşılaştır</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.dragFolder.1">
+        <source>Drag folder &quot;%s&quot;</source>
+        <target>&quot;%s&quot; klasörünü sürükleyin</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.dragFile.1">
+        <source>Drag template &quot;%s&quot;</source>
+        <target>&quot;%s&quot; kalıbını sürükleyin</target>
       </trans-unit>
       <trans-unit id="tl_templates.twig_studio_hint">
         <source>If you want to create or edit Twig templates, use the %s instead.</source>

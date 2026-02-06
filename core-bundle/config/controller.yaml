@@ -94,6 +94,23 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\ContentElement\ChangePasswordController:
+        arguments:
+            - '@contao.framework'
+            - '@security.password_hasher_factory'
+            - '@contao.routing.content_url_generator'
+            - '@event_dispatcher'
+            - '@router.default'
+
+    Contao\CoreBundle\Controller\ContentElement\CloseAccountController:
+        arguments:
+            - '@contao.framework'
+            - '@event_dispatcher'
+            - '@security.helper'
+            - '@contao.routing.content_url_generator'
+            - '@monolog.logger.contao.access'
+            - '@contao.filesystem.virtual.files'
+
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
     Contao\CoreBundle\Controller\ContentElement\DescriptionListController: ~
@@ -159,6 +176,14 @@ services:
             - '@contao.image.studio'
 
     Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\TwoFactorController:
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.two_factor.backup_code_manager'
+            - '@contao.security.two_factor.trusted_device_manager'
+            - '@contao.security.two_factor.authenticator'
+            - '@security.authentication_utils'
 
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 

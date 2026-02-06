@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.jumpTo.1">
         <source>Please choose the event reader page to which visitors will be redirected when clicking an event.</source>
-        <target>Wybierz stronę, na którą zostaną przekierowani odwiedzający kiedy klinką na odnośnik wydarzenia.</target>
+        <target>Wybierz stronę, na którą zostaną przekierowani odwiedzający kiedy klikną na odnośnik wydarzenia.</target>
       </trans-unit>
       <trans-unit id="tl_calendar.protected.0">
         <source>Protect calendar</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.children.0">
         <source>Events</source>
-        <target>Kalendarz/Wydarzenia</target>
+        <target>Wydarzenia</target>
       </trans-unit>
       <trans-unit id="tl_calendar.children.1">
         <source>Edit the events of calendar ID %s</source>
@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar.copy.0">
         <source>Duplicate</source>
+        <target>Duplikuj</target>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
@@ -111,6 +112,10 @@
       <trans-unit id="tl_calendar.delete.1">
         <source>Delete calendar ID %s</source>
         <target>Skasuj kalendarz ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar.tableLabel">
+        <source>Calendar</source>
+        <target>Kalendarz</target>
       </trans-unit>
     </body>
   </file>

@@ -109,6 +109,10 @@
         <source>Edit the recipients of channel ID %s</source>
         <target>Abonnenten des Verteilers ID %s bearbeiten</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tableLabel">
+        <source>Newsletter channel</source>
+        <target>Verteiler</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

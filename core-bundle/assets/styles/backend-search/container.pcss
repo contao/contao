@@ -79,6 +79,17 @@
         border: 0 none;
     }
 
+    .search-shortcut {
+        position: absolute;
+        inset: 5px 5px auto auto;
+        font-size: 0.75rem;
+        background: var(--header-bg);
+        padding: 4px;
+        border-radius: 3px;
+        opacity: 0.7;
+        visibility: hidden;
+    }
+
     .search--hidden {
         svg {
             color: var(--header-text);
@@ -90,6 +101,10 @@
             &::placeholder {
                 color: var(--header-text);
             }
+        }
+
+        .search-shortcut {
+            visibility: visible;
         }
     }
 

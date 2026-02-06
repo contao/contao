@@ -429,6 +429,10 @@
         <source>Paste into this calendar</source>
         <target>Ielīmēt šajā kalendārā</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>Notikums</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

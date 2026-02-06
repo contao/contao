@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Controller\Page;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -24,6 +25,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +46,9 @@ abstract class AbstractLayoutPageController extends AbstractController
         $this->initializeContaoFramework();
 
         if (!$layout = $this->getContaoAdapter(LayoutModel::class)->findById($page->layout)) {
-            throw $this->createNotFoundException();
+            $this->container->get('monolog.logger.contao.error')->error(\sprintf('Could not find layout ID "%s"', $page->layout));
+
+            throw new NoLayoutSpecifiedException('No layout specified');
         }
 
         // Load contao_default translations (#8690)
@@ -80,6 +84,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $services['contao.image.preview_factory'] = PreviewFactory::class;
         $services['contao.assets.assets_context'] = ContaoContext::class;
         $services['contao.twig.defer.renderer'] = Renderer::class;
+        $services['monolog.logger.contao.error'] = LoggerInterface::class;
 
         return $services;
     }

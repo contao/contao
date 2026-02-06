@@ -2,12 +2,8 @@
 
 {% set attributes = attrs()
     .addClass('tl_show_all')
-    .set('data-controller', 'contao--toggle-state contao--element-count', panel)
-    .set('data-contao--toggle-state-active-class', 'active', panel)
-    .set('data-contao--toggle-state-active-title-value', 'DCA.toggleFilter.2'|trans, panel)
-    .set('data-contao--toggle-state-inactive-title-value', 'DCA.toggleFilter.1'|trans, panel)
-    .set('data-contao--element-count-selector-value', '.active:not(#tl_search_term)', panel)
-    .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close', panel)
+    .set('data-controller', 'contao--element-count', panel)
+    .set('data-contao--element-count-selector-value', '.active:not(#tl_search_term,#tl_limit)', panel)
 %}
 <div{{ attributes }}>
     {{ panel|raw }}

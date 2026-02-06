@@ -7,28 +7,33 @@
     text-align: center;
     font-weight: 400;
     background: var(--table-header);
+
+    &:has([data-action~="contao--check-all#toggleAll"]) {
+        color: var(--gray);
+        text-align: left;
+    }
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (resolution >= 2dppx) {
     .tl_chmod th {
         font-weight: 300;
     }
 }
 
 .tl_chmod tr:first-child th:first-child {
-  border-top-left-radius: var(--border-radius);
+    border-top-left-radius: var(--border-radius);
 }
 
 .tl_chmod tr:first-child th:last-child {
-  border-top-right-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
 }
 
 .tl_chmod tr:last-child th:first-child {
-  border-bottom-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
 }
 
 .tl_chmod tr:last-child td:last-child {
-  border-bottom-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }
 
 .tl_chmod td {
@@ -40,13 +45,15 @@
     text-align: left;
 }
 
-.tl_chmod th, .tl_chmod td {
+.tl_chmod th,
+.tl_chmod td {
     width: 100px;
     padding: 6px;
     border: 1px solid var(--content-bg);
 }
 
-.tl_chmod tr th:first-child, .tl_chmod tr td:first-child {
+.tl_chmod tr th:first-child,
+.tl_chmod tr td:first-child {
     width: auto;
     min-width: 100px;
 }

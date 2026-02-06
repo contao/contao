@@ -281,6 +281,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@contao.data_container.foreign_key_parser'
             - '@translator'
 
     contao.data_container.virtual_fields_handler:
@@ -693,6 +694,7 @@ services:
             - '@knp_menu.factory'
             - '@event_dispatcher'
         tags:
+            - { name: knp_menu.menu_builder, method: buildBreadcrumbMenu, alias: be_breadcrumb_menu }
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
             - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
             - { name: knp_menu.menu_builder, method: buildLoginMenu, alias: be_login_menu }
