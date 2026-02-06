@@ -62,7 +62,7 @@ class ContentElementViewListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->createContaoFrameworkMock(
+        $framework = $this->createContaoFrameworkStub(
             [Controller::class => $controllerAdapter, Image::class => $imageAdapter],
             [ContentModel::class => $contentModel],
         );
