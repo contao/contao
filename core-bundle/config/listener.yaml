@@ -97,6 +97,12 @@ services:
         arguments:
             - '@security.helper'
 
+    contao.listener.data_container.content_element_view:
+        class: Contao\CoreBundle\EventListener\DataContainer\ContentElementViewListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+
     contao.listener.data_container.content_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener
         arguments:
@@ -305,12 +311,6 @@ services:
             - '@contao.framework'
             - '@request_stack'
             - '@contao.twig.filesystem_loader'
-
-    contao.listener.data_container.content_element_view:
-        class: Contao\CoreBundle\EventListener\DataContainer\ContentElementViewListener
-        arguments:
-            - '@contao.framework'
-            - '@translator'
 
     contao.listener.data_container.theme_layout:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeLayoutListener

@@ -86,7 +86,7 @@ class ContentElementViewListener
         return [$type, $preview, $row['invisible'] ? 'unpublished' : 'published'];
     }
 
-    private function generateGroupLabel($group, $mode, $field, $row): string
+    private function generateGroupLabel(string $group, int|string $mode, string $field, array $row): string
     {
         return 'type' === $field ? $row['type'] : $group;
     }
