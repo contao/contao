@@ -59,7 +59,6 @@ class ContentElementViewListener
      */
     public function generateGridLabel(array $row): array
     {
-        $key = $row['invisible'] ? 'unpublished' : 'published';
         $type = $this->generateContentTypeLabel($row);
 
         $objModel = new ContentModel();
@@ -84,7 +83,7 @@ class ContentElementViewListener
             $preview = '';
         }
 
-        return [$type, $preview, $key];
+        return [$type, $preview, $row['invisible'] ? 'unpublished' : 'published'];
     }
 
     private function generateGroupLabel($group, $mode, $field, $row): string
