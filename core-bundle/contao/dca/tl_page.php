@@ -36,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'ctable'                      => array('tl_article'),
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'permissions'                 => [],
+		'permissions'                 => array(),
 		'onload_callback' => array
 		(
 			array('tl_page', 'adjustDca'),
