@@ -18,11 +18,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
-use Contao\MemberGroupModel;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
@@ -71,7 +69,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'fields'                  => array('type'),
 			'format'                  => '%s',
-			'label_callback'          => array('tl_content', 'addCteType')
 		),
 	),
 
@@ -848,9 +845,13 @@ class tl_content extends Backend
 	 * @param string $element
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 6.
 	 */
 	public function getContentElementGroup($element)
 	{
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
 			if (array_key_exists($element, $v))
@@ -953,113 +954,14 @@ class tl_content extends Backend
 	 * @param array $arrRow
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 6.
 	 */
 	public function addCteType($arrRow)
 	{
-		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
-		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
 
-		// Remove the class if it is a wrapper element
-		if (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['start']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['separator']) || in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['stop']))
-		{
-			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
-			{
-				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
-			}
-		}
-
-		// Add the group name if it is a single element (see #5814)
-		elseif (in_array($arrRow['type'], $GLOBALS['TL_WRAPPERS']['single']))
-		{
-			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
-			{
-				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
-			}
-		}
-
-		// Show the title
-		elseif ($arrRow['title'] ?? null)
-		{
-			$type = $arrRow['title'] . ' <span class="type">[' . $type . ']</span>';
-		}
-
-		// Add the ID of the aliased element
-		if ($arrRow['type'] == 'alias')
-		{
-			$type .= ' ID ' . $arrRow['cteAlias'];
-		}
-
-		// Add the protection status
-		if ($arrRow['protected'] ?? null)
-		{
-			$groupIds = StringUtil::deserialize($arrRow['groups'], true);
-			$groupNames = array();
-
-			if (!empty($groupIds))
-			{
-				if (in_array(-1, array_map('intval', $groupIds), true))
-				{
-					$groupNames[] = $GLOBALS['TL_LANG']['MSC']['guests'];
-				}
-
-				if (null !== ($groups = MemberGroupModel::findMultipleByIds($groupIds)))
-				{
-					$groupNames += $groups->fetchEach('name');
-				}
-			}
-
-			$type = Image::getHtml('protected.svg') . $type;
-			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
-		}
-
-		// Add the headline level (see #5858)
-		if ($arrRow['type'] == 'headline' && is_array($headline = StringUtil::deserialize($arrRow['headline'])))
-		{
-			$type .= ' (' . $headline['unit'] . ')';
-		}
-
-		if ($arrRow['start'] && $arrRow['stop'])
-		{
-			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showFromTo'], Date::parse(Config::get('datimFormat'), $arrRow['start']), Date::parse(Config::get('datimFormat'), $arrRow['stop'])) . ')</span>';
-		}
-		elseif ($arrRow['start'])
-		{
-			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showFrom'], Date::parse(Config::get('datimFormat'), $arrRow['start'])) . ')</span>';
-		}
-		elseif ($arrRow['stop'])
-		{
-			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showTo'], Date::parse(Config::get('datimFormat'), $arrRow['stop'])) . ')</span>';
-		}
-
-		$objModel = new ContentModel();
-		$objModel->setRow($arrRow);
-
-		try
-		{
-			$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
-		}
-		catch (Throwable $exception)
-		{
-			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
-		}
-
-		if (!empty($arrRow['sectionHeadline']))
-		{
-			$sectionHeadline = StringUtil::deserialize($arrRow['sectionHeadline'], true);
-
-			if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit']))
-			{
-				$preview = '<' . $sectionHeadline['unit'] . '>' . $sectionHeadline['value'] . '</' . $sectionHeadline['unit'] . '>' . $preview;
-			}
-		}
-
-		// Strip HTML comments to check if the preview is empty
-		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')
-		{
-			$preview = '';
-		}
-
-		return array($type, $preview, $key);
+		return System::getContainer()->get('contao.listener.data_container.content_element_view')->generateGridLabel($arrRow);
 	}
 
 	/**
