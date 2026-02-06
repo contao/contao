@@ -61,7 +61,7 @@ class ContentElementViewListener
     {
         $type = $this->generateContentTypeLabel($row);
 
-        $objModel = new ContentModel();
+        $objModel = $this->framework->createInstance(ContentModel::class);
         $objModel->setRow($row);
 
         try {
@@ -83,7 +83,7 @@ class ContentElementViewListener
             $preview = '';
         }
 
-        return [$type, $preview, $row['invisible'] ? 'unpublished' : 'published'];
+        return [$type, $preview, $row['invisible'] ?? null ? 'unpublished' : 'published'];
     }
 
     private function generateGroupLabel(string $group, int|string $mode, string $field, array $row): string
@@ -100,14 +100,19 @@ class ContentElementViewListener
             $label = $row['type'];
         }
 
+        // Add the ID of the aliased element
+        if ('alias' === $row['type']) {
+            $label .= ' ID '.($row['cteAlias'] ?? 0);
+        }
+
+        // Add the headline level (see #5858)
+        if ('headline' === $row['type'] && \is_array($headline = StringUtil::deserialize($row['headline']))) {
+            $label .= ' ('.$headline['unit'].')';
+        }
+
         // Show the title
         if ($row['title'] ?? null) {
             $label = $row['title'].' <span class="tl_gray">['.$label.']</span>';
-        }
-
-        // Add the ID of the aliased element
-        if ('alias' === $row['type']) {
-            $label .= ' ID '.$row['cteAlias'];
         }
 
         // Add the protection status
@@ -132,16 +137,11 @@ class ContentElementViewListener
             $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.protected', [], 'contao_default').($groupNames ? ': '.implode(', ', $groupNames) : '').')</span>';
         }
 
-        // Add the headline level (see #5858)
-        if ('headline' === $row['type'] && \is_array($headline = StringUtil::deserialize($row['headline']))) {
-            $label .= ' ('.$headline['unit'].')';
-        }
-
-        if ($row['start'] && $row['stop']) {
+        if (($row['start'] ?? null) && ($row['stop'] ?? null)) {
             $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showFromTo', [Date::parse(Config::get('datimFormat'), $row['start']), Date::parse(Config::get('datimFormat'), $row['stop'])], 'contao_default').')</span>';
-        } elseif ($row['start']) {
+        } elseif ($row['start'] ?? null) {
             $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showFrom', [Date::parse(Config::get('datimFormat'), $row['start'])], 'contao_default').')</span>';
-        } elseif ($row['stop']) {
+        } elseif ($row['stop'] ?? null) {
             $label .= ' <span class="tl_gray">('.$this->translator->trans('MSC.showTo', [Date::parse(Config::get('datimFormat'), $row['stop'])], 'contao_default').')</span>';
         }
 
