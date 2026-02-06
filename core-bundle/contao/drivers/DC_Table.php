@@ -730,7 +730,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function create($set=array())
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
@@ -782,52 +782,48 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
 
-		// Insert the record if the table is not closed and switch to edit mode
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
+		// Combine virtual fields
+		$this->set = $container->get('contao.data_container.virtual_fields_handler')->combineFields($this->set, $this->strTable);
+
+		// Ensure JSON data type for virtual field targets when saving to database
+		$arrTypes = array_map(static fn (string $k) => \in_array($k, $dcaExtract->getVirtualTargets()) ? Types::JSON : null, array_keys($this->set));
+
+		$objInsertStmt = $db
+			->prepare("INSERT INTO " . $this->strTable . " %s")
+			->set($this->set)
+			->query('', array_values($this->set), array_values($arrTypes));
+
+		if ($objInsertStmt->affectedRows)
 		{
-			// Combine virtual fields
-			$this->set = $container->get('contao.data_container.virtual_fields_handler')->combineFields($this->set, $this->strTable);
+			$s2e = ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) ? '&s2e=1' : '';
+			$insertID = $objInsertStmt->insertId;
 
-			// Ensure JSON data type for virtual field targets when saving to database
-			$arrTypes = array_map(static fn (string $k) => \in_array($k, $dcaExtract->getVirtualTargets()) ? Types::JSON : null, array_keys($this->set));
+			$objSessionBag = $objSession->getBag('contao_backend');
 
-			$objInsertStmt = $db
-				->prepare("INSERT INTO " . $this->strTable . " %s")
-				->set($this->set)
-				->query('', array_values($this->set), array_values($arrTypes));
+			// Save new record in the session
+			$new_records = $objSessionBag->get('new_records');
+			$new_records[$this->strTable][] = $insertID;
+			$objSessionBag->set('new_records', $new_records);
 
-			if ($objInsertStmt->affectedRows)
+			// Call the oncreate_callback
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_callback'] ?? null))
 			{
-				$s2e = ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) ? '&s2e=1' : '';
-				$insertID = $objInsertStmt->insertId;
-
-				$objSessionBag = $objSession->getBag('contao_backend');
-
-				// Save new record in the session
-				$new_records = $objSessionBag->get('new_records');
-				$new_records[$this->strTable][] = $insertID;
-				$objSessionBag->set('new_records', $new_records);
-
-				// Call the oncreate_callback
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_callback'] ?? null))
+				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_callback'] as $callback)
 				{
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncreate_callback'] as $callback)
+					if (\is_array($callback))
 					{
-						if (\is_array($callback))
-						{
-							System::importStatic($callback[0])->{$callback[1]}($this->strTable, $insertID, $this->set, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($this->strTable, $insertID, $this->set, $this);
-						}
+						System::importStatic($callback[0])->{$callback[1]}($this->strTable, $insertID, $this->set, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$callback($this->strTable, $insertID, $this->set, $this);
 					}
 				}
-
-				$container->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
-
-				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
+
+			$container->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
+
+			$this->redirect($this->switchToEdit($insertID) . $s2e);
 		}
 
 		$this->redirect($this->getReferer());
@@ -975,7 +971,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function copy($blnDoNotRedirect=false)
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
@@ -1051,97 +1047,93 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Empty clipboard
 		System::getContainer()->get('contao.data_container.clipboard_manager')->clearIfNotKeep($this->strTable);
 
-		// Insert the record if the table is not closed and switch to edit mode
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
+		$this->set['tstamp'] = $blnDoNotRedirect ? time() : 0;
+
+		// Mark the new record with "copy of" (see #586)
+		if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy']))
 		{
-			$this->set['tstamp'] = $blnDoNotRedirect ? time() : 0;
+			$strKey = $GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy'];
 
-			// Mark the new record with "copy of" (see #586)
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy']))
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strKey]['inputType'] ?? null) == 'inputUnit')
 			{
-				$strKey = $GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy'];
+				$value = StringUtil::deserialize($this->set[$strKey]);
 
-				if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strKey]['inputType'] ?? null) == 'inputUnit')
+				if (!empty($value['value']))
 				{
-					$value = StringUtil::deserialize($this->set[$strKey]);
-
-					if (!empty($value['value']))
-					{
-						$value['value'] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
-						$this->set[$strKey] = serialize($value);
-					}
+					$value['value'] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
+					$this->set[$strKey] = serialize($value);
 				}
-				elseif (!empty($this->set[$strKey]))
+			}
+			elseif (!empty($this->set[$strKey]))
+			{
+				$this->set[$strKey] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
+			}
+		}
+
+		// Remove the ID field from the data array
+		unset($this->set['id']);
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
+
+		$objInsertStmt = null;
+
+		try
+		{
+			$objInsertStmt = Database::getInstance()
+				->prepare("INSERT INTO " . $this->strTable . " %s")
+				->set($this->set)
+				->execute();
+		}
+		catch (UniqueConstraintViolationException $e)
+		{
+			Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
+		}
+
+		if ($objInsertStmt?->affectedRows)
+		{
+			$insertID = $objInsertStmt->insertId;
+
+			// Save the new record in the session
+			$new_records = $objSessionBag->get('new_records');
+			$new_records[$this->strTable][] = $insertID;
+			$objSessionBag->set('new_records', $new_records);
+
+			// Duplicate the records of the child table
+			$this->copyChildren($this->strTable, $insertID, $this->intId, $insertID);
+
+			// Call the oncopy_callback after all new records have been created
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] ?? null))
+			{
+				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] as $callback)
 				{
-					$this->set[$strKey] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
+					if (\is_array($callback))
+					{
+						System::importStatic($callback[0])->{$callback[1]}($insertID, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$callback($insertID, $this);
+					}
 				}
 			}
 
-			// Remove the ID field from the data array
-			unset($this->set['id']);
+			System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
 
-			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
-
-			$objInsertStmt = null;
-
-			try
+			// Switch to edit mode
+			if (!$blnDoNotRedirect)
 			{
-				$objInsertStmt = Database::getInstance()
-					->prepare("INSERT INTO " . $this->strTable . " %s")
-					->set($this->set)
-					->execute();
-			}
-			catch (UniqueConstraintViolationException $e)
-			{
-				Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
-			}
-
-			if ($objInsertStmt?->affectedRows)
-			{
-				$insertID = $objInsertStmt->insertId;
-
-				// Save the new record in the session
-				$new_records = $objSessionBag->get('new_records');
-				$new_records[$this->strTable][] = $insertID;
-				$objSessionBag->set('new_records', $new_records);
-
-				// Duplicate the records of the child table
-				$this->copyChildren($this->strTable, $insertID, $this->intId, $insertID);
-
-				// Call the oncopy_callback after all new records have been created
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] ?? null))
+				// User cannot edit record, redirect back to the list view (see #6674)
+				if (($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
 				{
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							System::importStatic($callback[0])->{$callback[1]}($insertID, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($insertID, $this);
-						}
-					}
+					$this->redirect($this->getReferer());
 				}
-
-				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
-
-				// Switch to edit mode
-				if (!$blnDoNotRedirect)
+				else
 				{
-					// User cannot edit record, redirect back to the list view (see #6674)
-					if (($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
-					{
-						$this->redirect($this->getReferer());
-					}
-					else
-					{
-						$this->redirect($this->switchToEdit($insertID));
-					}
+					$this->redirect($this->switchToEdit($insertID));
 				}
-
-				return $insertID;
 			}
+
+			return $insertID;
 		}
 
 		if (!$blnDoNotRedirect)
@@ -3390,6 +3382,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
+		$canAddNew = !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null);
 
 		$security = System::getContainer()->get('security.helper');
 
@@ -3405,7 +3398,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
-		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
+		if (Input::get('act') != 'select' && $canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
 		{
 			$operations->addNewButton($operations::CREATE_PASTE);
 		}
@@ -3546,7 +3539,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$operations->addPasteButton('pasteroot', $this->strTable, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
 				}
 			}
-			elseif (!$blnModeTreeExtended && Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => 0, 'sorting' => 0))))
+			elseif (!$blnModeTreeExtended && Input::get('act') != 'select' && $canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => 0, 'sorting' => 0))))
 			{
 				$operations->addNewButton($operations::CREATE_TOP, $this->strTable, 0);
 			}
@@ -3781,6 +3774,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$blnClipboard = false !== $arrClipboard;
 			$security = System::getContainer()->get('security.helper');
+			$canAddNew = !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null);
 
 			if (Input::get('act') == 'select')
 			{
@@ -3795,17 +3789,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$operations->addSeparator();
 
-					if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+					if ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 					{
 						$operations->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
 					}
 
-					if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
+					if ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
 					{
 						$operations->addNewButton($operations::CREATE_INTO, $table, $currentRecord['id']);
 					}
 				}
-				elseif (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+				elseif ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 				{
 					$operations->addSeparator();
 					$operations->addNewButton($operations::CREATE_AFTER, $table, $currentRecord['id']);
@@ -3815,7 +3809,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable, $currentRecord['id']);
 
-				if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
+				if ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
 				{
 					$operations->addNewButton($operations::CREATE_INTO, $this->strTable, $currentRecord['id']);
 				}
@@ -4004,6 +3998,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
 		$blnMultiboard = null !== $arrClipboard && \is_array($arrClipboard['id'] ?? null);
+		$canAddNew = !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null);
 
 		// Load the language file and data container array of the parent table
 		System::loadLanguageFile($this->ptable);
@@ -4031,7 +4026,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))))
+		if (Input::get('act') != 'select' && $canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))))
 		{
 			if ($blnHasSorting)
 			{
@@ -4085,7 +4080,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$headerOperations = $this->generateHeaderButtons($objParent->row(), $this->ptable);
 
-				if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $objParent->id, 'sorting' => 0)))))
+				if ($blnHasSorting && $canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $objParent->id, 'sorting' => 0)))))
 				{
 					$headerOperations->addSeparator();
 					$headerOperations->addNewButton($operations::CREATE_TOP, $table, $objParent->id, $this->intId);
@@ -4301,7 +4296,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 
 						// Create new button
-						elseif (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $row[$i]['pid'], 'sorting' => $row[$i]['sorting'] + 1)))))
+						elseif ($canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $row[$i]['pid'], 'sorting' => $row[$i]['sorting'] + 1)))))
 						{
 							$recordOperations->addSeparator();
 							$recordOperations->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id);
@@ -4518,7 +4513,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$operations->addBackButton($this->getReferer(true, $this->ptable));
 		}
 
-		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
+		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
 		{
 			if ($this->ptable)
 			{

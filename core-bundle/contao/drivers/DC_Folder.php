@@ -497,9 +497,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->addBackButton();
 		}
 
-		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
-			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
 			{
 				$operations->append(array(
 					'href' => $this->addToUrl($hrfNew),
@@ -578,7 +578,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </form>';
 		}
 
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
+		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null))
 		{
 			$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
 			$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
@@ -637,7 +637,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function create()
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
@@ -2791,10 +2791,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Default buttons
 				else
 				{
-					// Only show the upload button for mounted folders
+					// Show the upload button for mounted folders. This is added here because regular operations are not rendered for the root mounts.
 					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
 					{
-						if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
+						if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
 						{
 							$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 

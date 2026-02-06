@@ -94,21 +94,6 @@ class DcaPermissionVoterTest extends TestCase
 
         yield [
             'notEditable',
-            new CreateAction('tl_foobar'),
-        ];
-
-        yield [
-            'notCreatable',
-            new CreateAction('tl_foobar'),
-        ];
-
-        yield [
-            'closed',
-            new UpdateAction('tl_foobar', []),
-        ];
-
-        yield [
-            'notEditable',
             new UpdateAction('tl_foobar', []),
         ];
 
