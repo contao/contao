@@ -61,10 +61,10 @@ class PageResolverTest extends TestCase
 
     public function testReturnsRootUrl(): void
     {
-        $content = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'type' => 'root']);
-        $jumpTo = $this->mockClassWithProperties(PageModel::class);
+        $content = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42, 'type' => 'root']);
+        $jumpTo = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $pageAdapter = $this->mockAdapter(['findFirstPublishedRegularByPid']);
+        $pageAdapter = $this->createAdapterMock(['findFirstPublishedRegularByPid']);
         $pageAdapter
             ->expects($this->once())
             ->method('findFirstPublishedRegularByPid')
@@ -72,7 +72,7 @@ class PageResolverTest extends TestCase
             ->willReturn($jumpTo)
         ;
 
-        $resolver = new PageResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
+        $resolver = new PageResolver($this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
 
         $result = $resolver->resolve($content);
 
