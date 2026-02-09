@@ -888,8 +888,6 @@ services:
         class: Contao\CoreBundle\Routing\Content\PageResolver
         arguments:
             - '@contao.framework'
-            - '@contao.routing.page_registry'
-            - '@router'
 
     contao.routing.content.string_resolver:
         class: Contao\CoreBundle\Routing\Content\StringResolver
