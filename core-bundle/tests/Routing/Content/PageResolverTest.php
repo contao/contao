@@ -15,12 +15,8 @@ namespace Contao\CoreBundle\Tests\Routing\Content;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\PageResolver;
 use Contao\CoreBundle\Routing\Content\StringUrl;
-use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageResolverTest extends TestCase
 {
