@@ -42,6 +42,7 @@ class ContentCompositionTest extends TestCase
     public function testUsesCustomTemplateFromRouteDefaults(): void
     {
         $page = $this->createClassWithPropertiesStub(PageModel::class);
+        $page->adminEmail = 'foo@bar.com';
 
         $route = $this->createMock(PageRoute::class);
         $route

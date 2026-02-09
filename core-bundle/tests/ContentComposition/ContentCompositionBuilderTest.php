@@ -77,9 +77,7 @@ class ContentCompositionBuilderTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);
-
         $page = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 2]);
-
         $builder = $this->getContentCompositionBuilder($framework, $page);
 
         $this->expectException(\LogicException::class);
@@ -350,7 +348,7 @@ class ContentCompositionBuilderTest extends TestCase
             ->buildLayoutTemplate()
         ;
 
-        $this->assertSame('<slot A>', $template->getSlot('A')->__toString());
+        $this->assertSame('<slot A>', (string) $template->getSlot('A'));
         $this->assertSame('<content>', $template->getResponse()->getContent());
     }
 

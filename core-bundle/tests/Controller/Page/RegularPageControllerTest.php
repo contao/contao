@@ -40,6 +40,7 @@ class RegularPageControllerTest extends TestCase
         ]);
 
         $handleNonModernLayoutType = static fn (): Response => new Response('<alternative content>');
+
         $controller = $this->getRegularPageController(
             $framework,
             $handleNonModernLayoutType,
@@ -56,7 +57,6 @@ class RegularPageControllerTest extends TestCase
     public function testAppliesCacheHeaders(array $pageAttributes, string $expectedCacheControl): void
     {
         $page = $this->createClassWithPropertiesStub(PageModel::class, $pageAttributes);
-
         $response = $this->getRegularPageController()($page);
 
         $this->assertSame($expectedCacheControl, $response->headers->get('Cache-Control'));
@@ -168,19 +168,34 @@ class RegularPageControllerTest extends TestCase
     private function getContentComposition(bool $build = true, ResponseContext|null $expectedResponseContext = null, RendererInterface|null $expectedFragmentRenderer = null): ContentComposition
     {
         $contentCompositionBuilder = $this->createMock(ContentCompositionBuilder::class);
-        $contentCompositionBuilder
-            ->expects($expectedResponseContext ? $this->once() : $this->any())
-            ->method('setResponseContext')
-            ->with($expectedResponseContext ?: $this->anything())
-            ->willReturnSelf()
-        ;
 
-        $contentCompositionBuilder
-            ->expects($expectedFragmentRenderer ? $this->once() : $this->any())
-            ->method('setSlotRenderer')
-            ->with($expectedFragmentRenderer ?: $this->anything())
-            ->willReturnSelf()
-        ;
+        if ($expectedResponseContext) {
+            $contentCompositionBuilder
+                ->expects($this->once())
+                ->method('setResponseContext')
+                ->with($expectedResponseContext)
+                ->willReturnSelf()
+            ;
+        } else {
+            $contentCompositionBuilder
+                ->method('setResponseContext')
+                ->willReturnSelf()
+            ;
+        }
+
+        if ($expectedFragmentRenderer) {
+            $contentCompositionBuilder
+                ->expects($this->once())
+                ->method('setSlotRenderer')
+                ->with($expectedFragmentRenderer)
+                ->willReturnSelf()
+            ;
+        } else {
+            $contentCompositionBuilder
+                ->method('setSlotRenderer')
+                ->willReturnSelf()
+            ;
+        }
 
         $contentCompositionBuilder
             ->expects($build ? $this->once() : $this->never())

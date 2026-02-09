@@ -67,9 +67,9 @@ class ContentCompositionBuilder
     }
 
     /**
-     * Set a custom layout template to use during build, instead of trying to find an
+     * Set a custom layout template to use during build instead of trying to find an
      * associated page layout and using its data. Use this option for your own page
-     * controllers, that support content composition, but do not have a layout.
+     * controllers that support content composition but do not have a layout.
      */
     public function useCustomLayoutTemplate(string $identifier): self
     {
@@ -101,7 +101,7 @@ class ContentCompositionBuilder
     }
 
     /**
-     * Set renderer that will be used to render the layout template.
+     * Set the renderer that will be used to render the layout template.
      */
     public function setRenderer(RendererInterface $renderer): self
     {
@@ -111,7 +111,7 @@ class ContentCompositionBuilder
     }
 
     /**
-     * Set renderer that will be used to render the slot template.
+     * Set the renderer that will be used to render the slot template.
      */
     public function setSlotRenderer(RendererInterface $renderer): self
     {
@@ -122,7 +122,7 @@ class ContentCompositionBuilder
 
     /**
      * Add a content element or frontend module - referenced by their ID - to a
-     * certain slot. References and stringable objects, that lazily render the slots
+     * certain slot. References and stringable objects that lazily render the slots
      * will be available as template parameters.
      */
     public function addElementToSlot(string $slot, int $id, bool $isContentElement = true): self
@@ -171,7 +171,7 @@ class ContentCompositionBuilder
                 throw new NoLayoutSpecifiedException('No layout specified');
             }
 
-            // Guard against using with anything other than the modern layout
+            // Guard against using anything other than the modern layout
             if ('modern' !== $layout->type) {
                 throw new \LogicException(\sprintf('Layout type "%s" is not supported in the %s.', $layout->type, self::class));
             }
@@ -200,7 +200,7 @@ class ContentCompositionBuilder
             $layout = null;
         }
 
-        // Set Configure services and set globals
+        // Configure services and set globals
         $this->setupFramework($this->page);
 
         // Create the template and add default data
@@ -382,7 +382,7 @@ class ContentCompositionBuilder
      */
     private function renderSlot(string $slot, array $elementReferences): string
     {
-        $result = $this->slotRenderer->render("@Contao/{$this->slotTemplate}.html.twig", [
+        $result = $this->slotRenderer->render("@Contao/$this->slotTemplate.html.twig", [
             '_slot_name' => $slot,
             'references' => $elementReferences,
         ]);
