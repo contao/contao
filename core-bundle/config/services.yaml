@@ -71,6 +71,19 @@ services:
             - '@translator'
             - '@contao.intl.locales'
 
+    contao.content_composition:
+        class: Contao\CoreBundle\ContentComposition\ContentComposition
+        arguments:
+            - '@contao.framework'
+            - '@monolog.logger.contao.error'
+            - '@contao.image.picture_factory'
+            - '@contao.image.preview_factory'
+            - '@contao.assets.assets_context'
+            - '@contao.twig.default_renderer'
+            - '@request_stack'
+            - '@translator'
+            - '@contao.routing.page_registry'
+
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
@@ -1389,8 +1402,13 @@ services:
             - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
 
-    contao.twig.defer.renderer:
-        class: Contao\CoreBundle\Twig\Defer\Renderer
+    contao.twig.default_renderer:
+        class: Contao\CoreBundle\Twig\Renderer\DefaultRenderer
+        arguments:
+            - '@twig'
+
+    contao.twig.deferred_renderer:
+        class: Contao\CoreBundle\Twig\Renderer\DeferredRenderer
         arguments:
             - '@twig'
 
@@ -1554,6 +1572,7 @@ services:
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
+    Contao\CoreBundle\ContentComposition\ContentComposition: '@contao.content_composition'
     Contao\CoreBundle\Csp\WysiwygStyleProcessor: '@contao.csp.wysiwyg_style_processor'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\DataContainer\DcaUrlAnalyzer: '@contao.data_container.dca_url_analyzer'

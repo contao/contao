@@ -3,7 +3,7 @@
   <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en">
     <body>
       <trans-unit id="tl_module.name.0">
-        <source>Title</source>
+        <source>Internal title</source>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>

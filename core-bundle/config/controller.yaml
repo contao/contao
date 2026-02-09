@@ -20,17 +20,6 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
-        Contao\CoreBundle\Controller\Page\AbstractLayoutPageController:
-            tags:
-                - { name: container.service_subscriber, id: contao.routing.page_finder }
-                - { name: container.service_subscriber, id: contao.routing.response_context_accessor }
-                - { name: container.service_subscriber, id: contao.routing.response_context_factory }
-                - { name: container.service_subscriber, id: contao.security.token_checker }
-                - { name: container.service_subscriber, id: contao.image.picture_factory }
-                - { name: container.service_subscriber, id: contao.image.preview_factory }
-                - { name: container.service_subscriber, id: contao.assets.assets_context }
-                - { name: container.service_subscriber, id: contao.twig.defer.renderer }
-
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\AltchaController:
         arguments:
@@ -254,7 +243,13 @@ services:
         arguments:
             - '@contao.routing.content_url_generator'
 
-    Contao\CoreBundle\Controller\Page\RegularPageController: ~
+    Contao\CoreBundle\Controller\Page\RegularPageController:
+        arguments:
+            - '@contao.content_composition'
+            - '@contao.routing.response_context_factory'
+            - '@contao.routing.response_context_accessor'
+            - '@contao.twig.deferred_renderer'
+            - '@contao.framework'
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:

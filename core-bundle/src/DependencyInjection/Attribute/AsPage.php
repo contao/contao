@@ -33,6 +33,7 @@ class AsPage
         string|null $format = null,
         public bool $contentComposition = true,
         public string|null $urlSuffix = null,
+        string|null $template = null,
     ) {
         if (null !== $locale) {
             $this->defaults['_locale'] = $locale;
@@ -40,6 +41,10 @@ class AsPage
 
         if (null !== $format) {
             $this->defaults['_format'] = $format;
+        }
+
+        if (null !== $template) {
+            $this->defaults['_template'] = $template;
         }
     }
 }
