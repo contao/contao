@@ -13,18 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageResolver implements ContentUrlResolverInterface
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly PageRegistry $pageRegistry,
-        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -36,17 +30,10 @@ class PageResolver implements ContentUrlResolverInterface
 
         switch ($content->type) {
             case 'root':
-                $route = $this->pageRegistry->getRoute($content);
-                $route->setPath('');
-                $route->setUrlSuffix('');
+                $pageAdapter = $this->framework->getAdapter(PageModel::class);
+                $forwardPage = $pageAdapter->findFirstPublishedRegularByPid($content->id);
 
-                $url = $this->urlGenerator->generate(
-                    PageRoute::PAGE_BASED_ROUTE_NAME,
-                    [RouteObjectInterface::ROUTE_OBJECT => $route],
-                    UrlGeneratorInterface::ABSOLUTE_URL,
-                );
-
-                return ContentUrlResult::url($url);
+                return ContentUrlResult::redirect($forwardPage);
 
             case 'redirect':
                 return ContentUrlResult::url($content->url);

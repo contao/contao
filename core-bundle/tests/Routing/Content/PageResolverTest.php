@@ -28,11 +28,7 @@ class PageResolverTest extends TestCase
     {
         $content = $this->mockClassWithProperties(ArticleModel::class);
 
-        $resolver = new PageResolver(
-            $this->mockContaoFramework(),
-            $this->createMock(PageRegistry::class),
-            $this->createMock(UrlGeneratorInterface::class),
-        );
+        $resolver = new PageResolver($this->mockContaoFramework());
 
         $result = $resolver->resolve($content);
 
@@ -41,11 +37,7 @@ class PageResolverTest extends TestCase
 
     public function testAbstainsIfContentPageModelIsNotRedirectOrForward(): void
     {
-        $resolver = new PageResolver(
-            $this->mockContaoFramework(),
-            $this->createMock(PageRegistry::class),
-            $this->createMock(UrlGeneratorInterface::class),
-        );
+        $resolver = new PageResolver($this->mockContaoFramework());
 
         $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'regular']);
         $result = $resolver->resolve($content);
@@ -64,11 +56,7 @@ class PageResolverTest extends TestCase
     {
         $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'redirect', 'url' => 'https://example.com/']);
 
-        $resolver = new PageResolver(
-            $this->mockContaoFramework(),
-            $this->createMock(PageRegistry::class),
-            $this->createMock(UrlGeneratorInterface::class),
-        );
+        $resolver = new PageResolver($this->mockContaoFramework());
 
         $result = $resolver->resolve($content);
 
@@ -79,44 +67,23 @@ class PageResolverTest extends TestCase
 
     public function testReturnsRootUrl(): void
     {
-        $content = $this->mockClassWithProperties(PageModel::class, ['type' => 'root', 'dns' => 'example.com', 'useSSL' => true, 'urlPrefix' => 'en']);
+        $content = $this->mockClassWithProperties(PageModel::class, ['id' => 42, 'type' => 'root']);
+        $jumpTo = $this->mockClassWithProperties(PageModel::class);
 
-        $route = $this->createMock(PageRoute::class);
-        $route
+        $pageAdapter = $this->mockAdapter(['findFirstPublishedRegularByPid']);
+        $pageAdapter
             ->expects($this->once())
-            ->method('setPath')
-            ->with('')
+            ->method('findFirstPublishedRegularByPid')
+            ->with(42)
+            ->willReturn($jumpTo)
         ;
 
-        $route
-            ->expects($this->once())
-            ->method('setUrlSuffix')
-            ->with('')
-        ;
-
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $pageRegistry
-            ->expects($this->once())
-            ->method('getRoute')
-            ->with($content)
-            ->willReturn($route)
-        ;
-
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with(PageRoute::PAGE_BASED_ROUTE_NAME, [RouteObjectInterface::ROUTE_OBJECT => $route], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://example.com/en/')
-        ;
-
-        $resolver = new PageResolver($this->mockContaoFramework(), $pageRegistry, $urlGenerator);
+        $resolver = new PageResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
 
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());
-        $this->assertInstanceOf(StringUrl::class, $result->content);
-        $this->assertSame('https://example.com/en/', $result->content->value);
+        $this->assertSame($jumpTo, $result->content);
     }
 
     public function testRedirectsToJumpToOfForwardPage(): void
@@ -132,11 +99,7 @@ class PageResolverTest extends TestCase
             ->willReturn($jumpTo)
         ;
 
-        $resolver = new PageResolver(
-            $this->mockContaoFramework([PageModel::class => $pageAdapter]),
-            $this->createMock(PageRegistry::class),
-            $this->createMock(UrlGeneratorInterface::class),
-        );
+        $resolver = new PageResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
 
         $result = $resolver->resolve($content);
 
@@ -157,11 +120,7 @@ class PageResolverTest extends TestCase
             ->willReturn($jumpTo)
         ;
 
-        $resolver = new PageResolver(
-            $this->mockContaoFramework([PageModel::class => $pageAdapter]),
-            $this->createMock(PageRegistry::class),
-            $this->createMock(UrlGeneratorInterface::class),
-        );
+        $resolver = new PageResolver($this->mockContaoFramework([PageModel::class => $pageAdapter]));
 
         $result = $resolver->resolve($content);
 
