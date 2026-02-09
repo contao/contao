@@ -1078,10 +1078,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objInsertStmt = null;
 
 		// Combine virtual fields
-			$this->set = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($this->set, $this->strTable);
+		$this->set = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($this->set, $this->strTable);
 
-			// Ensure JSON data type for virtual field targets when saving to database
-			$arrTypes = array_map(fn (string $k) => \in_array($k, DcaExtractor::getInstance($this->strTable)->getVirtualTargets()) ? Types::JSON : null, array_keys($this->set));try
+		// Ensure JSON data type for virtual field targets when saving to database
+		$arrTypes = array_map(fn (string $k) => \in_array($k, DcaExtractor::getInstance($this->strTable)->getVirtualTargets()) ? Types::JSON : null, array_keys($this->set));
+
+		try
 		{
 			$objInsertStmt = Database::getInstance()
 				->prepare("INSERT INTO " . $this->strTable . " %s")
