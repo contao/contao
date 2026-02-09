@@ -809,6 +809,10 @@
         <source>1 year</source>
         <target>1 rok</target>
       </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Propojit se stránkou</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

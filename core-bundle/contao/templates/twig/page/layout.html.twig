@@ -27,8 +27,8 @@
 
         <meta name="robots" content="{{ response_context.head.metaRobots }}">
         <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
-        {% for metaTag in response_context.head.metaTags %}
-            <meta{{ metaTag }}>
+        {% for meta_tag in response_context.head.metaTags %}
+            <meta{{ meta_tag }}>
         {% endfor %}
 
         {% if page['enableCanonical'] -%}
@@ -48,7 +48,7 @@
     {# Defer outputting the body tag so that extensions can still adjust the page's cssClass #}
     {%- set body_attributes = attrs()
         .set('id', 'top')
-        .addClass(contao.page.cssClass)
+        .addClass(contao.page.cssClass|default)
         .mergeWith(body_attributes|default)
     -%}
     <body{{ body_attributes|default }}>

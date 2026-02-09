@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Job;
 use Contao\BackendUser;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Messenger\Message\JobIdAwareMessageInterface;
 use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -16,6 +17,7 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\Clock\NativeClock;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatableMessage;
@@ -30,6 +32,7 @@ class Jobs
         private readonly Security $security,
         private readonly VirtualFilesystemInterface $jobAttachmentsStorage,
         private readonly RouterInterface $router,
+        private readonly MessageBusInterface $messageBus,
         private readonly ClockInterface $clock = new NativeClock(),
     ) {
     }
@@ -47,6 +50,12 @@ class Jobs
         }
 
         return $job->getOwner()->getId() === $userId;
+    }
+
+    public function dispatchJob(JobIdAwareMessageInterface $message, Job $job): void
+    {
+        $message->setJobId($job->getUuid());
+        $this->messageBus->dispatch($message);
     }
 
     public function createJob(string $type): Job
@@ -89,6 +98,28 @@ class Jobs
 
         $qb->andWhere('j.status IN (:status)');
         $qb->setParameter('status', [Status::new->value, Status::pending->value], ArrayParameterType::STRING);
+
+        return $this->queryWithQueryBuilder($qb);
+    }
+
+    /**
+     * Similar to findMyNewOrPending() but also includes jobs that were completed in
+     * the last $window seconds.
+     *
+     * @return array<Job>
+     */
+    public function findMyRecent(int $window): array
+    {
+        $qb = $this->buildQueryBuilderForMine();
+
+        if (!$qb) {
+            return [];
+        }
+
+        $qb->andWhere('j.status IN (:status_running) OR (j.status = :status_completed AND tstamp >= :window_start)');
+        $qb->setParameter('status_running', [Status::new->value, Status::pending->value], ArrayParameterType::STRING);
+        $qb->setParameter('status_completed', Status::completed->value);
+        $qb->setParameter('window_start', $this->clock->now()->getTimestamp() - $window);
 
         return $this->queryWithQueryBuilder($qb);
     }
@@ -170,13 +201,15 @@ class Jobs
                     'type' => StringUtil::specialchars($job->getType()),
                     'status' => $job->getStatus()->value, // No encoding needed, enum
                     'owner' => $job->getOwner()->getId(), // No encoding needed, integer
-                    'tstamp' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
+                    'tstamp' => $this->clock->now()->getTimestamp(), // No encoding needed, integer
+                    'createdAt' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
                     'public' => $job->isPublic(), // No encoding needed, boolean
                 ],
                 [
                     Types::STRING,
                     Types::STRING,
                     Types::STRING,
+                    Types::INTEGER,
                     Types::INTEGER,
                     Types::INTEGER,
                     Types::BOOLEAN,
@@ -186,6 +219,7 @@ class Jobs
 
         // Update job data
         $row = [];
+        $row['tstamp'] = $this->clock->now()->getTimestamp(); // No encoding needed, integer
         $row['pid'] = 0; // No encoding needed, integer
         $row['status'] = $job->getStatus()->value; // No encoding needed, enum
 
@@ -238,9 +272,9 @@ class Jobs
         }
 
         $this->connection->executeStatement(
-            'DELETE FROM tl_job WHERE tstamp < :tstamp',
-            ['tstamp' => $this->clock->now()->getTimestamp() - $period],
-            ['tstamp' => Types::INTEGER],
+            'DELETE FROM tl_job WHERE createdAt < :createdAt',
+            ['createdAt' => $this->clock->now()->getTimestamp() - $period],
+            ['createdAt' => Types::INTEGER],
         );
 
         // Cleanup all directories in attachment storage that are not used anymore (also
@@ -264,7 +298,7 @@ class Jobs
     {
         return new Attachment(
             $filesystemItem,
-            new TranslatableMessage('file_label.'.$filesystemItem->getName(), [], 'contao_jobs'),
+            new TranslatableMessage('MSC.downloadAttachment', [$filesystemItem->getName()], 'contao_default'),
             $this->router->generate(
                 '_contao_jobs.download',
                 ['jobUuid' => $job->getUuid(), 'identifier' => $filesystemItem->getName()],
@@ -327,7 +361,7 @@ class Jobs
         );
         $qb->setParameter('userOwner', $userid, ParameterType::INTEGER);
         $qb->setParameter('systemOwner', Owner::SYSTEM, ParameterType::INTEGER);
-        $qb->orderBy('j.tstamp', 'DESC');
+        $qb->orderBy('j.createdAt', 'DESC');
 
         return $qb;
     }
@@ -387,7 +421,7 @@ class Jobs
     {
         $job = new Job(
             $row['uuid'],
-            \DateTimeImmutable::createFromFormat('U', (string) $row['tstamp']),
+            \DateTimeImmutable::createFromFormat('U', (string) $row['createdAt']),
             Status::from($row['status']),
             StringUtil::decodeEntities($row['type']), // Decode because it's encoded for DC_Table
             new Owner((int) $row['owner']),

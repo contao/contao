@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_comments.author.1">
         <source>Here you can change the author of the reply.</source>
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.author_legend">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_comments.comment_legend">
         <source>Comment</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_comments.approved">
         <source>Approved</source>
@@ -191,9 +191,15 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.3">
         <source>Unpublish</source>
+        <target>Ukryj</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.4">
         <source>Publish</source>
+        <target>Opublikuj</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tableLabel">
+        <source>Comment</source>
+        <target>Komentarz</target>
       </trans-unit>
     </body>
   </file>

@@ -49,7 +49,7 @@ class BackendJobsListenerTest extends ContaoTestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(BackendUser::class))
+            ->willReturn($this->createStub(BackendUser::class))
         ;
 
         $twig = $this->createMock(Environment::class);
@@ -57,7 +57,7 @@ class BackendJobsListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@Contao/backend/jobs/_menu_item.html.twig',
+                '@Contao/backend/jobs/menu_item.html.twig',
                 [
                     'jobs_link' => '/contao?do=jobs',
                     'has_pending_jobs' => false,
@@ -66,7 +66,7 @@ class BackendJobsListenerTest extends ContaoTestCase
             ->willReturn('<twig html>')
         ;
 
-        $jobs = $this->createMock(Jobs::class);
+        $jobs = $this->createStub(Jobs::class);
 
         $listener = new BackendJobsListener($security, $twig, $router, $jobs);
         $listener($event);

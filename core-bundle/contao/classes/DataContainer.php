@@ -454,7 +454,7 @@ abstract class DataContainer extends Backend
 		}
 
 		/** @var class-string<Widget> $strClass */
-		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
+		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? ''] ?? null;
 
 		// Return if the widget class does not exist
 		if (!class_exists($strClass))
@@ -1144,37 +1144,10 @@ abstract class DataContainer extends Backend
 			$this->reload();
 		}
 
-		$return = '';
-		$intTotal = \count($arrPanels);
-		$intLast = $intTotal - 1;
-
-		for ($i=0; $i<$intTotal; $i++)
-		{
-			$submit = '';
-
-			if ($i == $intLast)
-			{
-				$submit = '
-<div class="tl_submit_panel tl_subpanel">
-  <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
-</div>';
-			}
-
-			$return .= '
-<div class="tl_panel">
-  ' . $arrPanels[$i] . $submit . '
-</div>';
-		}
-
-		$return = '
-<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
-<div class="tl_formbody">
-  <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-  ' . $return . '
-</div>
-</form>';
+		return System::getContainer()->get('twig')->render('@Contao/backend/data_container/panel.html.twig', array(
+			'panels' => $arrPanels,
+			'active' => $this->panelActive,
+		));
 
 		return $return;
 	}
@@ -1317,82 +1290,11 @@ abstract class DataContainer extends Backend
 		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
 		$args = array();
 
+		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
+
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			if (str_contains($v, ':'))
-			{
-				list($strKey, $strTable) = explode(':', $v, 2);
-				list($strTable, $strField) = explode('.', $strTable, 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
-					->limit(1)
-					->execute($row[$strKey]);
-
-				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
-			}
-			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
-			{
-				$key = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey'], 2);
-
-				$objRef = Database::getInstance()
-					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-					->limit(1)
-					->execute($row[$v]);
-
-				$args[$k] = $objRef->numRows ? $objRef->value : '';
-			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
-			{
-				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('dateFormat'), $row[$v]) : '-';
-				}
-				elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('timeFormat'), $row[$v]) : '-';
-				}
-				else
-				{
-					$args[$k] = $row[$v] ? Date::parse(Config::get('datimFormat'), $row[$v]) : '-';
-				}
-			}
-			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null)))
-			{
-				$args[$k] = ($row[$v] ?? null) ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-			}
-			elseif (isset($row[$v]))
-			{
-				$row_v = StringUtil::deserialize($row[$v]);
-
-				if (\is_array($row_v))
-				{
-					$args_k = array();
-
-					foreach ($row_v as $option)
-					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
-					}
-
-					$args[$k] = implode(', ', iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($args_k)), false));
-				}
-				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
-				{
-					$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
-				}
-				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
-				{
-					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]];
-				}
-				else
-				{
-					$args[$k] = $row[$v];
-				}
-			}
-			else
-			{
-				$args[$k] = null;
-			}
+			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
 		}
 
 		// Render the label
@@ -1422,17 +1324,6 @@ abstract class DataContainer extends Backend
 				elseif (\is_callable($labelConfig['label_callback']))
 				{
 					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
-				}
-			}
-			elseif ($mode === self::MODE_PARENT)
-			{
-				if (\is_array($labelConfig['label_callback']))
-				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
-				}
-				elseif (\is_callable($labelConfig['label_callback']))
-				{
-					$label = $labelConfig['label_callback']($row, $label, $this);
 				}
 			}
 			else

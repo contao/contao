@@ -122,7 +122,7 @@ class ControllerTest extends TestCase
     #[DataProvider('pageStatusIconProvider')]
     public function testPageStatusIcon(array $pageModelData, string $expected): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, $pageModelData);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, $pageModelData);
 
         $this->assertSame($expected, Controller::getPageStatusIcon($pageModel));
         $this->assertFileExists(__DIR__.'/../../contao/themes/flexible/icons/'.$expected);

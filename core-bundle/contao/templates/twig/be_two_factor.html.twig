@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 <div class="two-factor">
     <h2 class="sub_headline">{{ 'MSC.twoFactorAuthentication'|trans }}</h2>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="submit_container cf">
                     <button type="submit" class="tl_submit">{{ 'MSC.enable'|trans }}</button>
-                    <a href="{{ path('contao_backend', { do: 'security' }) }}" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
+                    <a href="{{ path('contao_backend', {do: 'security'}) }}" class="tl_submit">{{ 'MSC.cancelBT'|trans }}</a>
                 </div>
             </div>
         </form>
@@ -37,7 +37,7 @@
                 <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
                 <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                 <div class="submit_container cf">
-                    <a href="{{ path('contao_backend', { do: 'security', act: 'enable' }) }}" class="tl_submit">{{ 'MSC.edit'|trans }}</a>
+                    <a href="{{ path('contao_backend', {do: 'security', act: 'enable'}) }}" class="tl_submit">{{ 'MSC.edit'|trans }}</a>
                     <button type="submit" class="tl_submit">{{ 'MSC.disable'|trans }}</button>
                 </div>
             </div>
@@ -110,7 +110,7 @@
     {% else %}
         <p>{{ 'MSC.twoFactorExplain'|trans }}</p>
         <div class="tl_submit_container">
-            <a href="{{ path('contao_backend', { do: 'security', act: 'enable' }) }}" class="tl_submit">{{ 'MSC.enable'|trans }}</a>
+            <a href="{{ path('contao_backend', {do: 'security', act: 'enable'}) }}" class="tl_submit">{{ 'MSC.enable'|trans }}</a>
         </div>
     {% endif %}
 </div>
@@ -118,7 +118,7 @@
 <div class="two-factor passkeys">
     <h2 class="sub_headline">{{ 'MSC.passkeys'|trans }}</h2>
     <p>{{ 'MSC.passkeysDescription'|trans }}</p>
-    <div class="tl_listing_container">
+    <div class="list_passkeys">
         <turbo-frame id="passkeys" data-turbo-action="advance">
             {% if credentials|default %}
                 <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">
@@ -141,20 +141,20 @@
                                         <input type="text" name="passkey_name" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
                                     </form>
                                 {% else %}
-                                    {{ crendial.name ?: credential.id }}
+                                    {{ credential.name|default(credential.id) }}
                                 {% endif %}
                             </td>
                             <td class="created">{{ credential.createdAt.format('j. F Y, H:i') }}</td>
                             <td class="actions">
                                 <form method="post">
                                     <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
-                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_id }}">
+                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                                     {% if editPassKeyId == credential.id %}
                                         <button type="submit" name="save_passkey" form="form-edit-passkey-{{ credential.id }}" value="{{ credential.id }}">{{ backend_icon('save.svg', 'MSC.save'|trans) }}</button>
                                     {% else %}
                                         <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ backend_icon('edit.svg', 'MSC.edit'|trans) }}</button>
                                     {% endif %}
-                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name ?: credential.id]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
+                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)]) }}'))return false">{{ backend_icon('delete.svg', 'MSC.delete'|trans) }}</button>
                                 </form>
                             </td>
                         </tr>

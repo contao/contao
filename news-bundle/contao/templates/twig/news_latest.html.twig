@@ -5,13 +5,13 @@
     {% endblock %}
 
     {% if addImage %}
-        {% include "@Contao/image.html.twig" %}
+        {{ include('@Contao/image.html.twig') }}
     {% endif %}
 
     <h2>{{ linkHeadline|sanitize_html('contao') }}</h2>
 
     <div class="ce_text block">
-        {{ teaser|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+        {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
     </div>
 
     {% if hasText.invoke() or hasTeaser %}

@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% set wrapperAttributes = attrs(cssID)
     .addClass([class, 'block'])
@@ -12,7 +12,7 @@
 
     {% block headline %}
         {% if headline %}
-            <{{ hl }}>{{ headline }}</{{ hl }}>
+            <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
         {% endif %}
     {% endblock %}
 

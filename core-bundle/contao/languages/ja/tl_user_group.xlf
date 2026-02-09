@@ -73,6 +73,10 @@
         <source>Allowed member groups</source>
         <target>許可するメンバーグループ</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+        <target>テーブルの権限</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>許可する項目</target>
@@ -124,6 +128,10 @@
       <trans-unit id="tl_user_group.toggle.4">
         <source>Activate</source>
         <target>有効化</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+        <target>ユーザーグループ</target>
       </trans-unit>
     </body>
   </file>

@@ -36,6 +36,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'ctable'                      => array('tl_article'),
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'permissions'                 => array(),
 		'onload_callback' => array
 		(
 			array('tl_page', 'adjustDca'),
@@ -79,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'mode'                    => DataContainer::MODE_TREE,
 			'rootPaste'               => true,
 			'showRootTrails'          => true,
-			'panelLayout'             => 'filter;search',
+			'panelLayout'             => 'search,filter',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
@@ -94,7 +95,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'articles' => array
 			(
 				'href'                => 'do=article',
-				'icon'                => 'article.svg'
+				'icon'                => 'article.svg',
+				'method'              => 'POST',
 			)
 		)
 	),

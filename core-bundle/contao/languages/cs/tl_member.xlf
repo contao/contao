@@ -297,6 +297,10 @@
         <source>Preview the front end as member ID %s</source>
         <target>Prohlédnout si náhled jako člen %s</target>
       </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+        <target>Člen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

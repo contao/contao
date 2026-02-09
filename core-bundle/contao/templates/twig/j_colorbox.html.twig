@@ -1,8 +1,8 @@
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {# Add the colorbox style sheet #}
-{% add "colorbox" to stylesheets %}
-    {% with {file: 'assets/colorbox/css/colorbox.min.css' } %}{{ block('stylesheet_component') }}{% endwith %}
+{% add 'colorbox' to stylesheets %}
+    {% with {file: 'assets/colorbox/css/colorbox.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
 {% endadd %}
 
 <script src="{{ asset('js/colorbox.min.js', 'contao-components/colorbox') }}"></script>

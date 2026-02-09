@@ -11,7 +11,7 @@
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
 use Contao\CalendarModel;
-use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\Backend\CsvImportController;
 use Contao\ModuleCalendar;
 use Contao\ModuleEventlist;
 use Contao\ModuleEventMenu;
@@ -23,8 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
 $GLOBALS['BE_MOD']['content']['calendar'] = array
 (
 	'tables'      => array('tl_calendar', 'tl_calendar_events', 'tl_content'),
-	'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
-	'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
+	'table'       => array(CsvImportController::class, 'importTableWizardAction'),
+	'list'        => array(CsvImportController::class, 'importListWizardAction')
 );
 
 // Front end modules
@@ -44,7 +44,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'calendars';
-$GLOBALS['TL_PERMISSIONS'][] = 'calendarp';
 
 // Models
 $GLOBALS['TL_MODELS']['tl_calendar_events'] = CalendarEventsModel::class;

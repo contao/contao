@@ -17,6 +17,10 @@
         <source>Default/None</source>
         <target>Standard/Keiner</target>
       </trans-unit>
+      <trans-unit id="not_prefixed">
+        <source>without prefix</source>
+        <target>ohne Präfix</target>
+      </trans-unit>
       <trans-unit id="operation.save.0">
         <source>Save</source>
         <target>Speichern</target>
@@ -70,6 +74,22 @@
         <target>Variante umbenennen</target>
       </trans-unit>
       <trans-unit id="operation.rename_frontend_module_variant.1">
+        <source>Rename the %s variant template</source>
+        <target>Das Varianten-Template %s umbenennen</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.0">
+        <source>Create variant</source>
+        <target>Variante erstellen</target>
+      </trans-unit>
+      <trans-unit id="operation.create_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>Ein neues Varianten-Template für das Layout %s erstellen</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.0">
+        <source>Rename variant</source>
+        <target>Variante umbenennen</target>
+      </trans-unit>
+      <trans-unit id="operation.rename_page_variant.1">
         <source>Rename the %s variant template</source>
         <target>Das Varianten-Template %s umbenennen</target>
       </trans-unit>
@@ -132,6 +152,10 @@
       <trans-unit id="dialog.rename_variant">
         <source>Please define a new unique name for the variant template %s.</source>
         <target>Bitte geben Sie einen eindeutigen Namen für das Varianten-Template %s ein.</target>
+      </trans-unit>
+      <trans-unit id="editor_tab.relation.legacy_pair">
+        <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>
+        <target>Das %identifier%-Template ist in zwei Formaten verfügbar. Wenn Sie Anpassungen machen, bevorzugen Sie das Twig-Format, um mit Contao 6 kompatibel zu bleiben.</target>
       </trans-unit>
       <trans-unit id="editor_tab.relation.not_analyzable">
         <source>The template's relation cannot be analyzed because it contains errors.</source>

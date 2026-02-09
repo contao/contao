@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { TurboStreamConnection } from '../modules/turbo-stream-connection';
-import { TwigEditor } from '../modules/twig-editor';
+import { TwigEditor } from '../modules/twig-editor/twig-editor';
 
 export default class extends Controller {
     static values = {
@@ -8,7 +8,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations'];
+    static targets = ['content', 'themeSelector', 'tabs', 'editor', 'editorAnnotations'];
 
     #editors = new Map();
     #turboStreamConnection = new TurboStreamConnection();
@@ -67,9 +67,13 @@ export default class extends Controller {
     }
 
     colorChange(event) {
-        for (const editor of this.#editors) {
+        for (const editor of this.#editors.values()) {
             editor.setColorScheme(event.detail.mode);
         }
+    }
+
+    enterFullscreen() {
+        this.contentTarget.requestFullscreen();
     }
 
     #addOpenEditorTabsToRequest(event) {

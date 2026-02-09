@@ -173,6 +173,10 @@
         <source>Create a new question after question ID %s</source>
         <target>Vytvořit novou otázku po otázce ID%s</target>
       </trans-unit>
+        <trans-unit id="tl_faq.tableLabel">
+        <source>Question</source>
+        <target>Otázka</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

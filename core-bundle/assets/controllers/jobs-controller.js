@@ -27,6 +27,11 @@ export default class extends Controller {
         }
     }
 
+    disconnect() {
+        clearTimeout(this.#timer);
+        this.#timer = null;
+    }
+
     enable() {
         clearTimeout(this.#timer);
         this.#poll();
@@ -62,6 +67,6 @@ export default class extends Controller {
     }
 
     #poll() {
-        this.#turboStreamConnection.get(this.pendingJobsUrlValue, null, true);
+        this.#turboStreamConnection.get(this.pendingJobsUrlValue, { range: this.#pollInterval }, true);
     }
 }

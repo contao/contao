@@ -27,17 +27,17 @@ class NewsSearchListenerTest extends TestCase
     #[DataProvider('purgeSearchEntryProvider')]
     public function testNewsChanges(string $field, string $newValue, array $recordData, array|null $readerPageSettings, bool $shouldRemoveSearchEntry): void
     {
-        $newsModel = $this->createMock(NewsModel::class);
+        $newsModel = $this->createStub(NewsModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+        $framework = $this->createContaoFrameworkStub([
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $newsModel]),
             Search::class => $search,
         ]);
 
@@ -64,7 +64,7 @@ class NewsSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)
@@ -203,17 +203,17 @@ class NewsSearchListenerTest extends TestCase
     #[DataProvider('deleteProvider')]
     public function testOnDelete(array $recordData, bool $shouldRemoveSearchEntry): void
     {
-        $newsModel = $this->createMock(NewsModel::class);
+        $newsModel = $this->createStub(NewsModel::class);
 
-        $search = $this->mockAdapter(['removeEntry']);
+        $search = $this->createAdapterMock(['removeEntry']);
         $search
             ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
             ->with('uri')
         ;
 
-        $framework = $this->mockContaoFramework([
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+        $framework = $this->createContaoFrameworkStub([
+            NewsModel::class => $this->createConfiguredAdapterStub(['findById' => $newsModel]),
             Search::class => $search,
         ]);
 
@@ -231,7 +231,7 @@ class NewsSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $recordData['id']]);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class, ['id' => $recordData['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($recordData)

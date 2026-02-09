@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_default" -%}
+{% trans_default_domain 'contao_default' -%}
 
 {%- set rootAttributes = attrs()
     .set('lang', language)
@@ -11,11 +11,30 @@
     .set('id', 'top')
     .addClass('be_main')
     .addClass('popup', isPopup)
-    .set('data-controller', 'contao--tooltips contao--toggle-state')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
-    .set('data-contao--toggle-state-active-class', 'active')
+    .set('data-controller', 'contao--tooltips')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
+
+{%- set containerAttributes = attrs()
+    .addClass(containerClass)
+    .mergeWith(containerAttributes|default)
+-%}
+
+{% set mainAttributes = attrs()
+    .set('id', 'main')
+    .set('aria-labelledby', 'main_headline')
+    .mergeWith(mainAttributes|default)
+%}
+
+{% set asideAttributes = attrs()
+    .set('id', 'left')
+    .set('data-controller', 'contao--toggle-receiver')
+    .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#burger')
+    .set('data-contao--toggle-receiver-active-class', 'active')
+    .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+    .mergeWith(asideAttributes|default)
+%}
 
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
@@ -59,7 +78,7 @@
 <a class="invisible show-on-focus" href="#main" data-turbo="false">{{ 'MSC.skipToContent'|trans }}</a>
 
 {% block header %}
-    {% if not isPopup %}
+    {% if not renderMainOnly %}
         <header id="header">
             <div class="inner">
                 <h1>
@@ -75,18 +94,18 @@
         </header>
 
         {% block header_outlets %}
-            {% include "@Contao/backend/component/message/_outlet.html.twig" %}
-            {% include "@Contao/backend/component/dialog/_outlet.html.twig" %}
+            {{ include('@Contao/backend/component/message/_outlet.html.twig') }}
+            {{ include('@Contao/backend/component/dialog/_outlet.html.twig') }}
         {% endblock %}
     {% endif %}
 {% endblock %}
 
 {% block container %}
-    <div id="container">
+    <div id="container"{{ containerAttributes }}>
 
         {% block left %}
-            {% if not isPopup %}
-                <aside id="left" data-contao--toggle-state-target="controls">
+            {% if not renderMainOnly %}
+                <aside{{ asideAttributes }}>
                     {{ menu|raw }}
                     <div class="version">
                         {% block version %}
@@ -98,22 +117,33 @@
         {% endblock %}
 
         {% block main %}
-            <main id="main" aria-labelledby="main_headline">
-                <h1 id="main_headline">{{ headline|raw }}</h1>
-                <div class="content">
-                    {% if pickerMenu|default %}
-                        <div id="picker-menu">
-                            {{ pickerMenu|raw }}
-                        </div>
-                    {% endif %}
-                    {% if error|default %}
-                        <p class="tl_gerror">{{ error }}</p>
-                    {% endif %}
-                    {% block main_content %}
-                        {{ main|raw }}
+            <turbo-frame id="contao-main" target="_top">
+                <main{{ mainAttributes }}>
+                    {% block main_headline %}
+                        <h1 id="main_headline">
+                            {% if breadcrumb|default %}
+                                {{ breadcrumb|raw }}
+                            {% else %}
+                                {{ headline|raw }}
+                            {% endif %}
+                            {{ include('@Contao/backend/component/_favorites.html.twig') }}
+                        </h1>
                     {% endblock %}
-                </div>
-            </main>
+                    <div class="content">
+                        {% if pickerMenu|default %}
+                            <div id="picker-menu">
+                                {{ pickerMenu|raw }}
+                            </div>
+                        {% endif %}
+                        {% if error|default %}
+                            <p class="tl_gerror">{{ error }}</p>
+                        {% endif %}
+                        {% block main_content %}
+                            {{ main|raw }}
+                        {% endblock %}
+                    </div>
+                </main>
+            </turbo-frame>
         {% endblock %}
 
     </div>

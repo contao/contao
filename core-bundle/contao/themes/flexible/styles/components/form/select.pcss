@@ -1,7 +1,6 @@
 select {
     text-transform: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
+    appearance: none; /* see #9273 */
 }
 
 select::-ms-expand {
@@ -12,7 +11,9 @@ select[multiple] {
     height: auto;
 }
 
-.tl_select, .tl_mselect, .tl_select_wrapper {
+.tl_select,
+.tl_mselect,
+.tl_select_wrapper {
     width: 100%;
 }
 
@@ -24,7 +25,18 @@ select[multiple] {
     width: 50%;
 }
 
-.tl_select, .tl_mselect, .tl_select_unit, .tl_select_interval {
+.tl_select_wrapper {
+    margin: 3px 0;
+
+    .tl_select {
+        margin: 0;
+    }
+}
+
+.tl_select,
+.tl_mselect,
+.tl_select_unit,
+.tl_select_interval {
     height: 30px;
     margin: 3px 0;
     box-sizing: border-box;
@@ -36,20 +48,31 @@ select[multiple] {
     cursor: pointer;
 }
 
-.tl_select[disabled], .tl_mselect[disabled], .tl_select_unit[disabled], .tl_select_interval[disabled],
-.tl_select[readonly], .tl_mselect[readonly], .tl_select_unit[readonly], .tl_select_interval[readonly] {
+.tl_select[disabled],
+.tl_mselect[disabled],
+.tl_select_unit[disabled],
+.tl_select_interval[disabled],
+.tl_select[readonly],
+.tl_mselect[readonly],
+.tl_select_unit[readonly],
+.tl_select_interval[readonly] {
     color: var(--form-text-disabled);
-    background-color: var(--form-bg-disabled);
     border: 1px solid var(--form-border-disabled);
     cursor: not-allowed;
 }
 
-.tl_select[multiple], .tl_mselect[multiple], .tl_select_unit[multiple], .tl_select_interval[multiple] {
+.tl_select[multiple],
+.tl_mselect[multiple],
+.tl_select_unit[multiple],
+.tl_select_interval[multiple] {
     background-image: none;
 }
 
 @supports (display:-ms-grid) {
-    .tl_select, .tl_mselect, .tl_select_unit, .tl_select_interval {
+    .tl_select,
+    .tl_mselect,
+    .tl_select_unit,
+    .tl_select_interval {
         padding: 5px 18px 5px 2px;
     }
 }

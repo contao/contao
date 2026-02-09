@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
@@ -23,6 +24,7 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\DC_Table;
+use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -49,6 +51,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly TranslatorInterface $translator,
+        private readonly VirtualFieldsHandler $virtualFieldsHandler,
     ) {
     }
 
@@ -202,10 +205,21 @@ class TableDataContainerProvider implements ProviderInterface
 
         $searchableFields = array_filter(
             $fieldsConfig,
-            static fn (array $config): bool => isset($config['search']) && true === $config['search'],
+            static function (array $config): bool {
+                if (\array_key_exists('backendSearch', $config)) {
+                    return (bool) $config['backendSearch'];
+                }
+
+                return (bool) ($config['search'] ?? false);
+            },
         );
 
-        $qb = $this->createQueryBuilderForTable($table);
+        $virtualFields = $this->contaoFramework->createInstance(DcaExtractor::class, [$table])->getVirtualFields();
+
+        // Only select the rows we need so we don't transfer the entire database when indexing
+        $select = array_unique(['id', ...array_map(static fn (string $field) => $virtualFields[$field] ?? $field, array_keys($searchableFields))]);
+
+        $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
         if ($reindexConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
             $qb->andWhere('tstamp <= ', $qb->createNamedParameter($reindexConfig->getUpdateSince()));
@@ -226,7 +240,7 @@ class TableDataContainerProvider implements ProviderInterface
 
     private function createDocumentFromRow(string $table, array $row, array $fieldsConfig, array $searchableFields): Document|null
     {
-        $searchableContent = $this->extractSearchableContent($row, $fieldsConfig, $searchableFields);
+        $searchableContent = $this->extractSearchableContent($table, $row, $fieldsConfig, $searchableFields);
 
         if ('' === $searchableContent) {
             return null;
@@ -240,9 +254,12 @@ class TableDataContainerProvider implements ProviderInterface
         return self::TYPE_PREFIX.$table;
     }
 
-    private function extractSearchableContent(array $row, array $fieldsConfig, array $searchableFields): string
+    private function extractSearchableContent(string $table, array $row, array $fieldsConfig, array $searchableFields): string
     {
         $searchableContent = [];
+
+        // Expand virtual fields
+        $row = $this->virtualFieldsHandler->expandFields($row, $table);
 
         foreach (array_keys($searchableFields) as $field) {
             if (isset($row[$field])) {
@@ -257,7 +274,10 @@ class TableDataContainerProvider implements ProviderInterface
 
     private function loadRow(string $table, int $id): array|false
     {
-        $qb = $this->createQueryBuilderForTable($table);
+        // In this case, we want to load the entire row. This method is called only when
+        // generating the search result hits of which there are not that many and the
+        // entire row can be useful in the EnhanceHitEvent.
+        $qb = $this->createQueryBuilderForTable($table, '*');
 
         return $qb
             ->andWhere('id = '.$qb->createNamedParameter($id, ParameterType::INTEGER))
@@ -265,11 +285,11 @@ class TableDataContainerProvider implements ProviderInterface
         ;
     }
 
-    private function createQueryBuilderForTable(string $table): QueryBuilder
+    private function createQueryBuilderForTable(string $table, string $select): QueryBuilder
     {
         return $this->connection
             ->createQueryBuilder()
-            ->select('*')
+            ->select($select)
             ->from($table)
         ;
     }

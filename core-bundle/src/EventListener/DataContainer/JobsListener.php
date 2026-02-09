@@ -47,41 +47,15 @@ class JobsListener
             return $columns;
         }
 
-        $columns[2] = $this->twig->render('@Contao/backend/jobs/_progress.html.twig', ['progress' => $job->getProgress()]);
+        $columns[2] = $this->twig->render('@Contao/backend/jobs/progress.html.twig', ['job' => $job]);
+        $columns[3] = $this->twig->render('@Contao/backend/jobs/status.html.twig', ['job' => $job]);
+
+        $columns[5] = $this->twig->render('@Contao/backend/jobs/attachments.html.twig', [
+            'job' => $job,
+            'attachments' => $this->jobs->getAttachments($job),
+        ]);
 
         return $columns;
-    }
-
-    #[AsCallback(table: 'tl_job', target: 'list.operations.attachments.button')]
-    public function onAttachmentsCallback(DataContainerOperation $operation): void
-    {
-        $uuid = $operation->getRecord()['uuid'];
-        $job = $this->jobs->getByUuid($uuid);
-
-        if (!$job) {
-            $operation->hide();
-
-            return;
-        }
-
-        $attachments = $this->jobs->getAttachments($job);
-        $numberOfAttachments = \count($attachments);
-
-        if (0 === $numberOfAttachments) {
-            $operation->hide();
-
-            return;
-        }
-
-        // TODO: we need a template and Stimulus logic to have an operation with sub
-        // operations just like the [...] in the current context menu to be able to
-        // display more than just one download
-        $attachment = $attachments[0];
-
-        $operation['icon'] = 'theme_import.svg';
-        $operation['title'] = $attachment->getFileLabel();
-
-        $operation->setUrl($attachment->getDownloadUrl());
     }
 
     #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]

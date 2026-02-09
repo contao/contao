@@ -197,6 +197,10 @@
         <source>Publish</source>
         <target>Publicēt</target>
       </trans-unit>
+      <trans-unit id="tl_comments.tableLabel">
+        <source>Comment</source>
+        <target>Komentāri</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

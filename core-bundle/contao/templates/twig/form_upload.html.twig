@@ -1,4 +1,4 @@
-{% extends "@Contao/form_row.html.twig" %}
+{% extends '@Contao/form_row.html.twig' %}
 
 {% block label %}
     {% if this.label %}
@@ -24,6 +24,7 @@
         .addClass('upload')
         .addClass(this.class|default)
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
+        .set('multiple', this.multipleFiles|default)
         .mergeWith(getAttributes.invoke())
     }}>
 

@@ -136,6 +136,11 @@ class RowWizard extends Widget
 					$varValue[$i][$key] = $widget->value;
 				}
 			}
+
+			if (\in_array('enable', $this->actions))
+			{
+				$varValue[$i]['enable'] = $this->getPost($this->strId . '[' . $i . '][enable]');
+			}
 		}
 
 		if ($this->hasErrors())
@@ -166,7 +171,7 @@ class RowWizard extends Widget
 			}
 		}
 
-		$header = $rows = array();
+		$header = $footer = $rows = array();
 
 		for ($i = 0, $c = \count($this->varValue); $i < $c; ++$i)
 		{
@@ -251,7 +256,7 @@ class RowWizard extends Widget
 	}
 
 	/**
-	 * @return array{0: Widget|null, 1: array<mixed>}
+	 * @return array{0: Widget|null, 1: array}
 	 */
 	private function prepareWidget(string $key, mixed $value, array $options, int $increment): array
 	{
@@ -276,15 +281,7 @@ class RowWizard extends Widget
 		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
-
-		if (\in_array($data['type'] ?? null, array('checkbox', 'label'), true))
-		{
-			$data['id'] = $data['name'];
-		}
-		else
-		{
-			$data['id'] .= '_' . $increment;
-		}
+		$data['id'] = $data['name'];
 
 		return $this->widgets[$increment][$key] = array(new $widgetClass($data), $data);
 	}

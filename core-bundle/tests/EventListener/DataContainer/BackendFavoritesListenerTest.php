@@ -31,7 +31,7 @@ class BackendFavoritesListenerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testAllowsAddingNewFavorites(): void
+    public function testLoadDefaults(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_favorites'] = [
@@ -54,7 +54,7 @@ class BackendFavoritesListenerTest extends TestCase
         ];
 
         $userId = 2;
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -66,56 +66,16 @@ class BackendFavoritesListenerTest extends TestCase
         $url = '/contao?do=pages&act=edit&id=4';
 
         $request = new Request();
-        $request->query->set('act', 'create');
         $request->query->set('data', base64_encode($url));
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
-        $listener->enableEditing();
+        $listener->loadDefaults();
 
-        $this->assertFalse($GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable']);
         $this->assertSame([['user = ?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_favorites']['fields']['url']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_favorites']['fields']['user']['default']);
-    }
-
-    public function testDoesNotAllowAddingNewFavoritesIfThereIsNoData(): void
-    {
-        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
-        $GLOBALS['TL_DCA']['tl_favorites'] = [
-            'config' => [
-                'notCreatable' => true,
-            ],
-            'list' => [
-                'sorting' => [
-                    'filter' => [],
-                ],
-            ],
-        ];
-
-        $userId = 2;
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $request = new Request();
-        $request->query->set('act', 'create');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $listener = new BackendFavoritesListener($security, $requestStack);
-        $listener->enableEditing();
-
-        $this->assertTrue($GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable']);
-        $this->assertSame([['user = ?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
     }
 
     public function testShowsNothingIfThereIsNoUser(): void
@@ -133,14 +93,13 @@ class BackendFavoritesListenerTest extends TestCase
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($this->createStub(UserInterface::class))
         ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $listener = new BackendFavoritesListener($security, $requestStack);
-        $listener->enableEditing();
+        $listener->loadDefaults();
 
         $this->assertSame([['user = ?', 0]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
     }
@@ -161,10 +120,9 @@ class BackendFavoritesListenerTest extends TestCase
         $request->query->set('return', '1');
         $request->request->set('saveNclose', '1');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
         $redirect = null;
 
         try {
@@ -188,10 +146,9 @@ class BackendFavoritesListenerTest extends TestCase
         $request->query->set('return', '1');
         $request->request->set('save', '1');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
         $listener->redirectBack($dataContainer);
     }
 
@@ -206,10 +163,9 @@ class BackendFavoritesListenerTest extends TestCase
         $request = new Request();
         $request->request->set('saveNclose', '1');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
-        $listener = new BackendFavoritesListener($this->createMock(Security::class), $requestStack);
+        $listener = new BackendFavoritesListener($this->createStub(Security::class), $requestStack);
         $listener->redirectBack($dataContainer);
     }
 }

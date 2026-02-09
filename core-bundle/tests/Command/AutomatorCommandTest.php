@@ -64,7 +64,7 @@ class AutomatorCommandTest extends TestCase
         $container->setParameter('kernel.project_dir', $this->getFixturesDir());
         $container->set('filesystem', new Filesystem());
 
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $kernel
             ->method('getContainer')
             ->willReturn($container)
@@ -73,7 +73,7 @@ class AutomatorCommandTest extends TestCase
         $application = new Application($kernel);
         $application->setCatchExceptions(true);
 
-        $command = new AutomatorCommand($this->mockContaoFramework());
+        $command = new AutomatorCommand($this->createContaoFrameworkStub());
         $command->setApplication($application);
 
         return $command;

@@ -1,5 +1,5 @@
 {% for reference in references %}
     {% block element %}
-        {{ reference.type == 'content_element' ? content_element(reference.id): frontend_module(reference.id) }}
+        {{ reference.type == 'content_element' ? content_element(reference.id) : frontend_module(reference.id) }}
     {% endblock %}
 {% endfor %}

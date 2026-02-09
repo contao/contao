@@ -25,7 +25,7 @@ class OptInTokenTest extends TestCase
 {
     public function testReturnsTheIdentifier(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model->token = 'foobar';
 
         $token = $this->getToken($model);
@@ -35,7 +35,7 @@ class OptInTokenTest extends TestCase
 
     public function testReturnsTheEmailAddress(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model->email = 'foo@bar.com';
 
         $token = $this->getToken($model);
@@ -45,7 +45,7 @@ class OptInTokenTest extends TestCase
 
     public function testInvalidatesAToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model->invalidatedThrough = 'foo';
 
         $token = $this->getToken($model);
@@ -55,9 +55,8 @@ class OptInTokenTest extends TestCase
 
     public function testConfirmsAToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model = $this->createClassWithPropertiesMock(OptInModel::class);
+        $model->removeOn = strtotime('+24 hours');
 
         $model
             ->expects($this->once())
@@ -73,10 +72,9 @@ class OptInTokenTest extends TestCase
 
     public function testInvalidatesRelatedTokens(): void
     {
-        $related = $this->mockClassWithProperties(OptInModel::class);
+        $related = $this->createClassWithPropertiesMock(OptInModel::class);
         $related->token = 'reg-first';
-        $related->createdOn = time();
-        $related->confirmedOn = 0;
+        $related->removeOn = strtotime('+24 hours');
 
         $related
             ->expects($this->once())
@@ -89,7 +87,7 @@ class OptInTokenTest extends TestCase
             ->willReturn(['tl_user' => [2]])
         ;
 
-        $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
+        $adapter = $this->createAdapterMock(['findByRelatedTableAndIds']);
         $adapter
             ->expects($this->once())
             ->method('findByRelatedTableAndIds')
@@ -97,12 +95,11 @@ class OptInTokenTest extends TestCase
             ->willReturn([$related])
         ;
 
-        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([OptInModel::class => $adapter]);
 
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesMock(OptInModel::class);
         $model->token = 'reg-second';
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
 
         $model
             ->expects($this->once())
@@ -119,10 +116,9 @@ class OptInTokenTest extends TestCase
 
     public function testDoesNotInvalidateRelatedTokensIfTheRelatedRecordsDoNotMatch(): void
     {
-        $related = $this->mockClassWithProperties(OptInModel::class);
+        $related = $this->createClassWithPropertiesMock(OptInModel::class);
         $related->token = 'reg-first';
-        $related->createdOn = time();
-        $related->confirmedOn = 0;
+        $related->removeOn = strtotime('+24 hours');
 
         $related
             ->expects($this->never())
@@ -135,7 +131,7 @@ class OptInTokenTest extends TestCase
             ->willReturn(['tl_user' => [2, 3]])
         ;
 
-        $adapter = $this->mockAdapter(['findByRelatedTableAndIds']);
+        $adapter = $this->createAdapterMock(['findByRelatedTableAndIds']);
         $adapter
             ->expects($this->once())
             ->method('findByRelatedTableAndIds')
@@ -143,12 +139,11 @@ class OptInTokenTest extends TestCase
             ->willReturn([$related])
         ;
 
-        $framework = $this->mockContaoFramework([OptInModel::class => $adapter]);
+        $framework = $this->createContaoFrameworkStub([OptInModel::class => $adapter]);
 
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesMock(OptInModel::class);
         $model->token = 'reg-second';
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model->removeOn = strtotime('+24 hours');
 
         $model
             ->expects($this->once())
@@ -165,7 +160,7 @@ class OptInTokenTest extends TestCase
 
     public function testDoesNotConfirmAConfirmedToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model->confirmedOn = time();
 
         $token = $this->getToken($model);
@@ -178,9 +173,8 @@ class OptInTokenTest extends TestCase
 
     public function testDoesNotConfirmAnExpiredToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
-        $model->createdOn = strtotime('-1 day');
-        $model->confirmedOn = 0;
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
+        $model->removeOn = time();
 
         $token = $this->getToken($model);
 
@@ -192,9 +186,8 @@ class OptInTokenTest extends TestCase
 
     public function testSendsATokenViaEmail(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model = $this->createClassWithPropertiesMock(OptInModel::class);
+        $model->removeOn = strtotime('+24 hours');
         $model->emailSubject = '';
         $model->emailText = '';
 
@@ -209,7 +202,7 @@ class OptInTokenTest extends TestCase
             ->method('sendTo')
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -225,7 +218,7 @@ class OptInTokenTest extends TestCase
 
     public function testDoesNotSendAConfirmedTokenViaEmail(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
         $model->confirmedOn = time();
 
         $token = $this->getToken($model);
@@ -238,9 +231,8 @@ class OptInTokenTest extends TestCase
 
     public function testDoesNotSendAnExpiredTokenViaEmail(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
-        $model->createdOn = strtotime('-1 day');
-        $model->confirmedOn = 0;
+        $model = $this->createClassWithPropertiesStub(OptInModel::class);
+        $model->removeOn = time();
 
         $token = $this->getToken($model);
 
@@ -252,9 +244,8 @@ class OptInTokenTest extends TestCase
 
     public function testRequiresSubjectAndTextToSendToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model = $this->createClassWithPropertiesMock(OptInModel::class);
+        $model->removeOn = strtotime('+24 hours');
         $model->emailSubject = '';
         $model->emailText = '';
 
@@ -273,9 +264,8 @@ class OptInTokenTest extends TestCase
 
     public function testDoesNotRequireSubjectAndTextToResendToken(): void
     {
-        $model = $this->mockClassWithProperties(OptInModel::class);
-        $model->createdOn = time();
-        $model->confirmedOn = 0;
+        $model = $this->createClassWithPropertiesMock(OptInModel::class);
+        $model->removeOn = strtotime('+24 hours');
         $model->emailSubject = 'Subject';
         $model->emailText = 'Text';
 
@@ -290,7 +280,7 @@ class OptInTokenTest extends TestCase
             ->method('sendTo')
         ;
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkMock();
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -306,6 +296,6 @@ class OptInTokenTest extends TestCase
 
     private function getToken(OptInModel $model, ContaoFramework|null $framework = null): OptInTokenInterface
     {
-        return new OptInToken($model, $framework ?? $this->mockContaoFramework());
+        return new OptInToken($model, $framework ?? $this->createContaoFrameworkStub());
     }
 }

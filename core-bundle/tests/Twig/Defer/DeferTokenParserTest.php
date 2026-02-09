@@ -16,12 +16,12 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Defer\DeferredStringable;
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
-use Contao\CoreBundle\Twig\Defer\Renderer;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Renderer\DeferredRenderer;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
@@ -44,15 +44,15 @@ class DeferTokenParserTest extends TestCase
 
     public function testOutputsDeferredStringables(): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
 
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         );
 
@@ -78,7 +78,7 @@ class DeferTokenParserTest extends TestCase
 
         $this->assertSame(
             '1',
-            (new Renderer($environment))->render('template.html.twig', $this->getDefaultContext()),
+            (new DeferredRenderer($environment))->render('template.html.twig', $this->getDefaultContext()),
             'deferred order using the deferred renderer',
         );
     }

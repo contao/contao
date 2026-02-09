@@ -42,8 +42,7 @@ class ResponseContextAccessorTest extends TestCase
 
     public function testFinalizing(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $accessor = new ResponseContextAccessor($requestStack);
 

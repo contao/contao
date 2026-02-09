@@ -28,7 +28,7 @@ class RequestProcessorTest extends ContaoTestCase
     public function testAddsLogExtras(string $uri, string $method): void
     {
         $request = Request::create($uri, $method);
-        $event = new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $processor = new RequestProcessor();
         $processor->onKernelRequest($event);
@@ -44,7 +44,7 @@ class RequestProcessorTest extends ContaoTestCase
     public function testIgnoresSubRequests(string $uri, string $method): void
     {
         $request = Request::create($uri, $method);
-        $event = new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::SUB_REQUEST);
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::SUB_REQUEST);
 
         $processor = new RequestProcessor();
         $processor->onKernelRequest($event);

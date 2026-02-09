@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'name'
 		),
 		'label' => array
@@ -89,8 +89,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
 		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
 		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms;{amg_legend},amg;{cud_legend},cud;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms;{amg_legend},amg;{cud_legend},cud;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -325,14 +325,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
-		'formp' => array
-		(
-			'inputType'               => 'checkbox',
-			'options'                 => array('create', 'delete'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
-		),
 		'amg' => array
 		(
 			'inputType'               => 'checkbox',
@@ -340,6 +332,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+		),
+		'cud' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'cud',
+			'sql'                     => "blob NULL"
 		),
 		'disable' => array
 		(
@@ -444,7 +442,8 @@ class tl_user extends Backend
 		$GLOBALS['TL_DCA'][$dc->table]['palettes'] = array
 		(
 			'__selector__' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'],
-			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login']
+			'login' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login'],
+			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login'],
 		);
 
 		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default'] ?? '');

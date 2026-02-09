@@ -1,4 +1,4 @@
-{% set wrapperAttributes = attrs(cssID)
+{% set wrapperAttributes = attrs(cssID|default)
     .addClass([class, 'block'])
     .addStyle(style|default)
     .mergeWith(wrapperAttributes|default)
@@ -8,13 +8,13 @@
 <div{{ wrapperAttributes }}>
 
     {% if headline|default %}
-        <{{ hl }}>{{ headline }}</{{ hl }}>
+        <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
     {% endif %}
 
     {% if message|default %}
-        {% include "@Contao/form_message.html.twig" %}
+        {{ include('@Contao/form_message.html.twig') }}
     {% else %}
-        {% include "@Contao/form_inline.html.twig" %}
+        {{ include('@Contao/form_inline.html.twig') }}
     {% endif %}
 
 </div>

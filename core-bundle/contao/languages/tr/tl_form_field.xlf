@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.text.0">
         <source>Text</source>
-        <target>Metin</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="tl_form_field.text.1">
         <source>You can use HTML tags to format the text.</source>
-        <target>Metni biçimlendirmek için HTML kod imlerini kullanabilirsiniz.</target>
+        <target>Yazıyı biçimlendirmek için HTML kod imlerini kullanabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.html.0">
         <source>HTML</source>
@@ -167,13 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.1">
         <source>Show this text as long as the field is empty (requires HTML5).</source>
-        <target>Alan boş olduğu sürece bu metni görüntüler (HTML5 gereklidir).</target>
+        <target>Alan boş olduğu sürece bu yazıyı görüntüler (HTML5 gereklidir).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.help.0">
         <source>Help text</source>
+        <target>Yardım içeriği</target>
       </trans-unit>
       <trans-unit id="tl_form_field.help.1">
         <source>Here you can enter a help text that is associated with the field.</source>
+        <target>Buraya alanla ilişkili bir yardım içeriği yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
@@ -205,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxlength.1">
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
-        <target>Alanda belirtilen sayıdan fazla karakter (metin) ya da belirtilen boyuttan büyük (dosya yükleme) olmasını engeller.</target>
+        <target>Alanda belirtilen sayıdan fazla karakter (yazı) ya da belirtilen boyuttan büyük (dosya yükleme) olmasını engeller.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageWidth.0">
         <source>Maximum image width</source>
@@ -311,6 +313,14 @@
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Bu seçenek etkinleştirildiğinde, aynı adlı bir dosya zaten varsa yeni dosyanın adının sonuna bir rakam eklenir.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+        <target>Birden fazla dosyaya izin verilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+        <target>Kullanıcının birden fazla dosyayı yüklemesine izin verir.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
         <target>Varsayılan değer</target>
@@ -353,11 +363,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>
-        <target>Gönder düğmesi metni</target>
+        <target>Gönder düğmesi yazısı</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.1">
         <source>Please enter the label of the submit button.</source>
-        <target>Buraya gönder düğmesinde görüntülenecek metni yazabilirsiniz.</target>
+        <target>Buraya gönder düğmesinde görüntülenecek yazıyı yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.imageSubmit.0">
         <source>Create an image button</source>
@@ -399,6 +409,14 @@
         <source>Hide the footer (ALTCHA link).</source>
         <target>Alt bilgiyi (ALTCHA bağlantısı) gizler.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.0">
+        <source>Floating mode</source>
+        <target>Yüzer kip</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.1">
+        <source>Enable the floating UI.</source>
+        <target>Yüzer arayüzü etkinleştirir.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.autocomplete.0">
         <source>Autocomplete attributes</source>
         <target>Otomatik tamamlama öznitelikleri</target>
@@ -421,7 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.text_legend">
         <source>Text/HTML</source>
-        <target>Metin/HTML</target>
+        <target>Yazı/HTML</target>
       </trans-unit>
       <trans-unit id="tl_form_field.fconfig_legend">
         <source>Field configuration</source>
@@ -481,6 +499,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.copy.1">
         <source>Copy form field ID %s</source>
+        <target>%s kimlikli form alanını kopyala</target>
       </trans-unit>
       <trans-unit id="tl_form_field.delete.1">
         <source>Delete form field ID %s</source>
@@ -500,9 +519,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.3">
         <source>Hide</source>
+        <target>Gizle</target>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.4">
         <source>Unhide</source>
+        <target>Görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
@@ -519,6 +540,10 @@
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
         <target>Seçenekleri bir CSV dosyasından içe aktar</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.tableLabel">
+        <source>Form field</source>
+        <target>Form alanı</target>
       </trans-unit>
     </body>
   </file>

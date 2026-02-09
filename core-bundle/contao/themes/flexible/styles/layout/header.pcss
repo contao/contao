@@ -21,7 +21,7 @@
     color: var(--header-text);
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (resolution >= 2dppx) {
     #header h1 a {
         font-weight: 300;
     }
@@ -36,7 +36,8 @@
     position: relative;
 }
 
-#tmenu a, #tmenu .profile button {
+#tmenu a,
+#tmenu .profile button {
     margin: 0;
     padding: 13px 12px;
     display: inline-block;
@@ -46,7 +47,7 @@
     position: absolute;
     top: 5px;
     left: 20px;
-    font-size: .6rem;
+    font-size: 0.6rem;
     color: var(--header-bg);
     background: var(--header-text);
     padding: 2px;
@@ -70,28 +71,40 @@
     vertical-align: middle;
 }
 
-#tmenu .profile button {
-    position: relative;
-    cursor: pointer;
-    font-size: .875rem;
-    font-weight: 400;
-    border: none;
-    padding-right: 26px;
-    background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
+#tmenu {
+    :is(.profile, .color-scheme) {
+        button {
+            position: relative;
+            cursor: pointer;
+            font-size: 0.875rem;
+            border: none;
+        }
+    }
+
+    .profile button {
+        padding-right: 26px;
+        background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
+    }
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (resolution >= 2dppx) {
     #tmenu .profile button {
         font-weight: 300;
     }
 }
 
-#tmenu a, #tmenu .profile button, #tmenu .burger button {
+#tmenu a,
+#tmenu .profile button,
+#tmenu .burger button {
     color: var(--header-text);
-    transition: background-color .3s ease;
+    transition: background-color 0.3s ease;
 }
 
-#tmenu a:hover, #tmenu a.hover, #tmenu li:hover .profile button, #tmenu .active .profile button, #tmenu .burger button:hover {
+#tmenu a:hover,
+#tmenu a.hover,
+#tmenu li:hover .profile button,
+#tmenu .active .profile button,
+#tmenu .burger button:hover {
     background-color: var(--header-bg-hover);
 }
 
@@ -102,13 +115,13 @@
     margin-top: 5px;
     background: var(--content-bg);
     border: 1px solid var(--content-border);
-    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
     z-index: 4; /* Above .jump-targets */
     color: var(--text);
     text-align: left;
     opacity: 0;
     visibility: hidden;
-    transition: opacity .3s ease, visibility .3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 
     &.active {
         opacity: 1;
@@ -116,23 +129,29 @@
     }
 }
 
-#tmenu ul.menu_level_1 li a {
-    display: block;
-    color: inherit;
-    padding: 6px 20px 6px 40px;
-    white-space: nowrap;
-}
+#tmenu ul.menu_level_1 li {
+    :is(a, button) {
+        display: block;
+        color: inherit;
+        padding: 6px 20px 6px 40px;
+        white-space: nowrap;
 
-#tmenu ul.menu_level_1 li a:hover {
-    background-color: var(--nav-hover-bg);
+        &:hover {
+            background-color: var(--nav-bg-hover);
+        }
+    }
+
+    button {
+        width: 100%;
+        text-align: left;
+        background-color: transparent;
+    }
 }
 
 #tmenu ul.menu_level_1 .info {
     color: var(--info);
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--border);
+    padding: 15px 20px 7px;
     line-height: 1.4;
-    margin-bottom: 9px;
     white-space: nowrap;
 }
 
@@ -141,7 +160,7 @@
     display: block;
 }
 
-#tmenu ul.menu_level_1:before {
+#tmenu ul.menu_level_1::before {
     content: "";
     display: block;
     width: 0;
@@ -153,7 +172,7 @@
     border-bottom-color: var(--content-bg);
 }
 
-#tmenu ul.menu_level_1:after {
+#tmenu ul.menu_level_1::after {
     content: "";
     display: block;
     width: 9px;
@@ -166,19 +185,30 @@
     transform: rotateZ(-45deg);
 }
 
-#tmenu ul.menu_level_1 .logout {
-    margin-top: 9px;
-    padding: 6px 0;
-    border-top: 1px solid var(--border);
+#tmenu ul.menu_level_1 {
+    .separator {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+    }
+
+    .last {
+        padding-bottom: 8px;
+    }
 }
 
-#tmenu .icon-alert, #tmenu .icon-favorite, #tmenu .icon-manual, #tmenu .icon-color-scheme, #tmenu .icon-jobs {
-    width: 16px;
-    margin-bottom: -2px;
-    position: relative;
-    overflow: hidden;
-    white-space: nowrap;
-    text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+#tmenu {
+    .icon-alert,
+    .icon-favorite,
+    .icon-manual,
+    .icon-jobs {
+        width: 16px;
+        margin-bottom: -2px;
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+    }
 }
 
 #tmenu .icon-alert {
@@ -190,7 +220,7 @@
 }
 
 #tmenu .icon-favorite--active {
-    background: var(--icon-favorite--active) center center no-repeat;
+    background: var(--icon-favorite-active) center center no-repeat;
 }
 
 #tmenu .icon-manual {
@@ -201,16 +231,16 @@
     background: var(--icon-jobs) center center no-repeat;
 }
 
-#tmenu .icon-color-scheme {
-    background: var(--icon-color-scheme) center center no-repeat;
-}
-
 #tmenu .icon-profile {
     background: var(--icon-profile) 20px center no-repeat;
 }
 
 #tmenu .icon-security {
     background: var(--icon-security) 20px center no-repeat;
+}
+
+#tmenu .icon-color-scheme {
+    background: var(--icon-color-scheme) 20px center no-repeat;
 }
 
 #tmenu .icon-favorites {

@@ -27,6 +27,7 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -222,7 +223,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $menu
             ->expects($this->once())
             ->method('getFirstChild')
-            ->willReturn($this->createMock(ItemInterface::class))
+            ->willReturn($this->createStub(ItemInterface::class))
         ;
 
         $config = $this->mockPickerConfig('tl_foobar', '', 'tablePicker.'.$current, $expectedCurrent);
@@ -538,11 +539,11 @@ class TablePickerProviderTest extends ContaoTestCase
     private function createTableProvider(ContaoFramework|null $framework = null, RouterInterface|null $router = null, Connection|null $connection = null): TablePickerProvider
     {
         return new TablePickerProvider(
-            $framework ?: $this->createMock(ContaoFramework::class),
-            $this->createMock(FactoryInterface::class),
-            $router ?: $this->createMock(RouterInterface::class),
-            $this->createMock(TranslatorInterface::class),
-            $connection ?: $this->createMock(Connection::class),
+            $framework ?: $this->createStub(ContaoFramework::class),
+            $this->createStub(FactoryInterface::class),
+            $router ?: $this->createStub(RouterInterface::class),
+            $this->createStub(TranslatorInterface::class),
+            $connection ?: $this->createStub(Connection::class),
         );
     }
 
@@ -554,7 +555,7 @@ class TablePickerProviderTest extends ContaoTestCase
         if ($menu) {
             $expectedItems[] = ['picker', []];
         } else {
-            $menu = $this->createMock(ItemInterface::class);
+            $menu = $this->createStub(ItemInterface::class);
         }
 
         foreach ($modules as $module) {
@@ -568,7 +569,7 @@ class TablePickerProviderTest extends ContaoTestCase
                 $module,
                 [
                     'label' => 'MOD.'.$module.'.0',
-                    'linkAttributes' => ['class' => $module],
+                    'linkAttributes' => ['class' => $module.'Picker'],
                     'current' => $current === $module,
                     'uri' => '',
                 ],
@@ -588,21 +589,21 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         return new TablePickerProvider(
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ContaoFramework::class),
             $menuFactory,
             $this->mockRouterWithExpectedParams(...$expectedParams),
             $this->mockTranslatorWithExpectedCalls($modules),
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
         );
     }
 
-    private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array|null $expectedCurrent = null): PickerConfig&MockObject
+    private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array|null $expectedCurrent = null): PickerConfig&Stub
     {
         if (!$expectedCurrent && '' !== $current) {
             $expectedCurrent = [[$current]];
         }
 
-        $config = $this->createMock(PickerConfig::class);
+        $config = $this->createStub(PickerConfig::class);
         $config
             ->method('getContext')
             ->willReturn('dc.'.$table)

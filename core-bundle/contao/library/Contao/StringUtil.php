@@ -534,6 +534,29 @@ class StringUtil
 	}
 
 	/**
+	 * Converts binary UUIDs to string if detected.
+	 * Also supports serialized arrays (e.g. from the fileTree widget).
+	 */
+	public static function ensureStringUuids(mixed $data): mixed
+	{
+		if (!\is_string($data) && !\is_array($data))
+		{
+			return $data;
+		}
+
+		$deserialized = self::deserialize($data);
+
+		if (\is_array($deserialized))
+		{
+			$deserialized = array_map(static fn (mixed $v) => Validator::isBinaryUuid($v) ? self::binToUuid($v) : $v, $deserialized);
+
+			return \is_string($data) ? serialize($deserialized) : $deserialized;
+		}
+
+		return Validator::isBinaryUuid($data) ? self::binToUuid($data) : $data;
+	}
+
+	/**
 	 * Encode a string with Crockford’s Base32 (0123456789ABCDEFGHJKMNPQRSTVWXYZ)
 	 *
 	 * @see StringUtil::decodeBase32()
@@ -1184,7 +1207,7 @@ class StringUtil
 
 		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', \sprintf('%.' . ($precision - 1) . 'e', $number), $match))
 		{
-			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', $number));
+			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', is_nan($number) ? 'NAN' : $number));
 		}
 
 		$significantDigits = rtrim($match[2] . $match[3], '0');

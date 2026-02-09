@@ -13,7 +13,7 @@
             .set('data-contao--toggle-fieldset-table-value', table)
             .set('data-contao--toggle-fieldset-collapsed-class', 'collapsed')
             .set('data-contao--jump-targets-target', 'section', add_jump_targets|default(true))
-            .set('data-contao--jump-targets-label-value', add_jump_targets|default(true) and box.label)
+            .set('data-contao--jump-targets-label-value', box.label, add_jump_targets|default(true) and box.label)
             .set('data-action', 'contao--jump-targets:scrollto->contao--toggle-fieldset#open', add_jump_targets|default(true))
         %}
         <fieldset{{ fieldset_attributes }}>
@@ -24,7 +24,7 @@
             {% endif %}
 
             {% block widget_groups %}
-                {% include "@Contao/backend/data_container/table/edit/_widget_groups.html.twig" with {root: box.widget_groups_tree} %}
+                {{ include('@Contao/backend/data_container/table/edit/_widget_groups.html.twig', {root: box.widget_groups_tree}) }}
             {% endblock %}
         </fieldset>
     {% endblock %}

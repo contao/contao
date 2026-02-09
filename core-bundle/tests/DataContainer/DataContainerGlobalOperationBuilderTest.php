@@ -32,10 +32,10 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->mockContaoFramework(),
-            $this->createMock(Environment::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(Environment::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder->append(['html' => '']);
@@ -50,10 +50,10 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $twig,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
@@ -64,14 +64,14 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
     #[DataProvider('backButtonHrefProvider')]
     public function testBackButtonHref(string|null $href, string $expected): void
     {
-        $systemAdapter = $this->mockAdapter(['getReferer']);
+        $systemAdapter = $this->createAdapterMock(['getReferer']);
         $systemAdapter
             ->expects(null === $href ? $this->once() : $this->never())
             ->method('getReferer')
             ->willReturn($expected)
         ;
 
-        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
+        $framework = $this->createContaoFrameworkStub([System::class => $systemAdapter]);
 
         $twig = $this->createMock(Environment::class);
         $twig
@@ -89,7 +89,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('')
         ;
 
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator = $this->createStub(UrlGeneratorInterface::class);
         $urlGenerator
             ->method('generate')
             ->willReturn('/contao')
@@ -130,16 +130,60 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ];
     }
 
+    public function testAddFilterButton(): void
+    {
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(static fn (array $parameters) => isset($parameters['operations'])
+                    && 1 === \count($parameters['operations'])
+                    && ' style="display: none;"' === (string) $parameters['operations'][0]['listAttributes']
+                    && true === $parameters['operations'][0]['primary'],
+                ),
+            )
+            ->willReturn('')
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->exactly(4))
+            ->method('trans')
+            ->willReturnCallback(
+                static fn (string $id): string => match ($id) {
+                    'DCA.toggleFilter.0' => 'Filter',
+                    'DCA.toggleFilter.1' => 'Show the filters',
+                    'DCA.toggleFilter.2' => 'Hide the filters',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
+                },
+            )
+        ;
+
+        $builder = new DataContainerGlobalOperationsBuilder(
+            $this->createContaoFrameworkStub(),
+            $twig,
+            $this->createStub(UrlGeneratorInterface::class),
+            $translator,
+        );
+
+        $builder = $builder->initialize('tl_foo');
+        $builder->addFilterButton();
+
+        $this->assertSame('', (string) $builder);
+    }
+
     public function testAddClearClipboardButton(): void
     {
-        $backendAdapter = $this->mockAdapter(['addToUrl']);
+        $backendAdapter = $this->createAdapterMock(['addToUrl']);
         $backendAdapter
             ->expects($this->once())
             ->method('addToUrl')
             ->willReturnArgument(0)
         ;
 
-        $framework = $this->mockContaoFramework([Backend::class => $backendAdapter]);
+        $framework = $this->createContaoFrameworkStub([Backend::class => $backendAdapter]);
 
         $twig = $this->createMock(Environment::class);
         $twig
@@ -164,7 +208,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('Clear Clipboard')
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $this->createMock(UrlGeneratorInterface::class), $translator);
+        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $this->createStub(UrlGeneratorInterface::class), $translator);
         $builder = $builder->initialize('tl_foo');
         $builder->addClearClipboardButton();
 
@@ -190,17 +234,17 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('')
         ;
 
-        $backendAdapter = $this->mockAdapter(['addToUrl']);
+        $backendAdapter = $this->createAdapterStub(['addToUrl']);
         $backendAdapter
             ->method('addToUrl')
             ->willReturnArgument(0)
         ;
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->mockContaoFramework([Backend::class => $backendAdapter, Input::class => $this->mockAdapter(['get'])]),
+            $this->createContaoFrameworkStub([Backend::class => $backendAdapter, Input::class => $this->createAdapterStub(['get'])]),
             $twig,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
@@ -224,14 +268,14 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->mockContaoFramework(),
+            $this->createContaoFrameworkStub(),
             $twig,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
-        $builder->addGlobalButtons($this->createMock(DataContainer::class));
+        $builder->addGlobalButtons($this->createStub(DataContainer::class));
 
         $this->assertSame('', (string) $builder);
 
@@ -243,26 +287,26 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_foo'] = $dca;
 
-        $inputAdapter = $this->mockAdapter(['get']);
+        $inputAdapter = $this->createAdapterStub(['get']);
         $inputAdapter
             ->method('get')
             ->with('act')
             ->willReturn($selectView ? 'select' : '')
         ;
 
-        $backendAdapter = $this->mockAdapter(['addToUrl']);
+        $backendAdapter = $this->createAdapterStub(['addToUrl']);
         $backendAdapter
             ->method('addToUrl')
             ->willReturnCallback(static fn (string $href, $blnAddRef, $arrUnset, $addRequestToken) => '/contao?'.$href.($addRequestToken ? '&rt=1234' : ''))
         ;
 
-        $controllerAdapter = $this->mockAdapter(['addAssetsUrlTo']);
+        $controllerAdapter = $this->createAdapterStub(['addAssetsUrlTo']);
         $controllerAdapter
             ->method('addAssetsUrlTo')
             ->willReturnArgument(0)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             Input::class => $inputAdapter,
             Backend::class => $backendAdapter,
             Controller::class => $controllerAdapter,
@@ -290,11 +334,11 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             $framework,
             $twig,
             $urlGenerator,
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
-        $builder->addGlobalButtons($this->createMock(DataContainer::class));
+        $builder->addGlobalButtons($this->createStub(DataContainer::class));
 
         $this->assertSame('', (string) $builder);
 
@@ -372,10 +416,10 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(Environment::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(ContaoFramework::class),
+            $this->createStub(Environment::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');

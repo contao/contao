@@ -39,6 +39,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'permissions'                 => array(),
 		'onload_callback' => array
 		(
 			array('tl_article', 'adjustDca'),
@@ -63,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_TREE_EXTENDED,
-			'panelLayout'             => 'filter;search',
+			'panelLayout'             => 'search,filter',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array

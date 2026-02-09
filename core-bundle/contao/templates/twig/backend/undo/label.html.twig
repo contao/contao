@@ -1,4 +1,4 @@
-{% trans_default_domain "contao_tl_undo" %}
+{% trans_default_domain 'contao_tl_undo' %}
 
 <div class="tl_undo_header">
     <div class="tstamp">
@@ -19,7 +19,7 @@
 </div>
 
 {% if preview is not empty %}
-    <div class="tl_undo_preview">
+    <div class="tl_undo_preview" inert>
         {% if preview is not iterable %}
             {{ preview|sanitize_html('contao') }}
         {% else %}

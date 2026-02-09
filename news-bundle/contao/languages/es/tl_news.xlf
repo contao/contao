@@ -318,12 +318,12 @@
         <target>Publicar noticia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
-        <source>Publish</source>
-        <target>Publicar</target>
-      </trans-unit>
-      <trans-unit id="tl_news.toggle.4">
         <source>Unpublish</source>
         <target>Anular publicación</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Publish</source>
+        <target>Publicar</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -348,6 +348,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Pegar dentro de este nuevo archivo</target>
+      </trans-unit>
+      <trans-unit id="tl_news.tableLabel">
+        <source>News</source>
+        <target>Noticias</target>
       </trans-unit>
     </body>
   </file>

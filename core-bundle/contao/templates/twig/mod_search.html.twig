@@ -1,4 +1,4 @@
-{% extends "@Contao/block_unsearchable.html.twig" %}
+{% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
 
@@ -24,7 +24,7 @@
     </form>
 
     {% if header|default %}
-        <p class="header">{{ header }}</p>
+        <p class="header">{{ header|raw }}</p>
         {% if keywordHint|default %}
             <p class="info">{{ keywordHint }}</p>
         {% endif %}

@@ -73,6 +73,10 @@
         <source>Allowed member groups</source>
         <target>Erlaubte Mitgliedergruppen</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+        <target>Tabellenrechte</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Erlaubte Felder</target>
@@ -124,6 +128,10 @@
       <trans-unit id="tl_user_group.toggle.4">
         <source>Activate</source>
         <target>Aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+        <target>Benutzergruppe</target>
       </trans-unit>
     </body>
   </file>

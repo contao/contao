@@ -113,6 +113,22 @@
         <source>Activate</source>
         <target>Activar</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>Destinatario del boletín</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>Bloque</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>Bloquear el ID %s del destinatario</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>¿Realmente desea bloquear el ID de destinatario %s?</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

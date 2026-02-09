@@ -3,7 +3,7 @@
     <h1>{{ title }}</h1>
 
     {% if recurring %}
-        <p class="info recurring">{{ recurring }}</p>
+        <p class="info recurring">{{ recurring|raw }}</p>
     {% else %}
         <p class="info"><time datetime="{{ datetime }}">{{ date }}{% if time %} {{ time }}{% endif %}</time></p>
     {% endif %}
@@ -21,7 +21,7 @@
             {% endif %}
 
             {% if addImage %}
-                {% include "@Contao/image.html.twig" %}
+                {{ include('@Contao/image.html.twig') }}
             {% endif %}
 
             {% if addBefore %}

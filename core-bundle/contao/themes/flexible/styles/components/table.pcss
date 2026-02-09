@@ -1,4 +1,5 @@
-table.with-border th, table.with-border td {
+table.with-border th,
+table.with-border td {
     border: solid var(--border);
     border-width: 1px 0;
 }
@@ -7,18 +8,19 @@ table.with-border th {
     background-color: var(--table-header);
 }
 
-table.with-padding th, table.with-padding td {
+table.with-padding th,
+table.with-padding td {
     padding: 6px;
 }
 
 table.with-zebra th {
-    background-color: var(--table-nb-header);
+    background-color: var(--table-header);
 }
 
 table.with-zebra tbody tr:nth-child(odd) td {
-    background-color: var(--table-nb-odd);
+    background-color: var(--table-odd);
 }
 
 table.with-zebra tbody tr:nth-child(even) td {
-    background-color: var(--table-nb-even);
+    background-color: var(--table-even);
 }

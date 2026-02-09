@@ -28,23 +28,21 @@ class BackendFavoritesListener
     }
 
     #[AsCallback(table: 'tl_favorites', target: 'config.onload')]
-    public function enableEditing(): void
+    public function loadDefaults(): void
     {
         $user = $this->security->getUser();
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         // Always filter the favorites by user
         $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter'][] = ['user = ?', $userId];
+        $GLOBALS['TL_DCA']['tl_favorites']['fields']['user']['default'] = $userId;
 
         if (!$request = $this->requestStack->getCurrentRequest()) {
             return;
         }
 
-        // Allow adding new favorites
-        if ('create' === $request->query->get('act') && ($data = $request->query->get('data'))) {
-            $GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable'] = false;
+        if ($data = $request->query->get('data')) {
             $GLOBALS['TL_DCA']['tl_favorites']['fields']['url']['default'] = base64_decode($data, true);
-            $GLOBALS['TL_DCA']['tl_favorites']['fields']['user']['default'] = $userId;
         }
     }
 
@@ -53,7 +51,7 @@ class BackendFavoritesListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if ($request && $request->query->get('return') && $request->request->has('saveNclose')) {
+        if ($request?->query->get('return') && $request->request->has('saveNclose')) {
             throw new RedirectResponseException($dc->getCurrentRecord()['url']);
         }
     }

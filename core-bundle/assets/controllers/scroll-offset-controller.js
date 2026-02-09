@@ -125,10 +125,11 @@ export default class extends Controller {
 
         this.#autoFocus = true;
         input.focus();
-    }
 
-    autoFocusTargetDisconnected() {
-        this.#autoFocus = false;
+        requestAnimationFrame(() => {
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        });
     }
 
     widgetErrorTargetConnected() {
@@ -155,7 +156,7 @@ export default class extends Controller {
     get offset() {
         const value = window.sessionStorage.getItem(this.sessionKeyValue);
 
-        return value ? Number.parseInt(value) : null;
+        return value ? Number.parseInt(value, 10) : null;
     }
 
     set offset(value) {

@@ -1,4 +1,4 @@
-{% extends "@Contao/block_searchable.html.twig" %}
+{% extends '@Contao/block_searchable.html.twig' %}
 
 {% set wrapperAttributes = attrs()
     .addClass('ce_text')
@@ -10,6 +10,6 @@
 {% block content %}
 
     {{ text|default|sanitize_html('contao')|csp_inline_styles|encode_email|insert_tag_raw }}
-    <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }}<span class="invisible"> {{ headline }}</span></a></p>
+    <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ more }}<span class="invisible"> {{ headline|insert_tag_raw }}</span></a></p>
 
 {% endblock %}

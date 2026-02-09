@@ -15,7 +15,6 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Input;
-use Contao\StringUtil;
 use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_form'] = array
@@ -28,18 +27,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'enableVersioning'            => true,
 		'ctable'                      => array('tl_form_field'),
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_form', 'adjustDca')
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_form', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_form', 'adjustPermissions')
-		),
+		'userRoot'                    => 'forms',
 		'sql' => array
 		(
 			'keys' => array
@@ -59,7 +47,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
@@ -250,118 +238,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
  */
 class tl_form extends Backend
 {
-	/**
-	 *  Set the root IDs.
-	 */
-	public function adjustDca()
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->forms) || !is_array($user->forms))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->forms;
-		}
-
-		$GLOBALS['TL_DCA']['tl_form']['list']['sorting']['root'] = $root;
-	}
-
-	/**
-	 * Add the new form to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->forms) || !is_array($user->forms))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->forms;
-		}
-
-		// The form is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
-		{
-			$db = Database::getInstance();
-
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, forms, formp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrFormp = StringUtil::deserialize($objGroup->formp);
-
-					if (is_array($arrFormp) && in_array('create', $arrFormp))
-					{
-						$arrForms = StringUtil::deserialize($objGroup->forms, true);
-						$arrForms[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET forms=? WHERE id=?")->execute(serialize($arrForms), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT forms, formp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrFormp = StringUtil::deserialize($objUser->formp);
-
-				if (is_array($arrFormp) && in_array('create', $arrFormp))
-				{
-					$arrForms = StringUtil::deserialize($objUser->forms, true);
-					$arrForms[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET forms=? WHERE id=?")->execute(serialize($arrForms), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->forms = $root;
-		}
-	}
-
 	/**
 	 * Auto-generate a form alias if it has not been set yet
 	 *

@@ -293,7 +293,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchAssociative')
             ->willReturnCallback(
@@ -543,7 +543,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
         ];
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchAssociative')
             ->willReturn(['Value' => null])

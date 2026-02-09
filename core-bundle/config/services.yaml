@@ -71,6 +71,19 @@ services:
             - '@translator'
             - '@contao.intl.locales'
 
+    contao.content_composition:
+        class: Contao\CoreBundle\ContentComposition\ContentComposition
+        arguments:
+            - '@contao.framework'
+            - '@monolog.logger.contao.error'
+            - '@contao.image.picture_factory'
+            - '@contao.image.preview_factory'
+            - '@contao.assets.assets_context'
+            - '@contao.twig.default_renderer'
+            - '@request_stack'
+            - '@translator'
+            - '@contao.routing.page_registry'
+
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
@@ -233,6 +246,14 @@ services:
             - '@contao.translation.translator'
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
+            - '@database_connection'
+            - '@contao.csrf.token_manager'
+
+    contao.data_container.foreign_key_parser:
+        class: Contao\CoreBundle\DataContainer\ForeignKeyParser
+        public: true
+        arguments:
+            - '@database_connection'
 
     contao.data_container.global_operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder
@@ -266,6 +287,21 @@ services:
         public: true
         arguments:
             - '@event_dispatcher'
+
+    contao.data_container.value_formatter:
+        class: Contao\CoreBundle\DataContainer\ValueFormatter
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@contao.data_container.foreign_key_parser'
+            - '@translator'
+
+    contao.data_container.virtual_fields_handler:
+        class: Contao\CoreBundle\DataContainer\VirtualFieldsHandler
+        public: true
+        arguments:
+            - '@contao.framework'
 
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
@@ -648,6 +684,7 @@ services:
             - '@security.helper'
             - '@contao.filesystem.virtual.job-attachments'
             - '@router'
+            - '@messenger.bus.default'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -670,6 +707,7 @@ services:
             - '@knp_menu.factory'
             - '@event_dispatcher'
         tags:
+            - { name: knp_menu.menu_builder, method: buildBreadcrumbMenu, alias: be_breadcrumb_menu }
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
             - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
             - { name: knp_menu.menu_builder, method: buildLoginMenu, alias: be_login_menu }
@@ -682,6 +720,15 @@ services:
         public: true
         arguments:
             - '@contao.menu.matcher'
+
+    contao.messenger.crawl_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\CrawlMessageHandler
+        arguments:
+            - '@contao.crawl.escargot.factory'
+            - '@contao.job.jobs'
+            - '@messenger.bus.default'
+            - '%kernel.project_dir%'
+            - '%contao.backend.crawl_concurrency%'
 
     contao.messenger.search_index_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\SearchIndexMessageHandler
@@ -1095,6 +1142,14 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.dca_permission_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DcaPermissionVoter
+        arguments:
+            - '@contao.framework'
+            - '@security.access.decision_manager'
+        tags:
+            - { name: security.voter, priority: -128 }
+
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
 
@@ -1162,8 +1217,13 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.user_profile_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\UserProfileVoter
+
     contao.security.default_data_container_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
+        arguments:
+            - '@security.access.decision_manager'
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
@@ -1183,6 +1243,11 @@ services:
         arguments:
             - '@contao.framework'
             - Contao\FrontendUser
+
+    contao.security.legacy_backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao.security.login_authenticator:
         class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
@@ -1339,8 +1404,13 @@ services:
             - '@contao.csp.wysiwyg_style_processor'
             - '@?nelmio_security.csp.runtime'
 
-    contao.twig.defer.renderer:
-        class: Contao\CoreBundle\Twig\Defer\Renderer
+    contao.twig.default_renderer:
+        class: Contao\CoreBundle\Twig\Renderer\DefaultRenderer
+        arguments:
+            - '@twig'
+
+    contao.twig.deferred_renderer:
+        class: Contao\CoreBundle\Twig\Renderer\DeferredRenderer
         arguments:
             - '@twig'
 
@@ -1384,8 +1454,6 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.cache_dir%'
-            - '%kernel.environment%'
 
     contao.twig.finder_factory:
         class: Contao\CoreBundle\Twig\Finder\FinderFactory
@@ -1414,6 +1482,17 @@ services:
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
+
+    contao.twig.ide.namespace_lookup_file_generator:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileGenerator
+        arguments:
+            - '@contao.twig.filesystem_loader'
+
+    contao.twig.ide.namespace_lookup_file_warmer:
+        class: Contao\CoreBundle\Twig\Ide\NamespaceLookupFileWarmer
+        arguments:
+            - '@contao.twig.ide.namespace_lookup_file_generator'
+            - '%kernel.environment%'
 
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime
@@ -1495,9 +1574,11 @@ services:
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
+    Contao\CoreBundle\ContentComposition\ContentComposition: '@contao.content_composition'
     Contao\CoreBundle\Csp\WysiwygStyleProcessor: '@contao.csp.wysiwyg_style_processor'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\DataContainer\DcaUrlAnalyzer: '@contao.data_container.dca_url_analyzer'
+    Contao\CoreBundle\DataContainer\ForeignKeyParser: '@contao.data_container.foreign_key_parser'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'

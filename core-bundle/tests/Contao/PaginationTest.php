@@ -55,26 +55,25 @@ class PaginationTest extends TestCase
     {
         $currentPage = $data['currentPage'] ?? 1;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request(['page' => $currentPage]));
+        $requestStack = new RequestStack([new Request(['page' => $currentPage])]);
 
         System::getContainer()->set('request_stack', $requestStack);
 
-        $input = $this->mockAdapter(['get']);
+        $input = $this->createAdapterStub(['get']);
         $input
             ->method('get')
             ->with('page')
             ->willReturn($currentPage)
         ;
 
-        $framework = $this->mockContaoFramework([
-            Environment::class => $this->mockAdapter(['requestUri', 'queryString']),
+        $framework = $this->createContaoFrameworkStub([
+            Environment::class => $this->createAdapterStub(['requestUri', 'queryString']),
             Input::class => $input,
         ]);
 
         System::getContainer()->set('contao.framework', $framework);
 
-        $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createMock(FrontendTemplate::class));
+        $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createStub(FrontendTemplate::class));
         $items = $pagination->getItemsAsArray();
 
         $this->assertCount($data['expectedCount'], $items);

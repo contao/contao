@@ -1,4 +1,4 @@
-{% extends "@Contao/block_unsearchable.html.twig" %}
+{% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
 
@@ -9,7 +9,7 @@
 
         {% if splashImage|default %}
             <a id="splashImage_{{ id }}" href="{{ src }}">
-                {% include "@Contao/picture_default.html.twig" with splashImage.picture %}
+                {{ include('@Contao/picture_default.html.twig', splashImage.picture, false) }}
             </a>
             <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
                 document.getElementById('splashImage_{{ id|e('js') }}').addEventListener('click', function(e) {

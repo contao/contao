@@ -1,9 +1,14 @@
-{% extends "@Contao/form_row.html.twig" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
-{% trans_default_domain "contao_default" %}
+{% extends '@Contao/form_row.html.twig' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
+{% trans_default_domain 'contao_default' %}
+
+{% set wrapperAttributes = attrs()
+    .addClass('altcha-hidden', this.altchaFloating|default)
+    .mergeWith(wrapperAttributes|default)
+%}
 
 {% block label %}
-    {% if this.label %}
+    {% if this.label and not this.altchaFloating|default %}
         <label for="ctrl_{{ this.id }}"{% if this.class|default %} class="{{ this.class|default }}"{% endif %}>
             <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
         </label>
@@ -19,11 +24,11 @@
     {% if not this.canUseAltcha %}
         <p class="error">{{ 'ERR.altchaInsecureConnection'|trans }}</p>
     {% else %}
-        {% add "altcha" to stylesheets %}
-            {% with {file: asset('css/altcha.min.css', 'contao-components/altcha') } %}{{ block('stylesheet_component') }}{% endwith %}
+        {% add 'altcha' to stylesheets %}
+            {% with {file: asset('css/altcha.min.css', 'contao-components/altcha')} %}{{ block('stylesheet_component') }}{% endwith %}
         {% endadd %}
 
-        {% add "altcha" to body %}
+        {% add 'altcha' to body %}
             <script src="{{ asset('js/altcha.min.js', 'contao-components/altcha') }}" type="module"></script>
         {% endadd %}
 

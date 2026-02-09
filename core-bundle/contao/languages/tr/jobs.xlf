@@ -1,18 +1,29 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/jobs.php" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="jobs.tstamp.0">
+      <trans-unit id="jobs.created_at.0">
         <source>Created at</source>
         <target>Oluşturulma</target>
       </trans-unit>
+      <trans-unit id="jobs.progress.0">
+        <source>Progress</source>
+        <target>İlerleme</target>
+      </trans-unit>
       <trans-unit id="jobs.status.0">
         <source>Status</source>
+        <target>Durum</target>
       </trans-unit>
       <trans-unit id="jobs.owner.0">
         <source>Initiated by</source>
+        <target>Başlatan</target>
+      </trans-unit>
+      <trans-unit id="jobs.attachments.0">
+        <source>Attachments</source>
+        <target>Ek dosyalar</target>
       </trans-unit>
       <trans-unit id="jobs.type.0">
         <source>Type</source>
+        <target>Tür</target>
       </trans-unit>
       <trans-unit id="jobs.statusLabel.new">
         <source>New</source>
@@ -20,15 +31,23 @@
       </trans-unit>
       <trans-unit id="jobs.statusLabel.pending">
         <source>Pending</source>
+        <target>Bekliyor</target>
       </trans-unit>
       <trans-unit id="jobs.statusLabel.completed">
         <source>Completed</source>
+        <target>Tamamlandı</target>
       </trans-unit>
-      <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
+      <trans-unit id="jobs.type_label.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
+        <target>Yönetim bölümü arama dizinini yeniden oluştur</target>
+      </trans-unit>
+      <trans-unit id="jobs.type_label.crawl">
+        <source>Crawling the website</source>
+        <target>Site derleniyor</target>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>
+        <target>Tüm görevler işlendi.</target>
       </trans-unit>
     </body>
   </file>

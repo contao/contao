@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Twig\Error\LoaderError;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
@@ -38,7 +40,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
 
     public function parse(Token $token): IncludeNode
     {
-        $nameExpression = $this->parser->getExpressionParser()->parseExpression();
+        $nameExpression = $this->parser->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
         // Handle Contao includes
@@ -69,7 +71,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         $variables = null;
 
         if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
-            $variables = $this->parser->getExpressionParser()->parseExpression();
+            $variables = $this->parser->parseExpression();
         }
 
         $only = false;
@@ -86,7 +88,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     /**
      * Returns a Node if the given $node should be replaced, null otherwise.
      */
-    private function traverseAndAdjustTemplateNames(Node $node, bool $ignoreMissing): Node|null
+    private function traverseAndAdjustTemplateNames(Node $node, bool $ignoreMissing): AbstractExpression|null
     {
         if (!$node instanceof ConstantExpression) {
             foreach ($node as $name => $child) {
@@ -96,11 +98,11 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
                     }
 
                     $this->traverseAndAdjustTemplateNames($child, $ignoreMissing);
-                } catch (\LogicException $e) {
+                } catch (LoaderError $e) {
                     // Allow missing templates if they are listed in an array like "{% include
                     // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
-                        throw $e;
+                        throw new LoaderError('Optional templates are only supported in array notation.', $node->getTemplateLine(), $node->getSourceContext(), $e);
                     }
                 }
             }
@@ -122,7 +124,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
                 return null;
             }
 
-            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
+            throw new LoaderError($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', $node->getTemplateLine(), $node->getSourceContext(), $e);
         }
 
         return new RuntimeThemeDependentExpression($allFirstByThemeSlug);
