@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\ArticleModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\DataContainer;
@@ -26,6 +27,7 @@ class ArticleColumnListener
     public function __construct(
         private readonly Inspector $inspector,
         private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
     ) {
     }
 
@@ -42,17 +44,21 @@ class ArticleColumnListener
             return $value;
         }
 
-        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->loadDetails()->layout)) {
-            return $value;
-        }
+        if (!$template = $this->pageRegistry->getRoute($page)->getDefault('_template')) {
+            if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->loadDetails()->layout)) {
+                return $value;
+            }
 
-        if ('modern' !== $layout->type) {
-            return $value;
+            if ('modern' !== $layout->type) {
+                return $value;
+            }
+
+            $template = $layout->template;
         }
 
         try {
             $slots = $this->inspector
-                ->inspectTemplate("@Contao/$layout->template.html.twig")
+                ->inspectTemplate("@Contao/$template.html.twig")
                 ->getSlots()
             ;
         } catch (InspectionException) {
