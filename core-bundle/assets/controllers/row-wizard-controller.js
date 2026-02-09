@@ -104,7 +104,7 @@ export default class extends Controller {
     updateNesting(i) {
         const name = this.nameValue.replace(/\d+$/, i);
 
-        this.bodyTarget.querySelectorAll(`[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`).forEach((el) => {
+        this.bodyTarget.querySelectorAll(`[for*=${this.nameValue}\\[], [name^=${this.nameValue}\\[]`).forEach((el) => {
             if (el.name) {
                 el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
             }
@@ -116,7 +116,7 @@ export default class extends Controller {
             if (el.getAttribute('for')) {
                 el.setAttribute(
                     'for',
-                    el.getAttribute('for').replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`),
+                    el.getAttribute('for').replace(new RegExp(`*${this.nameValue}_`, 'g'), `${name}_`),
                 );
             }
         });
@@ -130,7 +130,7 @@ export default class extends Controller {
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `[for^=${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
+                `[for*=${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
             )) {
                 if (el.name) {
                     el.name = el.name.replace(regexPattern, `${this.nameValue}[${i}]`);
