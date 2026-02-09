@@ -47,7 +47,7 @@ class ValueFormatterTest extends TestCase
                 ->expects($this->atLeastOnce())
                 ->method('parse')
                 ->willReturnMap(array_map(
-                    static fn ($v) => [$dca['eval']['rgxp'].'Format', $v, $dca['eval']['rgxp'].': '.date('c', (int) $v)],
+                    static fn ($v) => [$dca['eval']['rgxp'].'Format', (int) $v, $dca['eval']['rgxp'].': '.date('c', (int) $v)],
                     (array) ($rawValues ?? $value),
                 ))
             ;
