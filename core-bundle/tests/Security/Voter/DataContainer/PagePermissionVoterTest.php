@@ -76,7 +76,7 @@ class PagePermissionVoterTest extends TestCase
     }
 
     #[DataProvider('voterProvider')]
-    public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
+    public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null, array|null $pagemountTrail = null): void
     {
         array_unshift($decisions, [['ROLE_ADMIN'], null, false]);
 
@@ -89,7 +89,7 @@ class PagePermissionVoterTest extends TestCase
             },
         );
 
-        $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
+        $framework = $this->mockContaoFrameworkWithDatabase($pagemounts, $pagemountTrail);
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
@@ -540,12 +540,28 @@ class PagePermissionVoterTest extends TestCase
             true,
         ];
 
+        yield 'Can read trail page' => [
+            new ReadAction('tl_page', ['id' => 42]),
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
+            ],
+            true,
+            [1, 2, 3],
+            [
+                [1, 'tl_page', [41]],
+                [2, 'tl_page', [42]],
+                [3, 'tl_page', [43]],
+            ],
+        ];
+
         yield 'Cannot read page' => [
             new ReadAction('tl_page', ['id' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
+            [1],
+            [[1, 'tl_page', [2]]],
         ];
 
         yield 'Can read article' => [
@@ -935,11 +951,11 @@ class PagePermissionVoterTest extends TestCase
         return $token;
     }
 
-    private function mockContaoFrameworkWithDatabase(array|null $pagemounts = null): ContaoFramework&Stub
+    private function mockContaoFrameworkWithDatabase(array|null $pagemounts = null, array|null $pagemountTrail = null): ContaoFramework&Stub
     {
         $database = $this->createMock(Database::class);
 
-        if (null === $pagemounts) {
+        if (null === $pagemounts || null !== $pagemountTrail) {
             $database
                 ->expects($this->never())
                 ->method('getChildRecords')
@@ -950,6 +966,19 @@ class PagePermissionVoterTest extends TestCase
                 ->method('getChildRecords')
                 ->with($pagemounts, 'tl_page', false, $pagemounts)
                 ->willReturn($pagemounts)
+            ;
+        }
+
+        if (null === $pagemountTrail) {
+            $database
+                ->expects($this->never())
+                ->method('getParentRecords')
+            ;
+        } else {
+            $database
+                ->expects($this->exactly(\count($pagemountTrail)))
+                ->method('getParentRecords')
+                ->willReturnMap($pagemountTrail)
             ;
         }
 
