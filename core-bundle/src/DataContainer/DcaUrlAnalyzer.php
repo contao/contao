@@ -52,7 +52,7 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string, label: string}>|null, treeSiblings: list<array{url: string, label: string, active: bool}>|null}>
+     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
      */
     public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false): array
     {
@@ -127,7 +127,7 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string, label: string}>|null, treeSiblings: list<array{url: string, label: string, active: bool}>|null}>
+     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
      */
     private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail): array
     {
@@ -485,18 +485,20 @@ class DcaUrlAnalyzer
             while ($id && $row = $this->getCurrentRecord($id, $table)) {
                 $pn = (int) $row['id'];
 
-                if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $pn)) {
-                    $pn = 0;
-                }
+                $link = [
+                    'url' => null,
+                    'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                ];
 
-                $links[] = [
-                    'url' => $this->router->generate('contao_backend', [
+                if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $pn)) {
+                    $link['url'] = $this->router->generate('contao_backend', [
                         ...$query,
                         'pn' => $pn,
                         'rt' => $this->tokenManager->getDefaultTokenValue(),
-                    ]),
-                    'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
-                ];
+                    ]);
+                }
+
+                $links[] = $link;
 
                 $id = (int) $row['pid'];
             }
