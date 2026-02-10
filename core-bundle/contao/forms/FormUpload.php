@@ -116,7 +116,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 	public function validate()
 	{
 		// No file specified
-		if (!isset($_FILES[$this->strName]) || empty($_FILES[$this->strName]['name']))
+		if (!isset($_FILES[$this->strName]) || (\is_array($_FILES[$this->strName]['name']) ? empty(array_filter($_FILES[$this->strName]['name'])) : empty($_FILES[$this->strName]['name'])))
 		{
 			if ($this->mandatory)
 			{
@@ -135,7 +135,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 
 		$files = $_FILES[$this->strName];
 		$uploadedFiles = array();
-		$fileCount = \is_array($files['name']) ? \count($files['name']) : 1;
+		$fileCount = \is_array($files['name']) ? \count(array_filter($files['name'])) : 1;
 		$maxlength_kb = $this->getMaximumUploadSize();
 		$maxlength_kb_readable = $this->getReadableSize($maxlength_kb);
 
