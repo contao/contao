@@ -208,14 +208,14 @@ class UserRootListener implements ResetInterface
         $this->updatePermission('tl_user_group', 'g', $rootField, $canEditGroups, $value, $recordId);
     }
 
-    private function updatePermission(string $table, string $prefix, string $rootField, bool $canEdit, array $selection, int $recordId): void
+    private function updatePermission(string $table, string $prefix, string $rootField, bool $canEdit, array $selection, int $rootId): void
     {
         $records = $this->fetchRecords($table, $prefix, null, $canEdit);
 
         foreach ($records as $record) {
             $root = (array) StringUtil::deserialize($record[$rootField], true);
-            $isEnabled = \in_array($prefix.$record['id'], $selection, true);
-            $isActive = \in_array($record['id'], $root, false);
+            $isEnabled = \in_array($prefix.$rootId, $selection, true);
+            $isActive = \in_array($rootId, $root, false);
 
             // Permission is already correct
             if (($isEnabled && $isActive) || (!$isEnabled && !$isActive)) {
@@ -223,9 +223,9 @@ class UserRootListener implements ResetInterface
             }
 
             if ($isEnabled) {
-                $root[] = $recordId;
+                $root[] = $rootId;
             } else {
-                $root = array_diff($root, [$recordId]);
+                $root = array_diff($root, [$rootId]);
             }
 
             $new = [$rootField => serialize($root)];
