@@ -24,7 +24,7 @@
         .addClass('upload')
         .addClass(this.class|default)
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
-        .set('multiple', this.multipleFiles|default)
+        .set('multiple', true, this.multipleFiles|default)
         .mergeWith(getAttributes.invoke())
     }}>
 
