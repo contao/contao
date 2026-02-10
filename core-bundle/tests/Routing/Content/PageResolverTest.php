@@ -73,7 +73,6 @@ class PageResolverTest extends TestCase
         ;
 
         $resolver = new PageResolver($this->createContaoFrameworkStub([PageModel::class => $pageAdapter]));
-
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());
