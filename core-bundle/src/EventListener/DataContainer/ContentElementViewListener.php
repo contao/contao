@@ -97,7 +97,7 @@ class ContentElementViewListener
         $label = $this->translator->trans($transId, [], 'contao_default');
 
         if ($transId === $label) {
-            $label = $row['type'];
+            $label = $this->translator->trans("CTE.$row[type].0", [], 'contao_default');
         }
 
         // Add the ID of the aliased element

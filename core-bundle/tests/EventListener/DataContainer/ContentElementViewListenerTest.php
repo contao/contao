@@ -98,74 +98,74 @@ class ContentElementViewListenerTest extends TestCase
     {
         yield [
             ['type' => 'text'],
-            'text',
+            'CTE.text.0',
             'published',
         ];
 
         yield [
             ['type' => 'text', 'invisible' => true],
-            'text',
+            'CTE.text.0',
             'unpublished',
         ];
 
         yield [
             ['type' => 'alias', 'cteAlias' => 42],
-            'alias ID 42',
+            'CTE.alias.0 ID 42',
             'published',
         ];
 
         yield [
-            ['type' => 'text', 'title' => 'foobar'],
-            'foobar <span class="tl_gray">[text]</span>',
+            ['type' => 'text', 'title' => 'Foobar'],
+            'Foobar <span class="tl_gray">[CTE.text.0]</span>',
             'published',
         ];
 
         yield [
             ['type' => 'text', 'sectionHeadline' => ['value' => 'foobar', 'unit' => 'h1']],
-            'text',
+            'CTE.text.0',
             'published',
             '<h1>foobar</h1>',
         ];
 
         yield [
-            ['type' => 'text', 'protected' => true],
-            'protected.svg text <span class="tl_gray">(MSC.protected)</span>',
+            ['type' => 'text', 'protected' => true, 'groups' => []],
+            'protected.svg CTE.text.0 <span class="tl_gray">(MSC.protected)</span>',
             'published',
         ];
 
         yield [
             ['type' => 'text', 'protected' => true, 'groups' => [-1]],
-            'protected.svg text <span class="tl_gray">(MSC.protected: MSC.guests)</span>',
+            'protected.svg CTE.text.0 <span class="tl_gray">(MSC.protected: MSC.guests)</span>',
             'published',
         ];
 
         yield [
             ['type' => 'headline', 'headline' => ['value' => '', 'unit' => 'h1']],
-            'headline (h1)',
+            'CTE.headline.0 (h1)',
             'published',
         ];
 
         yield [
-            ['type' => 'headline', 'headline' => ['value' => '', 'unit' => 'h1'], 'title' => 'foobar'],
-            'foobar <span class="tl_gray">[headline (h1)]</span>',
+            ['type' => 'headline', 'headline' => ['value' => '', 'unit' => 'h1'], 'title' => 'Foobar'],
+            'Foobar <span class="tl_gray">[CTE.headline.0 (h1)]</span>',
             'published',
         ];
 
         yield [
             ['type' => 'text', 'start' => 1],
-            'text <span class="tl_gray">(MSC.showFrom)</span>',
+            'CTE.text.0 <span class="tl_gray">(MSC.showFrom)</span>',
             'published',
         ];
 
         yield [
             ['type' => 'text', 'stop' => 1],
-            'text <span class="tl_gray">(MSC.showTo)</span>',
+            'CTE.text.0 <span class="tl_gray">(MSC.showTo)</span>',
             'published',
         ];
 
         yield [
             ['type' => 'text', 'start' => 1, 'stop' => 1],
-            'text <span class="tl_gray">(MSC.showFromTo)</span>',
+            'CTE.text.0 <span class="tl_gray">(MSC.showFromTo)</span>',
             'published',
         ];
     }
