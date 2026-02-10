@@ -93,11 +93,11 @@ class ContentElementViewListener
 
     private function generateContentTypeLabel(array $row): string
     {
-        $transId = 'CTE.'.$row['type'].'0';
+        $transId = "CTE.$row[type].0";
         $label = $this->translator->trans($transId, [], 'contao_default');
 
         if ($transId === $label) {
-            $label = $this->translator->trans("CTE.$row[type].0", [], 'contao_default');
+            $label = $row['type'];
         }
 
         // Add the ID of the aliased element
