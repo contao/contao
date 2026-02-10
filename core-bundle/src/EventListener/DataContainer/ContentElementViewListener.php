@@ -54,10 +54,7 @@ class ContentElementViewListener
         $GLOBALS['TL_DCA']['tl_content']['list']['label']['group_callback'] = $this->generateGroupLabel(...);
     }
 
-    /**
-     * @internal
-     */
-    public function generateGridLabel(array $row): array
+    private function generateGridLabel(array $row): array
     {
         $type = $this->generateContentTypeLabel($row);
 
