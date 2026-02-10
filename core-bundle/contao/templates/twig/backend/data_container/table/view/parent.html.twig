@@ -52,17 +52,17 @@
                     {% for record in records %}
                         <li{{ attrs().set('data-id', record.id, is_sortable) }}>
                             {% if record.group_header is defined %}
-                                <div class="tl_content_header">{{ record.group_header }}</div>
+                                <div class="tl_content_header">{{ record.group_header|raw }}</div>
                             {% endif %}
 
                             {% set record_attributes = attrs()
                                 .addClass('tl_content')
-                                .addClass('wrapper_start', record.display.wrapper_start)
-                                .addClass('wrapper_separator', record.display.wrapper_separator)
-                                .addClass('wrapper_stop', record.display.wrapper_stop)
-                                .addClass(['indent', "indent_#{record.display.wrap_level}"], record.display.wrap_level)
-                                .addClass('indent_first', record.display.indent_first)
-                                .addClass('indent_last', record.display.indent_last)
+                                .addClass('wrapper_start', record.display.wrapper_start|default)
+                                .addClass('wrapper_separator', record.display.wrapper_separator|default)
+                                .addClass('wrapper_stop', record.display.wrapper_stop|default)
+                                .addClass(['indent', "indent_#{record.display.wrap_level|default}"], record.display.wrap_level|default)
+                                .addClass('indent_first', record.display.indent_first|default)
+                                .addClass('indent_last', record.display.indent_last|default)
                                 .addClass('draft', record.is_draft)
                                 .addClass(record.class)
                                 .set('data-turbo', 'false')
