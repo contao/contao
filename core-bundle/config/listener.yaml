@@ -74,6 +74,7 @@ services:
         arguments:
             - '@contao.twig.inspector'
             - '@contao.framework'
+            - '@contao.routing.page_registry'
 
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
