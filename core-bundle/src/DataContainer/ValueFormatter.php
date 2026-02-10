@@ -79,7 +79,7 @@ class ValueFormatter implements ResetInterface
                 return $this->format($fk->getTableName(), $fk->getColumnName(), $value, $dc);
             }
 
-            return $value;
+            return (string) $value;
         }
 
         if (!isset($row[$field])) {
@@ -179,7 +179,7 @@ class ValueFormatter implements ResetInterface
             $objFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($value);
 
             if (null !== $objFile) {
-                return $objFile->path;
+                return (string) $objFile->path;
             }
         }
 
@@ -187,11 +187,11 @@ class ValueFormatter implements ResetInterface
         $configAdapter = $this->framework->getAdapter(Config::class);
 
         if ('date' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] ?? null)) {
-            return $value ? $dateAdapter->parse($configAdapter->get('dateFormat'), $value) : '';
+            return $value ? $dateAdapter->parse($configAdapter->get('dateFormat'), (int) $value) : '';
         }
 
         if ('time' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] ?? null)) {
-            return $value ? $dateAdapter->parse($configAdapter->get('timeFormat'), $value) : '';
+            return $value ? $dateAdapter->parse($configAdapter->get('timeFormat'), (int) $value) : '';
         }
 
         if (
@@ -213,7 +213,7 @@ class ValueFormatter implements ResetInterface
                 true,
             )
         ) {
-            return $value ? $dateAdapter->parse($configAdapter->get('datimFormat'), $value) : '';
+            return $value ? $dateAdapter->parse($configAdapter->get('datimFormat'), (int) $value) : '';
         }
 
         if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
@@ -270,7 +270,7 @@ class ValueFormatter implements ResetInterface
                 return $this->getLabel($fk->getTableName(), $fk->getColumnName(), $value, $dc);
             }
 
-            return $value;
+            return (string) $value;
         }
 
         if (
@@ -428,7 +428,7 @@ class ValueFormatter implements ResetInterface
             if (\is_array($v)) {
                 foreach ($v as $kk => $vv) {
                     if ((string) $kk === (string) $value) {
-                        return $vv;
+                        return (string) $vv;
                     }
                 }
             }
