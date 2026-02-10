@@ -45,7 +45,7 @@ class ContentElementViewListener
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = [
             'mode' => DataContainer::MODE_PARENT,
             'fields' => ['title'],
-            'panelLayout' => 'filter;sort,search,limit',
+            'panelLayout' => 'search,filter,sort,limit',
             'defaultSearchField' => 'title',
             'headerFields' => ['name', 'author', 'tstamp'],
         ];
