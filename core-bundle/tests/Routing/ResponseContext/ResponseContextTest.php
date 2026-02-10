@@ -73,8 +73,11 @@ class ResponseContextTest extends TestCase
 
         $this->assertFalse($context->has(ParameterBag::class));
 
+        /** @var InputBag<string> $inputBag */
+        $inputBag = new InputBag();
+
         $context->addLazy(ServerBag::class, static fn () => new ServerBag());
-        $context->addLazy(InputBag::class, static fn () => new InputBag());
+        $context->addLazy(InputBag::class, static fn () => $inputBag);
 
         $this->assertInstanceOf(ServerBag::class, $context->get(ServerBag::class));
         $this->assertInstanceOf(InputBag::class, $context->get(ParameterBag::class));
