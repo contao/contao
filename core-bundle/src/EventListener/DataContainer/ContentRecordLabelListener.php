@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
+use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -46,7 +47,7 @@ class ContentRecordLabelListener
         $labelKey = "CTE.$type.0";
 
         if ($this->translator->getCatalogue()->has($labelKey, 'contao_default')) {
-            $label = $this->translator->trans($labelKey, [], 'contao_default');
+            $label = StringUtil::decodeEntities($this->translator->trans($labelKey, [], 'contao_default'));
         } else {
             $label = $type;
         }
