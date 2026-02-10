@@ -122,7 +122,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="tl_empty_parent_view">{{ panel_active ? 'MSC.noResultWithFilter'|trans : 'MSC.noResult'|trans }}</p>
+                <p class="tl_empty_parent_view">{{ (panel_active ? 'MSC.noResultWithFilter' : 'MSC.noResult')|trans }}</p>
             {% endif %}
         {% endblock %}
     {% endembed %}

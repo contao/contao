@@ -49,6 +49,6 @@
             <div class="tl_listing_container">{{ breadcrumb|raw }}</div>
         {% endif %}
 
-        <p class="tl_empty">{{ panel_active ? 'MSC.noResultWithFilter'|trans : 'MSC.noResult'|trans }}</p>
+        <p class="tl_empty">{{ (panel_active ? 'MSC.noResultWithFilter' : 'MSC.noResult')|trans }}</p>
     {% endif %}
 {% endblock %}
