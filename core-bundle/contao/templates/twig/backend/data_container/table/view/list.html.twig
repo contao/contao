@@ -96,6 +96,6 @@
             {% endblock %}
         {% endembed %}
     {% else %}
-        <p class="tl_empty">{{ 'MSC.noResult'|trans }}</p>
+        <p class="tl_empty">{{ (panel_active ? 'MSC.noResultWithFilter' : 'MSC.noResult')|trans }}</p>
     {% endif %}
 {% endblock %}

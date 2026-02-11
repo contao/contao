@@ -404,6 +404,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'error' => $this->noReload,
 			'as_select' => Input::get('act') === 'select',
 			'as_picker' => (bool) $this->strPickerFieldType,
+			'panel_active' => $this->panelActive,
 		);
 
 		if ($defaultParameters['as_picker'])
@@ -4078,8 +4079,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		$parameters = array(
-			'has_clipboard_content' => $blnClipboard,
 			'is_sortable' => $blnIsSortable,
+			'has_clipboard_content' => $blnClipboard,
 		);
 
 		if (Input::get('act') != 'select' && $this->strPickerFieldType != 'checkbox')
