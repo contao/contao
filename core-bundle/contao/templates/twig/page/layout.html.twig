@@ -25,14 +25,16 @@
              <title>{{ title }}</title>
         {%- endblock -%}
 
-        <meta name="robots" content="{{ response_context.head.metaRobots }}">
-        <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
-        {% for meta_tag in response_context.head.metaTags %}
-            <meta{{ meta_tag }}>
-        {% endfor %}
+        {% if response_context.head %}
+            <meta name="robots" content="{{ response_context.head.metaRobots }}">
+            <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
+            {% for meta_tag in response_context.head.metaTags %}
+                <meta{{ meta_tag }}>
+            {% endfor %}
 
-        {% if page['enableCanonical'] -%}
-            <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request) }}">
+            {% if page['enableCanonical'] %}
+                <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request)|default }}">
+            {% endif %}
         {% endif %}
 
         {%- block end_of_head -%}
