@@ -40,7 +40,6 @@
     flex-grow: 1;
     box-sizing: border-box;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
     min-height: 18px;
@@ -48,6 +47,17 @@
 
 .tree_view .tl_left.with-offset {
     padding-left: calc(var(--level) * 16px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    *:has(> img) {
+        display: flex;
+    }
+
+    .foldable {
+        margin-right: -4px;
+    }
 }
 
 .tl_listing .tl_left.tl_left_dragging {
@@ -79,7 +89,7 @@
     color: var(--text);
 }
 
-.tl_listing .tl_left img:not(.preview-image, .preview-important) {
+.tl_listing .tl_left:not(.with-offset) img:not(.preview-image, .preview-important) {
     margin-top: -3px;
 }
 
