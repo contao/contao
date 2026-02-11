@@ -159,6 +159,22 @@ export default class extends Controller {
                 this.application.getControllerForElementAndIdentifier(el, this.identifier)?.updateNesting(i);
             }
         });
+
+        const optionsRegexPattern = new RegExp(`^${this.nameValue}_(default|group)_(\\d+)$`);
+
+        Array.from(this.bodyTarget.children).forEach((tr, i) => {
+            for (const el of tr.querySelectorAll(
+                `[for^=${this.nameValue}_default_], [for^=${this.nameValue}_group_], [id^=${this.nameValue}_default_], [id^=${this.nameValue}_group_]`
+            )) {
+                if (el.id) {
+                    el.id = el.id.replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`);
+                }
+
+                if (el.getAttribute('for')) {
+                    el.setAttribute('for', el.getAttribute('for').replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`));
+                }
+            }
+        });
     }
 
     #getRow(event) {
