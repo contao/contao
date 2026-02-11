@@ -37,6 +37,7 @@ class ContentCompositionBuilderTest extends TestCase
             $GLOBALS['TL_BODY'],
             $GLOBALS['TL_STYLE_SHEETS'],
             $GLOBALS['TL_CSS'],
+            $GLOBALS['objPage'],
         );
 
         parent::tearDown();
@@ -136,6 +137,8 @@ class ContentCompositionBuilderTest extends TestCase
             translator: $translator,
         );
 
+        $this->assertNull($GLOBALS['objPage'] ?? null, 'global $objPage is not set beforehand');
+
         $template = $builder->buildLayoutTemplate();
 
         $this->assertSame('admin@contao.org', $GLOBALS['TL_ADMIN_EMAIL']);
@@ -166,6 +169,8 @@ class ContentCompositionBuilderTest extends TestCase
         ];
 
         $this->assertSame($expectedTemplateData, $template->getData());
+
+        $this->assertSame($page, $GLOBALS['objPage'], 'global $objPage is set after building');
     }
 
     public function testAddsResponseContextDataToTemplate(): void
