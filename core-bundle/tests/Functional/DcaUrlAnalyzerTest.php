@@ -206,9 +206,8 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         yield [
             'do=article&act=edit&id=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_article&act=edit',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -227,6 +226,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_article&act=edit',
                 ],
             ],
         ];
@@ -234,23 +234,22 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         yield [
             'do=article',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
             ],
         ];
 
         yield [
             'do=article&act=select',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
             ],
         ];
 
         yield [
             'do=article&act=show&id=1&popup=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_article&act=show',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -269,6 +268,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_article&act=show',
                 ],
             ],
         ];
@@ -276,9 +276,8 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         yield [
             'do=article&table=tl_content&id=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_content',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -297,6 +296,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
                 ],
             ],
         ];
@@ -304,9 +304,8 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         yield [
             'do=article&id=1&table=tl_content&act=edit',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_content',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -325,17 +324,17 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
                 ],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content&act=edit', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content&act=edit'],
             ],
         ];
 
         yield [
             'do=article&id=1&table=tl_content&act=show&popup=1',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_content',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -354,17 +353,17 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
                 ],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content&act=show', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content&act=show'],
             ],
         ];
 
         yield [
             'do=article&id=1&table=tl_content&ptable=tl_content',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_content',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -383,17 +382,17 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
                 ],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content'],
             ],
         ];
 
         yield [
             'do=article&id=2&ptable=tl_content&table=tl_content&act=edit',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_content',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -412,18 +411,18 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
                 ],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
-                ['url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content&act=edit', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content'],
+                ['label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content&act=edit'],
             ],
         ];
 
         yield [
             'do=article&id=3&ptable=tl_content&table=tl_content&act=edit',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=1&table=tl_content',
                     'label' => 'Article 1',
                     'treeTrail' => [
                         [
@@ -442,44 +441,44 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=1&table=tl_content',
                 ],
-                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
-                ['url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content', 'label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null],
-                ['url' => '/contao?do=article&id=3&table=tl_content&ptable=tl_content&act=edit', 'label' => 'Headline', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content'],
+                ['label' => 'Element group', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content'],
+                ['label' => 'Headline', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&id=3&table=tl_content&ptable=tl_content&act=edit'],
             ],
         ];
 
         yield [
             'do=themes&table=tl_image_size&id=1',
             [
-                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null],
-                ['url' => '/contao?do=themes&id=1&table=tl_image_size', 'label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=themes&table=tl_theme'],
+                ['label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=themes&id=1&table=tl_image_size'],
             ],
         ];
 
         yield [
             'do=themes&id=1&table=tl_layout',
             [
-                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null],
-                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=themes&table=tl_theme'],
+                ['label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=themes&id=1&table=tl_layout'],
             ],
         ];
 
         yield [
             'do=themes&id=1&table=tl_layout&act=edit',
             [
-                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null],
-                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null],
-                ['url' => '/contao?do=themes&id=1&table=tl_layout&act=edit', 'label' => 'Default Layout', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Themes', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=themes&table=tl_theme'],
+                ['label' => 'Default Theme', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=themes&id=1&table=tl_layout'],
+                ['label' => 'Default Layout', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=themes&id=1&table=tl_layout&act=edit'],
             ],
         ];
 
         yield [
             'do=article&act=edit&id=2',
             [
-                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null],
+                ['label' => 'Articles', 'treeTrail' => null, 'treeSiblings' => null, 'url' => '/contao?do=article&table=tl_article'],
                 [
-                    'url' => '/contao?do=article&id=2&table=tl_article&act=edit',
                     'label' => 'Article 2',
                     'treeTrail' => [
                         [
@@ -494,6 +493,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
                             'active' => true,
                         ],
                     ],
+                    'url' => '/contao?do=article&id=2&table=tl_article&act=edit',
                 ],
             ],
         ];
