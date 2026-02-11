@@ -364,7 +364,6 @@ window.AjaxRequest =
 				}
 				// List view
 				else {
-					console.log(img);
 					img.setStyle('background-image', 'url(' + (!published ? img.get('data-icon') : img.get('data-icon-disabled')) + ')');
 				}
 			}
