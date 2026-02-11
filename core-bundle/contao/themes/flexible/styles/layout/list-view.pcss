@@ -16,7 +16,7 @@
 
 .tl_show th,
 .tl_show td {
-    line-height: 16px;
+    line-height: 18px;
     white-space: pre-line;
 }
 
@@ -107,7 +107,8 @@
 }
 
 .tl_content_header {
-    padding: 7px 6px;
+    line-height: 18px;
+    padding: 5px 6px;
     border-bottom: 1px solid var(--border);
     background: var(--table-header);
     font-weight: 600;
@@ -255,7 +256,7 @@
 }
 
 .tl_content_left {
-    line-height: 16px;
+    line-height: 18px;
 }
 
 .tl_content_left.draggable {
@@ -268,13 +269,14 @@
 }
 
 .tl_content_right {
+    min-height: 18px;
     display: flex;
+    align-items: center;
     position: relative;
     z-index: 1;
     float: right;
     text-align: right;
     margin-left: 12px;
-    margin-bottom: -1px;
 }
 
 .as-grid .tl_content .tl_content_right {
@@ -328,7 +330,7 @@
     display: flex;
     gap: 6px;
     align-items: center;
-    line-height: 16px;
+    line-height: 18px;
     white-space: nowrap;
     background-color: transparent;
     border: none;
@@ -393,8 +395,8 @@
 
 .operations-menu a,
 .operations-menu button {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 3px;
+    padding-bottom: 3px;
     padding-right: 1px;
     width: 100%;
     box-sizing: border-box;

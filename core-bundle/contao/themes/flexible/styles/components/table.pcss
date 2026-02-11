@@ -1,5 +1,6 @@
 table.with-border th,
 table.with-border td {
+    line-height: 18px;
     border: solid var(--border);
     border-width: 1px 0;
 }
@@ -8,9 +9,12 @@ table.with-border th {
     background-color: var(--table-header);
 }
 
-table.with-padding th,
+table.with-padding th {
+    padding: 5px 6px;
+}
+
 table.with-padding td {
-    padding: 6px;
+    padding: var(--row-padding) 6px;
 }
 
 table.with-zebra th {

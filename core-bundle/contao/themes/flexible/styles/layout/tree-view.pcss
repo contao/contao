@@ -13,7 +13,7 @@
 }
 
 .tl_folder {
-    padding: calc(var(--row-padding) - 1px) 6px;
+    padding: var(--row-padding) 6px;
     border-bottom: 1px solid var(--border);
     background: var(--table-header);
 }
@@ -30,8 +30,9 @@
 }
 
 .tl_listing .drag-handle {
+    display: flex;
     align-self: flex-start;
-    padding: 0;
+    padding: 1px 0;
     background: none;
     border: none;
 }
@@ -41,8 +42,7 @@
     box-sizing: border-box;
     white-space: nowrap;
     text-overflow: ellipsis;
-    line-height: normal;
-    min-height: 18px;
+    line-height: 18px;
 }
 
 .tree_view .tl_left.with-offset {
@@ -113,12 +113,10 @@
 }
 
 .tl_listing .tl_right {
-    padding: 0 0 0 9px;
+    padding-left: 9px;
     white-space: nowrap;
-}
-
-.tl_folder .tl_right {
-    padding-top: 1px;
+    display: flex;
+    align-items: center;
 }
 
 .tl_listing,
