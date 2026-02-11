@@ -113,7 +113,7 @@
     font-weight: 600;
 }
 
-.tl_header + .tl_content_header {
+.tl_header + ul li:first-child .tl_content_header {
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
@@ -256,6 +256,11 @@
 
 .tl_content_left {
     line-height: 16px;
+}
+
+.tl_content_left.draggable {
+    display: flex;
+    align-items: baseline;
 }
 
 .as-grid .tl_content_left {
@@ -447,6 +452,7 @@
     background: var(--table-header) url("icons/protected.svg") 8px 8px no-repeat;
 }
 
+/* Deprecated in Contao 5.7, to be removed in Contao 6 */
 .cte_type .visibility,
 .cte_type .type {
     color: var(--gray);

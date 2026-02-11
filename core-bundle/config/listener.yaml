@@ -74,6 +74,7 @@ services:
         arguments:
             - '@contao.twig.inspector'
             - '@contao.framework'
+            - '@contao.routing.page_registry'
 
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
@@ -96,6 +97,12 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
         arguments:
             - '@security.helper'
+
+    contao.listener.data_container.content_element_view:
+        class: Contao\CoreBundle\EventListener\DataContainer\ContentElementViewListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
 
     contao.listener.data_container.content_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener

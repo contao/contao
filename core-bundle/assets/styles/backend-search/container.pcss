@@ -158,7 +158,7 @@
         }
     }
 
-    .backend-search_results-grid:not(:has(#backend-search--facet-types:empty)) {
+    .backend-search_results-grid:has(.backend-search_facet_types > *) {
         grid-template-columns: 180px 1fr;
         gap: 16px;
     }

@@ -881,8 +881,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get the new position
 		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
-		// Avoid circular references when there is no parent table
-		if (!$this->ptable && $db->fieldExists('pid', $this->strTable))
+		// Avoid circular references when there is no parent table or the table references itself
+		if ((!$this->ptable || $this->ptable == $this->strTable) && $db->fieldExists('pid', $this->strTable))
 		{
 			$cr = $db->getChildRecords($this->intId, $this->strTable);
 			$cr[] = $this->intId;
@@ -1084,12 +1084,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$objInsertStmt = null;
 
+			// Combine virtual fields
+			$this->set = System::getContainer()->get('contao.data_container.virtual_fields_handler')->combineFields($this->set, $this->strTable);
+
+			// Ensure JSON data type for virtual field targets when saving to database
+			$arrTypes = array_map(fn (string $k) => \in_array($k, DcaExtractor::getInstance($this->strTable)->getVirtualTargets()) ? Types::JSON : null, array_keys($this->set));
+
 			try
 			{
 				$objInsertStmt = Database::getInstance()
 					->prepare("INSERT INTO " . $this->strTable . " %s")
 					->set($this->set)
-					->execute();
+					->query('', array_values($this->set), array_values($arrTypes));
 			}
 			catch (UniqueConstraintViolationException $e)
 			{
@@ -4243,34 +4249,37 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-				$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
-				$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-				$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-				$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-
-				// Closing wrappers
-				if ($blnWrapperStop && --$intWrapLevel < 1)
+				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? false)
 				{
-					$blnIndent = false;
-				}
+					$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+					$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
+					$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
+					$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+					$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
 
-				$record['display'] = array(
-					'wrapper_start' => $blnWrapperStart,
-					'wrapper_separator' => $blnWrapperSeparator,
-					'wrapper_stop' => $blnWrapperStop,
-					'wrap_level' => $blnIndent ? $intWrapLevel : null,
-					'indent_first' => $blnIndentFirst,
-					'indent_last' => $blnIndentLast,
-				);
+					// Closing wrappers
+					if ($blnWrapperStop && --$intWrapLevel < 1)
+					{
+						$blnIndent = false;
+					}
+
+					$record['display'] = array(
+						'wrapper_start' => $blnWrapperStart,
+						'wrapper_separator' => $blnWrapperSeparator,
+						'wrapper_stop' => $blnWrapperStop,
+						'wrap_level' => $blnIndent ? $intWrapLevel : null,
+						'indent_first' => $blnIndentFirst,
+						'indent_last' => $blnIndentLast,
+					);
+
+					// Opening wrappers
+					if ($blnWrapperStart && ++$intWrapLevel > 0)
+					{
+						$blnIndent = true;
+					}
+				}
 
 				$record['class'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] ?? '';
-
-				// Opening wrappers
-				if ($blnWrapperStart && ++$intWrapLevel > 0)
-				{
-					$blnIndent = true;
-				}
 
 				if (Input::get('act') != 'select')
 				{

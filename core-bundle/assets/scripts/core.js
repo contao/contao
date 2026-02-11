@@ -377,9 +377,9 @@ window.AjaxRequest =
 			image.set('data-state', !published ? 1 : 0);
 		});
 
-		if (!published && $(el).get('data-title')) {
+		if (el.title && !published && $(el).get('data-title')) {
 			el.title = label = $(el).get('data-title');
-		} else if (published && $(el).get('data-title-disabled')) {
+		} else if (el.title && published && $(el).get('data-title-disabled')) {
 			el.title = label = $(el).get('data-title-disabled');
 		}
 
@@ -960,7 +960,7 @@ window.Backend =
 				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
-				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				x: cloneBase.getPosition(cloneBase.getOffsetParent()).x,
 				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
 			}).setStyle('display', 'none');
 

@@ -2,26 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Twig\Defer;
+namespace Contao\CoreBundle\Twig\Renderer;
 
+use Contao\CoreBundle\Twig\Defer\DeferredStringable;
 use Twig\Environment;
 use Twig\TemplateWrapper;
 
 /**
  * @experimental
  */
-class Renderer
+final class DeferredRenderer implements RendererInterface
 {
     public function __construct(private readonly Environment $twig)
     {
     }
 
-    public function render(TemplateWrapper|string $name, array $context = []): string
+    public function render(TemplateWrapper|string $name, array $parameters = []): string
     {
         $chunks = [];
 
         // Stream and resolve all content except for the deferred output
-        foreach ($this->twig->load($name)->stream($context) as $value) {
+        foreach ($this->twig->load($name)->stream($parameters) as $value) {
             $chunks[] = $value instanceof DeferredStringable ? $value : (string) $value;
         }
 
