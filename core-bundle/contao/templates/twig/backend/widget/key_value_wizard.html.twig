@@ -31,7 +31,7 @@
                     {% set key_attributes = attrs()
                         .set('type', 'text')
                         .set('name', "#{id}[#{loop.index0}][key]")
-                        .set('id', '#{id}_key_#{loop.index0}')
+                        .set('id', "#{id}_key_#{loop.index0}")
                         .set('value', row.key|default)
                         .addClass('tl_text')
                     %}
@@ -41,7 +41,7 @@
                     {% set value_attributes = attrs()
                         .set('type', 'text')
                         .set('name', "#{id}[#{loop.index0}][value]")
-                        .set('id', '#{id}_value_#{loop.index0}')
+                        .set('id', "#{id}_value_#{loop.index0}")
                         .set('value', row.value|default)
                         .addClass('tl_text')
                     %}
