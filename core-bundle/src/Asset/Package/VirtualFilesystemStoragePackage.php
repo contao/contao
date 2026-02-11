@@ -23,7 +23,7 @@ class VirtualFilesystemStoragePackage implements PackageInterface
 
     public function getVersion(string $path): string
     {
-        // TODO: Once we have native checksum support (see #7630), we could use that for 
+        // TODO: Once we have native checksum support (see #7630), we could use that for
         // the version hashes on and/or to directly generate the public URIs including
         // the checksum/version hash.
         return hash('xxh3', (string) $this->storage->getLastModified($path));
