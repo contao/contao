@@ -19,6 +19,21 @@ use Symfony\Component\Filesystem\Path;
 
 class MtimeVersionStrategyTest extends TestCase
 {
+    private const MTIME = '2026-01-01 00:00:00';
+
+    public static function setUpBeforeClass(): void
+    {
+        // Set a predictable mtime on the tested files
+        $affectedFiles = [
+            Path::join(__DIR__, '../../Fixtures/files/data/data.csv'),
+            Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'),
+        ];
+
+        foreach ($affectedFiles as $file) {
+            touch($file, strtotime(self::MTIME));
+        }
+    }
+
     #[DataProvider('getPaths')]
     public function testGetVersion(string $path, string $expectedVersion): void
     {
@@ -29,20 +44,14 @@ class MtimeVersionStrategyTest extends TestCase
         $this->assertSame($expectedVersion, $strategy->getVersion($path));
     }
 
-    public function testGetVersionFromAbsolutePath(): void
-    {
-        $projectDir = $this->getFixturesDir();
-        $webDir = Path::join($projectDir, 'public');
-        $strategy = new MtimeVersionStrategy($projectDir, $webDir);
-
-        $this->assertSame('1762613044', $strategy->getVersion(Path::join($projectDir, 'public/images/dummy_public.jpg')));
-    }
-
     public static function getPaths(): iterable
     {
+        $expectedVersion = (string) strtotime(self::MTIME);
+
         return [
-            ['files/data/data.csv', '1762613044'],
-            ['images/dummy_public.jpg', '1762613044'],
+            ['files/data/data.csv', $expectedVersion],
+            ['images/dummy_public.jpg', $expectedVersion],
+            [Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'), $expectedVersion],
             ['does_not_exist', ''],
         ];
     }

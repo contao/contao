@@ -10,7 +10,7 @@ parameters:
 framework:
     assets:
         enabled: true
-        version_strategy: 'contao.assets.version_strategy.mtime'
+        version_strategy: 'contao.asset.mtime_version_strategy'
     esi: { enabled: true }
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'
