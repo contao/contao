@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Asset\VersionStrategy;
 use Contao\CoreBundle\Asset\VersionStrategy\MtimeVersionStrategy;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class MtimeVersionStrategyTest extends TestCase
@@ -29,8 +30,10 @@ class MtimeVersionStrategyTest extends TestCase
             Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'),
         ];
 
+        $fs = new Filesystem();
+
         foreach ($affectedFiles as $file) {
-            touch($file, strtotime(self::MTIME));
+            $fs->touch($file, strtotime(self::MTIME));
         }
     }
 
