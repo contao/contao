@@ -171,7 +171,7 @@ class DcaUrlAnalyzer
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
                 if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
                     $links[] = [
-                        'url' => $this->router->generate('contao_backend', [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')]),
+                        'query' => [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')],
                         'label' => $this->translator->trans(
                             match ($this->findGet('act')) {
                                 'editAll', 'select' => 'MSC.all.0',
@@ -201,7 +201,7 @@ class DcaUrlAnalyzer
             }
 
             $links[] = [
-                'url' => $this->router->generate('contao_backend', $query),
+                'query' => $query,
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
                 'treeTrail' => $treeTrail,
                 'treeSiblings' => $treeSiblings,
@@ -209,15 +209,31 @@ class DcaUrlAnalyzer
         }
 
         $links[] = [
-            'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
+            'query' => ['do' => $do, 'table' => $table],
             'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
             'treeTrail' => null,
             'treeSiblings' => null,
         ];
 
+        if (
+            // Mode "paste into"
+            '2' === $this->findGet('mode')
+            // For these actions the pid parameter refers to the insert position
+            && \in_array($this->findGet('act'), ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)
+        ) {
+            array_unshift($links, [
+                'query' => $links[0]['query'],
+                'label' => $this->translator->trans('DCA.cut.0', [], 'contao_default'),
+                'treeTrail' => null,
+                'treeSiblings' => null,
+            ]);
+
+            unset($links[1]['query']['act']);
+        }
+
         if ($this->findGet('clipboard')) {
             array_unshift($links, [
-                'url' => $links[0]['url'].(str_contains($links[0]['url'], '?') ? '&' : '?').'clipboard=1',
+                'query' => [...$links[0]['query'], 'clipboard' => '1'],
                 'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
                 'treeTrail' => null,
                 'treeSiblings' => null,
@@ -226,6 +242,11 @@ class DcaUrlAnalyzer
 
         if (\count($links) > $limit) {
             array_splice($links, $limit);
+        }
+
+        foreach ($links as $i => $link) {
+            $links[$i]['url'] = $this->router->generate('contao_backend', $link['query']);
+            unset($links[$i]['query']);
         }
 
         return array_reverse($links);

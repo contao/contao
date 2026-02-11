@@ -404,6 +404,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'error' => $this->noReload,
 			'as_select' => Input::get('act') === 'select',
 			'as_picker' => (bool) $this->strPickerFieldType,
+			'panel_active' => $this->panelActive,
 		);
 
 		if ($defaultParameters['as_picker'])
@@ -909,6 +910,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
 			->set($this->set)
 			->execute($this->intId);
+
+		self::clearCurrentRecordCache($this->intId, $this->strTable);
 
 		// Call the oncut_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncut_callback'] ?? null))
@@ -4076,8 +4079,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		$parameters = array(
-			'has_clipboard_content' => $blnClipboard,
 			'is_sortable' => $blnIsSortable,
+			'has_clipboard_content' => $blnClipboard,
 		);
 
 		if (Input::get('act') != 'select' && $this->strPickerFieldType != 'checkbox')

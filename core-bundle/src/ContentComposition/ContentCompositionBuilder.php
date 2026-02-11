@@ -261,6 +261,9 @@ class ContentCompositionBuilder
             $this->pictureFactory->setDefaultDensities($this->defaultImageDensities);
             $this->previewFactory->setDefaultDensities($this->defaultImageDensities);
         }
+
+        // Backwards compatibility: make global $objPage available
+        $GLOBALS['objPage'] = $page;
     }
 
     private function addDefaultDataToTemplate(LayoutTemplate $template, PageModel $page, LayoutModel|null $layout): void

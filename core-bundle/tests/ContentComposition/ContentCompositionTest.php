@@ -34,6 +34,7 @@ class ContentCompositionTest extends TestCase
             $GLOBALS['TL_ADMIN_NAME'],
             $GLOBALS['TL_ADMIN_EMAIL'],
             $GLOBALS['TL_LANGUAGE'],
+            $GLOBALS['objPage'],
         );
 
         parent::tearDown();
