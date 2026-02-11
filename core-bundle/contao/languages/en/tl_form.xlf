@@ -191,6 +191,9 @@
       <trans-unit id="tl_form.show.1">
         <source>Show the details of form ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_form.versions.1">
+        <source>Show the versions of form ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
       </trans-unit>
