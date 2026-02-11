@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
@@ -77,7 +79,11 @@ class ArticleColumnListenerTest extends TestCase
             LayoutModel::class => $layoutAdapter,
         ]);
 
-        $articleColumnListener = new ArticleColumnListener($inspector, $framework);
+        $articleColumnListener = new ArticleColumnListener(
+            $inspector,
+            $framework,
+            $this->createStub(PageRegistry::class),
+        );
 
         $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;
@@ -144,7 +150,11 @@ class ArticleColumnListenerTest extends TestCase
             LayoutModel::class => $layoutAdapter,
         ]);
 
-        $articleColumnListener = new ArticleColumnListener($this->createStub(Inspector::class), $framework);
+        $articleColumnListener = new ArticleColumnListener(
+            $this->createStub(Inspector::class),
+            $framework,
+            $this->createStub(PageRegistry::class),
+        );
 
         $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $dc->id = 1;
@@ -155,5 +165,83 @@ class ArticleColumnListenerTest extends TestCase
         );
 
         $this->assertArrayNotHasKey('TL_DCA', $GLOBALS);
+    }
+
+    public function testSetsSlotOptionsForRouteWithCustomTemplate(): void
+    {
+        $templateInformation = new TemplateInformation(
+            new Source('', ''),
+            slots: ['foo', 'bar'],
+        );
+
+        $inspector = $this->createStub(Inspector::class);
+        $inspector
+            ->method('inspectTemplate')
+            ->with('@Contao/layout/foo.html.twig')
+            ->willReturn($templateInformation)
+        ;
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+
+        $articleModel = $this->createStub(ArticleModel::class);
+        $articleModel
+            ->method('getRelated')
+            ->with('pid')
+            ->willReturn($pageModel)
+        ;
+
+        $articleAdapter = $this->createAdapterStub(['findById']);
+        $articleAdapter
+            ->method('findById')
+            ->with(1)
+            ->willReturn($articleModel)
+        ;
+
+        $framework = $this->createContaoFrameworkStub([
+            ArticleModel::class => $articleAdapter,
+        ]);
+
+        $pageRoute = $this->createStub(PageRoute::class);
+        $pageRoute
+            ->method('getDefault')
+            ->with('_template')
+            ->willReturn('layout/foo')
+        ;
+
+        $pageRegistry = $this->createStub(PageRegistry::class);
+        $pageRegistry
+            ->method('getRoute')
+            ->with($pageModel)
+            ->willReturn($pageRoute)
+        ;
+
+        $articleColumnListener = new ArticleColumnListener(
+            $inspector,
+            $framework,
+            $pageRegistry,
+        );
+
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
+        $dc->id = 1;
+
+        $this->assertSame(
+            'foo',
+            $articleColumnListener->setSlotOptions('foo', $dc),
+        );
+
+        $this->assertSame(
+            [
+                'foo' => '{% slot foo %}',
+                'bar' => '{% slot bar %}',
+            ],
+            $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options'],
+        );
+
+        $this->assertArrayNotHasKey(
+            'options_callback',
+            $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn'],
+        );
+
+        unset($GLOBALS['TL_DCA']);
     }
 }

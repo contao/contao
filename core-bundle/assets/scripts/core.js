@@ -317,7 +317,7 @@ window.AjaxRequest =
 					img = next.getFirst('div.list_icon');
 				}
 			} else if (el.closest('.tl_listing_container') && el.getParent('tr')) {
-				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
+				img = el.getParent('td').getPrevious('td').getElement('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
 				}

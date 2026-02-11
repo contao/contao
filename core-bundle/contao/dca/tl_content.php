@@ -71,7 +71,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'fields'                  => array('type'),
 			'format'                  => '%s',
-			'label_callback'          => array('tl_content', 'addCteType')
 		),
 	),
 
@@ -159,6 +158,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'title' => array
 		(
+			'sorting'                 => true,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
@@ -166,6 +167,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'type' => array
 		(
+			'sorting'                 => true,
+			'flag'                    => DataContainer::SORT_ASC,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
@@ -865,9 +868,13 @@ class tl_content extends Backend
 	 * @param string $element
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 6.
 	 */
 	public function getContentElementGroup($element)
 	{
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
 			if (array_key_exists($element, $v))
@@ -970,9 +977,13 @@ class tl_content extends Backend
 	 * @param array $arrRow
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated in Contao 5.7, to be removed in Contao 6.
 	 */
 	public function addCteType($arrRow)
 	{
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6.', __METHOD__);
+
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
 

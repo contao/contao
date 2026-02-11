@@ -404,6 +404,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'error' => $this->noReload,
 			'as_select' => Input::get('act') === 'select',
 			'as_picker' => (bool) $this->strPickerFieldType,
+			'panel_active' => $this->panelActive,
 		);
 
 		if ($defaultParameters['as_picker'])
@@ -909,6 +910,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
 			->set($this->set)
 			->execute($this->intId);
+
+		self::clearCurrentRecordCache($this->intId, $this->strTable);
 
 		// Call the oncut_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncut_callback'] ?? null))
@@ -4076,8 +4079,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		$parameters = array(
-			'has_clipboard_content' => $blnClipboard,
 			'is_sortable' => $blnIsSortable,
+			'has_clipboard_content' => $blnClipboard,
 		);
 
 		if (Input::get('act') != 'select' && $this->strPickerFieldType != 'checkbox')
@@ -4249,34 +4252,37 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-				$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
-				$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-				$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-				$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-
-				// Closing wrappers
-				if ($blnWrapperStop && --$intWrapLevel < 1)
+				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? false)
 				{
-					$blnIndent = false;
-				}
+					$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+					$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
+					$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
+					$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+					$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
 
-				$record['display'] = array(
-					'wrapper_start' => $blnWrapperStart,
-					'wrapper_separator' => $blnWrapperSeparator,
-					'wrapper_stop' => $blnWrapperStop,
-					'wrap_level' => $blnIndent ? $intWrapLevel : null,
-					'indent_first' => $blnIndentFirst,
-					'indent_last' => $blnIndentLast,
-				);
+					// Closing wrappers
+					if ($blnWrapperStop && --$intWrapLevel < 1)
+					{
+						$blnIndent = false;
+					}
+
+					$record['display'] = array(
+						'wrapper_start' => $blnWrapperStart,
+						'wrapper_separator' => $blnWrapperSeparator,
+						'wrapper_stop' => $blnWrapperStop,
+						'wrap_level' => $blnIndent ? $intWrapLevel : null,
+						'indent_first' => $blnIndentFirst,
+						'indent_last' => $blnIndentLast,
+					);
+
+					// Opening wrappers
+					if ($blnWrapperStart && ++$intWrapLevel > 0)
+					{
+						$blnIndent = true;
+					}
+				}
 
 				$record['class'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] ?? '';
-
-				// Opening wrappers
-				if ($blnWrapperStart && ++$intWrapLevel > 0)
-				{
-					$blnIndent = true;
-				}
 
 				if (Input::get('act') != 'select')
 				{
