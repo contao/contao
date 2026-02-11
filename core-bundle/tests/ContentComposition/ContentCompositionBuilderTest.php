@@ -37,6 +37,7 @@ class ContentCompositionBuilderTest extends TestCase
             $GLOBALS['TL_BODY'],
             $GLOBALS['TL_STYLE_SHEETS'],
             $GLOBALS['TL_CSS'],
+            $GLOBALS['objPage'],
         );
 
         parent::tearDown();
@@ -136,9 +137,7 @@ class ContentCompositionBuilderTest extends TestCase
             translator: $translator,
         );
 
-        global $objPage;
-
-        $this->assertNull($objPage, 'global $objPage is not set beforehand');
+        $this->assertNull($GLOBALS['objPage'], 'global $objPage is not set beforehand');
 
         $template = $builder->buildLayoutTemplate();
 
@@ -171,7 +170,7 @@ class ContentCompositionBuilderTest extends TestCase
 
         $this->assertSame($expectedTemplateData, $template->getData());
 
-        $this->assertSame($page, $objPage, 'global $objPage is set after building');
+        $this->assertSame($page, $GLOBALS['objPage'], 'global $objPage is set after building');
     }
 
     public function testAddsResponseContextDataToTemplate(): void

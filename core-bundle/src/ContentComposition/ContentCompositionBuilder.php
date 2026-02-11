@@ -263,8 +263,7 @@ class ContentCompositionBuilder
         }
 
         // Backwards compatibility: make global $objPage available
-        global $objPage;
-        $objPage = $page;
+        $GLOBALS['objPage'] = $page;
     }
 
     private function addDefaultDataToTemplate(LayoutTemplate $template, PageModel $page, LayoutModel|null $layout): void
