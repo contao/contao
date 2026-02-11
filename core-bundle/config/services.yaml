@@ -34,6 +34,12 @@ services:
             - staticFiles
             - '%kernel.debug%'
 
+    contao.assets.version_strategy.mtime:
+        class: Contao\CoreBundle\Asset\VersionStrategy\MtimeVersionStrategy
+        arguments:
+            - '%kernel.project_dir%'
+            - '%contao.web_dir%'
+
     contao.cache.clearer:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
         public: true

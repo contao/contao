@@ -8,7 +8,9 @@ parameters:
 
 # Framework configuration
 framework:
-    assets: true
+    assets:
+        enabled: true
+        version_strategy: 'contao.assets.version_strategy.mtime'
     esi: { enabled: true }
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'
