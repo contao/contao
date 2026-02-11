@@ -137,7 +137,7 @@ class ContentCompositionBuilderTest extends TestCase
             translator: $translator,
         );
 
-        $this->assertNull($GLOBALS['objPage'], 'global $objPage is not set beforehand');
+        $this->assertNull($GLOBALS['objPage'] ?? null, 'global $objPage is not set beforehand');
 
         $template = $builder->buildLayoutTemplate();
 
