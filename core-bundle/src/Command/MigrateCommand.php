@@ -283,6 +283,10 @@ class MigrateCommand extends Command
                         }
                     }
                 }
+
+                if (!$asJson) {
+                    $this->io->success("Executed $count migrations.");
+                }
             } catch (UnexpectedPendingMigrationException $exception) {
                 if ($asJson) {
                     $this->writeNdjson('migration-result', [
@@ -290,12 +294,9 @@ class MigrateCommand extends Command
                         'isSuccessful' => false,
                     ]);
                 } else {
-                    $this->io->error($exception->getMessage());
+                    $this->io->success("Executed $count migrations.");
+                    $this->io->error("{$exception->getMessage()}\nRestarting migration process...");
                 }
-            }
-
-            if (!$asJson) {
-                $this->io->success('Executed '.$count.' migrations.');
             }
 
             if (null !== $specifiedHash) {
