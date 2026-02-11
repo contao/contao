@@ -45,6 +45,7 @@ class MtimeVersionStrategyTest extends TestCase
         $strategy = new MtimeVersionStrategy($projectDir, $webDir);
 
         $this->assertSame($expectedVersion, $strategy->getVersion($path));
+        $this->assertSame($expectedVersion ? \sprintf('%s?v=%s', $path, $expectedVersion) : $path, $strategy->applyVersion($path));
     }
 
     public static function getPaths(): iterable

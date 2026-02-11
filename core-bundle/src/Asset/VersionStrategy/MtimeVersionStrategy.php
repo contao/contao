@@ -52,7 +52,11 @@ class MtimeVersionStrategy implements VersionStrategyInterface
 
     public function applyVersion(string $path): string
     {
-        $versionized = \sprintf($this->format, ltrim($path, '/'), $this->getVersion($path));
+        if (!$version = $this->getVersion($path)) {
+            return $path;
+        }
+
+        $versionized = \sprintf($this->format, ltrim($path, '/'), $version);
 
         if ($path && '/' === $path[0]) {
             return '/'.$versionized;
