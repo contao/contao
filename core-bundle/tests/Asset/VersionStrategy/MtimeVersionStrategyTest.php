@@ -24,25 +24,14 @@ class MtimeVersionStrategyTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        // Set a predictable mtime on the tested files
-        $affectedFiles = [
-            Path::join(__DIR__, '../../Fixtures/files/data/data.csv'),
-            Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'),
-        ];
-
-        $fs = new Filesystem();
-
-        foreach ($affectedFiles as $file) {
-            $fs->touch($file, strtotime(self::MTIME));
-        }
+        // Set a predictable mtime on the tested file
+        (new Filesystem())->touch(Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'), strtotime(self::MTIME));
     }
 
     #[DataProvider('getPaths')]
     public function testGetVersion(string $path, string $expectedVersion): void
     {
-        $projectDir = $this->getFixturesDir();
-        $webDir = Path::join($projectDir, 'public');
-        $strategy = new MtimeVersionStrategy($projectDir, $webDir);
+        $strategy = new MtimeVersionStrategy(Path::join($this->getFixturesDir(), 'public'));
 
         $this->assertSame($expectedVersion, $strategy->getVersion($path));
         $this->assertSame($expectedVersion ? \sprintf('%s?v=%s', $path, $expectedVersion) : $path, $strategy->applyVersion($path));
@@ -50,12 +39,9 @@ class MtimeVersionStrategyTest extends TestCase
 
     public static function getPaths(): iterable
     {
-        $expectedVersion = (string) strtotime(self::MTIME);
-
         return [
-            ['files/data/data.csv', $expectedVersion],
-            ['images/dummy_public.jpg', $expectedVersion],
-            [Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'), $expectedVersion],
+            ['images/dummy_public.jpg', (string) strtotime(self::MTIME)],
+            ['/images/dummy_public.jpg', (string) strtotime(self::MTIME)],
             ['does_not_exist', ''],
         ];
     }

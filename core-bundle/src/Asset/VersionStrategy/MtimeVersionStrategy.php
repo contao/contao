@@ -18,7 +18,6 @@ use Symfony\Component\Filesystem\Path;
 class MtimeVersionStrategy implements VersionStrategyInterface
 {
     public function __construct(
-        private readonly string $projectDir,
         private readonly string $webDir,
         private readonly string $format = '%s?v=%s',
     ) {
@@ -26,28 +25,7 @@ class MtimeVersionStrategy implements VersionStrategyInterface
 
     public function getVersion(string $path): string
     {
-        // Check if path is an absolute filesystem path to an existing resource
-        if (Path::isAbsolute($path) && is_file($path)) {
-            return (string) filemtime($path);
-        }
-
-        $path = urldecode($path);
-
-        // Check if path references a resource relative to the project dir
-        $projectPath = Path::join($this->projectDir, $path);
-
-        if (is_file($projectPath)) {
-            return (string) filemtime($projectPath);
-        }
-
-        // Check if path references a resource relative to the public dir
-        $publicPath = Path::join($this->webDir, $path);
-
-        if (is_file($publicPath)) {
-            return (string) filemtime($publicPath);
-        }
-
-        return '';
+        return (string) @filemtime(Path::join($this->webDir, $path));
     }
 
     public function applyVersion(string $path): string
@@ -56,12 +34,6 @@ class MtimeVersionStrategy implements VersionStrategyInterface
             return $path;
         }
 
-        $versionized = \sprintf($this->format, ltrim($path, '/'), $version);
-
-        if ($path && '/' === $path[0]) {
-            return '/'.$versionized;
-        }
-
-        return $versionized;
+        return \sprintf($this->format, $path, $version);
     }
 }

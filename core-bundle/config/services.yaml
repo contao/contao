@@ -21,7 +21,6 @@ services:
     contao.asset.mtime_version_strategy:
         class: Contao\CoreBundle\Asset\VersionStrategy\MtimeVersionStrategy
         arguments:
-            - '%kernel.project_dir%'
             - '%contao.web_dir%'
 
     contao.assets.assets_context:
