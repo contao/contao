@@ -910,6 +910,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			->set($this->set)
 			->execute($this->intId);
 
+		self::clearCurrentRecordCache($this->intId, $this->strTable);
+
 		// Call the oncut_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncut_callback'] ?? null))
 		{
