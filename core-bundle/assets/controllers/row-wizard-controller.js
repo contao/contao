@@ -104,24 +104,26 @@ export default class extends Controller {
     updateNesting(i) {
         const name = this.nameValue.replace(/\d+$/, i);
 
-        this.bodyTarget.querySelectorAll(
-            `[for^=${this.nameValue}\\[],[for^=opt_${this.nameValue}\\[],[name^=${this.nameValue}\\[]`
-        ).forEach((el) => {
-            if (el.name) {
-                el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
-            }
+        this.bodyTarget
+            .querySelectorAll(
+                `[for^=${this.nameValue}\\[],[for^=opt_${this.nameValue}\\[],[name^=${this.nameValue}\\[]`,
+            )
+            .forEach((el) => {
+                if (el.name) {
+                    el.name = el.name.replace(new RegExp(`^${this.nameValue}\\[`, 'g'), `${name}[`);
+                }
 
-            if (el.id) {
-                el.id = el.id.replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`);
-            }
+                if (el.id) {
+                    el.id = el.id.replace(new RegExp(`^${this.nameValue}_`, 'g'), `${name}_`);
+                }
 
-            if (el.getAttribute('for')) {
-                el.setAttribute(
-                    'for',
-                    el.getAttribute('for').replace(new RegExp(`${this.nameValue}_`, 'g'), `${name}_`),
-                );
-            }
-        });
+                if (el.getAttribute('for')) {
+                    el.setAttribute(
+                        'for',
+                        el.getAttribute('for').replace(new RegExp(`${this.nameValue}_`, 'g'), `${name}_`),
+                    );
+                }
+            });
 
         this.element.setAttribute(`data-${this.identifier}-name-value`, name);
         this.updateSorting();
@@ -132,7 +134,7 @@ export default class extends Controller {
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `[for^=${this.nameValue}\\[], [for^=opt_${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`
+                `[for^=${this.nameValue}\\[], [for^=opt_${this.nameValue}\\[], [name^=${this.nameValue}\\[], [id*=${this.nameValue}\\[]`,
             )) {
                 if (el.name) {
                     el.name = el.name.replace(regexPattern, `${this.nameValue}[${i}]`);
@@ -164,14 +166,17 @@ export default class extends Controller {
 
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll(
-                `[for^=${this.nameValue}_default_], [for^=${this.nameValue}_group_], [id^=${this.nameValue}_default_], [id^=${this.nameValue}_group_]`
+                `[for^=${this.nameValue}_default_], [for^=${this.nameValue}_group_], [id^=${this.nameValue}_default_], [id^=${this.nameValue}_group_]`,
             )) {
                 if (el.id) {
                     el.id = el.id.replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`);
                 }
 
                 if (el.getAttribute('for')) {
-                    el.setAttribute('for', el.getAttribute('for').replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`));
+                    el.setAttribute(
+                        'for',
+                        el.getAttribute('for').replace(optionsRegexPattern, `${this.nameValue}_$1_${i}`),
+                    );
                 }
             }
         });
