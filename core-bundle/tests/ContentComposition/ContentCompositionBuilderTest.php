@@ -136,6 +136,10 @@ class ContentCompositionBuilderTest extends TestCase
             translator: $translator,
         );
 
+        global $objPage;
+
+        $this->assertNull($objPage, 'global $objPage is not set beforehand');
+
         $template = $builder->buildLayoutTemplate();
 
         $this->assertSame('admin@contao.org', $GLOBALS['TL_ADMIN_EMAIL']);
@@ -166,6 +170,8 @@ class ContentCompositionBuilderTest extends TestCase
         ];
 
         $this->assertSame($expectedTemplateData, $template->getData());
+
+        $this->assertSame($page, $objPage, 'global $objPage is set after building');
     }
 
     public function testAddsResponseContextDataToTemplate(): void
