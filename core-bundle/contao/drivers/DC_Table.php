@@ -404,6 +404,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'error' => $this->noReload,
 			'as_select' => Input::get('act') === 'select',
 			'as_picker' => (bool) $this->strPickerFieldType,
+			'panel_active' => $this->panelActive,
 		);
 
 		if ($defaultParameters['as_picker'])
@@ -3434,7 +3435,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			'message' => Message::generate(),
 			'global_operations' => $operations,
 			'has_clipboard_content' => $blnClipboard,
-			'panel_active' => $this->panelActive,
 		);
 
 		$blnHasSorting = $db->fieldExists('sorting', $table);
@@ -4079,7 +4079,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$parameters = array(
 			'is_sortable' => $blnIsSortable,
 			'has_clipboard_content' => $blnClipboard,
-			'panel_active' => $this->panelActive,
 		);
 
 		if (Input::get('act') != 'select' && $this->strPickerFieldType != 'checkbox')
@@ -4689,7 +4688,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$parameters['message'] = Message::generate();
 		$parameters['global_operations'] = $operations;
-		$parameters['panel_active'] = $this->panelActive;
 		$parameters['records'] = $records;
 		$parameters['order_by'] = $firstOrderBy;
 		$parameters['show_columns'] = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? false;
