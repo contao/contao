@@ -32,6 +32,7 @@
 .tl_listing .drag-handle {
     align-self: flex-start;
     padding: 0;
+    margin-top: 2px;
     background: none;
     border: none;
 }
@@ -40,10 +41,13 @@
     flex-grow: 1;
     box-sizing: border-box;
     white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
     line-height: normal;
     min-height: 18px;
+}
+
+.tree_view .foldable {
+    margin-right: 2px;
 }
 
 .tree_view .tl_left.with-offset {
@@ -52,8 +56,12 @@
     align-items: center;
     gap: 4px;
 
+    *:has(> img) {
+        display: flex;
+    }
+
     .foldable {
-        margin-right: -4px;
+        margin-right: -2px;
     }
 }
 
