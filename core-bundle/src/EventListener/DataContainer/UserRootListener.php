@@ -214,7 +214,7 @@ class UserRootListener implements ResetInterface
 
         foreach ($records as $record) {
             $root = (array) StringUtil::deserialize($record[$rootField], true);
-            $isEnabled = \in_array($prefix.$rootId, $selection, true);
+            $isEnabled = \in_array($prefix.$record['id'], $selection, true);
             $isActive = \in_array($rootId, $root, false);
 
             // Permission is already correct
