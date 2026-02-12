@@ -215,10 +215,9 @@ class DcaUrlAnalyzer
             'treeSiblings' => null,
         ];
 
+        // For these actions the pid parameter refers to the insert position
         if (
-            // Mode "paste into"
-            '2' === $this->findGet('mode')
-            // For these actions the pid parameter refers to the insert position
+            (string) DataContainer::PASTE_INTO === $this->findGet('mode')
             && \in_array($this->findGet('act'), ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)
         ) {
             array_unshift($links, [
@@ -329,13 +328,11 @@ class DcaUrlAnalyzer
 
         // For these actions the pid parameter refers to the insert position
         if (\in_array($act, ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)) {
-            // Mode "paste into"
-            if ('2' === $mode) {
+            if ((string) DataContainer::PASTE_INTO === $mode) {
                 return [$this->findPtable($table, $pid), $pid];
             }
 
-            // Mode "paste after"
-            $id = $pid;
+            $id = $pid; // paste after
         }
 
         if ('paste' === $act) {
