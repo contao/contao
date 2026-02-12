@@ -172,6 +172,7 @@ class Cron
             }
 
             $entityManager->flush();
+            $repository->purgeOldRecords();
         } finally {
             $repository->unlockTable();
         }

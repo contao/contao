@@ -70,4 +70,19 @@ class CronJobRepository extends ServiceEntityRepository
     {
         $this->connection->executeStatement('UNLOCK TABLES');
     }
+
+    /**
+     * Purges cron job entries where lastRun is older than 1 year.
+     */
+    public function purgeOldRecords(): void
+    {
+        $this->createQueryBuilder('c')
+            ->delete()
+            ->where('c.lastRun < :date')
+            // Use a grace period of 1 day, so that a yearly cronjob is not deleted immediately
+            ->setParameter('date', new \DateTime('-1 year -1 day'))
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }
