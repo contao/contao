@@ -151,6 +151,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		'robots' => array
 		(
 			'filter'                  => true,
+			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
