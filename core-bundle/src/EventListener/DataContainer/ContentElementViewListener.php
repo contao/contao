@@ -25,7 +25,6 @@ use Contao\MemberGroupModel;
 use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsCallback(table: 'tl_content', target: 'config.onload')]
 class ContentElementViewListener
 {
     public function __construct(
@@ -34,11 +33,10 @@ class ContentElementViewListener
     ) {
     }
 
-    public function __invoke(DC_Table $dc): void
+    #[AsCallback(table: 'tl_content', target: 'config.onload')]
+    public function adjustListView(DC_Table $dc): void
     {
         if ('tl_theme' !== $dc->parentTable) {
-            $GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback'] = $this->generateGridLabel(...);
-
             return;
         }
 
@@ -49,9 +47,26 @@ class ContentElementViewListener
             'defaultSearchField' => 'title',
             'headerFields' => ['name', 'author', 'tstamp'],
         ];
+    }
 
-        $GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback'] = $this->generateContentTypeLabel(...);
-        $GLOBALS['TL_DCA']['tl_content']['list']['label']['group_callback'] = $this->generateGroupLabel(...);
+    #[AsCallback('tl_content', 'list.label.label')]
+    public function generateLabel(array $row, string $label, DC_Table $dc): array|string
+    {
+        if ('tl_theme' !== $dc->parentTable) {
+            return $this->generateGridLabel($row);
+        }
+
+        return $this->generateContentTypeLabel($row);
+    }
+
+    #[AsCallback('tl_content', 'list.label.group')]
+    public function generateGroupLabel(string $group, int|string $mode, string $field, array $row, DC_Table $dc): string
+    {
+        if ('tl_theme' !== $dc->parentTable) {
+            return $group;
+        }
+
+        return 'type' === $field ? $row['type'] : $group;
     }
 
     private function generateGridLabel(array $row): array
@@ -81,11 +96,6 @@ class ContentElementViewListener
         }
 
         return [$type, $preview, $row['invisible'] ?? null ? 'unpublished' : 'published'];
-    }
-
-    private function generateGroupLabel(string $group, int|string $mode, string $field, array $row): string
-    {
-        return 'type' === $field ? $row['type'] : $group;
     }
 
     private function generateContentTypeLabel(array $row): string
