@@ -131,6 +131,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'language' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>32, 'tl_class'=>'w50'),
@@ -138,7 +139,6 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'calendars' => array
 		(
-			'search'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_calendar_feed', 'getAllowedCalendars'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),

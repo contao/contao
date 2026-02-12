@@ -335,7 +335,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'cud' => array
 		(
-			'search'                  => true,
 			'inputType'               => 'cud',
 			'sql'                     => "blob NULL"
 		),

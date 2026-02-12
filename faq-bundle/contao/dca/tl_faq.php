@@ -124,6 +124,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'default'                 => static fn () => BackendUser::getInstance()->id,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
@@ -149,7 +150,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'robots' => array
 		(
-			'search'                  => true,
+			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
@@ -264,7 +265,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'searchIndexer' => array
 		(
-			'search'                  => true,
+			'filter'                  => true,
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),
