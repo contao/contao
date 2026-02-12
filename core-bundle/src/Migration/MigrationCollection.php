@@ -67,11 +67,17 @@ class MigrationCollection
 
         foreach ($this->getPending() as $migration) {
             if (null !== $pendingNames) {
+                if (!$pendingNames) {
+                    // If no more migrations are pending we return without an exception as new
+                    // migrations will be discovered in the next execution of the migration process.
+                    return;
+                }
+
                 $expected = array_shift($pendingNames);
                 $actual = $migration->getName();
 
                 if ($expected !== $actual) {
-                    throw new UnexpectedPendingMigrationException(\sprintf('Expected %s got "%s".', $expected ? "\"$expected\"" : 'no migration', $actual));
+                    throw new UnexpectedPendingMigrationException(\sprintf('Expected "%s" got "%s".', $expected, $actual));
                 }
             }
 
