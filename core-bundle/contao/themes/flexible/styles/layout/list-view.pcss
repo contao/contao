@@ -168,6 +168,10 @@
     margin: 0;
     padding: 0;
     list-style: none;
+
+    li:first-child:not(:has(.tl_content_header)) .tl_content {
+        border-top: 1px solid var(--border);
+    }
 }
 
 .tl_content.indent_1 {
