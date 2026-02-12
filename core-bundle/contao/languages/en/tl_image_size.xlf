@@ -143,6 +143,9 @@
       <trans-unit id="tl_image_size.show.1">
         <source>Show the details of image size ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.versions.1">
+        <source>Show the versions of image size ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
       </trans-unit>

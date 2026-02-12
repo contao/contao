@@ -291,7 +291,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'imageUrl' => array
 		(

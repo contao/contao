@@ -1905,6 +1905,10 @@
         <source>No records found.</source>
         <target>Keine Einträge gefunden.</target>
       </trans-unit>
+      <trans-unit id="MSC.noResultWithFilter">
+        <source>No records match the current filter settings.</source>
+        <target>Keine Einträge mit den aktuellen Filtereinstellungen gefunden.</target>
+      </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
         <target>Von der Synchronisation ausgenommene Ordner sind in den Suchergebnissen nicht berücksichtigt.</target>
@@ -3139,7 +3143,7 @@
       </trans-unit>
       <trans-unit id="MSC.searchFacetTitle.type">
         <source>Type</source>
-        <target>Art des Jobs</target>
+        <target>Typ</target>
       </trans-unit>
       <trans-unit id="MSC.searchFacetTitle.tags">
         <source>Tags</source>
