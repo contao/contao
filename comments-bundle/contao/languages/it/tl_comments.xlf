@@ -169,6 +169,9 @@
         <source>Show the details of comment ID %s</source>
         <target>Mostra i dettagli del commento ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_comments.versions.1">
+        <source>Show the versions of comment ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>
         <target>Modifica commento ID %s</target>

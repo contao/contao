@@ -253,6 +253,9 @@
         <source>Show the details of member ID %s</source>
         <target>Afficher les détails du membre ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_member.versions.1">
+        <source>Show the versions of member ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_member.edit.1">
         <source>Edit member ID %s</source>
         <target>Éditer le membre ID %s</target>

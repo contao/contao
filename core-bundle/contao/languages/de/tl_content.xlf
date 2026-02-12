@@ -10,12 +10,12 @@
         <target>Bitte wählen Sie den Typ des Inhaltselements.</target>
       </trans-unit>
       <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Titel</target>
+        <source>Internal title</source>
+        <target>Interner Titel</target>
       </trans-unit>
       <trans-unit id="tl_content.title.1">
-        <source>Here you can enter an optional title for the content element.</source>
-        <target>Hier können Sie einen optionalen Titel für das Inhaltselement eingeben.</target>
+        <source>An optional title used, for example, in the back end preview and the breadcrumb menu.</source>
+        <target>Ein optionaler Titel, der beispielsweise in der Backend-Vorschau und im Breadcrumb-Menü verwendet wird.</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
@@ -952,6 +952,10 @@
       <trans-unit id="tl_content.show.1">
         <source>Show the details of content element ID %s</source>
         <target>Details des Inhaltselements ID %s anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.versions.1">
+        <source>Show the versions of content element ID %s</source>
+        <target>Versionen des Inhaltselements ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>

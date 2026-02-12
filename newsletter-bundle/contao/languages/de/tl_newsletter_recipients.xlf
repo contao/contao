@@ -71,11 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.1">
         <source>Create a new recipient</source>
-        <target>Einen neuen Abonnent erstellen</target>
+        <target>Einen neuen Abonnenten erstellen</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.show.1">
         <source>Show the details of recipient ID %s</source>
-        <target>Details des Abonnent ID %s anzeigen</target>
+        <target>Details des Abonnenten ID %s anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.versions.1">
+        <source>Show the versions of recipient ID %s</source>
+        <target>Versionen des Abonnenten ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.edit.1">
         <source>Edit recipient ID %s</source>

@@ -65,6 +65,10 @@
         <source>Show the details of news archive ID %s</source>
         <target>Details des Nachrichtenarchivs ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.versions.1">
+        <source>Show the versions of news archive ID %s</source>
+        <target>Versionen des Nachrichtenarchivs ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_news_archive.edit.1">
         <source>Edit news archive ID %s</source>
         <target>Nachrichtenarchiv ID %s bearbeiten</target>

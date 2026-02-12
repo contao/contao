@@ -2,6 +2,51 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.0-RC3] (2026-02-12)
+
+**Fixed issues:**
+
+- [#9389] Set the minimum line height to `18px` ([leofeyer])
+- [#9399] Force identical UX for `panelLayout` ([Toflar])
+- [#9388] Add the missing operation labels ([de-es])
+- [#9367] Consider prefixed `for` attributes in the row wizard controller ([zoglo])
+- [#9384] Use `DataContainer::PASTE_INTO` in the `DcaUrlAnalyzer` ([leofeyer])
+- [#9393] Use callbacks instead of onload config for the element view ([aschempp])
+- [#9373] Filter empty entries during validation for multi-file upload fields ([lukasbableck])
+- [#9390] Use double-quoted strings for the Twig string interpolation ([zoglo])
+- [#9259] Make the tree view template work with whitespaces ([m-vo])
+- [#9377] Correctly toggle the group icons ([leofeyer])
+- [#9376] Show a different message if no records match the filter settings ([leofeyer])
+- [#9378] Correctly handle "paste into" in mode 4 in the `DcaUrlAnalyzer` ([ausi])
+- [#9375] Decode entities in the content record label listener ([leofeyer])
+- [#9374] Do not always add the `multiple` attribute to the upload field ([lukasbableck])
+- [#9382] Normalize the layout template ([m-vo])
+- [#9381] Set `globals $objPage` when building the layout template ([m-vo])
+- [#9232] Improve the theme element list ([aschempp])
+- [#9363] Add the missing `perPage` checks when adding the pagination ([fritzmg])
+- [#9365] Fix the `ValueFormatter` return types ([aschempp])
+- [#9340] Correctly hide empty facets in the back end search ([zoglo])
+- [#9076] Generate the correct URL for root pages ([aschempp])
+- [#9355] Check the page access in the `DcaUrlAnalyzer` ([ausi])
+- [#9323] Replace the `AbstractLayoutPageController` with a content composition service ([m-vo])
+- [#9361] Fix copying records with virtual fields ([fritzmg])
+- [#9359] Disable CUD permissions for `tl_page` and `tl_article` ([aschempp])
+- [#9343] Re-add the database fields for the login content element ([fritzmg])
+- [#9353] Add the missing title field for the comments content element ([fritzmg])
+- [#8737] Remove unnecessary conflict on `thecodingmachine/safe` ([zoglo])
+- [#9357] Rename the "title" field to "internal title" ([leofeyer])
+- [#9344] Replace insert tags in the body CSS class ([Toflar])
+- [#9348] Allow READ access to the parent records of a page mount ([aschempp])
+- [#9007] Prevent content overflow to the left of the drag handle ([aschempp])
+- [#9334] Skip tree trail items without read permission in breadcrumbs ([ausi])
+- [#9342] Do not toggle the checkbox when toggling a folder ([zoglo])
+- [#9341] Cast the search image object to an array ([zoglo])
+- [#9331] Fix the dragging element in the file tree ([fritzmg])
+- [#9326] Close the file handlers after adding the log files as attachment ([leofeyer])
+- [#9322] Handle null values for `cssClass` in the modern page layout ([zoglo])
+- [#9324] Close the log handler after crawling ([fritzmg])
+- [#9321] Do not pass the context when including Twig templates with specified data ([zoglo])
+
 ## [5.7.0-RC2] (2026-01-27)
 
 **New features:**
@@ -215,6 +260,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
 [aschempp]: https://github.com/aschempp
@@ -245,6 +291,7 @@ This project adheres to [Semantic Versioning].
 [#8630]: https://github.com/contao/contao/pull/8630
 [#8646]: https://github.com/contao/contao/pull/8646
 [#8658]: https://github.com/contao/contao/pull/8658
+[#8737]: https://github.com/contao/contao/pull/8737
 [#8778]: https://github.com/contao/contao/pull/8778
 [#8781]: https://github.com/contao/contao/pull/8781
 [#8785]: https://github.com/contao/contao/pull/8785
@@ -300,6 +347,7 @@ This project adheres to [Semantic Versioning].
 [#9002]: https://github.com/contao/contao/pull/9002
 [#9005]: https://github.com/contao/contao/pull/9005
 [#9006]: https://github.com/contao/contao/pull/9006
+[#9007]: https://github.com/contao/contao/pull/9007
 [#9012]: https://github.com/contao/contao/pull/9012
 [#9013]: https://github.com/contao/contao/pull/9013
 [#9016]: https://github.com/contao/contao/pull/9016
@@ -320,6 +368,7 @@ This project adheres to [Semantic Versioning].
 [#9071]: https://github.com/contao/contao/pull/9071
 [#9073]: https://github.com/contao/contao/pull/9073
 [#9074]: https://github.com/contao/contao/pull/9074
+[#9076]: https://github.com/contao/contao/pull/9076
 [#9083]: https://github.com/contao/contao/pull/9083
 [#9084]: https://github.com/contao/contao/pull/9084
 [#9085]: https://github.com/contao/contao/pull/9085
@@ -392,6 +441,7 @@ This project adheres to [Semantic Versioning].
 [#9224]: https://github.com/contao/contao/pull/9224
 [#9227]: https://github.com/contao/contao/pull/9227
 [#9230]: https://github.com/contao/contao/pull/9230
+[#9232]: https://github.com/contao/contao/pull/9232
 [#9233]: https://github.com/contao/contao/pull/9233
 [#9236]: https://github.com/contao/contao/pull/9236
 [#9241]: https://github.com/contao/contao/pull/9241
@@ -404,6 +454,7 @@ This project adheres to [Semantic Versioning].
 [#9256]: https://github.com/contao/contao/pull/9256
 [#9257]: https://github.com/contao/contao/pull/9257
 [#9258]: https://github.com/contao/contao/pull/9258
+[#9259]: https://github.com/contao/contao/pull/9259
 [#9262]: https://github.com/contao/contao/pull/9262
 [#9266]: https://github.com/contao/contao/pull/9266
 [#9267]: https://github.com/contao/contao/pull/9267
@@ -427,3 +478,38 @@ This project adheres to [Semantic Versioning].
 [#9318]: https://github.com/contao/contao/pull/9318
 [#9319]: https://github.com/contao/contao/pull/9319
 [#9320]: https://github.com/contao/contao/pull/9320
+[#9321]: https://github.com/contao/contao/pull/9321
+[#9322]: https://github.com/contao/contao/pull/9322
+[#9323]: https://github.com/contao/contao/pull/9323
+[#9324]: https://github.com/contao/contao/pull/9324
+[#9326]: https://github.com/contao/contao/pull/9326
+[#9331]: https://github.com/contao/contao/pull/9331
+[#9334]: https://github.com/contao/contao/pull/9334
+[#9340]: https://github.com/contao/contao/pull/9340
+[#9341]: https://github.com/contao/contao/pull/9341
+[#9342]: https://github.com/contao/contao/pull/9342
+[#9343]: https://github.com/contao/contao/pull/9343
+[#9344]: https://github.com/contao/contao/pull/9344
+[#9348]: https://github.com/contao/contao/pull/9348
+[#9353]: https://github.com/contao/contao/pull/9353
+[#9355]: https://github.com/contao/contao/pull/9355
+[#9357]: https://github.com/contao/contao/pull/9357
+[#9359]: https://github.com/contao/contao/pull/9359
+[#9361]: https://github.com/contao/contao/pull/9361
+[#9363]: https://github.com/contao/contao/pull/9363
+[#9365]: https://github.com/contao/contao/pull/9365
+[#9367]: https://github.com/contao/contao/pull/9367
+[#9373]: https://github.com/contao/contao/pull/9373
+[#9374]: https://github.com/contao/contao/pull/9374
+[#9375]: https://github.com/contao/contao/pull/9375
+[#9376]: https://github.com/contao/contao/pull/9376
+[#9377]: https://github.com/contao/contao/pull/9377
+[#9378]: https://github.com/contao/contao/pull/9378
+[#9381]: https://github.com/contao/contao/pull/9381
+[#9382]: https://github.com/contao/contao/pull/9382
+[#9384]: https://github.com/contao/contao/pull/9384
+[#9388]: https://github.com/contao/contao/pull/9388
+[#9389]: https://github.com/contao/contao/pull/9389
+[#9390]: https://github.com/contao/contao/pull/9390
+[#9393]: https://github.com/contao/contao/pull/9393
+[#9399]: https://github.com/contao/contao/pull/9399

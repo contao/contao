@@ -45,6 +45,10 @@
         <source>Show the details of media query ID %s</source>
         <target>Details des Media-Querys ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_image_size_item.versions.1">
+        <source>Show the versions of media query ID %s</source>
+        <target>Versionen des Media-Querys ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
         <target>Media-Query ID %s bearbeiten</target>

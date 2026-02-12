@@ -89,6 +89,10 @@
         <source>Show the details of calendar ID %s</source>
         <target>ID %sのカレンダーの詳細を表示</target>
       </trans-unit>
+      <trans-unit id="tl_calendar.versions.1">
+        <source>Show the versions of calendar ID %s</source>
+        <target>ID %sのカレンダーのバージョンを表示</target>
+      </trans-unit>
       <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>
         <target>ID %sのカレンダーを編集</target>
