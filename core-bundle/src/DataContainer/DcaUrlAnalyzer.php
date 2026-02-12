@@ -217,7 +217,7 @@ class DcaUrlAnalyzer
 
         // For these actions the pid parameter refers to the insert position
         if (
-            DataContainer::PASTE_INTO === (int) $this->findGet('mode')
+            (string) DataContainer::PASTE_INTO === $this->findGet('mode')
             && \in_array($this->findGet('act'), ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)
         ) {
             array_unshift($links, [
@@ -328,7 +328,7 @@ class DcaUrlAnalyzer
 
         // For these actions the pid parameter refers to the insert position
         if (\in_array($act, ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)) {
-            if (DataContainer::PASTE_INTO === (int) $mode) {
+            if ((string) DataContainer::PASTE_INTO === $mode) {
                 return [$this->findPtable($table, $pid), $pid];
             }
 
