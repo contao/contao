@@ -77,6 +77,10 @@
         <source>Show the details of recipient ID %s</source>
         <target>ID %sの宛先の詳細を表示</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.versions.1">
+        <source>Show the versions of recipient ID %s</source>
+        <target>ID %sの宛先のバージョンを表示</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter_recipients.edit.1">
         <source>Edit recipient ID %s</source>
         <target>ID %sの宛先を変更</target>

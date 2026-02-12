@@ -281,6 +281,10 @@
         <source>Show the details of news item ID %s</source>
         <target>ID %sのニュース項目の詳細を表示</target>
       </trans-unit>
+      <trans-unit id="tl_news.versions.1">
+        <source>Show the versions of news item ID %s</source>
+        <target>item ID %sのニュース項目のバージョンを表示</target>
+      </trans-unit>
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>ID %sのニュース項目を編集</target>

@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.compare.0">
         <source>Compare</source>
+        <target>Karşılaştırma</target>
       </trans-unit>
       <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>

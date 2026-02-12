@@ -92,6 +92,9 @@
       <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_faq.versions.1">
+        <source>Show the versions of question ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_faq.edit.1">
         <source>Edit question ID %s</source>
       </trans-unit>
@@ -131,7 +134,13 @@
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
       </trans-unit>
-        <trans-unit id="tl_faq.tableLabel">
+      <trans-unit id="tl_faq.pastenewtop.1">
+        <source>Add a new question at the top</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenewafter.1">
+        <source>Add a new question after question ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.tableLabel">
         <source>Question</source>
       </trans-unit>
     </body>

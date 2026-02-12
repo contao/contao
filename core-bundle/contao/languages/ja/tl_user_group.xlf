@@ -93,6 +93,10 @@
         <source>Show the details of user group ID %s</source>
         <target>ID %sのユーザーグループの詳細を表示</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.versions.1">
+        <source>Show the versions of user group ID %s</source>
+        <target>ID %sのユーザーグループのバージョンを表示</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>
         <target>ID %sのユーザーグループを編集</target>

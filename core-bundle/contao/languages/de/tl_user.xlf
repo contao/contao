@@ -429,6 +429,10 @@
         <source>Show the details of user ID %s</source>
         <target>Details des Benutzers ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_user.versions.1">
+        <source>Show the versions of user ID %s</source>
+        <target>Versionen des Benutzers ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>
         <target>Benutzer ID %s bearbeiten</target>

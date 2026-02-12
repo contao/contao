@@ -1902,6 +1902,9 @@
         <source>No records found.</source>
         <target>Aucun enregistrement trouvé.</target>
       </trans-unit>
+      <trans-unit id="MSC.noResultWithFilter">
+        <source>No records match the current filter settings.</source>
+      </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
         <target>Les répertoires non synchronisés ne sont pas inclus dans les résultats de recherche.</target>

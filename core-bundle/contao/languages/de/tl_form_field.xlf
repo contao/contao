@@ -489,6 +489,10 @@
         <source>Show the details of form field ID %s</source>
         <target>Details des Formularfeldes ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.versions.1">
+        <source>Show the versions of form field ID %s</source>
+        <target>Versionen des Formularfeldes ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.edit.1">
         <source>Edit form field ID %s</source>
         <target>Formularfeld ID %s bearbeiten</target>

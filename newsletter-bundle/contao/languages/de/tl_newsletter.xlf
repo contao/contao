@@ -229,6 +229,10 @@
         <source>Show the details of newsletter ID %s</source>
         <target>Details des Newsletters ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.versions.1">
+        <source>Show the versions of newsletter ID %s</source>
+        <target>Versionen des Newsletters ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
         <target>Newsletter ID %s bearbeiten</target>
