@@ -33,7 +33,7 @@
         <source>Copy favorite ID %s</source>
       </trans-unit>
       <trans-unit id="tl_favorites.copyChildren.1">
-        <source>Copy favorite ID %s with its subfavorites</source>
+        <source>Copy favorite ID %s with its children</source>
       </trans-unit>
       <trans-unit id="tl_favorites.delete.1">
         <source>Delete favorite ID %s</source>

@@ -93,19 +93,19 @@
         <source>Delete preview link ID %s</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.toggle.0">
-        <source>Publish/unpublish preview link</source>
+        <source>Enable/disable preview link</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.toggle.1">
-        <source>Unpublish preview link ID %s</source>
+        <source>Disable preview link ID %s</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.toggle.2">
-        <source>Publish preview link ID %s</source>
+        <source>Enable preview link ID %s</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.toggle.3">
-        <source>Unpublish</source>
+        <source>Disable</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.toggle.4">
-        <source>Publish</source>
+        <source>Enable</source>
       </trans-unit>
     </body>
   </file>
