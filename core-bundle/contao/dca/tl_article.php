@@ -39,6 +39,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'permissions'                 => array(),
 		'onload_callback' => array
 		(
 			array('tl_article', 'adjustDca'),

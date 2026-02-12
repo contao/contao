@@ -9,10 +9,10 @@
         <source>Please choose the type of content element.</source>
       </trans-unit>
       <trans-unit id="tl_content.title.0">
-        <source>Title</source>
+        <source>Internal title</source>
       </trans-unit>
       <trans-unit id="tl_content.title.1">
-        <source>Here you can enter an optional title for the content element.</source>
+        <source>An optional title used, for example, in the back end preview and the breadcrumb menu.</source>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>

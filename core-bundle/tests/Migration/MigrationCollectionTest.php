@@ -65,18 +65,22 @@ class MigrationCollectionTest extends TestCase
     }
 
     #[DataProvider('getUnexpectedPendingMigrations')]
-    public function testRunMigrationsUnexpectedPending(array $pendingNames, string $expectedExceptionMessage): void
+    public function testRunMigrationsUnexpectedPending(array $pendingNames, string|null $expectedExceptionMessage): void
     {
         $migrations = new MigrationCollection($this->getMigrationServices());
 
-        $this->expectException(UnexpectedPendingMigrationException::class);
-        $this->expectExceptionMessage($expectedExceptionMessage);
+        if (null !== $expectedExceptionMessage) {
+            $this->expectException(UnexpectedPendingMigrationException::class);
+            $this->expectExceptionMessage($expectedExceptionMessage);
+        }
 
         $results = $migrations->run($pendingNames);
 
         if ($results instanceof \Traversable) {
             iterator_to_array($results);
         }
+
+        $this->assertNull($expectedExceptionMessage);
     }
 
     public static function getUnexpectedPendingMigrations(): iterable
@@ -88,7 +92,7 @@ class MigrationCollectionTest extends TestCase
 
         yield [
             ['Successful Migration'],
-            'Expected no migration got "Failing Migration".',
+            null,
         ];
 
         yield [
@@ -99,6 +103,11 @@ class MigrationCollectionTest extends TestCase
         yield [
             ['Successful Migration', 'Different Migration'],
             'Expected "Different Migration" got "Failing Migration".',
+        ];
+
+        yield [
+            [],
+            null,
         ];
     }
 

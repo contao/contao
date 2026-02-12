@@ -284,6 +284,10 @@ class MigrateCommand extends Command
                         }
                     }
                 }
+
+                if (!$asJson) {
+                    $this->io->success("Executed $count migrations.");
+                }
             } catch (UnexpectedPendingMigrationException $exception) {
                 if ($asJson) {
                     $this->writeNdjson('migration-result', [
@@ -291,12 +295,9 @@ class MigrateCommand extends Command
                         'isSuccessful' => false,
                     ]);
                 } else {
-                    $this->io->error($exception->getMessage());
+                    $this->io->success("Executed $count migrations.");
+                    $this->io->error("{$exception->getMessage()}\nRestarting migration process...");
                 }
-            }
-
-            if (!$asJson) {
-                $this->io->success('Executed '.$count.' migrations.');
             }
 
             if (null !== $specifiedHash) {
@@ -349,6 +350,8 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
+            // Backwards compatibility with doctrine/dbal < 4.5.0, see
+            // https://github.com/doctrine/dbal/pull/7302
             $sortedCommands = $commands;
             sort($sortedCommands);
 

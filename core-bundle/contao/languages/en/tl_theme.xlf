@@ -3,7 +3,7 @@
   <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en">
     <body>
       <trans-unit id="tl_theme.name.0">
-        <source>Theme title</source>
+        <source>Title</source>
       </trans-unit>
       <trans-unit id="tl_theme.name.1">
         <source>Please enter a unique theme title.</source>
