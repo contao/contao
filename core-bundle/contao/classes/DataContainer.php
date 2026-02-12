@@ -1037,9 +1037,22 @@ abstract class DataContainer extends Backend
 	 */
 	protected function panel()
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? null))
+		$panelLayout = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '';
+
+		if (!$panelLayout)
 		{
 			return '';
+		}
+
+		$panels = StringUtil::trimsplit('[;,]', $panelLayout);
+
+		// Force consistent order in Contao 5.7+ because the filter panel has moved from the top to the right.
+		// Separating into rows using ";" has no meaning anymore and for UX purposes, we want consistency so
+		// the order should always be search,filter,sort,limit.
+		// But if any custom panels have been used, we do not interfere with the settings.
+		if (empty(array_diff($panels, array('search', 'filter', 'sort', 'limit'))))
+		{
+			$panelLayout = implode(',', array_values(array_intersect(array('search', 'filter', 'sort', 'limit'), $panels)));
 		}
 
 		// Reset all filters
@@ -1062,7 +1075,7 @@ abstract class DataContainer extends Backend
 
 		$intFilterPanel = 0;
 		$arrPanels = array();
-		$arrPanes = StringUtil::trimsplit(';', $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '');
+		$arrPanes = StringUtil::trimsplit(';', $panelLayout);
 
 		foreach ($arrPanes as $strPanel)
 		{
@@ -1148,8 +1161,6 @@ abstract class DataContainer extends Backend
 			'panels' => $arrPanels,
 			'active' => $this->panelActive,
 		));
-
-		return $return;
 	}
 
 	/**

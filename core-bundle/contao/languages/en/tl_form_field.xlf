@@ -368,6 +368,9 @@
       <trans-unit id="tl_form_field.show.1">
         <source>Show the details of form field ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.versions.1">
+        <source>Show the versions of form field ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.edit.1">
         <source>Edit form field ID %s</source>
       </trans-unit>

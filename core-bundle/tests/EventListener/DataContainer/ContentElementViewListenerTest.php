@@ -30,6 +30,34 @@ class ContentElementViewListenerTest extends TestCase
         parent::tearDown();
     }
 
+    public function testAdjustsThemeView(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = 'foobar';
+
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class, [
+            'parentTable' => 'tl_theme',
+        ]);
+
+        $listener = new ContentElementViewListener($this->createContaoFrameworkStub(), $this->createStub(TranslatorInterface::class));
+        $listener->adjustListView($dc);
+
+        $this->assertIsArray($GLOBALS['TL_DCA']['tl_content']['list']['sorting']);
+    }
+
+    public function testDoesNotAdjustOtherView(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = 'foobar';
+
+        $dc = $this->createClassWithPropertiesStub(DC_Table::class, [
+            'parentTable' => 'tl_article',
+        ]);
+
+        $listener = new ContentElementViewListener($this->createContaoFrameworkStub(), $this->createStub(TranslatorInterface::class));
+        $listener->adjustListView($dc);
+
+        $this->assertSame('foobar', $GLOBALS['TL_DCA']['tl_content']['list']['sorting']);
+    }
+
     #[DataProvider('gridViewProvider')]
     public function testGridView(array $row, string $expectedLabel, string $expectedClass, string $expectedPreview = ''): void
     {
@@ -80,14 +108,7 @@ class ContentElementViewListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = 'foobar';
 
         $listener = new ContentElementViewListener($framework, $translator);
-        $listener($dc);
-
-        // The DCA sorting key must not be changed
-        $this->assertSame('foobar', $GLOBALS['TL_DCA']['tl_content']['list']['sorting']);
-
-        $this->assertIsCallable($GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback']);
-
-        $label = $GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback']($row);
+        $label = $listener->generateLabel($row, '', $dc);
 
         $this->assertSame($expectedLabel, $label[0]);
         $this->assertSame($expectedPreview, $label[1]);
@@ -203,11 +224,7 @@ class ContentElementViewListenerTest extends TestCase
         ]);
 
         $listener = new ContentElementViewListener($framework, $translator);
-        $listener($dc);
-
-        $this->assertIsCallable($GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback']);
-
-        $label = $GLOBALS['TL_DCA']['tl_content']['list']['label']['label_callback'](['type' => 'text']);
+        $label = $listener->generateLabel(['type' => 'text'], '', $dc);
 
         $this->assertSame('<p class="tl_error">foobar</p>', $label[1]);
     }
