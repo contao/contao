@@ -25,7 +25,7 @@ class MtimeVersionStrategy implements VersionStrategyInterface
 
     public function getVersion(string $path): string
     {
-        return (string) @filemtime(Path::join($this->webDir, $path));
+        return (string) @filemtime(Path::join($this->webDir, urldecode($path)));
     }
 
     public function applyVersion(string $path): string
