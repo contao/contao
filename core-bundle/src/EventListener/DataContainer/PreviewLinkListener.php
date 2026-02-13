@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -174,29 +175,44 @@ class PreviewLinkListener
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
-    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
+    public function shareOperation(DataContainerOperation $operation): void
     {
-        if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
-            return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
-        }
+        $row = $operation->getRecord();
 
-        return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);
+        if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
+            $operation->disable();
+        } else {
+            $url = $this->generateUrl((int) $row['id']);
+
+            $operation->setUrl($url);
+            $operation['attributes']
+                ->set('data-controller', 'contao--clipboard')
+                ->set('data-contao--clipboard-content-value', $url)
+                ->set('data-contao--clipboard-message-value', $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'))
+                ->set('data-action', 'contao--clipboard#write:prevent')
+            ;
+        }
     }
 
-    private function generateClipboardLink(int $id, string|null $label = null, string|null $title = null): string
+    private function generateUrl(int $id): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
         $url = $this->uriSigner->sign($url);
 
-        $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
+        return $url;
+    }
+
+    private function generateClipboardLink(int $id): string
+    {
+        $url = $this->generateUrl($id);
 
         return \sprintf(
             '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
             StringUtil::specialcharsUrl($url),
-            StringUtil::specialchars($title),
+            StringUtil::specialchars($this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link')),
             StringUtil::specialcharsUrl($url),
             $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'),
-            $label ?? $url,
+            $url,
         );
     }
 }

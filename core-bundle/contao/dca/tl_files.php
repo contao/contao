@@ -12,6 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\File\TextTrackType;
@@ -114,14 +115,14 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
-				'button_callback'     => array('tl_files', 'copyFile')
+				'button_callback'     => array('tl_files', 'canRenameFile')
 			),
 			'cut' => array
 			(
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
-				'button_callback'     => array('tl_files', 'cutFile')
+				'button_callback'     => array('tl_files', 'canRenameFile')
 			),
 			'delete' => array
 			(
@@ -672,73 +673,38 @@ class tl_files extends Backend
 	}
 
 	/**
-	 * Return the sync files button
-	 *
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $class
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the sync files button
 	 */
-	public function syncFiles($href, $label, $title, $class, $attributes)
+	public function syncFiles(DataContainerOperation $operation)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_SYNC_DBAFS) ? '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" class="' . $class . '"' . $attributes . '>' . $label . '</a> ' : '';
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_SYNC_DBAFS)) {
+			$operation->hide();
+		}
 	}
 
 	/**
-	 * Return the edit file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the edit file button
 	 */
-	public function editFile($row, $href, $label, $title, $icon, $attributes)
+	public function editFile(DataContainerOperation $operation)
 	{
 		$security = System::getContainer()->get('security.helper');
-		$subject = new UpdateAction('tl_files', $row);
+		$subject = new UpdateAction('tl_files', $operation->getRecord());
 
-		return $security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_files', $subject) || !$security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE))
+		{
+			$operation->disable();
+		}
 	}
 
 	/**
-	 * Return the copy file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the copy and cut file buttons
 	 */
-	public function copyFile($row, $href, $label, $title, $icon, $attributes)
+	public function canRenameFile(DataContainerOperation $operation)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the cut file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function cutFile($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE))
+		{
+			$operation->disable();
+		}
 	}
 
 	/**
@@ -753,7 +719,7 @@ class tl_files extends Backend
 	 *
 	 * @return string
 	 */
-	public function uploadFile($row, $href, $label, $title, $icon, $attributes)
+	public function uploadFile(DataContainerOperation $operation)
 	{
 		if (($row['type'] ?? null) == 'folder' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
 		{
@@ -764,63 +730,61 @@ class tl_files extends Backend
 	}
 
 	/**
-	 * Return the delete file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the delete file button
 	 */
-	public function deleteFile($row, $href, $label, $title, $icon, $attributes)
+	public function deleteFile(DataContainerOperation $operation)
 	{
 		$security = System::getContainer()->get('security.helper');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$row = $operation->getRecord();
 		$path = $projectDir . '/' . urldecode($row['id']);
 
 		if (!is_dir($path))
 		{
-			return ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE) || $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+			if (!$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE) && !$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY))
+			{
+				$operation->disable();
+			}
+
+			return;
 		}
 
 		$finder = Finder::create()->in($path);
 
 		if ($finder->hasResults())
 		{
-			return $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+			if (!$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY))
+			{
+				$operation->disable();
+			}
 		}
-
-		return $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		elseif (!$security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE))
+		{
+			$operation->disable();
+		}
 	}
 
 	/**
-	 * Return the edit file source button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the edit file source button
 	 */
-	public function editSource($row, $href, $label, $title, $icon, $attributes)
+	public function editSource(DataContainerOperation $operation)
 	{
 		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FILE))
 		{
-			return '';
+			$operation->hide();
+
+			return;
 		}
 
+		$row = $operation->getRecord();
 		$strDecoded = rawurldecode($row['id']);
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if (is_dir($projectDir . '/' . $strDecoded))
 		{
-			return '';
+			$operation->hide();
+
+			return;
 		}
 
 		$objFile = new File($strDecoded);
@@ -830,32 +794,23 @@ class tl_files extends Backend
 
 		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+			$operation->disable();
 		}
-
-		return '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**
-	 * Return the show file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the show file button
 	 */
-	public function showFile($row, $href, $label, $title, $icon, $attributes)
+	public function showFile(DataContainerOperation $operation)
 	{
 		if (Input::get('popup'))
 		{
-			return '';
+			$operation->hide();
 		}
-
-		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($row['id'])))) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $title) . '</a> ';
+		else
+		{
+			$operation->setUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($operation->getRecord()['id']))));
+		}
 	}
 
 	/**
