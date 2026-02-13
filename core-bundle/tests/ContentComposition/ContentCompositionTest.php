@@ -67,6 +67,7 @@ class ContentCompositionTest extends TestCase
             $this->createStub(PreviewFactory::class),
             $this->createStub(ContaoContext::class),
             $this->createStub(RendererInterface::class),
+            $this->createStub(RendererInterface::class),
             $this->createStub(RequestStack::class),
             $this->createStub(LocaleAwareInterface::class),
             $pageRegistry,
