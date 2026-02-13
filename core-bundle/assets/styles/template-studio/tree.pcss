@@ -1,69 +1,107 @@
-#template-studio nav {
-    white-space: nowrap;
-    padding: 4px;
-
-    ol {
-        padding: 0;
-        margin: 0;
+#template-studio--tree {
+    &, > * {
+        height: 100%;
+        overflow: hidden;
     }
 
-    > ol > li {
-        > ol {
-            li {
-                margin-left: 0.75em;
-                border-left: thin solid var(--tree-line);
+    .search-filter {
+        position: relative;
+        vertical-align: initial;
 
-                &::before {
-                    content: "";
-                    width: 0.5em;
-                    height: 0.75em;
-                    vertical-align: top;
-                    border-bottom: thin solid var(--tree-line);
-                    display: inline-block;
-                }
+        svg {
+            position: absolute;
+            left: 7px;
+            top: 3px;
+            pointer-events: none;
+            color: var(--gray);
+        }
 
-                &:last-child {
-                    border-left: none;
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 6px 8px 6px 26px;
+            outline: none;
+            border: 0 none;
 
-                    &::before {
-                        border-left: thin solid var(--tree-line);
-                    }
-                }
-
-                > :not(ol) {
-                    display: inline-flex;
-                    align-items: center;
-                }
+            &.active {
+                background-color: var(--active-bg);
             }
         }
 
-        > .node {
-            margin-left: 4px;
+        input.active + button {
+            display: revert;
         }
     }
 
-    .node {
-        font-size: 0.75rem;
-        padding: 4px 0 2px;
-        color: var(--green);
-    }
+    nav {
+        height: 100%;
+        overflow: auto;
+        white-space: nowrap;
+        padding: 4px;
 
-    button {
-        display: inline-flex;
-        gap: 2px;
-        background: none;
-        border: none;
-        padding: 2px 0;
-        color: var(--text);
-
-        .user {
-            color: var(--blue);
+        ol {
+            padding: 0;
+            margin: 0;
         }
 
-        &:hover,
-        .user:hover {
-            color: var(--hover-color);
-            opacity: 1;
+        > ol > li {
+            > ol {
+                li {
+                    margin-left: 0.75em;
+                    border-left: thin solid var(--tree-line);
+
+                    &::before {
+                        content: "";
+                        width: 0.5em;
+                        height: 0.75em;
+                        vertical-align: top;
+                        border-bottom: thin solid var(--tree-line);
+                        display: inline-block;
+                    }
+
+                    &:last-child {
+                        border-left: none;
+
+                        &::before {
+                            border-left: thin solid var(--tree-line);
+                        }
+                    }
+
+                    > :not(ol) {
+                        display: inline-flex;
+                        align-items: center;
+                    }
+                }
+            }
+
+            > .node {
+                margin-left: 4px;
+            }
+        }
+
+        .node {
+            font-size: 0.75rem;
+            padding: 4px 0 2px;
+            color: var(--green);
+        }
+
+        button {
+            display: inline-flex;
+            gap: 2px;
+            background: none;
+            border: none;
+            padding: 2px 0;
+            color: var(--text);
+
+            .user {
+                color: var(--blue);
+            }
+
+            &:hover,
+            .user:hover {
+                color: var(--hover-color);
+                opacity: 1;
+            }
         }
     }
 }
