@@ -5,7 +5,10 @@ export default class extends Controller {
     static values = { selector: String };
 
     connect() {
-        const count = this.hasParentTarget && this.selectorValue ? this.parentTarget.querySelectorAll(this.selectorValue).length : 0;
+        const count =
+            this.hasParentTarget && this.selectorValue
+                ? this.parentTarget.querySelectorAll(this.selectorValue).length
+                : 0;
 
         for (const el of this.countTargets) {
             el.innerText = count !== 0 ? count : '';
