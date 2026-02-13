@@ -40,6 +40,9 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     private string|false|null $currentThemeSlug = null;
 
     /**
+     * The list of all identifiers mapped to a chain of template candidates (<absolute
+     * path> => <template logical name>) or null if not yet built.
+     *
      * @var array<string, array<string, string>>|null
      */
     private array|null $inheritanceChains = null;
@@ -323,16 +326,18 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     {
         $this->ensureHierarchyIsBuilt();
 
-        $chains = [];
+        if (true === $themeSlug) {
+            return $this->inheritanceChains;
+        }
+
+        $chains = $this->inheritanceChains;
 
         foreach ($this->inheritanceChains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
                 if (true !== $themeSlug && null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
-                    continue;
+                    unset($chains[$identifier][$path]);
                 }
-
-                $chains[$identifier][Path::makeAbsolute($path, $this->projectDir)] = $name;
             }
         }
 
@@ -385,11 +390,40 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             return;
         }
 
+        // Store paths relative to the project dir (see #5826)
+        $makePathsRelative = function (array $inheritanceChains) {
+            $chains = [];
+
+            foreach ($inheritanceChains as $identifier => $chain) {
+                foreach ($chain as $path => $name) {
+                    $chains[$identifier][Path::makeRelative($path, $this->projectDir)] = $name;
+                }
+            }
+
+            return $chains;
+        };
+
+        // Restore paths to absolute paths - as used everywhere in the application - to
+        // make lookup fast
+        $makePathsAbsolute = function (array $inheritanceChains) {
+            $chains = [];
+
+            foreach ($inheritanceChains as $identifier => $chain) {
+                foreach ($chain as $path => $name) {
+                    $chains[$identifier][Path::makeAbsolute($path, $this->projectDir)] = $name;
+                }
+            }
+
+            return $chains;
+        };
+
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
 
         // Restore hierarchy and theme slugs from cache
         if ($useCacheForLookup && $hierarchyItem->isHit() && null !== ($hierarchy = $hierarchyItem->get())) {
-            [$this->inheritanceChains, $this->themeSlugs] = $hierarchy;
+            [$inheritanceChains, $this->themeSlugs] = $hierarchy;
+
+            $this->inheritanceChains = $makePathsAbsolute($inheritanceChains);
 
             return;
         }
@@ -398,7 +432,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         [$this->inheritanceChains, $this->themeSlugs] = $this->buildInheritanceChains();
 
         // Persist
-        $hierarchyItem->set([$this->inheritanceChains, $this->themeSlugs]);
+        $hierarchyItem->set([$makePathsRelative($this->inheritanceChains), $this->themeSlugs]);
         $this->cachePool->save($hierarchyItem);
     }
 
@@ -464,10 +498,10 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                 if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {
                     $typeByIdentifier[$identifier] = $type;
                 } elseif ($type !== $existingType) {
-                    throw new \OutOfBoundsException(\sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, Path::makeAbsolute(array_key_last($hierarchy[$identifier]), $this->projectDir), $type, $path));
+                    throw new \OutOfBoundsException(\sprintf('The "%s" template has incompatible types, got "%s" in "%s" and "%s" in "%s".', $identifier, $existingType, array_key_last($hierarchy[$identifier]), $type, $path));
                 }
 
-                $hierarchy[$identifier][Path::makeRelative($path, $this->projectDir)] = "@$namespace/$shortName";
+                $hierarchy[$identifier][$path] = "@$namespace/$shortName";
             }
         }
 
@@ -505,7 +539,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                 // Either the namespace must match, or - in case of the default namespace
                 // ("@Contao") - the first non-theme element is used.
                 if (('Contao' === $namespace && !$this->themeNamespace->match($candidateTemplateName)) || str_starts_with($candidateTemplateName, "@$namespace/")) {
-                    return $candidatePath;
+                    return Path::makeRelative($candidatePath, $this->projectDir);
                 }
             }
 
