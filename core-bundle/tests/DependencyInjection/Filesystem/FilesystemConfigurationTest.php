@@ -268,8 +268,8 @@ class FilesystemConfigurationTest extends TestCase
         $config->addVirtualFilesystem('foo', 'some/prefix');
 
         $definition = $config->addAssetPackage('foo');
-
         $this->assertTrue($container->hasDefinition('contao.assets.package.vfs.foo'));
+
         $package = $container->getDefinition('contao.assets.package.vfs.foo');
         $this->assertSame(VirtualFilesystemStoragePackage::class, $package->getClass());
         $this->assertSame('contao.filesystem.virtual.foo', (string) $package->getArgument(0));

@@ -31,10 +31,10 @@ class VirtualFilesystemStoragePackage implements PackageInterface
 
     public function getUrl(string $path): string
     {
-        return $this->storage
-            ->generatePublicUri($path)
-            ?->withQuery('v='.$this->getVersion($path))
-            ->__toString() ?? $path
-        ;
+        if ($uri = $this->storage->generatePublicUri($path)) {
+            return (string) $uri->withQuery('v='.$this->getVersion($path));
+        }
+
+        return $path;
     }
 }
