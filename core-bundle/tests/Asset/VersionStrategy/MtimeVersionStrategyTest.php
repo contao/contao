@@ -25,7 +25,9 @@ class MtimeVersionStrategyTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         // Set a predictable mtime on the tested file
-        (new Filesystem())->touch(Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'), strtotime(self::MTIME));
+        $fs = new Filesystem();
+        $fs->touch(Path::join(__DIR__, '../../Fixtures/public/images/dummy_public.jpg'), strtotime(self::MTIME));
+        $fs->touch(Path::join(__DIR__, '../../Fixtures/public/images/dummy public.jpg'), strtotime(self::MTIME));
     }
 
     #[DataProvider('getPaths')]
@@ -39,10 +41,9 @@ class MtimeVersionStrategyTest extends TestCase
 
     public static function getPaths(): iterable
     {
-        return [
-            ['images/dummy_public.jpg', (string) strtotime(self::MTIME)],
-            ['/images/dummy_public.jpg', (string) strtotime(self::MTIME)],
-            ['does_not_exist', ''],
-        ];
+        yield 'relative path' => ['images/dummy_public.jpg', (string) strtotime(self::MTIME)];
+        yield 'absolute path' => ['/images/dummy_public.jpg', (string) strtotime(self::MTIME)];
+        yield 'encoded path' => ['/images/dummy%20public.jpg', (string) strtotime(self::MTIME)];
+        yield 'not existent path' => ['does_not_exist', ''];
     }
 }
