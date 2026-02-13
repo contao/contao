@@ -606,7 +606,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		return '<div
 				class="tree-view"
-				data-controller="contao--toggle-nodes contao--element-count"
+				data-controller="contao--toggle-nodes' . ($panel ? ' contao--element-count' : '') . '"
 				data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 				data-contao--toggle-nodes-load-action-value="loadFileManager"
 				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
@@ -616,7 +616,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
-				data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"
+				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"' : '') . '
 			>' . $return . '</div>';
 	}
 

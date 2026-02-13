@@ -19,7 +19,6 @@ use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\FrontendIndex;
 use Contao\LayoutModel;
 use Contao\PageModel;
@@ -32,7 +31,6 @@ class RegularPageController extends AbstractController
         private readonly ContentComposition $contentComposition,
         private readonly CoreResponseContextFactory $responseContextFactory,
         private readonly ResponseContextAccessor $responseContextAccessor,
-        private readonly RendererInterface $deferredRenderer,
         private readonly ContaoFramework $framework,
         private \Closure|null $handleNonModernLayoutType = null,
     ) {
@@ -52,7 +50,6 @@ class RegularPageController extends AbstractController
         $layoutTemplate = $this->contentComposition
             ->createContentCompositionBuilder($page)
             ->setResponseContext($responseContext)
-            ->setSlotRenderer($this->deferredRenderer)
             ->buildLayoutTemplate()
         ;
 

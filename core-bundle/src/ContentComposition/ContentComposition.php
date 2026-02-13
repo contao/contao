@@ -35,6 +35,7 @@ class ContentComposition
         private readonly PreviewFactory $previewFactory,
         private readonly ContaoContext $assetsContext,
         private readonly RendererInterface $defaultRenderer,
+        private readonly RendererInterface $deferredRenderer,
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
         private readonly PageRegistry $pageRegistry,
@@ -54,6 +55,9 @@ class ContentComposition
             $this->translator,
             $page,
         );
+
+        // Always use the deferred renderer for the layout template
+        $builder->setRenderer($this->deferredRenderer);
 
         if ($template = $this->pageRegistry->getRoute($page)->getDefault('_template')) {
             $builder->useCustomLayoutTemplate($template);
