@@ -135,6 +135,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
+            ->with(['UpdateEntitiesCron::onHourly'])
         ;
 
         $cronjob = $this
@@ -248,6 +249,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
+            ->with(['UpdateEntitiesCron::onHourly'])
         ;
 
         $cronjob = $this
@@ -300,6 +302,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
+            ->with(['UpdateEntitiesCron::onHourly'])
         ;
 
         $cronjob = $this
@@ -355,6 +358,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron'])
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
@@ -423,6 +427,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron'])
         ;
 
         $cache = new ArrayAdapter();
@@ -472,6 +477,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingMethod'])
         ;
 
         $cronjob = new TestCronJob();
@@ -527,6 +533,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod'])
         ;
 
         $cronjob = new TestCronJob();

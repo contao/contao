@@ -172,7 +172,7 @@ class Cron
             }
 
             $entityManager->flush();
-            $repository->purgeOldRecords();
+            $repository->purgeOldRecords(array_map(static fn (CronJob $cronJob): string => $cronJob->getName(), $cronJobs));
         } finally {
             $repository->unlockTable();
         }

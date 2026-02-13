@@ -73,14 +73,24 @@ class CronJobRepository extends ServiceEntityRepository
 
     /**
      * Purges cron job entries where lastRun is older than 1 year.
+     *
+     * @param list<string> $keepByName the cron job entries to keep by name
      */
-    public function purgeOldRecords(): void
+    public function purgeOldRecords(array $keepByName = []): void
     {
-        $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('c');
+        $qb
             ->delete()
             ->where('c.lastRun < :date')
-            // Use a grace period of 1 day, so that a yearly cronjob is not deleted immediately
-            ->setParameter('date', new \DateTime('-1 year -1 day'))
+        ;
+
+        if ($keepByName) {
+            $qb->andWhere($qb->expr()->notIn('c.name', $keepByName));
+        }
+
+        $qb
+            // Use a grace period of 1 month, so that a yearly cronjob is not deleted immediately
+            ->setParameter('date', new \DateTime('-1 year -1 month'))
             ->getQuery()
             ->execute()
         ;
