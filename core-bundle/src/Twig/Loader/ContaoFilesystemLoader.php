@@ -335,7 +335,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         foreach ($this->inheritanceChains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
-                if (true !== $themeSlug && null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
+                if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
                     unset($chains[$identifier][$path]);
                 }
             }
