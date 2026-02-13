@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Repository;
 
 use Contao\CoreBundle\Entity\CronJob;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Doctrine\DBAL\Types\Types;
@@ -82,15 +83,18 @@ class CronJobRepository extends ServiceEntityRepository
         $qb
             ->delete()
             ->where('c.lastRun < :date')
+            // Use a grace period of 1 month, so that a yearly cronjob is not deleted immediately
+            ->setParameter('date', new \DateTimeImmutable('-1 year -1 month'))
         ;
 
         if ($keepByName) {
-            $qb->andWhere($qb->expr()->notIn('c.name', $keepByName));
+            $qb
+                ->andWhere($qb->expr()->notIn('c.name', ':keepByName'))
+                ->setParameter('keepByName', $keepByName, ArrayParameterType::STRING)
+            ;
         }
 
         $qb
-            // Use a grace period of 1 month, so that a yearly cronjob is not deleted immediately
-            ->setParameter('date', new \DateTime('-1 year -1 month'))
             ->getQuery()
             ->execute()
         ;
