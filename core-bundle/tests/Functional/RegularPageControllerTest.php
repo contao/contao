@@ -46,6 +46,7 @@ class RegularPageControllerTest extends FunctionalTestCase
 
         $this->assertSame('article-1', $articleNode->attr('id'));
         $this->assertSame('mod_article block', $articleNode->attr('class'));
+
         $this->assertSame(
             '[content from test fragment controller for tl_content.1 in main]',
             $articleNode->innerText(),
