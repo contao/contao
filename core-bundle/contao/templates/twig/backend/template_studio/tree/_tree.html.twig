@@ -7,14 +7,16 @@
             {% set leaf_node = node %}
         {% elseif node|length <= 1 and node|first is not iterable %}
             {% set leaf_node = node|first %}
+        {% else %}
+            {% set leaf_node = null %}
         {% endif %}
 
         {% set node_attributes = attrs()
-            .set('data-contao--template-studio-target', 'nameNode',  leaf_node is defined)
-            .set('data-name', leaf_node.identifier|default, leaf_node is defined)
+            .set('data-contao--template-studio-target', 'nameNode', leaf_node)
+            .set('data-name', leaf_node.identifier|default, leaf_node)
         %}
         <li{{ node_attributes }}>
-            {% if leaf_node|default %}
+            {% if leaf_node %}
                 {% with {identifier: leaf_node.identifier} %}
                     {% embed '@Contao/backend/template_studio/_template_identifier_button.html.twig' %}
                         {% block inner %}
