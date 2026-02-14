@@ -39,7 +39,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->render('@Contao/backend/template_studio/operation/default_result.stream.html.twig', [
             'name' => $this->getName(),
             'context' => $context,
-            'translation_key' => "message.$name.success",
+            'translation_key' => "template_studio.message.$name.success",
             'success' => true,
         ]);
     }
@@ -51,7 +51,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         return $this->render('@Contao/backend/template_studio/operation/default_result.stream.html.twig', [
             'name' => $this->getName(),
             'context' => $context,
-            'translation_key' => $customTranslation ?? "message.$name.error",
+            'translation_key' => $customTranslation ?? "template_studio.message.$name.error",
             'success' => false,
         ]);
     }

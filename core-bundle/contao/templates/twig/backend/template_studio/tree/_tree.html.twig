@@ -6,7 +6,7 @@
         <li>
             {% if node is iterable %}
                 {% if node|length > 1 or node|first is iterable %}
-                    <span class="node">{{ name|default("(#{'not_prefixed'|trans})") }}</span>
+                    <span class="node">{{ name|default("(#{'template_studio.not_prefixed'|trans})") }}</span>
                     {{ _self.tree_node(node) }}
                 {% else %}
                     {% with {node: node|first} %}{{ block('navigate_button') }}{% endwith %}
