@@ -28,6 +28,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
@@ -158,45 +159,45 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
-			'sql'                     => "binary(16) NULL"
+			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'uuid' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['fileUuid'],
-			'sql'                     => "binary(16) NULL"
+			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
 		),
 		'type' => array
 		(
-			'sql'                     => "varchar(16) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'')
 		),
 		'path' => array
 		(
 			'eval'                    => array('unique'=>true, 'versionize'=>false),
-			'sql'                     => "varchar(1022) BINARY NOT NULL default ''",
+			'sql'                     => array('type'=>'string', 'length'=>1022, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin')),
 		),
 		'extension' => array
 		(
-			'sql'                     => "varchar(16) BINARY NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'hash' => array
 		(
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'lastModified' => array
 		(
-			'sql'                     => "int(13) unsigned NULL default NULL"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'notnull'=>false)
 		),
 		'found' => array
 		(
-			'sql'                     => array('type' => 'boolean', 'default' => true)
+			'sql'                     => array('type'=>'boolean', 'default'=>true)
 		),
 		'preview' => array
 		(
@@ -215,7 +216,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				array('tl_files', 'checkFilename')
 			),
-			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'protected' => array
 		(
@@ -231,25 +232,25 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>0)
 		),
 		'importantPartY' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>0)
 		),
 		'importantPartWidth' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>0)
 		),
 		'importantPartHeight' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>0)
 		),
 		'textTrackLanguage' => array
 		(
@@ -257,7 +258,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'inputType'               => 'select',
 			'eval'                    => array('mandatory' => true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'textTrackType' => array
 		(
@@ -265,7 +266,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'options_callback'        => static fn () => array_map(static fn ($case) => $case->name, TextTrackType::cases()),
-			'sql'                     => "varchar(12) NULL"
+			'sql'                     => array('type'=>'string', 'length'=>12, 'notnull'=>false)
 		),
 		'meta' => array
 		(
@@ -288,7 +289,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					)
 				)
 			),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		)
 	)
 );

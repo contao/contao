@@ -14,6 +14,7 @@ use Contao\DC_Table;
 use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
@@ -70,17 +71,17 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'name' => array
 		(
@@ -88,46 +89,46 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'search'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NULL"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false)
 		),
 		'imageQuality' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'cssClass' => array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
 			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'densities' => array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'sizes' => array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr', 'decodeEntities'=>true),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'width' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'height' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'resizeMode' => array
 		(
@@ -135,20 +136,20 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'zoom' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'formats' => array
 		(
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "varchar(1024) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>1024, 'default'=>'')
 		),
 		'preserveMetadata' => array
 		(
@@ -156,25 +157,25 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'options'                 => array('default', 'overwrite', 'delete'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['preserveMetadataOptions'],
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "varchar(12) NOT NULL default 'default'"
+			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'default')
 		),
 		'preserveMetadataFields' => array
 		(
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getMetadataFields'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'skipIfDimensionsMatch' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'lazyLoading' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		)
 	)
 );
