@@ -94,6 +94,8 @@ services:
         class: Contao\NewsBundle\Migration\FeedMigration
         arguments:
             - '@database_connection'
+            - '@filesystem'
+            - '%contao.web_dir%'
 
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
