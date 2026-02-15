@@ -229,23 +229,24 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function configureFilesystem(FilesystemConfiguration $config): void
     {
-        // User uploads
-        $filesStorageName = 'files';
-
         // TODO: Deprecate the "contao.upload_path" config key. In the next major
         // version, $uploadPath can then be replaced with "files" and the redundant
         // "files" attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
+        // User uploads
         $config
             ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
-            ->addVirtualFilesystem($filesStorageName, $uploadPath)
+            ->addVirtualFilesystem($filesStorageName = 'files', $uploadPath)
         ;
 
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
             ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
         ;
+
+        $config->addVirtualFilesystem($readonlyFilesStorageName = "$filesStorageName#readonly", $uploadPath, true);
+        $config->addAssetPackage($readonlyFilesStorageName, $filesStorageName);
 
         // Backups
         $config
