@@ -16,6 +16,7 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
+use Contao\CoreBundle\Migration\UnexpectedPendingMigrationException;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
@@ -265,25 +266,37 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            foreach ($this->migrations->run() as $result) {
-                ++$count;
+            try {
+                foreach ($this->migrations->run($migrationLabels) as $result) {
+                    ++$count;
 
-                if ($asJson) {
-                    $this->writeNdjson('migration-result', [
-                        'message' => $result->getMessage(),
-                        'isSuccessful' => $result->isSuccessful(),
-                    ]);
-                } else {
-                    $this->io->writeln(' * '.$result->getMessage());
+                    if ($asJson) {
+                        $this->writeNdjson('migration-result', [
+                            'message' => $result->getMessage(),
+                            'isSuccessful' => $result->isSuccessful(),
+                        ]);
+                    } else {
+                        $this->io->writeln(' * '.$result->getMessage());
 
-                    if (!$result->isSuccessful()) {
-                        $this->io->error('Migration failed');
+                        if (!$result->isSuccessful()) {
+                            $this->io->error('Migration failed');
+                        }
                     }
                 }
-            }
 
-            if (!$asJson) {
-                $this->io->success('Executed '.$count.' migrations.');
+                if (!$asJson) {
+                    $this->io->success("Executed $count migrations.");
+                }
+            } catch (UnexpectedPendingMigrationException $exception) {
+                if ($asJson) {
+                    $this->writeNdjson('migration-result', [
+                        'message' => $exception->getMessage(),
+                        'isSuccessful' => false,
+                    ]);
+                } else {
+                    $this->io->success("Executed $count migrations.");
+                    $this->io->error("{$exception->getMessage()}\nRestarting migration process...");
+                }
             }
 
             if (null !== $specifiedHash) {
@@ -336,6 +349,8 @@ class MigrateCommand extends Command
             $hasNewCommands = [] !== array_diff($commands, $lastCommands);
             $lastCommands = $commands;
 
+            // Backwards compatibility with doctrine/dbal < 4.5.0, see
+            // https://github.com/doctrine/dbal/pull/7302
             $sortedCommands = $commands;
             sort($sortedCommands);
             $commandsHash = hash('sha256', json_encode($sortedCommands, JSON_THROW_ON_ERROR));
