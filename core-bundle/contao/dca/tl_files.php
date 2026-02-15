@@ -708,25 +708,14 @@ class tl_files extends Backend
 	}
 
 	/**
-	 * Return the upload file button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the upload file button
 	 */
 	public function uploadFile(DataContainerOperation $operation)
 	{
-		if (($row['type'] ?? null) == 'folder' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
+		if (($row['type'] ?? null) !== 'folder' || ($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) || ($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) || Input::get('act') !== 'select')
 		{
-			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ';
+			$operation->disable();
 		}
-
-		return ' ';
 	}
 
 	/**
