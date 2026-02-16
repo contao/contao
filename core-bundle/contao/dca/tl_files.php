@@ -232,7 +232,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
 		),
 		'importantPartY' => array
 		(

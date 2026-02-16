@@ -333,7 +333,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w25'),
-			'sql'                     => array('type'=>'string', 'length'=>1, 'default'=>'')
+			'sql'                     => array('type'=>'string', 'length'=>1, 'default'=>'', 'fixed' => true)
 		),
 		'fSize' => array
 		(
