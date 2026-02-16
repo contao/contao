@@ -47,7 +47,7 @@ class CaptionBasicEntitiesMigration extends AbstractMigration
             $meta = StringUtil::deserialize($meta, true);
 
             foreach ($meta as $data) {
-                if (!($data['caption'] ?? null)) {
+                if (!isset($data['caption'])) {
                     continue;
                 }
 
@@ -66,7 +66,7 @@ class CaptionBasicEntitiesMigration extends AbstractMigration
             $meta = StringUtil::deserialize($meta, true);
 
             foreach ($meta as $lang => $data) {
-                if (!($data['caption'] ?? null)) {
+                if (!isset($data['caption'])) {
                     continue;
                 }
 
