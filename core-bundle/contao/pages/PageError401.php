@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,10 +41,10 @@ class PageError401 extends Frontend
 			$objPage->clientCache = 0;
 		}
 
-		/** @var PageRegular $objHandler */
-		$objHandler = new $GLOBALS['TL_PTY']['regular']();
-
-		return $objHandler->getResponse($objPage)->setStatusCode(401);
+		return System::getContainer()
+			->get(RegularPageController::class)($objPage)
+			->setStatusCode(Response::HTTP_UNAUTHORIZED)
+		;
 	}
 
 	/**
