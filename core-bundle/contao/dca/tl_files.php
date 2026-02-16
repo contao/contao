@@ -16,7 +16,6 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
@@ -754,9 +753,9 @@ class tl_files extends Backend
 	 *
 	 * @return string
 	 */
-	public function uploadFile($row, $href, $label, $title, $icon, $attributes, $table)
+	public function uploadFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (($row['type'] ?? null) == 'folder' && Input::get('act') != 'select' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notMovable'] ?? null) && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $table, new CreateAction($table, array('pid' => $row['id'], 'type' => 'file'))))
+		if (($row['type'] ?? null) == 'folder' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
 		{
 			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ';
 		}
