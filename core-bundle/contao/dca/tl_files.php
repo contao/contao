@@ -17,6 +17,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
@@ -712,7 +713,10 @@ class tl_files extends Backend
 	 */
 	public function uploadFile(DataContainerOperation $operation)
 	{
-		if (($operation->getRecord()['type'] ?? null) !== 'folder' || ($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) || ($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) || Input::get('act') === 'select')
+		$row = $operation->getRecord();
+		$table = $operation->getDataContainer()->table;
+
+		if (Input::get('act') === 'select' || ($row['type'] ?? null) !== 'folder' || ($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) || ($GLOBALS['TL_DCA']['tl_files']['config']['notMovable'] ?? null) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $table, new CreateAction($table, array('pid' => $row['id'], 'type' => 'file'))))
 		{
 			$operation->hide();
 		}
