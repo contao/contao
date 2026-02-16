@@ -712,9 +712,9 @@ class tl_files extends Backend
 	 */
 	public function uploadFile(DataContainerOperation $operation)
 	{
-		if (($row['type'] ?? null) !== 'folder' || ($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) || ($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) || Input::get('act') !== 'select')
+		if (($operation->getRecord()['type'] ?? null) !== 'folder' || ($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) || ($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) || Input::get('act') === 'select')
 		{
-			$operation->disable();
+			$operation->hide();
 		}
 	}
 
