@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'filesize' => array
 		(
-			'sql'                     => array('type'=>'float', 'default'=>0)
+			'sql'                     => array('type'=>'float', 'default'=>'0')
 		),
 		'checksum' => array
 		(
@@ -84,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'vectorLength' => array
 		(
-			'sql'                     => array('type'=>'float', 'default'=>0)
+			'sql'                     => array('type'=>'float', 'default'=>'0')
 		),
 		'meta' => array
 		(
