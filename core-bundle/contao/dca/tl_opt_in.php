@@ -14,7 +14,6 @@ use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
 use Contao\Message;
 use Contao\OptInModel;
 use Contao\System;

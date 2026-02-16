@@ -24,7 +24,6 @@ use Contao\DC_Folder;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Folder;
-use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
@@ -677,7 +676,8 @@ class tl_files extends Backend
 	 */
 	public function syncFiles(DataContainerOperation $operation)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_SYNC_DBAFS)) {
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_SYNC_DBAFS))
+		{
 			$operation->hide();
 		}
 	}

@@ -19,7 +19,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
@@ -185,6 +184,7 @@ class PreviewLinkListener
             $url = $this->generateUrl((int) $row['id']);
 
             $operation->setUrl($url);
+
             $operation['attributes']
                 ->set('data-controller', 'contao--clipboard')
                 ->set('data-contao--clipboard-content-value', $url)
@@ -197,9 +197,8 @@ class PreviewLinkListener
     private function generateUrl(int $id): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
-        $url = $this->uriSigner->sign($url);
 
-        return $url;
+        return $this->uriSigner->sign($url);
     }
 
     private function generateClipboardLink(int $id): string
