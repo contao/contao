@@ -67,7 +67,13 @@ class DcaPermissionVoter implements CacheableVoterInterface
 
     private function canCreate(TokenInterface $token, string $table): bool
     {
-        if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) {
+        if (
+            ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false)
+            || (
+                ($GLOBALS['TL_DCA'][$table]['config']['notCreatable'] ?? false)
+                && ($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false)
+            )
+        ) {
             return false;
         }
 
