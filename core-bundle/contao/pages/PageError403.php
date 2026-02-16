@@ -41,6 +41,8 @@ class PageError403 extends Frontend
 			$objPage->clientCache = 0;
 		}
 
+		$objPage->type = 'regular';
+
 		return System::getContainer()
 			->get(RegularPageController::class)($objPage)
 			->setStatusCode(Response::HTTP_FORBIDDEN)
