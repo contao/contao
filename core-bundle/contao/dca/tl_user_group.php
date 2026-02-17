@@ -206,6 +206,8 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		),
 		'alexf' => array
 		(
+			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getExcludedFields'),
 			'eval'                    => array('multiple'=>true, 'size'=>36, 'collapseUncheckedGroups'=>true),
