@@ -2,7 +2,7 @@
 
 <div class="two-factor">
     <h2 class="sub_headline">{{ 'MSC.twoFactorAuthentication'|trans }}</h2>
-    {{ messages }}
+    {{ messages|raw }}
 
     {% if enable|default %}
         <p>{{ 'MSC.twoFactorScan'|trans }}</p>

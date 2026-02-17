@@ -2,6 +2,27 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.0-RC4] (2026-02-17)
+
+**New features:**
+
+- [#9412] Implement a basic template search for the Template Studio ([m-vo])
+
+**Fixed issues:**
+
+- [#9428] Allow HTML messages in the security view ([zoglo])
+- [#9408] Optimize the access time of `ContaoFilesystemLoader#getInheritanceChains()` ([m-vo])
+- [#9405] Fix the remaining operation button callbacks ([aschempp])
+- [#9362] Fix various permission checks ([aschempp])
+- [#9427] Disable Turbo prefetching in `dev` ([fritzmg])
+- [#9413] Add the missing translation prefix in the Template Studio language files ([m-vo])
+- [#9422] Add `@internal` to the `RegularPageController` ([m-vo])
+- [#9410] Add the `featured--dark.svg` icon ([leofeyer])
+- [#9409] Fix the element count controller (again) ([fritzmg])
+- [#9406] Always use the deferred renderer for the layout template ([m-vo])
+- [#9391] Support using the asset component with VFS storages ([m-vo])
+- [#9379] Fix unsetting the root permissions ([aschempp])
+
 ## [5.7.0-RC3] (2026-02-12)
 
 **Fixed issues:**
@@ -260,6 +281,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.0-RC4]: https://github.com/contao/contao/releases/tag/5.7.0-RC4
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
@@ -496,6 +518,7 @@ This project adheres to [Semantic Versioning].
 [#9357]: https://github.com/contao/contao/pull/9357
 [#9359]: https://github.com/contao/contao/pull/9359
 [#9361]: https://github.com/contao/contao/pull/9361
+[#9362]: https://github.com/contao/contao/pull/9362
 [#9363]: https://github.com/contao/contao/pull/9363
 [#9365]: https://github.com/contao/contao/pull/9365
 [#9367]: https://github.com/contao/contao/pull/9367
@@ -505,11 +528,23 @@ This project adheres to [Semantic Versioning].
 [#9376]: https://github.com/contao/contao/pull/9376
 [#9377]: https://github.com/contao/contao/pull/9377
 [#9378]: https://github.com/contao/contao/pull/9378
+[#9379]: https://github.com/contao/contao/pull/9379
 [#9381]: https://github.com/contao/contao/pull/9381
 [#9382]: https://github.com/contao/contao/pull/9382
 [#9384]: https://github.com/contao/contao/pull/9384
 [#9388]: https://github.com/contao/contao/pull/9388
 [#9389]: https://github.com/contao/contao/pull/9389
 [#9390]: https://github.com/contao/contao/pull/9390
+[#9391]: https://github.com/contao/contao/pull/9391
 [#9393]: https://github.com/contao/contao/pull/9393
 [#9399]: https://github.com/contao/contao/pull/9399
+[#9405]: https://github.com/contao/contao/pull/9405
+[#9406]: https://github.com/contao/contao/pull/9406
+[#9408]: https://github.com/contao/contao/pull/9408
+[#9409]: https://github.com/contao/contao/pull/9409
+[#9410]: https://github.com/contao/contao/pull/9410
+[#9412]: https://github.com/contao/contao/pull/9412
+[#9413]: https://github.com/contao/contao/pull/9413
+[#9422]: https://github.com/contao/contao/pull/9422
+[#9427]: https://github.com/contao/contao/pull/9427
+[#9428]: https://github.com/contao/contao/pull/9428

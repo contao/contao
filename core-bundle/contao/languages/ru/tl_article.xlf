@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_article.versions.1">
         <source>Show the versions of article ID %s</source>
+        <target>Показать версии статьи ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>

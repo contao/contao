@@ -1907,6 +1907,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>Нет записей, соответствующих текущим настройкам фильтра.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>

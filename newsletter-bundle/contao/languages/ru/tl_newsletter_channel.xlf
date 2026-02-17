@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.versions.1">
         <source>Show the versions of channel ID %s</source>
+        <target>Показать версии канала ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.edit.1">
         <source>Edit channel ID %s</source>

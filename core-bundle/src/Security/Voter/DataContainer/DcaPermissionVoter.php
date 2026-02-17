@@ -69,8 +69,10 @@ class DcaPermissionVoter implements CacheableVoterInterface
     {
         if (
             ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false)
-            || ($GLOBALS['TL_DCA'][$table]['config']['notCreatable'] ?? false)
-            || ($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false)
+            || (
+                ($GLOBALS['TL_DCA'][$table]['config']['notCreatable'] ?? false)
+                && ($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false)
+            )
         ) {
             return false;
         }
@@ -80,10 +82,7 @@ class DcaPermissionVoter implements CacheableVoterInterface
 
     private function canUpdate(TokenInterface $token, string $table): bool
     {
-        if (
-            ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false)
-            || ($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false)
-        ) {
+        if ($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false) {
             return false;
         }
 

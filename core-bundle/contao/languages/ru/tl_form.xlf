@@ -255,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_form.versions.1">
         <source>Show the versions of form ID %s</source>
+        <target>Показать версии формы ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>

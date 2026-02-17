@@ -17,6 +17,9 @@
       <trans-unit id="template_studio.not_prefixed">
         <source>without prefix</source>
       </trans-unit>
+      <trans-unit id="template_studio.search_filter">
+        <source>Search templates…</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
       </trans-unit>

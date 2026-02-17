@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.versions.1">
         <source>Show the versions of media query ID %s</source>
+        <target>Показать версии Media query (Медиа-запроса) ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
