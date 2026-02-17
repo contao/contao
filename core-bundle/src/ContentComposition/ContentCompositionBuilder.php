@@ -40,6 +40,14 @@ class ContentCompositionBuilder
 
     private string|null $defaultImageDensities = null;
 
+    /**
+     * Renderer used for the main layout template.
+     */
+    private RendererInterface $renderer;
+
+    /**
+     * Renderer used to compose individual slots.
+     */
     private RendererInterface $slotRenderer;
 
     /**
@@ -58,12 +66,12 @@ class ContentCompositionBuilder
         private readonly PictureFactory $pictureFactory,
         private readonly PreviewFactory $previewFactory,
         private readonly ContaoContext $assetsContext,
-        private RendererInterface $renderer,
+        RendererInterface $renderer,
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
         private readonly PageModel $page,
     ) {
-        $this->slotRenderer = $this->renderer;
+        $this->slotRenderer = $this->renderer = $renderer;
     }
 
     /**

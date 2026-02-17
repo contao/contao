@@ -361,6 +361,10 @@
         <source>Show the details of event ID %s</source>
         <target>Details des Events ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.versions.1">
+        <source>Show the versions of event ID %s</source>
+        <target>Versionen des Events ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
         <target>Event ID %s bearbeiten</target>

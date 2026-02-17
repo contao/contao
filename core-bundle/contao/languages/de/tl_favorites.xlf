@@ -21,6 +21,10 @@
         <source>Title and URL</source>
         <target>Titel und URL</target>
       </trans-unit>
+      <trans-unit id="tl_favorites.new.1">
+        <source>Create a new favorite</source>
+        <target>Einen neuen Favoriten erstellen</target>
+      </trans-unit>
       <trans-unit id="tl_favorites.show.1">
         <source>Show the details of favorite ID %s</source>
         <target>Details des Favoriten ID %s anzeigen</target>
@@ -33,9 +37,37 @@
         <source>Move favorite ID %s</source>
         <target>Favorit ID %s verschieben</target>
       </trans-unit>
+      <trans-unit id="tl_favorites.copy.1">
+        <source>Copy favorite ID %s</source>
+        <target>Favorit ID %s kopieren</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.copyChildren.1">
+        <source>Copy favorite ID %s with its children</source>
+        <target>Favorit ID %s mit Kindelementen kopieren</target>
+      </trans-unit>
       <trans-unit id="tl_favorites.delete.1">
         <source>Delete favorite ID %s</source>
         <target>Favorit ID %s löschen</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pasteinto.1">
+        <source>Paste into favorite ID %s</source>
+        <target>In den Favoriten ID %s einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pasteafter.1">
+        <source>Paste after favorite ID %s</source>
+        <target>Nach dem Favoriten ID %s einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pastenewtop.1">
+        <source>Add a new favorite at the top</source>
+        <target>Neuen Favoriten oben einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pastenewafter.1">
+        <source>Add a new favorite after favorite ID %s</source>
+        <target>Neuen Favoriten nach dem Favoriten ID %s einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pastenewinto.1">
+        <source>Add a new favorite inside favorite ID %s</source>
+        <target>Neuen Favoriten in den Favoriten ID %s einfügen</target>
       </trans-unit>
       <trans-unit id="tl_favorites.tableLabel">
         <source>Favorite</source>

@@ -1902,6 +1902,9 @@
         <source>No records found.</source>
         <target>Inga poster funna.</target>
       </trans-unit>
+      <trans-unit id="MSC.noResultWithFilter">
+        <source>No records match the current filter settings.</source>
+      </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
         <target>Osynkroniserade kataloger ingår inte i sökresultaten.</target>

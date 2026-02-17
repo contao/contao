@@ -10,12 +10,10 @@
         <target>Välj vilken typ av innehållselement du vill skapa.</target>
       </trans-unit>
       <trans-unit id="tl_content.title.0">
-        <source>Title</source>
-        <target>Rubrik</target>
+        <source>Internal title</source>
       </trans-unit>
       <trans-unit id="tl_content.title.1">
-        <source>Here you can enter an optional title for the content element.</source>
-        <target>Här kan du ange en valfri titel för innehållselementet.</target>
+        <source>An optional title used, for example, in the back end preview and the breadcrumb menu.</source>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
@@ -952,6 +950,9 @@
       <trans-unit id="tl_content.show.1">
         <source>Show the details of content element ID %s</source>
         <target>Visa detaljer för innehållselement med ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.versions.1">
+        <source>Show the versions of content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>

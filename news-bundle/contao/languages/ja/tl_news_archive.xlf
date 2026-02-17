@@ -65,6 +65,10 @@
         <source>Show the details of news archive ID %s</source>
         <target>ID %sのニュースアーカイブの詳細を表示</target>
       </trans-unit>
+      <trans-unit id="tl_news_archive.versions.1">
+        <source>Show the versions of news archive ID %s</source>
+        <target>ID %sのニュースアーカイブのバージョンを表示</target>
+      </trans-unit>
       <trans-unit id="tl_news_archive.edit.1">
         <source>Edit news archive ID %s</source>
         <target>ID %sのニュースアーカイブを編集</target>

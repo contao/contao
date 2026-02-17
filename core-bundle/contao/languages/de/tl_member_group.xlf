@@ -69,6 +69,10 @@
         <source>Show the details of member group ID %s</source>
         <target>Details der Mitgliedergruppe ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_member_group.versions.1">
+        <source>Show the versions of member group ID %s</source>
+        <target>Versionen der Mitgliedergruppe ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_member_group.edit.1">
         <source>Edit member group ID %s</source>
         <target>Mitgliedergruppe ID %s bearbeiten</target>

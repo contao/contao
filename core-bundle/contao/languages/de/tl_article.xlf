@@ -185,6 +185,10 @@
         <source>Show the details of article ID %s</source>
         <target>Details des Artikels ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_article.versions.1">
+        <source>Show the versions of article ID %s</source>
+        <target>Versionen des Artikels ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
         <target>Artikel ID %s bearbeiten</target>

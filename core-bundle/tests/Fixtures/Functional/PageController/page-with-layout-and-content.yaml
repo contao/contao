@@ -1,0 +1,32 @@
+tl_page:
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1539698035
+      title: Layout Test Page
+      alias: layout-test
+      type: regular
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+tl_layout:
+    - id: 1
+      pid: 1
+      template: page/layout
+      type: modern
+      modules: a:1:{i:0;a:3:{s:3:"mod";s:1:"0";s:3:"col";s:4:"main";s:6:"enable";s:1:"1";}}
+
+tl_article:
+    - id: 1
+      pid: 2
+      inColumn: main
+      published: 1
+
+tl_content:
+    - id: 1
+      pid: 1
+      ptable: tl_article
+      tstamp: 12345678
+      type: test
+      invisible: 0

@@ -107,6 +107,11 @@ class MetaWizard extends Widget
 						$this->addError($errorMsg);
 						$this->arrFieldErrors[$lang][$kk] = true;
 					}
+
+					if ($this->metaFields[$kk]['basicEntities'] ?? false)
+					{
+						$v[$kk] = StringUtil::restoreBasicEntities($vv);
+					}
 				}
 
 				$varInput[$k] = array_map('trim', $v);
@@ -182,6 +187,11 @@ class MetaWizard extends Widget
 			foreach ($this->metaFields as $field=>$fieldConfig)
 			{
 				$item .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
+
+				if (($meta[$field] ?? null) && ($fieldConfig['basicEntities'] ?? false))
+				{
+					$meta[$field] = StringUtil::convertBasicEntities($meta[$field]);
+				}
 
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 				{
