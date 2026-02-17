@@ -24,6 +24,9 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @internal
+ */
 #[AsPage(contentComposition: true)]
 class RegularPageController extends AbstractController
 {
