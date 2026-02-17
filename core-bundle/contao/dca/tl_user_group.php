@@ -199,6 +199,8 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'cud' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
+			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'cud',
 			'sql'                     => "blob NULL"
 		),

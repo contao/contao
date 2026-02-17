@@ -12,6 +12,8 @@ $GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,t
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 	'exclude' => true,
+	'search' => true,
+	'backendSearch' => false,
 	'inputType' => 'checkbox',
 	'eval' => array('multiple' => true, 'mandatory' => true),
 	'sql' => "blob NULL"

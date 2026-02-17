@@ -232,7 +232,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'robots' => array
 		(
-			'filter'                  => true,
 			'search'                  => true,
 			'backendSearch'           => false,
 			'inputType'               => 'select',

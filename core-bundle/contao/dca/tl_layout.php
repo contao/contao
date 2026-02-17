@@ -271,6 +271,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'jquery' => array
 		(
 			'filter'                  => true,
+			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('j_');
@@ -287,6 +289,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'mootools' => array
 		(
 			'filter'                  => true,
+			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('moo_');

@@ -150,7 +150,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		),
 		'robots' => array
 		(
-			'filter'                  => true,
 			'search'                  => true,
 			'backendSearch'           => false,
 			'inputType'               => 'select',

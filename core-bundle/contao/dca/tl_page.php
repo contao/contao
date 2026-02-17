@@ -229,7 +229,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'robots' => array
 		(
-			'filter'                  => true,
 			'search'                  => true,
 			'backendSearch'           => false,
 			'inputType'               => 'select',
@@ -315,6 +314,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'staticFiles' => array
 		(
+			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
@@ -325,6 +326,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'staticPlugins' => array
 		(
+			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
