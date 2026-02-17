@@ -11,21 +11,11 @@
 {%- set bodyAttributes = attrs(attributes|default)
     .set('id', 'top')
     .addClass('be_main')
+    .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
     .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
--%}
-
-{%- set innerHeaderAttributes = attrs()
-    .addClass('inner')
-    .addClass(containerClass)
-    .mergeWith(innerHeaderAttributes|default)
--%}
-
-{%- set containerAttributes = attrs()
-    .addClass(containerClass)
-    .mergeWith(containerAttributes|default)
 -%}
 
 {% set mainAttributes = attrs()
@@ -87,7 +77,7 @@
 {% block header %}
     {% if not renderMainOnly %}
         <header id="header">
-            <div{{ innerHeaderAttributes }}>
+            <div class="inner">
                 <h1>
                     <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
                         <span class="app-title">Contao</span>
@@ -108,7 +98,7 @@
 {% endblock %}
 
 {% block container %}
-    <div id="container"{{ containerAttributes }}>
+    <div id="container">
 
         {% block left %}
             {% if not renderMainOnly %}
