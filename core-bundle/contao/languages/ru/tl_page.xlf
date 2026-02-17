@@ -655,6 +655,7 @@
       </trans-unit>
       <trans-unit id="tl_page.versions.1">
         <source>Show the versions of page ID %s</source>
+        <target>Показать версии страницы ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
