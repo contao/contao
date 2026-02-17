@@ -81,11 +81,8 @@ export default class extends Controller {
 
         this.filterTarget.classList.toggle('active', term);
 
-        for(const nameTarget of this.nameNodeTargets) {
-            nameTarget.classList.toggle(
-                'invisible',
-                !nameTarget.dataset.name.includes(term)
-            );
+        for (const nameTarget of this.nameNodeTargets) {
+            nameTarget.classList.toggle('invisible', !nameTarget.dataset.name.includes(term));
         }
     }
 
