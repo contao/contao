@@ -252,7 +252,7 @@ class BackendMain extends Backend
 
 		$data['menu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/main_menu.html.twig') : '';
 		$data['headerMenu'] = !$renderMainOnly ? $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled)) : '';
-		$data['isDebug'] = System::getContainer()->getParameter('kernel.debug');
+		$data['isDebug'] = $container->getParameter('kernel.debug');
 
 		return $data;
 	}
