@@ -81,7 +81,6 @@ class AbstractBackendControllerTest extends TestCase
             'dashboard' => 'dashboard',
             'home' => 'home',
             'learnMore' => 'learn more',
-            'containerClass' => null,
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -102,7 +101,7 @@ class AbstractBackendControllerTest extends TestCase
             'isDebug' => false,
             'isPopup' => null,
             'learnMore' => 'learn more',
-            'containerClass' => null,
+            'backendWidth' => null,
             'menu' => '<menu>',
             'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',
@@ -149,7 +148,6 @@ class AbstractBackendControllerTest extends TestCase
             'dashboard' => 'dashboard',
             'home' => 'home',
             'learnMore' => 'learn more',
-            'containerClass' => null,
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -180,7 +178,7 @@ class AbstractBackendControllerTest extends TestCase
             'isDebug' => false,
             'isPopup' => null,
             'learnMore' => 'learn more',
-            'containerClass' => null,
+            'backendWidth' => null,
             'menu' => '<menu>',
             'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',

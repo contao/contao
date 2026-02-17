@@ -11,15 +11,11 @@
 {%- set bodyAttributes = attrs(attributes|default)
     .set('id', 'top')
     .addClass('be_main')
+    .addClass(backendWidth)
     .addClass('popup', isPopup)
     .set('data-controller', 'contao--tooltips')
     .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
--%}
-
-{%- set containerAttributes = attrs()
-    .addClass(containerClass)
-    .mergeWith(containerAttributes|default)
 -%}
 
 {% set mainAttributes = attrs()
@@ -102,7 +98,7 @@
 {% endblock %}
 
 {% block container %}
-    <div id="container"{{ containerAttributes }}>
+    <div id="container">
 
         {% block left %}
             {% if not renderMainOnly %}
