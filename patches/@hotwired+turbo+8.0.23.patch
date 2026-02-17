@@ -1,45 +1,8 @@
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-index 086945c..21d2928 100644
+index 086945c..b7710be 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-@@ -417,6 +417,11 @@ function findClosestRecursively(element, selector) {
-   }
- }
- 
-+function elementIsStylesheet(element) {
-+  return element.localName === "style" ||
-+    (element.localName === "link" && element.relList.contains("stylesheet"))
-+}
-+
- function elementIsFocusable(element) {
-   const inertDisabledOrHidden = "[inert], :disabled, [hidden], details:not([open]), dialog:not([open])";
- 
-@@ -3729,11 +3734,6 @@ function elementIsNoscript(element) {
-   return tagName == "noscript"
- }
- 
--function elementIsStylesheet(element) {
--  const tagName = element.localName;
--  return tagName == "style" || (tagName == "link" && element.getAttribute("rel") == "stylesheet")
--}
--
- function elementIsMetaElementWithName(element, name) {
-   const tagName = element.localName;
-   return tagName == "meta" && element.getAttribute("name") == name
-@@ -3783,7 +3783,11 @@ class PageSnapshot extends Snapshot {
-     }
- 
-     for (const clonedNoscriptElement of clonedElement.querySelectorAll("noscript")) {
--      clonedNoscriptElement.remove();
-+      for (const child of [...clonedNoscriptElement.children]) {
-+        if (elementIsStylesheet(child)) {
-+          child.remove();
-+        }
-+      }
-     }
- 
-     return new PageSnapshot(this.documentElement, clonedElement, this.headSnapshot)
-@@ -4620,6 +4624,7 @@ class History {
+@@ -4620,6 +4620,7 @@ class History {
  class LinkPrefetchObserver {
    started = false
    #prefetchedLink = null
@@ -47,7 +10,7 @@ index 086945c..21d2928 100644
  
    constructor(delegate, eventTarget) {
      this.delegate = delegate;
-@@ -4649,6 +4654,7 @@ class LinkPrefetchObserver {
+@@ -4649,6 +4650,7 @@ class LinkPrefetchObserver {
      });
  
      this.eventTarget.removeEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
@@ -55,7 +18,7 @@ index 086945c..21d2928 100644
      this.started = false;
    }
  
-@@ -4663,6 +4669,7 @@ class LinkPrefetchObserver {
+@@ -4663,6 +4665,7 @@ class LinkPrefetchObserver {
      });
  
      this.eventTarget.addEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
@@ -63,7 +26,7 @@ index 086945c..21d2928 100644
      this.started = true;
    }
  
-@@ -4689,11 +4696,29 @@ class LinkPrefetchObserver {
+@@ -4689,11 +4692,29 @@ class LinkPrefetchObserver {
  
          fetchRequest.fetchOptions.priority = "low";
  
@@ -93,7 +56,7 @@ index 086945c..21d2928 100644
    #cancelRequestIfObsolete = (event) => {
      if (event.target === this.#prefetchedLink) this.#cancelPrefetchRequest();
    }
-@@ -4737,7 +4762,13 @@ class LinkPrefetchObserver {
+@@ -4737,7 +4758,13 @@ class LinkPrefetchObserver {
  
    requestErrored(fetchRequest) {}
  
@@ -108,69 +71,11 @@ index 086945c..21d2928 100644
  
    requestPreventedHandlingResponse(fetchRequest, fetchResponse) {}
  
-@@ -5444,13 +5475,17 @@ class PageRenderer extends Renderer {
- 
-   activateNewBody() {
-     document.adoptNode(this.newElement);
--    this.removeNoscriptElements();
-+    this.deactivateNoscriptStylesheetElements();
-     this.activateNewBodyScriptElements();
-   }
- 
--  removeNoscriptElements() {
-+  deactivateNoscriptStylesheetElements() {
-     for (const noscriptElement of this.newElement.querySelectorAll("noscript")) {
--      noscriptElement.remove();
-+      for (const child of [...noscriptElement.children]) {
-+        if (elementIsStylesheet(child)) {
-+          child.remove();
-+        }
-+      }
-     }
-   }
- 
 diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-index 120ed11..ee7ca5b 100644
+index 120ed11..1260129 100644
 --- a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
 +++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-@@ -423,6 +423,11 @@ Copyright © 2026 37signals LLC
-     }
-   }
- 
-+  function elementIsStylesheet(element) {
-+    return element.localName === "style" ||
-+      (element.localName === "link" && element.relList.contains("stylesheet"))
-+  }
-+
-   function elementIsFocusable(element) {
-     const inertDisabledOrHidden = "[inert], :disabled, [hidden], details:not([open]), dialog:not([open])";
- 
-@@ -3735,11 +3740,6 @@ Copyright © 2026 37signals LLC
-     return tagName == "noscript"
-   }
- 
--  function elementIsStylesheet(element) {
--    const tagName = element.localName;
--    return tagName == "style" || (tagName == "link" && element.getAttribute("rel") == "stylesheet")
--  }
--
-   function elementIsMetaElementWithName(element, name) {
-     const tagName = element.localName;
-     return tagName == "meta" && element.getAttribute("name") == name
-@@ -3789,7 +3789,11 @@ Copyright © 2026 37signals LLC
-       }
- 
-       for (const clonedNoscriptElement of clonedElement.querySelectorAll("noscript")) {
--        clonedNoscriptElement.remove();
-+        for (const child of [...clonedNoscriptElement.children]) {
-+          if (elementIsStylesheet(child)) {
-+            child.remove();
-+          }
-+        }
-       }
- 
-       return new PageSnapshot(this.documentElement, clonedElement, this.headSnapshot)
-@@ -4626,6 +4630,7 @@ Copyright © 2026 37signals LLC
+@@ -4626,6 +4626,7 @@ Copyright © 2026 37signals LLC
    class LinkPrefetchObserver {
      started = false
      #prefetchedLink = null
@@ -178,7 +83,7 @@ index 120ed11..ee7ca5b 100644
  
      constructor(delegate, eventTarget) {
        this.delegate = delegate;
-@@ -4655,6 +4660,7 @@ Copyright © 2026 37signals LLC
+@@ -4655,6 +4656,7 @@ Copyright © 2026 37signals LLC
        });
  
        this.eventTarget.removeEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
@@ -186,7 +91,7 @@ index 120ed11..ee7ca5b 100644
        this.started = false;
      }
  
-@@ -4669,6 +4675,7 @@ Copyright © 2026 37signals LLC
+@@ -4669,6 +4671,7 @@ Copyright © 2026 37signals LLC
        });
  
        this.eventTarget.addEventListener("turbo:before-fetch-request", this.#tryToUsePrefetchedRequest, true);
@@ -194,7 +99,7 @@ index 120ed11..ee7ca5b 100644
        this.started = true;
      }
  
-@@ -4695,11 +4702,29 @@ Copyright © 2026 37signals LLC
+@@ -4695,11 +4698,29 @@ Copyright © 2026 37signals LLC
  
            fetchRequest.fetchOptions.priority = "low";
  
@@ -224,7 +129,7 @@ index 120ed11..ee7ca5b 100644
      #cancelRequestIfObsolete = (event) => {
        if (event.target === this.#prefetchedLink) this.#cancelPrefetchRequest();
      }
-@@ -4743,7 +4768,13 @@ Copyright © 2026 37signals LLC
+@@ -4743,7 +4764,13 @@ Copyright © 2026 37signals LLC
  
      requestErrored(fetchRequest) {}
  
@@ -238,25 +143,4 @@ index 120ed11..ee7ca5b 100644
 +    }
  
      requestPreventedHandlingResponse(fetchRequest, fetchResponse) {}
- 
-@@ -5450,13 +5481,17 @@ Copyright © 2026 37signals LLC
- 
-     activateNewBody() {
-       document.adoptNode(this.newElement);
--      this.removeNoscriptElements();
-+      this.deactivateNoscriptStylesheetElements();
-       this.activateNewBodyScriptElements();
-     }
- 
--    removeNoscriptElements() {
-+    deactivateNoscriptStylesheetElements() {
-       for (const noscriptElement of this.newElement.querySelectorAll("noscript")) {
--        noscriptElement.remove();
-+        for (const child of [...noscriptElement.children]) {
-+          if (elementIsStylesheet(child)) {
-+            child.remove();
-+          }
-+        }
-       }
-     }
  
