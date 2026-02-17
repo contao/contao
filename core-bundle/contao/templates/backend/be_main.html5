@@ -19,6 +19,13 @@ $this->bodyAttributes = $this
     ->mergeWith($this->bodyAttributes)
 ;
 
+$this->innerHeaderAttributes = $this
+    ->attrs()
+    ->addClass('inner')
+    ->addClass($this->containerClass)
+    ->mergeWith($this->innerHeaderAttributes)
+;
+
 $this->containerAttributes = $this
     ->attrs()
     ->addClass($this->containerClass)
@@ -88,7 +95,7 @@ $this->asideAttributes = $this
   <?php $this->block('header'); ?>
     <?php if (!$this->renderMainOnly): ?>
       <header id="header">
-        <div class="inner">
+        <div<?= $this->innerHeaderAttributes ?>>
           <h1>
             <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
               <span class="app-title">Contao</span>

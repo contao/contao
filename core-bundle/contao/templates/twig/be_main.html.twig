@@ -17,6 +17,12 @@
     .mergeWith(bodyAttributes|default)
 -%}
 
+{%- set innerHeaderAttributes = attrs()
+    .addClass('inner')
+    .addClass(containerClass)
+    .mergeWith(innerHeaderAttributes|default)
+-%}
+
 {%- set containerAttributes = attrs()
     .addClass(containerClass)
     .mergeWith(containerAttributes|default)
@@ -81,7 +87,7 @@
 {% block header %}
     {% if not renderMainOnly %}
         <header id="header">
-            <div class="inner">
+            <div{{ innerHeaderAttributes }}>
                 <h1>
                     <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}" data-contao--tooltips-target="tooltip">
                         <span class="app-title">Contao</span>
