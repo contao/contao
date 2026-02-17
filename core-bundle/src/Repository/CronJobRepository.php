@@ -94,9 +94,6 @@ class CronJobRepository extends ServiceEntityRepository
             ;
         }
 
-        $qb
-            ->getQuery()
-            ->execute()
-        ;
+        $qb->getQuery()->execute();
     }
 }
