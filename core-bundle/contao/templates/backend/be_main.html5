@@ -5,6 +5,7 @@ $this->rootAttributes = $this
     ->set('lang', $this->language)
     ->set('data-controller', 'contao--scroll-offset')
     ->set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
+    ->set('data-turbo-prefetch', 'false', $this->isDebug)
     ->mergeWith($this->rootAttributes)
 ;
 

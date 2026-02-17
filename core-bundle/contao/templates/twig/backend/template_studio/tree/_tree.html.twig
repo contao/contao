@@ -26,7 +26,7 @@
                     {% endembed %}
                 {% endwith %}
             {% else %}
-                <span class="node">{{ name|default("(#{'not_prefixed'|trans})") }}</span>
+                <span class="node">{{ name|default("(#{'template_studio.not_prefixed'|trans})") }}</span>
                 {{ _self.tree_node(node) }}
             {% endif %}
         </li>
@@ -36,7 +36,7 @@
 
 {# Search field #}
 <label class="search-filter">
-    <span class="invisible">{{ 'search_filter'|trans }}</span>
+    <span class="invisible">{{ 'template_studio.search_filter'|trans }}</span>
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
     </svg>
@@ -44,7 +44,7 @@
     {% set search_input_attributes = attrs()
         .set('type', 'search')
         .set('data-contao--template-studio-target', 'filter')
-        .set('placeholder', 'search_filter'|trans)
+        .set('placeholder', 'template_studio.search_filter'|trans)
         .set('autocomplete', 'off')
         .set('data-action', 'input->contao--template-studio#filter')
     %}
