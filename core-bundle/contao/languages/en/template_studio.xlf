@@ -20,9 +20,6 @@
       <trans-unit id="search_filter">
         <source>Search templates…</source>
       </trans-unit>
-      <trans-unit id="reset_search_filter">
-        <source>Reset search filter</source>
-      </trans-unit>
       <trans-unit id="operation.save.0">
         <source>Save</source>
       </trans-unit>
