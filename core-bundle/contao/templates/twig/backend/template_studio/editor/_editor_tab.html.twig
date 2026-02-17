@@ -73,7 +73,7 @@
                             {% set identifier_token -%}
                                 <span class="token">{{ template.identifier }}</span>
                             {%- endset %}
-                            {{ 'editor_tab.relation.legacy_pair'|trans|replace({'%identifier%': identifier_token})|raw }}
+                            {{ 'template_studio.editor_tab.relation.legacy_pair'|trans|replace({'%identifier%': identifier_token})|raw }}
                         </div>
                     {% else %}
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -91,7 +91,7 @@
                                     <line x1="12" x2="12" y1="8" y2="12"/>
                                     <line x1="12" x2="12.01" y1="16" y2="16"/>
                                 </svg>
-                                {{ 'editor_tab.relation.not_analyzable'|trans }}
+                                {{ 'template_studio.editor_tab.relation.not_analyzable'|trans }}
                             </div>
                         {% elseif template.relation.warning %}
                             <div class="warning">
@@ -103,7 +103,7 @@
                                     <path d="M12 9v4"/>
                                     <path d="M12 17h.01"/>
                                 </svg>
-                                {% set message = 'editor_tab.relation.' ~ (template.is_component ? 'no_use_warning' : 'no_extend_warning') %}
+                                {% set message = 'template_studio.editor_tab.relation.' ~ (template.is_component ? 'no_use_warning' : 'no_extend_warning') %}
                                 {% set previous_token -%}
                                     <span class="token">@Contao/{{ template.identifier }}.{{ template.extension }}</span>
                                 {%- endset %}
