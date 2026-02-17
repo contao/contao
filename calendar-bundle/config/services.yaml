@@ -104,6 +104,8 @@ services:
         class: Contao\CalendarBundle\Migration\FeedMigration
         arguments:
             - '@database_connection'
+            - '@filesystem'
+            - '%contao.web_dir%'
 
     contao_calendar.migration.field_permission:
         class: Contao\CalendarBundle\Migration\FieldPermissionMigration

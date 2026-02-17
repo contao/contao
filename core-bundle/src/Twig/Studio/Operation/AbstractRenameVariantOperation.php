@@ -43,7 +43,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
-            return $this->error($context, 'message.rename_variant.error');
+            return $this->error($context, 'template_studio.message.rename_variant.error');
         }
 
         // Rename the variant template file
