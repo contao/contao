@@ -94,6 +94,8 @@ services:
         class: Contao\NewsBundle\Migration\FeedMigration
         arguments:
             - '@database_connection'
+            - '@filesystem'
+            - '%contao.web_dir%'
 
     contao_news.migration.overwrite_meta:
         class: Contao\NewsBundle\Migration\OverwriteMetaMigration
