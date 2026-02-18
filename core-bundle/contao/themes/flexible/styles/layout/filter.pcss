@@ -165,6 +165,10 @@
             font-size: 30px;
             line-height: 19px;
         }
+
+        .tl_select {
+            max-width: 250px;
+        }
     }
 
     li:has(>.header_filter_toggle) {
@@ -188,6 +192,13 @@
             position: sticky;
             top: 15px;
             margin-bottom: 15px;
+        }
+    }
+
+    .tl_subpanel {
+        /* Limit the widget width within the right filters - see #92 */
+        > *:not(label, button, :last-child) {
+            max-width: calc(var(--filter-width, 240px) - 30px);
         }
     }
 }
