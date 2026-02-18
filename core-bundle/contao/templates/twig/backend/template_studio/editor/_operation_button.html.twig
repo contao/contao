@@ -3,9 +3,9 @@
 {% set button_attributes = attrs()
     .set('formaction', path('_contao_template_studio_operation.stream', {identifier, operation}))
     .set('data-operation', operation)
-    .set('title', ('operation.' ~ operation ~ '.1')|trans([identifier]))
+    .set('title', ('template_studio.operation.' ~ operation ~ '.1')|trans([identifier]))
     .set('accesskey', 's', operation == 'save')
     .addClass('operation operation--' ~ operation)
     .mergeWith(button_attributes|default)
 %}
-<button{{ button_attributes }}>{{ ('operation.' ~ operation ~ '.0')|trans() }}</button>
+<button{{ button_attributes }}>{{ ('template_studio.operation.' ~ operation ~ '.0')|trans() }}</button>
