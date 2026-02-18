@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
+        <target>テンプレートを検索...</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
