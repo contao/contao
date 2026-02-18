@@ -11,6 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate</source>
+        <target>Aktywuj</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -110,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.4">
         <source>Activate</source>
+        <target>Aktywuj</target>
       </trans-unit>
     </body>
   </file>

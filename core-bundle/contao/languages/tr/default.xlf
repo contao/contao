@@ -1227,7 +1227,7 @@
       </trans-unit>
       <trans-unit id="MSC.url.1">
         <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
-        <target>Lütfen bir site adresi (http://...), bir e-posta adresi (mailto:...) ya da bir eklenebilecek kod imi yazın.</target>
+        <target>Lütfen bir site adresi (http://…), bir e-posta adresi (mailto:…) ya da bir eklenebilecek kod imi yazın.</target>
       </trans-unit>
       <trans-unit id="MSC.target.0">
         <source>Open in new window</source>
@@ -3038,8 +3038,8 @@
         <target>Lütfen en az %s karakter yazın</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Sonuçlar yükleniyor...</target>
+        <source>Loading results …</source>
+        <target>Sonuçlar yükleniyor…</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>

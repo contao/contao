@@ -3038,7 +3038,7 @@
         <target>少なくとも%s文字入力してください。</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
+        <source>Loading results …</source>
         <target>結果を読み込み中...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">

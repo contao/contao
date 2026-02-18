@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_user.php" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="tl_user.news.0">
+        <source>Allowed archives</source>
+        <target>Archiwa aktualności</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news.1">
+        <source>Here you can grant access to one or more news archives.</source>
+        <target>Zaznacz archiwa aktualności, które mają być dostępne dla redaktora.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.0">
+        <source>News archive permissions</source>
+        <target>Uprawnienia archiwum aktualności</target>
+      </trans-unit>
+      <trans-unit id="tl_user.newp.1">
+        <source>Here you can define the news archive permissions.</source>
+        <target>Tutaj możesz ustalić uprawnienia archiwum aktualności.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.news_legend">
+        <source>News permissions</source>
+        <target>Zezwolenia aktualności</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

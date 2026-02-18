@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.11] (2026-02-18)
+
+**Fixed issues:**
+
+- [#9417] Delete old XML files when migrating calendar feeds ([fritzmg])
+- [#9421] Load language files before DCA labels ([aschempp])
+- [#9346] Fix the line height for select and input fields ([fritzmg])
+- [#9293] Fix using "overwrite meta" with empty image titles in content elements ([ausi])
+- [#9240] Use ellipsis for `MSC.searchResultsLoading` ([fritzmg])
+- [#9225] Add `@deprecated` to all remaining deprecated classes ([fritzmg])
+
 ## [5.6.10] (2026-01-12)
 
 **Fixed issues:**
@@ -310,6 +321,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.11]: https://github.com/contao/contao/releases/tag/5.6.11
 [5.6.10]: https://github.com/contao/contao/releases/tag/5.6.10
 [5.6.9]: https://github.com/contao/contao/releases/tag/5.6.9
 [5.6.8]: https://github.com/contao/contao/releases/tag/5.6.8
@@ -567,3 +579,9 @@ This project adheres to [Semantic Versioning].
 [#9126]: https://github.com/contao/contao/pull/9126
 [#9140]: https://github.com/contao/contao/pull/9140
 [#9183]: https://github.com/contao/contao/pull/9183
+[#9225]: https://github.com/contao/contao/pull/9225
+[#9240]: https://github.com/contao/contao/pull/9240
+[#9293]: https://github.com/contao/contao/pull/9293
+[#9346]: https://github.com/contao/contao/pull/9346
+[#9417]: https://github.com/contao/contao/pull/9417
+[#9421]: https://github.com/contao/contao/pull/9421

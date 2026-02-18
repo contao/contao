@@ -3038,7 +3038,7 @@
         <target>Введите не менее %s символов</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
+        <source>Loading results …</source>
         <target>Загрузка результатов...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">

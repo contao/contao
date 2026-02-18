@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="operation.create_page_variant.1">
         <source>Create a new variant template for the %s layout</source>
+        <target>Crear una nueva plantilla de variante para el diseño %s</target>
       </trans-unit>
       <trans-unit id="operation.rename_page_variant.0">
         <source>Rename variant</source>

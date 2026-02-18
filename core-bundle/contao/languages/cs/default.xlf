@@ -3038,8 +3038,7 @@
         <target>Zadejte prosím alespoň %s znaků</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Načítám výsledky...</target>
+        <source>Loading results …</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>

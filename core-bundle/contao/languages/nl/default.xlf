@@ -3038,8 +3038,8 @@
         <target>Voer minimaal %s tekens in</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Resultaten laden...</target>
+        <source>Loading results …</source>
+        <target>Resultaten laden ...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>

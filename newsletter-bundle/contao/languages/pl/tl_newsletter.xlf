@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send</source>
+        <target>Wyślij</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>

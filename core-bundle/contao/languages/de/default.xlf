@@ -3038,8 +3038,8 @@
         <target>Bitte geben Sie mindestens %s Zeichen ein</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Ergebnisse werden geladen...</target>
+        <source>Loading results …</source>
+        <target>Ergebnisse werden geladen …</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>

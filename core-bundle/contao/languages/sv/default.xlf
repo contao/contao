@@ -3038,8 +3038,7 @@
         <target>Vänligen ange minst %s tecken</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Laddar resultat...</target>
+        <source>Loading results …</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>

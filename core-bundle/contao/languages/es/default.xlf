@@ -2907,6 +2907,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>No se puede generar la URL de vista previa porque el formulario tiene errores.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -3037,8 +3038,8 @@
         <target>Por favor, introduzca al menos %s caracteres</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
-        <source>Loading results...</source>
-        <target>Cargando resultados...</target>
+        <source>Loading results …</source>
+        <target>Cargando resultados ...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
@@ -3366,6 +3367,7 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.0">
         <source>New at the top</source>
+        <target>Nuevo en la cima</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
@@ -3373,6 +3375,7 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.0">
         <source>New after</source>
+        <target>Nuevo después</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
@@ -3380,9 +3383,11 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.0">
         <source>New inside</source>
+        <target>Nuevo dentro</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
+        <target>Crear un nuevo elemento dentro del ID %s del elemento</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
