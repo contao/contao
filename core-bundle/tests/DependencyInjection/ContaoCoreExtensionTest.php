@@ -1095,6 +1095,30 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'callback' => [AsCallback::class];
     }
 
+    #[DataProvider('autoRefreshTemplateHierarchy')]
+    public function testRemovesAutoRefreshTemplateHierarchyListener(bool $refresh): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'auto_refresh_template_hierarchy' => $refresh,
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertSame($refresh, $container->hasDefinition('contao.twig.loader.auto_refresh_template_hierarchy_listener'));
+    }
+
+    public static function autoRefreshTemplateHierarchy(): iterable
+    {
+        yield 'refresh template hierarchy' => [true];
+        yield 'do not refresh template hierarchy' => [false];
+    }
+
     private function getContainerBuilder(array|null $params = null): ContainerBuilder
     {
         $container = new ContainerBuilder(

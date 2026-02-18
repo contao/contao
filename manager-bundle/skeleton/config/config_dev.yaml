@@ -53,3 +53,7 @@ monolog:
 fos_http_cache:
     invalidation:
         enabled: false
+
+# Contao configuration
+contao:
+    auto_refresh_template_hierarchy: true

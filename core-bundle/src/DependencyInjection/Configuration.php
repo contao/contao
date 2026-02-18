@@ -130,6 +130,10 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
+                ->booleanNode('auto_refresh_template_hierarchy')
+                    ->info('Automatically refreshes the template hierarchy on every request.')
+                    ->defaultValue(false)
+                ->end()
             ->end()
         ;
 
