@@ -86,7 +86,6 @@ class FrontendModuleControllerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with('@Contao/mod_bar.html.twig')
             ->willReturn(true)
         ;
 
@@ -220,16 +219,6 @@ class FrontendModuleControllerTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
-            ->with(
-                '@Contao/backend/module_wildcard.html.twig',
-                [
-                    'id' => 42,
-                    'name' => 'foo',
-                    'title' => 'foo headline',
-                    'request_token' => '<token>',
-                    'type' => 'foobar',
-                ],
-            )
             ->willReturn('<rendered wildcard>')
         ;
 

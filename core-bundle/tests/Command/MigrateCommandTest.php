@@ -532,7 +532,6 @@ class MigrateCommandTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT @@version')
             ->willReturn($configuration['version'] ?? '10.10.0-MariaDB-foo-bar')
         ;
 
@@ -556,7 +555,6 @@ class MigrateCommandTest extends TestCase
 
         $connection
             ->method('fetchAllAssociative')
-            ->with('SHOW ENGINES')
             ->willReturn($configuration['engines'] ?? [])
         ;
 
@@ -789,7 +787,6 @@ class MigrateCommandTest extends TestCase
 
         $migrations
             ->method('run')
-            ->with($pendingMigrations[0])
             ->willReturn(...$migrationResults)
         ;
 

@@ -28,7 +28,6 @@ use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
-use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HtmlSanitizer\ContaoHtmlSanitizer;
 use Contao\CoreBundle\Image\Studio\Studio;
@@ -298,7 +297,6 @@ abstract class ContentElementTestCase extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
             ->willReturn(['ContaoCore' => $resourceBasePath.'/contao/templates'])
         ;
 
@@ -599,7 +597,6 @@ abstract class ContentElementTestCase extends TestCase
         $controllerAdapter = $this->createAdapterStub(['getContentElement']);
         $controllerAdapter
             ->method('getContentElement')
-            ->with($this->isInstanceOf(ContentElementReference::class))
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($el) => $el->getContentModel()->type, $nestedFragments))
         ;
 

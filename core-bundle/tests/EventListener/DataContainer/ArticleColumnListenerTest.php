@@ -36,7 +36,6 @@ class ArticleColumnListenerTest extends TestCase
         $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
-            ->with('@Contao/layout/foo.html.twig')
             ->willReturn($templateInformation)
         ;
 
@@ -52,14 +51,12 @@ class ArticleColumnListenerTest extends TestCase
         $articleModel = $this->createStub(ArticleModel::class);
         $articleModel
             ->method('getRelated')
-            ->with('pid')
             ->willReturn($pageModel)
         ;
 
         $articleAdapter = $this->createAdapterStub(['findById']);
         $articleAdapter
             ->method('findById')
-            ->with(1)
             ->willReturn($articleModel)
         ;
 
@@ -70,7 +67,6 @@ class ArticleColumnListenerTest extends TestCase
         $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
-            ->with(2)
             ->willReturn($layoutModel)
         ;
 
@@ -123,14 +119,12 @@ class ArticleColumnListenerTest extends TestCase
         $articleModel = $this->createStub(ArticleModel::class);
         $articleModel
             ->method('getRelated')
-            ->with('pid')
             ->willReturn($pageModel)
         ;
 
         $articleAdapter = $this->createAdapterStub(['findById']);
         $articleAdapter
             ->method('findById')
-            ->with(1)
             ->willReturn($articleModel)
         ;
 
@@ -141,7 +135,6 @@ class ArticleColumnListenerTest extends TestCase
         $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
-            ->with(2)
             ->willReturn($layoutModel)
         ;
 
@@ -177,7 +170,6 @@ class ArticleColumnListenerTest extends TestCase
         $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
-            ->with('@Contao/layout/foo.html.twig')
             ->willReturn($templateInformation)
         ;
 
@@ -186,14 +178,12 @@ class ArticleColumnListenerTest extends TestCase
         $articleModel = $this->createStub(ArticleModel::class);
         $articleModel
             ->method('getRelated')
-            ->with('pid')
             ->willReturn($pageModel)
         ;
 
         $articleAdapter = $this->createAdapterStub(['findById']);
         $articleAdapter
             ->method('findById')
-            ->with(1)
             ->willReturn($articleModel)
         ;
 
@@ -204,14 +194,12 @@ class ArticleColumnListenerTest extends TestCase
         $pageRoute = $this->createStub(PageRoute::class);
         $pageRoute
             ->method('getDefault')
-            ->with('_template')
             ->willReturn('layout/foo')
         ;
 
         $pageRegistry = $this->createStub(PageRegistry::class);
         $pageRegistry
             ->method('getRoute')
-            ->with($pageModel)
             ->willReturn($pageRoute)
         ;
 

@@ -44,13 +44,11 @@ class VirtualFilesystemStoragePackageTest extends TestCase
         $storage = $this->createStub(VirtualFilesystem::class);
         $storage
             ->method('getLastModified')
-            ->with('some/path')
             ->willReturn(12345678)
         ;
 
         $storage
             ->method('generatePublicUri')
-            ->with('some/path')
             ->willReturn(new Uri('https://base-url/some/path'))
         ;
 

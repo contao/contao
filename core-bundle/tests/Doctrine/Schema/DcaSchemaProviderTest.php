@@ -315,7 +315,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $connection
             ->method('fetchOne')
-            ->with('SELECT @@version')
             ->willReturn($version)
         ;
 
@@ -551,7 +550,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $connection
             ->method('fetchOne')
-            ->with('SELECT @@version')
             ->willReturn('foo')
         ;
 

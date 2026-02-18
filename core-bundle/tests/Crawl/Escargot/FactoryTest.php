@@ -23,7 +23,6 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpClient\ScopingHttpClient;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
@@ -67,7 +66,6 @@ class FactoryTest extends TestCase
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
-            ->with($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://contao.org')
         ;
 

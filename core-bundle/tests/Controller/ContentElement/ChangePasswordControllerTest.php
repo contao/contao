@@ -301,7 +301,6 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         if ($versions) {
             $framework
                 ->method('createInstance')
-                ->with(Versions::class)
                 ->willReturn($versions)
             ;
         }

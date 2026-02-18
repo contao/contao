@@ -361,16 +361,11 @@ class FeedReaderControllerTest extends TestCase
         if ($assertTwigContext) {
             $twig
                 ->method('render')
-                ->with(
-                    '@Contao/frontend_module/feed_reader.html.twig',
-                    $this->callback($assertTwigContext),
-                )
                 ->willReturn('rendered frontend_module/feed_reader')
             ;
         } else {
             $twig
                 ->method('render')
-                ->with('@Contao/frontend_module/feed_reader.html.twig')
                 ->willReturn('rendered frontend_module/feed_reader')
             ;
         }

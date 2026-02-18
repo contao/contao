@@ -40,14 +40,12 @@ class ThemeTemplatesListenerTest extends TestCase
         $themeNamespace = $this->createStub(ThemeNamespace::class);
         $themeNamespace
             ->method('generateSlug')
-            ->with('<bad-path>')
             ->willThrowException(new InvalidThemePathException('<bad-path>', ['.', '_']))
         ;
 
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->with('ERR.invalidThemeTemplatePath', ['<bad-path>', '._'], 'contao_default')
             ->willReturn('<message>')
         ;
 

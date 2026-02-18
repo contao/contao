@@ -56,7 +56,6 @@ class ContentCompositionTest extends TestCase
         $pageRegistry = $this->createStub(PageRegistry::class);
         $pageRegistry
             ->method('getRoute')
-            ->with($page)
             ->willReturn($route)
         ;
 

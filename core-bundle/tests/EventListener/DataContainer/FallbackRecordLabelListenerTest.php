@@ -48,7 +48,6 @@ class FallbackRecordLabelListenerTest extends TestCase
         $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
             ->method('has')
-            ->with('tl_foo.edit.1', 'contao_tl_foo')
             ->willReturn(true)
         ;
 

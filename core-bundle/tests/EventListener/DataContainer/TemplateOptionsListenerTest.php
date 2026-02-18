@@ -135,11 +135,6 @@ class TemplateOptionsListenerTest extends TestCase
 
         $connection
             ->method('executeQuery')
-            ->with(
-                \sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
-                [[1, 2, 3]],
-                [ArrayParameterType::STRING],
-            )
             ->willReturn($result)
         ;
 
@@ -177,7 +172,6 @@ class TemplateOptionsListenerTest extends TestCase
         $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
-            ->with('ce_text_', [], 'ce_text')
             ->willReturn(['' => '[result from legacy class]'])
         ;
 
@@ -199,7 +193,6 @@ class TemplateOptionsListenerTest extends TestCase
         $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
-            ->with('ce_custom_', [], 'ce_custom')
             ->willReturn(['' => '[result from legacy class]'])
         ;
 

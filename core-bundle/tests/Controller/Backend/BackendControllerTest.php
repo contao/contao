@@ -154,7 +154,6 @@ class BackendControllerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with('@ContaoCore/Error/backend.html.twig')
             ->willReturn($legacyTemplateExists)
         ;
 

@@ -54,7 +54,6 @@ class AbstractFragmentControllerTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
-            ->with('@Contao/modified/template.html.twig', ['some' => 'data'])
             ->willReturn('rendered modified/template')
         ;
 
@@ -78,7 +77,6 @@ class AbstractFragmentControllerTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
-            ->with('@Contao/foo/bar.html.twig', [])
             ->willReturn('rendered foo/bar')
         ;
 
@@ -105,7 +103,6 @@ class AbstractFragmentControllerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with("@Contao/$defaultTemplateName.html.twig")
             ->willReturn(true)
         ;
 
@@ -113,7 +110,6 @@ class AbstractFragmentControllerTest extends TestCase
             $twig = $this->createStub(Environment::class);
             $twig
                 ->method('render')
-                ->with("@Contao/$defaultTemplateName.html.twig", ['some' => 'data'])
                 ->willReturn("rendered $defaultTemplateName")
             ;
         }

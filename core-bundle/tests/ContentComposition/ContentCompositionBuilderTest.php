@@ -71,10 +71,7 @@ class ContentCompositionBuilderTest extends TestCase
         $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
-            ->with(2)
-            ->willReturn(
-                $this->createClassWithPropertiesStub(LayoutModel::class, ['type' => 'default']),
-            )
+            ->willReturn($this->createClassWithPropertiesStub(LayoutModel::class, ['type' => 'default']))
         ;
 
         $framework = $this->createContaoFrameworkStub([LayoutModel::class => $layoutAdapter]);

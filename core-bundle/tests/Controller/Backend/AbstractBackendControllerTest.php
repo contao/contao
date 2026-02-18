@@ -320,7 +320,6 @@ class AbstractBackendControllerTest extends TestCase
         $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
-            ->with('ROLE_USER')
             ->willReturn(true)
         ;
 

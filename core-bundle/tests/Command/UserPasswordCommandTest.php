@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Command;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
@@ -223,7 +222,7 @@ class UserPasswordCommandTest extends TestCase
             '--password' => $password,
         ];
 
-        $command = $this->getCommand($connection, $password);
+        $command = $this->getCommand($connection);
 
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
@@ -265,22 +264,19 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    private function getCommand(Connection|null $connection = null, string|null $password = null): UserPasswordCommand
+    private function getCommand(Connection|null $connection = null): UserPasswordCommand
     {
         $connection ??= $this->createStub(Connection::class);
-        $password ??= '12345678';
 
         $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher
             ->method('hash')
-            ->with($password)
             ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
         ;
 
         $passwordHasherFactory = $this->createStub(PasswordHasherFactoryInterface::class);
         $passwordHasherFactory
             ->method('getPasswordHasher')
-            ->with(BackendUser::class)
             ->willReturn($passwordHasher)
         ;
 

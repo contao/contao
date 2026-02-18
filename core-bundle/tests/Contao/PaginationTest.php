@@ -62,7 +62,6 @@ class PaginationTest extends TestCase
         $input = $this->createAdapterStub(['get']);
         $input
             ->method('get')
-            ->with('page')
             ->willReturn($currentPage)
         ;
 

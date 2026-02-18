@@ -49,7 +49,6 @@ class SwitchUserOperationTest extends TestCase
         $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
-            ->with('id')
             ->willReturn(42)
         ;
 
@@ -88,14 +87,12 @@ class SwitchUserOperationTest extends TestCase
         $user = $this->createStub(BackendUser::class);
         $user
             ->method('__get')
-            ->with('id')
             ->willReturn(21)
         ;
 
         $originalUser = $this->createStub(BackendUser::class);
         $originalUser
             ->method('__get')
-            ->with('id')
             ->willReturn(42)
         ;
 

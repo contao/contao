@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\AdministratorEmailListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
@@ -42,7 +41,6 @@ class AdministratorEmailListenerTest extends TestCase
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
-            ->with('adminEmail')
             ->willReturn('foobar@example.com')
         ;
 
@@ -66,7 +64,6 @@ class AdministratorEmailListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')
             ->willReturn(false)
         ;
 
@@ -88,7 +85,6 @@ class AdministratorEmailListenerTest extends TestCase
             $configAdapter = $this->createAdapterStub(['get']);
             $configAdapter
                 ->method('get')
-                ->with('adminEmail')
                 ->willReturn(null)
             ;
 
@@ -114,7 +110,6 @@ class AdministratorEmailListenerTest extends TestCase
             $security = $this->createStub(Security::class);
             $security
                 ->method('isGranted')
-                ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')
                 ->willReturn(true)
             ;
         }

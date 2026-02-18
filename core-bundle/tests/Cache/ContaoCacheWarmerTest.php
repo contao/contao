@@ -82,7 +82,6 @@ class ContaoCacheWarmerTest extends TestCase
 
         $parentCatalogue
             ->method('all')
-            ->with('contao_tl_foobar')
             ->willReturn(['tl_foobar.new.0' => 'Create new foobar'])
         ;
 

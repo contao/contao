@@ -30,7 +30,6 @@ class RegularPageControllerTest extends TestCase
         $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
-            ->with(1)
             ->willReturn($layout)
         ;
 
