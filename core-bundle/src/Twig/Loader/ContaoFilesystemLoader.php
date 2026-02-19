@@ -339,6 +339,11 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
                     unset($chains[$identifier][$path]);
                 }
             }
+
+            // Remove empty chains completely
+            if (empty($chains[$identifier])) {
+                unset($chains[$identifier]);
+            }
         }
 
         return $chains;

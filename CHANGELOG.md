@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.0] (2026-02-18)
+
+**Fixed issues:**
+
+- [#9437] Remove the `Theme::setupTextareaResizing()` call on domready ([zoglo])
+- [#9433] Adjust the back end width styles ([zoglo])
+- [#9429] Limit the header bar to the same width as the container ([bytehead])
+- [#9426] Expand the `#main` width in popup modals ([zoglo])
+
 ## [5.7.0-RC4] (2026-02-17)
 
 **New features:**
@@ -281,6 +290,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.0]: https://github.com/contao/contao/releases/tag/5.7.0
 [5.7.0-RC4]: https://github.com/contao/contao/releases/tag/5.7.0-RC4
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
@@ -546,5 +556,9 @@ This project adheres to [Semantic Versioning].
 [#9412]: https://github.com/contao/contao/pull/9412
 [#9413]: https://github.com/contao/contao/pull/9413
 [#9422]: https://github.com/contao/contao/pull/9422
+[#9426]: https://github.com/contao/contao/pull/9426
 [#9427]: https://github.com/contao/contao/pull/9427
 [#9428]: https://github.com/contao/contao/pull/9428
+[#9429]: https://github.com/contao/contao/pull/9429
+[#9433]: https://github.com/contao/contao/pull/9433
+[#9437]: https://github.com/contao/contao/pull/9437
