@@ -291,7 +291,9 @@ services:
             - '@contao.framework'
 
     contao.doctrine.backup.dumper:
-        class: Contao\CoreBundle\Doctrine\Backup\Dumper
+        class: Contao\CoreBundle\Doctrine\Backup\MigrationDumper
+        arguments:
+            - '@contao.framework'
 
     contao.doctrine.backup.retention_policy:
         class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy

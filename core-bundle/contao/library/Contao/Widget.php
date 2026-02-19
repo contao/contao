@@ -758,7 +758,7 @@ abstract class Widget extends Controller
 			return $request->request->get($strKey);
 		}
 
-		$strMethod = $this->allowHtml ? 'postHtml' : 'post';
+		$strMethod = $this->allowHtml ? 'postHtml' : 'postRaw';
 
 		if ($this->preserveTags)
 		{
