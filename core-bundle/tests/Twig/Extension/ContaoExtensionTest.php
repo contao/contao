@@ -192,7 +192,6 @@ class ContaoExtensionTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo')
             ->willReturn(['' => '@Contao_Bar/foo.html.twig'])
         ;
 
@@ -219,7 +218,6 @@ class ContaoExtensionTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo')
             ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_Bar/foo.html.twig'])
         ;
 

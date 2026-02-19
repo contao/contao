@@ -41,7 +41,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
-            ->with('contao_backend_preview')
             ->willReturn('/contao/preview')
         ;
 

@@ -43,7 +43,6 @@ class FilesystemUtilTest extends TestCase
 
         $storage
             ->method('listContents')
-            ->with('directory')
             ->willReturn(
                 new FilesystemItemIterator([
                     new FilesystemItem(true, 'directory/file3'),

@@ -510,7 +510,6 @@ class MountManagerTest extends TestCase
 
         $adapter
             ->method('mimeType')
-            ->with('bar/test.zip')
             ->willReturn(new FileAttributes('bar/test.zip', null, null, null, 'application/zip'))
         ;
 

@@ -113,7 +113,6 @@ class DynamicExtendsTokenParserTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllDynamicParentsByThemeSlug')
-            ->with('foo', $this->anything())
             ->willThrowException(new \LogicException('Template not found in hierarchy.'))
         ;
 

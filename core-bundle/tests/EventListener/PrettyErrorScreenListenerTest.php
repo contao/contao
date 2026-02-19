@@ -67,7 +67,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
             ->willReturn(false)
         ;
 
@@ -236,7 +235,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
             ->willReturn(false)
         ;
 
@@ -257,7 +255,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
             ->willReturn(true)
         ;
 
@@ -321,7 +318,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
             ->willReturn(true)
         ;
 
@@ -348,7 +344,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
             ->willReturn(true)
         ;
 
@@ -452,7 +447,6 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
             ->willReturn($isBackendUser)
         ;
 

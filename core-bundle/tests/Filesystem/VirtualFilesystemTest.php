@@ -111,7 +111,6 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager = $this->createStub(DbafsManager::class);
         $dbafsManager
             ->method('resolveUuid')
-            ->with($this->defaultUuid)
             ->willReturn($path)
         ;
 
@@ -294,25 +293,21 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager = $this->createStub(DbafsManager::class);
         $dbafsManager
             ->method('match')
-            ->with('prefix/path')
             ->willReturn(true)
         ;
 
         $dbafsManager
             ->method('fileExists')
-            ->with('prefix/path')
             ->willReturn($resourceExists)
         ;
 
         $dbafsManager
             ->method('directoryExists')
-            ->with('prefix/path')
             ->willReturn($resourceExists)
         ;
 
         $dbafsManager
             ->method('has')
-            ->with('prefix/path')
             ->willReturn($resourceExists)
         ;
 
@@ -567,7 +562,6 @@ class VirtualFilesystemTest extends TestCase
         $mountManager = $this->createStub(MountManager::class);
         $mountManager
             ->method('listContents')
-            ->with('prefix/foo/bar', $deep)
             ->willReturn($this->getGenerator($listing))
         ;
 

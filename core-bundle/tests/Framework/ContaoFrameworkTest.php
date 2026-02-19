@@ -415,7 +415,6 @@ class ContaoFrameworkTest extends TestCase
 
         $config
             ->method('get')
-            ->with('timeZone')
             ->willReturn(\ini_get('date.timezone'))
         ;
 

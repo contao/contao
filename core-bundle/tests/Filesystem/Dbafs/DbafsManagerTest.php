@@ -193,7 +193,6 @@ class DbafsManagerTest extends TestCase
         $dbafs1 = $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED);
         $dbafs1
             ->method('getRecord')
-            ->with('bar')
             ->willReturn(new FilesystemItem(true, 'bar', 123450))
         ;
 
@@ -216,7 +215,6 @@ class DbafsManagerTest extends TestCase
         $dbafs1 = $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE);
         $dbafs1
             ->method('getRecord')
-            ->with('bar')
             ->willReturn(new FilesystemItem(true, 'bar', 0, 1024))
         ;
 
@@ -239,7 +237,6 @@ class DbafsManagerTest extends TestCase
         $dbafs1 = $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE);
         $dbafs1
             ->method('getRecord')
-            ->with('bar')
             ->willReturn(new FilesystemItem(true, 'bar', 0, 0, 'image/png'))
         ;
 
@@ -562,7 +559,6 @@ class DbafsManagerTest extends TestCase
         $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
-            ->with($path, $deep)
             ->willReturn(
                 array_map(
                     static fn (string $listingPath): FilesystemItem => new FilesystemItem(true, $listingPath),
@@ -614,7 +610,6 @@ class DbafsManagerTest extends TestCase
         $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecord')
-            ->with($path)
             ->willReturn(new FilesystemItem(true, $path, 0, 0, 'application/x-empty', $extraMetadata))
         ;
 

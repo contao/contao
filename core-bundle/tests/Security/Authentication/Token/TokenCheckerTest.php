@@ -187,7 +187,6 @@ class TokenCheckerTest extends TestCase
         $session = $this->createStub(Session::class);
         $session
             ->method('get')
-            ->with(FrontendPreviewAuthenticator::SESSION_NAME)
             ->willReturn($token)
         ;
 

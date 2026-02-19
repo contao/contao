@@ -363,7 +363,6 @@ class PreviewToolbarListenerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig')
             ->willReturn($legacyTemplateExists)
         ;
 
@@ -443,11 +442,6 @@ class PreviewToolbarListenerTest extends TestCase
     private function mockRouterWithContext(): RouterInterface&Stub
     {
         $router = $this->createStub(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->with('contao_backend_switch', [], UrlGeneratorInterface::ABSOLUTE_PATH)
-        ;
-
         $router
             ->method('getContext')
             ->willReturn(new RequestContext())

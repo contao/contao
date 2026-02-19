@@ -406,7 +406,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
             ->willReturn([
                 'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
                 'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
@@ -609,7 +608,6 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $templateLocator1
             ->method('findTemplates')
-            ->with('/templates')
             ->willReturn([
                 'foo.html.twig' => '/templates/foo.html.twig',
             ])
@@ -771,7 +769,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
             ->willReturn($paths)
         ;
 

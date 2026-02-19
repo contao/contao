@@ -107,13 +107,11 @@ class TwigIntegrationTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
-            ->with('@Contao/form_text.html.twig')
             ->willReturn(true)
         ;
 
         $filesystemLoader
             ->method('getFirst')
-            ->with('form_text')
             ->willReturn('/path/to/form_text.html.twig')
         ;
 
@@ -198,13 +196,11 @@ class TwigIntegrationTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
-            ->with('@Contao/twig_template.html.twig')
             ->willReturn(true)
         ;
 
         $filesystemLoader
             ->method('getFirst')
-            ->with('twig_template')
             ->willReturn('/path/to/twig_template.html.twig')
         ;
 
@@ -350,7 +346,6 @@ class TwigIntegrationTest extends TestCase
 
         $parser
             ->method('replaceInline')
-            ->with('<i>foo</i>{{br}}')
             ->willReturn('<i>foo</i><br>')
         ;
 

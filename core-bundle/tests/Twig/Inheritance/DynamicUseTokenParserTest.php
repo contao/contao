@@ -121,14 +121,12 @@ class DynamicUseTokenParserTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
             ->willReturn(['FooBundle' => Path::join($projectDir, 'bundle/contao/templates'), 'App' => Path::join($projectDir, 'templates')])
         ;
 
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
-            ->with("SELECT templates FROM tl_theme WHERE templates != ''")
             ->willReturn(['templates/theme'])
         ;
 

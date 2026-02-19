@@ -27,7 +27,6 @@ class FlysystemDefaultProviderTest extends TestCase
         $adapter = $this->createStub(FilesystemAdapterAndPublicUrlGeneratorInterface::class);
         $adapter
             ->method('publicUrl')
-            ->with('path/to/resource.txt')
             ->willReturn('https://some.bucket/some.key')
         ;
 

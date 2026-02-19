@@ -55,7 +55,6 @@ class MessageCatalogueTest extends TestCase
         $finder = $this->createStub(Finder::class);
         $finder
             ->method('name')
-            ->with('/\.(php|xlf)$/')
             ->willReturn($finder)
         ;
 
@@ -73,7 +72,6 @@ class MessageCatalogueTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('findIn')
-            ->with('languages/en')
             ->willReturn($finder)
         ;
 

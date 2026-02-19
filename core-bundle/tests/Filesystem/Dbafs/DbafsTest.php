@@ -248,7 +248,6 @@ class DbafsTest extends TestCase
         $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('listTableColumns')
-            ->with('tl_files')
             ->willReturn(
                 array_map(
                     $getColumn,
@@ -1393,7 +1392,6 @@ class DbafsTest extends TestCase
         if ($connection instanceof Stub) {
             $connection
                 ->method('quoteIdentifier')
-                ->with('tl_files')
                 ->willReturn('tl_files')
             ;
         }

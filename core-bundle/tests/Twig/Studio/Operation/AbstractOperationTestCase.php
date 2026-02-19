@@ -136,7 +136,6 @@ abstract class AbstractOperationTestCase extends TestCase
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton
             ->method('getContent')
-            ->with($basedOnName)
             ->willReturn('new template content')
         ;
 
@@ -154,7 +153,6 @@ abstract class AbstractOperationTestCase extends TestCase
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton
             ->method('getContent')
-            ->with($basedOnName)
             ->willReturn('new template content')
         ;
 

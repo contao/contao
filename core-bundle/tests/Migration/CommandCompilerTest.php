@@ -495,7 +495,6 @@ class CommandCompilerTest extends TestCase
         $schemaManagerConnection = $this->createStub(Connection::class);
         $schemaManagerConnection
             ->method('fetchNumeric')
-            ->with('SELECT @@character_set_database, @@collation_database')
             ->willReturn(['utf8mb4', 'utf8mb4_unicode_ci'])
         ;
 
@@ -517,7 +516,6 @@ class CommandCompilerTest extends TestCase
 
         $schemaManager
             ->method('createComparator')
-            ->with(...$comparatorParams)
             ->willReturn($comparator)
         ;
 

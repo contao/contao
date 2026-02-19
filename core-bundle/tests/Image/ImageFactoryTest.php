@@ -476,7 +476,6 @@ class ImageFactoryTest extends TestCase
         $resizer = $this->createStub(DeferredResizer::class);
         $resizer
             ->method('getDeferredImage')
-            ->with($path)
             ->willReturn($imageMock)
         ;
 

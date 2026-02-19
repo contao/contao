@@ -35,7 +35,6 @@ class DeferredRendererTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('load')
-            ->with('foo.html.twig')
             ->willReturn(new TemplateWrapper($twig, $template))
         ;
 

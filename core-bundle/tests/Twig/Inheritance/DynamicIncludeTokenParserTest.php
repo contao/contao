@@ -120,7 +120,6 @@ class DynamicIncludeTokenParserTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo.html.twig')
             ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig'])
         ;
 
@@ -152,7 +151,6 @@ class DynamicIncludeTokenParserTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo')
             ->willThrowException(new \LogicException('<original message>'))
         ;
 

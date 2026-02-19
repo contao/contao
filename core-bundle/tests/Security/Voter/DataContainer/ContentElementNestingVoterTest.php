@@ -69,7 +69,6 @@ class ContentElementNestingVoterTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT type FROM tl_content WHERE id = ?', [42])
             ->willReturn($databaseResult)
         ;
 

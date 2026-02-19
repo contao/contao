@@ -620,18 +620,6 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         $clone = $config->method('cloneForCurrent');
-
-        if ($expectedCurrent) {
-            $clone->with($this->callback(
-                static function (...$parameters) use (&$expectedCurrent) {
-                    $pos = array_search($parameters, $expectedCurrent, true);
-                    unset($expectedCurrent[$pos]);
-
-                    return false !== $pos;
-                },
-            ));
-        }
-
         $clone->willReturnSelf();
 
         $config

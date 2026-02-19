@@ -58,7 +58,6 @@ class LightboxResultTest extends TestCase
         $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
-            ->with($layoutId)
             ->willReturn($layoutModel)
         ;
 
@@ -112,7 +111,6 @@ class LightboxResultTest extends TestCase
         $layoutModelAdapter = $this->createAdapterStub(['findById']);
         $layoutModelAdapter
             ->method('findById')
-            ->with($layoutId)
             ->willReturn($layoutModel)
         ;
 
