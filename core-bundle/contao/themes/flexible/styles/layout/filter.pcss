@@ -25,6 +25,10 @@
     letter-spacing: -0.31em;
     padding-left: 15px !important;
     padding-right: 15px !important;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    box-sizing: border-box;
 
     &:not(:last-child) {
         padding-bottom: 16px;
@@ -94,6 +98,7 @@
 
 .content-filter {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 1fr auto;
     order: 1;
     border-bottom: 1px solid var(--content-border);
