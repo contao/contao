@@ -35,7 +35,7 @@ class FrontendIndex extends Frontend
 
 		if (null !== $layout && 'modern' === $layout->type)
 		{
-			return System::getContainer()->get(RegularPageController::class)->__invoke($pageModel);
+			return System::getContainer()->get(RegularPageController::class)($pageModel);
 		}
 
 		global $objPage;
