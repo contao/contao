@@ -19,6 +19,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FilesModel;
+use Contao\Idna;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -87,6 +88,47 @@ class ValueFormatter implements ResetInterface
         }
 
         return $this->format($table, $field, $row[$field], $dc);
+    }
+
+    public function formatGroup(string $table, string $field, mixed $value, int $mode, mixed $dc): string
+    {
+        if (\in_array($mode, [DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_DAY_BOTH], true)) {
+            return $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
+        }
+
+        if (\in_array($mode, [DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_MONTH_BOTH], true)) {
+            $intMonth = $value ? (date('m', $value) - 1) : '-';
+
+            if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth])) {
+                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . date('Y', $value) : '-';
+            }
+
+            return $value ? date('Y-m', $value) : '-';
+        }
+
+        if (\in_array($mode, [DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC, DataContainer::SORT_YEAR_BOTH], true)) {
+            return $value ? date('Y', $value) : '-';
+        }
+
+        if ('checkbox' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null) && !($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['multiple'] ?? null)) {
+            return $value ? $field : '';
+        }
+
+        $value = $this->format($table, $field, $value, $dc);
+
+        $length = match ($mode) {
+            DataContainer::SORT_INITIAL_LETTER_ASC,
+            DataContainer::SORT_INITIAL_LETTER_DESC => 1,
+            DataContainer::SORT_INITIAL_LETTERS_ASC,
+            DataContainer::SORT_INITIAL_LETTERS_DESC => max((int) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['length'] ?? 2), 1),
+            default => null,
+        };
+
+        if ($value && $length) {
+            $value = (new UnicodeString($value))->slice(0, $length)->title()->toString();
+        }
+
+        return $value ?: '-';
     }
 
     /**
@@ -179,8 +221,10 @@ class ValueFormatter implements ResetInterface
             $objFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($value);
 
             if (null !== $objFile) {
-                return (string) $objFile->path;
+                return $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
             }
+
+            return '';
         }
 
         $dateAdapter = $this->framework->getAdapter(Date::class);
@@ -283,6 +327,10 @@ class ValueFormatter implements ResetInterface
             return $this->translator->trans($value ? 'MSC.yes' : 'MSC.no', [], 'contao_default');
         }
 
+        if ($value && 'email' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] ?? null)) {
+            return Idna::decodeEmail((string) $value);
+        }
+
         return (string) $value;
     }
 
@@ -383,7 +431,7 @@ class ValueFormatter implements ResetInterface
             return StringUtil::deserialize($value, true);
         }
 
-        return $value;
+        return StringUtil::deserialize($value);
     }
 
     private function fetchForeignValue(string $table, string $field, mixed $id): mixed
