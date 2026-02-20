@@ -97,10 +97,10 @@ class ValueFormatter implements ResetInterface
         }
 
         if (\in_array($mode, [DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_MONTH_BOTH], true)) {
-            $intMonth = $value ? (date('m', $value) - 1) : '-';
+            $intMonth = $value ? date('m', $value) - 1 : '-';
 
             if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth])) {
-                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . date('Y', $value) : '-';
+                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.date('Y', $value) : '-';
             }
 
             return $value ? date('Y-m', $value) : '-';
@@ -221,7 +221,7 @@ class ValueFormatter implements ResetInterface
             $objFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($value);
 
             if (null !== $objFile) {
-                return $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
+                return $objFile->path.' ('.StringUtil::binToUuid($value).')';
             }
 
             return '';
