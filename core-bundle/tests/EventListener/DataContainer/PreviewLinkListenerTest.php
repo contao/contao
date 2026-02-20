@@ -14,14 +14,11 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\Message;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
