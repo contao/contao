@@ -720,6 +720,10 @@ class tl_files extends Backend
 		{
 			$operation->hide();
 		}
+		else
+		{
+			$operation->setUrl(Backend::addToUrl($operation['href'] . '&amp;pid=' . $row['id']));
+		}
 	}
 
 	/**
