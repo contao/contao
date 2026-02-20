@@ -77,7 +77,7 @@ class CrawlMessageHandler
         $logger = $this->createLogger($job, $message->subscribers);
 
         $escargot = $escargot
-            ->withMaxDurationInSeconds(20) // This we can improve in the future. It's only needed in the "web" scope
+            ->withMaxDurationInSeconds('cli' === \PHP_SAPI ? 0 : 20) // Limit to 20 seconds in the "web" scope
             ->withConcurrency($this->concurrency)
             ->withMaxDepth($message->maxDepth)
             ->withLogger($logger)
