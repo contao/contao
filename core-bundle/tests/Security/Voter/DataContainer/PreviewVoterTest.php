@@ -38,7 +38,7 @@ class PreviewVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new PreviewVoter($this->createMock(AccessDecisionManagerInterface::class));
+        $voter = new PreviewVoter($this->createStub(AccessDecisionManagerInterface::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_preview_link'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -89,7 +89,7 @@ class PreviewVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new PreviewVoter($this->createMock(AccessDecisionManagerInterface::class));
+        $voter = new PreviewVoter($this->createStub(AccessDecisionManagerInterface::class));
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,

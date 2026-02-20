@@ -168,7 +168,7 @@ class PreviewLinkListenerTest extends TestCase
         $request = Request::create('/contao?do=preview_link&act=create&url=/preview.php/foo/bar');
 
         $listener = new PreviewLinkListener(
-            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
+            $this->createContaoFrameworkStub([Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->mockSecurity(),
             new RequestStack([$request]),
             $this->createStub(TranslatorInterface::class),
@@ -195,7 +195,7 @@ class PreviewLinkListenerTest extends TestCase
         $request = Request::create('/contao?do=preview_link&act=create');
 
         $listener = new PreviewLinkListener(
-            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
+            $this->createContaoFrameworkStub([Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->mockSecurity(),
             new RequestStack([$request]),
             $this->createStub(TranslatorInterface::class),
@@ -224,19 +224,5 @@ class PreviewLinkListenerTest extends TestCase
         ;
 
         return $security;
-    }
-
-    /**
-     * @return Adapter<Input>&Stub
-     */
-    private function mockInputAdapter(array $inputData): Adapter&Stub
-    {
-        $inputAdapter = $this->createAdapterStub(['get']);
-        $inputAdapter
-            ->method('get')
-            ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)
-        ;
-
-        return $inputAdapter;
     }
 }
