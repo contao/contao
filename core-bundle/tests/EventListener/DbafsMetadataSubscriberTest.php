@@ -195,6 +195,7 @@ class DbafsMetadataSubscriberTest extends TestCase
         return new ExtraMetadata([
             'importantPart' => new ImportantPart(0.1, 0.2, 0.3, 0.4),
             'textTrack' => new TextTrack('de', TextTrackType::captions),
+            'videoSizes' => '(min-width: 600px)',
             'localized' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',

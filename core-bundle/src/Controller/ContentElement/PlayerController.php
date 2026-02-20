@@ -106,6 +106,7 @@ class PlayerController extends AbstractContentElementController
                 $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
+                    ->setIfExists('media', $item->getExtraMetadata()->getVideoSizes())
                     ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;

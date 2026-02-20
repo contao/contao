@@ -173,6 +173,12 @@
       <trans-unit id="tl_files.textTrackType.1">
         <source>Here you can select the type of text track.</source>
       </trans-unit>
+      <trans-unit id="tl_files.videoSizes.0">
+        <source>Sizes attribute</source>
+      </trans-unit>
+      <trans-unit id="tl_files.videoSizes.1">
+        <source>Here you can define the intended layout width of the video, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+      </trans-unit>
       <trans-unit id="tl_files.captions">
         <source>Closed captions</source>
       </trans-unit>
