@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\Message;
 
-use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageTrait;
 use Symfony\Component\Messenger\Attribute\AsMessage;
 
 /**
