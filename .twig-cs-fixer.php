@@ -3,6 +3,7 @@
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
+use Contao\Tools\TwigCsFixer\Rules\HtmlAttributesVariableNameRule;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder;
 use TwigCsFixer\Rules\File\DirectoryNameRule;
@@ -54,6 +55,8 @@ $ruleset->addRule(new ForbiddenFunctionRule([
     'contao_section', // only for legacy layouts
     'contao_sections', // only for legacy layouts
 ]));
+
+$ruleset->addRule(new HtmlAttributesVariableNameRule());
 
 $config = new Config();
 $config->allowNonFixableRules();
