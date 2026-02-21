@@ -1,4 +1,7 @@
 #template-studio--tree {
+    display: flex;
+    flex-direction: column;
+
     &,
     > * {
         height: 100%;
@@ -6,13 +9,14 @@
     }
 
     .search-filter {
+        height: fit-content;
         position: relative;
         vertical-align: initial;
 
         svg {
             position: absolute;
             left: 7px;
-            top: 3px;
+            top: 5px;
             pointer-events: none;
             color: var(--gray);
         }
@@ -37,8 +41,9 @@
     nav {
         height: 100%;
         overflow: auto;
+        box-sizing: border-box;
         white-space: nowrap;
-        padding: 4px;
+        padding: 0 4px 12px 4px;
 
         ol {
             padding: 0;
