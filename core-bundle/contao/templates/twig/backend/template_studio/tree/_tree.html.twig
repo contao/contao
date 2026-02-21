@@ -42,6 +42,7 @@
     </svg>
 
     {% set search_input_attributes = attrs()
+        .set('name', 'template-studio--search-filter')
         .set('type', 'search')
         .set('data-contao--template-studio-target', 'filter')
         .set('placeholder', 'template_studio.search_filter'|trans)
