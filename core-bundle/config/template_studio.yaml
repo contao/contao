@@ -42,6 +42,15 @@ services:
     contao.twig.studio.create_frontend_module_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateFrontendModuleVariantOperation
 
+    contao.twig.studio.create_legacy_content_element_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\CreateLegacyContentElementVariantOperation
+
+    contao.twig.studio.create_legacy_frontend_module_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\CreateLegacyFrontendModuleVariantOperation
+
+    contao.twig.studio.create_legacy_page_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\CreateLegacyPageVariantOperation
+
     contao.twig.studio.create_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateOperation
 
