@@ -54,9 +54,6 @@ services:
     contao.twig.studio.delete_frontend_module_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteFrontendModuleVariantOperation
 
-    contao.twig.studio.delete_layout_variant_operation:
-        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteLayoutVariantOperation
-
     contao.twig.studio.delete_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
 
