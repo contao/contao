@@ -16,11 +16,16 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 class FeedMigration extends AbstractMigration
 {
-    public function __construct(private readonly Connection $connection)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly Filesystem $filesystem,
+        private readonly string $webDir,
+    ) {
     }
 
     public function shouldRun(): bool
@@ -87,6 +92,8 @@ class FeedMigration extends AbstractMigration
             $mapping[$feed['id']] = $this->connection->lastInsertId();
 
             $this->connection->delete('tl_news_feed', ['id' => $feed['id']]);
+
+            $this->filesystem->remove(Path::join($this->webDir, 'share', $feed['alias'].'.xml'));
         }
 
         foreach ($layouts as $layoutId => $newsfeeds) {
