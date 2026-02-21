@@ -95,7 +95,7 @@ abstract class AbstractOperationTestCase extends TestCase
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
-            ->method('getFirst')
+            ->method('getInheritanceChains')
             ->willReturnMap($this->getReturnMapForLoader())
         ;
 
@@ -106,7 +106,7 @@ abstract class AbstractOperationTestCase extends TestCase
     {
         $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
-            ->method('getFirst')
+            ->method('getInheritanceChains')
             ->willReturnMap($this->getReturnMapForLoader())
         ;
 
@@ -187,10 +187,28 @@ abstract class AbstractOperationTestCase extends TestCase
     private function getReturnMapForLoader(): array
     {
         return [
-            ['content_element/existing_user_template', null, '@Contao_Global/content_element/existing_user_template.html.twig'],
-            ['content_element/existing_user_template', 'my_theme', '@Contao_Theme_my_theme/content_element/existing_user_template.html.twig '],
-            ['content_element/no_user_template', null, '@Contao_ContaoCoreBundle/content_element/no_user_template.html.twig'],
-            ['content_element/no_user_template', 'my_theme', '@Contao_ContaoCoreBundle/content_element/no_user_template.html.twig'],
+            [
+                null,
+                [
+                    'content_element/existing_user_template' => [
+                        'path/to/content_element/existing_user_template.html.twig' => '@Contao_Global/content_element/existing_user_template.html.twig',
+                    ],
+                    'content_element/no_user_template' => [
+                        'path/to/content_element/no_user_template.html.twig' => '@Contao_ContaoCoreBundle/content_element/no_user_template.html.twig',
+                    ],
+                ],
+            ],
+            [
+                'my_theme',
+                [
+                    'content_element/existing_user_template' => [
+                        'path/to/content_element/existing_user_template.html.twig' => '@Contao_Theme_my_theme/content_element/existing_user_template.html.twig ',
+                    ],
+                    'content_element/no_user_template' => [
+                        'path/to/content_element/no_user_template.html.twig' => '@Contao_ContaoCoreBundle/content_element/no_user_template.html.twig',
+                    ],
+                ],
+            ],
         ];
     }
 }
