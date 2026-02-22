@@ -23,7 +23,7 @@
         .set('id', "ctrl_#{this.id}")
         .addClass('range')
         .addClass(this.class|default)
-        .set('value', this.value, "#{this.value}" != '')
+        .setIfExists('value', this.value|insert_tag)
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
         .mergeWith(getAttributes.invoke())
     }}>
