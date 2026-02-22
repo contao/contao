@@ -17,13 +17,15 @@
         <p class="error">{{ getErrorAsString.invoke() }}</p>
     {% endif %}
 
+    {% set value = this.value|insert_tag %}
+
     <input{{ attrs()
         .set('type', this.type)
         .set('name', this.name)
         .set('id', "ctrl_#{this.id}")
         .addClass('range')
         .addClass(this.class|default)
-        .setIfExists('value', this.value|insert_tag)
+        .set('value', value, value != '')
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
         .mergeWith(getAttributes.invoke())
     }}>
