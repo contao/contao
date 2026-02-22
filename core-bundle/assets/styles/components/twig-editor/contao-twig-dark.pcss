@@ -1,59 +1,59 @@
 @import "common.pcss";
 
-.ace_editor.contao-twig-light {
-    background-color: #fff;
-    color: #000;
+.ace_editor.contao-twig-dark {
+    background-color: #2b2b2b;
+    color: #f8f8f8;
 
     .ace_codeLens a::before {
-        background-image: url("../../../contao/themes/flexible/icons/search.svg");
+        background-image: url("../../../icons/search--dark.svg");
     }
 
     .ace_gutter {
-        background: #ebebeb;
-        color: #333;
+        background: #232323;
+        color: #e2e2e2;
     }
 
     .ace_print-margin {
         width: 1px;
-        background: #e8e8e8;
+        background: #232323;
     }
 
     .ace_cursor {
-        color: #000;
+        color: #a7a7a7;
     }
 
     .ace_marker-layer .ace_selection {
-        background: #bdd5fc;
+        background: rgb(221 240 255 / 20%);
     }
 
     .ce_multiselect .ace_selection.ace_start {
-        box-shadow: 0 0 3px 0 #fff;
+        box-shadow: 0 0 3px 0 #141414;
     }
 
     .ace_marker-layer .ace_bracket {
         margin: -1px 0 0 -1px;
-        border: 1px solid #bfbfbf;
+        border: 1px solid rgb(255 255 255 / 25%);
     }
 
     .ace_marker-layer .ace_active-line {
-        background: #fffbd1;
+        background: rgb(255 255 255 / 3.1%);
     }
 
     .ace_gutter-active-line {
-        background-color: #dcdcdc;
+        background-color: rgb(255 255 255 / 3.1%);
     }
 
     .ace_marker-layer .ace_selected-word {
-        border: 1px solid #bdd5fc;
+        border: 1px solid rgb(221 240 255 / 20%);
     }
 
     .ace_invisible {
-        color: #bfbfbf;
+        color: rgb(255 255 255 / 25%);
     }
 
     .ace_keyword,
     .ace_meta {
-        color: #0c234b;
+        color: #cda869;
     }
 
     .ace_constant,
@@ -64,11 +64,11 @@
     .ace_markup.ace_heading,
     .ace_support.ace_constant,
     .ace_support.ace_function {
-        color: #cf7428;
+        color: #cc7832;
     }
 
     .ace_support {
-        color: #ac3bb2;
+        color: #bb77bf;
     }
 
     .ace_list,
@@ -76,27 +76,27 @@
     .ace_storage,
     .ace_entity.ace_name.ace_function,
     .ace_meta.ace_tag {
-        color: #0a2660;
+        color: #e8bf6a;
     }
 
     .ace_string {
-        color: #5a7a49;
+        color: #6a8759;
     }
 
     .ace_comment {
         font-style: italic;
-        color: #777;
+        color: #808080;
     }
 
     .ace_variable,
     .ace_text {
-        color: #1c1c1c;
+        color: #e3e3e3;
     }
 
     .ace_string.ace_regexp,
     .ace_numeric,
     .ace_reference {
-        color: #5f8c97 !important;
+        color: #6fa5b3 !important;
     }
 
     .ace_xml-pe {
@@ -104,28 +104,28 @@
     }
 
     .ace_indent-guide {
-        background: url("ace-builds/css/clouds-1.png") right repeat-y;
+        background: url("../../../../../node_modules/ace-builds/css/twilight-1.png") right repeat-y;
     }
 
     .ace_indent-guide-active {
-        background: url("ace-builds/css/clouds-2.png") right repeat-y;
+        background: url("../../../../../node_modules/ace-builds/css/twilight-2.png") right repeat-y;
     }
 
     .ace_twig-output-start,
     .ace_twig-output-end,
     .ace_twig-tag-start,
     .ace_twig-tag-end {
-        color: #466589 !important;
+        color: #a7b5c5 !important;
     }
 
     .ace_twig-test,
     .ace_twig-function {
-        color: #1783ff !important;
+        color: #4b93f1 !important;
     }
 
     .ace_twig-function.ace_dangerous {
-        background-color: rgb(255 178 178);
-        color: #094da7 !important;
+        background-color: rgb(111 0 0);
+        color: #63a5fb !important;
         padding: 0 2px 0 1px;
     }
 }
