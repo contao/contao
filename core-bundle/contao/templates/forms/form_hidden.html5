@@ -1,2 +1,0 @@
-
-<input type="hidden" name="<?= $this->name ?>" value="<?= Contao\StringUtil::specialchars($this->value) ?>">

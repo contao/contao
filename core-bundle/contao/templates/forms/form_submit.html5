@@ -1,9 +1,0 @@
-<?php $this->extend('form_row'); ?>
-
-<?php $this->block('field'); ?>
-  <?php if ($this->src): ?>
-    <input type="image" src="<?= $this->src ?>" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" title="<?= Contao\StringUtil::specialchars($this->slabel) ?>" alt="<?= Contao\StringUtil::specialchars($this->slabel) ?>"<?= $this->getAttributes() ?>>
-  <?php else: ?>
-    <button type="submit" id="ctrl_<?= $this->id ?>" class="submit<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>"<?= $this->getAttributes() ?>><?= $this->slabel ?></button>
-  <?php endif; ?>
-<?php $this->endblock(); ?>
