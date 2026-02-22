@@ -110,7 +110,6 @@ class PreviewSwitchController
 
         try {
             return $this->twig->render($template, [
-                'request_token' => $this->tokenManager->getDefaultTokenValue(),
                 'action' => $this->router->generate('contao_backend_switch'),
                 'canSwitchUser' => $canSwitchUser,
                 'user' => $frontendUsername,

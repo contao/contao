@@ -94,22 +94,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);
-
-        $this->environment->addGlobal(
-            'request_token',
-            new class($tokenManager) implements \Stringable {
-                public function __construct(private readonly ContaoCsrfTokenManager $tokenManager)
-                {
-                }
-
-                public function __toString(): string
-                {
-                    trigger_deprecation('contao/core-bundle', '5.3', 'The "request_token" Twig variable is deprecated and will no longer work in Contao 6. Use the "contao.request_token" variable instead.');
-
-                    return $this->tokenManager->getDefaultTokenValue();
-                }
-            },
-        );
     }
 
     public function getGlobals(): array
