@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Psr\Cache\CacheItemPoolInterface;

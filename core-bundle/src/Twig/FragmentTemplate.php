@@ -12,11 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig;
 
-use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\Model;
-use Contao\Template;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -56,9 +51,6 @@ final class FragmentTemplate
         return $this->get($key);
     }
 
-    /**
-     * @param string $key
-     */
     public function __isset(string $key): bool
     {
         return $this->has($key);
@@ -95,9 +87,6 @@ final class FragmentTemplate
         return $this->context;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName(string $name): void
     {
         $this->templateName = $name;

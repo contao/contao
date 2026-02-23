@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
