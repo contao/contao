@@ -27,7 +27,6 @@ use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 use Webauthn\Bundle\WebauthnBundle;
 
@@ -47,7 +46,6 @@ class AppKernel extends Kernel
             new KnpTimeBundle(),
             new KnpMenuBundle(),
             new CmfRoutingBundle(),
-            new Terminal42ServiceAnnotationBundle(),
             new ContaoCoreBundle(),
             new ContaoNewsBundle(),
         ];
