@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 /*
  * This file is part of Contao.
@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'title' => array
 		(
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'url' => array
 		(
@@ -60,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'text' => array
 		(
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 		'filesize' => array
 		(
@@ -76,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'groups' => array
 		(
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'language' => array
 		(
@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'meta' => array
 		(
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 	)
 );

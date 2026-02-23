@@ -26,7 +26,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_page'] = array
 (
@@ -240,7 +240,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'serpPreview' => array
 		(
@@ -359,7 +359,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'textarea',
 			'eval'                    => array('doNotCopy'=>true, 'decodeEntities' => true),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'maintenanceMode' => array
 		(
@@ -477,7 +477,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'includeLayout' => array
@@ -696,7 +696,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style' => 'height:60px', 'tl_class' => 'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'imgSize' => array
 		(

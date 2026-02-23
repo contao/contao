@@ -28,7 +28,7 @@ use Contao\Idna;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_comments'] = array
 (
@@ -154,7 +154,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE'),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addReply' => array
 		(
@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'published' => array
 		(

@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 /*
  * This file is part of Contao.
@@ -72,7 +72,7 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 		),
 		'editUrl' => array
 		(
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'active' => array
 		(
@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 		),
 		'data' => array
 		(
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
 		)
 	)
 );

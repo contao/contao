@@ -14,7 +14,7 @@ use Contao\DC_Table;
 use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
@@ -164,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getMetadataFields'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'skipIfDimensionsMatch' => array
 		(

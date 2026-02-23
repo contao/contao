@@ -29,7 +29,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
@@ -290,7 +290,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					)
 				)
 			),
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		)
 	)
 );
