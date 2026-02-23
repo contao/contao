@@ -514,12 +514,6 @@ window.Backend =
 	popupWindow: null,
 
 	/**
-	 * The theme path
-	 * @member {string}
-	 */
-	//themePath: Contao.script_url + 'system/themes/' + Contao.theme + '/',
-
-	/**
 	 * Open a modal window
 	 *
 	 * @param {int}    width   The width in pixels
