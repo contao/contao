@@ -174,7 +174,6 @@
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^12.4",
         "sebastian/diff": "^7.0",
-        "symfony/browser-kit": "^7.4",
         "symfony/cache": "^7.4",
         "symfony/monolog-bundle": "^3.1",
         "symfony/web-profiler-bundle": "^7.4",
