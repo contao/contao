@@ -16,11 +16,13 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
+use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -30,6 +32,8 @@ use Highlight\Highlighter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -61,6 +65,50 @@ class TwigIntegrationTest extends TestCase
         $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
 
         parent::tearDown();
+    }
+
+    public function testRendersWidgets(): void
+    {
+        $content = "{{ strClass }}\n{{ strLabel }} {{ this.label }}\n {{ getErrorAsString }}";
+
+        $environment = new Environment(new ArrayLoader(['@Contao/form_text.html.twig' => $content]));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
+            ),
+        );
+
+        $requestStack = new RequestStack([$request = new Request()]);
+
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('exists')
+            ->willReturnMap([['@Contao/form_text.html.twig', true]])
+        ;
+
+        $filesystemLoader
+            ->method('getFirst')
+            ->willReturnMap([['form_text', '/path/to/form_text.html.twig']])
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('twig', $environment);
+        $container->set(ContextFactory::class, new ContextFactory($this->createStub(ScopeMatcher::class)));
+        $container->set('request_stack', $requestStack);
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
+
+        System::setContainer($container);
+
+        // Render widget
+        $textField = new FormText(['class' => 'my_class', 'label' => 'foo']);
+        $textField->addError('bar');
+
+        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse(), 'HTML is built correctly');
+        $this->assertTrue($request->attributes->get('_contao_widget_error'), 'error attribute is set');
     }
 
     public function testRendersAttributes(): void
