@@ -22,12 +22,14 @@ use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\RouterInterface;
 
 class FileDownloadHelperTest extends TestCase
 {
@@ -107,7 +109,7 @@ class FileDownloadHelperTest extends TestCase
     {
         $adapter = new LocalFilesystemAdapter(Path::canonicalize(__DIR__.'/../Fixtures/files/data'));
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($adapter);
 
         $storage = new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
@@ -173,7 +175,7 @@ class FileDownloadHelperTest extends TestCase
         $adapter->write('my_file.txt', 'foo', new Config());
         $adapter->write('my_file.unknown', 'foo', new Config());
 
-        $mountManager = new MountManager();
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($adapter);
 
         return new VirtualFilesystem($mountManager, $this->createStub(DbafsManager::class));
@@ -190,6 +192,11 @@ class FileDownloadHelperTest extends TestCase
 
     private function getFileDownloadHelper(): FileDownloadHelper
     {
-        return new FileDownloadHelper(new UriSigner('secret'));
+        return new FileDownloadHelper(
+            new UriSigner('secret'),
+            $this->createStub(RouterInterface::class),
+            $this->createStub(Security::class),
+            $this->createStub(MountManager::class),
+        );
     }
 }

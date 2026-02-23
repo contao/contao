@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\PublicUri\Options;
@@ -355,7 +356,7 @@ class MountManagerTest extends TestCase
 
     public function testFileExistsToleratesNonExistingMountPoints(): void
     {
-        $this->assertFalse((new MountManager())->fileExists('foo'));
+        $this->assertFalse((new MountManager($this->createStub(FileDownloadHelper::class)))->fileExists('foo'));
     }
 
     #[DataProvider('provideListings')]
@@ -513,7 +514,7 @@ class MountManagerTest extends TestCase
             ->willReturnMap([['bar/test.zip', new FileAttributes('bar/test.zip', null, null, null, 'application/zip')]])
         ;
 
-        $mountManager = new MountManager([]);
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class));
         $mountManager->mount($adapter, 'foo');
 
         $item = iterator_to_array($mountManager->listContents('foo/bar'))[0];
@@ -532,7 +533,7 @@ class MountManagerTest extends TestCase
 
         $adapter2 = new InMemoryFilesystemAdapter();
 
-        $manager = new MountManager();
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
         $manager->mount($adapter1, 'foo');
         $manager->mount($adapter2, 'bar');
 
@@ -605,7 +606,7 @@ class MountManagerTest extends TestCase
             ->willReturn(new Uri('https://some-service.org/user42/other.jpg'))
         ;
 
-        $mountManager = new MountManager([$publicUriProvider1, $publicUriProvider2]);
+        $mountManager = new MountManager($this->createStub(FileDownloadHelper::class), [$publicUriProvider1, $publicUriProvider2]);
         $mountManager->mount($fooAdapter, 'foo');
 
         $this->assertSame(
@@ -621,7 +622,7 @@ class MountManagerTest extends TestCase
 
     private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
     {
-        return (new MountManager())->mount($adapter);
+        return (new MountManager($this->createStub(FileDownloadHelper::class)))->mount($adapter);
     }
 
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter&MockObject

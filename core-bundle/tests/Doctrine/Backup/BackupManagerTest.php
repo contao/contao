@@ -21,6 +21,7 @@ use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicyInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -40,7 +41,7 @@ class BackupManagerTest extends ContaoTestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            (new MountManager($this->createStub(FileDownloadHelper::class)))->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
     }

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -911,7 +912,7 @@ class VirtualFilesystemTest extends TestCase
         }
 
         $filesystem = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            (new MountManager($this->createStub(FileDownloadHelper::class)))->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
 

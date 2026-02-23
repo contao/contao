@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
 
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -56,7 +57,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         $adapter->write('foo/bar.jpg', '…', new Config());
 
         $filesystem = new VirtualFilesystem(
-            (new MountManager())->mount($adapter),
+            (new MountManager($this->createStub(FileDownloadHelper::class)))->mount($adapter),
             $this->createStub(DbafsManager::class),
         );
 
