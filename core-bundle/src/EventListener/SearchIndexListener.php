@@ -35,6 +35,7 @@ class SearchIndexListener
         private readonly MessageBusInterface $messageBus,
         private readonly string $fragmentPath = '_fragment',
         private readonly string $contaoBackendRoutePrefix = '/contao',
+        private readonly bool $debugMode = false,
         private readonly int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
     ) {
     }
@@ -51,6 +52,10 @@ class SearchIndexListener
         }
 
         $request = $event->getRequest();
+
+        if ($this->debugMode) {
+            return;
+        }
 
         // Only handle GET requests (see #1194, #7240)
         if (!$request->isMethod(Request::METHOD_GET)) {
