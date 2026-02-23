@@ -275,26 +275,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Set the output format
-	 *
-	 * @param string $strFormat The output format
-	 */
-	public function setFormat($strFormat)
-	{
-		$this->strFormat = $strFormat;
-	}
-
-	/**
-	 * Return the output format
-	 *
-	 * @return string The output format
-	 */
-	public function getFormat()
-	{
-		return $this->strFormat;
-	}
-
-	/**
 	 * Print all template variables to the screen using the Symfony VarDumper component
 	 */
 	public function dumpTemplateVars()

@@ -108,28 +108,4 @@ trait FrontendTemplateTrait
 
 		include $this->getTemplate($template);
 	}
-
-	/**
-	 * Point to `Frontend::addToUrl()` in front end templates (see #6736)
-	 *
-	 * @param string  $strRequest      The request string to be added
-	 * @param boolean $blnIgnoreParams If true, the $_GET parameters will be ignored
-	 * @param array   $arrUnset        An optional array of keys to unset
-	 *
-	 * @return string The new URI string
-	 */
-	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
-	{
-		return Frontend::addToUrl($strRequest, $blnIgnoreParams, $arrUnset);
-	}
-
-	/**
-	 * Check whether there is an authenticated back end user
-	 *
-	 * @return boolean True if there is an authenticated back end user
-	 */
-	public function hasAuthenticatedBackendUser()
-	{
-		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
-	}
 }
