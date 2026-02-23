@@ -239,6 +239,13 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\Page\ForwardPageController:
+        arguments:
+            - '@contao.routing.content_url_generator'
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
     Contao\CoreBundle\Controller\Page\RedirectPageController:
         arguments:
             - '@contao.routing.content_url_generator'
