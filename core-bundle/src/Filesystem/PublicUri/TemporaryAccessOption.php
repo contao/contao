@@ -37,6 +37,6 @@ final class TemporaryAccessOption
 
     public static function createFromContent(int $ttl, array $content): self
     {
-        return new self($ttl, ArrayUtil::consistentHash($content, 'xxh3'));
+        return new self($ttl, ArrayUtil::consistentHash($content));
     }
 }

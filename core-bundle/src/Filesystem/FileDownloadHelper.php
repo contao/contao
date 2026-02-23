@@ -92,7 +92,7 @@ class FileDownloadHelper
             $parameters[self::TOKEN_PARAM] = $tokenHash;
         }
 
-        $url = $this->router->generate('contao_protected_download', $parameters, RouterInterface::ABSOLUTE_URL);
+        $url = $this->router->generate('contao_file_stream', $parameters, RouterInterface::ABSOLUTE_URL);
 
         return $this->signer->sign($url, $temporaryAccessOption->getTtl());
     }

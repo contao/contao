@@ -18,12 +18,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('_file_stream/{path}',
-    name: 'contao_protected_download',
+    name: 'contao_file_stream',
     requirements: ['path' => '.+'],
     defaults: ['_scope' => 'frontend'],
     methods: ['GET'],
 )]
-class ProtectedDownloadController
+class FileStreamController
 {
     public function __construct(private readonly FileDownloadHelper $fileDownloadHelper)
     {

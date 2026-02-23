@@ -264,7 +264,7 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\ProtectedDownloadController:
+    Contao\CoreBundle\Controller\FileStreamController:
         arguments:
             - '@contao.filesystem.file_download_helper'
         tags:

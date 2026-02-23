@@ -58,7 +58,7 @@ class ArrayUtil
 		ksort($array, $flags);
 	}
 
-	public static function consistentHash(array $array, string $algorithm): string
+	public static function consistentHash(array $array, string $algorithm = 'xxh3'): string
 	{
 		self::recursiveKeySort($array);
 
