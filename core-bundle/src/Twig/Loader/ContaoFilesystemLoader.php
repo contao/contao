@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Twig\Loader;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
-use Contao\TemplateLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;

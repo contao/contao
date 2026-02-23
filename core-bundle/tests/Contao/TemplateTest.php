@@ -13,12 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
-use Contao\Config;
-use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -29,14 +24,9 @@ use Contao\Template;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\VarDumper\VarDumper;
 use Twig\Environment;
 
@@ -50,14 +40,16 @@ class TemplateTest extends TestCase
             ->method('render')
             ->with(
                 '@Contao/test_template.html.twig',
-                $this->callback(function(array $context) {
-                    $this->assertArrayHasKey('foo', $context);
-                    $this->assertSame('bar', $context['foo']);
+                $this->callback(
+                    function (array $context) {
+                        $this->assertArrayHasKey('foo', $context);
+                        $this->assertSame('bar', $context['foo']);
 
-                    return true;
-                })
+                        return true;
+                    }
+                ),
             )
-            ->willReturn('<output>');
+            ->willReturn('<output>')
         ;
 
         $container = $this->getContainerWithContaoConfiguration();

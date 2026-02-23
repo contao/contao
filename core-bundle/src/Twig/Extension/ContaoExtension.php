@@ -263,12 +263,12 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'escape',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => [EscaperExtension::class, 'escapeFilterIsSafe']],
+                ['needs_environment' => true, 'is_safe_callback' => EscaperExtension::escapeFilterIsSafe(...)],
             ),
             new TwigFilter(
                 'e',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => [EscaperExtension::class, 'escapeFilterIsSafe']],
+                ['needs_environment' => true, 'is_safe_callback' => EscaperExtension::escapeFilterIsSafe(...)],
             ),
             new TwigFilter(
                 'insert_tag',

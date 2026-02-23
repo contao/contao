@@ -15,8 +15,6 @@ namespace Contao\CoreBundle\Tests\Twig\Extension;
 use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -27,33 +25,19 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
-use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
-use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\System;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Loader\ArrayLoader;
-use Twig\Node\BodyNode;
-use Twig\Node\EmptyNode;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\FilterExpression;
-use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\Nodes;
-use Twig\NodeTraverser;
 use Twig\Runtime\EscaperRuntime;
-use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
@@ -263,7 +247,6 @@ class ContaoExtensionTest extends TestCase
 
         $extension->getFunctions();
     }
-
 
     /**
      * @param Environment&MockObject $environment
