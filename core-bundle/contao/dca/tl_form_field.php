@@ -80,8 +80,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minval,maxval,step,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple,help;{options_legend},options;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -138,7 +138,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'name' => array
@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true, 'basicEntities'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
@@ -160,13 +160,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html'),
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'basicEntities'=>true),
 			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'options' => array
 		(
 			'inputType'               => 'optionWizard',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true),
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'basicEntities'=>true),
 			'xlabel' => array
 			(
 				array('tl_form_field', 'optionImportWizard')
@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'help' => array
@@ -211,7 +211,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'minlength' => array
@@ -325,7 +325,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'accesskey' => array

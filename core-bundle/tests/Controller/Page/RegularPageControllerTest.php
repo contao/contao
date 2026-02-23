@@ -15,7 +15,6 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\LayoutTemplate;
-use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -31,8 +30,7 @@ class RegularPageControllerTest extends TestCase
         $layoutAdapter = $this->createAdapterStub(['findById']);
         $layoutAdapter
             ->method('findById')
-            ->with(1)
-            ->willReturn($layout)
+            ->willReturnMap([[1, $layout]])
         ;
 
         $framework = $this->createContaoFrameworkStub([
@@ -96,18 +94,6 @@ class RegularPageControllerTest extends TestCase
         $this->assertSame($response, $finalizedResponse);
     }
 
-    public function testSetsDeferredRenderer(): void
-    {
-        $deferredRenderer = $this->createStub(RendererInterface::class);
-
-        $controller = $this->getRegularPageController(
-            contentComposition: $this->getContentComposition(expectedFragmentRenderer: $deferredRenderer),
-            deferredRenderer: $deferredRenderer,
-        );
-
-        $controller($this->createClassWithPropertiesStub(PageModel::class));
-    }
-
     public static function providePageCacheSettings(): iterable
     {
         yield 'disabled' => [
@@ -126,7 +112,7 @@ class RegularPageControllerTest extends TestCase
         ];
     }
 
-    private function getRegularPageController(ContaoFramework|null $framework = null, \Closure|null $handler = null, ContentComposition|null $contentComposition = null, CoreResponseContextFactory|null $responseContextFactory = null, ResponseContextAccessor|null $responseContextAccessor = null, RendererInterface|null $deferredRenderer = null): RegularPageController
+    private function getRegularPageController(ContaoFramework|null $framework = null, \Closure|null $handler = null, ContentComposition|null $contentComposition = null, CoreResponseContextFactory|null $responseContextFactory = null, ResponseContextAccessor|null $responseContextAccessor = null): RegularPageController
     {
         if (!$framework) {
             $layoutAdapter = $this->createAdapterStub(['findById']);
@@ -152,7 +138,6 @@ class RegularPageControllerTest extends TestCase
             $contentComposition ?? $this->getContentComposition(),
             $responseContextFactory,
             $responseContextAccessor ?? $this->createStub(ResponseContextAccessor::class),
-            $deferredRenderer ?? $this->createStub(RendererInterface::class),
             $framework,
             $handler,
         );
@@ -165,7 +150,7 @@ class RegularPageControllerTest extends TestCase
         return $controller;
     }
 
-    private function getContentComposition(bool $build = true, ResponseContext|null $expectedResponseContext = null, RendererInterface|null $expectedFragmentRenderer = null): ContentComposition
+    private function getContentComposition(bool $build = true, ResponseContext|null $expectedResponseContext = null): ContentComposition
     {
         $contentCompositionBuilder = $this->createMock(ContentCompositionBuilder::class);
 
@@ -179,20 +164,6 @@ class RegularPageControllerTest extends TestCase
         } else {
             $contentCompositionBuilder
                 ->method('setResponseContext')
-                ->willReturnSelf()
-            ;
-        }
-
-        if ($expectedFragmentRenderer) {
-            $contentCompositionBuilder
-                ->expects($this->once())
-                ->method('setSlotRenderer')
-                ->with($expectedFragmentRenderer)
-                ->willReturnSelf()
-            ;
-        } else {
-            $contentCompositionBuilder
-                ->method('setSlotRenderer')
                 ->willReturnSelf()
             ;
         }

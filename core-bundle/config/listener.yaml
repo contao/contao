@@ -267,7 +267,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '@security.helper'
             - '@request_stack'
             - '@translator'
@@ -519,11 +518,6 @@ services:
             - '@request_stack'
             - '@translator'
             - '%contao.template_studio.enabled%'
-
-    contao.listener.merge_http_headers:
-        class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
-        arguments:
-            - '@contao.framework'
 
     contao.listener.page_access:
         class: Contao\CoreBundle\EventListener\PageAccessListener

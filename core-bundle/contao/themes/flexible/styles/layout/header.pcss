@@ -21,6 +21,12 @@
     color: var(--header-text);
 }
 
+#header .inner {
+    position: relative;
+    margin: 0 auto;
+    max-width: var(--backend-width, none);
+}
+
 @media (resolution >= 2dppx) {
     #header h1 a {
         font-weight: 300;
@@ -115,7 +121,8 @@
     margin-top: 5px;
     background: var(--content-bg);
     border: 1px solid var(--content-border);
-    box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
+    border-radius: var(--border-radius);
+    box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
     z-index: 4; /* Above .jump-targets */
     color: var(--text);
     text-align: left;

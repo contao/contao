@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -121,15 +120,13 @@ class DynamicUseTokenParserTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn(['FooBundle' => Path::join($projectDir, 'bundle/contao/templates'), 'App' => Path::join($projectDir, 'templates')])
+            ->willReturnMap([['templates', ['FooBundle' => Path::join($projectDir, 'bundle/contao/templates'), 'App' => Path::join($projectDir, 'templates')]]])
         ;
 
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchFirstColumn')
-            ->with("SELECT templates FROM tl_theme WHERE templates != ''")
-            ->willReturn(['templates/theme'])
+            ->willReturnMap([["SELECT templates FROM tl_theme WHERE templates != ''", ['templates/theme']]])
         ;
 
         $templateLocator = new TemplateLocator(
@@ -153,7 +150,6 @@ class DynamicUseTokenParserTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $filesystemLoader,
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),

@@ -89,8 +89,8 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>1022, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>1022, 'default'=>'')
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		)
 	)
 );

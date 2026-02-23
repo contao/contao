@@ -48,6 +48,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'share' => array
 			(
 				'icon'                => 'share.svg',

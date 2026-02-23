@@ -2104,7 +2104,6 @@ window.addEvent('domready', function() {
 	Backend.tableWizardSetWidth();
 
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 
 	if ($('sbtog')) {
 		Theme.setupSplitButtonToggle();

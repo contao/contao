@@ -6,11 +6,11 @@
         <span class="token">{{ identifier }}</span>
     {%- endset %}
 
-    {% block title %}{{ ('operation.' ~ operation ~ '.0')|trans }}{% endblock %}
+    {% block title %}{{ ('template_studio.operation.' ~ operation ~ '.0')|trans }}{% endblock %}
 
     {% block content %}
         <div class="description">
-            {{ ('dialog.' ~ operation_type ~ '_variant')|trans([identifier_token])|raw }}
+            {{ ('template_studio.dialog.' ~ operation_type ~ '_variant')|trans([identifier_token])|raw }}
         </div>
 
         <div class="template_name name_container">

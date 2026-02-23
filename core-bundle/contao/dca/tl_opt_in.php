@@ -10,10 +10,10 @@
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
 use Contao\Message;
 use Contao\OptInModel;
 use Contao\System;
@@ -195,19 +195,15 @@ class tl_opt_in extends Backend
 	}
 
 	/**
-	 * Return the resend token button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the resend token button
 	 */
-	public function resendButton($row, $href, $label, $title, $icon, $attributes)
+	public function resendButton(DataContainerOperation $operation): void
 	{
-		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['removeOn'] > time()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : '';
+		$row = $operation->getRecord();
+
+		if ($row['confirmedOn'] || $row['invalidatedThrough'] || !$row['emailSubject'] || !$row['emailText'] || $row['removeOn'] <= time())
+		{
+			$operation->hide();
+		}
 	}
 }
