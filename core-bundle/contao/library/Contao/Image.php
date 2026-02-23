@@ -95,29 +95,12 @@ class Image
 
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
-		if (\in_array($filename, self::$deprecated))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6.');
-		}
-		elseif (\in_array($filename, self::$disabled))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
-		}
-
 		// Use path from icon manifest
 		$icons = System::getContainer()->getParameter('contao.backend.icons');
 
 		if (isset($icons["$filename.svg"]))
 		{
 			return ltrim($icons["$filename.svg"]['path'], '/');
-		}
-
-		$webDir = System::getContainer()->getParameter('contao.web_dir');
-
-		// Prefer SVG icons
-		if (file_exists($webDir . '/bundles/contaocore/icons/' . $filename . '.svg'))
-		{
-			return 'bundles/contaocore/icons/' . $filename . '.svg';
 		}
 
 		return 'bundles/contaocore/images/' . $src;
