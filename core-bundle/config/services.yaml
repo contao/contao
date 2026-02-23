@@ -369,12 +369,17 @@ services:
 
     contao.filesystem.file_download_helper:
         class: Contao\CoreBundle\Filesystem\FileDownloadHelper
+        lazy: true
         arguments:
             - '@uri_signer'
+            - '@router'
+            - '@security.helper'
+            - '@contao.filesystem.mount_manager'
 
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
+            - '@contao.filesystem.file_download_helper'
             - !tagged_iterator contao.public_file_uri_provider
 
     contao.filesystem.public_uri.flysystem_default_provider:

@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
 use Contao\StringUtil;
 use Nyholm\Psr7\Uri;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -21,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This helper class makes it easier to generate and handle streamed file
@@ -40,6 +43,9 @@ use Symfony\Component\HttpFoundation\UriSigner;
  */
 class FileDownloadHelper
 {
+    /**
+     * @deprecated can be removed as soon as the deprecated methods are removed
+     */
     private const PARAM_PATH = 'p';
 
     private const PARAM_CONTEXT = 'ctx';
@@ -48,25 +54,53 @@ class FileDownloadHelper
 
     private const PARAM_FILE_NAME = 'f';
 
-    public function __construct(private readonly UriSigner $signer)
-    {
+    private const TOKEN_PARAM = 't';
+
+    public function __construct(
+        private readonly UriSigner $signer,
+        private RouterInterface $router,
+        private Security $security,
+        private MountManager $mountManager,
+    ) {
     }
 
     /**
-     * Generate a signed file URL that a browser will display inline.
-     *
-     * You can optionally provide an array of $context, that will also be incorporated
-     * into the URL.
+     * Generate a signed file URL that a browser will download.
      */
-    public function generateInlineUrl(string $url, string $path, array|null $context = null): string
+    public function generateUrl(string $path, TemporaryAccessOption $temporaryAccessOption, string|null $fileName = null, string $disposition = HeaderUtils::DISPOSITION_INLINE): string
     {
-        return $this->generate($url, [
-            self::PARAM_PATH => $path,
-            self::PARAM_CONTEXT => null !== $context ? serialize($context) : null,
-        ]);
+        if (!\in_array($disposition, [HeaderUtils::DISPOSITION_ATTACHMENT, HeaderUtils::DISPOSITION_INLINE], true)) {
+            throw new \InvalidArgumentException(\sprintf('The disposition must be either "%s" or "%s".', HeaderUtils::DISPOSITION_ATTACHMENT, HeaderUtils::DISPOSITION_INLINE));
+        }
+
+        $parameters = [
+            'path' => $path,
+            self::PARAM_DISPOSITION => $disposition,
+            self::PARAM_CONTEXT => $temporaryAccessOption->getContentHash(), // Invalidates the URLs when the content changes
+        ];
+
+        if (null !== $fileName) {
+            // Call makeDisposition() here to check if the file name is valid
+            HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName, 'f');
+            $parameters[self::TOKEN_PARAM] = $fileName;
+        }
+
+        // When user is logged in, ensure the URL is private
+        $tokenHash = $this->getSecurityTokenHash();
+
+        if (null !== $tokenHash) {
+            $parameters[self::TOKEN_PARAM] = $tokenHash;
+        }
+
+        $url = $this->router->generate('contao_protected_download', $parameters, RouterInterface::ABSOLUTE_URL);
+
+        return $this->signer->sign($url, $temporaryAccessOption->getTtl());
     }
 
     /**
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *              use "generateUrl()" instead.
+     *
      * Generate a signed file URL that a browser will download.
      *
      * You can optionally provide an array of $context, that will also be incorporated
@@ -74,6 +108,8 @@ class FileDownloadHelper
      */
     public function generateDownloadUrl(string $url, string $path, string|null $fileName = null, array|null $context = null): string
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'The "generateDownloadUrl()" method is deprecated. Use "generateUrl()" instead.');
+
         if (null !== $fileName) {
             // Call makeDisposition() here to check if the file name is valid
             HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName, 'f');
@@ -87,7 +123,30 @@ class FileDownloadHelper
         ]);
     }
 
+    public function handleRequest(Request $request, string $path): Response
+    {
+        if (!$this->signer->checkRequest($request)) {
+            return new Response('The provided file URL is not valid.', Response::HTTP_FORBIDDEN);
+        }
+
+        // Token does not match
+        if ($this->getSecurityTokenHash() !== $request->query->get('token')) {
+            return new Response('The provided token is not valid.', Response::HTTP_FORBIDDEN);
+        }
+
+        $file = $this->mountManager->get($path);
+
+        if (null === $file) {
+            return new Response('The requested resource does not exist.', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->generateResponse($this->mountManager->readStream($path), $request, $file);
+    }
+
     /**
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             use "handleRequest()" instead.
+     *
      * Handle download request and stream file contents.
      *
      * If you need to add custom logic, you can implement the $onProcess closure that
@@ -99,6 +158,8 @@ class FileDownloadHelper
      */
     public function handle(Request $request, VirtualFilesystemInterface $storage, \Closure|null $onProcess = null): Response
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'The "handle()" method is deprecated. Use "handleRequest()" instead.');
+
         if (!$this->signer->checkRequest($request)) {
             return new Response('The provided file URL is not valid.', Response::HTTP_FORBIDDEN);
         }
@@ -116,7 +177,25 @@ class FileDownloadHelper
             }
         }
 
-        $stream = $storage->readStream($file->getPath());
+        return $this->generateResponse($storage->readStream($file->getPath()), $request, $file);
+    }
+
+    private function getSecurityTokenHash(): string|null
+    {
+        $token = $this->security->getToken();
+
+        if (null === $token) {
+            return null;
+        }
+
+        return hash('xxh3', serialize($token));
+    }
+
+    /**
+     * @param resource $stream
+     */
+    private function generateResponse($stream, Request $request, FilesystemItem $file): Response
+    {
         $metadata = stream_get_meta_data($stream);
 
         // Prefer sendfile for local resources

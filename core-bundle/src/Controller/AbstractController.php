@@ -15,12 +15,17 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\PageModel;
+use Psr\Http\Message\UriInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,6 +81,26 @@ abstract class AbstractController extends SymfonyAbstractController
             'csrf_token_manager' => $this->container->get('contao.csrf.token_manager'),
             'csrf_token_id' => $this->getParameter('contao.csrf_token_name'),
         ];
+    }
+
+    protected function generatePublicUriWithTemporaryAccess(VirtualFilesystemInterface $filesystem, FilesystemItem $filesystemItem, int $ttl, array $content, Options|null $options): UriInterface|null
+    {
+        $options = $options ?? Options::create();
+        $options = $options->withSetting(
+            Options::OPTION_TEMPORARY_ACCESS_INFORMATION,
+            TemporaryAccessOption::createFromContent($ttl, $content),
+        );
+
+        return $filesystem->generatePublicUri($filesystemItem->getPath(), $options);
+    }
+
+    protected function getSharedMaxAge(PageModel $pageModel): int
+    {
+        if ($pageModel->cache > 0) {
+            return $pageModel->cache;
+        }
+
+        return 0;
     }
 
     /**

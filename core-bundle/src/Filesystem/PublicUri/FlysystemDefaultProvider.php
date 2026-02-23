@@ -24,7 +24,7 @@ class FlysystemDefaultProvider implements PublicUriProviderInterface
      * Generate default public URLs for adapters that are a PublicUrlGenerator.
      * See https://flysystem.thephpleague.com/docs/usage/public-urls/.
      */
-    public function getUri(FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options): UriInterface|null
+    public function getUri(FilesystemAdapter $adapter, string $adapterPath, Options|null $options): UriInterface|null
     {
         if ($options || !$adapter instanceof PublicUrlGenerator) {
             return null;

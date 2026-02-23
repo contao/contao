@@ -48,7 +48,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         $template->set('sort_mode', $sortMode);
         $template->set('randomize_order', 'random' === $model->sortBy);
 
-        $downloads = $this->compileDownloadsList($filesystemItems, $model, $request);
+        $downloads = $this->compileDownloadsList($filesystemItems, $model);
 
         // Explicitly define title/text metadata for a single file
         if ('download' === $model->type && $model->overwriteLink && $downloads) {

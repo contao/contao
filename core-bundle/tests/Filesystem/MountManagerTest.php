@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
-use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
@@ -583,7 +583,7 @@ class MountManagerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('getUri')
             ->willReturnCallback(
-                function (FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options) use ($fooAdapter): UriInterface|null {
+                function (FilesystemAdapter $adapter, string $adapterPath, Options|null $options) use ($fooAdapter): UriInterface|null {
                     if ('bar/baz.jpg' !== $adapterPath) {
                         return null;
                     }
@@ -596,7 +596,7 @@ class MountManagerTest extends TestCase
             )
         ;
 
-        $options = $this->createStub(OptionsInterface::class);
+        $options = $this->createStub(Options::class);
 
         $publicUriProvider2 = $this->createMock(PublicUriProviderInterface::class);
         $publicUriProvider2

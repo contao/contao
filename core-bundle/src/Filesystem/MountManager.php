@@ -12,14 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\ContentDispositionOption;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemReader;
+use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 /**
  * This class allows accessing multiple Flysystem adapters as if there was only
@@ -43,8 +47,10 @@ class MountManager
     /**
      * @param iterable<int, PublicUriProviderInterface> $publicUriProviders
      */
-    public function __construct(private readonly iterable $publicUriProviders = [])
-    {
+    public function __construct(
+        private readonly FileDownloadHelper $fileDownloadHelper,
+        private readonly iterable $publicUriProviders = [],
+    ) {
     }
 
     public function mount(FilesystemAdapter $adapter, string $path = ''): self
@@ -265,6 +271,25 @@ class MountManager
         }
     }
 
+    public function get(string $path): FilesystemItem|null
+    {
+        [$adapter, $adapterPath, $prefix] = $this->getAdapterAndPath($path);
+
+        if (!$adapter->fileExists($adapterPath)) {
+            return null;
+        }
+
+        $storageAttributes = $adapter->mimeType($adapterPath);
+
+        $item = FilesystemItem::fromStorageAttributes($storageAttributes, $prefix);
+
+        return $item->withMetadataIfNotDefined(
+            fn () => $this->getLastModified($adapterPath),
+            fn () => $this->getFileSize($adapterPath),
+            fn () => $this->getMimeType($adapterPath),
+        );
+    }
+
     /**
      * @return \Generator<FilesystemItem>
      *
@@ -352,7 +377,7 @@ class MountManager
         }
     }
 
-    public function generatePublicUri(string $path, OptionsInterface|null $options = null): UriInterface|null
+    public function generatePublicUri(string $path, Options|null $options = null): UriInterface|null
     {
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
@@ -360,6 +385,12 @@ class MountManager
             if ($uri = $provider->getUri($adapter, $adapterPath, $options)) {
                 return $uri;
             }
+        }
+
+        $uri = $this->generateTemporaryPublicUri($path, $options);
+
+        if ($uri instanceof UriInterface) {
+            return $uri;
         }
 
         return null;
@@ -422,5 +453,23 @@ class MountManager
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToListContents($path, $e);
         }
+    }
+
+    private function generateTemporaryPublicUri(string $path, Options|null $options): UriInterface|null
+    {
+        $temporaryAccessOption = $options?->get(Options::OPTION_TEMPORARY_ACCESS_INFORMATION);
+
+        if (!$temporaryAccessOption instanceof TemporaryAccessOption) {
+            return null;
+        }
+
+        $disposition = HeaderUtils::DISPOSITION_INLINE;
+        $dispositionOption = $options?->get(Options::OPTION_CONTENT_DISPOSITION_TYPE);
+
+        if ($dispositionOption instanceof ContentDispositionOption) {
+            $disposition = $dispositionOption->getContentDispositionType();
+        }
+
+        return new Uri($this->fileDownloadHelper->generateUrl($path, $temporaryAccessOption, null, $disposition));
     }
 }

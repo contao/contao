@@ -6,11 +6,11 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\PublicUri\ContentDispositionOption;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -22,24 +22,12 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeConfiguration;
 use Contao\LayoutModel;
 use Contao\StringUtil;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class AbstractDownloadContentElementController extends AbstractContentElementController
 {
-    public function __invoke(Request $request, ContentModel $model, string $section, array|null $classes = null): Response
-    {
-        // TODO: Remove method and move logic into its own action, once we have a
-        // strategy how to handle permissions for downloads via a real route. See #4862
-        // for more details.
-        $this->handleDownload($request, $model);
-
-        return parent::__invoke($request, $model, $section, $classes);
-    }
-
     /**
      * @return array<string>
      */
@@ -58,42 +46,22 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     abstract protected function getFilesystemItems(Request $request, ContentModel $model): FilesystemItemIterator;
 
-    protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model, Request $request): array
+    protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model): array
     {
-        return array_map(
+        $items = array_map(
             fn (FilesystemItem $filesystemItem): array => [
-                'href' => $this->generateDownloadUrl($filesystemItem, $model, $request),
+                'href' => $this->generateDownloadUrl($filesystemItem, $model),
                 'file' => $filesystemItem,
                 'show_file_previews' => $model->showPreview,
                 'file_previews' => $this->getPreviewsForContentModel($filesystemItem, $model),
             ],
             iterator_to_array($filesystemItems),
         );
-    }
 
-    protected function handleDownload(Request $request, ContentModel $model): void
-    {
-        $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
-            $request,
-            $this->getVirtualFilesystem(),
-            function (FilesystemItem $item, array $context) use ($model, $request): Response|null {
-                // Do not handle downloads from other DownloadController elements on the same
-                // page (see #5568)
-                if ($model->id !== ($context['id'] ?? null)) {
-                    return new Response('', Response::HTTP_NO_CONTENT);
-                }
-
-                if (!$this->getFilesystemItems($request, $model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())) {
-                    return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
-                }
-
-                return null;
-            },
-        );
-
-        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse) {
-            throw new ResponseException($response);
-        }
+        return array_values(array_filter(
+            $items,
+            static fn (array $item) => null !== $item['href'],
+        ));
     }
 
     protected function applyDownloadableFileExtensionsFilter(FilesystemItemIterator $filesystemItemIterator): FilesystemItemIterator
@@ -115,24 +83,29 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
      * If the content should be displayed inline or if the resource does not have a
      * public URI, a URL pointing to this controller's download action will be
      * generated, otherwise the direct download URL will be returned.
+     *
+     * Note: You have to check permissions yourself **before** calling this
      */
-    protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
+    protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model): string|null
     {
-        $path = $filesystemItem->getPath();
-        $inline = $model->inline;
+        $options = Options::create()
+            ->withSetting(Options::OPTION_CONTENT_DISPOSITION_TYPE, new ContentDispositionOption($model->inline))
+        ;
 
-        if ($publicUri = $this->getVirtualFilesystem()->generatePublicUri($path, new ContentDispositionOption($inline))) {
-            return (string) $publicUri;
-        }
+        // If there is a page model, take the ttl from the shared max age. Otherwise
+        // (backend preview), just set it to 0.
+        $pageModel = $this->getPageModel();
+        $ttl = $pageModel ? $this->getSharedMaxAge($pageModel) : 0;
 
-        // TODO: Use an exclusive route once we have a strategy how to handle permissions
-        // for it. Right now we use the current route and then throw a ResponseException
-        // to initiate the download.
-        $context = ['id' => $model->id];
+        $uri = $this->generatePublicUriWithTemporaryAccess(
+            $this->getVirtualFilesystem(),
+            $filesystemItem,
+            $ttl,
+            ['id' => $model->id, 'tstamp' => $model->tstamp],
+            $options,
+        );
 
-        return $inline
-            ? $this->container->get('contao.filesystem.file_download_helper')->generateInlineUrl($request->getUri(), $path, $context)
-            : $this->container->get('contao.filesystem.file_download_helper')->generateDownloadUrl($request->getUri(), $path, $filesystemItem->getName(), $context);
+        return $uri instanceof UriInterface ? (string) $uri : null;
     }
 
     /**
