@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 use Symfony\Component\Uid\Uuid;
@@ -64,6 +65,7 @@ class Factory
     /**
      * @param array<string>                                            $additionalUris
      * @param \Closure(array<string, mixed>): HttpClientInterface|null $httpClientFactory
+     * @param UserProviderInterface<UserInterface> $userProvider
      */
     public function __construct(
         private readonly Connection $connection,
@@ -310,7 +312,7 @@ class Factory
         foreach ($uris as $uri) {
             $request = Request::create((string) $uri);
 
-            if (null === $mainRequest) {
+            if (!$mainRequest) {
                 $this->requestStack->push($request);
             }
 
@@ -331,7 +333,7 @@ class Factory
                 }
 
                 $headers = $response->getHeaders(false);
-            } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
+            } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface) {
                 continue;
             }
 
