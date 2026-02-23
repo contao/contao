@@ -88,11 +88,6 @@ class ContaoTwigUtilTest extends TestCase
 
     public static function provideNames(): iterable
     {
-        yield 'html5 template' => [
-            'bar.html5',
-            'bar',
-        ];
-
         yield 'HTML Twig template' => [
             'bar.html.twig',
             'bar',
@@ -101,11 +96,6 @@ class ContaoTwigUtilTest extends TestCase
         yield 'JSON Twig template' => [
             'bar.json.twig',
             'bar',
-        ];
-
-        yield 'complex name (html5)' => [
-            '@Foo/bar/foo.html5',
-            'bar/foo',
         ];
 
         yield 'complex name (Twig)' => [

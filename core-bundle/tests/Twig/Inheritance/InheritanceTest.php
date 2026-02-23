@@ -84,7 +84,7 @@ class InheritanceTest extends TestCase
         $file2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2/templates/text.json.twig');
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig/html5" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
+        $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
 
         $this->getDemoEnvironment(['InvalidBundle2' => $bundlePath]);
     }
