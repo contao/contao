@@ -307,6 +307,9 @@
             "bin-links": false,
             "forward-command": false
         },
+        "branch-alias": {
+            "dev-main": "6.0-dev"
+        },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
