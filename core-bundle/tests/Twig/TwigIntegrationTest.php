@@ -105,14 +105,12 @@ class TwigIntegrationTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
-            ->with('@Contao/form_text.html.twig')
-            ->willReturn(true)
+            ->willReturnMap([['@Contao/form_text.html.twig', true]])
         ;
 
         $filesystemLoader
             ->method('getFirst')
-            ->with('form_text')
-            ->willReturn('/path/to/form_text.html.twig')
+            ->willReturnMap([['form_text', '/path/to/form_text.html.twig']])
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
@@ -195,14 +193,12 @@ class TwigIntegrationTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
-            ->with('@Contao/twig_template.html.twig')
-            ->willReturn(true)
+            ->willReturnMap([['@Contao/twig_template.html.twig', true]])
         ;
 
         $filesystemLoader
             ->method('getFirst')
-            ->with('twig_template')
-            ->willReturn('/path/to/twig_template.html.twig')
+            ->willReturnMap([['twig_template', '/path/to/twig_template.html.twig']])
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
@@ -345,8 +341,7 @@ class TwigIntegrationTest extends TestCase
 
         $parser
             ->method('replaceInline')
-            ->with('<i>foo</i>{{br}}')
-            ->willReturn('<i>foo</i><br>')
+            ->willReturnMap([['<i>foo</i>{{br}}', '<i>foo</i><br>']])
         ;
 
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));

@@ -82,8 +82,7 @@ class ContaoCacheWarmerTest extends TestCase
 
         $parentCatalogue
             ->method('all')
-            ->with('contao_tl_foobar')
-            ->willReturn(['tl_foobar.new.0' => 'Create new foobar'])
+            ->willReturnMap([['contao_tl_foobar', ['tl_foobar.new.0' => 'Create new foobar']]])
         ;
 
         $catalogue = new MessageCatalogue($parentCatalogue, $this->createContaoFrameworkStub(), $this->createStub(ResourceFinder::class));

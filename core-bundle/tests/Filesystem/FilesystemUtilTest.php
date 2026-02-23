@@ -43,14 +43,14 @@ class FilesystemUtilTest extends TestCase
 
         $storage
             ->method('listContents')
-            ->with('directory')
-            ->willReturn(
+            ->willReturnMap([[
+                'directory',
                 new FilesystemItemIterator([
                     new FilesystemItem(true, 'directory/file3'),
                     new FilesystemItem(true, 'directory/file4'),
                     new FilesystemItem(false, 'directory/subdirectory'),
                 ]),
-            )
+            ]])
         ;
 
         $paths = array_map(

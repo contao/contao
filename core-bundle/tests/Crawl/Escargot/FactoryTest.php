@@ -67,8 +67,7 @@ class FactoryTest extends TestCase
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
-            ->with($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://contao.org')
+            ->willReturnMap([[$rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://contao.org']])
         ;
 
         $factory = new Factory(

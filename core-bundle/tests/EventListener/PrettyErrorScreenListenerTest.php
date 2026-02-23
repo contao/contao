@@ -67,8 +67,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(false)
+            ->willReturnMap([['ROLE_USER', false]])
         ;
 
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
@@ -236,8 +235,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(false)
+            ->willReturnMap([['ROLE_USER', false]])
         ;
 
         $listener = new PrettyErrorScreenListener(false, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
@@ -257,8 +255,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
+            ->willReturnMap([['ROLE_USER', true]])
         ;
 
         $exception = new ServiceUnavailableHttpException(null, '', new ServiceUnavailableException(''));
@@ -321,8 +318,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
+            ->willReturnMap([['ROLE_USER', true]])
         ;
 
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
@@ -348,8 +344,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
+            ->willReturnMap([['ROLE_USER', true]])
         ;
 
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
@@ -452,8 +447,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn($isBackendUser)
+            ->willReturnMap([['ROLE_USER', $isBackendUser]])
         ;
 
         return new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);

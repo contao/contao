@@ -85,8 +85,7 @@ class FrontendModuleControllerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with('@Contao/mod_bar.html.twig')
-            ->willReturn(true)
+            ->willReturnMap([['@Contao/mod_bar.html.twig', true]])
         ;
 
         $this->container->set('contao.twig.filesystem_loader', $loader);
@@ -210,8 +209,9 @@ class FrontendModuleControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $twig = $this->createStub(Environment::class);
+        $twig = $this->createMock(Environment::class);
         $twig
+            ->expects($this->once())
             ->method('render')
             ->with(
                 '@Contao/backend/module_wildcard.html.twig',
