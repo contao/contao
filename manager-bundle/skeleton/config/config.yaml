@@ -117,6 +117,7 @@ doctrine:
         auto_mapping: true
         auto_generate_proxy_classes: false
         enable_lazy_ghost_objects: true
+        enable_native_lazy_objects: true
         naming_strategy: doctrine.orm.naming_strategy.default
         metadata_cache_driver:
             type: pool

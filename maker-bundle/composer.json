@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "contao/core-bundle": "self.version",
         "symfony/filesystem": "^7.4",
         "symfony/maker-bundle": "^1.1",
