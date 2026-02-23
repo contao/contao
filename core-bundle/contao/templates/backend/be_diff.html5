@@ -17,7 +17,7 @@
   <?= $this->javascripts ?>
 
 </head>
-<body>
+<body class="be_diff">
 
   <div id="container">
     <main id="main">
