@@ -5,7 +5,7 @@
 {% block ace_assets %}{% endblock %}
 
 {% block main %}
-    {% set template_studio_attrs = attrs()
+    {% set template_studio_attributes = attrs()
         .set('id', 'main')
         .set('aria-labelledby', 'main_headline')
         .set('data-controller', 'contao--template-studio')
@@ -13,9 +13,9 @@
         .set('data-contao--template-studio-follow-url-value', path('_contao_template_studio_follow.stream'))
         .set('data-contao--template-studio-block-info-url-value', path('_contao_template_studio_block_info.stream'))
         .set('data-twig-environment', environment_information|json_encode)
-        .mergeWith(template_studio_attrs|default)
+        .mergeWith(template_studio_attributes|default)
     %}
-    <main{{ template_studio_attrs }}>
+    <main{{ template_studio_attributes }}>
         {# Headline #}
         <h1 id="main_headline">
             {{ headline }}
