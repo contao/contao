@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
+use Contao\Config;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -32,6 +33,22 @@ use Twig\Environment;
 
 class TemplateTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME'], $GLOBALS['objPage']);
+
+        $this->resetStaticProperties([System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testDelegatesRenderingToTwig(): void
     {
         $twig = $this->createMock(Environment::class);
