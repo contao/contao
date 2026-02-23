@@ -112,14 +112,6 @@ class Image
 			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
-		$webDir = System::getContainer()->getParameter('contao.web_dir');
-
-		// Prefer SVG icons
-		if (file_exists($webDir . '/bundles/contaocore/icons/' . $filename . '.svg'))
-		{
-			return 'bundles/contaocore/icons/' . $filename . '.svg';
-		}
-
 		return 'bundles/contaocore/images/' . $src;
 	}
 
