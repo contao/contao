@@ -60,6 +60,7 @@ class CrawlMessageHandler
                 $queue,
                 $message->subscribers,
                 ['headers' => $message->headers],
+                $message->username,
             );
 
             $escargotJobId = $escargot->getJobId();
@@ -71,6 +72,7 @@ class CrawlMessageHandler
                 $queue,
                 $message->subscribers,
                 ['headers' => $message->headers],
+                $message->username,
             );
         }
 

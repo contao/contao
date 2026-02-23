@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 use Symfony\Component\Uid\Uuid;
@@ -163,7 +164,7 @@ class Factory
         return $collection;
     }
 
-    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = [], string $username = null): Escargot
+    public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = [], string|null $username = null): Escargot
     {
         if ($username) {
             $clientOptions['headers']['Cookie'] = $this->getAuthenticatedCookie($baseUris->all(), $username);
@@ -180,7 +181,7 @@ class Factory
     /**
      * @throws InvalidJobIdException
      */
-    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = [], string $username = null): Escargot
+    public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = [], string|null $username = null): Escargot
     {
         if ($username) {
             $clientOptions['headers']['Cookie'] = $this->getAuthenticatedCookie($queue->getBaseUris($jobId)->all(), $username);
@@ -295,19 +296,23 @@ class Factory
         return $selectedSubscribers;
     }
 
-    private function getAuthenticatedCookie(array $uris, string $username): ?Cookie
+    private function getAuthenticatedCookie(array $uris, string $username): Cookie|null
     {
         $mainRequest = $this->requestStack->getMainRequest();
         $cookieJar = new CookieJar();
 
+        try {
+            $user = $this->userProvider->loadUserByIdentifier($username);
+        } catch (UserNotFoundException) {
+            return null;
+        }
+
         foreach ($uris as $uri) {
-            $request = Request::create((string)$uri);
+            $request = Request::create((string) $uri);
 
             if (null === $mainRequest) {
                 $this->requestStack->push($request);
             }
-
-            $user = $this->userProvider->loadUserByIdentifier($username);
 
             $loginLink = $this->loginLinkHandler->createLoginLink($user, $request);
             $loginUri = new Uri($loginLink->getUrl());
@@ -316,17 +321,17 @@ class Factory
 
             $query['_target_path'] = base64_encode($request->getUri());
 
-            $url = $this->uriSigner->sign((string)$loginUri->withQuery(http_build_query($query)));
+            $url = $this->uriSigner->sign((string) $loginUri->withQuery(http_build_query($query)));
 
             try {
-                $response = $this->httpClient->request('GET', $url);
+                $response = $this->httpClient->request('GET', $url, ['max_redirects' => 0]);
 
-                if (200 !== $response->getStatusCode()) {
+                if (302 !== $response->getStatusCode()) {
                     continue;
                 }
 
-                $headers = $response->getHeaders();
-            } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface) {
+                $headers = $response->getHeaders(false);
+            } catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e) {
                 continue;
             }
 
