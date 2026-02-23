@@ -63,27 +63,27 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_image_size.name',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'sorting' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'media' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long', 'decodeEntities'=>true),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'densities' => array
 		(
@@ -91,7 +91,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'sizes' => array
 		(
@@ -99,21 +99,21 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr', 'decodeEntities'=>true),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'width' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['width'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'height' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['height'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'resizeMode' => array
 		(
@@ -122,21 +122,21 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'zoom' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['zoom'],
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) NULL"
+			'sql'                     => array('type'=>'integer', 'notnull'=>false)
 		),
 		'invisible' => array
 		(
 			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		)
 	)
 );

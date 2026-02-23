@@ -20,42 +20,42 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_order'] = array
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'ascending'"
+	'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'ascending', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_perPage'] = array
 (
 	'inputType'               => 'text',
 	'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
-	'sql'                     => "smallint(5) unsigned NOT NULL default 0"
+	'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>0)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_moderate'] = array
 (
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type' => 'boolean', 'default' => false)
+	'sql'                     => array('type'=>'boolean', 'default'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_bbcode'] = array
 (
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type' => 'boolean', 'default' => false)
+	'sql'                     => array('type'=>'boolean', 'default'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_disableCaptcha'] = array
 (
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type' => 'boolean', 'default' => false)
+	'sql'                     => array('type'=>'boolean', 'default'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_requireLogin'] = array
 (
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => array('type' => 'boolean', 'default' => false)
+	'sql'                     => array('type'=>'boolean', 'default'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
@@ -65,5 +65,5 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
 		return Controller::getTemplateGroup('com_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 );

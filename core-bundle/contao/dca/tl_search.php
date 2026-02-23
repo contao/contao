@@ -8,6 +8,16 @@
  * @license LGPL-3.0-or-later
  */
 
+use Doctrine\DBAL\Platforms\MySQLPlatform;
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 $GLOBALS['TL_DCA']['tl_search'] = array
 (
 	// Config
@@ -30,55 +40,55 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'title' => array
 		(
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'url' => array
 		(
-			'sql'                     => "varchar(2048) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'text' => array
 		(
-			'sql'                     => "mediumtext NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 		'filesize' => array
 		(
-			'sql'                     => "double NOT NULL default 0" // see doctrine/dbal#1018
+			'sql'                     => array('type'=>'float', 'default'=>'0')
 		),
 		'checksum' => array
 		(
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'protected' => array
 		(
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'groups' => array
 		(
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'language' => array
 		(
-			'sql'                     => "varchar(5) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>5, 'default'=>'')
 		),
 		'vectorLength' => array
 		(
-			'sql'                     => "double NOT NULL default 0"
+			'sql'                     => array('type'=>'float', 'default'=>'0')
 		),
 		'meta' => array
 		(
-			'sql'                     => "mediumtext NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 	)
 );

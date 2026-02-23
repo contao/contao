@@ -9,6 +9,7 @@
  */
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 // Extend the default palettes
 PaletteManipulator::create()
@@ -24,6 +25,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['newsletters'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL",
+	'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
