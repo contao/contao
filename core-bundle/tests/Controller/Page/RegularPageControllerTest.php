@@ -46,11 +46,14 @@ class RegularPageControllerTest extends TestCase
             ->willReturn(new Response('<alternative content>'))
         ;
 
-        $framework = $this->createContaoFrameworkStub([
-            LayoutModel::class => $layoutAdapter,
-        ], [
-            FrontendIndex::class => $frontendIndex,
-        ]);
+        $framework = $this->createContaoFrameworkStub(
+            [
+                LayoutModel::class => $layoutAdapter,
+            ],
+            [
+                FrontendIndex::class => $frontendIndex,
+            ],
+        );
 
         $controller = $this->getRegularPageController(
             $framework,
@@ -153,7 +156,7 @@ class RegularPageControllerTest extends TestCase
         $container->set('event_dispatcher', $this->createStub(EventDispatcherInterface::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
         $container->set('contao.routing.response_context_accessor', $responseContextAccessor ?? $this->createStub(ResponseContextAccessor::class));
-        $container->set('contao.routing.response_context_factory', $responseContextFactory?? $this->createStub(CoreResponseContextFactory::class));
+        $container->set('contao.routing.response_context_factory', $responseContextFactory ?? $this->createStub(CoreResponseContextFactory::class));
         $container->set('contao.content_composition', $contentComposition ?? $this->getContentComposition());
         $container->set('contao.routing.page_registry', $this->createStub(PageRegistry::class));
 
