@@ -92,7 +92,8 @@ class FactoryTest extends TestCase
             $this->createStub(UserProviderInterface::class),
             $this->createStub(LoginLinkHandlerInterface::class),
             $this->createStub(HttpClientInterface::class),
-            $this->createStub(UriSigner::class)['https://example.com'],
+            $this->createStub(UriSigner::class),
+            ['https://example.com'],
         );
 
         $this->assertCount(1, $factory->getAdditionalCrawlUriCollection());
