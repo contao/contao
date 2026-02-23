@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
-use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
@@ -45,7 +44,6 @@ class SymlinksCommand extends Command
         private readonly string $projectDir,
         private readonly string $uploadPath,
         private readonly string $logsDir,
-        private readonly ResourceFinderInterface $resourceFinder,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {
         parent::__construct();

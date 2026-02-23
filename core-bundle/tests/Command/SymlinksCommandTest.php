@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\SymlinksCommand;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
@@ -96,7 +95,6 @@ class SymlinksCommandTest extends TestCase
             $this->getTempDir(),
             'files',
             Path::join($this->getTempDir(), '/var/logs'),
-            new ResourceFinder(Path::join($this->getTempDir(), 'vendor/contao/test-bundle/Resources/contao')),
             $this->createStub(EventDispatcherInterface::class),
         );
     }
