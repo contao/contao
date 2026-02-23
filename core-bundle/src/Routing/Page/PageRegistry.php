@@ -18,8 +18,6 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class PageRegistry implements ResetInterface
 {
-    private const DISABLE_CONTENT_COMPOSITION = ['logout'];
-
     private array|null $urlPrefixes = null;
 
     private array|null $urlSuffixes = null;
@@ -103,7 +101,7 @@ class PageRegistry implements ResetInterface
     public function supportsContentComposition(PageModel $pageModel): bool
     {
         if (!isset($this->contentComposition[$pageModel->type])) {
-            return !\in_array($pageModel->type, self::DISABLE_CONTENT_COMPOSITION, true);
+            return true;
         }
 
         $service = $this->contentComposition[$pageModel->type];
