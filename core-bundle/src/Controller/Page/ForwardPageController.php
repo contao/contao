@@ -37,7 +37,7 @@ class ForwardPageController extends AbstractController implements DynamicRouteIn
 
         $queryString = '';
 
-        if (!empty($query = $request->query->all())) {
+        if ([] !== ($query = $request->query->all())) {
             $queryString = '?'.http_build_query($query);
         }
 
