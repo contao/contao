@@ -26,8 +26,6 @@ use Contao\DcaLoader;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\HttpCache\CacheInvalidator;
@@ -42,11 +40,9 @@ class CacheTagManagerTest extends DoctrineTestCase
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG']);
 
         $this->resetStaticProperties([
-            [AnnotationRegistry::class, ['failedToAutoload']],
             Config::class,
             DcaExtractor::class,
             DcaLoader::class,
-            DocParser::class,
             System::class,
         ]);
 

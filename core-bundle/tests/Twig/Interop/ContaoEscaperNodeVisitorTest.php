@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\Config;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -169,7 +168,6 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $contaoExtension = new ContaoExtension(
             $environment,
             $this->createStub(ContaoFilesystemLoader::class),
-            $this->createStub(ContaoCsrfTokenManager::class),
             $this->createStub(ContaoVariable::class),
             new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );

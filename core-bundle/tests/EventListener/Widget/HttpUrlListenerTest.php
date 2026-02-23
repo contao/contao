@@ -15,19 +15,10 @@ namespace Contao\CoreBundle\Tests\EventListener\Widget;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Widget;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HttpUrlListenerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
-
-        parent::tearDown();
-    }
-
     public function testReturnsFalseIfNotHttpurlType(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);

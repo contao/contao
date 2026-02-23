@@ -1,11 +1,10 @@
 monorepo_url: https://github.com/contao/contao.git
-branch_filter: /^\d+\.(x|\d+)$/
+branch_filter: /^\d+\.\d+$/
 
 composer:
     require:
         contao/manager-plugin: ^2.6.2
     conflict:
-        doctrine/annotations: <1.9
         nikic/php-parser: 4.7.0
         zendframework/zend-code: <3.3.1
     require-dev:
