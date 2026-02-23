@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "backend.css": "/bundles/contaocore/backend.732519ca.css",
+=======
+  "backend.css": "/bundles/contaocore/backend.61bc5ebb.css",
+>>>>>>> 488ab4fee8 (Rebuild the assets)
   "backend.js": "/bundles/contaocore/backend.99869869.js",
   "navigation.css": "/bundles/contaocore/navigation.54bbedc9.css",
   "navigation.js": "/bundles/contaocore/navigation.8c222ed2.js",
