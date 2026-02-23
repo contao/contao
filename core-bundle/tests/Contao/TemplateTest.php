@@ -46,7 +46,7 @@ class TemplateTest extends TestCase
                         $this->assertSame('bar', $context['foo']);
 
                         return true;
-                    }
+                    },
                 ),
             )
             ->willReturn('<output>')
