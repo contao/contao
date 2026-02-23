@@ -43,7 +43,7 @@ class ForwardPageController extends AbstractController implements DynamicRouteIn
 
         return $this->redirect(
             $this->generateContentUrl($forwardPage, $request->attributes->all(), UrlGeneratorInterface::ABSOLUTE_URL).$queryString,
-            'temporary' === $pageModel->redirect ? Response::HTTP_SEE_OTHER : Response::HTTP_MOVED_PERMANENTLY
+            'temporary' === $pageModel->redirect ? Response::HTTP_SEE_OTHER : Response::HTTP_MOVED_PERMANENTLY,
         );
     }
 
@@ -74,7 +74,7 @@ class ForwardPageController extends AbstractController implements DynamicRouteIn
 
     private function getForwardPage(PageModel $pageModel): PageModel
     {
-        $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+        $pageAdapter = $this->getContaoAdapter(PageModel::class);
 
         if ($pageModel->jumpTo) {
             $forwardPage = $pageAdapter->findPublishedById($pageModel->jumpTo);

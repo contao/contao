@@ -37,7 +37,7 @@ class LogoutPageController extends AbstractController
             return new RedirectResponse($redirect);
         }
 
-        $pairs = array();
+        $pairs = [];
         $logoutUrl = $this->logoutUrlGenerator->getLogoutUrl();
         $request = Request::create($logoutUrl);
 
@@ -48,7 +48,7 @@ class LogoutPageController extends AbstractController
         // Add the redirect= parameter to the logout URL
         $pairs['redirect'] = $redirect;
 
-        $uri = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+        $uri = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().'?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 
         return new RedirectResponse($uri, Response::HTTP_TEMPORARY_REDIRECT);
     }
