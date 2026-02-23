@@ -31,10 +31,12 @@ class VirtualFilesystemStoragePackage implements PackageInterface
             if (null !== $version && '' !== $version) {
                 return (string) $version;
             }
+
+            // Fallback if no version could be found
+            return hash('xxh3', (string) $this->storage->getLastModified($path));
         }
 
-        // Fallback if no version could be found
-        return hash('xxh3', (string) $this->storage->getLastModified($path));
+        return '';
     }
 
     public function getUrl(string $path): string
