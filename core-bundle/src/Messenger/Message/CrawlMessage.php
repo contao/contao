@@ -26,7 +26,7 @@ class CrawlMessage implements JobIdAwareMessageInterface
         public array $subscribers,
         public int $maxDepth,
         public array $headers,
-        public string|null $username,
+        public string|null $username = null,
     ) {
     }
 }

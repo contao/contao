@@ -23,7 +23,11 @@ use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpClient\ScopingHttpClient;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 
@@ -43,7 +47,17 @@ class FactoryTest extends TestCase
             ->willReturn('subscriber-2')
         ;
 
-        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack());
+        $factory = new Factory(
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(ContentUrlGenerator::class),
+            new RequestStack(),
+            $this->createStub(UserProviderInterface::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(HttpClientInterface::class),
+            $this->createStub(UriSigner::class),
+        );
+
         $factory->addSubscriber($subscriber1);
         $factory->addSubscriber($subscriber2);
 
@@ -75,7 +89,10 @@ class FactoryTest extends TestCase
             $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
-            ['https://example.com'],
+            $this->createStub(UserProviderInterface::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(HttpClientInterface::class),
+            $this->createStub(UriSigner::class)['https://example.com'],
         );
 
         $this->assertCount(1, $factory->getAdditionalCrawlUriCollection());
@@ -100,7 +117,20 @@ class FactoryTest extends TestCase
         $mockClient = new MockHttpClient();
         $clientFactory = static fn (array $defaultOptions) => $mockClient;
 
-        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
+        $factory = new Factory(
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(ContentUrlGenerator::class),
+            new RequestStack(),
+            $this->createStub(UserProviderInterface::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(HttpClientInterface::class),
+            $this->createStub(UriSigner::class),
+            [],
+            [],
+            $clientFactory,
+        );
+
         $factory->addSubscriber($subscriber1);
 
         $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
@@ -126,7 +156,20 @@ class FactoryTest extends TestCase
         $mockClient = new MockHttpClient();
         $clientFactory = static fn (array $defaultOptions) => $mockClient;
 
-        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
+        $factory = new Factory(
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(ContentUrlGenerator::class),
+            new RequestStack(),
+            $this->createStub(UserProviderInterface::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(HttpClientInterface::class),
+            $this->createStub(UriSigner::class),
+            [],
+            [],
+            $clientFactory,
+        );
+
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();
@@ -201,6 +244,10 @@ class FactoryTest extends TestCase
             $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
+            $this->createStub(UserProviderInterface::class),
+            $this->createStub(LoginLinkHandlerInterface::class),
+            $this->createStub(HttpClientInterface::class),
+            $this->createStub(UriSigner::class),
             ['https://www.foreign-domain.com'],
             [
                 'headers' => [
