@@ -112,7 +112,7 @@ class Image
 			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
-		return 'bundles/contaocore/images/' . $src;
+		return 'bundles/contaocore/icons/' . $src;
 	}
 
 	/**
