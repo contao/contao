@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
 use Contao\CoreBundle\Cache\CacheTagManager;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
@@ -211,12 +210,6 @@ class FrontendModuleControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $tokenManager = $this->createStub(ContaoCsrfTokenManager::class);
-        $tokenManager
-            ->method('getDefaultTokenValue')
-            ->willReturn('<token>')
-        ;
-
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
@@ -226,7 +219,6 @@ class FrontendModuleControllerTest extends TestCase
                     'id' => 42,
                     'name' => 'foo',
                     'title' => 'foo headline',
-                    'request_token' => '<token>',
                     'type' => 'foobar',
                 ],
             )
@@ -235,7 +227,6 @@ class FrontendModuleControllerTest extends TestCase
 
         $this->container->set('request_stack', $requestStack);
         $this->container->set('contao.routing.scope_matcher', $scopeMatcher);
-        $this->container->set('contao.csrf.token_manager', $tokenManager);
         $this->container->set('twig', $twig);
 
         $controller = $this->getTestController();

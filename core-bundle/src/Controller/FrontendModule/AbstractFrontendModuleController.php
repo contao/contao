@@ -59,7 +59,6 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
             'name' => $module->name,
             'type' => $module->type,
             'title' => StringUtil::deserialize($module->headline, true)['value'] ?? null,
-            'request_token' => $this->container->get('contao.csrf.token_manager')->getDefaultTokenValue(),
         ];
 
         return $this->render('@Contao/backend/module_wildcard.html.twig', $context);
