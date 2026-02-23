@@ -16,8 +16,6 @@ use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsLi
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Image;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DisableAppConfiguredSettingsListenerTest extends TestCase
@@ -25,8 +23,6 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
-
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
 
         parent::tearDown();
     }
