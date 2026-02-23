@@ -67,7 +67,6 @@ use Symfony\Component\VarDumper\VarDumper;
 abstract class Template extends Controller
 {
 	use TemplateInheritance;
-	use TemplateTrait;
 
 	/**
 	 * Output buffer
