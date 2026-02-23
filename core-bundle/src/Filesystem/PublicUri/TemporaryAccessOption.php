@@ -18,7 +18,7 @@ final class TemporaryAccessOption
 {
     public function __construct(
         private int $ttl,
-        private string $contentHash,
+        private readonly string $contentHash,
     ) {
         \assert('' !== $this->contentHash);
         // Ensure TTL is max 1 year

@@ -58,9 +58,9 @@ class FileDownloadHelper
 
     public function __construct(
         private readonly UriSigner $signer,
-        private RouterInterface $router,
-        private Security $security,
-        private MountManager $mountManager,
+        private readonly RouterInterface $router,
+        private readonly Security $security,
+        private readonly MountManager $mountManager,
     ) {
     }
 
@@ -136,7 +136,7 @@ class FileDownloadHelper
 
         $file = $this->mountManager->get($path);
 
-        if (null === $file) {
+        if (!$file) {
             return new Response('The requested resource does not exist.', Response::HTTP_NOT_FOUND);
         }
 
@@ -184,7 +184,7 @@ class FileDownloadHelper
     {
         $token = $this->security->getToken();
 
-        if (null === $token) {
+        if (!$token) {
             return null;
         }
 

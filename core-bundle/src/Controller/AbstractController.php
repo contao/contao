@@ -85,7 +85,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
     protected function generatePublicUriWithTemporaryAccess(VirtualFilesystemInterface $filesystem, FilesystemItem $filesystemItem, int $ttl, array $content, Options|null $options): UriInterface|null
     {
-        $options = $options ?? Options::create();
+        $options ??= Options::create();
         $options = $options->withSetting(
             Options::OPTION_TEMPORARY_ACCESS_INFORMATION,
             TemporaryAccessOption::createFromContent($ttl, $content),
