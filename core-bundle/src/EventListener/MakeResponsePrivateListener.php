@@ -57,8 +57,8 @@ class MakeResponsePrivateListener
      * but we want to make sure it works for any reverse proxy without having to
      * configure too much.
      *
-     * The priority must be lower than the one of the ClearSessionDataListener listener
-     * (defaults to -768) and must be lower than the one of the
+     * The priority must be lower than the one of the ClearSessionDataListener
+     * listener (defaults to -768) and must be lower than the one of the
      * CsrfTokenCookieSubscriber listener (defaults to -1006) and must be higher than
      * the one of the StreamedResponseListener listener (defaults to -1024)
      */
