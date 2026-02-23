@@ -84,6 +84,7 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.routing.page_registry'
+            - '@event_dispatcher'
 
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
