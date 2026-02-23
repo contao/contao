@@ -14,7 +14,7 @@
       <meta name="robots" content="noindex,follow">
     <?php $this->endblock(); ?>
 
-    <link rel="stylesheet" href="<?= $this->asset('login.css', 'system/themes/'.$this->theme) ?>">
+    <link rel="stylesheet" href="<?= $this->asset('login.css', 'contao_core') ?>">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>

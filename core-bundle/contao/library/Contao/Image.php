@@ -112,16 +112,15 @@ class Image
 			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
-		$theme = Backend::getTheme();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$webDir = System::getContainer()->getParameter('contao.web_dir');
 
 		// Prefer SVG icons
-		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
+		if (file_exists($webDir . '/bundles/contaocore/icons/' . $filename . '.svg'))
 		{
-			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
+			return 'bundles/contaocore/icons/' . $filename . '.svg';
 		}
 
-		return 'system/themes/' . $theme . '/images/' . $src;
+		return 'bundles/contaocore/images/' . $src;
 	}
 
 	/**

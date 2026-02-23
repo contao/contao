@@ -29,7 +29,7 @@
                             onclick="Backend.openModalIframe({title:'{{ 'tl_page.edit'|trans([conflict.page.id]) }}', url:this.href});return false"
                             title="{{ 'tl_page.edit'|trans([conflict.page.id]) }}"
                             class="edit"
-                        ><img src="{{ asset('system/themes/flexible/icons/edit.svg') }}" width="16" height="16" alt=""></a>
+                        >{{ backend_icon('edit', attributes: attrs().set('width', 16).set('height', 16)) }}</a>
                     </td>
                 </tr>
             {% endfor %}

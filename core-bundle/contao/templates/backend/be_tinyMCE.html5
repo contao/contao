@@ -46,7 +46,7 @@ if ($this->enableTinyMce):
     <?php $this->endblock(); ?>
 
     <?php $this->block('content_css'); ?>
-      content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'system/themes/'.$this->theme) ?>' : '<?= $this->asset('tinymce.css', 'system/themes/'.$this->theme) ?>',
+      content_css: document.documentElement.dataset.colorScheme === 'dark' ? '<?= $this->asset('tinymce-dark.css', 'contao_core') ?>' : '<?= $this->asset('tinymce.css', 'contao_core') ?>',
     <?php $this->endblock(); ?>
 
     <?php $this->block('plugins'); ?>

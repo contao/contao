@@ -56,7 +56,6 @@ $this->asideAttributes = $this
     <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>" data-turbo-track="reload">
     <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>" data-turbo-track="reload">
     <link rel="stylesheet" href="<?= $this->asset('css/dropzone.min.css', 'contao-components/dropzone') ?>" data-turbo-track="reload">
-    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>" data-turbo-track="reload">
     <link rel="stylesheet" href="<?= $this->asset('backend.css', 'contao_core') ?>" data-turbo-track="reload">
     <?= $this->stylesheets ?>
 
