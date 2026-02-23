@@ -34,7 +34,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
         $frontendTemplate = $context['Template'] ?? null;
 
         if (!$frontendTemplate instanceof FrontendTemplate) {
-            throw new RuntimeError('The "contao_section" function cannot be used in this template.');
+            throw new RuntimeError('The "contao_sections" function cannot be used in this template.');
         }
 
         if (!array_filter($frontendTemplate->sections) || ($key && !isset($frontendTemplate->positions[$key]))) {
@@ -75,7 +75,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
         $frontendTemplate = $context['Template'] ?? null;
 
         if (!$frontendTemplate instanceof FrontendTemplate) {
-            throw new RuntimeError('The "contao_sections" function cannot be used in this template.');
+            throw new RuntimeError('The "contao_section" function cannot be used in this template.');
         }
 
         if (empty($frontendTemplate->sections[$id])) {
@@ -90,7 +90,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
             }
         }
 
-        $templateName ??= 'block_sections';
+        $templateName ??= 'block_section';
 
         return $this->twig->render("@Contao/$templateName.html.twig", [
             ...$frontendTemplate->getData(),
