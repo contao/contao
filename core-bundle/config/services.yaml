@@ -80,6 +80,7 @@ services:
             - '@contao.image.preview_factory'
             - '@contao.assets.assets_context'
             - '@contao.twig.default_renderer'
+            - '@contao.twig.deferred_renderer'
             - '@request_stack'
             - '@translator'
             - '@contao.routing.page_registry'
@@ -1197,6 +1198,11 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.preview_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
@@ -1418,7 +1424,6 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.filesystem_loader'
-            - '@contao.csrf.token_manager'
             - '@contao.twig.global.variable'
             - '@contao.twig.inspector_node_visitor'
 

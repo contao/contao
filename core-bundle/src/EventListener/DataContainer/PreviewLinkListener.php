@@ -13,20 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
-use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -38,7 +35,6 @@ class PreviewLinkListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly Connection $connection,
         private readonly Security $security,
         private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
@@ -65,70 +61,44 @@ class PreviewLinkListener
         }
     }
 
+    #[AsHook('loadDataContainer')]
+    public function allowUndo(string $table): void
+    {
+        if ('tl_preview_link' === $table && 'undo' === $this->requestStack->getCurrentRequest()?->query->get('do')) {
+            $GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable'] = false;
+        }
+    }
+
     /**
      * Only allow to create new records if a front end preview URL is given.
      */
     #[AsCallback(table: 'tl_preview_link', target: 'config.onload')]
     public function createFromUrl(DataContainer $dc): void
     {
-        $input = $this->framework->getAdapter(Input::class);
-        $message = $this->framework->getAdapter(Message::class);
-        $user = $this->security->getUser();
-        $userId = $user instanceof BackendUser ? (int) $user->id : 0;
+        $request = $this->requestStack->getCurrentRequest();
 
-        if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy = ?', $userId];
-
-            // Check the current action
-            switch ((string) $input->get('act')) {
-                case '': // empty
-                case 'paste':
-                case 'create':
-                case 'select':
-                    break;
-
-                case 'editAll':
-                case 'deleteAll':
-                case 'overrideAll':
-                    $allowedIds = $this->connection->fetchFirstColumn(
-                        'SELECT id FROM tl_preview_link WHERE createdBy = ?',
-                        [$userId],
-                    );
-
-                    /** @var AttributeBagInterface $session */
-                    $session = $this->requestStack->getSession()->getBag('contao_backend');
-                    $sessionData = $session->all();
-                    $sessionData['CURRENT']['IDS'] = array_intersect((array) $sessionData['CURRENT']['IDS'], $allowedIds);
-                    $session->replace($sessionData);
-                    break;
-
-                case 'edit':
-                case 'toggle':
-                case 'delete':
-                default:
-                    $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id = ?', [$dc->id]);
-
-                    if ($createdBy !== $userId) {
-                        throw new AccessDeniedException(\sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
-                    }
-                    break;
-            }
+        if (!$request) {
+            return;
         }
 
-        if (!$input->get('act')) {
+        $user = $this->security->getUser();
+        $act = $request->query->get('act');
+        $url = $request->query->getString('url');
+        $now = $this->clock->now();
+
+        if (!$act) {
+            $message = $this->framework->getAdapter(Message::class);
             $message->addInfo($this->translator->trans('tl_preview_link.hintNew', [], 'contao_tl_preview_link'));
-        } elseif ('create' === $input->get('act') && str_contains((string) ($input->get('url') ?? ''), $this->previewScript)) {
+        } elseif ('create' === $act && str_contains($url, $this->previewScript)) {
             // Only allow creating new records from front end link with preview script in URL
             $GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable'] = false;
         }
 
-        $now = $this->clock->now();
-
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = (string) $input->get('url');
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = (bool) $input->get('showUnpublished');
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = $url;
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = $request->query->getBoolean('showUnpublished');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = $now->getTimestamp();
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day', $now->getTimestamp());
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $userId;
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $user instanceof BackendUser ? (int) $user->id : 0;
     }
 
     /**
@@ -144,7 +114,7 @@ class PreviewLinkListener
             return;
         }
 
-        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id = ?', [$dc->id]);
+        $row = $dc->getCurrentRecord();
 
         if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
             $message->addError($this->translator->trans('tl_preview_link.hintExpired', [], 'contao_tl_preview_link'));
@@ -174,29 +144,44 @@ class PreviewLinkListener
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
-    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
+    public function shareOperation(DataContainerOperation $operation): void
     {
-        if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
-            return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
-        }
+        $row = $operation->getRecord();
 
-        return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);
+        if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
+            $operation->disable();
+        } else {
+            $url = $this->generateUrl((int) $row['id']);
+
+            $operation->setUrl($url);
+
+            $operation['attributes']
+                ->set('data-controller', 'contao--clipboard')
+                ->set('data-contao--clipboard-content-value', $url)
+                ->set('data-contao--clipboard-message-value', $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'))
+                ->set('data-action', 'contao--clipboard#write:prevent')
+            ;
+        }
     }
 
-    private function generateClipboardLink(int $id, string|null $label = null, string|null $title = null): string
+    private function generateUrl(int $id): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
-        $url = $this->uriSigner->sign($url);
 
-        $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
+        return $this->uriSigner->sign($url);
+    }
+
+    private function generateClipboardLink(int $id): string
+    {
+        $url = $this->generateUrl($id);
 
         return \sprintf(
             '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
             StringUtil::specialcharsUrl($url),
-            StringUtil::specialchars($title),
+            StringUtil::specialchars($this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link')),
             StringUtil::specialcharsUrl($url),
             $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'),
-            $label ?? $url,
+            $url,
         );
     }
 }

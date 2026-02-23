@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.versions.1">
         <source>Show the versions of image size ID %s</source>
+        <target>Показать версии размера изображения ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>

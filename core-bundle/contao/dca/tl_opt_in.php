@@ -10,13 +10,14 @@
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
 use Contao\Message;
 use Contao\OptInModel;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_opt_in'] = array
 (
@@ -77,16 +78,16 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'token' => array
 		(
 			'search'                  => true,
-			'sql'                     => "varchar(24) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>24, 'default'=>'')
 		),
 		'createdOn' => array
 		(
@@ -95,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'confirmedOn' => array
 		(
@@ -103,7 +104,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'removeOn' => array
 		(
@@ -111,12 +112,12 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'invalidatedThrough' => array
 		(
 			'search'                  => true,
-			'sql'                     => "varchar(24) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>24, 'default'=>'')
 		),
 		'email' => array
 		(
@@ -124,17 +125,17 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'search'                  => true,
 			'sorting'                 => true,
 			'eval'                    => array('rgxp'=>'email'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'emailSubject' => array
 		(
 			'search'                  => true,
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'emailText' => array
 		(
 			'search'                  => true,
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		)
 	)
 );
@@ -194,19 +195,15 @@ class tl_opt_in extends Backend
 	}
 
 	/**
-	 * Return the resend token button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Adjust the resend token button
 	 */
-	public function resendButton($row, $href, $label, $title, $icon, $attributes)
+	public function resendButton(DataContainerOperation $operation): void
 	{
-		return (!$row['confirmedOn'] &&!$row['invalidatedThrough'] && $row['emailSubject'] && $row['emailText'] && $row['removeOn'] > time()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : '';
+		$row = $operation->getRecord();
+
+		if ($row['confirmedOn'] || $row['invalidatedThrough'] || !$row['emailSubject'] || !$row['emailText'] || $row['removeOn'] <= time())
+		{
+			$operation->hide();
+		}
 	}
 }

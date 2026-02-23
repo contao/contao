@@ -171,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.versions.1">
         <source>Show the versions of comment ID %s</source>
+        <target>Показать версии комментария ID %s</target>
       </trans-unit>
       <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>

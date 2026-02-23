@@ -20,7 +20,6 @@ use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\File\TextTrack;
@@ -298,8 +297,7 @@ abstract class ContentElementTestCase extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn(['ContaoCore' => $resourceBasePath.'/contao/templates'])
+            ->willReturnMap([['templates', ['ContaoCore' => $resourceBasePath.'/contao/templates']]])
         ;
 
         $templateLocator = new TemplateLocator(
@@ -349,7 +347,6 @@ abstract class ContentElementTestCase extends TestCase
             new ContaoExtension(
                 $environment,
                 $contaoFilesystemLoader,
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -596,8 +593,9 @@ abstract class ContentElementTestCase extends TestCase
             })
         ;
 
-        $controllerAdapter = $this->createAdapterStub(['getContentElement']);
+        $controllerAdapter = $this->createAdapterMock(['getContentElement']);
         $controllerAdapter
+            ->expects($this->exactly(\count($nestedFragments)))
             ->method('getContentElement')
             ->with($this->isInstanceOf(ContentElementReference::class))
             ->willReturnOnConsecutiveCalls(...array_map(static fn ($el) => $el->getContentModel()->type, $nestedFragments))

@@ -16,7 +16,7 @@ if ($this->enableTinyMce):
     license_key: 'gpl',
     branding: false,
     promotion: false,
-    skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-5-dark' : 'tinymce-5'),
+    skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'oxide-dark' : 'oxide'),
     setup: function (editor) {
       editor.getElement().removeAttribute('required');
       document.querySelectorAll('[accesskey]').forEach(function (el) {

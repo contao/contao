@@ -47,7 +47,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
     {
         parent::tearDown();
 
-        unset($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']);
+        unset($GLOBALS['TL_DCA']);
     }
 
     public function testReturnsIfNoFrontendUser(): void
@@ -126,8 +126,6 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-
-        unset($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback']);
     }
 
     public function testReturnsIfWrongOldPassword(): void
@@ -239,8 +237,6 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        unset($GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning']);
-
         $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
@@ -298,17 +294,9 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             OptInModel::class => $optInAdapter,
         ]);
 
-        if ($versions) {
-            $framework
-                ->method('createInstance')
-                ->with(Versions::class)
-                ->willReturn($versions)
-            ;
-        }
-
         $framework
             ->method('createInstance')
-            ->willReturn($template)
+            ->willReturn($versions ?: $template)
         ;
 
         return $framework;

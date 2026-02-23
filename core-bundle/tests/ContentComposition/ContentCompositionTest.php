@@ -56,8 +56,7 @@ class ContentCompositionTest extends TestCase
         $pageRegistry = $this->createStub(PageRegistry::class);
         $pageRegistry
             ->method('getRoute')
-            ->with($page)
-            ->willReturn($route)
+            ->willReturnMap([[$page, $route]])
         ;
 
         $contentComposition = new ContentComposition(
@@ -66,6 +65,7 @@ class ContentCompositionTest extends TestCase
             $this->createStub(PictureFactory::class),
             $this->createStub(PreviewFactory::class),
             $this->createStub(ContaoContext::class),
+            $this->createStub(RendererInterface::class),
             $this->createStub(RendererInterface::class),
             $this->createStub(RequestStack::class),
             $this->createStub(LocaleAwareInterface::class),

@@ -231,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.versions.1">
         <source>Show the versions of newsletter ID %s</source>
+        <target>Показать версии новостной рассылки ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>

@@ -667,6 +667,7 @@ If you did not request this e-mail, please contact the website administrator.
       </trans-unit>
       <trans-unit id="tl_module.versions.1">
         <source>Show the versions of module ID %s</source>
+        <target>Показать версии модуля ID %s</target>
       </trans-unit>
       <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>

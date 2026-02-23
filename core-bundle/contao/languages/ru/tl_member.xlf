@@ -255,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_member.versions.1">
         <source>Show the versions of member ID %s</source>
+        <target>Показать версии участника ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.edit.1">
         <source>Edit member ID %s</source>
