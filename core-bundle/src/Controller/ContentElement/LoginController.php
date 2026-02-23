@@ -71,13 +71,13 @@ class LoginController extends AbstractContentElementController
                 $redirect = $request->getSchemeAndHttpHost().$request->getBasePath().'/';
             }
 
-            $template->logout = true;
-            $template->formId = 'tl_logout_'.$model->id;
-            $template->slabel = $this->translator->trans('MSC.logout', [], 'contao_default');
-            $template->action = $this->logoutUrlGenerator->getLogoutPath();
+            $template->set('logout', true);
+            $template->set('formId', 'tl_logout_'.$model->id);
+            $template->set('slabel', $this->translator->trans('MSC.logout', [], 'contao_default'));
+            $template->set('action', $this->logoutUrlGenerator->getLogoutPath());
 
             // We do not base64_encode the URL here for Symfony's logout controller
-            $template->targetPath = $redirect;
+            $template->set('targetPath', $redirect);
 
             return $template->getResponse();
         }
@@ -103,11 +103,11 @@ class LoginController extends AbstractContentElementController
         }
 
         if ($exception instanceof TooManyLoginAttemptsAuthenticationException) {
-            $template->message = $this->translator->trans('ERR.tooManyLoginAttempts', [], 'contao_default');
+            $template->set('message', $this->translator->trans('ERR.tooManyLoginAttempts', [], 'contao_default'));
         } elseif ($exception instanceof InvalidTwoFactorCodeException) {
-            $template->message = $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
+            $template->set('message', $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
         } elseif ($exception instanceof AuthenticationException) {
-            $template->message = $this->translator->trans('ERR.invalidLogin', [], 'contao_default');
+            $template->set('message', $this->translator->trans('ERR.invalidLogin', [], 'contao_default'));
         }
 
         $redirectBack = false;
@@ -124,9 +124,9 @@ class LoginController extends AbstractContentElementController
             $redirect = $this->generateContentUrl($targetPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
-        $template->formId = $formId;
-        $template->forceTargetPath = (int) $redirectBack;
-        $template->targetPath = base64_encode($redirect);
+        $template->set('formId', $formId);
+        $template->set('forceTargetPath', (int) $redirectBack);
+        $template->set('targetPath', base64_encode($redirect));
 
         if ($isTwoFactorInProgress) {
             // Dispatch 2FA form event to prepare 2FA providers
@@ -134,26 +134,26 @@ class LoginController extends AbstractContentElementController
             $event = new TwoFactorAuthenticationEvent($request, $token);
             $this->eventDispatcher->dispatch($event, TwoFactorAuthenticationEvents::FORM);
 
-            $template->twoFactorEnabled = true;
-            $template->slabel = $this->translator->trans('MSC.continue', [], 'contao_default');
+            $template->set('twoFactorEnabled', true);
+            $template->set('slabel', $this->translator->trans('MSC.continue', [], 'contao_default'));
 
             return $template->getResponse();
         }
 
         if ($pwResetPage = $pageAdapter->findById($model->pwResetPage)) {
-            $template->pwResetUrl = $this->generateContentUrl($pwResetPage);
+            $template->set('pwResetUrl', $this->generateContentUrl($pwResetPage));
         }
 
-        $template->slabel = $this->translator->trans('MSC.login', [], 'contao_default');
-        $template->value = $lastUsername;
-        $template->autologin = $model->autologin;
-        $template->remembered = false;
-        $template->redirect = $redirect;
+        $template->set('slabel', $this->translator->trans('MSC.login', [], 'contao_default'));
+        $template->set('value', $lastUsername);
+        $template->set('autologin', $model->autologin);
+        $template->set('remembered', false);
+        $template->set('redirect', $redirect);
 
         if ($isRemembered) {
-            $template->slabel = $this->translator->trans('MSC.verify', [], 'contao_default');
-            $template->value = $user->getUserIdentifier();
-            $template->remembered = true;
+            $template->set('slabel', $this->translator->trans('MSC.verify', [], 'contao_default'));
+            $template->set('value', $user->getUserIdentifier());
+            $template->set('remembered', true);
         }
 
         return $template->getResponse();

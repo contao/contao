@@ -35,18 +35,12 @@ final class FragmentTemplate
     ) {
     }
 
-    /**
-     * @param string $key
-     */
-    public function __set($key, $value): void
+    public function __set(string $key, mixed $value): void
     {
         $this->set($key, $value);
     }
 
-    /**
-     * @param string $key
-     */
-    public function __get($key)
+    public function __get(string $key): mixed
     {
         return $this->get($key);
     }
