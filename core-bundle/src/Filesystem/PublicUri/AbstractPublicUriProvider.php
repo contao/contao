@@ -12,16 +12,13 @@ abstract class AbstractPublicUriProvider
 {
     protected const VERSION_QUERY_PARAMETER = 'version';
 
-    /**
-     * @param \Closure():(string|null) $getVersionParameter
-     */
-    protected function versionizeUri(UriInterface $uri, Options|null $options, \Closure $getVersionParameter): UriInterface
+    protected function versionizeUri(UriInterface $uri, FilesystemAdapter $adapter, string $adapterPath, Options|null $options = null): UriInterface
     {
         if (true !== $options->get(Options::OPTION_ADD_VERSION_QUERY_PARAMETER)) {
             return $uri;
         }
 
-        $version = $getVersionParameter();
+        $version = $this->getVersionParameter($adapter, $adapterPath);
 
         if (null === $version) {
             return $uri;
@@ -30,17 +27,15 @@ abstract class AbstractPublicUriProvider
         return UrlUtil::mergeQueryIfMissing($uri, self::VERSION_QUERY_PARAMETER.'='.$version);
     }
 
-    protected function getVersionParameterFromMtimeClosure(FilesystemAdapter $adapter, string $adapterPath): \Closure
+    protected function getVersionParameter(FilesystemAdapter $adapter, string $adapterPath): string|null
     {
-        return static function () use ($adapter, $adapterPath) {
-            try {
-                $mtime = $adapter->lastModified($adapterPath)->lastModified();
-            } catch (\Throwable) {
-                $mtime = null;
-            }
+        try {
+            $mtime = $adapter->lastModified($adapterPath)->lastModified();
+        } catch (\Throwable) {
+            $mtime = null;
+        }
 
-            // Hash because nobody needs to know the mtime
-            return hash('xxh3', (string) $mtime);
-        };
+        // Hash because nobody needs to know the mtime
+        return hash('xxh3', (string) $mtime);
     }
 }

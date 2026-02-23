@@ -64,7 +64,7 @@ class SymlinkedLocalFilesProvider extends AbstractPublicUriProvider implements P
 
         $uri = new Uri(\sprintf('%s/%s/%s', $this->getSchemeAndHost(), $rootPath, $adapterPath));
 
-        return $this->versionizeUri($uri, $options, $this->getVersionParameterFromMtimeClosure($adapter, $adapterPath));
+        return $this->versionizeUri($uri, $adapter, $adapterPath, $options);
     }
 
     private function getSchemeAndHost(): string
