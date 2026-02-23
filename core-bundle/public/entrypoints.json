@@ -2,15 +2,7 @@
   "entrypoints": {
     "backend": {
       "css": [
-<<<<<<< HEAD
-<<<<<<< HEAD
-        "/bundles/contaocore/backend.732519ca.css"
-=======
-        "/bundles/contaocore/backend.61bc5ebb.css"
->>>>>>> 488ab4fee8 (Rebuild the assets)
-=======
-        "/bundles/contaocore/backend.87f96af1.css"
->>>>>>> 00b06bf773 (Rebuild the assets)
+        "/bundles/contaocore/backend.cb0b59d8.css"
       ],
       "js": [
         "/bundles/contaocore/backend.99869869.js"
