@@ -75,7 +75,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function __construct(
         private readonly Environment $environment,
         private readonly ContaoFilesystemLoader $filesystemLoader,
-        ContaoCsrfTokenManager $tokenManager,
         private readonly ContaoVariable $contaoVariable,
         private readonly InspectorNodeVisitor $inspectorNodeVisitor,
     ) {
