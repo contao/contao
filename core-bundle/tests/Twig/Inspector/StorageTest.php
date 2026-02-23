@@ -27,8 +27,7 @@ class StorageTest extends TestCase
         $adapter = $this->createStub(AdapterInterface::class);
         $adapter
             ->method('getItem')
-            ->with('contao.twig.inspector')
-            ->willReturn($item)
+            ->willReturnMap([['contao.twig.inspector', $item]])
         ;
 
         $storage = new Storage($adapter);

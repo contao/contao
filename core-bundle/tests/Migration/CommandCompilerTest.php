@@ -17,7 +17,6 @@ use Contao\CoreBundle\Migration\CommandCompiler;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
-use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\TestCase;
@@ -495,8 +494,7 @@ class CommandCompilerTest extends TestCase
         $schemaManagerConnection = $this->createStub(Connection::class);
         $schemaManagerConnection
             ->method('fetchNumeric')
-            ->with('SELECT @@character_set_database, @@collation_database')
-            ->willReturn(['utf8mb4', 'utf8mb4_unicode_ci'])
+            ->willReturnMap([['SELECT @@character_set_database, @@collation_database', ['utf8mb4', 'utf8mb4_unicode_ci']]])
         ;
 
         $platform = new MySQLPlatform();
@@ -508,16 +506,8 @@ class CommandCompilerTest extends TestCase
             ->willReturn($fromSchema)
         ;
 
-        $comparatorParams = [$this->callback(static fn ($param) => $param instanceof ComparatorConfig)];
-
-        // Backwards compatibility for doctrine/dbal 3.x
-        if (!class_exists(ComparatorConfig::class)) {
-            $comparatorParams = [];
-        }
-
         $schemaManager
             ->method('createComparator')
-            ->with(...$comparatorParams)
             ->willReturn($comparator)
         ;
 

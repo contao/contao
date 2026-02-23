@@ -69,8 +69,7 @@ class ContentElementNestingVoterTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT type FROM tl_content WHERE id = ?', [42])
-            ->willReturn($databaseResult)
+            ->willReturnMap([['SELECT type FROM tl_content WHERE id = ?', [42], $databaseResult]])
         ;
 
         $fragmentCompositor = $this->createMock(FragmentCompositor::class);
