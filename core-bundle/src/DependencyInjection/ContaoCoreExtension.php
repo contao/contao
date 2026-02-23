@@ -142,7 +142,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
         $container->setParameter('contao.backend.crawl_concurrency', $config['backend']['crawl_concurrency']);
-        $container->setParameter('contao.backend.icons', $this->getBackendIcons());
+        $container->setParameter('contao.backend.icons', $this->getBackendIcons($this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public')));
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
@@ -627,7 +627,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         return Path::join($projectDir, $publicDir);
     }
 
-    private function getBackendIcons(): array
+    private function getBackendIcons(string $publicDir): array
     {
         $basePath = Path::canonicalize(__DIR__.'/../../public/icons');
         $manifest = json_decode(file_get_contents(Path::join($basePath, 'manifest.json')), true, 2, JSON_THROW_ON_ERROR);
@@ -636,7 +636,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         foreach ($manifest as $name => $publicPath) {
             $svg = new \DOMDocument();
-            $svg->loadXML(file_get_contents(Path::join($basePath, $name)));
+            $svg->loadXML(file_get_contents(Path::join($publicDir, $publicPath)));
 
             $icons[$name] = [
                 'path' => $publicPath,
