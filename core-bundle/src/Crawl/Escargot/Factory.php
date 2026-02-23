@@ -65,7 +65,7 @@ class Factory
     /**
      * @param array<string>                                            $additionalUris
      * @param \Closure(array<string, mixed>): HttpClientInterface|null $httpClientFactory
-     * @param UserProviderInterface<UserInterface> $userProvider
+     * @param UserProviderInterface<UserInterface>                     $userProvider
      */
     public function __construct(
         private readonly Connection $connection,
