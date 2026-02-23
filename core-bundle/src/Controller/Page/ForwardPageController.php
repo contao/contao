@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\Page;
 
+use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
@@ -24,10 +24,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsPage(contentComposition: false)]
-class ForwardPageController extends AbstractPageController implements DynamicRouteInterface
+class ForwardPageController extends AbstractController implements DynamicRouteInterface
 {
     public function __construct(
-        private readonly ContentUrlGenerator $urlGenerator,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }
@@ -43,7 +42,7 @@ class ForwardPageController extends AbstractPageController implements DynamicRou
         }
 
         return $this->redirect(
-            $this->urlGenerator->generate($forwardPage, $request->attributes->all(), UrlGeneratorInterface::ABSOLUTE_URL).$queryString,
+            $this->generateContentUrl($forwardPage, $request->attributes->all(), UrlGeneratorInterface::ABSOLUTE_URL).$queryString,
             'temporary' === $pageModel->redirect ? Response::HTTP_SEE_OTHER : Response::HTTP_MOVED_PERMANENTLY
         );
     }
