@@ -19,6 +19,7 @@ use Contao\Environment;
 use Contao\NewsletterChannelModel;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_newsletter'] = array
 (
@@ -89,17 +90,17 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_newsletter_channel.title',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'subject' => array
 		(
@@ -108,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'alias' => array
 		(
@@ -119,14 +120,14 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				array('tl_newsletter', 'generateAlias')
 			),
-			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'preheader' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'content' => array
 		(
@@ -142,27 +143,27 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				array('tl_newsletter', 'convertRelativeLinks')
 			),
-			'sql'                     => "mediumtext NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 		'text' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('decodeEntities'=>true, 'autogrow' => false),
-			'sql'                     => "mediumtext NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, 'notnull'=>false)
 		),
 		'addFile' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'files' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'template' => array
 		(
@@ -171,27 +172,27 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mail_');
 			},
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'sendText' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'externalImages' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w33', 'includeBlankOption'=>true),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'sender' => array
 		(
@@ -203,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				array('tl_newsletter', 'addSenderPlaceholder')
 			),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'senderName' => array
 		(
@@ -214,7 +215,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				array('tl_newsletter', 'addSenderNamePlaceholder')
 			),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'sent' => array
 		(
@@ -222,7 +223,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'eval'                    => array('doNotCopy'=>true, 'isBoolean'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'date' => array
 		(
@@ -230,7 +231,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		)
 	)
 );

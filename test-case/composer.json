@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "contao/core-bundle": "self.version",
         "phpunit/phpunit": "^12.4",
         "symfony/yaml": "^6.4 || ^7.0"
@@ -30,6 +30,11 @@
         "allow-plugins": {
             "contao-components/installer": true,
             "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "6.0-dev"
         }
     }
 }

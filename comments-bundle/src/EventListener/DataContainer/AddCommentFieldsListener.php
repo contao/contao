@@ -95,7 +95,7 @@ class AddCommentFieldsListener
             'options' => ['notify_admin', 'notify_author', 'notify_both'],
             'reference' => &$GLOBALS['TL_LANG'][$table],
             'eval' => ['tl_class' => 'w50'],
-            'sql' => "varchar(32) NOT NULL default 'notify_admin'",
+            'sql' => ['type' => 'string', 'length' => 32, 'default' => 'notify_admin'],
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['sortOrder'] = [
@@ -103,13 +103,13 @@ class AddCommentFieldsListener
             'options' => ['ascending', 'descending'],
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
             'eval' => ['tl_class' => 'w50 clr'],
-            'sql' => "varchar(32) NOT NULL default 'ascending'",
+            'sql' => ['type' => 'string', 'length' => 32, 'default' => 'ascending'],
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['perPage'] = [
             'inputType' => 'text',
             'eval' => ['rgxp' => 'natural', 'tl_class' => 'w50'],
-            'sql' => 'smallint(5) unsigned NOT NULL default 0',
+            'sql' => ['type' => 'smallint', 'unsigned' => true, 'default' => 0],
         ];
 
         $GLOBALS['TL_DCA'][$table]['fields']['moderate'] = [

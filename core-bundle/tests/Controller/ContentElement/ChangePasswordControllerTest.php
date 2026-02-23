@@ -294,17 +294,9 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             OptInModel::class => $optInAdapter,
         ]);
 
-        if ($versions) {
-            $framework
-                ->method('createInstance')
-                ->with(Versions::class)
-                ->willReturn($versions)
-            ;
-        }
-
         $framework
             ->method('createInstance')
-            ->willReturn($template)
+            ->willReturn($versions ?: $template)
         ;
 
         return $framework;

@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "contao/core-bundle": "self.version",
         "symfony/http-kernel": "^7.4"
     },
@@ -61,6 +61,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "6.0-dev"
+        },
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     }
 }

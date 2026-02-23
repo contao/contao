@@ -327,13 +327,6 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
-    contao.doctrine.orm.fail_tolerant_proxy_cache_warmer:
-        class: Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer
-        decorates: doctrine.orm.proxy_cache_warmer
-        arguments:
-            - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
-            - '@database_connection'
-
     contao.doctrine.schema.mysql_innodb_row_size_calculator:
         class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
         arguments:
@@ -1203,6 +1196,11 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.preview_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
@@ -1424,7 +1422,6 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.filesystem_loader'
-            - '@contao.csrf.token_manager'
             - '@contao.twig.global.variable'
             - '@contao.twig.inspector_node_visitor'
 
