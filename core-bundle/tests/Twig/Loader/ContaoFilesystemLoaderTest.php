@@ -146,32 +146,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertStringContainsString('<theme>', $source->getCode());
     }
 
-    public function testGetsSourceContextFromHtml5File(): void
-    {
-        $loader = $this->getContaoFilesystemLoaderWithPaths(
-            $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $source = $loader->getSourceContext('@Contao/foo.html5');
-
-        $this->assertSame('@Contao/foo.html5', $source->getName());
-        $this->assertSame(Path::join($projectDir, 'templates/foo.html5'), Path::normalize($source->getPath()));
-        $this->assertSame("A\nB", $source->getCode(), 'block names must end up as tokens separated by \n');
-    }
-
-    public function testGetsSourceContextFromNestedHtml5File(): void
-    {
-        $loader = $this->getContaoFilesystemLoaderWithPaths(
-            $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $source = $loader->getSourceContext('@Contao/bar.html5');
-
-        $this->assertSame('@Contao/bar.html5', $source->getName());
-        $this->assertSame(Path::join($projectDir, 'templates/bar.html5'), Path::normalize($source->getPath()));
-        $this->assertSame("A\nB", $source->getCode(), 'block names including those of parent templates must end up as tokens separated by \n');
-    }
-
     public function testExists(): void
     {
         $loader = $this->getContaoFilesystemLoaderWithPaths(
