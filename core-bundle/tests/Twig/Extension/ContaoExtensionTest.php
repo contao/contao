@@ -72,12 +72,10 @@ class ContaoExtensionTest extends TestCase
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(4, $nodeVisitors);
+        $this->assertCount(2, $nodeVisitors);
 
-        $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
-        $this->assertInstanceOf(InspectorNodeVisitor::class, $nodeVisitors[1]);
-        $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[2]);
-        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[3]);
+        $this->assertInstanceOf(InspectorNodeVisitor::class, $nodeVisitors[0]);
+        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[1]);
     }
 
     public function testAddsTheTokenParsers(): void
@@ -159,7 +157,6 @@ class ContaoExtensionTest extends TestCase
             'highlight',
             'highlight_auto',
             'format_bytes',
-            'sanitize_html',
             'format_number',
             'csp_unsafe_inline_style',
             'csp_inline_styles',
@@ -267,178 +264,6 @@ class ContaoExtensionTest extends TestCase
         $extension->getFunctions();
     }
 
-    public function testAllowsOnTheFlyRegisteringTemplatesForInputEncoding(): void
-    {
-        $contaoExtension = $this->getContaoExtension();
-        $escaperNodeVisitor = $contaoExtension->getNodeVisitors()[0];
-
-        $traverser = new NodeTraverser(
-            $this->createStub(Environment::class),
-            [$escaperNodeVisitor],
-        );
-
-        $node = new ModuleNode(
-            new BodyNode([
-                new FilterExpression(
-                    new ConstantExpression('text', 1),
-                    new TwigFilter('escape'),
-                    new Nodes([
-                        new ConstantExpression('html', 1),
-                        new ConstantExpression(null, 1),
-                        new ConstantExpression(true, 1),
-                    ]),
-                    1,
-                ),
-            ]),
-            null,
-            new EmptyNode(),
-            new EmptyNode(),
-            new EmptyNode(),
-            null,
-            new Source('<code>', 'foo.html.twig'),
-        );
-
-        $original = (string) $node;
-
-        // Traverse tree first time (no changes expected)
-        $traverser->traverse($node);
-        $iteration1 = (string) $node;
-
-        // Add rule that allows the template and traverse tree a second time (change expected)
-        $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
-
-        // Adding the same rule should be ignored
-        $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
-
-        $traverser->traverse($node);
-        $iteration2 = (string) $node;
-
-        $this->assertSame($original, $iteration1);
-        $this->assertStringNotContainsString("'contao_html'", $iteration1);
-        $this->assertStringContainsString("'contao_html'", $iteration2);
-    }
-
-    public function testRenderLegacyTemplate(): void
-    {
-        $extension = $this->getContaoExtension();
-
-        $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
-
-        System::setContainer($container);
-
-        $output = $extension->renderLegacyTemplate(
-            'foo.html5',
-            ['B' => ['overwritten B block']],
-            ['foo' => 'bar'],
-        );
-
-        $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
-    }
-
-    public function testRenderLegacyTemplateNested(): void
-    {
-        $extension = $this->getContaoExtension();
-
-        $container = $this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
-
-        System::setContainer($container);
-
-        $framework = new \ReflectionClass(ContaoFramework::class);
-        $framework->setStaticPropertyValue('nonce', '<nonce>');
-
-        $output = $extension->renderLegacyTemplate(
-            'baz.html5',
-            ['B' => "root before B\n[[TL_PARENT_<nonce>]]root after B"],
-            ['foo' => 'bar'],
-        );
-
-        $this->assertSame(
-            implode("\n", [
-                'foo: bar',
-                'baz before A',
-                'bar before A',
-                'original A block',
-                'bar after A',
-                'baz after A',
-                'root before B',
-                'baz before B',
-                'original B block',
-                'baz after B',
-                'root after B',
-            ]),
-            $output,
-        );
-    }
-
-    public function testRenderLegacyTemplateWithTemplateFunctions(): void
-    {
-        $tokenChecker = $this->createStub(TokenChecker::class);
-        $tokenChecker
-            ->method('hasBackendUser')
-            ->willReturn(true)
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
-        $container->set('contao.security.token_checker', $tokenChecker);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
-
-        System::setContainer($container);
-
-        $GLOBALS['TL_LANG'] = [
-            'MONTHS' => ['a', 'b'],
-            'DAYS' => ['c', 'd'],
-            'MONTHS_SHORT' => ['e', 'f'],
-            'DAYS_SHORT' => ['g', 'h'],
-            'DP' => ['select_a_time' => 'i', 'use_mouse_wheel' => 'j', 'time_confirm_button' => 'k', 'apply_range' => 'l', 'cancel' => 'm', 'week' => 'n'],
-        ];
-
-        $output = $this->getContaoExtension()->renderLegacyTemplate('with_template_functions.html5', [], []);
-
-        $expected =
-            "1\n".
-            'Locale.define("en-US","Date",{months:["a","b"],days:["c","d"],months_abbr:["e","f"],days_abbr:["g","h"]});'.
-            'Locale.define("en-US","DatePicker",{select_a_time:"i",use_mouse_wheel:"j",time_confirm_button:"k",apply_range:"l",cancel:"m",week:"n"});';
-
-        $this->assertSame($expected, $output);
-
-        unset($GLOBALS['TL_LANG']);
-    }
-
-    #[DataProvider('provideTemplateNames')]
-    public function testDefaultEscaperRules(string $templateName): void
-    {
-        $extension = $this->getContaoExtension();
-
-        $property = new \ReflectionProperty(ContaoExtension::class, 'contaoEscaperFilterRules');
-        $rules = $property->getValue($extension);
-
-        $this->assertCount(2, $rules);
-
-        foreach ($rules as $rule) {
-            if (1 === preg_match($rule, $templateName)) {
-                return;
-            }
-        }
-
-        $this->fail(\sprintf('No escaper rule matched template "%s".', $templateName));
-    }
-
-    public static function provideTemplateNames(): iterable
-    {
-        yield '@Contao namespace' => ['@Contao/foo.html.twig'];
-        yield '@Contao namespace with folder' => ['@Contao/foo/bar.html.twig'];
-        yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
-        yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
-        yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
-    }
 
     /**
      * @param Environment&MockObject $environment
