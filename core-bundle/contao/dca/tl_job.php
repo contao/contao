@@ -66,38 +66,38 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true),
 		),
 		'uuid' => array
 		(
-			'sql'                     => array('type' => 'string', 'length' => 36, 'default' => ''),
+			'sql'                     => array('type'=>'string', 'length'=>36, 'default'=>''),
 		),
 		'pid' => array
 		(
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 		),
 		'createdAt' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['created_at'],
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 		),
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['type'],
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['jobs']['type_label'],
-			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>true),
 		),
 		'owner' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['owner'],
 			'foreignKey'              => 'tl_user.name',
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 		),
 		'progress' => array
 		(
@@ -108,7 +108,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['status'],
 			'inputType'               => 'select',
 			'enum'                    => Status::class,
-			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>true),
 		),
 		'attachments' => array
 		(
@@ -116,11 +116,11 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		),
 		'public' => array
 		(
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'jobData' => array
 		(
-			'sql'                     => array('type' => 'text', 'notnull' => false),
+			'sql'                     => array('type'=>'text', 'notnull'=>false),
 		),
 	)
 );

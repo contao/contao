@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -93,7 +92,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -145,7 +143,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -189,8 +186,7 @@ class TwigIntegrationTest extends TestCase
 
         $parser
             ->method('replaceInline')
-            ->with('<i>foo</i>{{br}}')
-            ->willReturn('<i>foo</i><br>')
+            ->willReturnMap([['<i>foo</i>{{br}}', '<i>foo</i><br>']])
         ;
 
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
@@ -200,7 +196,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -228,7 +223,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),

@@ -61,32 +61,15 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function __construct(
         private readonly Environment $environment,
         private readonly ContaoFilesystemLoader $filesystemLoader,
-        ContaoCsrfTokenManager $tokenManager,
         private readonly ContaoVariable $contaoVariable,
         private readonly InspectorNodeVisitor $inspectorNodeVisitor,
     ) {
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperRuntime = $this->environment->getRuntime(EscaperRuntime::class);
 
-        $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html']);
-        $escaperRuntime->addSafeClass(HighlightResult::class, ['html']);
-        $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html']);
-
-        $this->environment->addGlobal(
-            'request_token',
-            new class($tokenManager) implements \Stringable {
-                public function __construct(private readonly ContaoCsrfTokenManager $tokenManager)
-                {
-                }
-
-                public function __toString(): string
-                {
-                    trigger_deprecation('contao/core-bundle', '5.3', 'The "request_token" Twig variable is deprecated and will no longer work in Contao 6. Use the "contao.request_token" variable instead.');
-
-                    return $this->tokenManager->getDefaultTokenValue();
-                }
-            },
-        );
+        $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);
     }
 
     public function getGlobals(): array

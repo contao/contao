@@ -31,5 +31,10 @@
             "contao-components/installer": true,
             "php-http/discovery": false
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "6.0-dev"
+        }
     }
 }

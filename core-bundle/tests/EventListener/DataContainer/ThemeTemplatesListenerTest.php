@@ -37,8 +37,9 @@ class ThemeTemplatesListenerTest extends TestCase
 
     public function testThrowsFriendlyErrorMessageIfPathIsInvalid(): void
     {
-        $themeNamespace = $this->createStub(ThemeNamespace::class);
+        $themeNamespace = $this->createMock(ThemeNamespace::class);
         $themeNamespace
+            ->expects($this->once())
             ->method('generateSlug')
             ->with('<bad-path>')
             ->willThrowException(new InvalidThemePathException('<bad-path>', ['.', '_']))
@@ -47,8 +48,7 @@ class ThemeTemplatesListenerTest extends TestCase
         $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->with('ERR.invalidThemeTemplatePath', ['<bad-path>', '._'], 'contao_default')
-            ->willReturn('<message>')
+            ->willReturnMap([['ERR.invalidThemeTemplatePath', ['<bad-path>', '._'], 'contao_default', '<message>']])
         ;
 
         $listener = $this->getListener(null, $themeNamespace, $translator);

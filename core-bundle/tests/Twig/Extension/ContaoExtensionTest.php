@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\Config;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
@@ -173,8 +172,7 @@ class ContaoExtensionTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo')
-            ->willReturn(['' => '@Contao_Bar/foo.html.twig'])
+            ->willReturnMap([['foo', ['' => '@Contao_Bar/foo.html.twig']]])
         ;
 
         $includeFunction = $this->getContaoExtension($environment, $filesystemLoader)->getFunctions()[0];
@@ -200,8 +198,7 @@ class ContaoExtensionTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getAllFirstByThemeSlug')
-            ->with('foo')
-            ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_Bar/foo.html.twig'])
+            ->willReturnMap([['foo', ['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_Bar/foo.html.twig']]])
         ;
 
         $filesystemLoader
@@ -237,7 +234,6 @@ class ContaoExtensionTest extends TestCase
         $extension = new ContaoExtension(
             $environment,
             $this->createStub(ContaoFilesystemLoader::class),
-            $this->createStub(ContaoCsrfTokenManager::class),
             $this->createStub(ContaoVariable::class),
             new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );
@@ -272,7 +268,6 @@ class ContaoExtensionTest extends TestCase
         return new ContaoExtension(
             $environment,
             $filesystemLoader,
-            $this->createStub(ContaoCsrfTokenManager::class),
             $this->createStub(ContaoVariable::class),
             new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         );

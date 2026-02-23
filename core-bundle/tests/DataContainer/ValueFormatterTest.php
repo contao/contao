@@ -524,8 +524,7 @@ class ValueFormatterTest extends TestCase
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
-            ->with('dateFormat')
-            ->willReturn('Y-m-d')
+            ->willReturnMap([['dateFormat', 'Y-m-d']])
         ;
 
         $dateAdapter = $this->createAdapterStub(['parse']);

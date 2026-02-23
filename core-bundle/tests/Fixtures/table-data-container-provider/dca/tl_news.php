@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_news'] =
 
     'fields' => [
         'id' => [
-            'sql' => 'int(10) unsigned NOT NULL auto_increment',
+            'sql' => ['type' => 'integer', 'unsigned' => true, 'autoincrement' => true],
         ],
         'headline' => [
             'search' => true,
