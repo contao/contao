@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Contao\Tools\TwigCsFixer\Rules;
@@ -6,10 +7,9 @@ namespace Contao\Tools\TwigCsFixer\Rules;
 use TwigCsFixer\Rules\AbstractRule;
 use TwigCsFixer\Token\Token;
 use TwigCsFixer\Token\Tokens;
-use TwigCsFixer\Util\StringUtil;
 
 /**
- * Ensures that variables, that are assigned an HtmlAttributes instance via the
+ * Ensures that variables that are assigned an HtmlAttributes instance via the
  * "attrs()" function have a suffix "_attributes" in their name.
  *
  * Examples of valid naming:
@@ -24,7 +24,7 @@ use TwigCsFixer\Util\StringUtil;
  */
 final class HtmlAttributesVariableNameRule extends AbstractRule
 {
-    const EXPECTED_SUFFIX = 'attributes';
+    private const EXPECTED_SUFFIX = 'attributes';
 
     protected function process(int $tokenIndex, Tokens $tokens): void
     {
@@ -53,7 +53,7 @@ final class HtmlAttributesVariableNameRule extends AbstractRule
     {
         $name = $token->getValue();
 
-        if (preg_match(sprintf('/(?:^|\w_)%s$/', preg_quote(self::EXPECTED_SUFFIX, '/')), $name) === 1) {
+        if (1 === preg_match(sprintf('/(?:^|\w_)%s$/', preg_quote(self::EXPECTED_SUFFIX, '/')), $name)) {
             return;
         }
 

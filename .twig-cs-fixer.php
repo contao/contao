@@ -47,6 +47,7 @@ foreach ($templatePaths as $templatePath) {
 }
 
 $ruleset->addRule(new FileExtensionRule());
+$ruleset->addRule(new HtmlAttributesVariableNameRule());
 $ruleset->addRule(new ValidConstantFunctionRule());
 
 $ruleset->addRule(new ForbiddenFunctionRule([
@@ -55,8 +56,6 @@ $ruleset->addRule(new ForbiddenFunctionRule([
     'contao_section', // only for legacy layouts
     'contao_sections', // only for legacy layouts
 ]));
-
-$ruleset->addRule(new HtmlAttributesVariableNameRule());
 
 $config = new Config();
 $config->allowNonFixableRules();
