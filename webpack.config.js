@@ -77,7 +77,7 @@ Encore
     }))
     .copyFiles({
         from: './core-bundle/assets/icons',
-        to: '[name].[ext]',
+        to: '[name].[hash:8].[ext]',
         pattern: /\.svg$/,
     })
     .configureDevServerOptions(options => {
