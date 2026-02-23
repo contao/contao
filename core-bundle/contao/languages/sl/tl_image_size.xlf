@@ -77,9 +77,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.0">
         <source>Preserve copyright metadata</source>
+        <target>Ohrani metapodatke o avtorskih pravicah</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>Obdrži polja z meta podatki o avtorskih pravicah (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
@@ -87,6 +89,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.1">
         <source>Please select the metadata fields to preserve.</source>
+        <target>Prosimo, izberite polja metapodatkov, ki naj se obdržijo</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -152,16 +155,14 @@
         <target>Se prilega oknu</target>
       </trans-unit>
       <trans-unit id="tl_image_size.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Krajša stranica se prilagodi na podane dimenzije in slika spremeni velikost proporcionalno.</target>
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.0">
         <source>Crop</source>
         <target>Obreži</target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>Slika bo spremenjena po danih dimenzijah. Če je potrebno, bo obrezana.</target>
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
@@ -175,36 +176,44 @@
         <source>Remove all metadata fields</source>
         <target>Odstrani vsa polja z meta podatki</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.new.0">
-        <source>New</source>
-        <target>Nov</target>
-      </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
         <target>Ustvari novo velikost slike</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.show">
+      <trans-unit id="tl_image_size.show.1">
         <source>Show the details of image size ID %s</source>
         <target>Prikaži podrobnosti o velikosti slike ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.edit">
+      <trans-unit id="tl_image_size.versions.1">
+        <source>Show the versions of image size ID %s</source>
+        <target>Prikaži različice velikosti slike z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
         <target>Uredi velikost slike ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.children">
+      <trans-unit id="tl_image_size.children.0">
+        <source>Media queries</source>
+        <target>Media queries</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.children.1">
         <source>Edit the media queries of image size ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.cut">
+      <trans-unit id="tl_image_size.cut.1">
         <source>Move image size ID %s</source>
         <target>Premakni velikost slike ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.copy">
-        <source>Duplicate image size ID %s</source>
-        <target>Kopiraj velikost slike ID %s</target>
+      <trans-unit id="tl_image_size.copy.1">
+        <source>Copy image size ID %s</source>
+        <target>Kopiraj velikost slike z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_image_size.delete">
+      <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>
         <target>Izbriši velikost slike ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tableLabel">
+        <source>Image size</source>
+        <target>Velikost slike</target>
       </trans-unit>
     </body>
   </file>

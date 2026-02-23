@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
@@ -35,6 +36,7 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
+use Pdo\Mysql;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -83,6 +85,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
+            BundleConfig::create(SealBundle::class),
             BundleConfig::create(ContaoManagerBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
@@ -130,23 +133,25 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
-        if ('dev' !== $kernel->getEnvironment()) {
-            return null;
-        }
-
-        $collections = [];
-
-        $files = [
-            '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
-            '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+        $collections = [
+            $resolver
+                ->resolve('@WebauthnBundle/Resources/config/routing.php')
+                ->load('@WebauthnBundle/Resources/config/routing.php'),
         ];
 
-        foreach ($files as $prefix => $file) {
-            /** @var RouteCollection $collection */
-            $collection = $resolver->resolve($file)->load($file);
-            $collection->addPrefix($prefix);
+        if ('dev' === $kernel->getEnvironment()) {
+            $files = [
+                '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
+                '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+            ];
 
-            $collections[] = $collection;
+            foreach ($files as $prefix => $file) {
+                /** @var RouteCollection $collection */
+                $collection = $resolver->resolve($file)->load($file);
+                $collection->addPrefix($prefix);
+
+                $collections[] = $collection;
+            }
         }
 
         return array_reduce(
@@ -255,10 +260,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
+        $key = \defined('Pdo\Mysql::ATTR_MULTI_STATEMENTS') ? Mysql::ATTR_MULTI_STATEMENTS : \PDO::MYSQL_ATTR_MULTI_STATEMENTS;
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined
-        if (isset($options[\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+        if (isset($options[$key])) {
             return $extensionConfigs;
         }
 
@@ -272,7 +278,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            $key => false,
                         ],
                     ],
                 ],
@@ -363,7 +369,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Skip if driver is not supported
-        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver ?? ''] ?? null)) {
             return $extensionConfigs;
         }
 

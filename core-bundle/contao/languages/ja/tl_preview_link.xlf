@@ -62,8 +62,8 @@
         <target>クリップボードにコピー</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.share.1">
-        <source>Copy the preview link ID %s to your clipboard.</source>
-        <target>ID %sのプレビューのリンクをコピーします。</target>
+        <source>Copy the preview link ID %s to your clipboard</source>
+        <target>IDが %sのプレビューのリンクをクリップボードにコピーします。</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>
@@ -104,6 +104,42 @@
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
         <target>このプレビューのリンクは失効していて、もはや共有できません。</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.show.1">
+        <source>Show the details of preview link ID %s</source>
+        <target>ID %sのプレビューのリンクの詳細を表示</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.versions.1">
+        <source>Show the versions of preview link ID %s</source>
+        <target>ID %sのプレビューのリンクのバージョンを表示</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.edit.1">
+        <source>Edit preview link ID %s</source>
+        <target>ID %sのプレビューのリンクを編集</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.delete.1">
+        <source>Delete preview link ID %s</source>
+        <target>ID %sのプレビューのリンクを削除</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.toggle.0">
+        <source>Enable/disable preview link</source>
+        <target>プレビューのリンクの有効・無効を切り替え</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.toggle.1">
+        <source>Disable preview link ID %s</source>
+        <target>ID %sのプレビューのリンクを無効</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.toggle.2">
+        <source>Enable preview link ID %s</source>
+        <target>ID %sのプレビューのリンクを有効</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.toggle.3">
+        <source>Disable</source>
+        <target>無効</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.toggle.4">
+        <source>Enable</source>
+        <target>有効</target>
       </trans-unit>
     </body>
   </file>

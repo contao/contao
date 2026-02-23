@@ -17,7 +17,7 @@ use Twig\Compiler;
 use Twig\Node\Node;
 
 /**
- * @experimental
+ * @internal
  */
 #[YieldReady]
 final class PhpTemplateProxyNode extends Node
@@ -34,8 +34,7 @@ final class PhpTemplateProxyNode extends Node
     {
         /** @see PhpTemplateProxyNodeTest::testCompilesProxyCode() */
         $compiler
-            ->write(class_exists(YieldReady::class) ? 'yield' : 'echo') // Backwards compatibility
-            ->write(' $this->extensions[')
+            ->write('yield $this->extensions[')
             ->repr($this->getAttribute('extension_name'))
             ->raw(']->renderLegacyTemplate('."\n")
             ->indent()

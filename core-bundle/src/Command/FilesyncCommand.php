@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -29,8 +31,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class FilesyncCommand extends Command
 {
-    public function __construct(private readonly DbafsManager $dbafsManager)
-    {
+    public function __construct(
+        private readonly DbafsManager $dbafsManager,
+        private readonly ClockInterface $clock = new NativeClock(),
+    ) {
         parent::__construct();
     }
 
@@ -43,9 +47,9 @@ class FilesyncCommand extends Command
     {
         $output->writeln('Synchronizing…');
 
-        $time = microtime(true);
+        $start = $this->clock->now();
         $changeSet = $this->dbafsManager->sync(...$input->getArgument('paths'));
-        $timeTotal = round(microtime(true) - $time, 2);
+        $timeTotal = $this->clock->now()->getTimestamp() - $start->getTimestamp();
 
         $this->renderStats($changeSet, $output);
 

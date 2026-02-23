@@ -18,6 +18,7 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\UserGroupModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Terminal;
@@ -56,7 +57,7 @@ class UserCreateCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $question = $this->createMock(QuestionHelper::class);
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturn('j.doe')
@@ -73,7 +74,7 @@ class UserCreateCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $question = $this->createMock(QuestionHelper::class);
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturn('John Doe')
@@ -90,7 +91,7 @@ class UserCreateCommandTest extends TestCase
     {
         $command = $this->getCommand();
 
-        $question = $this->createMock(QuestionHelper::class);
+        $question = $this->createStub(QuestionHelper::class);
         $question
             ->method('ask')
             ->willReturn('12345678')
@@ -120,9 +121,7 @@ class UserCreateCommandTest extends TestCase
         $this->assertSame(1, $code);
     }
 
-    /**
-     * @dataProvider usernamePasswordProvider
-     */
+    #[DataProvider('usernamePasswordProvider')]
     public function testUpdatesTheDatabaseOnSuccess(string $username, string $name, string $email, string $password): void
     {
         $connection = $this->createMock(Connection::class);
@@ -153,36 +152,36 @@ class UserCreateCommandTest extends TestCase
 
     private function getCommand(Connection|null $connection = null, string|null $password = null): UserCreateCommand
     {
-        $connection ??= $this->createMock(Connection::class);
+        $connection ??= $this->createStub(Connection::class);
         $password ??= '12345678';
 
-        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
+        $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher
             ->method('hash')
             ->with($password)
             ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
         ;
 
-        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
+        $passwordHasherFactory = $this->createStub(PasswordHasherFactoryInterface::class);
         $passwordHasherFactory
             ->method('getPasswordHasher')
             ->with(BackendUser::class)
             ->willReturn($passwordHasher)
         ;
 
-        $userGroupModelAdapter = $this->mockAdapter(['findAll']);
+        $userGroupModelAdapter = $this->createAdapterStub(['findAll']);
         $userGroupModelAdapter
             ->method('findAll')
             ->willReturn(null, null)
         ;
 
-        $locales = $this->createMock(Locales::class);
+        $locales = $this->createStub(Locales::class);
         $locales
             ->method('getEnabledLocaleIds')
             ->willReturn(['en', 'de', 'ru'])
         ;
 
-        $command = new UserCreateCommand($this->mockContaoFramework([UserGroupModel::class => $userGroupModelAdapter]), $connection, $passwordHasherFactory, $locales);
+        $command = new UserCreateCommand($this->createContaoFrameworkStub([UserGroupModel::class => $userGroupModelAdapter]), $connection, $passwordHasherFactory, $locales);
         $command->setApplication(new Application());
 
         return $command;

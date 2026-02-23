@@ -16,7 +16,6 @@ use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarModel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Environment;
@@ -25,6 +24,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
 	// Config
@@ -33,18 +33,12 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
+		'backendSearchIgnore'         => true,
+		'userRoot'                    => 'calendarfeeds',
 		'onload_callback' => array
 		(
 			array('tl_calendar_feed', 'checkPermission'),
 			array('tl_calendar_feed', 'generateFeed')
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_calendar_feed', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_calendar_feed', 'adjustPermissions')
 		),
 		'onsubmit_callback' => array
 		(
@@ -70,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
@@ -94,7 +88,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_calendar_feed', 'deleteFeed')
 			),
-			'show'
+			'show',
+			'versions',
 		)
 	),
 
@@ -147,7 +142,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_calendar_feed', 'getAllowedCalendars'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('table'=>'tl_calendar_feed', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'format' => array
 		(
@@ -173,13 +169,10 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'feedBase' => array
 		(
+			'default'                 => static fn (): string => Environment::get('base'),
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'load_callback' => array
-			(
-				array('tl_calendar_feed', 'addFeedBase')
-			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'description' => array
@@ -196,7 +189,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback'	      => array('contao.listener.image_size_options', '__invoke'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 	)
 );
@@ -251,8 +244,6 @@ class tl_calendar_feed extends Backend
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['notDeletable'] = true;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Check current action
 		switch (Input::get('act'))
 		{
@@ -281,6 +272,7 @@ class tl_calendar_feed extends Backend
 			case 'deleteAll':
 			case 'overrideAll':
 			case 'copyAll':
+				$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 				$session = $objSession->all();
 
 				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS))
@@ -304,93 +296,6 @@ class tl_calendar_feed extends Backend
 	}
 
 	/**
-	 * Add the new calendar feed to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->calendarfeeds) || !is_array($user->calendarfeeds))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->calendarfeeds;
-		}
-
-		// The calendar feed is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$db = Database::getInstance();
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_calendar_feed']) && in_array($insertId, $arrNew['tl_calendar_feed']))
-		{
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrCalendarfeedp = StringUtil::deserialize($objGroup->calendarfeedp);
-
-					if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
-					{
-						$arrCalendarfeeds = StringUtil::deserialize($objGroup->calendarfeeds, true);
-						$arrCalendarfeeds[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT calendarfeeds, calendarfeedp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrCalendarfeedp = StringUtil::deserialize($objUser->calendarfeedp);
-
-				if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
-				{
-					$arrCalendarfeeds = StringUtil::deserialize($objUser->calendarfeeds, true);
-					$arrCalendarfeeds[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->calendarfeeds = $root;
-		}
-	}
-
-	/**
 	 * Return the copy calendar feed button
 	 *
 	 * @param array  $row
@@ -404,7 +309,7 @@ class tl_calendar_feed extends Backend
 	 */
 	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -421,7 +326,7 @@ class tl_calendar_feed extends Backend
 	 */
 	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -540,23 +445,6 @@ class tl_calendar_feed extends Backend
 		if (in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Add the RSS-feed base URL
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return string
-	 */
-	public function addFeedBase($varValue)
-	{
-		if (!$varValue)
-		{
-			$varValue = Environment::get('base');
 		}
 
 		return $varValue;

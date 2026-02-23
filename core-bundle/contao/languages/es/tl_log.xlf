@@ -59,15 +59,19 @@
       </trans-unit>
       <trans-unit id="tl_log.uri.0">
         <source>Request URI</source>
+        <target>Solicitar URI</target>
       </trans-unit>
       <trans-unit id="tl_log.uri.1">
         <source>The URI of the request</source>
+        <target>El URI de la solicitud.</target>
       </trans-unit>
       <trans-unit id="tl_log.page.0">
         <source>Page ID</source>
+        <target>ID de página</target>
       </trans-unit>
       <trans-unit id="tl_log.page.1">
         <source>The ID of the page</source>
+        <target>El ID de la página.</target>
       </trans-unit>
       <trans-unit id="tl_log.BE">
         <source>Back end</source>
@@ -76,6 +80,12 @@
       <trans-unit id="tl_log.FE">
         <source>Front end</source>
         <target>Front</target>
+      </trans-unit>
+      <trans-unit id="tl_log.show.1">
+        <source>Show the details of log entry ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_log.delete.1">
+        <source>Delete log entry ID %s</source>
       </trans-unit>
     </body>
   </file>

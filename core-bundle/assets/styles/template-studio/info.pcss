@@ -1,0 +1,48 @@
+#template-studio--info {
+    padding: 12px;
+
+    .description {
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+
+    .block_hierarchy {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        list-style: none;
+        margin-top: 12px;
+
+        .block {
+            padding: 6px;
+            border: 1px solid var(--border);
+
+            &.target {
+                border: 1px solid var(--blue);
+            }
+        }
+
+        .relation_info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+
+            .relation {
+                display: flex;
+                align-items: center;
+                font-size: 0.8rem;
+                color: var(--info);
+                padding: 4px 0;
+
+                svg {
+                    margin-left: 20px;
+                }
+
+                svg + svg {
+                    margin-left: -4px;
+                    margin-right: 8px;
+                }
+            }
+        }
+    }
+}

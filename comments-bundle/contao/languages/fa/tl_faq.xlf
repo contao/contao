@@ -1,0 +1,18 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_faq.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>غیرفعال کردن دیدگاه‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>اجازه ندادن دیدگاه‌ها برای این پرسش و پاسخ خاص.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>تنطیمات پیشرفته</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

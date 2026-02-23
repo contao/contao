@@ -22,13 +22,13 @@ use Twig\Error\RuntimeError;
  *
  * This strategy will get dropped once we move to output encoding.
  *
- * @experimental
+ * @internal
  */
 final class ContaoEscaper
 {
     /**
-     * This implementation is a clone of Twig's html escape strategy but calls
-     * htmlspecialchars with the double_encode parameter set to false.
+     * This implementation is a clone of Twig's HTML escape strategy but calls
+     * htmlspecialchars() with the double_encode parameter set to false.
      *
      * @see twig_escape_filter
      */
@@ -40,12 +40,12 @@ final class ContaoEscaper
 
         $string = (string) $string;
 
-        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', false);
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', 1 === preg_match('/["\'<>]/', $string));
     }
 
     /**
-     * This implementation is a clone of Twig's html_attr escape strategy but replaces
-     * insert tags and decodes entities beforehand.
+     * This implementation is a clone of Twig's "html_attr" escape strategy but
+     * decodes entities beforehand.
      *
      * @see twig_escape_filter
      */
@@ -56,7 +56,10 @@ final class ContaoEscaper
         }
 
         $string = (string) $string;
-        $string = StringUtil::decodeEntities($string);
+
+        if (1 !== preg_match('/["\'<>]/', $string)) {
+            $string = StringUtil::decodeEntities($string);
+        }
 
         // Original logic
         if (!preg_match('//u', $string)) {

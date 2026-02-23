@@ -27,22 +27,22 @@ class ImagesControllerTest extends TestCase
 {
     public function testReturnsResizedImage(): void
     {
-        $image = $this->createMock(DeferredImageInterface::class);
+        $image = $this->createStub(DeferredImageInterface::class);
         $image
             ->method('getPath')
             ->willReturn($this->getFixturesDir().'/images/dummy.jpg')
         ;
 
-        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
             ->willReturn($image)
         ;
 
-        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer = $this->createStub(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willReturn($this->createMock(ImageInterface::class))
+            ->willReturn($this->createStub(ImageInterface::class))
         ;
 
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
@@ -63,13 +63,13 @@ class ImagesControllerTest extends TestCase
             $exception = new \InvalidArgumentException('Image does not exist');
         }
 
-        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
             ->willThrowException($exception)
         ;
 
-        $resizer = $this->createMock(ResizerInterface::class);
+        $resizer = $this->createStub(ResizerInterface::class);
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
 
         $this->expectException(NotFoundHttpException::class);
@@ -83,13 +83,13 @@ class ImagesControllerTest extends TestCase
             $this->markTestSkipped();
         }
 
-        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willReturn($this->createMock(DeferredImageInterface::class))
+            ->willReturn($this->createStub(DeferredImageInterface::class))
         ;
 
-        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer = $this->createStub(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
             ->willThrowException(new FileNotExistsException('Image does not exist'))

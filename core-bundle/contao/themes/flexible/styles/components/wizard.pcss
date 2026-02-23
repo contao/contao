@@ -1,0 +1,292 @@
+/* Wizards */
+.tl_modulewizard button,
+.tl_optionwizard button,
+.tl_key_value_wizard button,
+.tl_tablewizard button,
+.tl_listwizard button,
+.tl_checkbox_wizard button,
+.tl_metawizard button,
+.tl_sectionwizard button,
+.tl_image_size button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    vertical-align: middle;
+}
+
+/* Module wizard */
+.tl_modulewizard {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 2px;
+}
+
+.tl_modulewizard td {
+    position: relative;
+    padding: 0 3px 0 0;
+}
+
+.tl_modulewizard th {
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 0 6px 1px 0;
+}
+
+@media (resolution >= 2dppx) {
+    .tl_modulewizard th {
+        font-weight: 300;
+    }
+}
+
+.tl_modulewizard td:first-child,
+.tl_modulewizard td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.tl_modulewizard .tl_select_wrapper {
+    margin: 2px 0;
+}
+
+.js .tl_modulewizard input.mw_enable {
+    position: absolute;
+    opacity: 0;
+    width: 16px;
+    height: 16px;
+}
+
+.js .tl_modulewizard input.mw_enable + label {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    text-indent: -999em;
+    background: var(--icon-invisible) 0 0 no-repeat;
+}
+
+.js .tl_modulewizard input.mw_enable:focus + label {
+    outline: 5px auto -webkit-focus-ring-color;
+}
+
+.js .tl_modulewizard input.mw_enable:checked + label {
+    background-image: var(--icon-visible);
+}
+
+/* Options and key/value wizard */
+.tl_optionwizard {
+    width: 100%;
+    max-width: 600px;
+}
+
+.tl_key_value_wizard {
+    width: 100%;
+    max-width: 628px;
+}
+
+.tl_optionwizard,
+.tl_key_value_wizard {
+    margin-top: 2px;
+}
+
+.tl_optionwizard label,
+.tl_key_value_wizard label {
+    margin-right: 3px;
+}
+
+.tl_optionwizard td,
+.tl_key_value_wizard td {
+    padding: 0 6px 0 0;
+}
+
+.tl_optionwizard th,
+.tl_key_value_wizard th {
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 0 6px 1px 0;
+}
+
+@media (resolution >= 2dppx) {
+    .tl_optionwizard th,
+    .tl_key_value_wizard th {
+        font-weight: 300;
+    }
+}
+
+.tl_optionwizard td:first-child,
+.tl_optionwizard td:last-child,
+.tl_key_value_wizard td:first-child,
+.tl_key_value_wizard td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.tl_optionwizard .tl_text,
+.tl_key_value_wizard .tl_text {
+    margin: 2px 0;
+}
+
+.tl_optionwizard img,
+.tl_key_value_wizard img {
+    position: relative;
+    top: 1px;
+}
+
+.tl_optionwizard .fw_checkbox,
+.tl_key_value_wizard .fw_checkbox {
+    margin: 0 1px;
+}
+
+#ctrl_allowedAttributes {
+    max-width: none;
+}
+
+#ctrl_allowedAttributes td:nth-child(2) {
+    width: 100px;
+}
+
+/* Table wizard */
+#tl_tablewizard {
+    margin-top: 2px;
+    padding-bottom: 2px;
+    overflow: auto;
+}
+
+.tl_tablewizard td {
+    padding: 0 3px 0 0;
+}
+
+.tl_tablewizard thead td {
+    padding-bottom: 3px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tl_tablewizard tbody td:last-child {
+    white-space: nowrap;
+}
+
+.tl_tablewizard td.tcontainer {
+    vertical-align: top;
+}
+
+.tl_tablewizard .tl_textarea {
+    margin: 2px 0;
+}
+
+/* List wizard */
+.tl_listwizard {
+    margin: 1px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tl_listwizard .tl_text {
+    width: 78%;
+    margin: 2px 0;
+}
+
+.tl_listwizard button {
+    margin-left: 1px;
+}
+
+/* Checkbox wizard */
+.tl_checkbox_wizard .sortable img {
+    vertical-align: bottom;
+}
+
+/* Meta wizard */
+.tl_metawizard {
+    margin: 3px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tl_metawizard li {
+    margin-bottom: 2px;
+    padding: 9px;
+}
+
+.tl_metawizard li:nth-child(odd) {
+    background: var(--table-header);
+}
+
+.tl_metawizard li:nth-child(even) {
+    background: var(--table-even);
+}
+
+.tl_metawizard label {
+    float: left;
+    width: 18%;
+    margin-top: 9px;
+}
+
+.tl_metawizard .tl_text,
+.tl_metawizard .tl_textarea {
+    float: left;
+    width: calc(82% - 20px);
+    margin: 1px 0;
+}
+
+.tl_metawizard .tl_textarea {
+    resize: vertical;
+}
+
+.tl_metawizard .tl_text + a {
+    position: relative;
+    top: 7px;
+    margin-left: 4px;
+}
+
+.tl_metawizard br {
+    clear: left;
+}
+
+.tl_metawizard .lang {
+    display: block;
+    margin: 3px 0 9px;
+    font-weight: 600;
+    position: relative;
+}
+
+.tl_metawizard .lang button {
+    position: absolute;
+    right: 0;
+    top: -1px;
+}
+
+@media (resolution >= 2dppx) {
+    .tl_metawizard .lang {
+        font-weight: 500;
+    }
+}
+
+/* Section wizard */
+.tl_sectionwizard {
+    margin-top: 2px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.tl_sectionwizard td {
+    width: 25%;
+    position: relative;
+    padding: 0 3px 0 0;
+}
+
+.tl_sectionwizard th {
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 0 4px 1px 0;
+}
+
+@media (resolution >= 2dppx) {
+    .tl_sectionwizard th {
+        font-weight: 300;
+    }
+}
+
+.tl_sectionwizard td:first-child,
+.tl_sectionwizard td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}

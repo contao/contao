@@ -17,7 +17,7 @@ use Contao\CoreBundle\Util\CachingTraversable;
 /**
  * @implements \IteratorAggregate<int, FilesystemItem>
  */
-class FilesystemItemIterator implements \IteratorAggregate
+class FilesystemItemIterator implements \IteratorAggregate, \Countable
 {
     private const MEDIA_TYPE_SORT_ORDER = [
         // Video
@@ -164,6 +164,11 @@ class FilesystemItemIterator implements \IteratorAggregate
         }
 
         return null;
+    }
+
+    public function count(): int
+    {
+        return \count($this->toArray());
     }
 
     /**

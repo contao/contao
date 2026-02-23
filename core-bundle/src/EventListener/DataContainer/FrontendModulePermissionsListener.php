@@ -56,12 +56,18 @@ class FrontendModulePermissionsListener
     {
         $options = [];
 
-        $modules = $this->connection->fetchAllAssociative('
-            SELECT m.id, m.name, m.type, t.name AS theme
-            FROM tl_module m
-            LEFT JOIN tl_theme t ON m.pid=t.id
-            ORDER BY t.name, m.name
-        ');
+        $modules = $this->connection->fetchAllAssociative(
+            <<<'SQL'
+                SELECT
+                    m.id,
+                    m.name,
+                    m.type,
+                    t.name AS theme
+                FROM tl_module m
+                LEFT JOIN tl_theme t ON m.pid = t.id
+                ORDER BY t.name, m.name
+                SQL,
+        );
 
         foreach ($modules as $module) {
             if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, $module['type'])) {

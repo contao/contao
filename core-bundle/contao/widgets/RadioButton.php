@@ -65,7 +65,7 @@ class RadioButton extends Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue, true);
 				break;
 
 			default:

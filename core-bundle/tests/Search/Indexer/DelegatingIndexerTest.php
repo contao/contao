@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Search\Indexer;
 
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\DelegatingIndexer;
+use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -21,47 +22,159 @@ class DelegatingIndexerTest extends TestCase
 {
     public function testDelegatesTheMethodCalls(): void
     {
-        $indexer1 = $this->createMock(IndexerInterface::class);
-        $indexer1
-            ->expects($this->once())
-            ->method('index')
-            ->with($this->isInstanceOf(Document::class))
-        ;
-
-        $indexer1
-            ->expects($this->once())
-            ->method('delete')
-            ->with($this->isInstanceOf(Document::class))
-        ;
-
-        $indexer1
-            ->expects($this->once())
-            ->method('clear')
-        ;
-
-        $indexer2 = $this->createMock(IndexerInterface::class);
-        $indexer2
-            ->expects($this->once())
-            ->method('index')
-            ->with($this->isInstanceOf(Document::class))
-        ;
-
-        $indexer2
-            ->expects($this->once())
-            ->method('delete')
-            ->with($this->isInstanceOf(Document::class))
-        ;
-
-        $indexer2
-            ->expects($this->once())
-            ->method('clear')
-        ;
+        $indexer1 = $this->createIndexer();
+        $indexer2 = $this->createIndexer();
 
         $delegating = new DelegatingIndexer();
         $delegating->addIndexer($indexer1);
         $delegating->addIndexer($indexer2);
-        $delegating->index($this->createMock(Document::class));
-        $delegating->delete($this->createMock(Document::class));
+        $delegating->index($this->createStub(Document::class));
+        $delegating->delete($this->createStub(Document::class));
         $delegating->clear();
+    }
+
+    public function testDelegatesAndCollectsIndexerExceptions(): void
+    {
+        $firstException = IndexerException::createAsWarning('Warning 1');
+
+        $indexer1 = $this->createIndexer($firstException);
+        $indexer2 = $this->createIndexer(new IndexerException('Failure 2'));
+        $indexer3 = $this->createIndexer();
+
+        $delegating = new DelegatingIndexer();
+        $delegating->addIndexer($indexer1);
+        $delegating->addIndexer($indexer2);
+        $delegating->addIndexer($indexer3);
+
+        try {
+            $delegating->index($this->createStub(Document::class));
+        } catch (IndexerException $exception) {
+            $this->assertSame('Warning 1 | Failure 2', $exception->getMessage());
+            $this->assertFalse($exception->isOnlyWarning());
+            $this->assertSame($firstException, $exception->getPrevious());
+        }
+
+        try {
+            $delegating->delete($this->createStub(Document::class));
+        } catch (IndexerException $exception) {
+            $this->assertSame('Warning 1 | Failure 2', $exception->getMessage());
+            $this->assertFalse($exception->isOnlyWarning());
+            $this->assertSame($firstException, $exception->getPrevious());
+        }
+
+        try {
+            $delegating->clear();
+        } catch (IndexerException $exception) {
+            $this->assertSame('Warning 1 | Failure 2', $exception->getMessage());
+            $this->assertFalse($exception->isOnlyWarning());
+            $this->assertSame($firstException, $exception->getPrevious());
+        }
+    }
+
+    public function testGeneralExceptionsThrowImmediately(): void
+    {
+        $indexer1 = $this->createIndexer(IndexerException::createAsWarning('Warning 1'));
+        $indexer2 = $this->createIndexer(new \LogicException('General failure 1'));
+        $indexer3 = $this->createIndexer(new IndexerException('Failure 3'), false);
+
+        $delegating = new DelegatingIndexer();
+        $delegating->addIndexer($indexer1);
+        $delegating->addIndexer($indexer2);
+        $delegating->addIndexer($indexer3);
+
+        try {
+            $delegating->index($this->createStub(Document::class));
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf(\LogicException::class, $exception);
+            $this->assertSame('General failure 1', $exception->getMessage());
+        }
+
+        try {
+            $delegating->delete($this->createStub(Document::class));
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf(\LogicException::class, $exception);
+            $this->assertSame('General failure 1', $exception->getMessage());
+        }
+
+        try {
+            $delegating->clear();
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf(\LogicException::class, $exception);
+            $this->assertSame('General failure 1', $exception->getMessage());
+        }
+    }
+
+    public function testWarningExceptionCollectionOnly(): void
+    {
+        $firstException = IndexerException::createAsWarning('Warning 1');
+
+        $indexer1 = $this->createIndexer($firstException);
+        $indexer2 = $this->createIndexer(IndexerException::createAsWarning('Warning 2'));
+
+        $delegating = new DelegatingIndexer();
+        $delegating->addIndexer($indexer1);
+        $delegating->addIndexer($indexer2);
+
+        try {
+            $delegating->index($this->createStub(Document::class));
+        } catch (IndexerException $exception) {
+            $this->assertSame('Warning 1 | Warning 2', $exception->getMessage());
+            $this->assertTrue($exception->isOnlyWarning());
+            $this->assertSame($firstException, $exception->getPrevious());
+        }
+
+        try {
+            $delegating->delete($this->createStub(Document::class));
+        } catch (IndexerException $exception) {
+            $this->assertSame('Warning 1 | Warning 2', $exception->getMessage());
+            $this->assertTrue($exception->isOnlyWarning());
+            $this->assertSame($firstException, $exception->getPrevious());
+        }
+
+        try {
+            $delegating->clear();
+        } catch (IndexerException $exception) {
+            $this->assertSame('Warning 1 | Warning 2', $exception->getMessage());
+            $this->assertTrue($exception->isOnlyWarning());
+            $this->assertSame($firstException, $exception->getPrevious());
+        }
+    }
+
+    private function createIndexer(\Throwable|null $indexerException = null, bool $expectsCalls = true): IndexerInterface
+    {
+        $indexer = $this->createMock(IndexerInterface::class);
+
+        $invocationMocker = $indexer
+            ->expects($expectsCalls ? $this->once() : $this->never())
+            ->method('index')
+        ;
+
+        $invocationMocker->with($this->isInstanceOf(Document::class));
+
+        if ($indexerException) {
+            $invocationMocker->willThrowException($indexerException);
+        }
+
+        $invocationMocker = $indexer
+            ->expects($expectsCalls ? $this->once() : $this->never())
+            ->method('delete')
+        ;
+
+        $invocationMocker->with($this->isInstanceOf(Document::class));
+
+        if ($indexerException) {
+            $invocationMocker->willThrowException($indexerException);
+        }
+
+        $invocationMocker = $indexer
+            ->expects($expectsCalls ? $this->once() : $this->never())
+            ->method('clear')
+        ;
+
+        if ($indexerException) {
+            $invocationMocker->willThrowException($indexerException);
+        }
+
+        return $indexer;
     }
 }

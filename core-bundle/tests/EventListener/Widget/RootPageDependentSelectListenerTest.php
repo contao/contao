@@ -20,6 +20,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -37,12 +38,12 @@ class RootPageDependentSelectListenerTest extends TestCase
     public function testDoesNotAddWizardWhenNoValuesSet(): void
     {
         $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
         $dataContainer->value = serialize([]);
 
         $this->assertSame('', $listener->wizardCallback($dataContainer));
@@ -60,12 +61,12 @@ class RootPageDependentSelectListenerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration('/directory/project'));
 
         $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(UrlGeneratorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
             $translator,
         );
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
         $dataContainer->value = serialize([
             '1' => '10',
             '2' => '20',
@@ -79,9 +80,9 @@ class RootPageDependentSelectListenerTest extends TestCase
     public function testDoesNotSaveUnserializableData(): void
     {
         $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Connection::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame('foobar', $listener->saveCallback('foobar'));
@@ -93,8 +94,8 @@ class RootPageDependentSelectListenerTest extends TestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -111,7 +112,7 @@ class RootPageDependentSelectListenerTest extends TestCase
     {
         $this->populateGlobalsArray([]);
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesMock(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
 
@@ -125,8 +126,8 @@ class RootPageDependentSelectListenerTest extends TestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -154,7 +155,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             ],
         ]);
 
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer = $this->createClassWithPropertiesMock(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
 
@@ -168,8 +169,8 @@ class RootPageDependentSelectListenerTest extends TestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(TranslatorInterface::class),
         );
 
         $this->assertSame(
@@ -193,7 +194,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         unset($GLOBALS['TL_DCA']['tl_module']['fields']);
     }
 
-    private function mockGetRootPages(): Connection
+    private function mockGetRootPages(): Connection&MockObject
     {
         $result = $this->createMock(Result::class);
         $result
@@ -223,7 +224,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         return $connection;
     }
 
-    private function mockGetModules(): Connection
+    private function mockGetModules(): Connection&MockObject
     {
         $result = $this->createMock(Result::class);
         $result

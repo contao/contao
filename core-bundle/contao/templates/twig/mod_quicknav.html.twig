@@ -1,0 +1,26 @@
+{% extends '@Contao/block_unsearchable.html.twig' %}
+
+{% block content %}
+
+    <form method="post">
+        <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            <div class="widget widget-select">
+                <label for="ctrl_target" class="invisible">{{ targetPage }}</label>
+                <select name="target" id="ctrl_target" class="select">
+                    <option value="">{{ title }}</option>
+                    {% for item in items %}
+                        <option value="{{ item.href }}" {% if item.active %} selected{% endif %}>
+                            {{- ' &nbsp; '|u.repeat(item.level) }}{{ item.link -}}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="widget widget-submit">
+                <button type="submit" class="submit">{{ button }}</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

@@ -22,15 +22,15 @@ class SymlinkedLocalFilesProviderTest extends TestCase
 {
     public function testGetUri(): void
     {
-        $adapter = $this->createMock(LocalFilesystemAdapter::class);
+        $adapter = $this->createStub(LocalFilesystemAdapter::class);
 
-        $request = $this->createMock(Request::class);
+        $request = $this->createStub(Request::class);
         $request
             ->method('getSchemeAndHttpHost')
             ->willReturn('https://example.com')
         ;
 
-        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack = $this->createStub(RequestStack::class);
         $requestStack
             ->method('getCurrentRequest')
             ->willReturn($request)
@@ -46,13 +46,13 @@ class SymlinkedLocalFilesProviderTest extends TestCase
     public function testGetUriWithNonMatchingAdapter(): void
     {
         $provider = new SymlinkedLocalFilesProvider(
-            $this->createMock(LocalFilesystemAdapter::class),
+            $this->createStub(LocalFilesystemAdapter::class),
             'upload/dir',
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
         );
 
         $uri = $provider->getUri(
-            $this->createMock(LocalFilesystemAdapter::class),
+            $this->createStub(LocalFilesystemAdapter::class),
             'path/to/resource.txt',
             null,
         );

@@ -20,6 +20,7 @@ use Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin as FixturesPlugin;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\NewsBundle\ContaoNewsBundle;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -44,9 +45,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $this->assertTrue($command->getDefinition()->hasOption('bundles'));
     }
 
-    /**
-     * @dataProvider commandOutputProvider
-     */
+    #[DataProvider('commandOutputProvider')]
     public function testCommandOutput(array $plugins, array $bundles, array $arguments, string $expectedOutput): void
     {
         $command = new DebugPluginsCommand($this->getKernel($plugins, $bundles));
@@ -134,7 +133,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
             ->willReturn($plugins)
         ;
 
-        $kernel = $this->createMock(ContaoKernel::class);
+        $kernel = $this->createStub(ContaoKernel::class);
         $kernel
             ->method('getContainer')
             ->willReturn($container)

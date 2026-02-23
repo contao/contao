@@ -39,6 +39,15 @@
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the pages of your website(s)</source>
+        <target>Uredite strani na vašem spletnem mestu</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+        <target>Template Studio</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Dodaj ali uredi predloge Twig</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,6 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
+        <target>Uporabniški računi</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -151,6 +161,14 @@
         <source>Restore deleted records</source>
         <target>Modul vam omogoča obnavljanje zapisov v bazi, ki so bili pomotoma pobrisani. To ne vključuje datotek in map.</target>
       </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+        <target>Posli</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+        <target>Pregled sistemskih poslov (jobs)</target>
+      </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
         <target>Uporabniški profil</target>
@@ -165,6 +183,7 @@
       </trans-unit>
       <trans-unit id="MOD.favorites.1">
         <source>Manage your back end menu favorites</source>
+        <target>Upravljajte vaše izpostavljene elemente v meniju administracije</target>
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
@@ -400,6 +419,7 @@
       </trans-unit>
       <trans-unit id="FMD.template.1">
         <source>Generates a module to insert a custom template.</source>
+        <target>Ustvari modul za vnos prilagojene predloge.</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader (deprecated)</source>
@@ -430,6 +450,7 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the website root page</source>
+        <target>Ustvarijo se različni moduli odvisni od vrhnje strani spletnega mesta</target>
       </trans-unit>
     </body>
   </file>

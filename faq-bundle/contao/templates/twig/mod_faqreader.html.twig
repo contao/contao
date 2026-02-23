@@ -1,0 +1,55 @@
+{% extends '@Contao/block_searchable.html.twig' %}
+
+{% block content %}
+
+    {% if error|default %}
+        {{ error }}
+    {% else %}
+        <h1>{{ question }}</h1>
+
+        <div class="ce_text block">
+            {% if not addBefore|default %}
+                {{ answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+            {% endif %}
+
+            {% if addImage %}
+                {{ include('@Contao/image.html.twig') }}
+            {% endif %}
+
+            {% if addBefore|default %}
+                {{ answer|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+            {% endif %}
+        </div>
+
+        {% if enclosure %}
+            <ul class="enclosure">
+                {% for enclosure in enclosure %}
+                    <li class="download-element ext-{{ enclosure.extension }}">
+                        <a href="{{ enclosure.href }}" title="{{ enclosure.title }}">{{ enclosure.link }} <span class="size">({{ enclosure.filesize }})</span></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p class="info">{{ info }}</p>
+
+        {% if referer|default %}
+            <!-- indexer::stop -->
+            <p class="back"><a href="{{ referer }}" title="{{ back }}">{{ back }}</a></p>
+            <!-- indexer::continue -->
+        {% endif %}
+    {% endif %}
+
+    {% if allowComments|default %}
+        <div class="ce_comments block">
+            <{{ hlc }}>{{ hlcText }}</{{ hlc }}>
+            {{ comments|join|raw }}
+            {{ pagination|default|raw }}
+            <{{ hlc }}>{{ addComment }}</{{ hlc }}>
+            {{ include('@Contao/mod_comment_form.html.twig', [], true, true) }}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% do add_schema_org(getSchemaOrgData.invoke()) %}

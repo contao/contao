@@ -1,0 +1,43 @@
+{% extends '@Contao/block_unsearchable.html.twig' %}
+
+{% block content %}
+
+    <figure class="video_container">
+        {% if aspect %}
+            <div class="responsive ratio-{{ aspect }}">
+        {% endif %}
+
+        {% if splashImage|default %}
+            <a id="splashImage_{{ id }}" href="{{ src }}">
+                {{ include('@Contao/picture_default.html.twig', splashImage.picture, false) }}
+            </a>
+            <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+                document.getElementById('splashImage_{{ id|e('js') }}').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var iframe = document.createElement('iframe');
+                    iframe.src = this.href;
+                    iframe.width = '{{ width|e('js') }}';
+                    iframe.height = '{{ height|e('js') }}';
+                    iframe.setAttribute('allowfullscreen', '');
+                    this.parentNode.replaceChild(iframe, this);
+                });
+            </script>
+        {% else %}
+            <iframe{{ attrs(size)
+                .set('src', src)
+                .set('allowfullscreen', true)
+            }}></iframe>
+        {% endif %}
+
+        {% if aspect %}
+            </div>
+        {% endif %}
+
+        {% if caption %}
+            <figcaption class="caption">{{ caption|insert_tag_raw }}</figcaption>
+        {% endif %}
+    </figure>
+
+{% endblock %}
+
+{% do csp_source('frame-src', src) %}

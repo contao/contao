@@ -1,0 +1,6 @@
+{% set id = id|default('dialog') %}
+{% set dialog_outlet_attributes = attrs()
+    .set('id', id)
+    .mergeWith(dialog_outlet_attributes|default)
+%}
+<div{{ dialog_outlet_attributes }}></div>

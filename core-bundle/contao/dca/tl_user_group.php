@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('name'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'name'
 		),
 		'label' => array
@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms;{amg_legend},amg;{cud_legend},cud;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -138,7 +138,8 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['pagemounts'],
 			'inputType'               => 'pageTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('table'=>'tl_page', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'alpty' => array
 		(
@@ -169,7 +170,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'imageSizes' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
@@ -184,16 +184,8 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_form.title',
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
-		),
-		'formp' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['formp'],
-			'inputType'               => 'checkbox',
-			'options'                 => array('create', 'delete'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'amg' => array
 		(
@@ -201,6 +193,14 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL",
+			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+		),
+		'cud' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
+			'search'                  => true,
+			'inputType'               => 'cud',
 			'sql'                     => "blob NULL"
 		),
 		'alexf' => array
@@ -383,7 +383,7 @@ class tl_user_group extends Backend
 		// Get all excluded fields
 		foreach ($GLOBALS['TL_DCA'] as $k=>$v)
 		{
-			if (is_array($v['fields']))
+			if (is_array($v['fields'] ?? null))
 			{
 				foreach ($v['fields'] as $kk=>$vv)
 				{

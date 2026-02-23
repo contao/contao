@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FrontendModuleVoter;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -27,7 +28,7 @@ class FrontendModulesVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $voter = new FrontendModuleVoter($this->createMock(AccessDecisionManagerInterface::class));
+        $voter = new FrontendModuleVoter($this->createStub(AccessDecisionManagerInterface::class));
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_module'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
@@ -35,7 +36,7 @@ class FrontendModulesVoterTest extends TestCase
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
 
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
@@ -47,14 +48,12 @@ class FrontendModulesVoterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider userDataProvider
-     */
+    #[DataProvider('userDataProvider')]
     public function testUserCanOnlyAccessPermittedModuleTypes(array $userData, array $expected): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = $this->createStub(TokenInterface::class);
 
-        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $accessDecisionManager = $this->createStub(AccessDecisionManagerInterface::class);
         $accessDecisionManager
             ->method('decide')
             ->willReturnMap([

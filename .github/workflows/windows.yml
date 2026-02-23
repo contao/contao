@@ -5,7 +5,8 @@ on:
     schedule:
         - cron: 0 13 * * 1-5
 
-permissions: read-all
+permissions:
+    contents: read
 
 jobs:
     windows:
@@ -14,13 +15,13 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                contao: [4.13, 5.3, 5.x]
+                contao: [5.3, 5.7, dev-main]
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2 # not all packages are compatible with PHP 8.3 yet
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  php-version: 8.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, pdo_sqlite, sodium, zlib
                   ini-values: memory_limit=1G
                   coverage: none
 
@@ -28,10 +29,11 @@ jobs:
               run: git config --global core.autocrlf false
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   ref: ${{ matrix.contao }}
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3

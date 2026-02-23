@@ -1,7 +1,7 @@
 <?php
 
 $this->wrapperAttributes = $this
-    ->attr($this->cssID)
+    ->attrs($this->cssID)
     ->addClass([$this->class, 'block'])
     ->addStyle($this->style ?? '')
     ->set('aria-label', $this->trans('MSC.breadcrumbMenu'))
@@ -25,7 +25,7 @@ $this->wrapperAttributes = $this
         <?php if ($item['isActive']): ?>
           <li class="active" aria-current="page"><?= $item['link'] ?></li>
         <?php else: ?>
-          <li><a href="<?= $item['href'] ?>" title="<?= $item['title'] ?>"><?= $item['link'] ?></a></li>
+          <li><a href="<?= $item['href'] ?>"><?= $item['link'] ?></a></li>
         <?php endif; ?>
       <?php endforeach; ?>
     </ul>

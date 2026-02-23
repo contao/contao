@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle\EventListener;
 
-use Contao\CalendarEventsModel;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
@@ -25,9 +25,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[AsEventListener]
 class PreviewUrlCreateListener
 {
+    use DynamicPtableTrait;
+
     public function __construct(
-        private readonly RequestStack $requestStack,
         private readonly ContaoFramework $framework,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -40,34 +43,21 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
+        [$table, $id] = $this->dcaUrlAnalyzer->getCurrentTableId();
 
         // Return on the calendar list page
-        if ('tl_calendar_events' === $request->query->get('table') && !$request->query->has('act')) {
+        if (null === $id || !\in_array($table, ['tl_calendar_events', 'tl_content'], true)) {
             return;
         }
 
-        if ((!$id = $this->getId($event, $request)) || (!$eventModel = $this->getEventModel($id))) {
+        if ('tl_content' === $table) {
+            [$table, $id] = $this->getParentTableAndId($this->connection, $table, $id);
+        }
+
+        if ('tl_calendar_events' !== $table) {
             return;
         }
 
-        $event->setQuery('calendar='.$eventModel->id);
-    }
-
-    private function getId(PreviewUrlCreateEvent $event, Request $request): int|string
-    {
-        // Overwrite the ID if the event settings are edited
-        if ('tl_calendar_events' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
-            return $request->query->get('id');
-        }
-
-        return $event->getId();
-    }
-
-    private function getEventModel(int|string $id): CalendarEventsModel|null
-    {
-        return $this->framework->getAdapter(CalendarEventsModel::class)->findById($id);
+        $event->setQuery('calendar='.$id);
     }
 }

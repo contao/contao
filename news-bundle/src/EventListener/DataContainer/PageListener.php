@@ -12,57 +12,37 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener\DataContainer;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
-use Contao\DataContainer;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
+use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Doctrine\DBAL\Connection;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PageListener
 {
     public function __construct(
         private readonly Connection $connection,
-        private readonly Security $security,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
-    }
-
-    #[AsCallback('tl_page', target: 'config.onload')]
-    public function onLoad(DataContainer $dc): void
-    {
-        $type = $dc->getCurrentRecord()['type'] ?? null;
-
-        if (!$type || NewsFeedController::TYPE !== $type[0]) {
-            return;
-        }
-
-        $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class'] = 'clr w50';
     }
 
     #[AsCallback('tl_page', target: 'fields.newsArchives.options')]
     public function getAllowedArchives(): array
     {
-        $user = $this->security->getUser();
-
-        $qb = $this->connection->createQueryBuilder()
+        $archives = $this->connection->createQueryBuilder()
             ->select('id, title')
             ->from('tl_news_archive')
+            ->fetchAllKeyValue()
         ;
 
-        if ($user instanceof BackendUser && !$this->security->isGranted('ROLE_ADMIN')) {
-            $qb->where($qb->expr()->in('id', $user->news));
+        foreach (array_keys($archives) as $id) {
+            if (!$this->authorizationChecker->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, (int) $id)) {
+                unset($archives[$id]);
+            }
         }
 
-        $results = $qb->executeQuery();
-
-        $options = [];
-
-        foreach ($results->fetchAllAssociative() as $archive) {
-            $options[$archive['id']] = $archive['title'];
-        }
-
-        return $options;
+        return $archives;
     }
 
     #[AsHook('getPageStatusIcon')]

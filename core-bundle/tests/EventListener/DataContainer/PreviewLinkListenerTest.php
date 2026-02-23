@@ -20,9 +20,11 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ClockMock;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -30,13 +32,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PreviewLinkListenerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        ClockMock::register(PreviewLinkListener::class);
-    }
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
@@ -49,13 +44,14 @@ class PreviewLinkListenerTest extends TestCase
         $GLOBALS['BE_MOD']['system'] = ['preview_link' => ['foo']];
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
-            $this->createMock(Connection::class),
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(Connection::class),
+            $this->createStub(Security::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
+            new MockClock(),
             '',
         );
 
@@ -68,16 +64,18 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testUnsetsTheDcaTableWithoutPreviewScript(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA'] = ['tl_preview_link' => ['config' => ['foo']]];
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
-            $this->createMock(Connection::class),
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(Connection::class),
+            $this->createStub(Security::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
+            new MockClock(),
             '',
         );
 
@@ -88,16 +86,18 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testDoesNotUnloadOtherTables(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA'] = ['tl_preview_link' => 'foo', 'tl_member' => 'bar'];
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework(),
-            $this->createMock(Connection::class),
-            $this->createMock(Security::class),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createContaoFrameworkStub(),
+            $this->createStub(Connection::class),
+            $this->createStub(Security::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
+            new MockClock(),
             '',
         );
 
@@ -106,13 +106,9 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertSame(['tl_preview_link' => 'foo', 'tl_member' => 'bar'], $GLOBALS['TL_DCA']);
     }
 
-    /**
-     * @dataProvider defaultDcaValueProvider
-     */
+    #[DataProvider('defaultDcaValueProvider')]
     public function testSetsTheDefaultValueForDcaFields(string $url, bool $showUnpublished, int $userId): void
     {
-        ClockMock::withClockMock(true);
-
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
@@ -126,31 +122,29 @@ class PreviewLinkListenerTest extends TestCase
         ];
 
         $input = $this->mockInputAdapter(['url' => $url, 'showUnpublished' => $showUnpublished]);
+        $clock = new MockClock();
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
-            $this->createMock(Connection::class),
+            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
+            $this->createStub(Connection::class),
             $this->mockSecurity($userId),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
+            $clock,
             '/preview.php',
         );
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
-        $now = ClockMock::time();
-
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
         $listener->createFromUrl($dc);
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default']);
         $this->assertSame($showUnpublished, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default']);
-        $this->assertSame($now, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
-        $this->assertSame(strtotime('+1 day', $now), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
+        $this->assertSame($clock->now()->getTimestamp(), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
+        $this->assertSame(strtotime('+1 day', $clock->now()->getTimestamp()), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
-
-        ClockMock::withClockMock(false);
     }
 
     public static function defaultDcaValueProvider(): iterable
@@ -178,17 +172,18 @@ class PreviewLinkListenerTest extends TestCase
         $input = $this->mockInputAdapter(['act' => 'create', 'url' => '/preview.php/foo/bar']);
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
-            $this->createMock(Connection::class),
+            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
+            $this->createStub(Connection::class),
             $this->mockSecurity(),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
+            new MockClock(),
             '/preview.php',
         );
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
 
         $listener->createFromUrl($dc);
 
@@ -205,17 +200,18 @@ class PreviewLinkListenerTest extends TestCase
         $input = $this->mockInputAdapter(['act' => 'create']);
 
         $listener = new PreviewLinkListener(
-            $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
-            $this->createMock(Connection::class),
+            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
+            $this->createStub(Connection::class),
             $this->mockSecurity(),
-            $this->createMock(RequestStack::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->createMock(UrlGeneratorInterface::class),
-            $this->createMock(UriSigner::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(UriSigner::class),
+            new MockClock(),
             '/preview.php',
         );
 
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
 
         $listener->createFromUrl($dc);
 
@@ -224,7 +220,7 @@ class PreviewLinkListenerTest extends TestCase
 
     private function mockSecurity(int $userId = 42): Security&MockObject
     {
-        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
         $security
@@ -244,11 +240,11 @@ class PreviewLinkListenerTest extends TestCase
     }
 
     /**
-     * @return Adapter<Input>&MockObject
+     * @return Adapter<Input>&Stub
      */
-    private function mockInputAdapter(array $inputData): Adapter&MockObject
+    private function mockInputAdapter(array $inputData): Adapter&Stub
     {
-        $inputAdapter = $this->mockAdapter(['get']);
+        $inputAdapter = $this->createAdapterStub(['get']);
         $inputAdapter
             ->method('get')
             ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)

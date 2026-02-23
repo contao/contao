@@ -23,6 +23,6 @@ class TestController extends AbstractContentElementController
 {
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
-        return new JsonResponse(array_merge($template->getData(), ['templateName' => $template->getName()]));
+        return new JsonResponse([...$template->getData(), 'templateName' => $template->getName()]);
     }
 }

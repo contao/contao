@@ -1,0 +1,27 @@
+#tl_buttons + .tl_edit_form .tl_formbody_edit {
+    border-top: 1px solid var(--border);
+}
+
+.tl_formbody_submit {
+    border-top: 1px solid var(--content-border);
+    position: sticky;
+    bottom: 0;
+    z-index: 3; /* Above TinyMCE */
+}
+
+.tl_submit_container {
+    padding: 8px 12px;
+    background: var(--panel-bg);
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+}
+
+.popup,
+.tl_formbody_submit.is-sticky {
+    .tl_submit_container {
+        border-radius: 0;
+    }
+}
+
+.tl_submit_container .tl_submit {
+    margin: 2px 0;
+}

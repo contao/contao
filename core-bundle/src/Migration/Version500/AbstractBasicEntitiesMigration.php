@@ -53,7 +53,12 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $test = $this->connection->fetchOne(
-                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;",
+                <<<SQL
+                    SELECT TRUE
+                    FROM $table
+                    WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+                    LIMIT 1
+                    SQL,
             );
 
             if (false !== $test) {
@@ -77,17 +82,20 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             }
 
             $values = $this->connection->fetchAllKeyValue(
-                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'",
+                <<<SQL
+                    SELECT
+                        id,
+                        `$column`
+                    FROM $table
+                    WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+                    SQL,
             );
 
             foreach ($values as $id => $value) {
-                $value = StringUtil::deserialize($value);
+                $value = StringUtil::restoreBasicEntities(StringUtil::deserialize($value));
 
                 if (\is_array($value)) {
-                    array_walk_recursive($value, static fn (&$v) => $v = StringUtil::restoreBasicEntities($v));
                     $value = serialize($value);
-                } else {
-                    $value = StringUtil::restoreBasicEntities($value);
                 }
 
                 $this->connection->update($table, [$column => $value], ['id' => (int) $id]);

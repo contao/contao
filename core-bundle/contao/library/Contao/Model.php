@@ -16,6 +16,7 @@ use Contao\Model\Collection;
 use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Filesystem\Path;
 
@@ -139,7 +140,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (str_contains($k, '__'))
+				if (static::isJoinedField($k))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -231,7 +232,12 @@ abstract class Model
 	public function cloneDetached()
 	{
 		$clone = clone $this;
-		$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+
+		if (isset($this->arrData[static::$strPk]))
+		{
+			$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		}
+
 		$clone->preventSaving(false);
 
 		return $clone;
@@ -257,7 +263,7 @@ abstract class Model
 
 		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s is deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
 		}
 	}
 
@@ -370,9 +376,9 @@ abstract class Model
 	 */
 	public function setRow(array $arrData)
 	{
-		foreach ($arrData as $k=>$v)
+		foreach ($arrData as $k => $v)
 		{
-			if (str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				unset($arrData[$k]);
 			}
@@ -381,6 +387,14 @@ abstract class Model
 		foreach ($arrData as $strKey => $varValue)
 		{
 			$arrData[$strKey] = static::convertToPhpValue($strKey, $varValue);
+		}
+
+		$container = System::getContainer();
+
+		// Expand virtual fields
+		if ($container->has('contao.data_container.virtual_fields_handler'))
+		{
+			$arrData = $container->get('contao.data_container.virtual_fields_handler')->expandFields($arrData, static::$strTable);
 		}
 
 		$this->arrData = $arrData;
@@ -399,7 +413,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				continue;
 			}
@@ -444,7 +458,7 @@ abstract class Model
 		{
 			foreach ($table->getColumns() as $column)
 			{
-				$type = strtolower($column->getType()->getName());
+				$type = strtolower(Type::getTypeRegistry()->lookupName($column->getType()));
 
 				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
 				{
@@ -537,13 +551,32 @@ abstract class Model
 		}
 
 		$objDatabase = Database::getInstance();
+		$objDca = DcaExtractor::getInstance(static::$strTable);
 		$arrFields = $objDatabase->getFieldNames(static::$strTable);
+		$arrRow = $this->row();
+
+		$container = System::getContainer();
+
+		// Combine virtual fields
+		if ($container->has('contao.data_container.virtual_fields_handler'))
+		{
+			$arrRow = $container->get('contao.data_container.virtual_fields_handler')->combineFields($arrRow, static::$strTable);
+		}
 
 		// The model is in the registry
 		if (Registry::getInstance()->isRegistered($this))
 		{
 			$arrSet = array();
-			$arrRow = $this->row();
+			$arrTypes = array();
+
+			// Mark virtual field targets as modified, if virtual field is modified
+			foreach ($objDca->getVirtualFields() as $virtualField => $target)
+			{
+				if (\array_key_exists($virtualField, $this->arrModified))
+				{
+					$this->arrModified[$target] = $arrRow[$target];
+				}
+			}
 
 			// Only update modified fields
 			foreach ($this->arrModified as $k=>$v)
@@ -563,6 +596,9 @@ abstract class Model
 				return $this;
 			}
 
+			// Ensure JSON data type for virtual field targets when saving to database
+			$arrTypes = array_map(static fn (string $k) => \in_array($k, $objDca->getVirtualTargets()) ? Types::JSON : null, array_keys($arrSet));
+
 			// Track primary key changes
 			$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
@@ -572,9 +608,9 @@ abstract class Model
 			}
 
 			// Update the row
-			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
+			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 						->set($arrSet)
-						->execute($intPk);
+						->query('', array(...array_values($arrSet), $intPk), array_values($arrTypes));
 
 			$this->postSave(self::UPDATE);
 			$this->arrModified = array(); // reset after postSave()
@@ -583,7 +619,7 @@ abstract class Model
 		// The model is not yet in the registry
 		else
 		{
-			$arrSet = $this->row();
+			$arrSet = $arrRow;
 
 			// Remove fields that do not exist in the DB
 			foreach ($arrSet as $k=>$v)
@@ -602,10 +638,13 @@ abstract class Model
 				return $this;
 			}
 
+			// Ensure JSON data type for virtual field targets when saving to database
+			$arrTypes = array_map(static fn (string $k) => \in_array($k, $objDca->getVirtualTargets()) ? Types::JSON : null, array_keys($arrSet));
+
 			// Insert a new row
 			$stmt = $objDatabase->prepare("INSERT INTO " . static::$strTable . " %s")
 								->set($arrSet)
-								->execute();
+								->query('', array_values($arrSet), array_values($arrTypes));
 
 			if (static::$strPk == 'id')
 			{
@@ -657,7 +696,7 @@ abstract class Model
 		$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
 		// Delete the row
-		$intAffected = Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
+		$intAffected = Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 											   ->execute($intPk)
 											   ->affectedRows;
 
@@ -788,7 +827,7 @@ abstract class Model
 		$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
 		// Reload the database record
-		$res = Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
+		$res = Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 									   ->execute($intPk);
 
 		$this->setRow($res->row());
@@ -836,7 +875,7 @@ abstract class Model
 		{
 			$varAliasValue = $this->{$strColumn};
 
-			if (!$registry->isRegisteredAlias($this, $strColumn, $varAliasValue))
+			if (null !== $varAliasValue && !$registry->isRegisteredAlias($this, $strColumn, $varAliasValue))
 			{
 				$registry->registerAlias($this, $strColumn, $varAliasValue);
 			}
@@ -975,7 +1014,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("CAST($t.alias AS BINARY) = ?") : array("$t.id = ?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
@@ -1258,7 +1297,7 @@ abstract class Model
 		{
 			if (($arrOptions['return'] ?? null) == 'Array')
 			{
-				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries is deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 				return array();
 			}
@@ -1283,7 +1322,7 @@ abstract class Model
 
 		if (($arrOptions['return'] ?? null) == 'Array')
 		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries is deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
@@ -1454,5 +1493,15 @@ abstract class Model
 		}
 
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+	}
+
+	/**
+	 * This method is a hot path so caching the keys gets rid of thousands of str_contains() calls.
+	 */
+	protected static function isJoinedField(string $key): bool
+	{
+		static $cache = array();
+
+		return $cache[$key] ??= str_contains($key, '__');
 	}
 }

@@ -20,14 +20,14 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
 {
     public function testReturnsAllNewsFeeds(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
             ->with('news_feed')
             ->willReturn(
                 [
-                    $this->mockClassWithProperties(
+                    $this->createClassWithPropertiesStub(
                         PageModel::class,
                         [
                             'id' => 1,
@@ -35,7 +35,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                             'feedFormat' => 'rss',
                         ],
                     ),
-                    $this->mockClassWithProperties(
+                    $this->createClassWithPropertiesStub(
                         PageModel::class,
                         [
                             'id' => 2,
@@ -43,7 +43,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                             'feedFormat' => 'atom',
                         ],
                     ),
-                    $this->mockClassWithProperties(
+                    $this->createClassWithPropertiesStub(
                         PageModel::class,
                         [
                             'id' => 3,
@@ -55,7 +55,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
             )
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
         $listener = new LayoutFeedOptionsListener($framework);
 
         $this->assertSame(
@@ -70,7 +70,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
 
     public function testReturnsEmptyArrayIfNoFeedsExist(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter = $this->createAdapterMock(['findByType']);
         $pageAdapter
             ->expects($this->once())
             ->method('findByType')
@@ -78,7 +78,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
             ->willReturn(null)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
         $listener = new LayoutFeedOptionsListener($framework);
 
         $this->assertSame([], $listener());

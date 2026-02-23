@@ -32,7 +32,9 @@ $GLOBALS['TL_DCA']['tl_newsletter_deny_list'] = array
 		),
 		'pid' => array
 		(
+			'foreignKey'              => 'tl_newsletter_channel.email',
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'hash' => array
 		(

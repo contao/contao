@@ -12,10 +12,31 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
-use PHPUnit\Runner\BeforeFirstTestHook;
+use PHPUnit\Event\Application\Started;
+use PHPUnit\Event\Application\StartedSubscriber;
+use PHPUnit\Runner\Extension\Extension;
+use PHPUnit\Runner\Extension\Facade;
+use PHPUnit\Runner\Extension\ParameterCollection;
+use PHPUnit\TextUI\Configuration\Configuration;
 
-class WarnXdebugPhpunitExtension implements BeforeFirstTestHook
+class WarnXdebugPhpunitExtension implements Extension
 {
+    public function bootstrap(Configuration $configuration, Facade $facade, ParameterCollection $parameters): void
+    {
+        $facade->registerSubscriber(
+            new class($this) implements StartedSubscriber {
+                public function __construct(private readonly WarnXdebugPhpunitExtension $extension)
+                {
+                }
+
+                public function notify(Started $event): void
+                {
+                    $this->extension->executeBeforeFirstTest();
+                }
+            },
+        );
+    }
+
     public function executeBeforeFirstTest(): void
     {
         if (\is_callable('xdebug_info') && [] !== xdebug_info('mode') && ['off'] !== xdebug_info('mode')) {

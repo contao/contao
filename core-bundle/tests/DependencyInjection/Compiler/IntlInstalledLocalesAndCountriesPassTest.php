@@ -27,8 +27,12 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $container
             ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive(['contao.intl.locales'], ['contao.intl.countries'])
             ->willReturn(false)
+        ;
+
+        $container
+            ->expects($this->never())
+            ->method('findDefinition')
         ;
 
         $pass = new IntlInstalledLocalesAndCountriesPass();
@@ -46,8 +50,8 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableLocales = $container->getDefinition('contao.intl.locales')->getArgument(2);
-        $enabledLocales = $container->getDefinition('contao.intl.locales')->getArgument(3);
+        $availableLocales = $container->getDefinition('contao.intl.locales')->getArgument(1);
+        $enabledLocales = $container->getDefinition('contao.intl.locales')->getArgument(2);
 
         $this->assertIsArray($availableLocales);
         $this->assertNotEmpty($availableLocales);
@@ -74,7 +78,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableCountries = $container->getDefinition('contao.intl.countries')->getArgument(2);
+        $availableCountries = $container->getDefinition('contao.intl.countries')->getArgument(1);
 
         $this->assertIsArray($availableCountries);
         $this->assertNotEmpty($availableCountries);

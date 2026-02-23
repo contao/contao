@@ -30,7 +30,7 @@ use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle;
+use Webauthn\Bundle\WebauthnBundle;
 
 class PluginTest extends TestCase
 {
@@ -57,10 +57,6 @@ class PluginTest extends TestCase
         $this->assertSame([], $bundles[3]->getReplace());
         $this->assertSame([], $bundles[3]->getLoadAfter());
 
-        $this->assertSame(Terminal42ServiceAnnotationBundle::class, $bundles[4]->getName());
-        $this->assertSame([], $bundles[4]->getReplace());
-        $this->assertSame([], $bundles[4]->getLoadAfter());
-
         $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
         $this->assertSame(['core'], $bundles[5]->getReplace());
 
@@ -80,6 +76,7 @@ class PluginTest extends TestCase
                 SecurityBundle::class,
                 TwigBundle::class,
                 CmfRoutingBundle::class,
+                WebauthnBundle::class,
             ],
             $loadAfter,
         );
@@ -93,13 +90,13 @@ class PluginTest extends TestCase
             ->method('load')
         ;
 
-        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $resolver = $this->createStub(LoaderResolverInterface::class);
         $resolver
             ->method('resolve')
             ->willReturn($loader)
         ;
 
         $plugin = new Plugin();
-        $plugin->getRouteCollection($resolver, $this->createMock(KernelInterface::class));
+        $plugin->getRouteCollection($resolver, $this->createStub(KernelInterface::class));
     }
 }

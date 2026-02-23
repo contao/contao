@@ -68,7 +68,7 @@ class FrontendControllerTest extends TestCase
 
     public function testRunsTheCronJobsUponGetRequests(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $cron = $this->createMock(Cron::class);
         $cron
@@ -97,7 +97,7 @@ class FrontendControllerTest extends TestCase
 
     public function testDoesNotRunTheCronJobsUponPostRequests(): void
     {
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
         $cron = $this->createMock(Cron::class);
         $cron

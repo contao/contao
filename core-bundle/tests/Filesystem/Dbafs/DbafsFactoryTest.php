@@ -24,10 +24,10 @@ class DbafsFactoryTest extends TestCase
 {
     public function testCreatesDbafsInstance(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $filesystem = $this->createMock(VirtualFilesystemInterface::class);
-        $hashGenerator = $this->createMock(HashGeneratorInterface::class);
+        $connection = $this->createStub(Connection::class);
+        $eventDispatcher = $this->createStub(EventDispatcherInterface::class);
+        $filesystem = $this->createStub(VirtualFilesystemInterface::class);
+        $hashGenerator = $this->createStub(HashGeneratorInterface::class);
 
         $factory = new DbafsFactory($connection, $eventDispatcher);
         $dbafs = $factory($filesystem, $hashGenerator, 'tl_foo');

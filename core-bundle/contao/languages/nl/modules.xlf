@@ -41,6 +41,14 @@
         <source>Set up the pages of your website(s)</source>
         <target>Stel de pagina's van uw website(s) in</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+        <target>Template studio</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Voeg Twig-sjablonen toe of bewerk ze</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Templates</target>
@@ -152,6 +160,14 @@
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
         <target>Herstel verwijderde bestanden.</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+        <target>Taken</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+        <target>Overzicht van de systeemtaken</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>

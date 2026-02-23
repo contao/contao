@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Twig\Error\LoaderError;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
-use Twig\TemplateWrapper;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
@@ -29,7 +30,7 @@ use Twig\TokenParser\IncludeTokenParser;
  *
  * @see IncludeTokenParser
  *
- * @experimental
+ * @internal
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
@@ -39,41 +40,20 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
 
     public function parse(Token $token): IncludeNode
     {
-        $expr = $this->parser->getExpressionParser()->parseExpression();
+        $nameExpression = $this->parser->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
         // Handle Contao includes
-        $this->traverseAndAdjustTemplateNames($expr);
+        if ($contaoNameExpression = $this->traverseAndAdjustTemplateNames($nameExpression, $ignoreMissing)) {
+            $nameExpression = $contaoNameExpression;
+        }
 
-        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine());
+        return new IncludeNode($nameExpression, $variables, $only, $ignoreMissing, $token->getLine());
     }
 
     public function getTag(): string
     {
         return 'include';
-    }
-
-    /**
-     * Return the adjusted logical name or the unchanged input if it does not match
-     * the Contao Twig namespace.
-     */
-    public static function adjustTemplateName(TemplateWrapper|string $name, ContaoFilesystemLoader $filesystemLoader): TemplateWrapper|string
-    {
-        if ($name instanceof TemplateWrapper) {
-            return $name;
-        }
-
-        $parts = ContaoTwigUtil::parseContaoName($name);
-
-        if ('Contao' !== ($parts[0] ?? null)) {
-            return $name;
-        }
-
-        try {
-            return $filesystemLoader->getFirst($parts[1] ?? '');
-        } catch (\LogicException $e) {
-            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
-        }
     }
 
     private function parseArguments(): array
@@ -91,7 +71,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         $variables = null;
 
         if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
-            $variables = $this->parser->getExpressionParser()->parseExpression();
+            $variables = $this->parser->parseExpression();
         }
 
         $only = false;
@@ -105,29 +85,48 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         return [$variables, $only, $ignoreMissing];
     }
 
-    private function traverseAndAdjustTemplateNames(Node $node): void
+    /**
+     * Returns a Node if the given $node should be replaced, null otherwise.
+     */
+    private function traverseAndAdjustTemplateNames(Node $node, bool $ignoreMissing): AbstractExpression|null
     {
         if (!$node instanceof ConstantExpression) {
-            foreach ($node as $child) {
+            foreach ($node as $name => $child) {
                 try {
-                    $this->traverseAndAdjustTemplateNames($child);
-                } catch (\LogicException $e) {
+                    if ($adjustedNode = $this->traverseAndAdjustTemplateNames($child, $ignoreMissing)) {
+                        $node->setNode((string) $name, $adjustedNode);
+                    }
+
+                    $this->traverseAndAdjustTemplateNames($child, $ignoreMissing);
+                } catch (LoaderError $e) {
                     // Allow missing templates if they are listed in an array like "{% include
                     // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
-                        throw $e;
+                        throw new LoaderError('Optional templates are only supported in array notation.', $node->getTemplateLine(), $node->getSourceContext(), $e);
                     }
                 }
             }
 
-            return;
+            return null;
         }
 
         $name = (string) $node->getAttribute('value');
-        $adjustedName = self::adjustTemplateName($name, $this->filesystemLoader);
+        $parts = ContaoTwigUtil::parseContaoName($name);
 
-        if ($name !== $adjustedName) {
-            $node->setAttribute('value', $adjustedName);
+        if ('Contao' !== ($parts[0] ?? null)) {
+            return null;
         }
+
+        try {
+            $allFirstByThemeSlug = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
+        } catch (\LogicException $e) {
+            if ($ignoreMissing) {
+                return null;
+            }
+
+            throw new LoaderError($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', $node->getTemplateLine(), $node->getSourceContext(), $e);
+        }
+
+        return new RuntimeThemeDependentExpression($allFirstByThemeSlug);
     }
 }

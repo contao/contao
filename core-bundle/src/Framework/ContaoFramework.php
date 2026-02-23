@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Framework;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\DcaLoader;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
@@ -28,9 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
 
-/**
- * @internal Do not use this class in your code; use the "contao.framework" service instead
- */
 class ContaoFramework implements ResetInterface
 {
     private static bool $initialized = false;
@@ -45,6 +43,9 @@ class ContaoFramework implements ResetInterface
 
     private array $hookListeners = [];
 
+    /**
+     * @internal Do not use this class in your code; use the "contao.framework" service instead
+     */
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly string $projectDir,
@@ -62,6 +63,7 @@ class ContaoFramework implements ResetInterface
         }
 
         Controller::resetControllerCache();
+        DcaLoader::reset();
         Environment::reset();
         Input::setUnusedRouteParameters([]);
         InsertTags::reset();
@@ -112,7 +114,7 @@ class ContaoFramework implements ResetInterface
      *
      * @return T
      */
-    public function createInstance(string $class, array $args = [])
+    public function createInstance(string $class, array $args = []): object|null
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
             return \call_user_func_array([$class, 'getInstance'], $args);
@@ -238,14 +240,14 @@ class ContaoFramework implements ResetInterface
         foreach ($this->hookListeners as $hookName => $priorities) {
             if (isset($GLOBALS['TL_HOOKS'][$hookName]) && \is_array($GLOBALS['TL_HOOKS'][$hookName])) {
                 if (isset($priorities[0])) {
-                    $priorities[0] = [...$GLOBALS['TL_HOOKS'][$hookName], ...$priorities[0]];
+                    $priorities[0] = [...array_values($GLOBALS['TL_HOOKS'][$hookName]), ...$priorities[0]];
                 } else {
                     $priorities[0] = $GLOBALS['TL_HOOKS'][$hookName];
                     krsort($priorities);
                 }
             }
 
-            $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...$priorities);
+            $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...array_values($priorities));
         }
     }
 }

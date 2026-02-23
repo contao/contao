@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_empty">
         <source>Currently there are no events.</source>
-        <target>Aktualnie mie ma żadnych nadchodzących wydarzeń.</target>
+        <target>Aktualnie nie ma żadnych nadchodzących wydarzeń.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
         <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
@@ -88,6 +88,14 @@
       <trans-unit id="MSC.eventOverview">
         <source>Back to the event overview</source>
         <target>Wstecz do przeglądu wydarzenia</target>
+      </trans-unit>
+      <trans-unit id="PTY.calendar_feed.0">
+        <source>Calendar feed</source>
+        <target>Kanał RSS kalendarza</target>
+      </trans-unit>
+      <trans-unit id="PTY.calendar_feed.1">
+        <source>Create an RSS, Atom or JSON feed from your calendars.</source>
+        <target>Utwórz kanał RSS, Atom lub JSON z kalendarzy.</target>
       </trans-unit>
     </body>
   </file>

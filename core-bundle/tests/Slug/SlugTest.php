@@ -29,12 +29,12 @@ class SlugTest extends ContaoTestCase
             ->willReturn([])
         ;
 
-        $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
+        $pageModelAdapter = $this->createAdapterMock(['findWithDetails']);
         $pageModelAdapter
             ->expects($this->atLeastOnce())
             ->method('findWithDetails')
             ->with(123)
-            ->willReturn($pageModel, null)
+            ->willReturn($pageModel)
         ;
 
         $framework = $this->createMock(ContaoFramework::class);

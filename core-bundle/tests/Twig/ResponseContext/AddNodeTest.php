@@ -33,7 +33,7 @@ class AddNodeTest extends TestCase
             1,
         );
 
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
         $compiler->compile($addNode);
 
         $expectedSource = <<<'SOURCE'

@@ -20,6 +20,7 @@ use Contao\CoreBundle\InsertTag\ParsedSequence;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class InsertTagTest extends TestCase
 {
@@ -41,9 +42,7 @@ class InsertTagTest extends TestCase
         $this->assertSame($flags, $insertTag->getFlags());
     }
 
-    /**
-     * @dataProvider getSerialize
-     */
+    #[DataProvider('getSerialize')]
     public function testSerialize(string $expected, InsertTag $insertTag): void
     {
         $this->assertSame($expected, $insertTag->serialize());

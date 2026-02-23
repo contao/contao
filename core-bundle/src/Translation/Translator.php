@@ -80,8 +80,8 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     {
         $parentCatalog = $this->translator->getCatalogue($locale);
 
-        if (!$this->catalogues->contains($parentCatalog)) {
-            $this->catalogues->attach(
+        if (!$this->catalogues->offsetExists($parentCatalog)) {
+            $this->catalogues->offsetSet(
                 $parentCatalog,
                 new MessageCatalogue($parentCatalog, $this->framework, $this->resourceFinder),
             );

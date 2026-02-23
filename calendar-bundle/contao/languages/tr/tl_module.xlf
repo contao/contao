@@ -105,6 +105,18 @@
         <source>Here you can choose how featured events are handled.</source>
         <target>Buradan öne çıkarılmış etkinliklerin nasıl işleneceğini seçebilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+        <target>Örtüşen bağlantılar için geçerli adres kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Örtüşen bağlantılar için yapılandırılmış okuyucu sayfası yerine geçerli adres kullanılır.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_overview_legend">
+        <source>Overview page</source>
+        <target>Özet sayfası</target>
+      </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
         <target>Etkinlik listesi</target>
@@ -235,11 +247,11 @@
       </trans-unit>
       <trans-unit id="tl_module.events.featured">
         <source>Show featured events only</source>
-        <target>Yalnızca önce çıkarılmış etkinlikleri görüntüle</target>
+        <target>Yalnızca önce çıkarılmış etkinlikler görüntülensin</target>
       </trans-unit>
       <trans-unit id="tl_module.events.unfeatured">
         <source>Skip featured events</source>
-        <target>Öne çıkarılmış etkinlikleri atla</target>
+        <target>Öne çıkarılmış etkinlikler atlansın</target>
       </trans-unit>
     </body>
   </file>

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 
@@ -24,7 +25,7 @@ class DataContainerOperationTest extends TestCase
         $translations = ['some_label' => ['first', 'second']];
         $config = ['label' => &$translations['some_label']];
 
-        new DataContainerOperation('test', $config, ['id' => 1], $this->createMock(DataContainer::class));
+        new DataContainerOperation('test', $config, ['id' => 1], $this->createStub(DataContainer::class));
 
         $this->assertSame('first', $translations['some_label'][0]);
         $this->assertSame('second', $translations['some_label'][1]);
@@ -35,7 +36,7 @@ class DataContainerOperationTest extends TestCase
     {
         $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
 
-        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createMock(DataContainer::class));
+        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createStub(DataContainer::class));
 
         $this->assertSame('#foo', $operation['href']);
         $this->assertSame('bar', $operation['route']);
@@ -46,5 +47,31 @@ class DataContainerOperationTest extends TestCase
         $this->assertArrayNotHasKey('href', $operation);
         $this->assertArrayNotHasKey('route', $operation);
         $this->assertSame('edit--disabled.svg', $operation['icon']);
+    }
+
+    public function testHidesOperation(): void
+    {
+        $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
+
+        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createStub(DataContainer::class));
+        $operation->setHtml('<a href="#">foobar</a>');
+
+        $this->assertSame('<a href="#">foobar</a>', $operation->getHtml());
+        $operation->hide();
+        $this->assertSame('', $operation->getHtml());
+    }
+
+    public function testHandlesHtmlAttributes(): void
+    {
+        $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
+
+        $operation = new DataContainerOperation('test', $config, null, $this->createStub(DataContainer::class));
+
+        $this->assertInstanceOf(HtmlAttributes::class, $operation['attributes']);
+
+        $operation['attributes'] .= ' foo="bar"';
+
+        /** @phpstan-ignore offsetAccess.notFound */
+        $this->assertSame('bar', $operation['attributes']['foo']);
     }
 }

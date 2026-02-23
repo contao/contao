@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -32,7 +31,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly ContaoCsrfTokenManager $tokenManager,
         private readonly MemoryTokenStorage $tokenStorage,
         private readonly string $cookiePrefix = 'csrf_',
     ) {
@@ -72,7 +70,6 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         } elseif ($response->isSuccessful()) {
             // Only delete the CSRF token cookie if the response is successful (#2252)
             $this->removeCookies($request, $response);
-            $this->replaceTokenOccurrences($response);
         }
     }
 
@@ -159,33 +156,6 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
             $response->headers->setCookie($cookie);
         }
-    }
-
-    private function replaceTokenOccurrences(Response $response): void
-    {
-        // Return if the response is not an HTML document
-        if (false === stripos((string) $response->headers->get('Content-Type'), 'text/html')) {
-            return;
-        }
-
-        $content = $response->getContent();
-        $tokens = $this->tokenManager->getUsedTokenValues();
-
-        if (!$tokens || !\is_string($content)) {
-            return;
-        }
-
-        $content = str_replace($tokens, '', $content, $replacedCount);
-
-        if ($replacedCount <= 0) {
-            return;
-        }
-
-        $response->setContent($content);
-
-        // Remove the Content-Length header now that we have changed the content length (see
-        // #2416). Do not add the header or adjust an existing one (see symfony/symfony#1846).
-        $response->headers->remove('Content-Length');
     }
 
     private function removeCookies(Request $request, Response $response): void

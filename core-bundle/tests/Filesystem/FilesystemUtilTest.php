@@ -18,16 +18,15 @@ use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\StringUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 
 class FilesystemUtilTest extends TestCase
 {
-    /**
-     * @dataProvider provideResources
-     */
+    #[DataProvider('provideResources')]
     public function testListContentsFromSerialized(array|string $sources, array $expectedPaths): void
     {
-        $storage = $this->createMock(VirtualFilesystemInterface::class);
+        $storage = $this->createStub(VirtualFilesystemInterface::class);
         $storage
             ->method('get')
             ->willReturnCallback(
@@ -130,9 +129,7 @@ class FilesystemUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidArguments
-     */
+    #[DataProvider('provideInvalidArguments')]
     public function testThrowIfArgumentIsNotAnOpenResource(mixed $argument, string $exception): void
     {
         $this->expectException(\LogicException::class);

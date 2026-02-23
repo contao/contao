@@ -1,0 +1,14 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_news.php" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="tl_news.noComments.0">
+        <source>Disable comments</source>
+        <target>Désactiver les commentaires</target>
+      </trans-unit>
+      <trans-unit id="tl_news.noComments.1">
+        <source>Do not allow comments for this particular news item.</source>
+        <target>Désactiver les commentaires pour cette actualité en particulier.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -13,7 +13,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 // Extend the default palette
 PaletteManipulator::create()
 	->addLegend('newsletter_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
-	->addField(array('newsletters', 'newsletterp'), 'newsletter_legend', PaletteManipulator::POSITION_APPEND)
+	->addField(array('newsletters'), 'newsletter_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_user_group')
 ;
 
@@ -24,15 +24,6 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['newsletters'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
-);
-
-$GLOBALS['TL_DCA']['tl_user_group']['fields']['newsletterp'] = array
-(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['newsletterp'],
-	'inputType'               => 'checkbox',
-	'options'                 => array('create', 'delete'),
-	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );

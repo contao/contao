@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\File;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MetadataBagTest extends TestCase
 {
@@ -99,9 +100,7 @@ class MetadataBagTest extends TestCase
         unset($bag['en']);
     }
 
-    /**
-     * @dataProvider provideInvalidElements
-     */
+    #[DataProvider('provideInvalidElements')]
     public function testPreventsConstructingWithInvalidObjects(array $elements, string $type): void
     {
         $this->expectException(\TypeError::class);
@@ -123,9 +122,7 @@ class MetadataBagTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidLocales
-     */
+    #[DataProvider('provideInvalidLocales')]
     public function testPreventsConstructingWithInvalidLocales(array $locales, string $type): void
     {
         $this->expectException(\TypeError::class);

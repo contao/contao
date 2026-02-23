@@ -25,12 +25,15 @@ class SwiperController extends AbstractContentElementController
     {
         $sliderSettings = [
             'speed' => (float) $model->sliderSpeed,
-            'offset' => $model->sliderStartSlide,
+            'initialSlide' => $model->sliderStartSlide,
             'loop' => $model->sliderContinuous,
         ];
 
         if ($model->sliderDelay) {
-            $sliderSettings['autoplay'] = ['delay' => (float) $model->sliderDelay];
+            $sliderSettings['autoplay'] = [
+                'delay' => (float) $model->sliderDelay,
+                'pauseOnMouseEnter' => true,
+            ];
         }
 
         $template->set('slider_settings', $sliderSettings);

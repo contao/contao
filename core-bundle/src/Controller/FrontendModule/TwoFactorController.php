@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+use Contao\CoreBundle\Controller\ContentElement\TwoFactorController as TwoFactorControllerContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -31,8 +32,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', TwoFactorController::class, TwoFactorControllerContentElement::class);
+
 /**
  * @internal
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\TwoFactorController instead.
  */
 #[AsFrontendModule(category: 'user', template: 'mod_two_factor')]
 class TwoFactorController extends AbstractFrontendModuleController
@@ -117,11 +123,6 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, string $return): Response|null
     {
-        // Return if 2FA is enabled already
-        if ($user->useTwoFactor) {
-            return null;
-        }
-
         $translator = $this->container->get('translator');
         $authenticator = $this->container->get('contao.security.two_factor.authenticator');
         $exception = $this->container->get('security.authentication_utils')->getLastAuthenticationError();

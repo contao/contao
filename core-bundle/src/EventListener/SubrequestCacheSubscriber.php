@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategy;
@@ -49,6 +50,14 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
      * @var array<ResponseCacheStrategy>
      */
     private array $strategyStack = [];
+
+    /**
+     * @internal
+     */
+    public function addToCurrentStrategy(Response $response): void
+    {
+        $this->currentStrategy?->add($response);
+    }
 
     public function onKernelRequest(RequestEvent $event): void
     {

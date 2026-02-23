@@ -1,0 +1,25 @@
+{% extends '@Contao/block_unsearchable.html.twig' %}
+
+{% block content %}
+
+    <ul>
+        {% if hasPrev|default %}
+            <li class="previous"><a href="{{ prevHref }}" title="{{ prevPageTitle }}">{{ prevLink }}</a></li>
+        {% else %}
+            <li class="previous empty">&nbsp;</li>
+        {% endif %}
+
+        {% if hasUp|default %}
+            <li class="up"><a href="{{ upHref }}" title="{{ upPageTitle }}">{{ upLink }}</a></li>
+        {% else %}
+            <li class="up empty">&nbsp;</li>
+        {% endif %}
+
+        {% if hasNext|default %}
+            <li class="next"><a href="{{ nextHref }}" title="{{ nextPageTitle }}">{{ nextLink }}</a></li>
+        {% else %}
+            <li class="next empty">&nbsp;</li>
+        {% endif %}
+    </ul>
+
+{% endblock %}

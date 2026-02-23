@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.1">
         <source>Automatically switch to the newsreader if an item has been selected.</source>
+        <target>به صورت خودکار به خبرخوان تعویض خواهد شد اگر آیتمی انتخاب شده باشد.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.0">
         <source>News template</source>
@@ -71,6 +72,18 @@
       <trans-unit id="tl_module.news_showQuantity.1">
         <source>Show the number of news items of each month.</source>
         <target>نمایش تعداد آیتم‌ها خبری هر ماه.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+        <target>از URL فعلی برای پیوندهای کانونیکال استفاده کنید</target>
+      </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>URL فعلی را به جای صفحه خواننده تنظیم‌شده برای پیوندهای کانونیکال نگه دارید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.news_overview_legend">
+        <source>Overview page</source>
+        <target>برگه‌ی بررسی کلی</target>
       </trans-unit>
       <trans-unit id="tl_module.news_day">
         <source>Day</source>

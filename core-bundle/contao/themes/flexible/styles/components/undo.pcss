@@ -1,0 +1,54 @@
+.tl_undo_header {
+    max-width: 880px;
+    margin-top: 2px;
+    display: grid;
+    grid-template-columns: 2fr 2fr 3fr 3fr;
+    column-gap: 24px;
+}
+
+.hover-row:hover .tl_undo_header {
+    background-color: var(--hover-row) !important;
+}
+
+.tl_undo_preview {
+    margin-top: 5px;
+    padding: 6px 0 3px;
+    font-size: 0.75rem;
+    position: relative;
+}
+
+.tl_undo_preview td {
+    padding-left: 0 !important;
+    padding-right: 32px !important;
+}
+
+.tl_undo_preview td:empty {
+    display: none;
+}
+
+.tl_undo_preview img {
+    max-width: 320px;
+    height: auto;
+}
+
+.tl_undo_preview a img {
+    margin-top: -3px;
+}
+
+.tl_undo_preview .cte_preview h1 {
+    font-size: 1.15rem;
+}
+
+.tl_undo_preview .cte_preview h2 {
+    font-size: 0.9rem;
+}
+
+.tl_undo_preview .cte_preview h3 {
+    font-size: 0.8rem;
+}
+
+.tl_undo_preview .cte_preview h4,
+.tl_undo_preview .cte_preview h5,
+.tl_undo_preview .cte_preview h6 {
+    font-size: 0.775rem;
+}

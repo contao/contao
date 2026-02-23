@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\DC_Folder;
@@ -35,8 +36,13 @@ class DefaultGlobalOperationsListener
 
     private function getForTable(string $table): array
     {
-        $defaults = $this->getDefaults($table);
         $dca = $GLOBALS['TL_DCA'][$table]['list']['global_operations'] ?? null;
+
+        if ([] === $dca) {
+            return [];
+        }
+
+        $defaults = $this->getDefaults($table);
 
         if (!\is_array($dca)) {
             return $defaults;
@@ -44,19 +50,28 @@ class DefaultGlobalOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to
-        // the defaults.
-        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
-            $operations = $defaults;
-        }
-
         foreach ($dca as $k => $v) {
+            if ('-' === $v) {
+                $operations[$k] = $v;
+                continue;
+            }
+
             if (\is_string($v) && isset($defaults[$v])) {
                 $operations[$v] = $defaults[$v];
                 continue;
             }
 
-            $operations[$k] = \is_array($v) ? $v : [$v];
+            if (!\is_array($v)) {
+                continue;
+            }
+
+            $operations[$k] = $v;
+        }
+
+        // If none of the defined operations are name-only, we append the defaults operations.
+        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
+            // Keeps $operations first in array but does not override it from $defaults
+            $operations = array_replace($operations, $defaults, $operations);
         }
 
         return $operations;
@@ -75,11 +90,13 @@ class DefaultGlobalOperationsListener
         $operations = [];
 
         $hasLimitHeight = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['limitHeight'] ?? null) > 0;
+        $isParentMode = DataContainer::MODE_PARENT === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $isTreeMode = DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $isExtendedTreeMode = DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
         $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($isDcFolder || $isTreeMode || $isExtendedTreeMode) {
@@ -87,25 +104,30 @@ class DefaultGlobalOperationsListener
                 'toggleNodes' => [
                     'href' => $isDcFolder ? 'tg=all' : 'ptg=all',
                     'class' => 'header_toggle',
-                    'attributes' => ' data-contao--toggle-nodes-target="operation" data-action="contao--toggle-nodes#toggleAll keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
+                    'attributes' => ' data-contao--toggle-nodes-target="operation" data-action="contao--toggle-nodes#toggleAll:prevent keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
                     'showOnSelect' => true,
+                    'primary' => true,
                 ],
             ];
         } elseif ($hasLimitHeight) {
             $operations += [
                 'toggleNodes' => [
-                    'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button> ',
+                    'button_callback' => static fn (DataContainerOperation $operation) => $operation->setHtml('<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button>'),
+                    'listAttributes' => ' style="display:none"',
                     'showOnSelect' => true,
+                    'primary' => true,
                 ],
             ];
         }
 
-        if ($canEdit || $canCopy || $canDelete) {
+        if ($canEdit || $canCopy || $canDelete || ($canSort && ($isParentMode || $isTreeMode || $isExtendedTreeMode))) {
             $operations += [
                 'all' => [
                     'href' => 'act=select',
+                    'prefetch' => true,
                     'class' => 'header_edit_all',
-                    'attributes' => 'accesskey="e"',
+                    'attributes' => 'data-action="contao--scroll-offset#store" accesskey="e"',
+                    'primary' => true,
                 ],
             ];
         }

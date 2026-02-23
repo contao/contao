@@ -23,14 +23,11 @@ use Contao\FormText;
 use Contao\ModuleArticleList;
 use Contao\System;
 use Contao\TemplateLoader;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class TemplateLoaderTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,7 +53,7 @@ class TemplateLoaderTest extends TestCase
         $GLOBALS['TL_LANG']['MSC']['global'] = 'global';
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.twig.filesystem_loader', $this->createMock(ContaoFilesystemLoader::class));
+        $container->set('contao.twig.filesystem_loader', $this->createStub(ContaoFilesystemLoader::class));
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
         (new Filesystem())->dumpFile($this->getTempDir().'/var/cache/contao/sql/tl_theme.php', '<?php $GLOBALS["TL_DCA"]["tl_theme"] = [];');
@@ -242,12 +239,9 @@ class TemplateLoaderTest extends TestCase
         unset($GLOBALS['CTLG']);
     }
 
-    /**
-     * @group legacy
-     */
     public function testReturnsACustomTwigTemplate(): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([

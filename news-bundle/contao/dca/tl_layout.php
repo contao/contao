@@ -13,7 +13,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 // Extend default palette
 PaletteManipulator::create()
 	->addLegend('feed_legend', 'modules_legend', PaletteManipulator::POSITION_BEFORE)
-	->addField('newsfeeds', 'calendarfeeds', PaletteManipulator::POSITION_BEFORE, 'feed_legend', PaletteManipulator::POSITION_PREPEND)
+	->addField('newsfeeds', 'feed_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_layout')
 ;
 
@@ -21,7 +21,8 @@ PaletteManipulator::create()
 $GLOBALS['TL_DCA']['tl_layout']['fields']['newsfeeds'] = array
 (
 	'inputType'       => 'checkbox',
-	'foreignKey'	  => 'tl_page.title',
+	'foreignKey'      => 'tl_page.title',
 	'eval'            => array('multiple'=>true),
 	'sql'             => "blob NULL",
+	'relation'        => array('type'=>'hasMany', 'load'=>'lazy')
 );

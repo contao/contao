@@ -1,0 +1,4 @@
+<label class="jobs-progress" data-job-progress="{{ job.uuid }}">
+    <progress class="jobs-progress-bar" value="{{ job.progress|round }}" max="100"></progress>
+    <span class="jobs-progress-label">{{ job.progress|format_number(2) }}%</span>
+</label>

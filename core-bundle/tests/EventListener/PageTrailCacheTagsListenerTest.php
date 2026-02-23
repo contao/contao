@@ -28,7 +28,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
     public function testDoesNotFailIfNoResponseTaggerAvailable(): void
     {
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $this->createRequestWithPageModel([42, 18]),
             HttpKernelInterface::MAIN_REQUEST,
             new Response(),
@@ -51,7 +51,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
         ;
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $this->createRequestWithPageModel([14, 7]),
             HttpKernelInterface::SUB_REQUEST,
             new Response(),
@@ -71,7 +71,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
         ;
 
         $event = new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $this->createRequestWithPageModel([42, 18]),
             HttpKernelInterface::SUB_REQUEST,
             new Response(),
@@ -83,7 +83,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
 
     private function createScopeMatcher(bool $isFrontendMainRequest): ScopeMatcher
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isFrontendMainRequest')
             ->willReturn($isFrontendMainRequest)
@@ -95,7 +95,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
     private function createRequestWithPageModel(array $trail): Request
     {
         $request = new Request();
-        $request->attributes->set('pageModel', $this->mockClassWithProperties(PageModel::class, ['trail' => $trail]));
+        $request->attributes->set('pageModel', $this->createClassWithPropertiesStub(PageModel::class, ['trail' => $trail]));
 
         return $request;
     }

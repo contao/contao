@@ -1,0 +1,23 @@
+{% use '@Contao/component/_stylesheet.html.twig' %}
+
+{# Add the tablesorter style sheet #}
+{% add 'tablesorter' to stylesheets %}
+    {% with {file: 'assets/tablesorter/css/tablesorter.min.css'} %}{{ block('stylesheet_component') }}{% endwith %}
+{% endadd %}
+
+<script src="{{ asset('js/tablesorter.min.js', 'contao-components/tablesorter') }}"></script>
+<script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+    jQuery(function($) {
+        $('.ce_table .sortable').each(function(i, table) {
+            var attr = $(table).attr('data-sort-default'),
+                opts = {}, s;
+
+            if (attr) {
+                s = attr.split('|');
+                opts = { sortList: [[s[0], s[1] == 'desc' | 0]] };
+            }
+
+            $(table).tablesorter(opts);
+        });
+    });
+</script>

@@ -25,11 +25,11 @@ use Contao\Model\Collection;
  * @method static NewsletterDenyListModel|null findOneByPid($val, array $opt=array())
  * @method static NewsletterDenyListModel|null findOneByHash($val, array $opt=array())
  *
- * @method static Collection<NewsletterDenyListModel>|NewsletterDenyListModel[]|null findByPid($val, array $opt=array())
- * @method static Collection<NewsletterDenyListModel>|NewsletterDenyListModel[]|null findByHash($val, array $opt=array())
- * @method static Collection<NewsletterDenyListModel>|NewsletterDenyListModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<NewsletterDenyListModel>|NewsletterDenyListModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<NewsletterDenyListModel>|NewsletterDenyListModel[]|null findAll(array $opt=array())
+ * @method static Collection<NewsletterDenyListModel>|null findByPid($val, array $opt=array())
+ * @method static Collection<NewsletterDenyListModel>|null findByHash($val, array $opt=array())
+ * @method static Collection<NewsletterDenyListModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<NewsletterDenyListModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<NewsletterDenyListModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())

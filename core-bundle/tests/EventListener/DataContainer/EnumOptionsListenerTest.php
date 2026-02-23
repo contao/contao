@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\TranslatableEnum;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EnumOptionsListenerTest extends TestCase
@@ -36,17 +37,16 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
     }
 
     /**
-     * @dataProvider backedEnumProvider
-     *
      * @param class-string<\BackedEnum> $enum
      */
+    #[DataProvider('backedEnumProvider')]
     public function testGeneratesOptionCallbackForBackedEnums(string $enum): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
@@ -58,7 +58,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame(
@@ -78,7 +78,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
@@ -95,15 +95,13 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
     }
 
-    /**
-     * @dataProvider translatableDcaConfigurationProvider
-     */
+    #[DataProvider('translatableDcaConfigurationProvider')]
     public function testGeneratesTranslatedReferenceForLabeledEnum(array $dca): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
@@ -146,6 +144,7 @@ class EnumOptionsListenerTest extends TestCase
 
     public function testDoesNotOverwriteExistingReference(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $dca = $GLOBALS['TL_DCA']['tl_foo'] = [
             'fields' => [
                 'foo' => [
@@ -158,7 +157,7 @@ class EnumOptionsListenerTest extends TestCase
             ],
         ];
 
-        $listener = new EnumOptionsListener($this->createMock(TranslatorInterface::class));
+        $listener = new EnumOptionsListener($this->createStub(TranslatorInterface::class));
         $listener('tl_foo');
 
         $this->assertSame(

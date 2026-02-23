@@ -24,25 +24,17 @@
       <form method="post" data-turbo="false">
         <div class="formbody">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-          <?php if ($this->staticFrom): ?>
-            <span class="static-version"><?= $this->staticFrom ?></span>
-          <?php else: ?>
-            <select name="from" id="ctrl_from" class="tl_select">
-              <?php foreach ($this->versions as $k => $v): ?>
-                <option value="<?= $k ?>"<?php if ($v['version'] == $this->from): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
-              <?php endforeach; ?>
-            </select>
-          <?php endif; ?>
+          <select name="from" id="ctrl_from" class="tl_select">
+            <?php foreach ($this->versions as $k => $v): ?>
+              <option value="<?= $k ?>"<?php if ($v['version'] == $this->from): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
+            <?php endforeach; ?>
+          </select>
           <span class="arrow">→</span>
-          <?php if ($this->staticTo): ?>
-            <span class="static-version"><?= $this->staticTo ?></span>
-          <?php else: ?>
-            <select name="to" id="ctrl_to" class="tl_select">
-              <?php foreach ($this->versions as $k => $v): ?>
-                <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
-              <?php endforeach; ?>
-            </select>
-          <?php endif; ?>
+          <select name="to" id="ctrl_to" class="tl_select">
+            <?php foreach ($this->versions as $k => $v): ?>
+              <option value="<?= $k ?>"<?php if ($v['version'] == $this->to): ?> selected<?php endif; ?>><?= $v['info'] ?></option>
+            <?php endforeach; ?>
+          </select>
           <input type="submit" class="tl_submit" value="<?= $this->showLabel ?>">
         </div>
       </form>

@@ -14,10 +14,8 @@ use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\Database;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\DC_Table;
 use Contao\FaqCategoryModel;
-use Contao\StringUtil;
 use Contao\System;
 
 System::loadLanguageFile('tl_content');
@@ -53,20 +51,25 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'question',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp'),
-			'child_record_callback'   => array('tl_faq', 'listQuestions'),
 			'renderAsGrid'            => true,
 			'limitHeight'             => 160
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('question', 'answer'),
+			'format'                  => '<h2>%s</h2> %s',
+			'label_callback'          => array('tl_faq', 'listQuestions'),
+		),
 	),
 
 	// Palettes
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},searchIndexer;{publish_legend},published'
 	),
 
 	// Sub-palettes
@@ -133,7 +136,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE', 'helpwizard'=>true),
+			'eval'                    => array('mandatory'=>true, 'rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => "text NULL"
 		),
@@ -193,7 +196,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'imageTitle' => array
 		(
@@ -201,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'size' => array
 		(
@@ -209,10 +212,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
-			'options_callback' => static function () {
-				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
-			},
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'options_callback'        => array('contao.listener.image_size_options', '__invoke'),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'imageUrl' => array
 		(
@@ -220,7 +221,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'fullsize' => array
 		(
@@ -235,7 +236,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'floating' => array
 		(
@@ -258,6 +259,16 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
+		),
+		'searchIndexer' => array
+		(
+			'search'                  => true,
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
+			'inputType'               => 'select',
+			'options'                 => array('always_index', 'never_index'),
+			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'published' => array
 		(
@@ -292,6 +303,7 @@ class tl_faq extends Backend
 		if (!$objFaqCategory->jumpTo)
 		{
 			PaletteManipulator::create()
+				->removeField(array('searchIndexer'), 'expert_legend')
 				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview'), 'meta_legend')
 				->applyToPalette('default', 'tl_faq');
 		}
@@ -335,22 +347,17 @@ class tl_faq extends Backend
 	}
 
 	/**
-	 * Add the type of input field
+	 * Add the question as element metadata
 	 *
-	 * @param array $arrRow
+	 * @param array  $arrRow
+	 * @param string $label
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function listQuestions($arrRow)
+	public function listQuestions($arrRow, $label): array
 	{
 		$key = $arrRow['published'] ? 'published' : 'unpublished';
-		$date = Date::parse(Config::get('datimFormat'), $arrRow['tstamp']);
 
-		return '
-<div class="cte_type ' . $key . '">' . $date . '</div>
-<div class="cte_preview">
-<h2>' . $arrRow['question'] . '</h2>
-' . StringUtil::insertTagToSrc($arrRow['answer']) . '
-</div>' . "\n";
+		return array($arrRow['question'], $label, $key);
 	}
 }

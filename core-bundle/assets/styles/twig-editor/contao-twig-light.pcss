@@ -1,0 +1,131 @@
+@import "common.pcss";
+
+.ace_editor.contao-twig-light {
+    background-color: #fff;
+    color: #000;
+
+    .ace_codeLens a::before {
+        background-image: url("../../../contao/themes/flexible/icons/search.svg");
+    }
+
+    .ace_gutter {
+        background: #ebebeb;
+        color: #333;
+    }
+
+    .ace_print-margin {
+        width: 1px;
+        background: #e8e8e8;
+    }
+
+    .ace_cursor {
+        color: #000;
+    }
+
+    .ace_marker-layer .ace_selection {
+        background: #bdd5fc;
+    }
+
+    .ce_multiselect .ace_selection.ace_start {
+        box-shadow: 0 0 3px 0 #fff;
+    }
+
+    .ace_marker-layer .ace_bracket {
+        margin: -1px 0 0 -1px;
+        border: 1px solid #bfbfbf;
+    }
+
+    .ace_marker-layer .ace_active-line {
+        background: #fffbd1;
+    }
+
+    .ace_gutter-active-line {
+        background-color: #dcdcdc;
+    }
+
+    .ace_marker-layer .ace_selected-word {
+        border: 1px solid #bdd5fc;
+    }
+
+    .ace_invisible {
+        color: #bfbfbf;
+    }
+
+    .ace_keyword,
+    .ace_meta {
+        color: #0c234b;
+    }
+
+    .ace_constant,
+    .ace_constant.ace_character,
+    .ace_constant.ace_character.ace_escape,
+    .ace_constant.ace_other,
+    .ace_heading,
+    .ace_markup.ace_heading,
+    .ace_support.ace_constant,
+    .ace_support.ace_function {
+        color: #cf7428;
+    }
+
+    .ace_support {
+        color: #ac3bb2;
+    }
+
+    .ace_list,
+    .ace_markup.ace_list,
+    .ace_storage,
+    .ace_entity.ace_name.ace_function,
+    .ace_meta.ace_tag {
+        color: #0a2660;
+    }
+
+    .ace_string {
+        color: #5a7a49;
+    }
+
+    .ace_comment {
+        font-style: italic;
+        color: #777;
+    }
+
+    .ace_variable,
+    .ace_text {
+        color: #1c1c1c;
+    }
+
+    .ace_string.ace_regexp,
+    .ace_numeric,
+    .ace_reference {
+        color: #5f8c97 !important;
+    }
+
+    .ace_xml-pe {
+        color: #494949;
+    }
+
+    .ace_indent-guide {
+        background: url("ace-builds/css/clouds-1.png") right repeat-y;
+    }
+
+    .ace_indent-guide-active {
+        background: url("ace-builds/css/clouds-2.png") right repeat-y;
+    }
+
+    .ace_twig-output-start,
+    .ace_twig-output-end,
+    .ace_twig-tag-start,
+    .ace_twig-tag-end {
+        color: #466589 !important;
+    }
+
+    .ace_twig-test,
+    .ace_twig-function {
+        color: #1783ff !important;
+    }
+
+    .ace_twig-function.ace_dangerous {
+        background-color: rgb(255 178 178);
+        color: #094da7 !important;
+        padding: 0 2px 0 1px;
+    }
+}

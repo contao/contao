@@ -5,7 +5,7 @@ declare(strict_types=1);
 <?php endif; ?>
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['<?= $element_name ?>'] = '
-    {type_legend},type,headline;
+    {type_legend},title,headline,type;
     {template_legend:hide},customTpl;
     {protected_legend:hide},protected;
     {expert_legend:hide},cssID;

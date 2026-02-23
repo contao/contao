@@ -180,7 +180,7 @@ class RegisterPagesPassTest extends TestCase
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
-                        return 'test.controller:action' === $definition->getArgument(5)['_controller'];
+                        return 'test.controller::action' === $definition->getArgument(5)['_controller'];
                     },
                 ),
             )
@@ -258,7 +258,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.routing.page_registry', $this->createMock(Definition::class));
+        $container->setDefinition('contao.routing.page_registry', $this->createStub(Definition::class));
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();

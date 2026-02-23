@@ -115,7 +115,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'email_open':
-                        $result = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$strEmail.'" title="'.$strEmail.'" class="email">';
+                        $result = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$strEmail.'" class="email">';
                         break;
 
                     case 'email_url':
@@ -144,7 +144,13 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 if ('CNT' === $keys[0] && 2 === \count($keys)) {
                     try {
-                        $result = $this->container->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
+                        $countryCode = strtoupper($keys[1]);
+
+                        if (\strlen($countryCode) > 2) {
+                            $countryCode = substr($countryCode, 0, 2).'-'.substr($countryCode, 2);
+                        }
+
+                        $result = $this->container->get('contao.intl.countries')->getCountries()[$countryCode] ?? '';
                         break;
                     } catch (\Throwable) {
                         // Fall back to loading the label via $GLOBALS['TL_LANG']
@@ -310,11 +316,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 // Replace the tag
                 switch ($insertTag->getName()) {
                     case 'article':
-                        $result = \sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
+                        $result = \sprintf('<a href="%s"%s>%s</a>', $strUrl, $strTarget, $objArticle->title);
                         break;
 
                     case 'article_open':
-                        $result = \sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
+                        $result = \sprintf('<a href="%s"%s>', $strUrl, $strTarget);
                         break;
 
                     case 'article_url':
@@ -426,7 +432,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'page':
                 $property = $insertTag->getParameters()->get(0);
 
-                if ($GLOBALS['objPage']) {
+                if ($GLOBALS['objPage'] ?? null) {
                     if (!$GLOBALS['objPage']->parentPageTitle && 'parentPageTitle' === $property) {
                         $property = 'parentTitle';
                     } elseif (!$GLOBALS['objPage']->mainPageTitle && 'mainPageTitle' === $property) {
@@ -443,7 +449,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         'pageTitle' => htmlspecialchars($htmlHeadBag->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
                         'description' => htmlspecialchars($htmlHeadBag->getMetaDescription(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
                     };
-                } elseif ($GLOBALS['objPage']) {
+                } elseif ($GLOBALS['objPage'] ?? null) {
                     // Do not use StringUtil::specialchars() here (see #4687)
                     if (!\in_array($property, ['title', 'parentTitle', 'mainTitle', 'rootTitle', 'pageTitle', 'parentPageTitle', 'mainPageTitle', 'rootPageTitle'], true)) {
                         $outputType = OutputType::text;
@@ -501,12 +507,12 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Take arguments
                 if (str_contains($insertTag->getParameters()->get(0), '?')) {
-                    $arrChunks = explode('?', urldecode($insertTag->getParameters()->get(0)), 2);
+                    $arrChunks = explode('?', $insertTag->getParameters()->get(0), 2);
                     $strSource = StringUtil::decodeEntities($arrChunks[1]);
                     $arrParams = explode('&', $strSource);
 
                     foreach ($arrParams as $strParam) {
-                        [$key, $value] = explode('=', $strParam);
+                        [$key, $value] = explode('=', urldecode($strParam), 2);
 
                         switch ($key) {
                             case 'width':
@@ -621,7 +627,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
+                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates is deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
                 $requestStack = $this->container->get('request_stack');
                 $subRequest = null;
@@ -699,11 +705,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             static function (&$value): void {
                 if (is_numeric($value)) {
                     $value = (int) $value;
-
-                    return;
+                } else {
+                    $value = StringUtil::specialcharsAttribute($value);
                 }
-
-                $value = StringUtil::specialcharsAttribute($value);
             },
         );
 

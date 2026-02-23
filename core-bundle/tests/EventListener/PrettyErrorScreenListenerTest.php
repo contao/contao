@@ -25,7 +25,8 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,6 +39,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Loader\LoaderInterface;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
@@ -51,17 +53,18 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/backend.html.twig', $event->getResponse()->getContent());
     }
 
     public function testChecksIsGrantedBeforeRenderingBackEndExceptions(): void
     {
-        $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $pageFinder = $this->createMock(PageFinder::class);
+        $twig = $this->createStub(Environment::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+        $httpKernel = $this->createStub(HttpKernelInterface::class);
+        $pageFinder = $this->createStub(PageFinder::class);
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -80,13 +83,18 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testCatchesAuthenticationCredentialsNotFoundExceptionWhenRenderingBackEndExceptions(): void
     {
-        $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $pageFinder = $this->createMock(PageFinder::class);
+        $twig = $this->createStub(Environment::class);
+        $twig
+            ->method('render')
+            ->willReturnCallback(static fn (string $template) => "template: $template")
+        ;
 
-        $security = $this->createMock(Security::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+        $httpKernel = $this->createStub(HttpKernelInterface::class);
+        $pageFinder = $this->createStub(PageFinder::class);
+
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->willThrowException(new AuthenticationCredentialsNotFoundException())
@@ -100,11 +108,10 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/general.html.twig', $event->getResponse()->getContent());
     }
 
-    /**
-     * @dataProvider getErrorTypes
-     */
+    #[DataProvider('getErrorTypes')]
     public function testCreatesSubrequestForException(int $type, \Exception $exception): void
     {
         $errorPage = $this->mockPageWithProperties([
@@ -212,6 +219,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(503, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/service_unavailable.html.twig', $event->getResponse()->getContent());
     }
 
     public function testDoesNotRenderExceptionsIfDisabled(): void
@@ -219,13 +227,13 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new ServiceUnavailableHttpException(null, '', new ServiceUnavailableException(''));
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
-        $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $pageFinder = $this->createMock(PageFinder::class);
+        $twig = $this->createStub(Environment::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+        $httpKernel = $this->createStub(HttpKernelInterface::class);
+        $pageFinder = $this->createStub(PageFinder::class);
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -240,13 +248,13 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNotRenderExceptionsUponSubrequests(): void
     {
-        $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $pageFinder = $this->createMock(PageFinder::class);
+        $twig = $this->createStub(Environment::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+        $httpKernel = $this->createStub(HttpKernelInterface::class);
+        $pageFinder = $this->createStub(PageFinder::class);
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -271,24 +279,25 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(409, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/general.html.twig', $event->getResponse()->getContent());
     }
 
     public function testRendersTheErrorScreen(): void
     {
         $exception = new InternalServerErrorHttpException('', new ForwardPageNotFoundException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $count = 0;
 
         $twig
             ->method('render')
             ->willReturnCallback(
-                static function () use (&$count): string {
+                static function (string $template) use (&$count): string {
                     if (0 === $count++) {
                         throw new Error('foo');
                     }
 
-                    return '';
+                    return "template: $template";
                 },
             )
         ;
@@ -298,17 +307,18 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/general.html.twig', $event->getResponse()->getContent());
     }
 
     public function testDoesNothingIfTheFormatIsNotHtml(): void
     {
-        $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $pageFinder = $this->createMock(PageFinder::class);
+        $twig = $this->createStub(Environment::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+        $httpKernel = $this->createStub(HttpKernelInterface::class);
+        $pageFinder = $this->createStub(PageFinder::class);
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -329,13 +339,13 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testDoesNothingIfTextHtmlIsNotAccepted(): void
     {
-        $twig = $this->createMock(Environment::class);
-        $framework = $this->mockContaoFramework();
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $pageFinder = $this->createMock(PageFinder::class);
+        $twig = $this->createStub(Environment::class);
+        $framework = $this->createContaoFrameworkStub();
+        $pageRegistry = $this->createStub(PageRegistry::class);
+        $httpKernel = $this->createStub(HttpKernelInterface::class);
+        $pageFinder = $this->createStub(PageFinder::class);
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -374,15 +384,50 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
+    public function testRendersBCTemplateIfExists(): void
+    {
+        $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
+        $event = $this->getResponseEvent($exception);
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->once())
+            ->method('exists')
+            ->with('@ContaoCore/Error/backend.html.twig')
+            ->willReturn(true)
+        ;
+
+        $twig = $this->createStub(Environment::class);
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
+        $twig
+            ->method('render')
+            ->willReturnCallback(static fn (string $template) => "template: $template")
+        ;
+
+        $listener = $this->getListener(true, $twig);
+        $listener($event);
+
+        $this->assertSame('template: @ContaoCore/Error/backend.html.twig', $event->getResponse()->getContent());
+    }
+
     private function getListener(bool $isBackendUser = false, Environment|null $twig = null, PageModel|null $errorPage = null, HttpKernelInterface|null $httpKernel = null): PrettyErrorScreenListener
     {
-        $twig ??= $this->createMock(Environment::class);
-        $httpKernel ??= $this->createMock(HttpKernelInterface::class);
+        if (!$twig) {
+            $twig = $this->createStub(Environment::class);
+            $twig
+                ->method('render')
+                ->willReturnCallback(static fn (string $template) => "template: $template")
+            ;
+        }
 
-        $pageFinder = $this->createMock(PageFinder::class);
-        $pageRegistry = $this->createMock(PageRegistry::class);
+        $httpKernel ??= $this->createStub(HttpKernelInterface::class);
 
         if ($errorPage) {
+            $pageFinder = $this->createMock(PageFinder::class);
             $pageFinder
                 ->expects($this->once())
                 ->method('findFirstPageOfTypeForRequest')
@@ -390,17 +435,21 @@ class PrettyErrorScreenListenerTest extends TestCase
                 ->willReturn($errorPage)
             ;
 
+            $pageRegistry = $this->createMock(PageRegistry::class);
             $pageRegistry
                 ->expects($this->once())
                 ->method('getRoute')
                 ->with($errorPage)
                 ->willReturn(new PageRoute($errorPage))
             ;
+        } else {
+            $pageFinder = $this->createStub(PageFinder::class);
+            $pageRegistry = $this->createStub(PageRegistry::class);
         }
 
-        $framework = $this->mockContaoFramework();
+        $framework = $this->createContaoFrameworkStub();
 
-        $security = $this->createMock(Security::class);
+        $security = $this->createStub(Security::class);
         $security
             ->method('isGranted')
             ->with('ROLE_USER')
@@ -423,15 +472,15 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     private function getResponseEvent(\Exception $exception, Request|null $request = null, bool $isSubRequest = false): ExceptionEvent
     {
-        $kernel = $this->createMock(KernelInterface::class);
+        $kernel = $this->createStub(KernelInterface::class);
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;
 
         return new ExceptionEvent($kernel, $request ?? $this->getRequest(), $type, $exception);
     }
 
-    private function mockPageWithProperties(array $properties = []): PageModel&MockObject
+    private function mockPageWithProperties(array $properties = []): PageModel&Stub
     {
-        $page = $this->mockClassWithProperties(PageModel::class, $properties);
+        $page = $this->createClassWithPropertiesStub(PageModel::class, $properties);
         $page
             ->method('loadDetails')
             ->willReturnSelf()

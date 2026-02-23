@@ -27,14 +27,14 @@ class PurgeRegistrationsCronTest extends ContaoTestCase
             ->method('delete')
         ;
 
-        $memberModelAdapter = $this->mockAdapter(['findExpiredRegistrations']);
+        $memberModelAdapter = $this->createAdapterMock(['findExpiredRegistrations']);
         $memberModelAdapter
             ->expects($this->once())
             ->method('findExpiredRegistrations')
             ->willReturn(new Collection([$memberModel], MemberModel::getTable()))
         ;
 
-        $framework = $this->mockContaoFramework([MemberModel::class => $memberModelAdapter]);
+        $framework = $this->createContaoFrameworkStub([MemberModel::class => $memberModelAdapter]);
 
         (new PurgeRegistrationsCron($framework, null))();
     }

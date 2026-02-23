@@ -49,10 +49,10 @@ class VideoController extends AbstractContentElementController
 
         $template->set('source', $sourceParameters);
 
-        $size = StringUtil::deserialize($model->playerSize, true);
+        [$width, $height] = StringUtil::deserialize($model->playerSize, true) + [null, null];
 
-        $template->set('width', $size[0] ?? 640);
-        $template->set('height', $size[1] ?? 360);
+        $template->set('width', $width ?: 640);
+        $template->set('height', $height ?: 360);
         $template->set('aspect_ratio', $model->playerAspect);
 
         // Meta data

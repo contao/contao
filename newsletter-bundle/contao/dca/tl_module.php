@@ -29,7 +29,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
@@ -37,13 +38,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_newsletter', 'getChannels'),
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('table'=>'tl_newsletter_channel', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array
 (
 	'inputType'               => 'textarea',
-	'eval'                    => array('rte'=>'tinyMCE', 'helpwizard'=>true),
+	'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
 	'explanation'             => 'insertTags',
 	'sql'                     => "text NULL"
 );
@@ -56,23 +58,17 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 (
+	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-	'load_callback' => array
-	(
-		array('tl_module_newsletter', 'getSubscribeDefault')
-	),
+	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 	'sql'                     => "text NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 (
+	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-	'load_callback' => array
-	(
-		array('tl_module_newsletter', 'getUnsubscribeDefault')
-	),
+	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 	'sql'                     => "text NULL"
 );
 
@@ -93,40 +89,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
  */
 class tl_module_newsletter extends Backend
 {
-	/**
-	 * Load the default subscribe text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getSubscribeDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1];
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Load the default unsubscribe text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getUnsubscribeDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1];
-		}
-
-		return $varValue;
-	}
-
 	/**
 	 * Get all channels and return them as array
 	 *

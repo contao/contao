@@ -13,7 +13,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 // Extend the default palette
 PaletteManipulator::create()
 	->addLegend('news_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
-	->addField(array('news', 'newp'), 'news_legend', PaletteManipulator::POSITION_APPEND)
+	->addField('news', 'news_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_user_group')
 ;
 
@@ -24,15 +24,6 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['news'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_news_archive.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
-);
-
-$GLOBALS['TL_DCA']['tl_user_group']['fields']['newp'] = array
-(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['newp'],
-	'inputType'               => 'checkbox',
-	'options'                 => array('create', 'delete'),
-	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );

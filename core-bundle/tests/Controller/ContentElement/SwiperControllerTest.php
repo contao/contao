@@ -20,11 +20,11 @@ class SwiperControllerTest extends ContentElementTestCase
 {
     public function testOutputsMarkup(): void
     {
-        $text = $this->mockClassWithProperties(ContentModel::class, [
+        $text = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'text',
         ]);
 
-        $image = $this->mockClassWithProperties(ContentModel::class, [
+        $image = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'image',
         ]);
 
@@ -32,7 +32,7 @@ class SwiperControllerTest extends ContentElementTestCase
             new SwiperController(),
             [
                 'type' => 'swiper',
-                'sliderDelay' => 0,
+                'sliderDelay' => 1000,
                 'sliderSpeed' => 300,
                 'sliderStartSlide' => 0,
                 'sliderContinuous' => true,
@@ -49,13 +49,20 @@ class SwiperControllerTest extends ContentElementTestCase
 
         $expectedJson = htmlspecialchars(json_encode([
             'speed' => 300,
-            'offset' => 0,
+            'initialSlide' => 0,
             'loop' => true,
+            'autoplay' => [
+                'delay' => 1000,
+                'pauseOnMouseEnter' => true,
+            ],
         ]));
+
+        // Replace }} with &#125;&#125; due to our insert tag filter
+        $expectedJson = str_replace('}}', '&#125;&#125;', $expectedJson);
 
         $expectedOutput = <<<HTML
             <div class="content-swiper">
-                <div class="swiper" data-settings="{$expectedJson}">
+                <div class="swiper" data-settings="$expectedJson">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             text
@@ -64,8 +71,8 @@ class SwiperControllerTest extends ContentElementTestCase
                             image
                         </div>
                     </div>
-                    <button type="button" class="swiper-button-prev"></button>
-                    <button type="button" class="swiper-button-next"></button>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                     <div class="swiper-pagination"></div>
                 </div>
             </div>

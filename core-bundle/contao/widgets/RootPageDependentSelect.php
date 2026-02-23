@@ -29,11 +29,11 @@ class RootPageDependentSelect extends SelectMenu
 
 		foreach ($rootPages as $rootPage)
 		{
-			$this->arrOptions[0]['label'] = \sprintf($this->blankOptionLabel, $rootPage->title);
+			$this->arrOptions[0]['label'] = \sprintf($this->blankOptionLabel, $rootPage->title, $rootPage->dns);
 			$this->strLabel = $rootPage->title;
 
 			$fields[] = \sprintf(
-				'<select name="%s[]" id="ctrl_%s" class="tl_select%s"%s data-action="focus->contao--scroll-offset#store" data-controller="contao--chosen">%s</select>%s',
+				'<div class="tl_select_wrapper" data-controller="contao--choices"><select name="%s[]" id="ctrl_%s" class="tl_select%s"%s data-action="focus->contao--scroll-offset#store">%s</select></div>%s',
 				$this->strName,
 				\sprintf('%s-%s', $this->strId, $rootPage->id),
 				$this->strClass ? ' ' . $this->strClass : '',

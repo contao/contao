@@ -78,7 +78,7 @@ class ContentElementNestingVoter extends AbstractDataContainerVoter implements R
             return '' === $type || \in_array($type, $this->types[$pid], true);
         }
 
-        $parentType = $this->connection->fetchOne('SELECT type FROM tl_content WHERE id=?', [$pid]);
+        $parentType = $this->connection->fetchOne('SELECT type FROM tl_content WHERE id = ?', [$pid]);
 
         if (
             false === $parentType

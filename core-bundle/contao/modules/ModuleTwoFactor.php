@@ -10,9 +10,15 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use ParagonIE\ConstantTime\Base32;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Back end module "two factor".
@@ -46,11 +52,13 @@ class ModuleTwoFactor extends BackendModule
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['twoFactorEnforced']);
 		}
 
-		$ref = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$return = $container->get('router')->generate('contao_backend', array('do'=>'security'));
 
-		$this->Template->href = $this->getReferer(true);
-		$this->Template->ref = $ref;
+		/** @var UriSigner $uriSigner */
+		$uriSigner = $container->get('uri_signer');
+		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
+
 		$this->Template->messages = Message::generateUnwrapped();
 		$this->Template->backupCodes = json_decode((string) $user->backupCodes, true) ?? array();
 
@@ -75,8 +83,63 @@ class ModuleTwoFactor extends BackendModule
 			$container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 		}
 
+		/** @var WebauthnCredentialRepository $credentialRepo */
+		$credentialRepo = $container->get('contao.repository.webauthn_credential');
+
+		if (Input::post('FORM_SUBMIT') === 'tl_passkeys_credentials_actions')
+		{
+			if ($deleteCredentialId = Input::post('delete_passkey'))
+			{
+				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
+				{
+					$this->denyAccessUnlessGranted($credential);
+
+					$credentialRepo->remove($credential);
+				}
+			}
+			elseif ($editCredentialId = Input::post('edit_passkey'))
+			{
+				if ($credential = $credentialRepo->findOneById($editCredentialId))
+				{
+					$this->denyAccessUnlessGranted($credential);
+
+					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
+				}
+			}
+
+			$this->redirect($this->addToUrl('', true, array('edit_passkey', 'edit_new_passkey')));
+		}
+		elseif (Input::post('FORM_SUBMIT') === 'tl_passkeys_credentials_edit')
+		{
+			if ($saveCredentialId = Input::post('credential_id'))
+			{
+				if ($credential = $credentialRepo->findOneById($saveCredentialId))
+				{
+					$this->denyAccessUnlessGranted($credential);
+
+					$credential->name = Input::post('passkey_name') ?? '';
+					$credentialRepo->saveCredentialSource($credential);
+				}
+			}
+
+			$this->redirect($this->addToUrl('', true, array('edit_passkey', 'edit_new_passkey')));
+		}
+
 		$this->Template->isEnabled = $user->useTwoFactor;
 		$this->Template->trustedDevices = $container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
+		$this->Template->webauthnCreationSuccessRedirectUri = $passkeyReturn;
+		$this->Template->credentials = $credentialRepo->getAllForUser($user);
+		$this->Template->editPassKeyId = (string) Input::get('edit_passkey');
+
+		if (Input::get('edit_new_passkey') && $uriSigner->checkRequest($request))
+		{
+			$lastCredential = $credentialRepo->getLastForUser($user);
+
+			if ($lastCredential instanceof WebauthnCredential)
+			{
+				$this->Template->editPassKeyId = $lastCredential->getId();
+			}
+		}
 	}
 
 	/**
@@ -87,12 +150,6 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function enableTwoFactor(BackendUser $user, $return)
 	{
-		// Return if 2FA is enabled already
-		if ($user->useTwoFactor)
-		{
-			return;
-		}
-
 		$container = System::getContainer();
 		$authenticator = $container->get('contao.security.two_factor.authenticator');
 		$verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];
@@ -151,5 +208,13 @@ class ModuleTwoFactor extends BackendModule
 		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
+	}
+
+	private function denyAccessUnlessGranted(WebauthnCredential $credential): void
+	{
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP, $credential))
+		{
+			throw new AccessDeniedHttpException('Cannot access credential ID ' . $credential->getId());
+		}
 	}
 }

@@ -12,15 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\PageModel;
-use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,11 +34,10 @@ abstract class AbstractController extends SymfonyAbstractController
 
         $services['contao.framework'] = ContaoFramework::class;
         $services['contao.routing.content_url_generator'] = ContentUrlGenerator::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
         $services['event_dispatcher'] = EventDispatcherInterface::class;
-        $services['logger'] = '?'.LoggerInterface::class;
-        $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
-        $services['contao.cache.entity_tags'] = EntityCacheTags::class;
+        $services['contao.cache.tag_manager'] = CacheTagManager::class;
 
         return $services;
     }
@@ -64,7 +63,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
     protected function tagResponse(array|object|string|null $tags): void
     {
-        $this->container->get('contao.cache.entity_tags')->tagWith($tags);
+        $this->container->get('contao.cache.tag_manager')->tagWith($tags);
     }
 
     /**
@@ -121,7 +120,7 @@ abstract class AbstractController extends SymfonyAbstractController
             }
 
             // Tag the page (see #2137)
-            $this->container->get('contao.cache.entity_tags')->tagWithModelInstance($pageModel);
+            $this->container->get('contao.cache.tag_manager')->tagWithModelInstance($pageModel);
         }
 
         return $response;
@@ -130,6 +129,19 @@ abstract class AbstractController extends SymfonyAbstractController
     protected function generateContentUrl(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         return $this->container->get('contao.routing.content_url_generator')->generate($content, $parameters, $referenceType);
+    }
+
+    protected function getHtmlHeadBag(): HtmlHeadBag|null
+    {
+        try {
+            return $this->container
+                ->get('contao.routing.response_context_accessor')
+                ->getResponseContext()
+                ?->get(HtmlHeadBag::class)
+            ;
+        } catch (\InvalidArgumentException) {
+            return null;
+        }
     }
 
     protected function hasParameter(string $name): bool

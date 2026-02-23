@@ -16,6 +16,6 @@ class RetrieveDbafsMetadataEvent extends AbstractDbafsMetadataEvent
 {
     public function set(string $metadataKey, mixed $metadataValue): void
     {
-        $this->extraMetadata[$metadataKey] = $metadataValue;
+        $this->extraMetadata->set($metadataKey, $metadataValue);
     }
 }

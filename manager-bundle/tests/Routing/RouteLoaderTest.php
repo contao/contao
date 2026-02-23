@@ -62,7 +62,7 @@ class RouteLoaderTest extends ContaoTestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(ContaoKernel::class),
+            $this->createStub(ContaoKernel::class),
             __DIR__.'/../Fixtures/Routing/WithRoutingYaml',
         );
 
@@ -103,7 +103,7 @@ class RouteLoaderTest extends ContaoTestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(ContaoKernel::class),
+            $this->createStub(ContaoKernel::class),
             __DIR__.'/../Fixtures/Routing/WithAppController',
         );
 
@@ -112,7 +112,7 @@ class RouteLoaderTest extends ContaoTestCase
 
     public function testLoadFromPlugins(): void
     {
-        $loaderResolver = $this->createMock(LoaderResolverInterface::class);
+        $loaderResolver = $this->createStub(LoaderResolverInterface::class);
 
         $loader = $this->createMock(LoaderInterface::class);
         $loader
@@ -135,7 +135,7 @@ class RouteLoaderTest extends ContaoTestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(ContaoKernel::class),
+            $this->createStub(ContaoKernel::class),
             $this->getTempDir(),
         );
 
@@ -150,7 +150,7 @@ class RouteLoaderTest extends ContaoTestCase
 
     public function testCatchAllIsLast(): void
     {
-        $loaderResolver = $this->createMock(LoaderResolverInterface::class);
+        $loaderResolver = $this->createStub(LoaderResolverInterface::class);
 
         $loader = $this->createMock(LoaderInterface::class);
         $loader
@@ -175,7 +175,7 @@ class RouteLoaderTest extends ContaoTestCase
         $routeLoader = new RouteLoader(
             $loader,
             $pluginLoader,
-            $this->createMock(ContaoKernel::class),
+            $this->createStub(ContaoKernel::class),
             $this->getTempDir(),
         );
 

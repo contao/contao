@@ -1,0 +1,72 @@
+#template-studio--tabs {
+    .operations {
+        display: flex;
+        justify-content: end;
+        gap: 15px;
+        margin-bottom: 12px;
+    }
+
+    .operation {
+        border: none;
+        padding: 3px 0 3px 22px;
+        background: none no-repeat left center;
+
+        &:hover {
+            color: var(--contao);
+        }
+    }
+
+    *[data-contao--tabs-target="panel"] {
+        counter-reset: templates;
+    }
+
+    .template {
+        border: 1px solid var(--content-border);
+        padding: 4px;
+        margin-left: 4px;
+        position: relative;
+
+        &::before {
+            counter-increment: templates;
+            content: counter(templates);
+            border: 1px solid var(--content-border);
+            background-color: var(--panel-bg);
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 15px;
+            height: 15px;
+            font-size: 11px;
+        }
+
+        &.editable {
+            border: 1px solid var(--blue);
+            background-color: rgb(0 100 148 / 5%);
+
+            &::before {
+                color: var(--blue);
+                border: 1px solid var(--blue);
+            }
+        }
+    }
+
+    .relation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 0;
+        color: var(--info);
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .warning,
+        .info {
+            max-width: min(80%, 450px);
+        }
+    }
+}

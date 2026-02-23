@@ -47,7 +47,6 @@ class ArrayAttributeBagTest extends TestCase
 
         $this->assertSame('bar', $bag['foo']);
         $this->assertSame(['baz' => 'foo'], $bag['bar']);
-        $this->assertSame('foo', $bag['bar']['baz']);
     }
 
     public function testCanModifyTheOffset(): void

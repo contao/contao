@@ -37,14 +37,14 @@ class MemberCountryUppercaseMigration extends AbstractMigration
             return false;
         }
 
-        $test = $this->connection->fetchOne('SELECT TRUE FROM tl_member WHERE BINARY country!=BINARY UPPER(country) LIMIT 1');
+        $test = $this->connection->fetchOne('SELECT TRUE FROM tl_member WHERE CAST(country AS BINARY) != CAST(UPPER(country) AS BINARY) LIMIT 1');
 
         return false !== $test;
     }
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement('UPDATE tl_member SET country=UPPER(country) WHERE BINARY country!=BINARY UPPER(country)');
+        $this->connection->executeStatement('UPDATE tl_member SET country = UPPER(country) WHERE CAST(country AS BINARY) != CAST(UPPER(country) AS BINARY)');
 
         return $this->createResult(true);
     }

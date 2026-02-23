@@ -1,0 +1,11 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set button_attributes = attrs()
+    .addClass('close')
+    .set('type', 'button')
+    .set('aria-label', 'MSC.close'|trans)
+    .set('aria-controls', target_id)
+    .set('data-action', 'contao--template-studio#close')
+    .mergeWith(button_attributes|default)
+%}
+<button{{ button_attributes }}>{% block inner %}x{% endblock %}</button>

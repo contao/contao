@@ -1,0 +1,35 @@
+.ace_editor {
+    /* Make sure annotation tooltips can escape the editor boundary. */
+    overflow: visible !important;
+
+    &.ace_autocomplete {
+        width: 400px;
+    }
+
+    .ace_codeLens {
+        position: absolute;
+        padding-top: 4px;
+        font-size: 90%;
+        cursor: pointer;
+
+        a {
+            opacity: 0.7;
+            display: flex;
+            gap: 4px;
+
+            &::before {
+                display: inline-flex;
+                background-repeat: no-repeat;
+                background-size: cover;
+                content: "";
+                width: 11px;
+                height: 11px;
+                margin-top: 1px;
+            }
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}

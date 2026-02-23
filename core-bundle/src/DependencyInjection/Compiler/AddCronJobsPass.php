@@ -57,7 +57,7 @@ class AddCronJobsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(\sprintf('The contao.cronjob definition for service "%s" has an invalid interval expression "%s"', $serviceId, $interval));
                 }
 
-                $newDefinition = new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]);
+                $newDefinition = new Definition(CronJob::class, [new Reference($serviceId), $interval, $method, $serviceId]);
 
                 $reflector = new \ReflectionMethod($jobDefinition->getClass(), $method ?? '__invoke');
                 $returnType = $reflector->getReturnType();

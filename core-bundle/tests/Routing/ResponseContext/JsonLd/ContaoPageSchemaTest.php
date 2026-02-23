@@ -20,13 +20,15 @@ class ContaoPageSchemaTest extends TestCase
 {
     public function testGeneralSettersAndGetters(): void
     {
-        $schema = new ContaoPageSchema('title', 42, false, false, [], false);
+        $schema = new ContaoPageSchema('title', 42, false, false, [1, 2, 3], false, [2]);
 
         $this->assertSame('title', $schema->getTitle());
         $this->assertSame(42, $schema->getPageId());
         $this->assertFalse($schema->isNoSearch());
         $this->assertFalse($schema->isProtected());
-        $this->assertSame([], $schema->getGroups());
+        $this->assertSame([1, 2, 3], $schema->getGroups());
+        $this->assertSame([2], $schema->getMemberGroups());
+        $this->assertSame('', $schema->getSearchIndexer());
         $this->assertFalse($schema->isFePreview());
 
         $schema->setTitle('Foobar');
@@ -46,6 +48,9 @@ class ContaoPageSchemaTest extends TestCase
 
         $schema->setFePreview(true);
         $this->assertTrue($schema->isFePreview());
+
+        $schema->setSearchIndexer('always_index');
+        $this->assertSame('always_index', $schema->getSearchIndexer());
     }
 
     public function testUpdateFromHtmlHeadBag(): void

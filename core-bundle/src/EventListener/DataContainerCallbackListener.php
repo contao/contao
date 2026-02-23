@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\System;
 
 /**
  * The priority must be lower than 0 (see #3255).
@@ -23,20 +25,38 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 class DataContainerCallbackListener
 {
     private const SINGLETONS = [
+        'button_callback',
+        'child_record_callback',
+        'default',
+        'group_callback',
+        'header_callback',
+        'input_field_callback',
+        'label_callback',
+        'options_callback',
         'panel_callback',
         'paste_button_callback',
-        'button_callback',
-        'label_callback',
-        'header_callback',
-        'child_record_callback',
-        'input_field_callback',
-        'options_callback',
-        'group_callback',
-        'url_callback',
         'title_tag_callback',
+        'url_callback',
     ];
 
+    // These "callbacks" do not support array notation, so they are wrapped with a closure
+    private const CLOSURES = [
+        '/fields.[^\.]+.default/',
+    ];
+
+    /**
+     * @var array<string, array<string, array<int, array<array{
+     *     service: string,
+     *     method: string,
+     *     singleton: bool|null,
+     *     closure: bool|null,
+     * }>>>>
+     */
     private array $callbacks = [];
+
+    public function __construct(private readonly ContaoFramework $framework)
+    {
+    }
 
     public function setCallbacks(array $callbacks): void
     {
@@ -49,11 +69,28 @@ class DataContainerCallbackListener
             return;
         }
 
-        foreach ($this->callbacks[$table] as $target => $callbacks) {
-            $keys = explode('.', (string) $target);
+        $systemAdapter = $this->framework->getAdapter(System::class);
+
+        foreach ($this->callbacks[$table] as $target => $configs) {
+            $keys = explode('.', $target);
+            $callbacks = [];
+            $singleton = false;
+
+            foreach ($configs as $priority => $pConfigs) {
+                foreach ($pConfigs as $k => $config) {
+                    $singleton = $singleton || $this->isSingleton($config, $keys);
+
+                    if ($this->isClosure($config, $target)) {
+                        $callbacks[$priority][$k] = static fn (...$args) => $systemAdapter->importStatic($config['service'])->{$config['method']}(...$args);
+                    } else {
+                        $callbacks[$priority][$k] = [$config['service'], $config['method']];
+                    }
+                }
+            }
+
             $dcaRef = &$this->getDcaReference($table, $keys);
 
-            if ((isset($keys[2]) && 'panel_callback' === $keys[2]) || \in_array(end($keys), self::SINGLETONS, true)) {
+            if ($singleton) {
                 $this->updateSingleton($dcaRef, $callbacks);
             } else {
                 $this->addCallbacks($dcaRef, $callbacks);
@@ -110,5 +147,29 @@ class DataContainerCallbackListener
         if ($postCallbacks) {
             array_push($dcaRef, ...$postCallbacks);
         }
+    }
+
+    private function isSingleton(array $callback, array $keys): bool
+    {
+        if (\is_bool($callback['singleton'] ?? null)) {
+            return $callback['singleton'];
+        }
+
+        return (isset($keys[2]) && 'panel_callback' === $keys[2]) || \in_array(end($keys), self::SINGLETONS, true);
+    }
+
+    private function isClosure(array $callback, string $target): bool
+    {
+        if (\is_bool($callback['closure'] ?? null)) {
+            return $callback['closure'];
+        }
+
+        foreach (self::CLOSURES as $regex) {
+            if (preg_match($regex, $target)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

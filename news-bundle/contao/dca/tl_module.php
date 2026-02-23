@@ -32,7 +32,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_archives'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_news', 'getNewsArchives'),
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('table'=>'tl_news_archive', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array

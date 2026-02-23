@@ -174,6 +174,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 fn () => $this->getFileSize($relativePath, $accessFlags),
                 fn () => $this->getMimeType($relativePath, $accessFlags),
                 fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+                $this,
             );
         }
 
@@ -185,6 +186,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 null,
                 null,
                 fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+                $this,
             );
         }
 
@@ -247,7 +249,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->mountManager->getMimeType($path);
     }
 
-    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): array
+    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): ExtraMetadata
     {
         $path = $this->resolve($location);
 
@@ -256,17 +258,22 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         if ($accessFlags & self::BYPASS_DBAFS) {
-            return [];
+            return new ExtraMetadata();
         }
 
         return $this->dbafsManager->getExtraMetadata($path);
     }
 
-    public function setExtraMetadata(Uuid|string $location, array $metadata): void
+    public function setExtraMetadata(Uuid|string $location, ExtraMetadata $metadata): void
     {
         $this->ensureNotReadonly();
 
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
+    }
+
+    public function resolveUuid(Uuid $uuid): string
+    {
+        return $this->dbafsManager->resolveUuid($uuid, $this->prefix);
     }
 
     public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
@@ -324,7 +331,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
-                $item = $item->withPath(Path::makeRelative($path, $this->prefix));
+
+                $item = $item
+                    ->withPath(Path::makeRelative($path, $this->prefix))
+                    ->withStorage($this)
+                ;
 
                 if (!$item->isFile()) {
                     yield $item;
@@ -353,6 +364,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
             yield $item
                 ->withPath(Path::makeRelative($path, $this->prefix))
+                ->withStorage($this)
                 ->withExtraMetadata(fn () => $this->dbafsManager->getExtraMetadata($path))
             ;
         }

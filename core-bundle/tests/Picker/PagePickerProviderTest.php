@@ -190,7 +190,7 @@ class PagePickerProviderTest extends ContaoTestCase
             ->willReturn($accessGranted ?? false)
         ;
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
+        $menuFactory = $this->createStub(FactoryInterface::class);
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -206,13 +206,13 @@ class PagePickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Page picker')

@@ -1,5 +1,5 @@
 
-<div id="<?= Contao\StringUtil::standardize($this->id, true) ?>">
+<div id="<?= $this->id ?>">
   <div class="inside">
     <?= $this->content ?>
   </div>

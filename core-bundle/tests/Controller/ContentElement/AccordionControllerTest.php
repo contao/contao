@@ -20,12 +20,12 @@ class AccordionControllerTest extends ContentElementTestCase
 {
     public function testOutputsAccordion(): void
     {
-        $text = $this->mockClassWithProperties(ContentModel::class, [
+        $text = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'text',
             'sectionHeadline' => serialize(['value' => 'Text', 'unit' => 'h3']),
         ]);
 
-        $image = $this->mockClassWithProperties(ContentModel::class, [
+        $image = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'image',
             'sectionHeadline' => serialize(['value' => 'Image', 'unit' => 'h3']),
         ]);
@@ -74,12 +74,12 @@ class AccordionControllerTest extends ContentElementTestCase
 
     public function testDoesNotAddTheDataOpenAttribute(): void
     {
-        $text = $this->mockClassWithProperties(ContentModel::class, [
+        $text = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'text',
             'sectionHeadline' => serialize(['value' => 'Text', 'unit' => 'h3']),
         ]);
 
-        $image = $this->mockClassWithProperties(ContentModel::class, [
+        $image = $this->createClassWithPropertiesStub(ContentModel::class, [
             'type' => 'image',
             'sectionHeadline' => serialize(['value' => 'Image', 'unit' => 'h3']),
         ]);

@@ -92,41 +92,41 @@ use Contao\Model\Registry;
  * @method static MemberModel|null findOneByBackupCodes($val, array $opt=array())
  * @method static MemberModel|null findOneByTrustedTokenVersion($val, array $opt=array())
  *
- * @method static Collection<MemberModel>|MemberModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByFirstname($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByLastname($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByDateOfBirth($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByGender($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByCompany($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByStreet($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByPostal($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByCity($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByState($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByCountry($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByPhone($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByMobile($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByFax($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByWebsite($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByLanguage($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByGroups($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByLogin($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByPassword($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByAssignDir($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByHomeDir($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByDisable($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByStart($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByStop($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByDateAdded($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByLastLogin($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByCurrentLogin($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findBySession($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findBySecret($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByUseTwoFactor($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByBackupCodes($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findByTrustedTokenVersion($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<MemberModel>|MemberModel[]|null findAll(array $opt=array())
+ * @method static Collection<MemberModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByFirstname($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByLastname($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByDateOfBirth($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByGender($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByCompany($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByStreet($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByPostal($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByCity($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByState($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByCountry($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByPhone($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByMobile($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByFax($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByWebsite($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByLanguage($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByGroups($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByLogin($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByPassword($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByAssignDir($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByHomeDir($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByDisable($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByStart($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByStop($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByDateAdded($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByLastLogin($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByCurrentLogin($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findBySession($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findBySecret($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByUseTwoFactor($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByBackupCodes($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findByTrustedTokenVersion($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<MemberModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<MemberModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -211,9 +211,9 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn>? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
-								 ->execute($strEmail, strtotime('-24 hours'));
+								 ->execute($strEmail, time());
 
 		if ($objResult->numRows < 1)
 		{
@@ -231,19 +231,19 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Find registrations that have not been activated for more than 24 hours
+	 * Find registrations that have not been confirmed while the opt-in token was valid
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<MemberModel>|MemberModel[]|null A collection of models or null if there are no expired registrations
+	 * @return Collection<MemberModel>|null A collection of models or null if there are no expired registrations
 	 */
 	public static function findExpiredRegistrations()
 	{
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
-								 ->execute(strtotime('-24 hours'));
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
+								 ->execute(time());
 
 		if ($objResult->numRows < 1)
 		{
@@ -254,7 +254,7 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Find an expired registration by e-mail address that has not been activated for more than 24 hours
+	 * Find an expired registration by e-mail address that has not been confirmed while the opt-in token was valid
 	 *
 	 * @param string $strEmail The e-mail address to find the expired registration for
 	 *
@@ -265,9 +265,9 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.removeOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
-								 ->execute($strEmail, strtotime('-24 hours'));
+								 ->execute($strEmail, time());
 
 		if ($objResult->numRows < 1)
 		{

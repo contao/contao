@@ -17,15 +17,14 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Route;
 
 class PageControllerTest extends FunctionalTestCase
 {
     private static array|null $lastImport = null;
 
-    /**
-     * @dataProvider getPageController
-     */
+    #[DataProvider('getPageController')]
     public function testResolvesPageController(array $fixtures, string $request, string|false|null $path, array $requirements, array $defaults): void
     {
         $_SERVER['REQUEST_URI'] = $request;

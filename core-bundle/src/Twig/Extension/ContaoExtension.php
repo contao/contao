@@ -14,8 +14,12 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
@@ -44,11 +48,14 @@ use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
+use Contao\FrontendTemplate;
 use Contao\FrontendTemplateTrait;
 use Contao\StringUtil;
-use Contao\Template;
+use Contao\Widget;
 use Symfony\Component\Filesystem\Path;
+use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\GlobalsInterface;
@@ -58,13 +65,13 @@ use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-/**
- * @experimental
- */
 final class ContaoExtension extends AbstractExtension implements GlobalsInterface
 {
     private array $contaoEscaperFilterRules = [];
 
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly Environment $environment,
         private readonly ContaoFilesystemLoader $filesystemLoader,
@@ -86,6 +93,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);
 
         $this->environment->addGlobal(
             'request_token',
@@ -96,7 +104,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
 
                 public function __toString(): string
                 {
-                    trigger_deprecation('contao/core-bundle', '5.3', 'The "request_token" Twig variable has been deprecated and will no longer work in Contao 6. Use the "contao.request_token" variable instead.');
+                    trigger_deprecation('contao/core-bundle', '5.3', 'The "request_token" Twig variable is deprecated and will no longer work in Contao 6. Use the "contao.request_token" variable instead.');
 
                     return $this->tokenManager->getDefaultTokenValue();
                 }
@@ -155,6 +163,8 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new AddTokenParser(self::class),
             // Add a parser for the Contao specific "slot" tag
             new SlotTokenParser(),
+            // Add a parser for the Contao specific "defer" tag
+            new DeferTokenParser(),
         ];
     }
 
@@ -169,7 +179,15 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->filesystemLoader);
+
+                    if (\is_string($template)) {
+                        $parts = ContaoTwigUtil::parseContaoName($template);
+
+                        if ('Contao' === ($parts[0] ?? null)) {
+                            $candidates = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
+                            $args[2] = $candidates[$this->filesystemLoader->getCurrentThemeSlug() ?? ''] ?? $candidates[''];
+                        }
+                    }
 
                     return $includeFunctionCallable(...$args);
                 },
@@ -186,7 +204,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'contao_figure',
                 [FigureRuntime::class, 'renderFigure'],
-                ['is_safe' => ['html']],
+                [
+                    'is_safe' => ['html'],
+                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'),
+                ],
             ),
             new TwigFunction(
                 'picture_config',
@@ -217,7 +238,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'frontend_module',
                 [FragmentRuntime::class, 'renderModule'],
-                ['is_safe' => ['html']],
+                ['needs_context' => true, 'is_safe' => ['html']],
             ),
             new TwigFunction(
                 'content_element',
@@ -241,10 +262,19 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'content_url',
                 [ContentUrlRuntime::class, 'generate'],
             ),
+            new TwigFunction(
+                'slot',
+                static fn () => throw new SyntaxError('You cannot use the slot() function outside of a slot.'),
+            ),
             // Backend functions
             new TwigFunction(
                 'backend_icon',
                 [BackendHelperRuntime::class, 'icon'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFunction(
+                'file_icon',
+                [BackendHelperRuntime::class, 'fileIcon'],
                 ['is_safe' => ['html']],
             ),
         ];
@@ -331,6 +361,11 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 ['is_safe' => ['html']],
             ),
             new TwigFilter(
+                'format_number',
+                [FormatterRuntime::class, 'formatNumber'],
+                ['is_safe' => ['html']],
+            ),
+            new TwigFilter(
                 'sanitize_html',
                 [SanitizerRuntime::class, 'sanitizeHtml'],
                 ['is_safe' => ['html']],
@@ -351,10 +386,26 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 ['preserves_safety' => ['contao_html', 'html']],
             ),
             new TwigFilter(
+                'input_encoded_to_plain_text',
+                [StringRuntime::class, 'inputEncodedToPlainText'],
+            ),
+            new TwigFilter(
+                'html_to_plain_text',
+                [StringRuntime::class, 'htmlToPlainText'],
+            ),
+            new TwigFilter(
                 'deserialize',
                 static fn (mixed $value): array => StringUtil::deserialize($value, true),
             ),
         ];
+    }
+
+    /**
+     * @internal
+     */
+    public function getCurrentThemeSlug(): string|null
+    {
+        return $this->filesystemLoader->getCurrentThemeSlug();
     }
 
     /**
@@ -365,32 +416,55 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
      */
     public function renderLegacyTemplate(string $name, array $blocks, array $context): string
     {
-        $template = Path::getFilenameWithoutExtension($name);
+        $isWidget = ($context['this'] ?? null) instanceof Widget;
 
-        $partialTemplate = new class($template) extends Template {
-            use BackendTemplateTrait;
-            use FrontendTemplateTrait;
+        if (!$isWidget) {
+            $template = Path::getFilenameWithoutExtension($name);
 
-            public function setBlocks(array $blocks): void
-            {
-                $this->arrBlocks = array_map(static fn ($block) => \is_array($block) ? $block : [$block], $blocks);
-            }
+            $partialTemplate = new class($template) extends FrontendTemplate {
+                use BackendTemplateTrait;
+                use FrontendTemplateTrait;
 
-            public function parse(): string
-            {
-                return $this->inherit();
-            }
+                public function setBlocks(array $blocks): void
+                {
+                    $this->arrBlocks = $blocks;
+                }
 
-            protected function renderTwigSurrogateIfExists(): string|null
-            {
-                return null;
-            }
-        };
+                public function parse(): string
+                {
+                    return $this->inherit();
+                }
 
-        $partialTemplate->setData($context);
-        $partialTemplate->setBlocks($blocks);
+                protected function renderTwigSurrogateIfExists(): string|null
+                {
+                    return null;
+                }
+            };
+        }
 
-        return $partialTemplate->parse();
+        // Prevent replacing insert tags in output from Twig
+        $nonce = ContaoFramework::getNonce();
+        $from = ['{{', '}}'];
+        $to = ["[[TL_IT_OPEN_$nonce]]", "[[TL_IT_CLOSE_$nonce]]"];
+
+        $blocks = array_map(
+            static fn ($block) => array_map(
+                static fn ($content) => str_replace($from, $to, $content),
+                \is_array($block) ? $block : [$block],
+            ),
+            $blocks,
+        );
+
+        if ($isWidget) {
+            $output = $context['this']->renderLegacyFromTwig($blocks);
+        } else {
+            $partialTemplate->setData($context);
+            $partialTemplate->setBlocks($blocks);
+
+            $output = $partialTemplate->parse();
+        }
+
+        return str_replace($to, $from, $output);
     }
 
     /**

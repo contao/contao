@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\Message;
 
 use Contao\CoreBundle\Search\Document;
+use Symfony\Component\Messenger\Attribute\AsMessage;
 
-class SearchIndexMessage implements LowPriorityMessageInterface
+#[AsMessage('contao_prio_low')]
+class SearchIndexMessage
 {
     final public const ACTION_INDEX = 'index';
 

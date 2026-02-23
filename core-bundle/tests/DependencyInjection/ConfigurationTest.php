@@ -15,7 +15,8 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Imagine\Image\ImageInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
@@ -23,8 +24,6 @@ use Symfony\Component\Config\Definition\PrototypedArrayNode;
 
 class ConfigurationTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     private Configuration $configuration;
 
     protected function setUp(): void
@@ -120,9 +119,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame($extensions, $configuration['image']['valid_extensions']);
     }
 
-    /**
-     * @dataProvider getPaths
-     */
+    #[DataProvider('getPaths')]
     public function testResolvesThePaths(string $unix, string $windows): void
     {
         $params = [
@@ -150,9 +147,7 @@ class ConfigurationTest extends TestCase
         yield ['/tmp/contao/foo/..', 'C:\Temp\contao\foo\..'];
     }
 
-    /**
-     * @dataProvider getInvalidUploadPaths
-     */
+    #[DataProvider('getInvalidUploadPaths')]
     public function testFailsIfTheUploadPathIsInvalid(string $uploadPath): void
     {
         $params = [
@@ -202,9 +197,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    /**
-     * @dataProvider getReservedImageSizeNames
-     */
+    #[DataProvider('getReservedImageSizeNames')]
     public function testFailsIfAPredefinedImageSizeNameIsReserved(string $name): void
     {
         $params = [
@@ -450,9 +443,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    /**
-     * @dataProvider invalidAllowedInlineStylesRegexProvider
-     */
+    #[DataProvider('invalidAllowedInlineStylesRegexProvider')]
     public function testFailsOnInvalidAllowedInlineStylesRegex(string $regex, string $exceptionMessage): void
     {
         $params = [
@@ -484,9 +475,7 @@ class ConfigurationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider cronConfigurationProvider
-     */
+    #[DataProvider('cronConfigurationProvider')]
     public function testValidCronConfiguration(array $params, bool|string $expected): void
     {
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
@@ -529,6 +518,39 @@ class ConfigurationTest extends TestCase
         ];
     }
 
+    public function testDoesNormalizeResamplingFilter(): void
+    {
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling-filter' => ImageInterface::FILTER_LANCZOS,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
+
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling_filter' => ImageInterface::FILTER_UNDEFINED,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_UNDEFINED, $configuration['image']['imagine_options']['resampling-filter']);
+    }
+
     /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).
@@ -548,7 +570,7 @@ class ConfigurationTest extends TestCase
                 }
             }
 
-            if (\is_string($key) && !$value->isDeprecated()) {
+            if (\is_string($key) && !$value->isDeprecated() && 'resampling-filter' !== $key) {
                 $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }

@@ -14,6 +14,7 @@ use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Create and execute queries
@@ -167,7 +168,7 @@ class Statement
 				throw new \InvalidArgumentException('Set array must not be empty for UPDATE queries');
 			}
 
-			$strQuery = 'SET ' . implode('=?, ', $arrParamNames) . '=?';
+			$strQuery = 'SET ' . implode(' = ?, ', $arrParamNames) . ' = ?';
 		}
 
 		$this->strQuery = str_replace('%s', $strQuery, $this->strQuery);
@@ -187,7 +188,8 @@ class Statement
 	{
 		if ($intRows <= 0)
 		{
-			$intRows = 30;
+			// 2^64-1 is the maximum of unsigned BIGINT, the biggest limit possible
+			$intRows = '18446744073709551615';
 		}
 
 		if ($intOffset < 0)
@@ -249,6 +251,12 @@ class Statement
 			}
 
 			if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+			{
+				continue;
+			}
+
+			// Native JSON support
+			if (\is_array($varParam) && Types::JSON === $arrTypes[$key])
 			{
 				continue;
 			}

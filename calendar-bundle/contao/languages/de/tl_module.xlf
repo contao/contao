@@ -105,6 +105,18 @@
         <source>Here you can choose how featured events are handled.</source>
         <target>Hier legen Sie fest, wie hervorgehobene Events gehandhabt werden.</target>
       </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+        <target>Aktuelle URL für kanonische Links verwenden</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Die aktuelle URL anstelle der konfigurierten Leseseite für kanonische Links verwenden.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_overview_legend">
+        <source>Overview page</source>
+        <target>Übersichtsseite</target>
+      </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
         <target>Eventliste</target>

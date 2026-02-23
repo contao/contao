@@ -23,19 +23,21 @@ class GlobalsMapListener
 
     /**
      * Maps fragments to the globals array.
-     *
-     * Note: Existing elements in $GLOBALS[$key] won't be overwritten. This allows
-     * opting out of our new content elements/modules as fragments by creating a
-     * $GLOBALS definition that points to the respective legacy class.
      */
     public function onInitializeSystem(): void
     {
-        foreach ($this->globals as $key => $value) {
-            if (\is_array($value) && isset($GLOBALS[$key]) && \is_array($GLOBALS[$key])) {
-                $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key], $value, $GLOBALS[$key]);
-            } else {
-                $GLOBALS[$key] = $value;
+        foreach ($this->globals as $key => $priorities) {
+            if (isset($GLOBALS[$key]) && \is_array($GLOBALS[$key])) {
+                if (isset($priorities[0])) {
+                    $priorities[0] = array_replace_recursive($priorities[0], $GLOBALS[$key]);
+                } else {
+                    $priorities[0] = $GLOBALS[$key];
+                }
             }
+
+            ksort($priorities);
+
+            $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key] ?? [], ...array_values($priorities));
         }
     }
 }

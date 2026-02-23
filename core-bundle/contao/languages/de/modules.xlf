@@ -41,6 +41,14 @@
         <source>Set up the pages of your website(s)</source>
         <target>Die Seiten der Webseite(n) erstellen</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+        <target>Template Studio</target>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Twig-Templates anlegen oder bearbeiten</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Templates</target>
@@ -152,6 +160,14 @@
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
         <target>Gelöschte Datensätze wiederherstellen</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+        <target>Jobs</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+        <target>Übersicht der System-Jobs</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
@@ -435,7 +451,7 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the website root page</source>
-        <target>Erzeugt je nach Website-Startseite verschiedene Module</target>
+        <target>Erzeugt je nach Website-Startpunkt verschiedene Module</target>
       </trans-unit>
     </body>
   </file>

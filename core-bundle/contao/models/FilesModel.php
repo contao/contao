@@ -35,6 +35,8 @@ use Symfony\Component\Filesystem\Path;
  * @property float             $importantPartY
  * @property float             $importantPartWidth
  * @property float             $importantPartHeight
+ * @property string            $textTrackLanguage
+ * @property string            $textTrackType
  * @property string|array|null $meta
  *
  * @method static FilesModel|null findByIdOrAlias($val, array $opt=array())
@@ -50,21 +52,25 @@ use Symfony\Component\Filesystem\Path;
  * @method static FilesModel|null findOneByImportantPartY($val, array $opt=array())
  * @method static FilesModel|null findOneByImportantPartWidth($val, array $opt=array())
  * @method static FilesModel|null findOneByImportantPartHeight($val, array $opt=array())
+ * @method static FilesModel|null findOneByTextTrackLanguage($val, array $opt=array())
+ * @method static FilesModel|null findOneByTextTrackType($val, array $opt=array())
  * @method static FilesModel|null findOneByMeta($val, array $opt=array())
  *
- * @method static Collection<FilesModel>|FilesModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByType($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByExtension($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByHash($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByFound($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByName($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByImportantPartX($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByImportantPartY($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByImportantPartWidth($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByImportantPartHeight($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findByMeta($val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<FilesModel>|FilesModel[]|null findAll(array $opt=array())
+ * @method static Collection<FilesModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByType($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByExtension($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByHash($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByFound($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByName($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByImportantPartX($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByImportantPartY($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByImportantPartWidth($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByImportantPartHeight($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByTextTrackLanguage($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByTextTrackType($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findByMeta($val, array $opt=array())
+ * @method static Collection<FilesModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<FilesModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
@@ -80,6 +86,8 @@ use Symfony\Component\Filesystem\Path;
  * @method static integer countByImportantPartY($val, array $opt=array())
  * @method static integer countByImportantPartWidth($val, array $opt=array())
  * @method static integer countByImportantPartHeight($val, array $opt=array())
+ * @method static integer countByTextTrackLanguage($val, array $opt=array())
+ * @method static integer countByTextTrackType($val, array $opt=array())
  * @method static integer countByMeta($val, array $opt=array())
  */
 class FilesModel extends Model
@@ -144,7 +152,7 @@ class FilesModel extends Model
 	 * @param mixed $intPid     The parent ID
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null if there are no files
+	 * @return Collection<FilesModel>|null A collection of models or null if there are no files
 	 */
 	public static function findByPid($intPid, array $arrOptions=array())
 	{
@@ -165,7 +173,7 @@ class FilesModel extends Model
 	 * @param array $arrIds     An array of IDs or UUIDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null if there are no files
+	 * @return Collection<FilesModel>|null A collection of models or null if there are no files
 	 */
 	public static function findMultipleByIds($arrIds, array $arrOptions=array())
 	{
@@ -220,7 +228,7 @@ class FilesModel extends Model
 	 * @param array $arrUuids   An array of UUIDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null if there are no files
+	 * @return Collection<FilesModel>|null A collection of models or null if there are no files
 	 */
 	public static function findMultipleByUuids($arrUuids, array $arrOptions=array())
 	{
@@ -287,7 +295,7 @@ class FilesModel extends Model
 	 * @param array $arrPaths   An array of file paths
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null if there are no files
+	 * @return Collection<FilesModel>|null A collection of models or null if there are no files
 	 */
 	public static function findMultipleByPaths($arrPaths, array $arrOptions=array())
 	{
@@ -312,7 +320,7 @@ class FilesModel extends Model
 	 * @param string $strPath    The base path
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null if there are no matching files
+	 * @return Collection<FilesModel>|null A collection of models or null if there are no matching files
 	 */
 	public static function findMultipleByBasepath($strPath, array $arrOptions=array())
 	{
@@ -333,7 +341,7 @@ class FilesModel extends Model
 	 * @param array $arrExtensions An array of file extensions
 	 * @param array $arrOptions    An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null of there are no matching files
+	 * @return Collection<FilesModel>|null A collection of models or null of there are no matching files
 	 */
 	public static function findMultipleByUuidsAndExtensions($arrUuids, $arrExtensions, array $arrOptions=array())
 	{
@@ -377,7 +385,7 @@ class FilesModel extends Model
 	 * @param string $strPath    The folder path
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null if there are no matching files
+	 * @return Collection<FilesModel>|null A collection of models or null if there are no matching files
 	 */
 	public static function findMultipleFilesByFolder($strPath, array $arrOptions=array())
 	{
@@ -393,7 +401,7 @@ class FilesModel extends Model
 	 * @param string $strPath    The folder path
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return Collection<FilesModel>|FilesModel[]|null A collection of models or null if there are no matching folders
+	 * @return Collection<FilesModel>|null A collection of models or null if there are no matching folders
 	 */
 	public static function findMultipleFoldersByFolder($strPath, array $arrOptions=array())
 	{

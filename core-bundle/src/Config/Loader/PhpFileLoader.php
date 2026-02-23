@@ -13,11 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Loader;
 
 use PhpParser\Node;
+use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Exit_;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Declare_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
@@ -25,6 +31,7 @@ use PhpParser\Node\Stmt\InlineHTML;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
@@ -88,18 +95,18 @@ class PhpFileLoader extends Loader
                     }
 
                     if ([] === $node->declares) {
-                        return NodeTraverser::REMOVE_NODE;
+                        return NodeVisitor::REMOVE_NODE;
                     }
                 }
 
                 // Drop any inline HTML
                 if ($node instanceof InlineHTML) {
-                    return NodeTraverser::REMOVE_NODE;
+                    return NodeVisitor::REMOVE_NODE;
                 }
 
                 // Drop legacy access check
                 if ($this->matchLegacyCheck($node)) {
-                    return NodeTraverser::REMOVE_NODE;
+                    return NodeVisitor::REMOVE_NODE;
                 }
 
                 return null;
@@ -125,9 +132,43 @@ class PhpFileLoader extends Loader
             }
         };
 
+        // Add an if statement around all class declarations to skip them if they exist:
+        // if (!\class_exists(tl_foo::class, false)) { class tl_foo … { … } }
+        $classWrapper = new class() extends NodeVisitorAbstract {
+            public function leaveNode(Node $node): If_|null
+            {
+                if ($node instanceof Class_) {
+                    return new If_(
+                        new BooleanNot(
+                            new FuncCall(
+                                new FullyQualified(['class_exists']),
+                                [
+                                    new Arg(
+                                        new ClassConstFetch(
+                                            new Name([$node->name->name]),
+                                            new Identifier('class'),
+                                        ),
+                                    ),
+                                    new Arg(
+                                        new ConstFetch(new Name('false')),
+                                    ),
+                                ],
+                            ),
+                        ),
+                        [
+                            'stmts' => [$node],
+                        ],
+                    );
+                }
+
+                return null;
+            }
+        };
+
         $traverser = new NodeTraverser();
         $traverser->addVisitor($namespaceResolver);
         $traverser->addVisitor($nodeStripper);
+        $traverser->addVisitor($classWrapper);
 
         $ast = $traverser->traverse($ast);
 

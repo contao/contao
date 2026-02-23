@@ -30,6 +30,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -50,6 +51,7 @@ use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnha
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCoreBundle extends Bundle
@@ -57,6 +59,11 @@ class ContaoCoreBundle extends Bundle
     final public const SCOPE_BACKEND = 'backend';
 
     final public const SCOPE_FRONTEND = 'frontend';
+
+    public function boot(): void
+    {
+        (new Request())->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
+    }
 
     public function getContainerExtension(): ContaoCoreExtension
     {
@@ -124,6 +131,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
         $container->addCompilerPass(new AccessDecisionStrategyPass());
+        $container->addCompilerPass(new RegisterTwigExtensionsPass());
     }
 
     public static function getVersion(): string

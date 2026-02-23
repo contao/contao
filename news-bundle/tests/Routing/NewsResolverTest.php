@@ -14,19 +14,21 @@ namespace Contao\NewsBundle\Tests\Routing;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\StringUrl;
+use Contao\Model;
 use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Routing\NewsResolver;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewsResolverTest extends ContaoTestCase
 {
     public function testResolveNewsWithExternalSource(): void
     {
-        $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'external', 'url' => 'foobar']);
+        $content = $this->createClassWithPropertiesStub(NewsModel::class, ['source' => 'external', 'url' => 'foobar']);
 
-        $resolver = new NewsResolver($this->mockContaoFramework());
+        $resolver = new NewsResolver($this->createContaoFrameworkStub());
         $result = $resolver->resolve($content);
 
         $this->assertTrue($result->isRedirect());
@@ -36,18 +38,18 @@ class NewsResolverTest extends ContaoTestCase
 
     public function testResolveNewsWithInternalSource(): void
     {
-        $jumpTo = $this->mockClassWithProperties(PageModel::class);
-        $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'internal', 'jumpTo' => 42]);
+        $jumpTo = $this->createClassWithPropertiesStub(PageModel::class);
+        $content = $this->createClassWithPropertiesStub(NewsModel::class, ['source' => 'internal', 'jumpTo' => 42]);
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(42)
             ->willReturn($jumpTo)
         ;
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $framework = $this->createContaoFrameworkStub([PageModel::class => $pageAdapter]);
 
         $resolver = new NewsResolver($framework);
         $result = $resolver->resolve($content);
@@ -58,18 +60,18 @@ class NewsResolverTest extends ContaoTestCase
 
     public function testResolveNewsWithArticleSource(): void
     {
-        $article = $this->mockClassWithProperties(ArticleModel::class);
-        $content = $this->mockClassWithProperties(NewsModel::class, ['source' => 'article', 'articleId' => 42]);
+        $article = $this->createClassWithPropertiesStub(ArticleModel::class);
+        $content = $this->createClassWithPropertiesStub(NewsModel::class, ['source' => 'article', 'articleId' => 42]);
 
-        $articleAdapter = $this->mockAdapter(['findPublishedById']);
+        $articleAdapter = $this->createAdapterMock(['findById']);
         $articleAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(42)
             ->willReturn($article)
         ;
 
-        $framework = $this->mockContaoFramework([ArticleModel::class => $articleAdapter]);
+        $framework = $this->createContaoFrameworkStub([ArticleModel::class => $articleAdapter]);
 
         $resolver = new NewsResolver($framework);
         $result = $resolver->resolve($content);
@@ -80,22 +82,22 @@ class NewsResolverTest extends ContaoTestCase
 
     public function testResolveNewsWithoutSource(): void
     {
-        $target = $this->mockClassWithProperties(PageModel::class);
-        $newsArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['jumpTo' => 42]);
+        $target = $this->createClassWithPropertiesStub(PageModel::class);
+        $newsArchive = $this->createClassWithPropertiesStub(NewsArchiveModel::class, ['jumpTo' => 42]);
 
-        $content = $this->mockClassWithProperties(NewsModel::class, ['source' => '']);
+        $content = $this->createClassWithPropertiesStub(NewsModel::class, ['source' => '']);
 
-        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter = $this->createAdapterMock(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findPublishedById')
+            ->method('findById')
             ->with(42)
             ->willReturn($target)
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             PageModel::class => $pageAdapter,
-            NewsArchiveModel::class => $this->mockConfiguredAdapter(['findById' => $newsArchive]),
+            NewsArchiveModel::class => $this->createConfiguredAdapterStub(['findById' => $newsArchive]),
         ]);
 
         $resolver = new NewsResolver($framework);
@@ -106,30 +108,35 @@ class NewsResolverTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getParametersForContentProvider
+     * @param class-string<Model> $class
      */
-    public function testGetParametersForContent(object $content, array $expected): void
+    #[DataProvider('getParametersForContentProvider')]
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $resolver = new NewsResolver($this->mockContaoFramework());
+        $content = $this->createClassWithPropertiesStub($class, $properties);
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $resolver = new NewsResolver($this->createContaoFrameworkStub());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the news alias' => [
-            $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => 'foobar']),
+            NewsModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses news ID if alias is empty' => [
-            $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => '']),
+            NewsModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports NewsModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            PageModel::class,
+            [],
             [],
         ];
     }

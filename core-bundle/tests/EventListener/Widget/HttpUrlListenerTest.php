@@ -15,19 +15,10 @@ namespace Contao\CoreBundle\Tests\EventListener\Widget;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Widget;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HttpUrlListenerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
-
-        parent::tearDown();
-    }
-
     public function testReturnsFalseIfNotHttpurlType(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
@@ -39,7 +30,7 @@ class HttpUrlListenerTest extends TestCase
 
         $listener = new HttpUrlListener($translator);
 
-        $this->assertFalse($listener('foobar', 'input', $this->createMock(Widget::class)));
+        $this->assertFalse($listener('foobar', 'input', $this->createStub(Widget::class)));
     }
 
     public function testReturnsTrueIfNoString(): void
@@ -53,7 +44,7 @@ class HttpUrlListenerTest extends TestCase
 
         $listener = new HttpUrlListener($translator);
 
-        $this->assertTrue($listener(HttpUrlListener::RGXP_NAME, [], $this->createMock(Widget::class)));
+        $this->assertTrue($listener(HttpUrlListener::RGXP_NAME, [], $this->createStub(Widget::class)));
     }
 
     public function testAddsErrorIfInputIsNotAbsoluteUrl(): void

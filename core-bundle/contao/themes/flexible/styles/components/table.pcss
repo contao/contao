@@ -1,0 +1,30 @@
+table.with-border th,
+table.with-border td {
+    line-height: 18px;
+    border: solid var(--border);
+    border-width: 1px 0;
+}
+
+table.with-border th {
+    background-color: var(--table-header);
+}
+
+table.with-padding th {
+    padding: 5px 6px;
+}
+
+table.with-padding td {
+    padding: var(--row-padding) 6px;
+}
+
+table.with-zebra th {
+    background-color: var(--table-header);
+}
+
+table.with-zebra tbody tr:nth-child(odd) td {
+    background-color: var(--table-odd);
+}
+
+table.with-zebra tbody tr:nth-child(even) td {
+    background-color: var(--table-even);
+}

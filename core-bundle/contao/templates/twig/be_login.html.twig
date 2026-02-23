@@ -1,0 +1,100 @@
+{% trans_default_domain 'contao_default' -%}
+
+<!DOCTYPE html>
+<html lang="{{ language }}" data-turbo="false">
+<head>
+    <meta name="turbo-visit-control" content="reload">
+
+    {% block head %}
+        <meta charset="{{ charset }}">
+        <title>Contao | {{ host }}</title>
+
+        {% block meta %}
+            <meta name="generator" content="Contao Open Source CMS">
+            <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+            <meta name="referrer" content="origin">
+            <meta name="robots" content="noindex,follow">
+        {% endblock %}
+
+        <link rel="stylesheet" href="{{ asset('login.css', 'system/themes/' ~ theme) }}">
+        {{ stylesheets|default|raw }}
+
+        <script>{{ getLocaleString.invoke()|raw }}</script>
+        <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
+        <script src="{{ asset('backend.js', 'contao_core') }}"></script>
+        <script>{{ getDateString.invoke()|raw }}</script>
+        {{ javascripts|default|raw }}
+    {% endblock %}
+
+</head>
+<body{{ attrs(attributes|default).addClass('be_login') }}>
+
+{% block container %}
+    <div id="container"
+         data-controller="contao--webauthn contao--webauthn-error"
+         data-contao--webauthn-request-result-url-value="{{ path('webauthn.controller.security.contao_backend.request.result') }}"
+         data-contao--webauthn-request-options-url-value="{{ path('webauthn.controller.security.contao_backend.request.options') }}"
+         data-contao--webauthn-request-success-redirect-uri-value="{{ webauthnSuccessUrl }}"
+         data-contao--webauthn-error-unsupported-message-value="{{ 'ERR.passkeysUnsupported'|trans }}"
+         data-contao--webauthn-error-assertion-failure-message-value="{{ 'ERR.passkeyAssertionFailure'|trans }}"
+         data-contao--webauthn-error-options-failure-message-value="{{ 'ERR.passkeyAssertionFailure'|trans }}"
+         data-contao--webauthn-error-csrf-url-value="{{ path('contao_frontend_request_token_script') }}"
+         data-action="
+        webauthn:unsupported->contao--webauthn-error#handleUnsupported
+        webauthn:assertion:failure->contao--webauthn-error#handleAssertionFailure
+        webauthn:options:failure->contao--webauthn-error#handleOptionsFailure
+        webauthn:options:failure->contao--webauthn-error#loadCsrf
+        webauthn:options:success->contao--webauthn-error#loadCsrf
+      "
+    >
+        <main id="main">
+            <form class="tl_login_form" method="post">
+                <div class="formbody">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_login">
+                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                    <input type="hidden" name="_target_path" value="{{ targetPath }}">
+                    <input type="hidden" name="_always_use_target_path" value="1">
+                    {% if badgeTitle|default %}
+                        <span class="badge-title">{{ badgeTitle }}</span>
+                    {% endif %}
+                    <h1>{{ headline }}</h1>
+                    <div class="widget widget-text">
+                        <label for="username">{{ username }}</label>
+                        <input type="text" name="username" id="username" class="tl_text" value="{{ curUsername }}" autocapitalize="off" autocomplete="username" placeholder="{{ username }}" required>
+                    </div>
+                    <div class="widget widget-password" data-controller="contao--password-visibility">
+                        <label for="password">{{ password }}</label>
+                        <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="{{ password }}" data-contao--password-visibility-target="input" required>
+                        <button type="button" class="password-button" data-action="contao--password-visibility#toggle">
+                            <span data-contao--password-visibility-target="icon">{{ backend_icon('password-show.svg', 'MSC.showPassword'|trans) }}</span>
+                            <span class="hidden" data-contao--password-visibility-target="icon">{{ backend_icon('password-hide.svg', 'MSC.hidePassword'|trans) }}</span>
+                        </button>
+                    </div>
+                    <div class="submit_container">
+                        <button type="submit" name="login" id="login" class="tl_submit">{{ loginButton }}</button>
+                    </div>
+                </div>
+            </form>
+            {{ include('@Contao/backend/chrome/login_menu.html.twig') }}
+        </main>
+        {{ messages|raw }}
+        <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+        <p class="fe-link"><a href="/">{{ feLink }}</a></p>
+    </div>
+{% endblock %}
+
+<div class="tl_info" id="javascript">
+    {{ jsDisabled }}
+</div>
+
+<script>
+    window.addEvent('domready', function() {
+        if (parent.frames[0] && parent.frames[0].name == 'switch') {
+            parent.location.reload();
+        }
+        $('username').focus();
+    });
+</script>
+
+</body>
+</html>

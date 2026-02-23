@@ -24,9 +24,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
-use Symfony\Component\Cache\Adapter\NullAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -34,9 +35,7 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class TwigMacrosTest extends TestCase
 {
-    /**
-     * @dataProvider provideAttributes
-     */
+    #[DataProvider('provideAttributes')]
     public function testHtmlAttributesMacro(string $attributes, string $expected): void
     {
         $this->assertSame($expected, $this->renderMacro("html_attributes($attributes)"));
@@ -60,13 +59,11 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideCaptionOptions
-     */
+    #[DataProvider('provideCaptionOptions')]
     public function testCaptionMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
         $figure = new Figure(
-            $this->createMock(ImageResult::class),
+            $this->createStub(ImageResult::class),
             new Metadata([Metadata::VALUE_CAPTION => 'my <b>caption</b>']),
             null,
             null,
@@ -105,12 +102,10 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideImgData
-     */
+    #[DataProvider('provideImgData')]
     public function testImgMacro(array $imageData, Metadata|null $metadata, string $expected): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $image
             ->method('getImg')
             ->willReturn($imageData)
@@ -181,12 +176,10 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideImgOptions
-     */
+    #[DataProvider('provideImgOptions')]
     public function testImgMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $image
             ->method('getImg')
             ->willReturn([
@@ -235,12 +228,10 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePictureSources
-     */
+    #[DataProvider('providePictureSources')]
     public function testPictureMacro(array $sources, string $expected): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $image
             ->method('getSources')
             ->willReturn($sources)
@@ -301,12 +292,10 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePictureOptions
-     */
+    #[DataProvider('providePictureOptions')]
     public function testPictureMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $image
             ->method('getSources')
             ->willReturn([
@@ -369,13 +358,26 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFigureData
-     */
-    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, LightboxResult|null $lightbox, string $expected): void
+    #[DataProvider('provideFigureData')]
+    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, bool $withLightbox, string $expected): void
     {
+        $lightbox = null;
+
+        if ($withLightbox) {
+            $lightbox = $this->createStub(LightboxResult::class);
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('lightbox/resource')
+            ;
+
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('gal1')
+            ;
+        }
+
         $figure = new Figure(
-            $this->createMock(ImageResult::class),
+            $this->createStub(ImageResult::class),
             $metadata,
             $linkAttributes,
             $lightbox,
@@ -393,12 +395,12 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideFigureData(): iterable
+    public static function provideFigureData(): iterable
     {
         yield 'minimal' => [
             null,
             [],
-            null,
+            false,
             '<figure><picture></figure>',
         ];
 
@@ -408,49 +410,36 @@ class TwigMacrosTest extends TestCase
                 'href' => 'foo.html',
                 'data-link' => 'bar',
             ],
-            null,
+            false,
             '<figure><a href="foo.html" data-link="bar"><picture></a></figure>',
         ];
-
-        $lightbox = $this->createMock(LightboxResult::class);
-        $lightbox
-            ->method('getLinkHref')
-            ->willReturn('lightbox/resource')
-        ;
-
-        $lightbox
-            ->method('getGroupIdentifier')
-            ->willReturn('gal1')
-        ;
 
         yield 'with lightbox link' => [
             null,
             [],
-            $lightbox,
+            true,
             '<figure><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with lightbox link and title' => [
             new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [],
-            $lightbox,
+            true,
             '<figure><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with caption' => [
             new Metadata([Metadata::VALUE_CAPTION => 'foo caption']),
             [],
-            null,
+            false,
             '<figure><picture><figcaption></figure>',
         ];
     }
 
-    /**
-     * @dataProvider provideFigureOptions
-     */
+    #[DataProvider('provideFigureOptions')]
     public function testFigureMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
-        $lightbox = $this->createMock(LightboxResult::class);
+        $lightbox = $this->createStub(LightboxResult::class);
         $lightbox
             ->method('getLinkHref')
             ->willReturn('lightbox/resource')
@@ -462,7 +451,7 @@ class TwigMacrosTest extends TestCase
         ;
 
         $figure = new Figure(
-            $this->createMock(ImageResult::class),
+            $this->createStub(ImageResult::class),
             new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [
                 'href' => 'foo.html',
@@ -517,13 +506,11 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideAddSchemaOrgOptions
-     */
+    #[DataProvider('provideAddSchemaOrgOptions')]
     public function testDoesAddsSchemaOrgDataIfEnabled(string $call, array $schemaData): void
     {
         $figure = new Figure(
-            $this->createMock(ImageResult::class),
+            $this->createStub(ImageResult::class),
             new Metadata([
                 Metadata::VALUE_TITLE => 'foo title',
                 Metadata::VALUE_UUID => '<uuid>',
@@ -534,7 +521,7 @@ class TwigMacrosTest extends TestCase
         $jsonLdManager = new JsonLdManager($responseContext);
         $responseContext->add($jsonLdManager);
 
-        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
         $responseContextAccessor
             ->method('getResponseContext')
             ->willReturn($responseContext)
@@ -587,14 +574,14 @@ class TwigMacrosTest extends TestCase
         $environment->setExtensions([
             new ContaoExtension(
                 $environment,
-                $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                $this->createStub(ContaoFilesystemLoader::class),
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
         ]);
 
-        $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor ??= $this->createStub(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

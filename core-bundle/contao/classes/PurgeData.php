@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -104,7 +105,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 			{
 				if (str_contains($folder, '%'))
 				{
-					$folder = StringUtil::stripRootDir($parameterBag->resolveValue($folder));
+					$folder = Path::canonicalize(StringUtil::stripRootDir($parameterBag->resolveValue($folder)));
 				}
 
 				$total = 0;

@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Twig;
 
 use Symfony\Component\Filesystem\Path;
 
-/**
- * @experimental
- */
 final class ContaoTwigUtil
 {
     /**

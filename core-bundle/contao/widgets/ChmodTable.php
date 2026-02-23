@@ -34,38 +34,12 @@ class ChmodTable extends Widget
 	 */
 	public function generate()
 	{
-		$arrObjects = array('u'=>'cuser', 'g'=>'cgroup', 'w'=>'cworld');
-
-		$return = '  <table id="ctrl_defaultChmod" class="tl_chmod">
-    <tr>
-      <th></th>
-      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['editpage'] . '</th>
-      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['editnavigation'] . '</th>
-      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['deletepage'] . '</th>
-      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['editarticles'] . '</th>
-      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['movearticles'] . '</th>
-      <th scope="col">' . $GLOBALS['TL_LANG']['CHMOD']['deletearticles'] . '</th>
-    </tr>';
-
-		// Build rows for user, group and world
-		foreach ($arrObjects as $k=>$v)
-		{
-			$return .= '
-    <tr>
-      <th scope="row">' . $GLOBALS['TL_LANG']['CHMOD'][$v] . '</th>';
-
-			// Add checkboxes
-			for ($j=1; $j<=6; $j++)
-			{
-				$return .= '
-      <td><input type="checkbox" name="' . $this->strName . '[]" value="' . self::specialcharsValue($k . $j) . '"' . $this->getAttributes() . static::optionChecked($k . $j, $this->varValue) . ' data-action="focus->contao--scroll-offset#store"></td>';
-			}
-
-			$return .= '
-    </tr>';
-		}
-
-		return $return . '
-  </table>';
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/chmod_table.html.twig', array(
+			'id' => $this->strId,
+			'name' => $this->strName,
+			'objects' => array('u' => 'cuser', 'g' => 'cgroup', 'w' => 'cworld'),
+			'values' => $this->varValue,
+			'attributes' => $this->getAttributes(),
+		));
 	}
 }

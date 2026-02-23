@@ -28,7 +28,7 @@ use Imagine\Imagick\Imagine as ImagickImagine;
 
 class ImaginePreviewProvider implements PreviewProviderInterface
 {
-    public function __construct(private readonly ImagineInterface $imagine)
+    public function __construct(private readonly ImagineInterface&InfoProvider $imagine)
     {
     }
 
@@ -113,11 +113,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
             return \function_exists('image'.$format);
         }
 
-        if ($this->imagine instanceof InfoProvider) {
-            return $this->imagine->getDriverInfo()->isFormatSupported($format);
-        }
-
-        throw new \RuntimeException(\sprintf('Unsupported Imagine implementation "%s"', $this->imagine::class));
+        return $this->imagine->getDriverInfo()->isFormatSupported($format);
     }
 
     private function openImagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface

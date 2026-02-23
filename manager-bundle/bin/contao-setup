@@ -16,7 +16,6 @@ use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Filesystem\Filesystem;
 
-error_reporting(-1);
 set_time_limit(0);
 @ini_set('display_startup_errors', '1');
 @ini_set('display_errors', '1');
@@ -24,6 +23,8 @@ set_time_limit(0);
 
 if (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 2);
+} elseif (file_exists(__DIR__.'/../../../autoload.php')) {
+    $projectDir = \dirname(__DIR__, 4);
 } elseif (file_exists(__DIR__.'/../../../../autoload.php')) {
     $projectDir = \dirname(__DIR__, 5);
 } elseif (false !== ($cwd = getcwd()) && file_exists($cwd.'/vendor/autoload.php')) {
@@ -35,9 +36,13 @@ if (file_exists(__DIR__.'/../autoload.php')) {
 require $projectDir.'/vendor/autoload.php';
 
 $kernel = ContaoKernel::fromInput($projectDir, new ArrayInput(['--env' => 'prod']));
+$devKernel = ContaoKernel::fromInput($projectDir, new ArrayInput(['--env' => 'dev']));
 
 // Purge the cache in case it is corrupted
 (new Filesystem())->remove($kernel->getCacheDir());
+(new Filesystem())->remove($devKernel->getCacheDir());
+
+unset($devKernel);
 
 $application = new ContaoApplication($kernel);
 $application->setDefaultCommand('contao:setup');

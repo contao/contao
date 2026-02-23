@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Compiler\LoggerChannelPass;
 use Contao\CoreBundle\Monolog\SystemLogger;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -71,9 +72,7 @@ class LoggerChannelPassTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao._logger.contao.dummy_service'));
     }
 
-    /**
-     * @dataProvider legacyActionNamesProvider
-     */
+    #[DataProvider('legacyActionNamesProvider')]
     public function testTransformsLegacyActionNamesForLoggersUsingContaoChannel(string $action, string $transformed): void
     {
         $definition = new ChildDefinition('monolog.logger_prototype');

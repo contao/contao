@@ -57,7 +57,7 @@ class ProcessUtil implements ResetInterface
     {
         // Use PhpSubprocess introduced in Symfony 6.4 to respect command line arguments
         // used to invoke the current process.
-        return new PhpSubprocess([$this->getConsolePath(), $command, ...$commandArguments], php: [$this->getPhpBinary()]);
+        return new PhpSubprocess([$this->getConsolePath(), $command, ...$commandArguments], env: ['PROCESS_CONSUMER_NAME' => 'contao-'.bin2hex(random_bytes(5))], php: [$this->getPhpBinary()]);
     }
 
     public function reset(): void

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig\Slots;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Slots\SlotNode;
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Node\Expression\ConstantExpression;
@@ -24,7 +23,7 @@ class SlotNodeTest extends TestCase
 {
     public function testCompilesCode(): void
     {
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
 
         $node = new SlotNode(
             'foo',
@@ -35,25 +34,16 @@ class SlotNodeTest extends TestCase
 
         $node->compile($compiler);
 
-        if (class_exists(YieldReady::class)) {
-            $expectedSource = <<<'SOURCE'
-                if (isset($context['_slots']['foo'])) {
-                    yield "foo";
-                } else {
-                    yield "bar";
-                }
+        $expectedSource = <<<'SOURCE'
+            $context['_slot_name'] = "foo";
+            if ('' !== (string)($context['_slots']['foo'] ?? '')) {
+                yield "foo";
+            } else {
+                yield "bar";
+            }
+            unset($context['_slot_name']);
 
-                SOURCE;
-        } else {
-            $expectedSource = <<<'SOURCE'
-                if (isset($context['_slots']['foo'])) {
-                    echo "foo";
-                } else {
-                    echo "bar";
-                }
-
-                SOURCE;
-        }
+            SOURCE;
 
         $this->assertSame($expectedSource, $compiler->getSource());
     }

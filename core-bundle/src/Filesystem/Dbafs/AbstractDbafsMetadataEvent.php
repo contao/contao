@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -21,13 +22,14 @@ class AbstractDbafsMetadataEvent
 {
     /**
      * @param array<string, mixed> $row
-     * @param array<string, mixed> $extraMetadata
      */
     public function __construct(
         private readonly string $table,
         protected array $row,
-        protected array $extraMetadata = [],
+        protected ExtraMetadata|null $extraMetadata = null,
     ) {
+        $this->extraMetadata ??= new ExtraMetadata();
+
         foreach (['path', 'uuid'] as $mandatoryKey) {
             if (null === ($value = $row[$mandatoryKey] ?? null)) {
                 throw new \InvalidArgumentException(\sprintf('Row must contain key "%s".', $mandatoryKey));
@@ -62,10 +64,7 @@ class AbstractDbafsMetadataEvent
         return $this->row;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getExtraMetadata(): array
+    public function getExtraMetadata(): ExtraMetadata
     {
         return $this->extraMetadata;
     }

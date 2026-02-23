@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\StringUtil;
+use Nyholm\Psr7\Uri;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -137,7 +138,14 @@ class FileDownloadHelper
 
     private function generate(string $url, array $params): string
     {
-        return $this->signer->sign($url.'?'.http_build_query(array_filter($params)));
+        $uri = new Uri($url);
+        parse_str($uri->getQuery(), $existingParams);
+        $params = [...$existingParams, ...array_filter($params)];
+
+        // Unset default uri_signer parameters (#7989)
+        unset($params['_hash'], $params['_expiration']);
+
+        return $this->signer->sign((string) $uri->withQuery(http_build_query($params)));
     }
 
     private function getFile(Request $request, VirtualFilesystemInterface $storage): FilesystemItem|null
@@ -155,7 +163,7 @@ class FileDownloadHelper
 
     private function addContentTypeHeader(Response $response, FilesystemItem $file): void
     {
-        $response->headers->set('Content-Type', $file->getMimeType());
+        $response->headers->set('Content-Type', $file->getMimeType('application/octet-stream'));
     }
 
     private function addContentDispositionHeader(Response $response, Request $request, FilesystemItem $file): void

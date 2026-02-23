@@ -15,7 +15,9 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
@@ -26,19 +28,17 @@ class DynamicExtendsTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicExtendsTokenParser($this->createMock(ContaoFilesystemLoader::class));
+        $tokenParser = new DynamicExtendsTokenParser($this->createStub(ContaoFilesystemLoader::class));
 
         $this->assertSame('extends', $tokenParser->getTag());
     }
 
-    /**
-     * @dataProvider provideSources
-     */
+    #[DataProvider('provideSources')]
     public function testHandlesContaoExtends(string $code, string ...$expectedStrings): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getDynamicParent')
+            ->method('getAllDynamicParentsByThemeSlug')
             ->willReturnCallback(
                 function (string $name, string $path) {
                     $this->assertSame('/path/to/the/template.html.twig', $path);
@@ -49,7 +49,7 @@ class DynamicExtendsTokenParserTest extends TestCase
                     ];
 
                     if (null !== ($resolved = $hierarchy[$name] ?? null)) {
-                        return $resolved;
+                        return ['' => $resolved];
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
@@ -57,7 +57,7 @@ class DynamicExtendsTokenParserTest extends TestCase
             )
         ;
 
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicExtendsTokenParser($filesystemLoader));
 
         $source = new Source(
@@ -67,10 +67,10 @@ class DynamicExtendsTokenParserTest extends TestCase
         );
 
         $tokenStream = (new Lexer($environment))->tokenize($source);
-        $serializedParentNode = (new Parser($environment))->parse($tokenStream)->getNode('parent');
+        $parentNode = (new Parser($environment))->parse($tokenStream)->getNode('parent');
 
         foreach ($expectedStrings as $expectedString) {
-            $this->assertStringContainsString($expectedString, (string) $serializedParentNode);
+            $this->assertStringContainsString($expectedString, (string) $parentNode);
         }
     }
 
@@ -110,14 +110,14 @@ class DynamicExtendsTokenParserTest extends TestCase
 
     public function testFailsWhenExtendingAnInvalidTemplate(): void
     {
-        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getDynamicParent')
-            ->with('foo')
+            ->method('getAllDynamicParentsByThemeSlug')
+            ->with('foo', $this->anything())
             ->willThrowException(new \LogicException('Template not found in hierarchy.'))
         ;
 
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
         $environment->addTokenParser(new DynamicExtendsTokenParser($filesystemLoader));
 
         // Use a conditional expression here, so that we can test rethrowing exceptions
@@ -126,21 +126,19 @@ class DynamicExtendsTokenParserTest extends TestCase
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Template not found in hierarchy.');
+        $this->expectException(LoaderError::class);
+        $this->expectExceptionMessage('Template not found in hierarchy. Optional templates are only supported in array notation at line 1.');
 
         $parser->parse($tokenStream);
     }
 
-    /**
-     * @dataProvider provideSourcesWithErrors
-     */
+    #[DataProvider('provideSourcesWithErrors')]
     public function testValidatesTokenStream(string $code, string $expectedException): void
     {
-        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment = new Environment($this->createStub(LoaderInterface::class));
 
         $environment->addTokenParser(new DynamicExtendsTokenParser(
-            $this->createMock(ContaoFilesystemLoader::class),
+            $this->createStub(ContaoFilesystemLoader::class),
         ));
 
         $source = new Source(
@@ -153,7 +151,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $parser = new Parser($environment);
 
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage($expectedException);
+        $this->expectExceptionMessageMatches($expectedException);
 
         $parser->parse($tokenStream);
     }
@@ -162,17 +160,12 @@ class DynamicExtendsTokenParserTest extends TestCase
     {
         yield 'extend from within a block' => [
             "{% block b %}{% extends '@Foo/bar.html.twig' %}{% endblock %}",
-            'Cannot use "extends" in a block.',
+            '/^Cannot use "extends" in a block/',
         ];
 
         yield 'extend from within macro' => [
             "{% macro m() %}{% extends '@Foo/bar.html.twig' %}{% endmacro %}",
-            'Cannot use "extends" in a macro.',
-        ];
-
-        yield 'multiple extends' => [
-            "{% extends '@Foo/bar1.html.twig' %}{% extends '@Foo/bar2.html.twig' %}",
-            'Multiple extends tags are forbidden.',
+            '/^Cannot use "extends" in a macro/',
         ];
     }
 }

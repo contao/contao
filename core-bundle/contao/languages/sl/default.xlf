@@ -145,6 +145,10 @@
         <source>Cannot move %s to %s because the target exists!</source>
         <target>Premik %s v %s ni mogoč, ker ciljna datoteka že obstaja!</target>
       </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+        <target>Za to polje ni dovoljeno nalaganje več datotek!</target>
+      </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
         <target>Dostop zavrnjen! Trenutni gostiteljev naslov (%s) ni identičen željenemu gostiteljevemu naslovu (%s)</target>
@@ -199,6 +203,7 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
         <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Ta vzdevek je v konfliktu s stranjo &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -372,6 +377,40 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Naslov skrbnikove elektronske pošte ni bil podan. Prosimo, obvestite skrbnika.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>Izvajanje JavaScripta je trenutno onemogočeno ali blokirano. Brez JavaScripta preverjanje proti neželenim sporočilom (spam) ne bo uspelo. Za uspešno pošiljanje obrazca, prosimo, da začasno omogočite izvajanje JavaScripta.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+        <target>Preverjanje ni uspelo. Prosimo, poskusite kasneje.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA ni na voljo brez varne povezave HTTPS. Če vaše produkcijsko spletno mesto ne uporablja HTTPS (ni priporočljivo), prosimo, namesto tega uporabite varnostno vprašanje.</target>
+      </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Ključi Passkeys niso podprti na tej napravi.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Prijava s ključem Passkey ni uspela.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>Ključ Passkey ni bil ustvarjen.</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element z ID %d ne more biti vstavljen na to mesto, ker je v navzkrižju z obstoječim elementom.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Seštejte %d in %d.</target>
@@ -387,6 +426,22 @@
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
         <target>Elementi teksta</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+        <target>Spremeni geslo</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+        <target>Ustvari obrazec za spremembo gesla.</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+        <target>Izbriši račun</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+        <target>Ustvari obrazec za izbris članskega računa.</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -432,6 +487,12 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Generira razvrščen ali nerazvrščen seznam.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabela</target>
@@ -440,29 +501,40 @@
         <source>Generates an optionally sortable table.</source>
         <target>Generira tabelo. Opcijsko z razvrščanjem.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Harmonika</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Ustvari &quot;accordion&quot;.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Skupina elementov</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Ustvari skupino vgnezdenih elementov.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Začetek ovoja</target>
+        <source>Accordion wrapper start</source>
+        <target>Accordion wrapper start</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Generira začetni del ovoja harmonike.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Konec ovoja</target>
+        <source>Accordion wrapper stop</source>
+        <target>Accordion wrapper stop</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Generira zaključni del ovoja harmonike.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Samostojen element</target>
+        <source>Accordion single element</source>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -491,21 +563,27 @@
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Drsnik vsebine</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Usvari drsnik vsebine (slider)</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Drsnik vsebine</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Začetek ovoja</target>
+        <source>Slider wrapper start</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Generira začetni del ovoja drsnika.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Konec ovoja</target>
+        <source>Slider wrapper stop</source>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -639,6 +717,37 @@
         <source>Displays the teaser text of an article.</source>
         <target>Prikaže uvodni tekst članka.</target>
       </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>Dvostopenjska prijava</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>Ustvari obrazec za nastavitev dvonivojske avtentikacije (2FA).</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+      </trans-unit>
+      <trans-unit id="CTE.user">
+        <source>User</source>
+        <target>Uporabnik</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.0">
+        <source>Manage passkeys</source>
+        <target>Upravljanje ključev Passkey</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.1">
+        <source>Allows to manage the passkeys of a member.</source>
+        <target>Članom dovoli urejanje ključev Passkey.</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.0">
+        <source>Login form</source>
+        <target>Obrazec za prijavo</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.1">
+        <source>Generates a login form.</source>
+        <target>Ustvari obrazec za prijavo.</target>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
         <target>Pojasnilo</target>
@@ -725,6 +834,7 @@
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
+        <target>Range slider</target>
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
@@ -736,6 +846,13 @@
       <trans-unit id="FFL.hidden.1">
         <source>A single-line input field that is not visible in the form.</source>
         <target>Enovrstično vnosno polje, ki ni vidno v obrazcu.</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+        <target>ALTCHA antispam</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -783,6 +900,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website.</source>
+        <target>Ta vrsta strani označuje začetno stran novega spletnega mesta.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -822,6 +940,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>Ko je koren spletnega mesta v vzdrževalnem načinu, bodo vse strani prikazovale napako 503.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1131,6 +1250,10 @@
         <source>Open the link in a new browser window.</source>
         <target>Odpri povezavo v novem oknu.</target>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>Odpri v novem zavihku</target>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1312,16 +1435,24 @@
         <target>Izbriši vrstico</target>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
-        <source>Module</source>
-        <target>Modul</target>
+        <source>Module or content element</source>
+        <target>Modul ali element vsebine</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
         <target>Sklop postavitve</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
-        <source>Enable/disable the module</source>
-        <target>Omogoči/onemogoči modul</target>
+        <source>Enable/disable the module or content element</source>
+        <target>Omogoči/onemogoči modul ali element vsebine</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_modules">
+        <source>Front end modules</source>
+        <target>Moduli na spletnem mestu</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
+        <target>Elementi vsebine</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
@@ -1591,8 +1722,8 @@
         <target>Bližnjice na tipkovnici, na voljo v administraciji</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Za več informacij o načinu pohitritve dela preberite članek o &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;bližnjicah na tipkovnici&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Več informacij o načinu pohitritve dela z &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;bližnjicami na tipkovnici&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1687,12 +1818,16 @@
         <target>Nazaj</target>
       </trans-unit>
       <trans-unit id="MSC.backBTTitle">
-        <source>Back to the previous page</source>
-        <target>Nazaj na prejšnjo stran</target>
+        <source>Go up one level</source>
+        <target>Pojdi en nivo višje</target>
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Prekliči</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+        <source>Are you sure?</source>
+        <target>Ste prepričani?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -1746,9 +1881,16 @@
         <source>Search</source>
         <target>Išči</target>
       </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+        <target>Datoteka</target>
+      </trans-unit>
       <trans-unit id="MSC.noResult">
         <source>No records found.</source>
         <target>Ni najdenih zapisov.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultWithFilter">
+        <source>No records match the current filter settings.</source>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -1765,10 +1907,6 @@
       <trans-unit id="MSC.saveNedit">
         <source>Save and edit child elements</source>
         <target>Shrani in uredi podelemente</target>
-      </trans-unit>
-      <trans-unit id="MSC.saveNback">
-        <source>Save and go back</source>
-        <target>Shrani in pojdi nazaj</target>
       </trans-unit>
       <trans-unit id="MSC.saveNcreate">
         <source>Save and new</source>
@@ -2098,6 +2236,10 @@
         <source>Reset the filters</source>
         <target>Resetiraj filtre</target>
       </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
+        <target>Filtriraj</target>
+      </trans-unit>
       <trans-unit id="MSC.searchAndFilter">
         <source>Search and filter functions</source>
         <target>Možnosti iskanja in filtriranja</target>
@@ -2314,6 +2456,10 @@
         <source>Quick link</source>
         <target>Hitra povezava</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Pozabljeno geslo?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Uporabniško ime</target>
@@ -2333,6 +2479,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Vnesite uporabniško ime in geslo.</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Prosimo, potrdite svojo identiteto z vašim geslom.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>Preveri</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2438,17 +2592,13 @@
         <source>Print this page</source>
         <target>Natisni to stran</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Shrani članek kot PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Povej naprej na Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Povej naprej na Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Deli na X (prej Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2481,6 +2631,10 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>Rezultatov na stran</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>ali</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2530,6 +2684,10 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Povezave, katero hočete odpreti, ni bilo mogoče preveriti. Če ste sami kliknili na povezavo, ali povezavo dobili od zaupljive osebe, lahko potrdite proces spodaj.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Prevečkrat ste poskusili ponastaviti vaše geslo. Prosimo, poskusite znova čez 15 minut.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Neujemanje različic</target>
@@ -2563,19 +2721,34 @@
         <target>Če želite vnesti meta podatke, morate dodati korensko stran.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
+        <source>Breadcrumb</source>
         <target>Drobna navigacija (breadcrumb)</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
-        <target>Glavna navigacija</target>
+        <source>Main</source>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
-        <target>Navigacija v glavi strani</target>
+        <source>Header</source>
+        <target>Glava</target>
+      </trans-unit>
+      <trans-unit id="MSC.showProfile">
+        <source>Show user profile</source>
+        <target>Prikaži uporabniški profil</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideProfile">
+        <source>Hide user profile</source>
+        <target>Skrij uporabniški profil</target>
+      </trans-unit>
+      <trans-unit id="MSC.showMainNavigation">
+        <source>Show main navigation</source>
+        <target>Prikaži glavno navigacijo</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideMainNavigation">
+        <source>Hide main navigation</source>
+        <target>Skrij glavno navigacijo</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
+        <source>Pagination</source>
         <target>Paginacija</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
@@ -2666,9 +2839,24 @@
         <source>Favorites</source>
         <target>Priljubljeni</target>
       </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+        <target>Prikaži sled</target>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+      </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
         <target>Shrani naslov URL med priljubljene</target>
+      </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+        <target>Naslov URL odstrani iz priljubljenih</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+        <target>Resnično želite odstraniti naslov URL iz seznama vaših priljubljenih?</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
@@ -2707,6 +2895,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Onemogoči</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Uredi</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2760,6 +2952,13 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
         <target>Naslov URL za predogled ne more biti ustvarjen, ker ima pot (route) obvezne parametre.</target>
       </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Naslov URL za predogled ne more biti ustvarjen, ker obrazec vsebuje napake.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpIndexSetting">
+        <source>The URL will not be indexed due to the robots tag settings.</source>
+      </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
         <target>Neznana možnost: %s</target>
@@ -2774,10 +2973,27 @@
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>Nadrejeni</target>
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
         <target>Ročno</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+        <target>Opravilo je bilo dodano v vrsto. Preverite spremembe statusa v pregledu poslov.</target>
+      </trans-unit>
+      <trans-unit id="MSC.jobs">
+        <source>Job overview</source>
+        <target>Pregled poslov</target>
+      </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+        <target>Ogled priponk</target>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
+        <target>Prenesi priponko %s</target>
       </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
@@ -2814,6 +3030,167 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>Svetli način</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Zaščiten z &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+        <target>Nisem robot</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+        <target>Sem človek</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+        <target>Preverjanje ...</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
+        <target>Preverjanje ... prosimo, počakajte.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Ključi Passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Ključ Passkey omogoča varno in enostavno prijavo brez gesla in žetona za dvonivojsko avtentikacijo.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Prijavi se s ključem Passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Ime/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Poimenuj ta ključ Passkey ...</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Ustvarjeno ob</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Dodaj ključ Passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.editPasskey">
+        <source>Edit passkey &quot;%s&quot;</source>
+        <target>Uredi ključ Passkey &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="MSC.savePasskey">
+        <source>Save passkey &quot;%s&quot;</source>
+        <target>Shrani ključ Passkey &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="MSC.deletePasskey">
+        <source>Delete passkey &quot;%s&quot;</source>
+        <target>Izbriši ključ Passkey &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>Začnite tipkati za začetek iskanja</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>Prosimo, vnesite vsaj %s znakov</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results …</source>
+        <target>Pridobivam rezultate ...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
+        <target>⌘+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>Poglej %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>Uredi %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+        <target>Tip</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+        <target>Značke</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>Ni najdenih rezultatov.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>Nobene možnosti za izbor.</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>Odstrani element</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuExpand">
+        <source>Expand menu: </source>
+        <target>Razširi meni:</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuCollapse">
+        <source>Collapse menu: </source>
+        <target>Skrči meni:</target>
+      </trans-unit>
+      <trans-unit id="MSC.skipToContent">
+        <source>Skip to content</source>
+        <target>Preskoči na vsebino</target>
+      </trans-unit>
+      <trans-unit id="MSC.clipboardCopy">
+        <source>Copied to clipboard.</source>
+        <target>Kopirano v odložišče.</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
+      </trans-unit>
+      <trans-unit id="MSC.always_index">
+        <source>Always index</source>
+        <target>Vedno indeksiraj</target>
+      </trans-unit>
+      <trans-unit id="MSC.never_index">
+        <source>Never index</source>
+        <target>Nikoli ne indeksiraj</target>
+      </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+        <target>Polje</target>
+      </trans-unit>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
+        <target>Ključna beseda</target>
+      </trans-unit>
+      <trans-unit id="MSC.enter_fullscreen">
+        <source>Enter fullscreen mode</source>
+        <target>Vklopi celozaslonski način</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+        <target>Premakni se v levo</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
+        <target>Premakni se v desno</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2964,6 +3341,18 @@
         <source>Collapse all nodes</source>
         <target>Skrči vsa vozlišča</target>
       </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Filter</source>
+        <target>Filtriraj</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Show the filter panel</source>
+        <target>Prikaži filtre</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.2">
+        <source>Hide the filter panel</source>
+        <target>Skrij filtre</target>
+      </trans-unit>
       <trans-unit id="DCA.new.0">
         <source>New</source>
         <target>Nov</target>
@@ -2972,31 +3361,76 @@
         <source>Create a new element</source>
         <target>Ustvari nov element</target>
       </trans-unit>
-      <trans-unit id="DCA.show">
+      <trans-unit id="DCA.show.0">
+        <source>Details</source>
+        <target>Podrobnosti</target>
+      </trans-unit>
+      <trans-unit id="DCA.show.1">
         <source>Show the details of element ID %s</source>
         <target>Prikaži podrobnosti elementa z ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.edit">
+      <trans-unit id="DCA.edit.0">
+        <source>Edit</source>
+        <target>Uredi</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit.1">
         <source>Edit element ID %s</source>
         <target>Uredi element z ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.cut">
+      <trans-unit id="DCA.cut.0">
+        <source>Move</source>
+        <target>Premakni</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut.1">
         <source>Move element ID %s</source>
         <target>Premakni element z ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.copy">
-        <source>Duplicate element ID %s</source>
-        <target>Podvoji element z ID %s</target>
+      <trans-unit id="DCA.copy.0">
+        <source>Copy</source>
+        <target>Kopiraj</target>
       </trans-unit>
-      <trans-unit id="DCA.delete">
+      <trans-unit id="DCA.copy.1">
+        <source>Copy element ID %s</source>
+        <target>Kopiraj element z ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.0">
+        <source>Copy recursively</source>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.1">
+        <source>Copy element ID %s with child nodes</source>
+        <target>Kopiraj element z ID %s vključno z elementi v njem</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.0">
+        <source>Delete</source>
+        <target>Izbriši</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
         <target>Izbriši element z ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+        <target>Različice</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
+        <target>Prikaži različice elementa z ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>Povleci element z ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.children">
+      <trans-unit id="DCA.global_operations">
+        <source>Show all global operations</source>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>Prikaži možnosti za element z ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.0">
+        <source>Child elements</source>
+      </trans-unit>
+      <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
         <target>Uredi elemente znotraj elementa z ID %s</target>
       </trans-unit>
@@ -3012,29 +3446,81 @@
         <source>Publish element ID %s</source>
         <target>Objavi element z ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.pasteinto.0">
+      <trans-unit id="DCA.toggle.3">
+        <source>Unpublish</source>
+        <target>Skrij objavo</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.4">
+        <source>Publish</source>
+        <target>Objavi</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastetop">
         <source>Paste at the top</source>
         <target>Prilepi na vrh</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteroot">
+        <source>Paste at the top</source>
+        <target>Prilepi na vrh</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste into</source>
+        <target>Prilepi v</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
         <target>Vstavi v element z ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Prilepi na vrh</target>
+        <source>Paste after</source>
+        <target>Vstavi za</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
         <target>Vstavi za element z ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.0">
+      <trans-unit id="DCA.pastenewtop.0">
+        <source>New at the top</source>
+        <target>Novo na vrhu</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
         <target>Ustvari nov element na vrhu</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.1">
+      <trans-unit id="DCA.pastenewafter.0">
+        <source>New after</source>
+        <target>Novo za</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
         <target>Vstavi nov element za element z ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.0">
+        <source>New inside</source>
+        <target>Novo znotraj</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.1">
+        <source>Create a new element inside element ID %s</source>
+        <target>Ustvari nov element znotraj elementa z ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions_legend">
+        <source>Permissions</source>
+        <target>Dovoljenja</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.0">
+        <source>Back end permissions</source>
+        <target>Dovoljenja za administracijo</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.1">
+        <source>The changes made here are saved in the user and group settings.</source>
+        <target>Spremembe, opravljene tu, se shranijo v nastavitvah uporabnikov in skupin.</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.groups">
+        <source>Groups</source>
+        <target>Skupine</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.users">
+        <source>Users</source>
+        <target>Uporabniki</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

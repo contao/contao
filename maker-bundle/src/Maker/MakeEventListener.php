@@ -114,7 +114,7 @@ class MakeEventListener extends AbstractMaker
         $events = [];
 
         foreach ($yaml['events'] as $key => $config) {
-            $events[$key] = new MethodDefinition($config['return_type'], $config['arguments']);
+            $events[$key] = new MethodDefinition($config['return_type'] ?? null, $config['arguments'] ?? [], $config['body'] ?? null);
         }
 
         return $events;

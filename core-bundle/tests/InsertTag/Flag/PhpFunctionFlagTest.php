@@ -17,12 +17,11 @@ use Contao\CoreBundle\InsertTag\InsertTagFlag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PhpFunctionFlagTest extends TestCase
 {
-    /**
-     * @dataProvider getFlags
-     */
+    #[DataProvider('getFlags')]
     public function testFlags(string $flagName, string $source, string $expected): void
     {
         $flag = new PhpFunctionFlag();

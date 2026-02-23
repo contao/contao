@@ -29,7 +29,7 @@ class TranslationInsertTag implements InsertTagResolverNestedResolvedInterface
         $parameters = \array_slice($insertTag->getParameters()->all(), 2);
 
         if (1 === \count($parameters) && str_contains($parameters[0], ':')) {
-            trigger_deprecation('contao/core-bundle', '5.3', 'Passing parameters to the trans insert tag separated by a single colon has has been deprecated and will no longer work in Contao 6. Use double colons instead.');
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using single colons to pass parameters to the "trans" insert tag is deprecated and will no longer work in Contao 6. Use double colons instead.');
             $parameters = explode(':', $parameters[0]);
         }
 

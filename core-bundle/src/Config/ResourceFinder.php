@@ -40,13 +40,13 @@ class ResourceFinder implements ResourceFinderInterface
     /**
      * @return array<string>
      */
-    private function getExistingSubpaths(string $subpath): array
+    public function getExistingSubpaths(string $subpath): array
     {
         $paths = [];
 
-        foreach ($this->paths as $path) {
+        foreach ($this->paths as $name => $path) {
             if (is_dir($dir = Path::join($path, $subpath))) {
-                $paths[] = $dir;
+                $paths[$name] = $dir;
             }
         }
 

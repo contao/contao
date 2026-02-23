@@ -18,6 +18,7 @@ use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -49,33 +50,30 @@ class PaginationTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider paginationDataProvider
-     */
+    #[DataProvider('paginationDataProvider')]
     public function testGeneratesPaginationItems(array $data): void
     {
         $currentPage = $data['currentPage'] ?? 1;
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request(['page' => $currentPage]));
+        $requestStack = new RequestStack([new Request(['page' => $currentPage])]);
 
         System::getContainer()->set('request_stack', $requestStack);
 
-        $input = $this->mockAdapter(['get']);
+        $input = $this->createAdapterStub(['get']);
         $input
             ->method('get')
             ->with('page')
             ->willReturn($currentPage)
         ;
 
-        $framework = $this->mockContaoFramework([
-            Environment::class => $this->mockAdapter(['requestUri', 'queryString']),
+        $framework = $this->createContaoFrameworkStub([
+            Environment::class => $this->createAdapterStub(['requestUri', 'queryString']),
             Input::class => $input,
         ]);
 
         System::getContainer()->set('contao.framework', $framework);
 
-        $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createMock(FrontendTemplate::class));
+        $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createStub(FrontendTemplate::class));
         $items = $pagination->getItemsAsArray();
 
         $this->assertCount($data['expectedCount'], $items);

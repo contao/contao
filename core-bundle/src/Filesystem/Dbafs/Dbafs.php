@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\Filesystem\Dbafs\DbafsTest;
@@ -28,7 +29,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @phpstan-type DatabasePaths array<string|int, self::RESOURCE_FILE|self::RESOURCE_DIRECTORY>
  * @phpstan-type FilesystemPaths \Generator<string, self::RESOURCE_*>
- * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: array<string, mixed>}
+ * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: ExtraMetadata}
  *
  * @phpstan-import-type CreateItemDefinition from ChangeSet
  * @phpstan-import-type UpdateItemDefinition from ChangeSet
@@ -163,7 +164,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
     }
 
-    public function setExtraMetadata(string $path, array $metadata): void
+    public function setExtraMetadata(string $path, ExtraMetadata $metadata): void
     {
         if (!$this->getRecord($path)) {
             throw new \InvalidArgumentException(\sprintf('Record for path "%s" does not exist.', $path));
@@ -274,7 +275,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             isset($record['lastModified']) ? (int) $record['lastModified'] : null,
             isset($record['fileSize']) ? (int) $record['fileSize'] : null,
             $record['mimeType'] ?? null,
-            [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]],
+            new ExtraMetadata([...$record['extra']->all(), ...['uuid' => Uuid::fromBinary($uuid)]]),
         );
     }
 
@@ -447,7 +448,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE uuid = ?', $this->connection->quoteIdentifier($this->table)),
             [$uuid],
         );
 
@@ -463,7 +464,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE id = ?', $this->connection->quoteIdentifier($this->table)),
             [$id],
         );
 
@@ -479,7 +480,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE path = ?', $this->connection->quoteIdentifier($this->table)),
             [$this->convertToDatabasePath($path)],
         );
 
@@ -571,8 +572,10 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             // Backwards compatibility
             if ('tl_files' === $this->table) {
+                $extension = Path::getExtension($itemToCreate->getPath(), true);
+
                 $dataToInsert['name'] = basename($itemToCreate->getPath());
-                $dataToInsert['extension'] = $itemToCreate->isFile() ? Path::getExtension($itemToCreate->getPath(), true) : '';
+                $dataToInsert['extension'] = $itemToCreate->isFile() && \strlen($extension) <= 16 ? $extension : '';
                 $dataToInsert['tstamp'] = $currentTime;
             }
 
@@ -680,7 +683,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         $items = $this->connection->fetchAllNumeric(
             \sprintf(
-                "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
+                "SELECT path, uuid, hash, IF(type = 'folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
                 $this->connection->quoteIdentifier($this->table),
             ),

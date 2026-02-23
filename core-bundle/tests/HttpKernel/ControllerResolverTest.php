@@ -74,7 +74,7 @@ class ControllerResolverTest extends TestCase
         $request = new Request();
         $request->attributes->set('_controller', new ControllerReference('foo'));
 
-        $decorated = $this->createMock(ControllerResolverInterface::class);
+        $decorated = $this->createStub(ControllerResolverInterface::class);
         $decorated
             ->method('getController')
             ->willReturn(false)

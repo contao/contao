@@ -15,17 +15,17 @@ namespace Contao\CoreBundle\Tests\Routing\Matcher;
 use Contao\CoreBundle\Routing\Matcher\LanguageFilter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class LanguageFilterTest extends TestCase
 {
-    /**
-     * @dataProvider getRoutesAndLanguages
-     */
-    public function testRemovesARouteIfTheAcceptedLanguagesDoNotMatch(string $name, PageModel|null $page, string $acceptLanguage, bool $expectRemoval): void
+    #[DataProvider('getRoutesAndLanguages')]
+    public function testRemovesARouteIfTheAcceptedLanguagesDoNotMatch(string $name, array|null $pageModelData, string $acceptLanguage, bool $expectRemoval): void
     {
+        $page = null === $pageModelData ? null : $this->createClassWithPropertiesStub(PageModel::class, $pageModelData);
         $route = $this->createMock(Route::class);
         $route
             ->expects($this->once())
@@ -53,18 +53,18 @@ class LanguageFilterTest extends TestCase
         $filter->filter($collection, $request);
     }
 
-    public function getRoutesAndLanguages(): iterable
+    public static function getRoutesAndLanguages(): iterable
     {
         yield 'Removes a fallback page route if the accepted language does not match' => [
             'tl_page.2.fallback',
-            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'en', 'urlPrefix' => '']),
+            ['rootIsFallback' => false, 'rootLanguage' => 'en', 'urlPrefix' => ''],
             'de',
             true,
         ];
 
         yield 'Removes a root page route if the accepted language does not match' => [
             'tl_page.2.root',
-            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'en', 'urlPrefix' => '']),
+            ['rootIsFallback' => false, 'rootLanguage' => 'en', 'urlPrefix' => ''],
             'de',
             true,
         ];
@@ -78,28 +78,28 @@ class LanguageFilterTest extends TestCase
 
         yield 'Does not remove a route if the root page is the language fallback' => [
             'tl_page.2.root',
-            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => true, 'rootLanguage' => 'en', 'urlPrefix' => '']),
+            ['rootIsFallback' => true, 'rootLanguage' => 'en', 'urlPrefix' => ''],
             'de',
             false,
         ];
 
         yield 'Does not remove a route if the root page language is accepted' => [
             'tl_page.2.root',
-            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'de', 'urlPrefix' => '']),
+            ['rootIsFallback' => false, 'rootLanguage' => 'de', 'urlPrefix' => ''],
             'de',
             false,
         ];
 
         yield 'Does not remove a route if the root page language with region code is accepted' => [
             'tl_page.2.root',
-            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'de', 'urlPrefix' => '']),
+            ['rootIsFallback' => false, 'rootLanguage' => 'de', 'urlPrefix' => ''],
             'de-CH',
             false,
         ];
 
         yield 'Does not remove a route if the root page language with region code equals the accepted language' => [
             'tl_page.2.root',
-            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'de-CH', 'urlPrefix' => '']),
+            ['rootIsFallback' => false, 'rootLanguage' => 'de-CH', 'urlPrefix' => ''],
             'de-CH',
             false,
         ];

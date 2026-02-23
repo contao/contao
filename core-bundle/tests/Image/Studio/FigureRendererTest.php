@@ -27,10 +27,10 @@ use Contao\File;
 use Contao\Files;
 use Contao\Image\ImageInterface;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
@@ -83,9 +83,7 @@ class FigureRendererTest extends TestCase
         $this->assertSame('<result>', $figureRenderer->render('resource', '_size', $configuration));
     }
 
-    /**
-     * @dataProvider provideMetadataKeys
-     */
+    #[DataProvider('provideMetadataKeys')]
     public function testAllowsDefiningMetadataAsArray(string $key): void
     {
         $metadata = [Metadata::VALUE_ALT => 'foo'];
@@ -109,19 +107,19 @@ class FigureRendererTest extends TestCase
 
     public function testRendersContaoTemplate(): void
     {
-        $image = $this->createMock(ImageResult::class);
+        $image = $this->createStub(ImageResult::class);
         $image
             ->method('getImageSrc')
             ->willReturn('files/public/foo.jpg')
         ;
 
-        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder = $this->createStub(FigureBuilder::class);
         $figureBuilder
             ->method('buildIfResourceExists')
             ->willReturn(new Figure($image))
         ;
 
-        $studio = $this->createMock(Studio::class);
+        $studio = $this->createStub(Studio::class);
         $studio
             ->method('createFigureBuilder')
             ->willReturn($figureBuilder)
@@ -142,17 +140,17 @@ class FigureRendererTest extends TestCase
             Path::join($this->getTempDir(), 'files'),
         );
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
-            ->willReturn($this->createMock(ImageInterface::class))
+            ->willReturn($this->createStub(ImageInterface::class))
         ;
 
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('filesystem', $filesystem);
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework(), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
         $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
@@ -172,9 +170,7 @@ class FigureRendererTest extends TestCase
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
     }
 
-    /**
-     * @dataProvider provideInvalidTemplates
-     */
+    #[DataProvider('provideInvalidTemplates')]
     public function testFailsWithInvalidTemplate(string $invalidTemplate): void
     {
         $figureRenderer = $this->getFigureRenderer();
@@ -202,19 +198,19 @@ class FigureRendererTest extends TestCase
 
     public function testReturnsNullIfTheResourceDoesNotExist(): void
     {
-        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder = $this->createStub(FigureBuilder::class);
         $figureBuilder
             ->method('buildIfResourceExists')
             ->willReturn(null)
         ;
 
-        $studio = $this->createMock(Studio::class);
+        $studio = $this->createStub(Studio::class);
         $studio
             ->method('createFigureBuilder')
             ->willReturn($figureBuilder)
         ;
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $figureRenderer = new FigureRenderer($studio, $twig);
 
         $this->assertNull($figureRenderer->render('invalid-resource', null));
@@ -222,30 +218,35 @@ class FigureRendererTest extends TestCase
 
     private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRenderer
     {
-        $figure = new Figure($this->createMock(ImageResult::class));
+        $figure = new Figure($this->createStub(ImageResult::class));
 
-        $figureBuilder = $this->createMock(FigureBuilder::class);
+        if ([] === $figureBuilderCalls) {
+            $figureBuilder = $this->createStub(FigureBuilder::class);
+        } else {
+            $figureBuilder = $this->createMock(FigureBuilder::class);
+
+            foreach ($figureBuilderCalls as $method => $value) {
+                $figureBuilder
+                    ->expects($this->once())
+                    ->method($method)
+                    ->with($value)
+                    ->willReturn($figureBuilder)
+                ;
+            }
+        }
+
         $figureBuilder
             ->method('buildIfResourceExists')
             ->willReturn($figure)
         ;
 
-        foreach ($figureBuilderCalls as $method => $value) {
-            $figureBuilder
-                ->expects($this->once())
-                ->method($method)
-                ->with($value)
-                ->willReturn($figureBuilder)
-            ;
-        }
-
-        $studio = $this->createMock(Studio::class);
+        $studio = $this->createStub(Studio::class);
         $studio
             ->method('createFigureBuilder')
             ->willReturn($figureBuilder)
         ;
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
             ->with($expectedTemplate, ['figure' => $figure])

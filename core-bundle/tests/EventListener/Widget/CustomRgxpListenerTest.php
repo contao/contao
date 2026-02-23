@@ -15,19 +15,10 @@ namespace Contao\CoreBundle\Tests\EventListener\Widget;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Widget;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomRgxpListenerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
-
-        parent::tearDown();
-    }
-
     public function testReturnsFalseIfNotCustomRgxpType(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
@@ -39,7 +30,7 @@ class CustomRgxpListenerTest extends TestCase
 
         $listener = new CustomRgxpListener($translator);
 
-        $this->assertFalse($listener('foobar', 'input', $this->createMock(Widget::class)));
+        $this->assertFalse($listener('foobar', 'input', $this->createStub(Widget::class)));
     }
 
     public function testReturnsTrueIfNoCustomRgxpSet(): void
@@ -53,7 +44,7 @@ class CustomRgxpListenerTest extends TestCase
 
         $listener = new CustomRgxpListener($translator);
 
-        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'input', $this->createMock(Widget::class)));
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'input', $this->createStub(Widget::class)));
     }
 
     public function testAddsErrorIfInputDoesNotMatchCustomRgxp(): void
@@ -65,7 +56,7 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
+        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->once())
             ->method('addError')
@@ -86,7 +77,7 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
+        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->never())
             ->method('addError')
@@ -96,5 +87,26 @@ class CustomRgxpListenerTest extends TestCase
         $listener = new CustomRgxpListener($translator);
 
         $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'foobar', $widget));
+    }
+
+    public function testDecodesEntities(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->never())
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $widget = $this->createClassWithPropertiesMock(Widget::class, ['customRgxp' => '/^&lt;>$/i']);
+        $widget
+            ->expects($this->never())
+            ->method('addError')
+            ->with('ERR.customRgxp')
+        ;
+
+        $listener = new CustomRgxpListener($translator);
+
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, '<&gt;', $widget));
     }
 }

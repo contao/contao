@@ -23,7 +23,7 @@ use Monolog\LogRecord;
 class ContaoTableHandler extends AbstractProcessingHandler
 {
     /**
-     * @param \Closure(): Connection $connection
+     * @param \Closure():Connection $connection
      */
     public function __construct(
         private readonly \Closure $connection,

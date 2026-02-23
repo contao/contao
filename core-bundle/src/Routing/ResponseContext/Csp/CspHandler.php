@@ -114,7 +114,7 @@ final class CspHandler
         if (($sources = $this->getDirective($directive, $useFallback)) || !$autoIgnore) {
             $parser = new ContentSecurityPolicyParser();
             $existingValues = explode(' ', (string) $sources);
-            $newValues = array_unique(array_merge($existingValues, explode(' ', $source)));
+            $newValues = array_unique([...$existingValues, ...explode(' ', $source)]);
             $value = $parser->parseSourceList($newValues);
 
             $this->directives->setDirective($directive, $value);

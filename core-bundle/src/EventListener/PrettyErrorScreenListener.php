@@ -182,13 +182,24 @@ class PrettyErrorScreenListener
             return;
         }
 
+        // Backwards compatibility: check if a bundle template exists
         $view = '@ContaoCore/Error/'.$template.'.html.twig';
         $parameters = $this->getTemplateParameters($view, $statusCode, $event);
+
+        if (!$this->twig->getLoader()->exists($view)) {
+            $view = match ($template) {
+                'backend' => '@Contao/error/backend.html.twig',
+                'invalid_request_token' => '@Contao/error/invalid_request_token.html.twig',
+                'missing_route_parameters' => '@Contao/error/missing_route_parameters.html.twig',
+                'service_unavailable' => '@Contao/error/service_unavailable.html.twig',
+                default => '@Contao/error/general.html.twig',
+            };
+        }
 
         try {
             $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
         } catch (Error) {
-            $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
+            $event->setResponse(new Response($this->twig->render('@Contao/error/general.html.twig'), 500));
         }
     }
 

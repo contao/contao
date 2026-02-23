@@ -138,19 +138,19 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
+        $calendarModel = $this->createClassWithPropertiesStub(CalendarModel::class);
         $calendarModel->id = 1;
 
-        $calendarEvents = $this->createMock(CalendarEventsModel::class);
+        $calendarEvents = $this->createStub(CalendarEventsModel::class);
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendarModel]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+            CalendarModel::class => $this->createConfiguredAdapterStub(['findById' => $calendarModel]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -165,11 +165,11 @@ class EventPickerProviderTest extends ContaoTestCase
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -181,16 +181,16 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
     {
-        $calendarEvents = $this->createMock(CalendarEventsModel::class);
+        $calendarEvents = $this->createStub(CalendarEventsModel::class);
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => null]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
+            CalendarModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
+            CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findById' => $calendarEvents]),
         ];
 
         $picker = $this->getPicker();
-        $picker->setFramework($this->mockContaoFramework($adapters));
+        $picker->setFramework($this->createContaoFrameworkStub($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
         $params = $method->invokeArgs($picker, [$config]);
@@ -209,7 +209,7 @@ class EventPickerProviderTest extends ContaoTestCase
             ->willReturn($accessGranted ?? false)
         ;
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
+        $menuFactory = $this->createStub(FactoryInterface::class);
         $menuFactory
             ->method('createItem')
             ->willReturnCallback(
@@ -225,13 +225,13 @@ class EventPickerProviderTest extends ContaoTestCase
             )
         ;
 
-        $router = $this->createMock(RouterInterface::class);
+        $router = $this->createStub(RouterInterface::class);
         $router
             ->method('generate')
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createStub(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->willReturn('Event picker')

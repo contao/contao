@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\Message;
 
+trigger_deprecation('contao/core-bundle', '5.6', "Using the NormalPriorityMessageInterface is deprecated and will no longer work in Contao 6. Use the #[AsMessage('contao_prio_normal')] attribute instead.");
+
+/**
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use the #[AsMessage('contao_prio_normal')] attribute instead.
+ */
 interface NormalPriorityMessageInterface
 {
 }

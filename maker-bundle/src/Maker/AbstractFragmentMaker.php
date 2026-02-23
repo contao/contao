@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Maker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\MakerBundle\Generator\ClassGenerator;
 use Contao\MakerBundle\Generator\DcaGenerator;
@@ -19,6 +21,7 @@ use Contao\MakerBundle\Generator\LanguageFileGenerator;
 use Contao\MakerBundle\Generator\TemplateGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
+use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
@@ -32,12 +35,13 @@ use Symfony\Component\Filesystem\Path;
 abstract class AbstractFragmentMaker extends AbstractMaker
 {
     public function __construct(
-        protected ContaoFramework $framework,
-        protected TemplateGenerator $templateGenerator,
-        protected ClassGenerator $classGenerator,
-        protected DcaGenerator $dcaGenerator,
-        protected LanguageFileGenerator $languageFileGenerator,
-        protected string $projectDir,
+        protected readonly ContaoFramework $framework,
+        protected readonly TemplateGenerator $templateGenerator,
+        protected readonly ClassGenerator $classGenerator,
+        protected readonly DcaGenerator $dcaGenerator,
+        protected readonly LanguageFileGenerator $languageFileGenerator,
+        protected readonly FileManager $fileManager,
+        protected readonly string $projectDir,
     ) {
     }
 
@@ -82,7 +86,8 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         return Path::join(
             $this->projectDir,
             'contao/templates',
-            \sprintf('%s_%s.html5', $this->getTemplatePrefix(), Container::underscore($className)),
+            $this->getTemplatePrefix(),
+            \sprintf('%s.html.twig', Container::underscore($className)),
         );
     }
 
@@ -114,11 +119,33 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         $io->writeln(' <fg=green>Suggested categories:</>');
         $io->listing($categories);
 
-        $question = new Question('Choose a category');
-        $question->setAutocompleterValues($categories);
-        $question->setValidator(Validator::notBlank(...));
+        $attributeClass = match (static::class) {
+            MakeContentElement::class => AsContentElement::class,
+            MakeFrontendModule::class => AsFrontendModule::class,
+            default => null,
+        };
 
-        $input->setArgument('category', $io->askQuestion($question));
+        $default = null;
+
+        if ($attributeClass) {
+            $reflection = new \ReflectionClass($attributeClass);
+            $params = $reflection->getConstructor()->getParameters();
+
+            foreach ($params as $param) {
+                if ('category' === $param->getName()) {
+                    $default = $param->getDefaultValue();
+
+                    break;
+                }
+            }
+        }
+
+        $question = new Question('Choose a category', $default);
+        $question->setAutocompleterValues($categories);
+
+        $category = (string) $io->askQuestion($question);
+
+        $input->setArgument('category', $category === (string) $default ? null : $category);
     }
 
     private function askForDcaPalette(InputInterface $input, ConsoleStyle $io, Command $command): void

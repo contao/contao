@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="1" resname="debug_mode">
         <source>Debug mode</source>
-        <target>Vychytávací mód</target>
+        <target>Ladící mód</target>
       </trans-unit>
       <trans-unit id="2" resname="contao_manager_title">
         <source>Manage updates and extensions and maintain the application</source>

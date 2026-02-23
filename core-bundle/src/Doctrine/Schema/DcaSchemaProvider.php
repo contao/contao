@@ -64,31 +64,33 @@ class DcaSchemaProvider
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $conf) {
-                    if ($table->hasColumn($fieldName)) {
+                    if ($table->hasColumn($conf['name'] ?? $fieldName)) {
                         continue;
                     }
 
                     $options = $conf;
-                    unset($options['name'], $options['type']);
+
+                    if (isset($options['customSchemaOptions'])) {
+                        trigger_deprecation('contao/core-bundle', '5.3', 'Using the "customSchemaOptions" option is deprecated and will no longer work in Contao 6. Use the "platformOptions" option instead.');
+
+                        $options['platformOptions'] = [...($options['platformOptions'] ?? []), ...$options['customSchemaOptions']];
+
+                        // Deprecated in doctrine/dbal 3.x and removed in 4.x
+                        unset($options['customSchemaOptions']);
+                    }
 
                     // Use the binary collation if the "case_sensitive" option is set
-                    if ($this->isCaseSensitive($conf)) {
+                    if (true === ($options['platformOptions']['case_sensitive'] ?? null)) {
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
-                    if (isset($options['customSchemaOptions']['charset'])) {
-                        $options['platformOptions']['charset'] = $options['customSchemaOptions']['charset'];
+                    if (isset($options['platformOptions']['collation']) && !isset($options['platformOptions']['charset'])) {
+                        $options['platformOptions']['charset'] = explode('_', (string) $options['platformOptions']['collation'], 2)[0];
                     }
 
-                    if (isset($options['customSchemaOptions']['collation'])) {
-                        if (!isset($options['customSchemaOptions']['charset'])) {
-                            $options['platformOptions']['charset'] = explode('_', (string) $options['customSchemaOptions']['collation'], 2)[0];
-                        }
+                    unset($options['name'], $options['type']);
 
-                        $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
-                    }
-
-                    $table->addColumn($conf['name'], $conf['type'], $options);
+                    $table->addColumn($conf['name'] ?? $fieldName, $conf['type'], $options);
                 }
             }
 
@@ -143,7 +145,7 @@ class DcaSchemaProvider
         if (null !== $def) {
             if (preg_match('/default (\'[^\']*\'|\d+(?:\.\d+)?)/i', $def, $match)) {
                 if (is_numeric($match[1])) {
-                    $default = $match[1] * 1;
+                    $default = $match[1];
                 } else {
                     $default = trim($match[1], "'");
                 }
@@ -165,20 +167,20 @@ class DcaSchemaProvider
         }
 
         $options = [
-            'length' => $length,
             'unsigned' => $unsigned,
             'fixed' => $fixed,
             'default' => $default,
             'notnull' => $notnull,
-            'scale' => null,
-            'precision' => null,
             'autoincrement' => $autoincrement,
-            'comment' => null,
         ];
 
+        if (null !== $length) {
+            $options['length'] = $length;
+        }
+
         if (null !== $scale && null !== $precision) {
-            $options['scale'] = $scale;
-            $options['precision'] = $precision;
+            $options['scale'] = (int) $scale;
+            $options['precision'] = (int) $precision;
         }
 
         $platformOptions = [];
@@ -295,7 +297,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string, array<string, string|array<string, string|array<string>>>>
+     * @return array<string, array<string, string|array<string, string|array<string|array>>>>
      */
     private function getSqlDefinitions(): array
     {
@@ -402,15 +404,6 @@ class DcaSchemaProvider
         }
 
         return $this->defaultIndexLength = 3072;
-    }
-
-    private function isCaseSensitive(array $config): bool
-    {
-        if (!isset($config['customSchemaOptions']['case_sensitive'])) {
-            return false;
-        }
-
-        return true === $config['customSchemaOptions']['case_sensitive'];
     }
 
     /**

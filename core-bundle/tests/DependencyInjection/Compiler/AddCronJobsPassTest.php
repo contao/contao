@@ -182,6 +182,33 @@ class AddCronJobsPassTest extends TestCase
         $this->assertSame('@monthly', $definitions[4]->getArgument(1));
     }
 
+    public function testAddingTheSameClassWithDifferentServiceIdsHasDifferentNames(): void
+    {
+        $definition = new Definition(TestCronJob::class);
+        $definition->addTag('contao.cronjob', ['interval' => 'minutely']);
+
+        $container = $this->getContainerBuilder();
+        $container->setDefinition('app.cronjobs.configuration_1', $definition);
+        $container->setDefinition('app.cronjobs.configuration_2', $definition);
+        $container->setDefinition('app.cronjobs.configuration_3', $definition);
+
+        $pass = new AddCronJobsPass();
+        $pass->process($container);
+
+        $crons = $this->getCronsFromDefinition($container);
+
+        /** @var array<Definition> $definitions */
+        $definitions = array_column($crons, 0);
+
+        $this->assertCount(3, $crons);
+        $this->assertSame('* * * * *', $definitions[0]->getArgument(1));
+        $this->assertSame('* * * * *', $definitions[1]->getArgument(1));
+        $this->assertSame('* * * * *', $definitions[2]->getArgument(1));
+        $this->assertSame('app.cronjobs.configuration_1', $definitions[0]->getArgument(3));
+        $this->assertSame('app.cronjobs.configuration_2', $definitions[1]->getArgument(3));
+        $this->assertSame('app.cronjobs.configuration_3', $definitions[2]->getArgument(3));
+    }
+
     public function testAddsPromiseReturningCronjobsFirst(): void
     {
         $definition1 = new Definition(TestCronJob::class);

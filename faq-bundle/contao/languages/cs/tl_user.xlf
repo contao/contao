@@ -9,14 +9,6 @@
         <source>Here you can grant access to one or more FAQ categories.</source>
         <target>Zde můžete zaručit přístup k jednomu nebo více kategoriím Často kladených otázek</target>
       </trans-unit>
-      <trans-unit id="tl_user.faqp.0">
-        <source>FAQ category permissions</source>
-        <target>Přístupová práva ke kategoriím Často kladených otázek (FAQ)</target>
-      </trans-unit>
-      <trans-unit id="tl_user.faqp.1">
-        <source>Here you can define the FAQ category permissions.</source>
-        <target>Zde můžete vybrat kategorie, k nimž se může přistupovat</target>
-      </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
         <target>Přistupová práva k Často kladeným otázkám (FAQ)</target>

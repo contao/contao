@@ -137,9 +137,7 @@ class JumpToParentOperationListener
     {
         $count = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM '.$this->connection->quoteIdentifier($parent['table']).' WHERE id = :id',
-            [
-                'id' => $parent['id'],
-            ],
+            ['id' => $parent['id']],
         );
 
         return (int) $count > 0;

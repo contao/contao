@@ -23,7 +23,7 @@ class PluginTest extends TestCase
 {
     public function testReturnsTheBundles(): void
     {
-        $parser = $this->createMock(ParserInterface::class);
+        $parser = $this->createStub(ParserInterface::class);
         $config = (new Plugin())->getBundles($parser)[0];
 
         $this->assertInstanceOf(BundleConfig::class, $config);

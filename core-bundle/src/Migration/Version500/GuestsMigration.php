@@ -23,7 +23,6 @@ class GuestsMigration extends AbstractGuestsMigration
             'tl_article',
             'tl_content',
             'tl_module',
-            'tl_page',
         ];
     }
 }

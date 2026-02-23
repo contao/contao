@@ -114,18 +114,16 @@ class TextArea extends Widget
 	 */
 	public function generate()
 	{
-		if ($this->rte)
-		{
-			$this->strClass = trim($this->strClass . ' noresize');
-		}
+		$disableAutogrow = $this->rte || str_contains($this->strClass, 'noresize') || false === ($this->arrConfiguration['autogrow'] ?? true);
 
 		return \sprintf(
-			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--scroll-offset-target="autoFocus">%s</textarea>%s',
+			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s%s data-action="focus->contao--scroll-offset#store" data-contao--scroll-offset-target="autoFocus">%s</textarea>%s',
 			$this->strName,
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
-			$this->intRows,
+			$disableAutogrow ? $this->intRows : 1, // Let the controller handle the height
 			$this->intCols,
+			$disableAutogrow ? '' : ' data-controller="contao--textarea-autogrow"',
 			$this->getAttributes(),
 			self::specialcharsValue($this->varValue),
 			$this->wizard

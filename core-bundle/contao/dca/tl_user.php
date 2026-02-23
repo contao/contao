@@ -22,6 +22,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
@@ -59,7 +60,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'name'
 		),
 		'label' => array
@@ -70,16 +71,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'copy',
-			'delete',
-			'toggle',
-			'show',
+			'-',
 			'su' => array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
-				'button_callback'     => array('tl_user', 'switchUser')
+				'primary'             => true
 			)
 		)
 	),
@@ -88,12 +85,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('inherit', 'admin'),
-		'login'                       => '{name_legend},name,email;{backend_legend},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{session_legend},session;{password_legend},password;{theme_legend:hide},backendTheme',
-		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
-		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'login'                       => '{name_legend},name,email;{backend_legend},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{session_legend},session;{password_legend},password;{theme_legend:hide},backendTheme,backendWidth',
+		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
+		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms;{amg_legend},amg;{cud_legend},cud;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme,backendWidth;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms;{amg_legend},amg;{cud_legend},cud;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -150,6 +147,13 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
+		'backendWidth' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('mw1280' => '1280px', 'mw1440' => '1440px', 'mw1920' => '1920px'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(6) NOT NULL default ''"
+		),
 		'uploader' => array
 		(
 			'inputType'               => 'select',
@@ -183,6 +187,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'doNotCollapse' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'doNotHideMessages' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -261,7 +271,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'frontendModules' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
@@ -271,7 +280,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'inputType'               => 'pageTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('table'=>'tl_page', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'alpty' => array
 		(
@@ -312,21 +322,21 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_form.title',
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
-		),
-		'formp' => array
-		(
-			'inputType'               => 'checkbox',
-			'options'                 => array('create', 'delete'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'amg' => array
 		(
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
+			'sql'                     => "blob NULL",
+			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+		),
+		'cud' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'cud',
 			'sql'                     => "blob NULL"
 		),
 		'disable' => array
@@ -352,8 +362,9 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'session' => array
 		(
 			'input_field_callback'    => array('tl_user', 'sessionField'),
+			'options'                 => array('purge_session', 'purge_images', 'purge_previews', 'purge_pages'),
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
 		(
@@ -408,11 +419,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 class tl_user extends Backend
 {
 	/**
-	 * @var int
-	 */
-	private static $origUserId;
-
-	/**
 	 * Handle the profile page.
 	 *
 	 * @param DataContainer $dc
@@ -436,7 +442,8 @@ class tl_user extends Backend
 		$GLOBALS['TL_DCA'][$dc->table]['palettes'] = array
 		(
 			'__selector__' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'],
-			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login']
+			'login' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login'],
+			'default' => $GLOBALS['TL_DCA'][$dc->table]['palettes']['login'],
 		);
 
 		$arrFields = StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA'][$dc->table]['palettes']['default'] ?? '');
@@ -518,64 +525,6 @@ class tl_user extends Backend
 	}
 
 	/**
-	 * Generate a "switch account" button and return it as string
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 *
-	 * @return string
-	 *
-	 * @throws Exception
-	 */
-	public function switchUser($row, $href, $label, $title, $icon)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		if (!$security->isGranted('ROLE_ALLOWED_TO_SWITCH'))
-		{
-			return '';
-		}
-
-		$disabled = false;
-
-		if (BackendUser::getInstance()->id == $row['id'])
-		{
-			$disabled = true;
-		}
-		elseif ($security->isGranted('ROLE_PREVIOUS_ADMIN'))
-		{
-			if (self::$origUserId === null)
-			{
-				$origToken = $security->getToken()->getOriginalToken();
-				$origUser = $origToken->getUser();
-
-				if ($origUser instanceof BackendUser)
-				{
-					self::$origUserId = $origUser->id;
-				}
-			}
-
-			if (self::$origUserId == $row['id'])
-			{
-				$disabled = true;
-			}
-		}
-
-		if ($disabled)
-		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-		}
-
-		$router = System::getContainer()->get('router');
-		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
-
-		return '<a href="' . $url . '" title="' . StringUtil::specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ';
-	}
-
-	/**
 	 * Return a checkbox to delete session data
 	 *
 	 * @param DataContainer $dc
@@ -584,6 +533,8 @@ class tl_user extends Backend
 	 */
 	public function sessionField(DataContainer $dc)
 	{
+		$allowedOptions = $GLOBALS['TL_DCA']['tl_user']['fields']['session']['options'] ?? array();
+
 		if (Input::post('FORM_SUBMIT') == 'tl_user')
 		{
 			$arrPurge = Input::post('purge');
@@ -591,6 +542,7 @@ class tl_user extends Backend
 			if (is_array($arrPurge))
 			{
 				$automator = new Automator();
+				$arrPurge = array_values(array_intersect($arrPurge, $allowedOptions));
 
 				if (in_array('purge_session', $arrPurge))
 				{
@@ -621,15 +573,32 @@ class tl_user extends Backend
 			}
 		}
 
+		$options = array();
+
+		$labels = array(
+			'purge_session' => $GLOBALS['TL_LANG']['tl_user']['sessionLabel'],
+			'purge_images' => $GLOBALS['TL_LANG']['tl_user']['htmlLabel'],
+			'purge_previews' => $GLOBALS['TL_LANG']['tl_user']['previewLabel'],
+			'purge_pages' => $GLOBALS['TL_LANG']['tl_user']['tempLabel'],
+		);
+
+		foreach ($allowedOptions as $i => $operation)
+		{
+			$options[] = sprintf(
+				'<span><input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store contao--check-all#toggleInput" data-contao--check-all-target="input"> <label for="opt_purge_%d">%s</label></span>',
+				$i,
+				$operation,
+				$i,
+				$labels[$operation]
+			);
+		}
+
 		return '
 <div class="widget">
-  <fieldset class="tl_checkbox_container">
+  <fieldset class="tl_checkbox_container" data-controller="contao--check-all">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
-    <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_0" class="tl_checkbox" value="purge_session" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_0">' . $GLOBALS['TL_LANG']['tl_user']['sessionLabel'] . '</label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_1" class="tl_checkbox" value="purge_images" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_1">' . $GLOBALS['TL_LANG']['tl_user']['htmlLabel'] . '</label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_previews" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['previewLabel'] . '</label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_3" class="tl_checkbox" value="purge_pages" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_3">' . $GLOBALS['TL_LANG']['tl_user']['tempLabel'] . '</label></span>
+    <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" data-action="contao--check-all#toggleAll"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>
+    ' . implode("\n", $options) . '
   </fieldset>' . $dc->help() . '
 </div>';
 	}

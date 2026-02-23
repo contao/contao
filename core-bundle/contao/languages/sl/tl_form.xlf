@@ -198,6 +198,13 @@
         <source>Submit the form via Ajax instead of reloading the page.</source>
         <target>Obrazec oddaj preko Ajax namesto s ponovnim nalaganjem strani</target>
       </trans-unit>
+      <trans-unit id="tl_form.storeSession.0">
+        <source>Store data in the session</source>
+        <target>Shrani podatke v sejo</target>
+      </trans-unit>
+      <trans-unit id="tl_form.storeSession.1">
+        <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
         <target>Datum revizije</target>
@@ -234,37 +241,49 @@
         <source>Template settings</source>
         <target>Nastavitve predloge</target>
       </trans-unit>
-      <trans-unit id="tl_form.new.0">
-        <source>New</source>
-        <target>Nov</target>
-      </trans-unit>
       <trans-unit id="tl_form.new.1">
         <source>Create a new form</source>
         <target>Ustvari nov obrazec.</target>
       </trans-unit>
-      <trans-unit id="tl_form.show">
+      <trans-unit id="tl_form.show.1">
         <source>Show the details of form ID %s</source>
         <target>Prikaži podrobnosti obrazca z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.edit">
+      <trans-unit id="tl_form.versions.1">
+        <source>Show the versions of form ID %s</source>
+        <target>Prikaži različice obrazca z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
         <target>Uredi obrazec z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.children">
+      <trans-unit id="tl_form.children.0">
+        <source>Form fields</source>
+        <target>Vnosna polja v obrazcih</target>
+      </trans-unit>
+      <trans-unit id="tl_form.children.1">
         <source>Edit the form fields of form ID %s</source>
         <target>Uredi polja v obrazcu z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.copy">
+      <trans-unit id="tl_form.copy.0">
+        <source>Duplicate</source>
+        <target>Podvoji</target>
+      </trans-unit>
+      <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
         <target>Podvoji obrazec z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form.delete">
+      <trans-unit id="tl_form.delete.1">
         <source>Delete form ID %s</source>
         <target>Izbriši obrazec z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
         <target>V naslednji konfiguraciji DCA &lt;code&gt;%s&lt;/code&gt; definirajte tabele, ki so na voljo.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.tableLabel">
+        <source>Form</source>
+        <target>Obrazec</target>
       </trans-unit>
     </body>
   </file>

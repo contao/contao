@@ -15,18 +15,17 @@ namespace Contao\ManagerBundle\Tests\Command;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class MaintenanceModeCommandTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);
@@ -34,12 +33,22 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider enableProvider
-     */
+    #[DataProvider('enableProvider')]
     public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string|null $customTemplateName = null, string|null $customTemplateVars = null): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects('@ContaoCore/Error/service_unavailable.html.twig' === $expectedTemplateName ? $this->once() : $this->never())
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
         $twig = $this->mockEnvironment();
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
         $twig
             ->expects($this->once())
             ->method('render')
@@ -67,8 +76,8 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
             $twig,
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 
@@ -89,9 +98,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 
@@ -113,9 +122,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class), $filesystem);
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -135,9 +144,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 
@@ -159,9 +168,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
 
         $command = new MaintenanceModeCommand(
             '/path/to/var/maintenance.html',
-            $this->mockEnvironment(),
-            $this->createMock(Locales::class),
-            $this->createMock(TranslatorInterface::class),
+            $this->createStub(Environment::class),
+            $this->createStub(Locales::class),
+            $this->createStub(TranslatorInterface::class),
             $filesystem,
         );
 

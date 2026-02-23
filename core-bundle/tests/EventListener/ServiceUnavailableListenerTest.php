@@ -16,7 +16,7 @@ use Contao\CoreBundle\EventListener\ServiceUnavailableListener;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -24,7 +24,7 @@ class ServiceUnavailableListenerTest extends TestCase
 {
     public function testDoesNotHandleBackendRequest(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->never())
             ->method('loadDetails')
@@ -38,11 +38,14 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotHandleFrontendSubrequest(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->never())
             ->method('loadDetails')
@@ -56,11 +59,14 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionInPreviewEntryPoint(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->never())
             ->method('loadDetails')
@@ -75,11 +81,14 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionIfRouteBypassesMaintenance(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
         $pageModel
             ->expects($this->never())
             ->method('loadDetails')
@@ -94,6 +103,9 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionWithoutPageModelInRequest(): void
@@ -105,11 +117,14 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionIfMaintenanceIsNotEnabled(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['maintenanceMode' => '']);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class, ['maintenanceMode' => '']);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
@@ -123,11 +138,14 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testThrowExceptionIfMaintenanceIsEnabled(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['maintenanceMode' => true]);
+        $pageModel = $this->createClassWithPropertiesMock(PageModel::class, ['maintenanceMode' => true]);
         $pageModel
             ->expects($this->once())
             ->method('loadDetails')
@@ -146,9 +164,9 @@ class ServiceUnavailableListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockEvent(Request $request, bool $isMainRequest = true): RequestEvent&MockObject
+    private function mockEvent(Request $request, bool $isMainRequest = true): RequestEvent&Stub
     {
-        $event = $this->createMock(RequestEvent::class);
+        $event = $this->createStub(RequestEvent::class);
         $event
             ->method('isMainRequest')
             ->willReturn($isMainRequest)

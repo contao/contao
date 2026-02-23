@@ -1,0 +1,81 @@
+.tl_search_hit {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+
+    &:last-of-type {
+        border-bottom: 0;
+    }
+}
+
+.hit_header {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+}
+
+.hit_preview {
+    width: 40px;
+    margin-right: 10px;
+
+    img {
+        width: 100%;
+        height: auto;
+        border-radius: var(--border-radius);
+    }
+}
+
+.hit_actions {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+
+    .title {
+        flex: 1;
+    }
+
+    .hit_title {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    .type {
+        display: inline-block;
+        color: var(--text);
+        background: var(--nav-bg-hover);
+        padding: 0 4px;
+        margin-bottom: 2px;
+        border-radius: 2px;
+        font-weight: normal;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+}
+
+.hit_edit {
+    width: 24px;
+    text-align: right;
+}
+
+.hit_context-container {
+    margin-top: 0.5rem;
+
+    .context {
+        font-size: 14px;
+        color: var(--text);
+        margin: 0;
+        line-height: normal;
+        opacity: 0.9;
+
+        /* Prevent overflow for long serialized results (e. g. user-group settings) */
+        text-overflow: ellipsis;
+        overflow-wrap: anywhere;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+}

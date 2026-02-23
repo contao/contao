@@ -31,7 +31,7 @@ use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
-use Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle;
+use Webauthn\Bundle\WebauthnBundle;
 
 /**
  * @internal
@@ -45,7 +45,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
             BundleConfig::create(KnpTimeBundle::class),
             BundleConfig::create(SchebTwoFactorBundle::class),
             BundleConfig::create(CmfRoutingBundle::class),
-            BundleConfig::create(Terminal42ServiceAnnotationBundle::class),
+            BundleConfig::create(WebauthnBundle::class),
             BundleConfig::create(ContaoCoreBundle::class)
                 ->setReplace(['core'])
                 ->setLoadAfter(
@@ -61,6 +61,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         NelmioSecurityBundle::class,
                         SchebTwoFactorBundle::class,
                         CmfRoutingBundle::class,
+                        WebauthnBundle::class,
                     ],
                 ),
         ];

@@ -1,0 +1,23 @@
+<figure class="image_container{{ floatClass|default }}">
+    {% if imageHref|default or href|default %}
+        <a{{ attrs()
+            .set('href', imageHref|default(href))
+            .setIfExists('title', linkTitle|default|insert_tag)
+            .mergeWith(attributes|default)
+        }}>
+    {% endif %}
+
+    {{ include('@Contao/picture_default.html.twig', picture, false) }}
+
+    {% if imageHref|default or href|default %}
+        </a>
+    {% endif %}
+
+    {% if caption|default %}
+        <figcaption class="caption">{{ caption|sanitize_html('contao')|insert_tag_raw }}</figcaption>
+    {% endif %}
+</figure>
+
+{% if figure|default %}
+    {% do add_schema_org(figure.getSchemaOrgData()) %}
+{% endif %}

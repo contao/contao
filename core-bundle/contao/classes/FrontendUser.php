@@ -33,6 +33,7 @@ class FrontendUser extends User
 	/**
 	 * Name of the current cookie
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strCookie = 'FE_USER_AUTH';
 
@@ -216,5 +217,15 @@ class FrontendUser extends User
 	public function getRoles(): array
 	{
 		return $this->roles;
+	}
+
+	public function getDisplayName(): string
+	{
+		return trim("$this->firstname $this->lastname");
+	}
+
+	public function getPasskeyUserHandle(): string
+	{
+		return 'frontend.' . $this->id;
 	}
 }

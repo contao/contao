@@ -79,8 +79,6 @@ class ModuleArticlenav extends Module
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 		$intActive = null;
 		$articles = array();

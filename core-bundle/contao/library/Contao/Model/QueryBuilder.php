@@ -55,7 +55,7 @@ class QueryBuilder
 							$arrFields[] = 'j' . $intCount . '.' . Database::quoteIdentifier($strField) . ' AS ' . $strKey . '__' . $strField;
 						}
 
-						$arrJoins[] = " LEFT JOIN " . $arrConfig['table'] . " j$intCount ON " . $arrOptions['table'] . "." . Database::quoteIdentifier($strKey) . "=j$intCount." . $arrConfig['field'];
+						$arrJoins[] = " LEFT JOIN " . $arrConfig['table'] . " j$intCount ON " . $arrOptions['table'] . "." . Database::quoteIdentifier($strKey) . " = j$intCount." . $arrConfig['field'];
 					}
 				}
 			}
@@ -67,7 +67,7 @@ class QueryBuilder
 		// Where condition
 		if (isset($arrOptions['column']))
 		{
-			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . "=?");
+			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . " = ?");
 		}
 
 		// Having (see #6446)
@@ -98,7 +98,7 @@ class QueryBuilder
 
 		if (isset($arrOptions['column']))
 		{
-			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . "=?");
+			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . " = ?");
 		}
 
 		return $strQuery;

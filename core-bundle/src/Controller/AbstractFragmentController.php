@@ -263,7 +263,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]['class'];
 
         if (!\in_array($caller, [AbstractContentElementController::class, AbstractFrontendModuleController::class], true)) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'The "%s" method is considered internal and won\'t be accessible anymore in Contao 6.', $method);
+            trigger_deprecation('contao/core-bundle', '5.0', 'The "%s" method is considered internal and will not be accessible anymore in Contao 6.', $method);
         }
     }
 

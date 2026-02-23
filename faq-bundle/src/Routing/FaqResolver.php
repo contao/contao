@@ -34,7 +34,7 @@ class FaqResolver implements ContentUrlResolverInterface
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $categoryAdapter = $this->framework->getAdapter(FaqCategoryModel::class);
 
-        return ContentUrlResult::resolve($pageAdapter->findPublishedById((int) $categoryAdapter->findById($content->pid)?->jumpTo));
+        return ContentUrlResult::resolve($pageAdapter->findById((int) $categoryAdapter->findById($content->pid)?->jumpTo));
     }
 
     public function getParametersForContent(object $content, PageModel $pageModel): array

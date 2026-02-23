@@ -76,8 +76,10 @@ class DataContainerCallbackPass implements CompilerPassInterface
         }
 
         if (
-            !str_ends_with($attributes['target'], '_callback')
+            !($attributes['exact'] ?? false)
+            && !str_ends_with($attributes['target'], '_callback')
             && !str_contains((string) $attributes['target'], '.panel_callback.')
+            && !str_ends_with($attributes['target'], '.default')
             && !\in_array(substr($attributes['target'], -7), ['.wizard', '.xlabel'], true)
         ) {
             $attributes['target'] .= '_callback';
@@ -86,8 +88,10 @@ class DataContainerCallbackPass implements CompilerPassInterface
         $priority = (int) ($attributes['priority'] ?? 0);
 
         $callbacks[$attributes['table']][$attributes['target']][$priority][] = [
-            $serviceId,
-            $this->getMethod($attributes, $class, $serviceId),
+            'service' => $serviceId,
+            'method' => $this->getMethod($attributes, $class, $serviceId),
+            'closure' => ($attributes['closure'] ?? null),
+            'singleton' => ($attributes['singleton'] ?? null),
         ];
     }
 

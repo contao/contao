@@ -75,7 +75,13 @@ class PageRegular extends Frontend
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$request->setLocale($locale);
 
-		$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
+		$responseContextAccessor = System::getContainer()->get('contao.routing.response_context_accessor');
+
+		if (!$this->responseContext = $responseContextAccessor->getResponseContext())
+		{
+			$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
+		}
+
 		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
 
 		System::loadLanguageFile('default');
@@ -110,31 +116,52 @@ class PageRegular extends Frontend
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 		$arrModules = StringUtil::deserialize($objLayout->modules);
 		$arrModuleIds = array();
+		$arrElementIds = array();
 
 		// Filter the disabled modules
 		foreach ($arrModules as $module)
 		{
 			if ($module['enable'] ?? null)
 			{
-				$arrModuleIds[] = (int) $module['mod'];
+				if (str_starts_with((string) $module['mod'], 'content-'))
+				{
+					$arrElementIds[] = (int) str_replace('content-', '', (string) $module['mod']);
+				}
+				else
+				{
+					$arrModuleIds[] = (int) $module['mod'];
+				}
 			}
 		}
 
-		// Get all modules in a single DB query
+		// Get all modules and elements in a single DB query each
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
+		$objElements = ContentModel::findMultipleByIds($arrElementIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds, true))
+		if ($objModules !== null || $objElements !== null || \in_array(0, $arrModuleIds, true))
 		{
-			$arrMapper = array();
+			$arrModuleMapper = array();
+			$arrElementsMapper = array();
 
 			// Create a mapper array in case a module is included more than once (see #4849)
 			if ($objModules !== null)
 			{
 				while ($objModules->next())
 				{
-					$arrMapper[$objModules->id] = $objModules->current();
+					$arrModuleMapper[$objModules->id] = $objModules->current();
 				}
 			}
+
+			if ($objElements !== null)
+			{
+				while ($objElements->next())
+				{
+					$arrElementsMapper[$objElements->id] = $objElements->current();
+				}
+			}
+
+			$arrPreloadedModules = $this->preloadReaderModules($objPage, $request, $arrModules, $arrModuleMapper);
+			$arrPreloadedContentElements = $this->preloadReaderContentElements($objPage, $request, $arrModules, $arrModuleMapper);
 
 			foreach ($arrModules as $arrModule)
 			{
@@ -144,10 +171,17 @@ class PageRegular extends Frontend
 					continue;
 				}
 
-				// Replace the module ID with the module model
-				if ($arrModule['mod'] > 0 && isset($arrMapper[$arrModule['mod']]))
+				$isContentElement = str_starts_with((string) $arrModule['mod'], 'content-');
+				$id = (int) str_replace('content-', '', (string) $arrModule['mod']);
+
+				// Replace the module ID with the models
+				if ($isContentElement && isset($arrElementsMapper[$id]))
 				{
-					$arrModule['mod'] = $arrMapper[$arrModule['mod']];
+					$arrModule['mod'] = $arrElementsMapper[$id];
+				}
+				elseif ($id > 0 && isset($arrModuleMapper[$id]))
+				{
+					$arrModule['mod'] = $arrModuleMapper[$id];
 				}
 
 				// Generate the modules
@@ -174,7 +208,7 @@ class PageRegular extends Frontend
 						continue;
 					}
 
-					$this->Template->{$arrModule['col']} .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$this->Template->{$arrModule['col']} .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : $arrPreloadedModules[$arrModule['col']][$arrModule['mod']->id ?? $arrModule['mod']] ?? Controller::getFrontendModule($arrModule['mod'], $arrModule['col'], $arrPreloadedContentElements);
 				}
 				else
 				{
@@ -183,7 +217,7 @@ class PageRegular extends Frontend
 						$arrCustomSections[$arrModule['col']] = '';
 					}
 
-					$arrCustomSections[$arrModule['col']] .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$arrCustomSections[$arrModule['col']] .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : $arrPreloadedModules[$arrModule['col']][$arrModule['mod']->id ?? $arrModule['mod']] ?? Controller::getFrontendModule($arrModule['mod'], $arrModule['col'], $arrPreloadedContentElements);
 				}
 			}
 		}
@@ -209,20 +243,20 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
 			$this->Template->canonical = htmlspecialchars(
-				str_replace(array('{', '}'), array('%7B', '%7D'), $headBag->getCanonicalUriForRequest($request)),
+				str_replace(array('{', '}'), array('%7B', '%7D'), $headBag->getCanonicalUriForRequest($request) ?? ''),
 				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5
 			);
 		}
@@ -233,17 +267,76 @@ class PageRegular extends Frontend
 			$objLayout->titleTag = '{{page::pageTitle}} - {{page::rootPageTitle}}';
 		}
 
+		$parser = System::getContainer()->get('contao.insert_tag.parser');
+
 		// Assign the title and description
-		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($headBag->getMetaDescription(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$this->Template->title = strip_tags($parser->replaceInline($objLayout->titleTag));
+		$this->Template->description = htmlspecialchars($headBag->getMetaDescription() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
-		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
+		$this->Template->class = htmlspecialchars(trim($parser->replaceInline($objLayout->cssClass . ' ' . $objPage->cssClass)), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+
+		// Additional meta tags
+		$this->Template->metaTags = $headBag->getMetaTags();
 
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);
 		$this->createHeaderScripts($objPage, $objLayout);
+	}
+
+	protected function preloadReaderModules($objPage, $request, $arrModules, $arrMapper): array
+	{
+		$arrPreloaded = array();
+
+		foreach ($arrModules as $arrModule)
+		{
+			$strClass = Module::findClass($arrMapper[$arrModule['mod']]->type ?? '');
+
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
+			{
+				continue;
+			}
+
+			$arrPreloaded[$arrModule['col']][$arrModule['mod']] = $this->getFrontendModule($arrMapper[$arrModule['mod']], $arrModule['col']);
+		}
+
+		return $arrPreloaded;
+	}
+
+	protected function preloadReaderContentElements($objPage, $request, $arrModules, $arrMapper): array
+	{
+		$arrPreloaded = array();
+		$arrArticleColumns = array();
+
+		foreach ($arrModules as $arrModule)
+		{
+			if ($arrModule['mod'] == 0)
+			{
+				$arrArticleColumns[] = $arrModule['col'];
+			}
+		}
+
+		if (empty($arrArticleColumns))
+		{
+			return $arrPreloaded;
+		}
+
+		$objResult = ContentModel::findModulesByArticleByPublishedPidAndColumns($objPage->id, $arrArticleColumns);
+
+		foreach ($objResult->fetchAllAssoc() as list('id' => $intId, 'type' => $strType, 'column' => $strColumn))
+		{
+			$strClass = Module::findClass($strType);
+
+			if (!is_a($strClass, Module::class, true) || !$strClass::shouldPreload($strType, $objPage, $request))
+			{
+				continue;
+			}
+
+			$arrPreloaded[$intId] = $this->getContentElement($intId, $strColumn);
+		}
+
+		return $arrPreloaded;
 	}
 
 	/**
@@ -380,7 +473,7 @@ class PageRegular extends Frontend
 		// Overwrite the viewport tag (see #6251)
 		if ($objLayout->viewport)
 		{
-			$this->Template->viewport = '<meta name="viewport" content="' . $objLayout->viewport . '">' . "\n";
+			$this->Template->viewport = '<meta name="viewport" content="' . StringUtil::specialcharsAttribute($objLayout->viewport) . '">' . "\n";
 		}
 
 		$this->Template->mooScripts = '';

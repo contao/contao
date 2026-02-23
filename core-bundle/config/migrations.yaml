@@ -8,7 +8,7 @@ services:
     contao.migration.collection:
         class: Contao\CoreBundle\Migration\MigrationCollection
         arguments:
-            - ~
+            - []
 
     contao.migration.command_compiler:
         class: Contao\CoreBundle\Migration\CommandCompiler
@@ -39,6 +39,9 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '@contao.resource_finder'
+        tags:
+            # Use a higher priority for the boolean fields migration (#8707)
+            - { name: contao.migration, priority: 1 }
 
     contao.migration.version_500.empty_ptable:
         class: Contao\CoreBundle\Migration\Version500\EmptyPtableMigration
@@ -65,6 +68,12 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_503.caption_basic_entities:
+        class: Contao\CoreBundle\Migration\Version503\CaptionBasicEntitiesMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+
     contao.migration.version_503.file_extension:
         class: Contao\CoreBundle\Migration\Version503\FileExtensionMigration
         arguments:
@@ -80,4 +89,36 @@ services:
         class: Contao\CoreBundle\Migration\Version503\RememberMeMigration
         arguments:
             - '@database_connection'
-            - !tagged_iterator security.remember_me_handler
+
+    contao.migration.version_505.form_store_session:
+        class: Contao\CoreBundle\Migration\Version505\FormStoreSessionMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_505.overwrite_meta:
+        class: Contao\CoreBundle\Migration\Version505\OverwriteMetaMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_506.layout_template:
+        class: Contao\CoreBundle\Migration\Version506\LayoutTemplateMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.twig.filesystem_loader'
+            - '@filesystem'
+
+    contao.migration.version_506.search_indexer_settings:
+        class: Contao\CoreBundle\Migration\Version506\SearchIndexerSettingsMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_507.default_cud:
+        class: Contao\CoreBundle\Migration\Version507\DefaultCudMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.listener.data_container.cud_permission'
+
+    contao.migration.version_507.field_permission:
+        class: Contao\CoreBundle\Migration\Version507\FieldPermissionMigration
+        arguments:
+            - '@database_connection'

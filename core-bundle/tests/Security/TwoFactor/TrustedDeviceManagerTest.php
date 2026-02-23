@@ -32,14 +32,14 @@ class TrustedDeviceManagerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $user = $this->mockClassWithProperties(BackendUser::class);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class);
         $user->id = 1;
         $user->trustedTokenVersion = 1;
 
         $manager = new TrustedDeviceManager(
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
             $tokenStorage,
-            $this->createMock(EntityManagerInterface::class),
+            $this->createStub(EntityManagerInterface::class),
         );
 
         $this->assertTrue($manager->isTrustedDevice($user, 'contao_backend'));
@@ -54,11 +54,11 @@ class TrustedDeviceManagerTest extends TestCase
         ;
 
         $manager = new TrustedDeviceManager(
-            $this->createMock(RequestStack::class),
+            $this->createStub(RequestStack::class),
             $tokenStorage,
-            $this->createMock(EntityManagerInterface::class),
+            $this->createStub(EntityManagerInterface::class),
         );
 
-        $this->assertFalse($manager->isTrustedDevice($this->createMock(UserInterface::class), 'contao_backend'));
+        $this->assertFalse($manager->isTrustedDevice($this->createStub(UserInterface::class), 'contao_backend'));
     }
 }

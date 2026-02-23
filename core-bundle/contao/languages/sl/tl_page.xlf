@@ -42,6 +42,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
+        <target>Route priority</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
@@ -67,8 +68,7 @@
         <target>Oznake robota</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Tu lahko določite kako stran obravnavajo iskalniki.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -96,6 +96,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
+        <target>Vedno preusmeri</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
@@ -383,14 +384,6 @@
         <source>Please assign the access rights for the page and its subpages.</source>
         <target>Prosimo, določite dostopne pravice strani in njenih podstrani.</target>
       </trans-unit>
-      <trans-unit id="tl_page.noSearch.0">
-        <source>Do not search</source>
-        <target>Ne išči</target>
-      </trans-unit>
-      <trans-unit id="tl_page.noSearch.1">
-        <source>Exclude the page from the search index.</source>
-        <target>Izključi stran iz iskalnega indeksa.</target>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>CSS class</target>
@@ -415,6 +408,14 @@
         <source>Hide the page in the navigation menu.</source>
         <target>Ne prikaži te strani navigacijskem meniju.</target>
       </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+        <target>Skrij prijavljenim uporabnikom</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Če je uporabnik prijavljen, ne prikaži strani v navigacijskem meniju.</target>
+      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>Dostopni ključ</target>
@@ -437,6 +438,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Če želite skriti stran pred določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -444,6 +446,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Če želite skriti stran po določenem dnevu oz. uri, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -461,6 +464,59 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Prosimo, določite stran na katero bodo preusmerjeni vsi uporabniki, da si bodo lahko nastavili dvostopenjsko prijavo.</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>Omogoči CSP</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>Omogoči Content Security Policy za to spletno mesto.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Tu lahko vnesete prilagojene direktive za Content Security Policy.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>Samo poročanje</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>Format izvlečka</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>Prosimo, izberite format izvlečka.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>Največje število elementov</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>Tukaj lahko omejite število izvlečkov. Nastavite na 0, za izvoz vseh.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>Opis izvlečka</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the feed.</source>
+        <target>Tukaj lahko vpišete kratek opis izvlečka novic.</target>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Naziv in tip</target>
@@ -475,6 +531,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonical_legend">
         <source>Canonical URL</source>
+        <target>Canonical URL</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -540,6 +597,18 @@
         <source>Two-factor authentication</source>
         <target>Dvostopenjska prijava</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>Content Security Policy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>Nastavitve izvlečka</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>Nastavitve slike</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Stalna preusmeritev</target>
@@ -564,35 +633,35 @@
         <source>Inherit page layout</source>
         <target>Podeduj postavitev strani</target>
       </trans-unit>
-      <trans-unit id="tl_page.new.0">
-        <source>New</source>
-        <target>Nov</target>
-      </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
         <target>Ustvari novo stran</target>
       </trans-unit>
-      <trans-unit id="tl_page.show">
+      <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
         <target>Prikaži podrobnosti strani z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit">
+      <trans-unit id="tl_page.versions.1">
+        <source>Show the versions of page ID %s</source>
+        <target>Prikaži različice strani z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Uredi stran z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut">
+      <trans-unit id="tl_page.cut.1">
         <source>Move page ID %s</source>
         <target>Premakni stran z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy">
-        <source>Duplicate page ID %s</source>
-        <target>Podvoji stran z ID %s</target>
+      <trans-unit id="tl_page.copy.1">
+        <source>Copy page ID %s</source>
+        <target>Kopriaj strani z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
-        <source>Duplicate page ID %s with its subpages</source>
-        <target>Podvoji stran z ID %s in vse njene podstrani</target>
+      <trans-unit id="tl_page.copyChildren.1">
+        <source>Copy page ID %s with its subpages</source>
+        <target>Kopiraj stran z ID %s in vse njene podstrani</target>
       </trans-unit>
-      <trans-unit id="tl_page.delete">
+      <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
         <target>Izbriši stran z ID %s</target>
       </trans-unit>
@@ -608,9 +677,13 @@
         <source>Publish page ID %s</source>
         <target>Objavi stran z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste at the top</source>
-        <target>Prilepi na vrh</target>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+        <target>Skrij objavo</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
+        <target>Objavi</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -620,12 +693,29 @@
         <source>Paste after page ID %s</source>
         <target>Prilepi za stranjo z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles">
+      <trans-unit id="tl_page.pastenewtop.1">
+        <source>Add a new page at the top</source>
+        <target>Vstavi novo stran na vrh</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.1">
+        <source>Add a new page after page ID %s</source>
+        <target>Vstavi novo stran za stran z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.1">
+        <source>Add a new page inside page ID %s</source>
+        <target>Vstavi novo stran znotraj strani z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.0">
+        <source>Articles</source>
+        <target>Članki</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>
         <target>Uredi članke strani z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
+        <target>Route conflicts</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
@@ -708,6 +798,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 leto</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Stran</target>
       </trans-unit>
     </body>
   </file>

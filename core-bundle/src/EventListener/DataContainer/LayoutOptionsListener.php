@@ -30,7 +30,18 @@ class LayoutOptionsListener implements ResetInterface
     {
         if (null === $this->options) {
             $this->options = [];
-            $layouts = $this->connection->fetchAllAssociative('SELECT l.id, l.name, t.name AS theme FROM tl_layout l LEFT JOIN tl_theme t ON l.pid=t.id ORDER BY t.name, l.name');
+
+            $layouts = $this->connection->fetchAllAssociative(
+                <<<'SQL'
+                    SELECT
+                        l.id,
+                        l.name,
+                        t.name AS theme
+                    FROM tl_layout l
+                    LEFT JOIN tl_theme t ON l.pid = t.id
+                    ORDER BY t.name, l.name
+                    SQL,
+            );
 
             foreach ($layouts as $layout) {
                 $this->options[$layout['theme']][$layout['id']] = $layout['name'];

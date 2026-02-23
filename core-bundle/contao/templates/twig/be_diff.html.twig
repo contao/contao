@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+
+    <meta charset="{{ charset }}">
+    <title>{{ title }} | {{ host }}</title>
+    <meta name="generator" content="Contao Open Source CMS">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+
+    <link rel="stylesheet" href="{{ asset('diff.css', 'system/themes/' ~ theme) }}">
+    {{ stylesheets|default|raw }}
+
+    <script>{{ getLocaleString.invoke()|raw }}</script>
+    <script src="{{ asset('js/mootools.min.js', 'contao-components/mootools') }}"></script>
+    <script src="{{ asset('backend.js', 'contao_core') }}"></script>
+    {{ javascripts|default|raw }}
+
+</head>
+<body>
+
+<div id="container">
+    <main id="main">
+        <form method="post" data-turbo="false">
+            <div class="formbody">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                <select name="from" id="ctrl_from" class="tl_select">
+                    {% for k, v in versions %}
+                        <option value="{{ k }}"{% if v.version == from %} selected{% endif %}>{{ v.info }}</option>
+                    {% endfor %}
+                </select>
+                <span class="arrow">→</span>
+                <select name="to" id="ctrl_to" class="tl_select">
+                    {% for k, v in versions %}
+                        <option value="{{ k }}"{% if v.version == to|default %} selected{% endif %}>{{ v.info }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" class="tl_submit" value="{{ showLabel }}">
+            </div>
+        </form>
+        <div id="diff">
+            {{ content|raw }}
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

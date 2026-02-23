@@ -1,0 +1,50 @@
+{% extends '@Contao/form_row.html.twig' %}
+
+{% block field %}
+    <fieldset id="ctrl_{{ this.id }}" class="checkbox_container{% if this.class|default %} {{ this.class|default }}{% endif %}"{% if this.help|default %} aria-describedby="help_ctrl_{{ this.id }}"{% endif %}>
+
+        {% if this.label %}
+            <legend>
+                {% if this.mandatory|default %}
+                    <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
+                {% else %}
+                    {{ this.label }}
+                {% endif %}
+            </legend>
+        {% endif %}
+
+        {% if hasErrors.invoke() %}
+            <p class="error">{{ getErrorAsString.invoke() }}</p>
+        {% endif %}
+
+        <input type="hidden" name="{{ this.name }}" value="">
+
+        {% for option in getOptions.invoke() %}
+            {% if option.type == 'group_start' %}
+                <fieldset>
+                <legend>{{ option.label }}</legend>
+            {% endif %}
+
+            {% if option.type == 'option' %}
+                <span><input{{ attrs()
+                        .set('type', 'checkbox')
+                        .set('name', option.name)
+                        .set('id', "opt_#{option.id}")
+                        .addClass('checkbox')
+                        .set('value', option.value)
+                        .set('checked', option.checked, option.checked)
+                        .mergeWith(option.attributes)
+                    }}> <label id="lbl_{{ option.id }}" for="opt_{{ option.id }}">{{ option.label|sanitize_html('contao')|insert_tag_raw }}</label></span>
+            {% endif %}
+
+            {% if option.type == 'group_end' %}
+                </fieldset>
+            {% endif %}
+        {% endfor %}
+
+        {% if this.help|default %}
+            <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
+        {% endif %}
+
+    </fieldset>
+{% endblock %}

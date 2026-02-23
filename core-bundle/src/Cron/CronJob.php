@@ -24,8 +24,9 @@ class CronJob
         private readonly object $service,
         private readonly string $interval,
         private readonly string|null $method = null,
+        string|null $name = null,
     ) {
-        $name = $service::class;
+        $name ??= $service::class;
 
         if (!\is_callable($service)) {
             if (null === $this->method) {
@@ -41,10 +42,16 @@ class CronJob
     public function __invoke(string $scope): PromiseInterface|null
     {
         if (\is_callable($this->service)) {
-            return ($this->service)($scope);
+            $result = ($this->service)($scope);
+        } else {
+            $result = $this->service->{$this->method}($scope);
         }
 
-        return $this->service->{$this->method}($scope);
+        if (null === $result || $result instanceof PromiseInterface) {
+            return $result;
+        }
+
+        throw new \UnexpectedValueException(\sprintf('Invalid return value from "%s": expected null or PromiseInterface, got %s', $this->name, get_debug_type($result)));
     }
 
     public function getService(): object

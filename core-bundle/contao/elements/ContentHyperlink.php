@@ -10,8 +10,15 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentHyperlink::class, HyperlinkController::class);
+
 /**
  * Front end content element "hyperlink".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\HyperlinkController instead.
  */
 class ContentHyperlink extends ContentElement
 {

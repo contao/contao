@@ -1,7 +1,7 @@
 <?php
 
 $this->wrapperAttributes = $this
-    ->attr()
+    ->attrs()
     ->addClass([$this->prefix, 'explanation', $this->class])
     ->mergeWith($this->wrapperAttributes)
 ;

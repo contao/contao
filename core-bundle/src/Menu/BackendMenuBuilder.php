@@ -52,4 +52,25 @@ class BackendMenuBuilder
 
         return $tree;
     }
+
+    public function buildLoginMenu(): ItemInterface
+    {
+        $tree = $this->factory->createItem('loginMenu');
+
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
+
+        return $tree;
+    }
+
+    public function buildBreadcrumbMenu(): ItemInterface
+    {
+        $tree = $this->factory
+            ->createItem('breadcrumbMenu')
+            ->setChildrenAttribute('id', 'breadcrumb')
+        ;
+
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
+
+        return $tree;
+    }
 }

@@ -135,14 +135,14 @@ class PageTree extends Widget
 			}
 		}
 
-		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . '
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '" data-contao--input-map-target="input">' . '
   <div class="selector_container">' . (($this->isSortable && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . ($this->isSortable ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '"' . ($this->isSortable ? ' class="sortable" data-controller="contao--sortable" data-action="contao--sortable:update->contao--input-map#update"' : '') . '>';
 
 		foreach ($arrValues as $k=>$v)
 		{
-			$return .= '<li data-id="' . $k . '">' . $v . '</li>';
+			$return .= '<li data-contao--input-map-target="source" data-id="' . $k . '">' . $v . '</li>';
 		}
 
 		$return .= '</ul>';
@@ -166,6 +166,7 @@ class PageTree extends Widget
           "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
+            AjaxRequest.displayBox(Contao.lang.loading + \' …\');
             new Request.Contao({
               evalScripts: false,
               onSuccess: function(txt, json) {
@@ -174,16 +175,16 @@ class PageTree extends Widget
                 var evt = document.createEvent("HTMLEvents");
                 evt.initEvent("change", true, true);
                 $("ctrl_' . $this->strId . '").dispatchEvent(evt);
+                AjaxRequest.hideBox();
               }
             }).post({"action":"reloadPagetree", "name":"' . $this->strName . '", "value":value.join("\t"), "REQUEST_TOKEN":"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '"});
           }
         });
       });
-    </script>' . ($this->isSortable ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>';
 		}
 
-		$return = '<div>' . $return . '</div></div>';
+		$return = '<div data-controller="contao--input-map" data-contao--input-map-attribute-value="data-id">' . $return . '</div></div>';
 
 		return $return;
 	}

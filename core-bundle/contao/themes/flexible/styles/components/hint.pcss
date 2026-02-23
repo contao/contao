@@ -1,0 +1,41 @@
+/* Paste/sort hint */
+#paste_hint {
+    position: relative;
+    z-index: 1;
+}
+
+.tl_message + #paste_hint {
+    margin-top: -12px;
+}
+
+#paste_hint p {
+    position: absolute;
+    font-family: "Architects Daughter", cursive;
+    font-size: 1rem;
+    color: var(--paste-hint);
+    top: 0;
+    right: 30px;
+    padding: 0 36px 24px 0;
+    background: var(--icon-arrow-right) bottom right no-repeat;
+    transform: rotate(-1deg);
+}
+
+.sort_hint {
+    position: absolute;
+    font-family: "Architects Daughter", cursive;
+    font-size: 1rem;
+    color: var(--paste-hint);
+    top: -50px;
+    left: 160px;
+    padding: 0 6px 24px 42px;
+    background: var(--icon-arrow-left) 6px bottom no-repeat;
+    transform: rotate(-2deg);
+}
+
+.widget + .subpal .sort_hint {
+    left: 260px;
+}
+
+.widget + .widget .sort_hint {
+    left: 320px;
+}

@@ -17,7 +17,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -31,7 +30,6 @@ class AdministratorEmailListener
         private readonly ContaoFramework $framework,
         private readonly TranslatorInterface $translator,
         private readonly RouterInterface $router,
-        private readonly RequestStack $requestStack,
         private readonly Security $security,
     ) {
     }
@@ -45,12 +43,7 @@ class AdministratorEmailListener
         }
 
         if ($this->canAccessSettings()) {
-            $request = $this->requestStack->getCurrentRequest();
-
-            $settingsUrl = $this->router->generate('contao_backend', [
-                'do' => 'settings',
-                'ref' => $request->attributes->get('_contao_referer_id'),
-            ]);
+            $settingsUrl = $this->router->generate('contao_backend', ['do' => 'settings']);
 
             $message = $this->translator->trans('ERR.noAdminEmailUrl', ['settingsUrl' => $settingsUrl], 'contao_default');
         } else {

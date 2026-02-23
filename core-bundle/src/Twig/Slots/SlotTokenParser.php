@@ -12,19 +12,22 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Slots;
 
+use Twig\Error\SyntaxError;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\RawFilter;
 use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
 /**
- * @experimental
+ * @internal
  */
 final class SlotTokenParser extends AbstractTokenParser
 {
@@ -36,16 +39,18 @@ final class SlotTokenParser extends AbstractTokenParser
         $nameToken = $stream->expect(Token::NAME_TYPE, null, '');
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        // Parse body: we inject a macro symbol with a marker expression to support the
-        // virtual slot() function when parsing the following tokens. Then the marker
-        // expression gets replaced again with a SlotContentNode that outputs the slot
-        // content at runtime.
-        $markerExpression = new ConstantExpression('', 0);
-        $this->parser->addImportedSymbol('function', 'slot', '', $markerExpression);
         $body = $this->parser->subparse($this->decideForFork(...));
 
+        $throwMissingSlotFunctionError = static function () use ($nameToken, $token, $stream): void {
+            throw new SyntaxError(\sprintf('Slot "%s" adds template content but does not call the "slot()" function.', $nameToken->getValue()), $token->getLine(), $stream->getSourceContext());
+        };
+
         if ($body->count()) {
-            $this->traverseAndReplaceMarkerExpression($markerExpression, $nameToken->getValue(), $body);
+            if (0 === $this->traverseAndReplaceSlotFunction($nameToken->getValue(), $body)) {
+                $throwMissingSlotFunctionError();
+            }
+        } elseif ($body->hasAttribute('data') && $body->getAttribute('data')) {
+            $throwMissingSlotFunctionError();
         } else {
             $line = $stream->getCurrent()->getLine();
             $body->setNode('body', new PrintNode($this->getSlotReferenceExpression($nameToken->getValue(), $line), $line));
@@ -54,7 +59,7 @@ final class SlotTokenParser extends AbstractTokenParser
         // Parse optional {% else %} tag with fallback content
         if ('else' === $stream->next()->getValue()) {
             $stream->expect(Token::BLOCK_END_TYPE);
-            $fallback = $this->parser->subparse($this->decideAddEnd(...), true);
+            $fallback = $this->parser->subparse($this->decideSlotEnd(...), true);
         } else {
             $fallback = null;
         }
@@ -69,7 +74,13 @@ final class SlotTokenParser extends AbstractTokenParser
         return $token->test(['else', 'endslot']);
     }
 
-    public function decideAddEnd(Token $token): bool
+    /**
+     * Keep the name of this function consistent - we use it to guess which token
+     * parsers have corresponding end tags.
+     *
+     * @see \Contao\CoreBundle\Twig\EnvironmentInformation
+     */
+    public function decideSlotEnd(Token $token): bool
     {
         return $token->test('endslot');
     }
@@ -79,11 +90,14 @@ final class SlotTokenParser extends AbstractTokenParser
         return 'slot';
     }
 
-    private function traverseAndReplaceMarkerExpression(AbstractExpression $markerExpression, string $name, Node $node, array $parents = []): void
+    /**
+     * Returns the number of slot function expressions that were replaced.
+     */
+    private function traverseAndReplaceSlotFunction(string $name, Node $node, Node|null $parent = null): int
     {
-        if ($node === $markerExpression) {
+        if ($node instanceof FunctionExpression && 'slot' === $node->getAttribute('name')) {
             /** @var Node $target */
-            $target = $parents[1];
+            $target = $parent;
 
             foreach (array_keys(iterator_to_array($target)) as $key) {
                 $target->removeNode((string) $key);
@@ -91,12 +105,16 @@ final class SlotTokenParser extends AbstractTokenParser
 
             $target->setNode('expr', $this->getSlotReferenceExpression($name, $target->getTemplateLine()));
 
-            return;
+            return 1;
         }
 
+        $count = 0;
+
         foreach ($node as $child) {
-            $this->traverseAndReplaceMarkerExpression($markerExpression, $name, $child, [$node, ...$parents]);
+            $count += $this->traverseAndReplaceSlotFunction($name, $child, $node);
         }
+
+        return $count;
     }
 
     /**
@@ -105,7 +123,7 @@ final class SlotTokenParser extends AbstractTokenParser
     private function getSlotReferenceExpression(string $name, int $line): AbstractExpression
     {
         $node = new GetAttrExpression(
-            new NameExpression('_slots', $line),
+            new ContextVariable('_slots', $line),
             new ConstantExpression($name, $line),
             null,
             'array',
@@ -119,7 +137,7 @@ final class SlotTokenParser extends AbstractTokenParser
         return new FilterExpression(
             $node,
             new ConstantExpression('raw', $line),
-            new Node(),
+            new EmptyNode($line),
             $line,
         );
     }

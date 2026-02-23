@@ -20,8 +20,6 @@ use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @experimental
- *
  * @implements \IteratorAggregate<string, string>
  */
 final class Finder implements \IteratorAggregate, \Countable
@@ -35,6 +33,12 @@ final class Finder implements \IteratorAggregate, \Countable
     private bool $variantsExclusive = false;
 
     private bool $variants = false;
+
+    private string|null $identifierExpression = null;
+
+    private bool|null $identifierExpressionIsInclude = null;
+
+    private bool $excludePartials = false;
 
     /**
      * @var array<string, list<string>>
@@ -84,6 +88,35 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Includes only or excludes identifiers matching the given expression.
+     *
+     * E.g. use "%^backend/%" with $include set to false in order to suppress anything
+     * from the "backend" directories or "%/foo/%" with $include set to true to only
+     * consider identifiers containing a directory "foo" in their name.
+     *
+     * The given $regularExpression is passed to preg_match - it must include the
+     * delimiters and can include modifiers.
+     */
+    public function identifierRegex(string $regularExpression, bool $include = true): self
+    {
+        $this->identifierExpression = $regularExpression;
+        $this->identifierExpressionIsInclude = $include;
+
+        return $this;
+    }
+
+    /**
+     * Do not include partial templates. Partial templates are identified by their
+     * filename starting with an underscore, e.g. "@Contao/foo/_bar.html.twig".
+     */
+    public function excludePartials(): self
+    {
+        $this->excludePartials = true;
+
+        return $this;
+    }
+
+    /**
      * Also includes variant templates, e.g: "content_element/text/special" when
      * filtering for "content_element/text". If $exclusive is set to true, only the
      * variants will be output.
@@ -107,11 +140,13 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Returns the result as template options.
+     * Returns the result as template options. When searching with an exact
+     * identifier, this identifier becomes the default option (key = ""). Set
+     * $baseIdentifierAsDefaultOption to false, if the key should still be set.
      *
      * @return array<string, string>
      */
-    public function asTemplateOptions(): array
+    public function asTemplateOptions(bool $baseIdentifierAsDefaultOption = true): array
     {
         $getSourceLabel = function (string $name): string {
             if (null !== ($themeSlug = $this->themeNamespace->match($name))) {
@@ -146,9 +181,9 @@ final class Finder implements \IteratorAggregate, \Countable
 
         $options = [];
 
-        foreach (array_keys(iterator_to_array($this->getIterator())) as $identifier) {
+        foreach ($this->asIdentifierList() as $identifier) {
             $sourceLabels = array_map($getSourceLabel, $this->sources[$identifier]);
-            $key = $identifier !== $this->identifier ? $identifier : '';
+            $key = !$baseIdentifierAsDefaultOption || $identifier !== $this->identifier ? $identifier : '';
 
             $options[$key] = $getCustomLabel($identifier, $sourceLabels) ?? $getLabel($identifier, $sourceLabels);
         }
@@ -160,6 +195,19 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
+     * @return list<string>
+     */
+    public function asIdentifierList(): array
+    {
+        $identifiers = array_keys(iterator_to_array($this->getIterator()));
+        sort($identifiers);
+
+        return $identifiers;
+    }
+
+    /**
+     * Yields key-value pairs "identifier" => "extension".
+     *
      * @return \Generator<string, string>
      */
     public function getIterator(): \Generator
@@ -194,6 +242,14 @@ final class Finder implements \IteratorAggregate, \Countable
 
         foreach ($chains as $identifier => $chain) {
             if ($this->identifier && !$matchIdentifier($identifier)) {
+                continue;
+            }
+
+            if (null !== $this->identifierExpression && (1 === preg_match($this->identifierExpression, $identifier)) !== $this->identifierExpressionIsInclude) {
+                continue;
+            }
+
+            if ($this->excludePartials && 1 === preg_match('%(?:/|^)_[^/]+$%', $identifier)) {
                 continue;
             }
 

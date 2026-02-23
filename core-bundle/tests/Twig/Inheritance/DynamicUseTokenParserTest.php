@@ -12,18 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
@@ -33,42 +35,14 @@ class DynamicUseTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicUseTokenParser($this->createMock(ContaoFilesystemLoader::class));
+        $tokenParser = new DynamicUseTokenParser($this->createStub(ContaoFilesystemLoader::class));
 
         $this->assertSame('use', $tokenParser->getTag());
     }
 
     public function testHandlesContaoUses(): void
     {
-        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/use');
-
-        $templateLocator = new TemplateLocator(
-            $projectDir,
-            ['FooBundle' => ContaoModuleBundle::class],
-            ['FooBundle' => ['path' => Path::join($projectDir, 'bundle')]],
-            $themeNamespace = new ThemeNamespace(),
-            $this->createMock(Connection::class),
-        );
-
-        $filesystemLoader = new ContaoFilesystemLoader(
-            new NullAdapter(),
-            $templateLocator,
-            $themeNamespace,
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(PageFinder::class),
-            $projectDir,
-        );
-
-        $environment = new Environment($filesystemLoader);
-        $environment->addExtension(
-            new ContaoExtension(
-                $environment,
-                $filesystemLoader,
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
-            ),
-        );
+        $environment = $this->getDemoEnvironment();
 
         // A component is adjusted by overwriting the component's template (here by
         // adding the item "ice" and turning apples into pineapples). The changes should
@@ -109,5 +83,82 @@ class DynamicUseTokenParserTest extends TestCase
                 HTML,
             trim($environment->render('@Contao/element/recipe.html.twig')),
         );
+    }
+
+    public function testHandlesContaoUsesWithThemeContext(): void
+    {
+        $pageFinder = $this->createStub(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($this->createClassWithPropertiesStub(PageModel::class, ['templateGroup' => 'templates/theme']))
+        ;
+
+        $environment = $this->getDemoEnvironment($pageFinder);
+
+        // When in a theme context at runtime, the theme's component is used as first
+        // template in the chain:
+        $this->assertSame(
+            <<<'HTML'
+                <h1>Summer menu</h1>
+                <div class="themed_shake">
+                    <h2>Fruit shake</h2>
+                    <b>Ingredients:</b>
+                    <ul>
+                        <li>pineapple and banana</li>
+                        <li>milk</li>
+                        <li>ice</li>
+                    </ul>
+                </div>
+                HTML,
+            trim($environment->render('@Contao/element/menu.html.twig')),
+        );
+    }
+
+    private function getDemoEnvironment(PageFinder|null $pageFinder = null): Environment
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/use');
+
+        $resourceFinder = $this->createStub(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn(['FooBundle' => Path::join($projectDir, 'bundle/contao/templates'), 'App' => Path::join($projectDir, 'templates')])
+        ;
+
+        $connection = $this->createStub(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->with("SELECT templates FROM tl_theme WHERE templates != ''")
+            ->willReturn(['templates/theme'])
+        ;
+
+        $templateLocator = new TemplateLocator(
+            $projectDir,
+            $resourceFinder,
+            $themeNamespace = new ThemeNamespace(),
+            $connection,
+        );
+
+        $filesystemLoader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            $themeNamespace,
+            $this->createStub(ContaoFramework::class),
+            $pageFinder ?? $this->createStub(PageFinder::class),
+            $projectDir,
+        );
+
+        $environment = new Environment($filesystemLoader);
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $filesystemLoader,
+                $this->createStub(ContaoCsrfTokenManager::class),
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
+            ),
+        );
+
+        return $environment;
     }
 }

@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\SuperviseWorkersCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
+use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
@@ -24,21 +27,19 @@ use Toflar\CronjobSupervisor\Supervisor;
 
 class SuperviseWorkersCommandTest extends TestCase
 {
-    /**
-     * @dataProvider autoscalingProvider
-     */
+    #[DataProvider('autoscalingProvider')]
     public function testCorrectAmountOfWorkersAreCreated(int $messageCount, int $desiredSize, int $max, int $min, array $expectedCommands): void
     {
         $messengerTransportLocator = new Container();
         $messengerTransportLocator->set('prio_normal', $this->mockMessengerTransporter(0, false));
         $messengerTransportLocator->set('prio_high', $this->mockMessengerTransporter($messageCount, true));
 
-        $processUtil = $this->createMock(ProcessUtil::class);
+        $processUtil = $this->createStub(ProcessUtil::class);
         $processUtil
             ->method('createSymfonyConsoleProcess')
             ->willReturnCallback(
                 function () {
-                    $process = $this->createMock(Process::class);
+                    $process = $this->createStub(Process::class);
                     $process
                         ->method('getCommandLine')
                         ->willReturn(implode(' ', \func_get_args()))
@@ -51,7 +52,7 @@ class SuperviseWorkersCommandTest extends TestCase
 
         $commands = [];
 
-        $supervisor = $this->createMock(Supervisor::class);
+        $supervisor = $this->createStub(Supervisor::class);
         $supervisor
             ->method('withCommand')
             ->willReturnCallback(
@@ -63,9 +64,16 @@ class SuperviseWorkersCommandTest extends TestCase
             )
         ;
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('close')
+        ;
+
         $command = new SuperviseWorkersCommand(
             $messengerTransportLocator,
             $processUtil,
+            $connection,
             $supervisor,
             $this->getWorkers($desiredSize, $max, $min),
         );
@@ -165,7 +173,7 @@ class SuperviseWorkersCommandTest extends TestCase
         return $converted;
     }
 
-    private function mockMessengerTransporter(int $messageCount, bool $hasAutoscaling): MessageCountAwareInterface
+    private function mockMessengerTransporter(int $messageCount, bool $hasAutoscaling): MessageCountAwareInterface&MockObject
     {
         $transport = $this->createMock(MessageCountAwareInterface::class);
         $transport

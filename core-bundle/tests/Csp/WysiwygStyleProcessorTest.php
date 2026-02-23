@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Csp;
 
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class WysiwygStyleProcessorTest extends TestCase
 {
-    /**
-     * @dataProvider extractStylesProvider
-     */
+    #[DataProvider('extractStylesProvider')]
     public function testProcessStyles(string $html, array $expectedStyles, array $allowedCssProperties): void
     {
         $processor = new WysiwygStyleProcessor($allowedCssProperties);

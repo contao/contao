@@ -12,14 +12,29 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\EventListener;
 
+use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 
 class MessageListener
 {
-    public function __construct(private readonly LoggerInterface $logger)
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly Connection $connection,
+    ) {
+    }
+
+    #[AsEventListener]
+    public function onWorkerRunning(WorkerRunningEvent $event): void
     {
+        if (!$event->isWorkerIdle()) {
+            return;
+        }
+
+        // Close the database connection when the worker is idle (see #8199)
+        $this->connection->close();
     }
 
     #[AsEventListener]

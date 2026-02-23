@@ -49,6 +49,7 @@ class TransportSecurityHeaderListenerTest extends TestCase
     {
         $response = new Response();
         $response->headers->set('Strict-Transport-Security', 'max-age=500; includeSubDomains; preload');
+
         $request = Request::create('https://contao.org');
 
         $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 31536000);
@@ -82,7 +83,7 @@ class TransportSecurityHeaderListenerTest extends TestCase
     private function createEvent(Request $request, Response $response): ResponseEvent
     {
         return new ResponseEvent(
-            $this->createMock(KernelInterface::class),
+            $this->createStub(KernelInterface::class),
             $request,
             HttpKernelInterface::MAIN_REQUEST,
             $response,

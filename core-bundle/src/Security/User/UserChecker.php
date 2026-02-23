@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\FrontendUser;
 use Contao\User;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -41,7 +42,7 @@ class UserChecker implements UserCheckerInterface
         $this->checkIfAccountIsActive($user);
     }
 
-    public function checkPostAuth(UserInterface $user): void
+    public function checkPostAuth(UserInterface $user, TokenInterface|null $token = null): void
     {
     }
 

@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Table(name: 'tl_cron_job')]
 #[Entity(repositoryClass: CronJobRepository::class)]
-#[Index(columns: ['name'], name: 'name')]
+#[Index(name: 'name', columns: ['name'])]
 class CronJob
 {
     #[Id]
@@ -33,13 +33,18 @@ class CronJob
     #[Column(type: 'string', length: 255, nullable: false)]
     protected string $name;
 
-    #[Column(type: 'datetime', nullable: false)]
-    protected \DateTimeInterface $lastRun;
+    #[Column(type: 'datetime_immutable', nullable: false)]
+    protected \DateTimeImmutable $lastRun;
 
     public function __construct(string $name, \DateTimeInterface|null $lastRun = null)
     {
         $this->name = $name;
-        $this->lastRun = $lastRun ?? new \DateTime();
+
+        if ($lastRun && !$lastRun instanceof \DateTimeImmutable) {
+            $lastRun = \DateTimeImmutable::createFromInterface($lastRun);
+        }
+
+        $this->lastRun = $lastRun ?? new \DateTimeImmutable();
     }
 
     public function getName(): string
@@ -49,6 +54,10 @@ class CronJob
 
     public function setLastRun(\DateTimeInterface $lastRun): self
     {
+        if (!$lastRun instanceof \DateTimeImmutable) {
+            $lastRun = \DateTimeImmutable::createFromInterface($lastRun);
+        }
+
         $this->lastRun = $lastRun;
 
         return $this;

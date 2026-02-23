@@ -99,6 +99,10 @@ class Route404Provider extends AbstractPageRouteProvider
             $pages = $pageAdapter->findBy('tl_page.id IN ('.implode(',', $ids).')', []);
         }
 
+        if (null === $pages) {
+            return [];
+        }
+
         $routes = [];
 
         foreach ($pages as $page) {

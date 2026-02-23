@@ -1,0 +1,107 @@
+{% trans_default_domain 'contao_default' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
+
+{% set wrapper_attributes = attrs(cssID)
+    .addClass([class, 'nav-wrapper', 'block'])
+    .mergeWith(wrapper_attributes|default)
+%}
+
+{% block content %}
+    {% block navigation_script_variables %}
+        <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
+            let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
+            if (typeof accessibleNavObserver === 'undefined') {
+                const accessibleNavObserver = new ResizeObserver(() => {
+                    document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
+                    document.body.classList.toggle('nav-is-mobile', window.innerWidth < accessibleNavBreakpoint)
+                }).observe(document.body);
+            }
+        </script>
+    {% endblock %}
+    <!-- indexer::stop -->
+    <div{{ wrapper_attributes }}>
+        {% block toggle %}
+            {% set button_attributes = attrs()
+                .addClass('nav-burger')
+                .setIfExists('aria-label', ariaLabel|default)
+                .set('aria-haspopup', 'menu')
+                .set('aria-expanded', 'false')
+                .mergeWith(button_attributes|default)
+            %}
+
+            <button{{ button_attributes }}>
+                <span class="nav-burger__inner">
+                    <span class="icon-line"></span>
+                </span>
+            </button>
+        {% endblock %}
+
+        {% block navigation %}
+            {% set nav_attributes = attrs()
+                .addClass('navigation-main')
+                .setIfExists('style', style)
+                .setIfExists('aria-label', ariaLabel|default)
+                .mergeWith(nav_attributes|default)
+            %}
+
+            <nav{{ nav_attributes }}>
+                {% if headline|default %}
+                    <{{ hl }}>{{ headline }}</{{ hl }}>
+                {% endif %}
+
+                {% block skip_link %}
+                    {% set skiplink_attributes = attrs()
+                        .set('href', request ~ '#' ~ skipId)
+                        .addClass(['invisible', 'skip-link'])
+                        .mergeWith(skiplink_attributes|default)
+                    %}
+
+                    <a{{ skiplink_attributes }}>{{ skipNavigation }}</a>
+                {% endblock %}
+
+                {{ items|raw }}
+
+                <span id="{{ skipId }}" class="invisible"></span>
+            </nav>
+        {% endblock %}
+    </div>
+    <!-- indexer::continue -->
+{% endblock %}
+
+{% block script %}
+    {% add 'accessible_navigation_js' to head %}
+        <link rel="modulepreload" href="{{ asset('navigation.js', 'contao_core') }}">
+        <script src="{{ asset('navigation.js', 'contao_core') }}" type="module"></script>
+    {% endadd %}
+
+    {% set script_attributes = attrs()
+        .setIfExists('nonce', csp_nonce('script-src'))
+        .mergeWith(script_attributes|default)
+    %}
+
+    <script{{ script_attributes }}>
+        window.addEventListener('load', () => {
+            new AccessibilityNavigation({
+                selector: '.navigation-main',
+                toggle: '.nav-burger',
+                minWidth: accessibleNavBreakpoint,
+                classes: {
+                    submenuButton: 'btn-toggle-submenu',
+                    expand: 'nav-expanded'
+                },
+                ariaLabels: {
+                    'expand': '{{ 'MSC.ariaMenuExpand'|trans|e('js') }}',
+                    'collapse': '{{ 'MSC.ariaMenuCollapse'|trans|e('js') }}',
+                }
+            });
+        })
+    </script>
+{% endblock %}
+
+{% block style %}
+    {% add 'accessible_navigation_css' to stylesheets %}
+        {% with {file: navigation_css_file|default(asset('navigation.css', 'contao_core'))} %}
+            {{ block('stylesheet_component') }}
+        {% endwith %}
+    {% endadd %}
+{% endblock %}

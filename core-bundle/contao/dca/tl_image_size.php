@@ -9,16 +9,11 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
-use Imagine\Gd\Imagine as GdImagine;
-use Imagine\Gmagick\Imagine as GmagickImagine;
-use Imagine\Imagick\Imagine as ImagickImagine;
 
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
@@ -31,14 +26,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
-		'oncreate_callback' => array
-		(
-			array('tl_image_size', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_image_size', 'adjustPermissions')
-		),
+		'userRoot'                   => 'imageSizes',
 		'sql' => array
 		(
 			'keys' => array
@@ -57,11 +45,16 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
-			'child_record_callback'   => array('tl_image_size', 'listImageSize')
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('name'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_image_size', 'listImageSize'),
+		),
 	),
 
 	// Palettes
@@ -152,7 +145,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'formats' => array
 		(
-			'inputType'               => 'checkboxWizard',
+			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
@@ -194,121 +187,25 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 class tl_image_size extends Backend
 {
 	/**
-	 * Add the new image size to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set the image sizes
-		if (empty($user->imageSizes) || !is_array($user->imageSizes))
-		{
-			$imageSizes = array();
-		}
-		else
-		{
-			$imageSizes = $user->imageSizes;
-		}
-
-		// The image size is enabled already
-		if (in_array($insertId, $imageSizes))
-		{
-			return;
-		}
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
-		{
-			$db = Database::getInstance();
-
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrThemes = StringUtil::deserialize($objGroup->themes);
-
-					if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
-					{
-						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
-						$arrImageSizes[] = $insertId;
-
-						$db
-							->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
-							->execute(serialize($arrImageSizes), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrThemes = StringUtil::deserialize($objUser->themes);
-
-				if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
-				{
-					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
-					$arrImageSizes[] = $insertId;
-
-					$db
-						->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
-						->execute(serialize($arrImageSizes), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$imageSizes[] = $insertId;
-			$user->imageSizes = $imageSizes;
-		}
-	}
-
-	/**
 	 * List an image size
 	 *
 	 * @param array $row
 	 *
 	 * @return string
 	 */
-	public function listImageSize($row)
+	public function listImageSize($row, $label)
 	{
-		$html = '<div class="tl_content_left">';
-		$html .= $row['name'];
-
 		if ($row['width'] || $row['height'])
 		{
-			$html .= ' <span class="label-info">' . $row['width'] . 'x' . $row['height'] . '</span>';
+			$label .= ' <span class="label-info">' . $row['width'] . 'x' . $row['height'] . '</span>';
 		}
 
 		if ($row['zoom'])
 		{
-			$html .= ' <span class="label-info">(' . (int) $row['zoom'] . '%)</span>';
+			$label .= ' <span class="label-info">(' . (int) $row['zoom'] . '%)</span>';
 		}
 
-		$html .= "</div>\n";
-
-		return $html;
+		return $label;
 	}
 
 	/**
@@ -330,7 +227,12 @@ class tl_image_size extends Backend
 
 		$imageExtensions = System::getContainer()->getParameter('contao.image.valid_extensions');
 
-		foreach ($this->getSupportedFormats() as $format => $isSupported)
+		$supporedFormats = $this->getSupportedFormats();
+		$supporedFormats['jpg'] = true;
+		$supporedFormats['png'] = true;
+		$supporedFormats['gif'] = true;
+
+		foreach ($supporedFormats as $format => $isSupported)
 		{
 			if (!in_array($format, $imageExtensions))
 			{
@@ -344,11 +246,26 @@ class tl_image_size extends Backend
 				continue;
 			}
 
-			$formats[] = "png:$format,png";
-			$formats[] = "jpg:$format,jpg;jpeg:$format,jpeg";
-			$formats[] = "gif:$format,gif";
-			$formats[] = "$format:$format,png";
-			$formats[] = "$format:$format,jpg";
+			foreach ($supporedFormats as $subFormat => $subFormatSupported)
+			{
+				if (
+					!$subFormatSupported
+					|| $subFormat === $format
+					|| 'gif' === $subFormat
+					|| (in_array($format, array('jpg', 'png', 'gif')) && in_array($subFormat, array('jpg', 'png', 'gif')))
+				) {
+					continue;
+				}
+
+				if ('jpg' === $format)
+				{
+					$formats[] = "jpg:jpg,$subFormat;jpeg:jpeg,$subFormat";
+				}
+				else
+				{
+					$formats[] = "$format:$format,$subFormat";
+				}
+			}
 		}
 
 		if ($missingSupport)
@@ -371,6 +288,8 @@ class tl_image_size extends Backend
 
 			$options[$format] = strtoupper($from) . ' → ' . strtoupper($chunks[0]);
 		}
+
+		asort($options);
 
 		return $options;
 	}
@@ -411,28 +330,9 @@ class tl_image_size extends Backend
 
 		$imagine = System::getContainer()->get('contao.image.imagine');
 
-		if ($imagine instanceof ImagickImagine)
+		foreach (array_keys($supported) as $format)
 		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = in_array(strtoupper($format), Imagick::queryFormats(strtoupper($format)), true);
-			}
-		}
-
-		if ($imagine instanceof GmagickImagine)
-		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = in_array(strtoupper($format), (new Gmagick())->queryformats(strtoupper($format)), true);
-			}
-		}
-
-		if ($imagine instanceof GdImagine)
-		{
-			foreach (array_keys($supported) as $format)
-			{
-				$supported[$format] = function_exists('image' . $format);
-			}
+			$supported[$format] = $imagine->getDriverInfo()->isFormatSupported($format);
 		}
 
 		return $supported;

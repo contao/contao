@@ -15,13 +15,12 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StartStopValidationListenerTest extends TestCase
 {
-    /**
-     * @dataProvider valueProvider
-     */
+    #[DataProvider('valueProvider')]
     public function testValidatesStartStop(array $values, array|null $currentRecord = null, bool $expectException = false): void
     {
         $translator = $this->createMock(TranslatorInterface::class);

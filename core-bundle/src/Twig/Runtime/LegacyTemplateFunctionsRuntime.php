@@ -18,13 +18,10 @@ use Twig\Error\RuntimeError;
 use Twig\Extension\RuntimeExtensionInterface;
 
 /**
- * @experimental
+ * @internal
  */
 final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
 {
-    /**
-     * @internal
-     */
     public function __construct(private readonly ContaoFramework $framework)
     {
     }

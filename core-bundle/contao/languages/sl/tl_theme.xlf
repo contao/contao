@@ -2,8 +2,8 @@
   <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="sl">
     <body>
       <trans-unit id="tl_theme.name.0">
-        <source>Theme title</source>
-        <target>Naslov teme</target>
+        <source>Title</source>
+        <target>Naziv</target>
       </trans-unit>
       <trans-unit id="tl_theme.name.1">
         <source>Please enter a unique theme title.</source>
@@ -46,8 +46,8 @@
         <target>Izvorne datoteke</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>Tu lahko naložite eno ali več datotek .cto ali .sql, ki bodo uvožene.</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Tu lahko naložite eno ali več datotek .cto, .zip ali .sql, ki bodo uvožene.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -148,45 +148,69 @@
         <source>Edit the theme settings</source>
         <target>Uredi nastavitve teme</target>
       </trans-unit>
-      <trans-unit id="tl_theme.new.0">
-        <source>New</source>
-        <target>Nov</target>
-      </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Ustvari novo temo</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show">
+      <trans-unit id="tl_theme.show.1">
         <source>Show the details of theme ID %s</source>
         <target>Prikaži podrobnosti teme ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit">
+      <trans-unit id="tl_theme.versions.1">
+        <source>Show the versions of theme ID %s</source>
+        <target>Prikaži različice teme z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.edit.1">
         <source>Edit theme ID %s</source>
         <target>Uredi temo z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete">
+      <trans-unit id="tl_theme.delete.1">
         <source>Delete theme ID %s</source>
         <target>Izbriši temo z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-        <target>Uredi slogovne predloge teme ID %s</target>
+      <trans-unit id="tl_theme.modules.0">
+        <source>Front end modules</source>
+        <target>Moduli na spletnem mestu</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules">
+      <trans-unit id="tl_theme.modules.1">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Uredi predstavitvene module (front end) teme z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout">
+      <trans-unit id="tl_theme.elements.0">
+        <source>Content elements</source>
+        <target>Elementi vsebine</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.elements.1">
+        <source>Edit the content elements of theme ID %s</source>
+        <target>Uredi elemente vsebine v temi z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.0">
+        <source>Page layouts</source>
+        <target>Postavitve strani</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.1">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Uredi postavitve strani teme z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes">
+      <trans-unit id="tl_theme.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Velikosti slik</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes.1">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Uredi velikosti slik teme ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.exportTheme">
+      <trans-unit id="tl_theme.exportTheme.0">
+        <source>Export theme</source>
+        <target>Izvozi temo</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>
         <target>Izvoz teme ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tableLabel">
+        <source>Theme</source>
+        <target>Tema</target>
       </trans-unit>
     </body>
   </file>

@@ -101,7 +101,7 @@ class PictureFactory implements PictureFactoryInterface
             && !isset($this->predefinedSizes[$size[2]])
             && 1 === substr_count($size[2], '_')
         ) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.', $size[2]);
+            trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" is deprecated and will no longer work in Contao 6.', $size[2]);
 
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
             $size[2] = ResizeConfiguration::MODE_CROP;
@@ -205,14 +205,8 @@ class PictureFactory implements PictureFactoryInterface
 
                         foreach (explode(';', $formatsString) as $format) {
                             [$source, $targets] = explode(':', $format, 2);
-                            $targets = explode(',', $targets);
 
-                            if (!isset($formats[$source])) {
-                                $formats[$source] = $targets;
-                                continue;
-                            }
-
-                            $formats[$source] = array_unique([...$formats[$source], ...$targets]);
+                            $formats[$source] = array_unique([...($formats[$source] ?? []), ...explode(',', $targets)]);
 
                             usort(
                                 $formats[$source],

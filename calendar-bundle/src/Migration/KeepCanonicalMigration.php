@@ -40,16 +40,8 @@ class KeepCanonicalMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement('
-            ALTER TABLE tl_module
-            ADD cal_keepCanonical tinyint(1) NOT NULL default 0
-        ');
-
-        $this->connection->executeStatement("
-            UPDATE tl_module
-            SET cal_keepCanonical = 1
-            WHERE type = 'eventreader'
-        ");
+        $this->connection->executeStatement('ALTER TABLE tl_module ADD cal_keepCanonical tinyint(1) NOT NULL default 0');
+        $this->connection->executeStatement("UPDATE tl_module SET cal_keepCanonical = 1 WHERE type = 'eventreader'");
 
         return $this->createResult(true);
     }

@@ -1,0 +1,27 @@
+.foldable img {
+    transition: transform 0.2s ease;
+    transform: none;
+    will-change: transform;
+}
+
+.foldable--open img {
+    transform: rotateZ(90deg);
+}
+
+.foldable--loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.foldable--loading img {
+    visibility: hidden;
+}
+
+.foldable--loading::after {
+    content: "";
+    position: absolute;
+    inset: 2px auto auto 2px;
+    width: 14px;
+    height: 14px;
+    background: var(--icon-loading) 0 0/contain no-repeat;
+}

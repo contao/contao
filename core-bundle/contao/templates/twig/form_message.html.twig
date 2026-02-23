@@ -1,0 +1,3 @@
+<div class="form-confirmation">
+    {{ message|sanitize_html('contao')|encode_email|csp_inline_styles|insert_tag_raw }}
+</div>

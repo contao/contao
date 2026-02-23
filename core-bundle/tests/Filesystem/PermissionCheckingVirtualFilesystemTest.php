@@ -13,47 +13,107 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
-use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PermissionCheckingVirtualFilesystemTest extends TestCase
 {
-    /**
-     * @dataProvider provideOperationsThatShouldBeDenied
-     */
-    public function testDeniesAccess(string $operation, array $arguments, string $permission, string $exception): void
+    #[DataProvider('provideOperationsThatShouldBeDenied')]
+    public function testDeniesAccess(string $operation, array $arguments, array|string $permissionToDeny, string $exception): void
     {
-        $virtualFilesystem = $this->createMock(VirtualFilesystemInterface::class);
+        $filesStorage = $this->createStub(VirtualFilesystem::class);
+        $filesStorage
+            ->method('getPrefix')
+            ->willReturn('files')
+        ;
 
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
-            ->willReturnCallback(static fn (string $attribute): bool => $attribute !== $permission)
+            ->willReturnCallback(
+                function (string $attribute, mixed $subject) use ($permissionToDeny): bool {
+                    $permissionToDeny = (array) $permissionToDeny;
+
+                    if ($attribute !== $permissionToDeny[0]) {
+                        return true;
+                    }
+
+                    if (null !== ($permissionToDeny[1] ?? null)) {
+                        $this->assertSame($permissionToDeny[1], $subject, 'wrong subject');
+                    }
+
+                    return false;
+                },
+            )
         ;
 
         $container = new Container();
         $container->set('security.authorization_checker', $authorizationChecker);
 
-        $customViewVirtualFilesystem = new PermissionCheckingVirtualFilesystem(
-            $virtualFilesystem,
+        $permissionCheckingVirtualFilesystem = new PermissionCheckingVirtualFilesystem(
+            $filesStorage,
             new Security($container),
         );
 
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage($exception);
 
-        $customViewVirtualFilesystem->$operation(...$arguments);
+        $permissionCheckingVirtualFilesystem->$operation(...$arguments);
     }
 
     public static function provideOperationsThatShouldBeDenied(): iterable
     {
         $resource = tmpfile();
         fclose($resource);
+
+        yield 'has' => [
+            'has',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'has with un-normalized path' => [
+            'has',
+            ['foo/../bar'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/bar'],
+            'Access denied to access path at location "foo/../bar".',
+        ];
+
+        yield 'fileExists' => [
+            'fileExists',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'directoryExists' => [
+            'directoryExists',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'read' => [
+            'fileExists',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'readStream' => [
+            'directoryExists',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
 
         yield 'write' => [
             'write',
@@ -109,6 +169,96 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
             ['foo', 'bar'],
             ContaoCorePermissions::USER_CAN_UPLOAD_FILES,
             'Access denied to upload files at location "bar".',
+        ];
+
+        yield 'get' => [
+            'get',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'listContents' => [
+            'listContents',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'getLastModified' => [
+            'getLastModified',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'getFileSize' => [
+            'getFileSize',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'getMimeType' => [
+            'getMimeType',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'getExtraMetadata' => [
+            'getMimeType',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'setExtraMetadata' => [
+            'setExtraMetadata',
+            ['foo', new ExtraMetadata()],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+
+        yield 'generatePublicUri' => [
+            'generatePublicUri',
+            ['foo'],
+            [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
+            'Access denied to access path at location "foo".',
+        ];
+    }
+
+    #[DataProvider('provideInvalidPaths')]
+    public function testDisallowsAccessForInvalidPaths(string $invalidPath, string $expectedMessage): void
+    {
+        $permissionCheckingVirtualFilesystem = new PermissionCheckingVirtualFilesystem(
+            $this->createStub(VirtualFilesystem::class),
+            $this->createStub(Security::class),
+        );
+
+        $this->assertFalse($permissionCheckingVirtualFilesystem->canAccessLocation($invalidPath));
+
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $permissionCheckingVirtualFilesystem->has($invalidPath);
+    }
+
+    public static function provideInvalidPaths(): iterable
+    {
+        yield 'relative path escaping boundary' => [
+            '../foo',
+            'Access denied to access path at location "../foo".',
+        ];
+
+        yield 'local path escaping boundary' => [
+            './../',
+            'Access denied to access path at location "./../".',
+        ];
+
+        yield 'absolute path' => [
+            '/absolute/foo',
+            'Access denied to access path at location "/absolute/foo".',
         ];
     }
 }

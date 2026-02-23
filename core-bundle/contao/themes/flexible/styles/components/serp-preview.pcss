@@ -1,0 +1,44 @@
+.serp-preview {
+    max-width: 600px;
+    margin: 2px 0;
+    padding: 6px 9px;
+    font-family: Arial, sans-serif;
+    font-weight: 400;
+    color: var(--serp-preview);
+    background: var(--panel-bg);
+    border-radius: var(--border-radius);
+
+    p {
+        margin: 0;
+    }
+
+    :is(.url, .description) {
+        line-height: 18px;
+    }
+
+    .title {
+        margin: 4px 0;
+        font-size: 18px;
+        color: var(--serp-preview-title);
+    }
+
+    .tl_info {
+        background-color: transparent;
+    }
+
+    .robots {
+        display: none;
+        padding: 2px 1px 2px 21px;
+        background-position: 0 3px;
+    }
+
+    &.noindex {
+        > p {
+            display: none;
+        }
+
+        .robots {
+            display: block;
+        }
+    }
+}

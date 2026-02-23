@@ -27,7 +27,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
 
     public function __construct(
         LocalFilesystemAdapter $localFilesAdapter,
-        readonly string $uploadDir,
+        string $uploadDir,
         private readonly RequestStack $requestStack,
     ) {
         $this->adapters = new \WeakMap();

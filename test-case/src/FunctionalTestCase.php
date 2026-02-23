@@ -29,6 +29,14 @@ abstract class FunctionalTestCase extends WebTestCase
 
     private static bool $supportsAlterCount;
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Remove the default exception handler
+        restore_exception_handler();
+    }
+
     protected static function loadFixtures(array $yamlFiles): void
     {
         if (!self::$booted) {
@@ -61,18 +69,20 @@ abstract class FunctionalTestCase extends WebTestCase
             // Ignore
         }
 
-        $getAlterCount = static fn (): int => (int) $connection->fetchOne("
-            SELECT SUM(total)
-            FROM sys.host_summary_by_statement_type
-            WHERE statement IN (
-                'create_view',
-                'drop_index',
-                'create_index',
-                'drop_table',
-                'alter_table',
-                'create_table'
-            )
-        ");
+        $getAlterCount = static fn (): int => (int) $connection->fetchOne(
+            <<<'SQL'
+                SELECT SUM(total)
+                FROM sys.host_summary_by_statement_type
+                WHERE statement IN (
+                    'create_view',
+                    'drop_index',
+                    'create_index',
+                    'drop_table',
+                    'alter_table',
+                    'create_table'
+                )
+                SQL,
+        );
 
         if (!isset(self::$supportsAlterCount)) {
             self::$supportsAlterCount = true;
@@ -86,11 +96,13 @@ abstract class FunctionalTestCase extends WebTestCase
 
         if (self::$tableColumns) {
             if (!self::$supportsAlterCount || $getAlterCount() !== self::$alterCount) {
-                $allColumns = $connection->fetchAllNumeric('
-                    SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
-                    FROM information_schema.COLUMNS
-                    WHERE TABLE_SCHEMA = DATABASE()
-                ');
+                $allColumns = $connection->fetchAllNumeric(
+                    <<<'SQL'
+                        SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
+                        FROM information_schema.COLUMNS
+                        WHERE TABLE_SCHEMA = DATABASE()
+                        SQL,
+                );
 
                 $tableColumns = [];
 
@@ -108,11 +120,13 @@ abstract class FunctionalTestCase extends WebTestCase
                 self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
             }
 
-            $truncateTables = $connection->fetchFirstColumn('
-                SELECT TABLE_NAME
-                FROM information_schema.TABLES
-                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_ROWS > 0
-            ');
+            $truncateTables = $connection->fetchFirstColumn(
+                <<<'SQL'
+                    SELECT TABLE_NAME
+                    FROM information_schema.TABLES
+                    WHERE TABLE_SCHEMA = DATABASE() AND TABLE_ROWS > 0
+                    SQL,
+            );
 
             foreach ($truncateTables as $tableName) {
                 $connection->executeStatement('TRUNCATE TABLE '.$connection->quoteIdentifier($tableName));
@@ -140,11 +154,13 @@ abstract class FunctionalTestCase extends WebTestCase
 
         $tables = $schemaManager->listTables();
 
-        $allColumns = $connection->fetchAllNumeric('
-            SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
-            FROM information_schema.COLUMNS
-            WHERE TABLE_SCHEMA = DATABASE()
-        ');
+        $allColumns = $connection->fetchAllNumeric(
+            <<<'SQL'
+                SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
+                FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE()
+                SQL,
+        );
 
         foreach ($allColumns as $column) {
             self::$tableColumns[$column[0]][] = $column;

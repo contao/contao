@@ -121,7 +121,7 @@ class MergeHttpHeadersListener implements ResetInterface
         );
 
         if ([] !== $deprectatedHeaders) {
-            trigger_deprecation('contao/core-bundle', '5.3', 'Using the PHP header() function to set HTTP headers has been deprecated and will no longer work in Contao 6. Use the response object instead. Headers used: %s', implode(', ', $deprectatedHeaders));
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using the PHP header() function to set HTTP headers is deprecated and will no longer work in Contao 6. Use the response object instead. Headers used: %s', implode(', ', $deprectatedHeaders));
         }
 
         $this->headers = [...$this->headers, ...$headers];

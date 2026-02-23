@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\ToplinkController;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ToplinkControllerTest extends ContentElementTestCase
 {
-    /**
-     * @dataProvider provideLinkText
-     */
+    #[DataProvider('provideLinkText')]
     public function testOutputsToplinkAndScript(string $linkText, string $expectedLinkElement): void
     {
         $response = $this->renderWithModelData(
@@ -63,7 +62,7 @@ class ToplinkControllerTest extends ContentElementTestCase
 
         yield 'user defined value' => [
             'All the way up!',
-            '<a href="#top" data-toplink title="All the way up!">All the way up!</a>',
+            '<a href="#top" data-toplink>All the way up!</a>',
         ];
     }
 

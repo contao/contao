@@ -22,7 +22,7 @@ class PhpTemplateProxyNodeTest extends TestCase
 {
     public function testCompilesProxyCode(): void
     {
-        $compiler = new Compiler($this->createMock(Environment::class));
+        $compiler = new Compiler($this->createStub(Environment::class));
 
         (new PhpTemplateProxyNode(ContaoExtension::class))->compile($compiler);
 

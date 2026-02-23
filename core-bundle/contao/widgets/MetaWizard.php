@@ -107,6 +107,11 @@ class MetaWizard extends Widget
 						$this->addError($errorMsg);
 						$this->arrFieldErrors[$lang][$kk] = true;
 					}
+
+					if ($this->metaFields[$kk]['basicEntities'] ?? false)
+					{
+						$v[$kk] = StringUtil::restoreBasicEntities($vv);
+					}
 				}
 
 				$varInput[$k] = array_map('trim', $v);
@@ -123,6 +128,11 @@ class MetaWizard extends Widget
 			}
 		}
 
+		// Remove empty locales (see #7569)
+		$varInput = array_filter($varInput, static function ($localeArray) {
+			return array_filter($localeArray, static fn ($value) => !empty($value));
+		});
+
 		// Sort the metadata by key (see #3818)
 		ksort($varInput);
 
@@ -136,12 +146,17 @@ class MetaWizard extends Widget
 	 */
 	public function generate()
 	{
-		$count = 0;
-		$return = '';
+		if (!\is_array($this->varValue))
+		{
+			$this->varValue = array();
+		}
 
-		// Only show the root page languages (see #7112, #7667)
+		$count = 0;
+
+		// Only show the root page languages plus their primary language (see #7112, #7667, #7569)
 		$objRootLangs = Database::getInstance()->query("SELECT language FROM tl_page WHERE type='root' AND language!=''");
 		$existing = $objRootLangs->fetchEach('language');
+		$existing = array_unique(array_merge($existing, array_map(static fn ($locale) => LocaleUtil::getPrimaryLanguage($locale), $existing)));
 
 		foreach ($existing as $lang)
 		{
@@ -166,12 +181,17 @@ class MetaWizard extends Widget
 		// Add the input fields
 		foreach ($this->varValue as $lang=>$meta)
 		{
-			$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg') . '</button></span>';
+			$item = '<li data-language="' . $lang . '" data-controller="contao--metawizard"><span class="lang">' . ($languages[$lang] ?? $lang) . ' <button type="button" data-action="contao--metawizard#delete:prevent">' . Image::getHtml('delete.svg', $GLOBALS['TL_LANG']['MSC']['delete']) . '</button></span>';
 
 			// Take the fields from the DCA (see #4327)
 			foreach ($this->metaFields as $field=>$fieldConfig)
 			{
 				$item .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
+
+				if (($meta[$field] ?? null) && ($fieldConfig['basicEntities'] ?? false))
+				{
+					$meta[$field] = StringUtil::convertBasicEntities($meta[$field]);
+				}
 
 				if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 				{

@@ -1,0 +1,182 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        {{ include('@Contao/web_debug_toolbar/contao.svg.twig') }}
+        <span class="sf-toolbar-value">{{ collector.summary.version }}</span>
+    {% endset %}
+    {% set text %}
+        {% if collector.summary.frontend %}
+            <div class="sf-toolbar-info-group">
+                <div class="sf-toolbar-info-piece">
+                    <b>Page</b>
+                    <span><a href="{{ collector.summary.page_url }}">{{ collector.summary.page }}</a></span>
+                </div>
+                <div class="sf-toolbar-info-piece">
+                    <b>Page layout</b>
+                    <span><a href="{{ collector.summary.layout_url }}">{{ collector.summary.layout }}</a></span>
+                </div>
+                {% for article in collector.summary.articles %}
+                    <div class="sf-toolbar-info-piece">
+                        <b>Article</b>
+                        <span><a href="{{ article.url }}">{{ article.label }}</a></span>
+                    </div>
+                {% endfor %}
+                <div class="sf-toolbar-info-piece">
+                    <b>Template</b>
+                    <span>{{ collector.summary.template|default('n/a') }}</span>
+                </div>
+                <div class="sf-toolbar-info-piece">
+                    <b>FE preview</b>
+                    {% if collector.summary.preview %}
+                        <span class="sf-toolbar-status sf-toolbar-status-yellow">enabled</span>
+                    {% else %}
+                        <span>disabled</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <div class="sf-toolbar-info-group">
+            <div class="sf-toolbar-info-piece">
+                <b>Resources</b>
+                <span><a href="https://docs.contao.org/" target="_blank" rel="help noreferrer noopener">Read the Contao docs</a></span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Help</b>
+                <span><a href="https://to.contao.org/support" target="_blank" rel="help">Contao support channels</a></span>
+            </div>
+        </div>
+    {% endset %}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', {link: true, name: 'contao', additional_classes: (((collector.summary.preview) ? 'sf-toolbar-status-yellow ' : '') ~ 'sf-toolbar-block-right')}) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon">{{ include('@Contao/web_debug_toolbar/contao.svg.twig') }}</span>
+        <strong>Contao</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Summary</h2>
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ collector.summary.version }}</span>
+            <span class="label">Contao version</span>
+        </div>
+
+        {% if collector.summary.page %}
+            <div class="metric">
+                <span class="value">{{ collector.summary.page }}</span>
+                <span class="label">Page</span>
+            </div>
+        {% endif %}
+
+        {% if collector.summary.layout %}
+            <div class="metric">
+                <span class="value">{{ collector.summary.layout }}</span>
+                <span class="label">Page layout</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <h2>Image resizing and previews</h2>
+    <p>
+        Imagine service in use: <code>{{ collector.imageChecks.imagine_service }}</code><br>
+        This can be changed in the <code>contao.image.imagine_service</code> configuration.
+    </p>
+    <p>The following image formats are supported on your system:</p>
+    <table>
+        <thead>
+        <tr>
+            <th colspan="3">Image formats</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for format in collector.imageChecks.formats %}
+            <tr>
+                <td>{% if format.supported %}✅{% else %}🚨{% endif %}</td>
+                <td>{{ format.label|upper }}</td>
+                <td>{{ format.error }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if collector.backendSearchChecks|default %}
+        <h2>Back end search</h2>
+        {% if collector.backendSearchChecks.available %}
+            <p>✅ The back end search is available.</p>
+        {% else %}
+            <p>🚨 The back end search is not available.</p>
+        {% endif %}
+        <table>
+            <thead>
+            <tr>
+                <th colspan="2">Requirements</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% if collector.backendSearchChecks.requires_sqlite %}
+                    <tr>
+                        <td>{% if collector.backendSearchChecks.sqlite_supported %}✅{% else %}🚨{% endif %}</td>
+                        <td>
+                            {% if collector.backendSearchChecks.sqlite_supported %}
+                                The following PHP extensions are enabled: {{ collector.backendSearchChecks.sqlite_supported|join(', ') }}
+                            {% else %}
+                                One of the following PHP extensions needs to be enabled: pdo_sqlite, sqlite3
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{% if collector.backendSearchChecks.supervisor_supported %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.supervisor_supported %}
+                            Using the SuperVisor is supported.
+                        {% else %}
+                            Using the SuperVisor is not supported and thus Contao's default messenger queues are not processed automatically.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if not collector.backendSearchChecks.pnctl_disabled %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if not collector.backendSearchChecks.pnctl_disabled %}
+                            The pnctl_* functions are available.
+                        {% else %}
+                            Some pnctl_* functions are disabled in PHP's disable_functions setting.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if collector.backendSearchChecks.cron_running %}✅{% else %}{% if collector.backendSearchChecks.cli_workers_running %}ℹ️{% else %}🚨{% endif %}{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.cron_running %}
+                            The contao:cron cronjob is executed minutely on the command line.
+                        {% else %}
+                            The contao:cron cronjob is not executed minutely on the command line and thus Contao's default messenger queues are not processed automatically.
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{% if collector.backendSearchChecks.cli_workers_running %}✅{% else %}🚨{% endif %}</td>
+                    <td>
+                        {% if collector.backendSearchChecks.cli_workers_running %}
+                            The messenger queues are processed on the command line.
+                        {% else %}
+                            The messenger queues are not processed on the command line.
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if collector.additionaldata %}
+        <h2>Other</h2>
+        <pre>
+            {{ dump(collector.additionaldata) }}
+        </pre>
+    {% endif %}
+{% endblock %}

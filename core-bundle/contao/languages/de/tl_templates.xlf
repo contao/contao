@@ -69,9 +69,25 @@
         <source>Paste into folder &quot;%s&quot;</source>
         <target>In den Ordner &quot;%s&quot; einfügen</target>
       </trans-unit>
-      <trans-unit id="tl_templates.compare">
+      <trans-unit id="tl_templates.compare.0">
+        <source>Compare</source>
+        <target>Vergleichen</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Das Template &quot;%s&quot; mit einem anderen vergleichen</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.dragFolder.1">
+        <source>Drag folder &quot;%s&quot;</source>
+        <target>Verzeichnis &quot;%s&quot; verschieben</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.dragFile.1">
+        <source>Drag template &quot;%s&quot;</source>
+        <target>Template &quot;%s&quot; verschieben</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.twig_studio_hint">
+        <source>If you want to create or edit Twig templates, use the %s instead.</source>
+        <target>Wenn Sie Twig-Templates erstellen oder bearbeiten möchten, verwenden Sie stattdessen das %s.</target>
       </trans-unit>
     </body>
   </file>

@@ -37,7 +37,7 @@ class SitemapListenerTest extends ContaoTestCase
     public function testNothingIsAddedIfNoPublishedCategory(): void
     {
         $adapters = [
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findAll' => null]),
+            FaqCategoryModel::class => $this->createConfiguredAdapterStub(['findAll' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -49,13 +49,13 @@ class SitemapListenerTest extends ContaoTestCase
 
     public function testFaqEntryIsAdded(): void
     {
-        $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
+        $jumpToPage = $this->createClassWithPropertiesStub(PageModel::class, [
             'published' => 1,
             'protected' => 1,
             'groups' => [1],
         ]);
 
-        $faqModel = $this->mockClassWithProperties(FaqModel::class);
+        $faqModel = $this->createClassWithPropertiesStub(FaqModel::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -66,15 +66,15 @@ class SitemapListenerTest extends ContaoTestCase
         ;
 
         $adapters = [
-            FaqCategoryModel::class => $this->mockConfiguredAdapter([
+            FaqCategoryModel::class => $this->createConfiguredAdapterStub([
                 'findAll' => [
-                    $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]),
+                    $this->createClassWithPropertiesStub(FaqCategoryModel::class, ['jumpTo' => 42]),
                 ],
             ]),
-            PageModel::class => $this->mockConfiguredAdapter([
+            PageModel::class => $this->createConfiguredAdapterStub([
                 'findWithDetails' => $jumpToPage,
             ]),
-            FaqModel::class => $this->mockConfiguredAdapter([
+            FaqModel::class => $this->createConfiguredAdapterStub([
                 'findPublishedByPid' => [$faqModel],
             ]),
         ];
@@ -88,7 +88,7 @@ class SitemapListenerTest extends ContaoTestCase
 
     private function createListener(array $allPages, array $adapters, ContentUrlGenerator|null $urlGenerator = null): SitemapListener
     {
-        $database = $this->createMock(Database::class);
+        $database = $this->createStub(Database::class);
         $database
             ->method('getChildRecords')
             ->willReturn($allPages)
@@ -98,10 +98,12 @@ class SitemapListenerTest extends ContaoTestCase
             Database::class => $database,
         ];
 
-        $framework = $this->mockContaoFramework($adapters, $instances);
-        $security = $this->createMock(Security::class);
+        $framework = $this->createContaoFrameworkStub($adapters, $instances);
 
-        if ([] !== $allPages) {
+        if ([] === $allPages) {
+            $security = $this->createStub(Security::class);
+        } else {
+            $security = $this->createMock(Security::class);
             $security
                 ->expects($this->once())
                 ->method('isGranted')
@@ -110,7 +112,7 @@ class SitemapListenerTest extends ContaoTestCase
             ;
         }
 
-        $urlGenerator ??= $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator ??= $this->createStub(ContentUrlGenerator::class);
 
         return new SitemapListener($framework, $security, $urlGenerator);
     }

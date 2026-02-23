@@ -22,6 +22,7 @@ use Contao\TestCase\FunctionalTestCase;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DbafsTest extends FunctionalTestCase
 {
@@ -37,7 +38,7 @@ class DbafsTest extends FunctionalTestCase
 
         $this->filesystem = new VirtualFilesystem(
             (new MountManager())->mount($this->adapter = new InMemoryFilesystemAdapter()),
-            $dbafsManager = new DbafsManager(),
+            $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class)),
         );
 
         $container = $this->createClient()->getContainer();

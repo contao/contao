@@ -16,6 +16,7 @@ use Contao\ManagerBundle\Monolog\RequestProcessor;
 use Contao\TestCase\ContaoTestCase;
 use Monolog\Level;
 use Monolog\LogRecord;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -23,13 +24,11 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class RequestProcessorTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider logExtrasProvider
-     */
+    #[DataProvider('logExtrasProvider')]
     public function testAddsLogExtras(string $uri, string $method): void
     {
         $request = Request::create($uri, $method);
-        $event = new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $processor = new RequestProcessor();
         $processor->onKernelRequest($event);
@@ -41,13 +40,11 @@ class RequestProcessorTest extends ContaoTestCase
         $this->assertArrayHasKey('request_method', $record->extra);
     }
 
-    /**
-     * @dataProvider logExtrasProvider
-     */
+    #[DataProvider('logExtrasProvider')]
     public function testIgnoresSubRequests(string $uri, string $method): void
     {
         $request = Request::create($uri, $method);
-        $event = new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::SUB_REQUEST);
+        $event = new RequestEvent($this->createStub(KernelInterface::class), $request, HttpKernelInterface::SUB_REQUEST);
 
         $processor = new RequestProcessor();
         $processor->onKernelRequest($event);
@@ -59,9 +56,7 @@ class RequestProcessorTest extends ContaoTestCase
         $this->assertArrayNotHasKey('request_method', $record->extra);
     }
 
-    /**
-     * @dataProvider logExtrasProvider
-     */
+    #[DataProvider('logExtrasProvider', validateArgumentCount: false)]
     public function testIgnoresIfRequestIsNotSet(): void
     {
         $processor = new RequestProcessor();

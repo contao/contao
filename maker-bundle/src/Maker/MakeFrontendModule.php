@@ -21,6 +21,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Path;
 
 class MakeFrontendModule extends AbstractFragmentMaker
 {
@@ -64,9 +65,15 @@ class MakeFrontendModule extends AbstractFragmentMaker
         ]);
 
         $this->templateGenerator->generate([
-            'source' => 'frontend-module/frontend_module.tpl.php',
+            'source' => 'frontend-module/frontend_module.tpl.html.twig',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
+
+        $twigRoot = Path::join($this->projectDir, 'contao/templates/.twig-root');
+
+        if (!$this->fileManager->fileExists($twigRoot)) {
+            $this->fileManager->dumpFile($twigRoot, '');
+        }
 
         if ($addPalette) {
             $this->dcaGenerator->generate([
@@ -78,13 +85,15 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
         if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'source' => 'frontend-module/source.tpl.php',
-                'domain' => 'default',
+                'domain' => 'contao_modules',
                 'language' => 'en',
                 'variables' => [
-                    'element' => $elementName,
-                    'sourceName' => $input->getArgument('source-name'),
-                    'sourceDescription' => $input->getArgument('source-description'),
+                    'FMD' => [
+                        $elementName => [
+                            $input->getArgument('source-name'),
+                            $input->getArgument('source-description'),
+                        ],
+                    ],
                 ],
             ]);
 
@@ -98,15 +107,15 @@ class MakeFrontendModule extends AbstractFragmentMaker
                 }
 
                 $this->languageFileGenerator->generate([
-                    'source' => 'frontend-module/target.tpl.php',
-                    'domain' => 'default',
+                    'domain' => 'contao_modules',
                     'language' => $input->getArgument('language-'.$i),
                     'variables' => [
-                        'element' => $elementName,
-                        'sourceName' => $input->getArgument('source-name'),
-                        'sourceDescription' => $input->getArgument('source-description'),
-                        'translatedName' => $input->getArgument('target-name-'.$i),
-                        'translatedDescription' => $input->getArgument('target-description-'.$i),
+                        'FMD' => [
+                            $elementName => [
+                                $input->getArgument('target-name-'.$i),
+                                $input->getArgument('target-description-'.$i),
+                            ],
+                        ],
                     ],
                 ]);
 
@@ -130,6 +139,6 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
     protected function getTemplatePrefix(): string
     {
-        return 'mod';
+        return 'frontend_module';
     }
 }

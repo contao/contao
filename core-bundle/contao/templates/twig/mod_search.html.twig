@@ -1,0 +1,36 @@
+{% extends '@Contao/block_unsearchable.html.twig' %}
+
+{% block content %}
+
+    <form{% if action|default %} action="{{ action }}"{% endif %} method="get">
+        <div class="formbody">
+            <div class="widget widget-text">
+                <label for="ctrl_keywords_{{ uniqueId }}" class="invisible">{{ keywordLabel }}</label>
+                <input type="search" name="keywords" id="ctrl_keywords_{{ uniqueId }}" class="text" value="{{ keyword }}" spellcheck="false">
+            </div>
+            <div class="widget widget-submit">
+                <button type="submit" id="ctrl_submit_{{ uniqueId }}" class="submit">{{ search }}</button>
+            </div>
+            {% if advanced %}
+                <div class="widget widget-radio">
+                    <fieldset class="radio_container">
+                        <legend class="invisible">{{ optionsLabel }}</legend>
+                        <span><input type="radio" name="query_type" id="matchAll_{{ uniqueId }}" class="radio" value="and"{% if 'and' == queryType %} checked{% endif %}> <label for="matchAll_{{ uniqueId }}">{{ matchAll }}</label></span>
+                        <span><input type="radio" name="query_type" id="matchAny_{{ uniqueId }}" class="radio" value="or"{% if 'or' == queryType %} checked{% endif %}> <label for="matchAny_{{ uniqueId }}">{{ matchAny }}</label></span>
+                    </fieldset>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if header|default %}
+        <p class="header">{{ header|raw }}</p>
+        {% if keywordHint|default %}
+            <p class="info">{{ keywordHint }}</p>
+        {% endif %}
+    {% endif %}
+
+    {{ results|raw }}
+    {{ pagination|raw }}
+
+{% endblock %}

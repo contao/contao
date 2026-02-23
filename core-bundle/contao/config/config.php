@@ -22,8 +22,9 @@ use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
-use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Controller\Backend\CsvImportController;
 use Contao\Crawl;
+use Contao\CudTable;
 use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
@@ -54,7 +55,6 @@ use Contao\LayoutModel;
 use Contao\ListWizard;
 use Contao\MemberGroupModel;
 use Contao\MemberModel;
-use Contao\Messages;
 use Contao\MetaWizard;
 use Contao\ModuleArticleList;
 use Contao\ModuleArticlenav;
@@ -95,7 +95,9 @@ use Contao\Picker;
 use Contao\PurgeData;
 use Contao\RadioButton;
 use Contao\RadioTable;
+use Contao\RebuildBackendSearchIndex;
 use Contao\RootPageDependentSelect;
+use Contao\RowWizard;
 use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
@@ -123,8 +125,9 @@ $GLOBALS['BE_MOD'] = array
 		'article' => array
 		(
 			'tables'      => array('tl_article', 'tl_content'),
-			'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
-			'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
+			'ptables'     => array('tl_page'),
+			'table'       => array(CsvImportController::class, 'importTableWizardAction'),
+			'list'        => array(CsvImportController::class, 'importListWizardAction')
 		),
 		'files' => array
 		(
@@ -133,7 +136,7 @@ $GLOBALS['BE_MOD'] = array
 		'form' => array
 		(
 			'tables'      => array('tl_form', 'tl_form_field'),
-			'option'      => array(BackendCsvImportController::class, 'importOptionWizardAction')
+			'option'      => array(CsvImportController::class, 'importOptionWizardAction')
 		)
 	),
 
@@ -142,7 +145,7 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'themes' => array
 		(
-			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
+			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item', 'tl_content'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
 		),
@@ -221,6 +224,12 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_undo'),
 			'disablePermissionChecks' => true
+		),
+		'jobs' => array
+		(
+			'tables'                  => array('tl_job'),
+			'disablePermissionChecks' => true,
+			'hideInNavigation' 		  => true,
 		)
 	)
 );
@@ -268,6 +277,7 @@ $GLOBALS['TL_CTE'] = array
 	'links' => array(),
 	'files' => array(),
 	'media' => array(),
+	'user' => array(),
 	'miscellaneous' => array(),
 	'includes' => array
 	(
@@ -300,6 +310,7 @@ $GLOBALS['BE_FFL'] = array
 	'inputUnit'               => InputUnit::class,
 	'trbl'                    => TrblField::class,
 	'chmod'                   => ChmodTable::class,
+	'cud'                     => CudTable::class,
 	'picker'                  => Picker::class,
 	'pageTree'                => PageTree::class,
 	'fileTree'                => FileTree::class,
@@ -314,7 +325,8 @@ $GLOBALS['BE_FFL'] = array
 	'metaWizard'              => MetaWizard::class,
 	'sectionWizard'           => SectionWizard::class,
 	'serpPreview'             => SerpPreview::class,
-	'rootPageDependentSelect' => RootPageDependentSelect::class
+	'rootPageDependentSelect' => RootPageDependentSelect::class,
+	'rowWizard'               => RowWizard::class
 );
 
 // Front end form fields
@@ -354,7 +366,8 @@ $GLOBALS['TL_PTY'] = array
 $GLOBALS['TL_MAINTENANCE'] = array
 (
 	Crawl::class,
-	PurgeData::class
+	RebuildBackendSearchIndex::class,
+	PurgeData::class,
 );
 
 // Purge jobs
@@ -425,15 +438,6 @@ $GLOBALS['TL_PURGE'] = array
 		(
 			'callback' => array(Automator::class, 'generateSymlinks')
 		)
-	)
-);
-
-// Hooks
-$GLOBALS['TL_HOOKS'] = array
-(
-	'getSystemMessages' => array
-	(
-		array(Messages::class, 'languageFallback')
 	)
 );
 

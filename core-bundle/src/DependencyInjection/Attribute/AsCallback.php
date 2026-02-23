@@ -23,6 +23,9 @@ class AsCallback
         public string $target,
         public string|null $method = null,
         public int|null $priority = null,
+        public bool|null $exact = null,
+        public bool|null $singleton = null,
+        public bool|null $closure = null,
     ) {
     }
 }

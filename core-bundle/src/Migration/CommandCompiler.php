@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Migration;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -29,6 +30,18 @@ class CommandCompiler
     ) {
     }
 
+    public function compileTargetSchema(bool $skipDropStatements = false): Schema
+    {
+        $schemaManager = $this->connection->createSchemaManager();
+        $toSchema = $this->schemaProvider->createSchema();
+
+        if ($skipDropStatements) {
+            $this->copyMissingTablesAndColumns($schemaManager->introspectSchema(), $toSchema);
+        }
+
+        return $toSchema;
+    }
+
     /**
      * @return list<string>
      */
@@ -38,37 +51,49 @@ class CommandCompiler
         $toSchema = $this->schemaProvider->createSchema();
         $fromSchema = $schemaManager->introspectSchema();
 
-        // If tables or columns should be preserved, we copy the missing definitions over
-        // to the $toSchema, so that no DROP commands will be issued in the diff.
         if ($skipDropStatements) {
-            foreach ($fromSchema->getTables() as $table) {
-                if (!$toSchema->hasTable($table->getName())) {
-                    $this->copyTableDefinition($toSchema, $table);
+            $this->copyMissingTablesAndColumns($fromSchema, $toSchema);
+        }
 
-                    continue;
-                }
-
-                $toSchemaTable = $toSchema->getTable($table->getName());
-
-                foreach ($table->getColumns() as $column) {
-                    if (!$toSchemaTable->hasColumn($column->getName())) {
-                        $this->copyColumnDefinition($toSchemaTable, $column);
-                    }
-                }
-            }
+        if (class_exists(ComparatorConfig::class)) {
+            $comparator = $schemaManager->createComparator(new ComparatorConfig(false, false));
+        } else {
+            // Backwards compatibility for doctrine/dbal 3.x
+            $comparator = $schemaManager->createComparator();
         }
 
         // Get a list of SQL statements from the schema diff
-        $diffCommands = $schemaManager
-            ->createComparator()
-            ->compareSchemas($fromSchema, $toSchema)
-            ->toSql($this->connection->getDatabasePlatform())
-        ;
+        $schemaDiff = $comparator->compareSchemas($fromSchema, $toSchema);
+
+        $diffCommands = $this->connection->getDatabasePlatform()->getAlterSchemaSQL($schemaDiff);
 
         // Get a list of SQL statements that adjust the engine and collation options
         $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);
 
         return array_unique([...$diffCommands, ...$engineAndCollationCommands]);
+    }
+
+    /**
+     * If tables or columns should be preserved, we copy the missing definitions over
+     * to the $toSchema, so that no DROP commands will be issued in the diff.
+     */
+    private function copyMissingTablesAndColumns(Schema $fromSchema, Schema $toSchema): void
+    {
+        foreach ($fromSchema->getTables() as $table) {
+            if (!$toSchema->hasTable($table->getName())) {
+                $this->copyTableDefinition($toSchema, $table);
+
+                continue;
+            }
+
+            $toSchemaTable = $toSchema->getTable($table->getName());
+
+            foreach ($table->getColumns() as $column) {
+                if (!$toSchemaTable->hasColumn($column->getName())) {
+                    $this->copyColumnDefinition($toSchemaTable, $column);
+                }
+            }
+        }
     }
 
     private function copyTableDefinition(Schema $targetSchema, Table $table): void

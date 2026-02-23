@@ -25,8 +25,10 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Contao\Template;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -45,7 +47,7 @@ class TemplateTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
 
         System::setContainer($container);
     }
@@ -333,9 +335,7 @@ class TemplateTest extends TestCase
         (new FrontendTemplate())->figure(1, null);
     }
 
-    /**
-     * @dataProvider provideBuffer
-     */
+    #[DataProvider('provideBuffer')]
     public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
     {
         $page = new \stdClass();
@@ -569,5 +569,24 @@ class TemplateTest extends TestCase
         $expectedHash = base64_encode(hash($algorithm, 'text-decoration: underline;', true));
 
         $this->assertSame(\sprintf("style-src 'self' 'unsafe-hashes' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+    }
+
+    public function testOnceHelperExecutesCodeOnce(): void
+    {
+        $invocationCount = 0;
+
+        $expensiveFunction = static function () use (&$invocationCount) {
+            ++$invocationCount;
+
+            return false;
+        };
+
+        $template = new FrontendTemplate();
+        $template->hasFoo = Template::once($expensiveFunction);
+
+        $this->assertFalse($template->hasFoo, 'first call');
+        $this->assertFalse($template->hasFoo, 'second call');
+
+        $this->assertSame(1, $invocationCount);
     }
 }

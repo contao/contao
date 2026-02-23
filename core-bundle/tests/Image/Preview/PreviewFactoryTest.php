@@ -33,15 +33,13 @@ use Contao\ImageSizeModel;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class PreviewFactoryTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -56,10 +54,10 @@ class PreviewFactoryTest extends TestCase
 
         $factory = new PreviewFactory(
             [],
-            $this->createMock(ImageFactoryInterface::class),
-            $this->createMock(PictureFactoryInterface::class),
-            $this->createMock(Studio::class),
-            $this->createMock(ContaoFramework::class),
+            $this->createStub(ImageFactoryInterface::class),
+            $this->createStub(PictureFactoryInterface::class),
+            $this->createStub(Studio::class),
+            $this->createStub(ContaoFramework::class),
             'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),
             ['png'],
@@ -154,12 +152,10 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviews($sourcePath, 128);
     }
 
-    /**
-     * @dataProvider getImageSizes
-     */
+    #[DataProvider('getImageSizes')]
     public function testGetPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $expectedSize, string $defaultDensities = ''): void
     {
-        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
+        $imageSizeModel = $this->createClassWithPropertiesStub(ImageSizeModel::class);
         $imageSizeModel->setRow([
             'id' => 456,
             'width' => 20,
@@ -167,7 +163,7 @@ class PreviewFactoryTest extends TestCase
             'densities' => '1x, 2x, 120w',
         ]);
 
-        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
+        $imageSizeItemModel = $this->createClassWithPropertiesStub(ImageSizeItemModel::class);
         $imageSizeItemModel->setRow([
             'pid' => 456,
             'width' => 789,
@@ -175,19 +171,19 @@ class PreviewFactoryTest extends TestCase
             'densities' => '0.5x',
         ]);
 
-        $imageSizeAdapter = $this->mockAdapter(['findById']);
+        $imageSizeAdapter = $this->createAdapterStub(['findById']);
         $imageSizeAdapter
             ->method('findById')
             ->willReturn($imageSizeModel)
         ;
 
-        $imageSizeItemAdapter = $this->mockAdapter(['findVisibleByPid']);
+        $imageSizeItemAdapter = $this->createAdapterStub(['findVisibleByPid']);
         $imageSizeItemAdapter
             ->method('findVisibleByPid')
             ->willReturn([$imageSizeItemModel])
         ;
 
-        $framework = $this->mockContaoFramework([
+        $framework = $this->createContaoFrameworkStub([
             ImageSizeModel::class => $imageSizeAdapter,
             ImageSizeItemModel::class => $imageSizeItemAdapter,
         ]);
@@ -343,12 +339,9 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
 
-    /**
-     * @group legacy
-     */
     public function testCreatePreviewFigureBuilder(): void
     {
-        $this->expectDeprecation('Since contao/image 1.2: Passing NULL as $rootDir is deprecated and will no longer work in version 2.0.%s');
+        $this->expectUserDeprecationMessageMatches('/Passing NULL as \$rootDir is deprecated and will no longer work in version 2.0\./');
 
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
         $factory = $this->createFactoryWithExampleProvider();
@@ -406,7 +399,7 @@ class PreviewFactoryTest extends TestCase
             }
         };
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturnCallback(
@@ -415,18 +408,18 @@ class PreviewFactoryTest extends TestCase
                         return $path;
                     }
 
-                    return new Image($path, $this->createMock(ImagineInterface::class));
+                    return new Image($path, $this->createStub(ImagineInterface::class));
                 },
             )
         ;
 
-        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory = $this->createStub(PictureFactoryInterface::class);
         $pictureFactory
             ->method('create')
             ->willReturnCallback(
                 function ($path) {
                     if (!$path instanceof ImageInterface) {
-                        $path = new Image($path, $this->createMock(ImagineInterface::class));
+                        $path = new Image($path, $this->createStub(ImagineInterface::class));
                     }
 
                     return new Picture(['src' => $path, 'srcset' => [[$path, '1x']]], []);
@@ -434,7 +427,7 @@ class PreviewFactoryTest extends TestCase
             )
         ;
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createStub(ContainerInterface::class);
 
         $studio = new Studio(
             $locator,
@@ -444,7 +437,7 @@ class PreviewFactoryTest extends TestCase
             ['png'],
         );
 
-        $filesContext = $this->createMock(ContaoContext::class);
+        $filesContext = $this->createStub(ContaoContext::class);
         $filesContext
             ->method('getStaticUrl')
             ->willReturn('')
@@ -464,7 +457,7 @@ class PreviewFactoryTest extends TestCase
             $imageFactory,
             $pictureFactory,
             $studio,
-            $framework ?? $this->createMock(ContaoFramework::class),
+            $framework ?? $this->createStub(ContaoFramework::class),
             'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),
             ['png'],

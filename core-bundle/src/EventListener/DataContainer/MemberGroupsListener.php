@@ -31,7 +31,7 @@ class MemberGroupsListener
     public function __invoke(): array
     {
         $options = [-1 => $this->translator->trans('MSC.guests', [], 'contao_default')];
-        $groups = $this->connection->fetchAllAssociative('SELECT id, name FROM tl_member_group WHERE tstamp>0 ORDER BY name');
+        $groups = $this->connection->fetchAllAssociative('SELECT id, name FROM tl_member_group WHERE tstamp > 0 ORDER BY name');
 
         foreach ($groups as $group) {
             $options[$group['id']] = $group['name'];

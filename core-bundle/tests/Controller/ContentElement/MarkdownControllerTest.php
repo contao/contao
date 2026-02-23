@@ -13,16 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\System;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class MarkdownControllerTest extends ContentElementTestCase
     {
         $container = $this->mockContainer('<h1>Headline</h1>'."\n");
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = '# Headline';
 
@@ -63,7 +64,7 @@ class MarkdownControllerTest extends ContentElementTestCase
         $container = $this->mockContainer('<p><a rel="noopener noreferrer" target="_blank" class="external-link" href="https://contao.org/news-alias%20that-needs-encoding.html">My text for my link</a></p>'."\n");
         $container->set('contao.insert_tag.parser', $insertTagParser);
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = '[My text for my link]({{news_url::42}})';
 
@@ -92,7 +93,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         System::setContainer($container);
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = <<<'MARKDOWN'
             # Headline
@@ -118,17 +119,17 @@ class MarkdownControllerTest extends ContentElementTestCase
         $tempTestFile = $fs->tempnam($this->getTempDir(), '');
         $fs->dumpFile($tempTestFile, '# Headline');
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
+        $filesModel = $this->createClassWithPropertiesMock(FilesModel::class);
         $filesModel
             ->expects($this->once())
             ->method('getAbsolutePath')
             ->willReturn($tempTestFile)
         ;
 
-        $filesAdapter = $this->mockConfiguredAdapter(['findById' => $filesModel]);
+        $filesAdapter = $this->createConfiguredAdapterStub(['findById' => $filesModel]);
         $container = $this->mockContainer('<h1>Headline</h1>'."\n", [FilesModel::class => $filesAdapter]);
 
-        $contentModel = $this->mockClassWithProperties(ContentModel::class);
+        $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceFile';
         $contentModel->singleSRC = 'uuid';
 
@@ -162,32 +163,22 @@ class MarkdownControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container
+    private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): ContainerBuilder
     {
-        $template = $this->createMock(FrontendTemplate::class);
-        $template
-            ->expects($this->once())
-            ->method('getResponse')
-            ->willReturn(new Response())
-        ;
-
-        $template
-            ->method('__set')
-            ->withConsecutive(
-                [$this->equalTo('headline'), $this->isNull()],
-                [$this->equalTo('hl'), $this->equalTo('h1')],
-                [$this->equalTo('class'), $this->equalTo('ce_markdown')],
-                [$this->equalTo('cssID'), $this->equalTo('')],
-                [$this->equalTo('inColumn'), $this->equalTo('main')],
-                [$this->equalTo('content'), $this->equalTo($expectedMarkdown)],
-            )
-        ;
-
         if (!isset($frameworkAdapters[Input::class])) {
             $frameworkAdapters[Input::class] = new Adapter(Input::class);
         }
 
-        $framework = $this->mockContaoFramework($frameworkAdapters);
+        $template = new FragmentTemplate(
+            'foo',
+            static function (FragmentTemplate $template) use ($expectedMarkdown) {
+                self::assertSame($expectedMarkdown, $template->get('content'));
+
+                return new Response('result');
+            },
+        );
+
+        $framework = $this->createContaoFrameworkMock($frameworkAdapters);
         $framework
             ->expects($this->once())
             ->method('createInstance')
@@ -197,9 +188,9 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
-        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
-        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
-        $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $container->set('monolog.logger.contao.error', $this->createStub(LoggerInterface::class));
+        $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
 
         return $container;
     }

@@ -34,4 +34,14 @@ final class FormatterRuntime implements RuntimeExtensionInterface
 
         return System::getReadableSize($bytes, $decimals);
     }
+
+    /**
+     * Convert a number value into a human-readable format.
+     */
+    public function formatNumber(float|int $number, int $decimals = 1): string
+    {
+        $this->framework->initialize();
+
+        return System::getFormattedNumber($number, $decimals);
+    }
 }

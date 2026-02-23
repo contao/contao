@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Csrf;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Csrf\Exception\TokenNotFoundException;
-use Symfony\Contracts\Service\ResetInterface;
 
 class MemoryTokenStorageTest extends TestCase
 {
@@ -103,9 +102,6 @@ class MemoryTokenStorageTest extends TestCase
     public function testServiceIsResetable(): void
     {
         $memoryTokenStorage = new MemoryTokenStorage();
-
-        $this->assertInstanceOf(ResetInterface::class, $memoryTokenStorage);
-
         $memoryTokenStorage->initialize([]);
 
         $this->assertFalse($memoryTokenStorage->hasToken('foo'));

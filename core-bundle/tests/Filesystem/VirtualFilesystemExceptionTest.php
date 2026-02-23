@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class VirtualFilesystemExceptionTest extends TestCase
 {
-    /**
-     * @dataProvider provideVariants
-     */
+    #[DataProvider('provideVariants')]
     public function testGetValues(VirtualFilesystemException $e, string $message): void
     {
         $this->assertSame($message, $e->getMessage());

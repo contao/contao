@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fixtures\EventListener;
 
+use Contao\DataContainer;
+
 class TestListener
 {
     public function onLoadPage(): void
@@ -20,6 +22,11 @@ class TestListener
 
     public function onLoadCallback(): void
     {
+    }
+
+    public function onClosure(DataContainer $dc): string
+    {
+        return 'foo';
     }
 
     public function onListitemsXlabel(): void

@@ -17,6 +17,7 @@ use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -30,8 +31,7 @@ class RequestTokenListenerTest extends TestCase
 {
     public function testValidatesTheRequestToken(): void
     {
-        $request = Request::create('/account.html', 'POST');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->attributes->set('_token_check', true);
         $request->request->set('REQUEST_TOKEN', 'foo');
@@ -43,8 +43,7 @@ class RequestTokenListenerTest extends TestCase
 
     public function testValidatesTheRequestTokenUponAuthenticatedRequest(): void
     {
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->headers->set('PHP_AUTH_USER', 'user');
         $request->request->set('REQUEST_TOKEN', 'foo');
@@ -57,8 +56,7 @@ class RequestTokenListenerTest extends TestCase
         $session = new Session(new MockArraySessionStorage());
         $session->set('foobar', 'foobaz');
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
         $request->setSession($session);
 
         $request->attributes->set('_token_check', true);
@@ -69,28 +67,23 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenWithoutCookies(): void
     {
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $this->validateRequestTokenForRequest($request, false);
     }
 
     public function testDoesNotValidateTheRequestTokenWithCsrfCookiesOnly(): void
     {
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
-
+        $request = $this->createPostRequest();
         $request->cookies = new InputBag(['csrf_contao_csrf_token' => 'value']);
 
         $this->validateRequestTokenForRequest($request, false);
     }
 
-    /**
-     * @dataProvider getAttributeAndRequest
-     */
+    #[DataProvider('getAttributeAndRequest')]
     public function testValidatesTheRequestTokenDependingOnTheRequest(bool $setAttribute, bool|null $tokenCheck, bool $isContaoRequest, bool $isValidToken): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isContaoRequest')
             ->willReturn($isContaoRequest)
@@ -103,9 +96,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
-
+        $request = $this->createPostRequest();
         $request->request->set('REQUEST_TOKEN', 'foo');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
@@ -142,7 +133,7 @@ class RequestTokenListenerTest extends TestCase
 
     public function testFailsIfTheRequestTokenIsInvalid(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isContaoRequest')
             ->willReturn(true)
@@ -155,8 +146,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->request->set('REQUEST_TOKEN', 'foo');
 
@@ -185,8 +175,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenUponNonPostRequests(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $request = Request::create('/account.html');
         $request->setMethod('GET');
@@ -212,14 +202,37 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMainRequest')
+            ->willReturn(true)
+        ;
+
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener($event);
+    }
+
+    public function testDoesNotValidateTheRequestTokenUponPreflightedRequests(): void
+    {
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
+
+        $request = $this->createPostRequest('text/xml'); // Content-Type requiring preflighted request
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -242,11 +255,10 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->attributes->set('_token_check', false);
 
@@ -278,10 +290,9 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -304,8 +315,8 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenIfNotAMainRequest(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
+        $csrfTokenManager = $this->createStub(ContaoCsrfTokenManager::class);
 
         $event = $this->createMock(RequestEvent::class);
         $event
@@ -323,9 +334,40 @@ class RequestTokenListenerTest extends TestCase
         $listener($event);
     }
 
+    #[DataProvider('simpleCorsRequestContentTypeProvider')]
+    public function testSimpleCorsRequest(string $contentType): void
+    {
+        $request = $this->createPostRequest($contentType);
+
+        $this->assertTrue(RequestTokenListener::isSimpleCorsRequest($request));
+    }
+
+    public static function simpleCorsRequestContentTypeProvider(): iterable
+    {
+        return [
+            'urlencoded basic' => ['application/x-www-form-urlencoded'],
+            'urlencoded with UTF-8' => ['application/x-www-form-urlencoded; charset=UTF-8'],
+            'urlencoded with ISO' => ['application/x-www-form-urlencoded; charset=ISO-8859-1'],
+            'multipart basic' => ['multipart/form-data'],
+            'multipart with WebKit boundary' => ['multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'],
+            'multipart with charset and custom boundary' => ['multipart/form-data; charset=UTF-8; boundary=----MyCustomBoundary12345'],
+            'text plain basic' => ['text/plain'],
+            'text plain with UTF-8' => ['text/plain; charset=UTF-8'],
+            'text plain with ISO' => ['text/plain; charset=ISO-8859-1'],
+            'text plain flowed' => ['text/plain; format=flowed'],
+            'text plain UTF-8 flowed' => ['text/plain; charset=UTF-8; format=flowed'],
+            'text plain uppercase' => ['TEXT/PLAIN'],
+        ];
+    }
+
+    public function testSimpleCorsRequestHandlesMissingContentTypeHeader(): void
+    {
+        $this->assertFalse(RequestTokenListener::isSimpleCorsRequest(new Request()));
+    }
+
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher = $this->createStub(ScopeMatcher::class);
         $scopeMatcher
             ->method('isContaoRequest')
             ->willReturn(true)
@@ -342,7 +384,7 @@ class RequestTokenListenerTest extends TestCase
             ->method('canSkipTokenValidation')
             ->willReturnCallback(
                 function () {
-                    $tokenManager = new ContaoCsrfTokenManager($this->createMock(RequestStack::class), 'csrf_', new UriSafeTokenGenerator(), $this->createMock(TokenStorageInterface::class));
+                    $tokenManager = new ContaoCsrfTokenManager($this->createStub(RequestStack::class), 'csrf_', new UriSafeTokenGenerator(), $this->createStub(TokenStorageInterface::class));
 
                     return $tokenManager->canSkipTokenValidation(...\func_get_args());
                 },
@@ -364,5 +406,10 @@ class RequestTokenListenerTest extends TestCase
 
         $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
+    }
+
+    private function createPostRequest(string $contentType = 'application/x-www-form-urlencoded'): Request
+    {
+        return Request::create('/account.html', 'POST', [], [], [], ['CONTENT_TYPE' => $contentType]);
     }
 }

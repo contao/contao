@@ -16,6 +16,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -23,6 +24,9 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class VirtualFilesystemTest extends TestCase
@@ -39,8 +43,8 @@ class VirtualFilesystemTest extends TestCase
     public function testGetPrefix(): void
     {
         $virtualFilesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
             'some/prefix',
         );
 
@@ -58,7 +62,7 @@ class VirtualFilesystemTest extends TestCase
 
         $virtualFilesystem = new VirtualFilesystem(
             $mountManager,
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $this->assertSame('', $virtualFilesystem->getPrefix());
@@ -69,15 +73,15 @@ class VirtualFilesystemTest extends TestCase
     public function testRetReadOnly(): void
     {
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
             '',
             false,
         );
 
         $readOnlyFilesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
             '',
             true,
         );
@@ -86,14 +90,12 @@ class VirtualFilesystemTest extends TestCase
         $this->assertTrue($readOnlyFilesystem->isReadOnly());
     }
 
-    /**
-     * @dataProvider provideInvalidPaths
-     */
+    #[DataProvider('provideInvalidPaths')]
     public function testPreventsEscapingBounds(string $path, string $message): void
     {
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
             'prefix',
         );
 
@@ -103,12 +105,10 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->read($path);
     }
 
-    /**
-     * @dataProvider provideInvalidPaths
-     */
+    #[DataProvider('provideInvalidPaths')]
     public function testPreventsEscapingBoundsViaUUIDs(string $path, string $message): void
     {
-        $dbafsManager = $this->createMock(DbafsManager::class);
+        $dbafsManager = $this->createStub(DbafsManager::class);
         $dbafsManager
             ->method('resolveUuid')
             ->with($this->defaultUuid)
@@ -116,7 +116,7 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
             'prefix',
         );
@@ -145,14 +145,13 @@ class VirtualFilesystemTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideResourceExistsResults
-     */
+    #[DataProvider('provideResourceExistsResults')]
     public function testResourceExistsWithUuid(bool $resourceExists): void
     {
         $uuid = $this->defaultUuid;
 
         $dbafsManager = $this->createMock(DbafsManager::class);
+
         $invocationMocker = $dbafsManager
             ->expects($this->exactly(3))
             ->method('resolveUuid')
@@ -164,7 +163,7 @@ class VirtualFilesystemTest extends TestCase
         }
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
             'prefix',
         );
@@ -180,14 +179,12 @@ class VirtualFilesystemTest extends TestCase
         yield 'resource not found' => [false];
     }
 
-    /**
-     * @dataProvider provideInvalidAccessFlags
-     */
+    #[DataProvider('provideInvalidAccessFlags')]
     public function testResourceExistsThrowsWithUuidAndInvalidAccessFlags(int $invalidAccessFlags): void
     {
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $this->expectException(\LogicException::class);
@@ -196,14 +193,12 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->has(Uuid::v1(), $invalidAccessFlags);
     }
 
-    /**
-     * @dataProvider provideInvalidAccessFlags
-     */
+    #[DataProvider('provideInvalidAccessFlags')]
     public function testFileExistsThrowsWithUuidAndInvalidAccessFlags(int $invalidAccessFlags): void
     {
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $this->expectException(\LogicException::class);
@@ -212,14 +207,12 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->fileExists(Uuid::v1(), $invalidAccessFlags);
     }
 
-    /**
-     * @dataProvider provideInvalidAccessFlags
-     */
+    #[DataProvider('provideInvalidAccessFlags')]
     public function testDirectoryExistsThrowsWithUuidAndInvalidAccessFlags(int $invalidAccessFlags): void
     {
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $this->expectException(\LogicException::class);
@@ -234,9 +227,7 @@ class VirtualFilesystemTest extends TestCase
         yield 'bypass DBAFS, but still sync' => [VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS];
     }
 
-    /**
-     * @dataProvider provideResourceExistsResults
-     */
+    #[DataProvider('provideResourceExistsResults')]
     public function testFileExistsReadsFromMountManagerAndSyncsDbafs(bool $resourceExists): void
     {
         $mountManager = $this->createMock(MountManager::class);
@@ -286,9 +277,7 @@ class VirtualFilesystemTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideResourceExistsResults
-     */
+    #[DataProvider('provideResourceExistsResults')]
     public function testResourceExistsReadsFromDbafsManager(bool $resourceExists): void
     {
         $mountManager = $this->createMock(MountManager::class);
@@ -302,7 +291,7 @@ class VirtualFilesystemTest extends TestCase
             ->method('directoryExists')
         ;
 
-        $dbafsManager = $this->createMock(DbafsManager::class);
+        $dbafsManager = $this->createStub(DbafsManager::class);
         $dbafsManager
             ->method('match')
             ->with('prefix/path')
@@ -427,7 +416,7 @@ class VirtualFilesystemTest extends TestCase
     {
         $handlerInvocationCount = 0;
 
-        $mountManager = $this->createMock(MountManager::class);
+        $mountManager = $this->createStub(MountManager::class);
         $mountManager
             ->method('fileExists')
             ->willReturnCallback(static fn (string $path): bool => 'foo/file_a' === $path)
@@ -503,7 +492,7 @@ class VirtualFilesystemTest extends TestCase
                             static function () use (&$handlerInvocationCount) {
                                 ++$handlerInvocationCount;
 
-                                return ['extra' => 'data'];
+                                return new ExtraMetadata(['extra' => 'data']);
                             },
                         ),
                         'dir_b' => new FilesystemItem(false, 'foo/dir_b'),
@@ -520,7 +509,7 @@ class VirtualFilesystemTest extends TestCase
             ->willReturn(new ChangeSet([], [], []))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, 'foo');
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'foo');
@@ -566,18 +555,16 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame(12345, $fileB->getLastModified());
         $this->assertSame(1024, $fileB->getFileSize());
         $this->assertSame('image/png', $fileB->getMimeType());
-        $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata());
+        $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata()->all());
 
         /** @phpstan-ignore method.impossibleType */
         $this->assertSame(7, $handlerInvocationCount);
     }
 
-    /**
-     * @dataProvider provideMountManagerListings
-     */
+    #[DataProvider('provideMountManagerListings')]
     public function testListContentsYieldsFromMountManager(bool $deep, array $listing, array $expected): void
     {
-        $mountManager = $this->createMock(MountManager::class);
+        $mountManager = $this->createStub(MountManager::class);
         $mountManager
             ->method('listContents')
             ->with('prefix/foo/bar', $deep)
@@ -594,13 +581,13 @@ class VirtualFilesystemTest extends TestCase
             ->expects($this->once())
             ->method('getExtraMetadata')
             ->with('prefix/foo/bar/file')
-            ->willReturn(['extra' => 'data'])
+            ->willReturn(new ExtraMetadata(['extra' => 'data']))
         ;
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
         $listedContents = $filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)->toArray();
 
-        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata()->all());
 
         // Normalize listing for comparison
         $listing = array_map(
@@ -646,9 +633,7 @@ class VirtualFilesystemTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDbafsManagerListings
-     */
+    #[DataProvider('provideDbafsManagerListings')]
     public function testListContentsYieldsFromDbafsManager(bool $deep, array $listing, array $expected): void
     {
         $mountManager = $this->createMock(MountManager::class);
@@ -681,7 +666,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
         $listedContents = $filesystem->listContents('foo/bar', $deep)->toArray();
 
-        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata()->all());
         $this->assertSame(1024, $listedContents[0]->getFileSize());
 
         // Normalize listing for comparison
@@ -706,7 +691,7 @@ class VirtualFilesystemTest extends TestCase
                     null,
                     null,
                     null,
-                    ['extra' => 'data'],
+                    new ExtraMetadata(['extra' => 'data']),
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
             ],
@@ -725,7 +710,7 @@ class VirtualFilesystemTest extends TestCase
                     null,
                     null,
                     null,
-                    ['extra' => 'data'],
+                    new ExtraMetadata(['extra' => 'data']),
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
                 new FilesystemItem(true, 'prefix/foo/bar/things/a'),
@@ -744,7 +729,7 @@ class VirtualFilesystemTest extends TestCase
 
     public function testListContentsSyncsDbafs(): void
     {
-        $mountManager = $this->createMock(MountManager::class);
+        $mountManager = $this->createStub(MountManager::class);
 
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
@@ -769,33 +754,25 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->listContents('foo/bar', false, VirtualFilesystemInterface::FORCE_SYNC);
     }
 
-    /**
-     * @dataProvider provideAccessFlags
-     */
+    #[DataProvider('provideAccessFlags')]
     public function testGetLastModified(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
         $this->doTestGetMetadata('lastModified', 123450, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
-    /**
-     * @dataProvider provideAccessFlags
-     */
+    #[DataProvider('provideAccessFlags')]
     public function testGetFileSize(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
         $this->doTestGetMetadata('fileSize', 1024, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
-    /**
-     * @dataProvider provideAccessFlags
-     */
+    #[DataProvider('provideAccessFlags')]
     public function testGetMimeType(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
         $this->doTestGetMetadata('mimeType', 'image/png', $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
-    /**
-     * @dataProvider provideAccessFlags
-     */
+    #[DataProvider('provideAccessFlags')]
     public function testGetExtraMetadata(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
         $dbafsManager = $this->createMock(DbafsManager::class);
@@ -816,19 +793,19 @@ class VirtualFilesystemTest extends TestCase
             ->expects($shouldReadFromDbafs ? $this->exactly(2) : $this->never())
             ->method('getExtraMetadata')
             ->with('prefix/path')
-            ->willReturn(['extra' => 'data'])
+            ->willReturn(new ExtraMetadata(['extra' => 'data']))
         ;
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
             'prefix',
         );
 
         $expected = $shouldReadFromDbafs ? ['extra' => 'data'] : [];
 
-        $this->assertSame($expected, $filesystem->getExtraMetadata('path', $accessFlags));
-        $this->assertSame($expected, $filesystem->getExtraMetadata($this->defaultUuid, $accessFlags));
+        $this->assertSame($expected, $filesystem->getExtraMetadata('path', $accessFlags)->all());
+        $this->assertSame($expected, $filesystem->getExtraMetadata($this->defaultUuid, $accessFlags)->all());
     }
 
     public static function provideAccessFlags(): iterable
@@ -852,6 +829,8 @@ class VirtualFilesystemTest extends TestCase
 
     public function testSetExtraMetadata(): void
     {
+        $extraMetadata = new ExtraMetadata(['extra' => 'data']);
+
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
             ->expects($this->once())
@@ -863,29 +842,27 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager
             ->expects($this->exactly(2))
             ->method('setExtraMetadata')
-            ->with('prefix/path', ['extra' => 'data'])
+            ->with('prefix/path', $extraMetadata)
         ;
 
         $filesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
+            $this->createStub(MountManager::class),
             $dbafsManager,
             'prefix',
         );
 
-        $filesystem->setExtraMetadata('path', ['extra' => 'data']);
-        $filesystem->setExtraMetadata($this->defaultUuid, ['extra' => 'data']);
+        $filesystem->setExtraMetadata('path', $extraMetadata);
+        $filesystem->setExtraMetadata($this->defaultUuid, $extraMetadata);
     }
 
-    /**
-     * @dataProvider provideReadOnlyMethods
-     */
+    #[DataProvider('provideReadOnlyMethods')]
     public function testDisallowsMutatingAReadOnlyFilesystem(mixed ...$arguments): void
     {
         $method = array_shift($arguments);
 
         $readOnlyFilesystem = new VirtualFilesystem(
-            $this->createMock(MountManager::class),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(MountManager::class),
+            $this->createStub(DbafsManager::class),
             '',
             true,
         );
@@ -927,7 +904,7 @@ class VirtualFilesystemTest extends TestCase
         ];
 
         yield 'set extra metadata' => [
-            'setExtraMetadata', 'foo/bar', ['some' => 'data'],
+            'setExtraMetadata', 'foo/bar', new ExtraMetadata(['some' => 'data']),
         ];
     }
 
@@ -941,7 +918,7 @@ class VirtualFilesystemTest extends TestCase
 
         $filesystem = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class),
+            $this->createStub(DbafsManager::class),
         );
 
         $filesystem->createDirectory("b\xE4r");
@@ -956,7 +933,7 @@ class VirtualFilesystemTest extends TestCase
     {
         $method = \sprintf('get%s', ucfirst($property));
 
-        $mountManager = $this->createMock(MountManager::class);
+        $mountManager = $this->createStub(MountManager::class);
         $mountManager
             ->method($method)
             ->willReturn($value)
@@ -994,7 +971,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($value, $filesystem->$method('path2', $accessFlags));
     }
 
-    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MountManager
+    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MountManager&MockObject
     {
         $mountManager = $this->createMock(MountManager::class);
 

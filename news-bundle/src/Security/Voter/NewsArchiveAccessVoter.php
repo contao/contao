@@ -44,8 +44,8 @@ class NewsArchiveAccessVoter extends AbstractDataContainerVoter
         return match (true) {
             $action instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES]),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $action->getCurrentId())
+            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], (int) $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], (int) $action->getCurrentId())
                 && $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES]),
         };
     }

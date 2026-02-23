@@ -47,8 +47,8 @@
         all directly in the context. Grouping under an object has precedence.
 #}
 
-{% trans_default_domain "contao_default" %}
-{% use "@Contao/component/_stylesheet.html.twig" %}
+{% trans_default_domain 'contao_default' %}
+{% use '@Contao/component/_stylesheet.html.twig' %}
 
 {% block table_component %}
     {% set table = table|default(_context) %}
@@ -65,7 +65,7 @@
                See https://github.com/tristen/tablesort for more details. #}
             {% do table_attributes.set(
                 'data-sortable-table',
-                tablesort_option|default({})|merge({descending: sorting.order == 'desc'})|json_encode
+                tablesort_option|default({})|merge({descending: sorting.order == 'desc'})|json_encode,
             ) %}
         {% endif %}
         <table{% block table_attributes %}{{ table_attributes }}{% endblock %}>
@@ -79,8 +79,8 @@
             {% endif %}
 
             {# Header #}
-            {% if header %}
-                {% block table_header %}
+            {% block table_header %}
+                {% if header %}
                     <thead{{ table_header_attributes|default }}>
                     {% block table_header_inner %}
                         <tr>
@@ -98,12 +98,12 @@
                         </tr>
                     {% endblock %}
                     </thead>
-                {% endblock %}
-            {% endif %}
+                {% endif %}
+            {% endblock %}
 
             {# Footer #}
-            {% if footer %}
-                {% block table_footer %}
+            {% block table_footer %}
+                {% if footer %}
                     <tfoot{{ table_footer_attributes|default }}>
                     {% block table_footer_inner %}
                         <tr>
@@ -117,8 +117,8 @@
                         </tr>
                     {% endblock %}
                     </tfoot>
-                {% endblock %}
-            {% endif %}
+                {% endif %}
+            {% endblock %}
 
             {# Body #}
             {% block table_body %}
@@ -149,7 +149,7 @@
 
     {% block table_script %}
         {% if sorting %}
-            {% add "tablesort_script" to body %}
+            {% add 'tablesort_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
                     .mergeWith(script_attributes|default)
@@ -176,7 +176,9 @@
                         script.addEventListener('load', () => {
                             new MutationObserver(function (mutations) {
                                 mutations.forEach(function (mutation) {
-                                    initTree(mutation.target)
+                                    if (mutation.target instanceof HTMLElement) {
+                                        initTree(mutation.target)
+                                    }
                                 });
                             }).observe(document, {
                                 childList: true,
@@ -197,7 +199,7 @@
         {% if sorting %}
             {% set tablesort_css_file = asset('css/tablesort.min.css', 'contao-components/tristen-tablesort') %}
 
-            {% add "tablesort_css" to stylesheets %}
+            {% add 'tablesort_css' to stylesheets %}
                 {% with {file: tablesort_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
             {% endadd %}
         {% endif %}

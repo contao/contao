@@ -22,6 +22,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
+		'backendSearchIgnore'         => true,
 		'sql' => array
 		(
 			'keys' => array
@@ -39,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('tstamp', 'id'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'text'
 		),
 		'label' => array
@@ -47,11 +48,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'fields'                  => array('tstamp', 'text'),
 			'format'                  => '<span class="label-date">[%s]</span> %s',
 			'label_callback'          => array('tl_log', 'colorize')
-		),
-		'operations' => array
-		(
-			'delete',
-			'show'
 		)
 	),
 

@@ -101,14 +101,17 @@ class ImageSizes implements ResetInterface
         }
 
         $rows = $this->connection->fetchAllAssociative(
-            'SELECT
-                s.id, s.name, s.width, s.height, t.name as theme
-            FROM
-                tl_image_size s
-            LEFT JOIN
-                tl_theme t ON s.pid=t.id
-            ORDER BY
-                s.pid, s.name',
+            <<<'SQL'
+                SELECT
+                    s.id,
+                    s.name,
+                    s.width,
+                    s.height,
+                    t.name as theme
+                FROM tl_image_size s
+                LEFT JOIN tl_theme t ON s.pid = t.id
+                ORDER BY s.pid, s.name
+                SQL,
         );
 
         $options = [];

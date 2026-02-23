@@ -36,13 +36,13 @@ class ModuleTest extends TestCase
     {
         parent::setUp();
 
-        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager = $this->createStub(AbstractSchemaManager::class);
         $schemaManager
             ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
@@ -55,7 +55,7 @@ class ModuleTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
-        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->setParameter('contao.resources_paths', $this->getTempDir());
         $container->setParameter('kernel.cache_dir', $this->getTempDir().'/var/cache');
 
@@ -90,13 +90,13 @@ class ModuleTest extends TestCase
             ['id' => 3, 'alias' => 'alias3'],
         ];
 
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createStub(Statement::class);
         $statement
             ->method('execute')
             ->willReturnOnConsecutiveCalls(new Result($databaseResultFirstQuery, ''), new Result($databaseResultSecondQuery, ''))
         ;
 
-        $database = $this->createMock(Database::class);
+        $database = $this->createStub(Database::class);
         $database
             ->method('prepare')
             ->willReturn($statement)

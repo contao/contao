@@ -1,0 +1,17 @@
+{% set wrapperAttributes = attrs(cssID)
+    .addClass([class, 'ce_accordion', 'block'])
+    .addStyle(style|default)
+    .mergeWith(wrapperAttributes|default)
+%}
+
+<section{{ wrapperAttributes }}>
+
+    <div{{ attrs()
+        .addClass(toggler)
+        .addStyle(headlineStyle|default)
+    }}>
+        {{ headline|sanitize_html('contao')|insert_tag_raw }}
+    </div>
+
+    <div class="{{ accordion }}">
+        <div>

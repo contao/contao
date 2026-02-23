@@ -43,8 +43,13 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'limit',
 			'headerFields'            => array('name', 'tstamp', 'width', 'height', 'resizeMode', 'zoom'),
-			'child_record_callback'   => array('tl_image_size_item', 'listImageSizeItem')
-		)
+		),
+		'label' => array
+		(
+			'fields'                  => array('media'),
+			'format'                  => '%s',
+			'label_callback'          => array('tl_image_size_item', 'listImageSizeItem'),
+		),
 	),
 
 	// Palettes
@@ -150,23 +155,18 @@ class tl_image_size_item extends Backend
 	 *
 	 * @return string
 	 */
-	public function listImageSizeItem($row)
+	public function listImageSizeItem($row, $label)
 	{
-		$html = '<div class="tl_content_left">';
-		$html .= $row['media'];
-
 		if ($row['width'] || $row['height'])
 		{
-			$html .= ' <span style="padding-left:3px">' . $row['width'] . 'x' . $row['height'] . '</span>';
+			$label .= ' <span style="padding-left:3px">' . $row['width'] . 'x' . $row['height'] . '</span>';
 		}
 
 		if ($row['zoom'])
 		{
-			$html .= ' <span class="label-info">(' . $row['zoom'] . '%)</span>';
+			$label .= ' <span class="label-info">(' . $row['zoom'] . '%)</span>';
 		}
 
-		$html .= "</div>\n";
-
-		return $html;
+		return $label;
 	}
 }

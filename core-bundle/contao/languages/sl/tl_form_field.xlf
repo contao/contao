@@ -169,6 +169,14 @@
         <source>Show this text as long as the field is empty (requires HTML5).</source>
         <target>Prikaži to besedilo, vkolikor je polje prazno (zahteva HTML5).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.help.0">
+        <source>Help text</source>
+        <target>Besedilo pomoči</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.help.1">
+        <source>Here you can enter a help text that is associated with the field.</source>
+        <target>Tu lahko vnesete besedilo pomoči, ki je povezano s poljem.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
         <target>Regularni izraz po meri</target>
@@ -303,6 +311,14 @@
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
         <target>Dodaj številčno pripono novi datoteki, v kolikor taka z enakim imenom že obstaja.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.0">
+        <source>Allow multiple files</source>
+        <target>Dovoli več datotek</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multipleFiles.1">
+        <source>Allow the user to upload multiple files.</source>
+        <target>Dovoli uporabniku, da naložio več datotek.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
         <target>Privzeta vrednost</target>
@@ -367,6 +383,45 @@
         <source>Please select an image from the files directory.</source>
         <target>Prosimo, izberite sliko</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.0">
+        <source>Auto verification</source>
+        <target>Samodejno preverjanje</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.1">
+        <source>Automatically verify without user interaction.</source>
+        <target>Samodejno preveri uporabnika brez njegove interakcije.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.0">
+        <source>Hide logo</source>
+        <target>Skrij logotip</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.1">
+        <source>Hide the ALTCHA logo.</source>
+        <target>Skrij logotip ALTCHA.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.0">
+        <source>Hide footer</source>
+        <target>Skrij nogo</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.1">
+        <source>Hide the footer (ALTCHA link).</source>
+        <target>Skrij nogo (povezava ALTCHA).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.0">
+        <source>Floating mode</source>
+        <target>Lebdeči način</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaFloating.1">
+        <source>Enable the floating UI.</source>
+        <target>Omogoči lebdeči (floating) uporabniški vmesnik.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.0">
+        <source>Autocomplete attributes</source>
+        <target>Nastavitve samodejnega zaključevanja</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.1">
+        <source>Here you can enter autocomplete attributes so that the browser knows how to pre-populate the form field with user-preferred values.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.invisible.0">
         <source>Invisible</source>
         <target>Nevidno</target>
@@ -403,6 +458,10 @@
         <source>Rows and columns</source>
         <target>Vrstice in stoplci</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.rgxp_legend">
+        <source>Validation settings</source>
+        <target>Nastavitve preverjanja</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.template_legend">
         <source>Template settings</source>
         <target>Nastavitve predloge</target>
@@ -419,31 +478,31 @@
         <source>Visibility</source>
         <target>Vidnost</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.new.0">
-        <source>New</source>
-        <target>Nov</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
         <target>Ustvari nov vnosno polje</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show">
+      <trans-unit id="tl_form_field.show.1">
         <source>Show the details of form field ID %s</source>
         <target>Prikaži podrobnosti vnosnega polja z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit">
+      <trans-unit id="tl_form_field.versions.1">
+        <source>Show the versions of form field ID %s</source>
+        <target>Prikaži različice vnosnega polja z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.edit.1">
         <source>Edit form field ID %s</source>
         <target>Uredi vnosno polje z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut">
+      <trans-unit id="tl_form_field.cut.1">
         <source>Move form field ID %s</source>
         <target>Premakni vnosno polje z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.copy">
-        <source>Duplicate form field ID %s</source>
-        <target>Podvoji vnosno polje z ID %s</target>
+      <trans-unit id="tl_form_field.copy.1">
+        <source>Copy form field ID %s</source>
+        <target>Kopiraj vnosno polje z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.delete">
+      <trans-unit id="tl_form_field.delete.1">
         <source>Delete form field ID %s</source>
         <target>Izbriši vnosno polje z ID %s</target>
       </trans-unit>
@@ -459,25 +518,33 @@
         <source>Unhide form field ID %s</source>
         <target>Prikaži vnosno polje z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Prilepi na vrh</target>
+      <trans-unit id="tl_form_field.toggle.3">
+        <source>Hide</source>
+        <target>Skrij</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.4">
+        <source>Unhide</source>
+        <target>Ponovno prikaži</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
         <target>Vstavi za vnosno polje z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.0">
+      <trans-unit id="tl_form_field.pastenewtop.1">
         <source>Create a new form field at the top</source>
         <target>Ustvari novo vnosno polje na začetku</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.1">
+      <trans-unit id="tl_form_field.pastenewafter.1">
         <source>Create a new form field after form field ID %s</source>
         <target>Ustvari novo vnosno polje za poljem z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>
         <target>Uvozi možnosti iz datoteke CSV</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.tableLabel">
+        <source>Form field</source>
+        <target>Vnosno polje</target>
       </trans-unit>
     </body>
   </file>

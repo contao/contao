@@ -10,8 +10,15 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\TextController;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentText::class, TextController::class);
+
 /**
  * Front end content element "text".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\TextController instead.
  */
 class ContentText extends ContentElement
 {

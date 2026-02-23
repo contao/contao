@@ -286,7 +286,7 @@ class PreviewFactory
 
         $size += [0, 0, 'crop'];
 
-        if ($predefinedSize = $this->predefinedSizes[$size[2] ?? null] ?? null) {
+        if ($predefinedSize = $this->predefinedSizes[$size[2] ?? ''] ?? null) {
             $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
                 $predefinedSize['width'] ?? 0,
                 $predefinedSize['height'] ?? 0,

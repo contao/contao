@@ -19,7 +19,7 @@ interface OptInInterface
      *
      * @param array<string, array<int>> $related An array of related tables and IDs
      */
-    public function create(string $prefix, string $email, array $related): OptInTokenInterface;
+    public function create(string $prefix, string $email, array $related/* , \DateTimeInterface|null $validUntil = null */): OptInTokenInterface;
 
     /**
      * Finds a double opt-in token by its identifier.

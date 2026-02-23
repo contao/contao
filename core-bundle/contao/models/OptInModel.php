@@ -42,17 +42,17 @@ use Contao\Model\Registry;
  * @method static OptInModel|null findOneByEmailSubject($val, array $opt=array())
  * @method static OptInModel|null findOneByEmailText($val, array $opt=array())
  *
- * @method static Collection<OptInModel>|OptInModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findByCreatedOn($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findByConfirmedOn($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findByRemoveOn($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findByInvalidatedThrough($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findByEmail($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findByEmailSubject($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findByEmailText($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<OptInModel>|OptInModel[]|null findAll(array $opt=array())
+ * @method static Collection<OptInModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findByCreatedOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findByConfirmedOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findByRemoveOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findByInvalidatedThrough($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findByEmail($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findByEmailSubject($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findByEmailText($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<OptInModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<OptInModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -78,7 +78,7 @@ class OptInModel extends Model
 	 *
 	 * @param array $arrOptions
 	 *
-	 * @return Collection<OptInModel>|OptInModel[]|null
+	 * @return Collection<OptInModel>|null
 	 */
 	public static function findExpiredTokens(array $arrOptions=array())
 	{
@@ -94,7 +94,7 @@ class OptInModel extends Model
 	 * @param array  $arrIds
 	 * @param array  $arrOptions
 	 *
-	 * @return Collection<OptInModel>|OptInModel[]|null
+	 * @return Collection<OptInModel>|null
 	 */
 	public static function findByRelatedTableAndIds($strTable, array $arrIds, array $arrOptions=array())
 	{
@@ -114,6 +114,46 @@ class OptInModel extends Model
 
 		while ($objResult->next())
 		{
+			if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
+			{
+				$arrModels[] = $objOptIn;
+			}
+			else
+			{
+				$arrModels[] = new static($objResult->row());
+			}
+		}
+
+		return static::createCollection($arrModels, $t);
+	}
+
+	/**
+	 * Find unconfirmed opt-in tokens by their related table and ID
+	 *
+	 * @param string  $strTable
+	 * @param integer $intId
+	 *
+	 * @return Collection|OptInModel[]|OptInModel|null
+	 */
+	public static function findUnconfirmedByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
+
+		$objResult =  $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn=0 AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId=?)")
+								  ->execute($strTable, $intId);
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		$arrModels = array();
+		$objRegistry = Registry::getInstance();
+
+		while ($objResult->next())
+		{
+			/** @var OptInModel|Model $objOptIn */
 			if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
 			{
 				$arrModels[] = $objOptIn;

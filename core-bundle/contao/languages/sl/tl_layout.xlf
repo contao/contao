@@ -9,13 +9,13 @@
         <source>Please enter the layout title.</source>
         <target>Prosimo, vnesite naziv postavitve.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Privzeta postavitev</target>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
+        <target>Vrsta postavitve</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Trenutna postavitev naj bo privzeta.</target>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
+        <target>Tu lahko izberete vrsto postavitve.</target>
       </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
@@ -177,6 +177,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.form.css.1">
         <source>Adds basic form elements and buttons formatting.</source>
+        <target>Doda osnovno oblikovanje elementov obrazca in gumbov.</target>
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.0">
         <source>Basic icons</source>
@@ -218,12 +219,11 @@
         <target>Tu lahko določite privzeto gostoto pikslov, npr. &lt;em&gt;1x, 1.5x, 2x&lt;/ em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
-        <target>Vključeni moduli</target>
+        <source>Included elements</source>
+        <target>Vključeni elementi</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>V kolikor imate izklopljen JavaScript, se prepričajte, da ste shranili spremembe, preden se lotite preurejanja vrstnega reda.</target>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -370,8 +370,8 @@
         <target>Prosimo, izberite poravnavo na strani.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
-        <target>Naziv</target>
+        <source>Title and type</source>
+        <target>Naslov in tip</target>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -395,10 +395,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.feed_legend">
         <source>Feeds</source>
+        <target>Viri (feeds)</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
-        <target>Moduli na spletnem mestu</target>
+        <source>Include settings</source>
+        <target>Vključi nastavitve</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -420,13 +421,16 @@
         <source>MooTools</source>
         <target>MooTools</target>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Default layout</source>
+        <target>Privzeta postavitev</target>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
         <target>HTML</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.edit_styles">
-        <source>Edit the style sheets</source>
-        <target>Uredite slogovne predloge</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>
@@ -440,33 +444,37 @@
         <source>Matomo</source>
         <target>Matomo</target>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-        <target>Nov</target>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
         <target>Ustvari novo postavitev strani</target>
       </trans-unit>
-      <trans-unit id="tl_layout.show">
+      <trans-unit id="tl_layout.show.1">
         <source>Show the details of page layout ID %s</source>
         <target>Prikaži podrobnosti postavitve strani %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit">
+      <trans-unit id="tl_layout.versions.1">
+        <source>Show the versions of page layout ID %s</source>
+        <target>Prikaži različice postavitve strani z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.edit.1">
         <source>Edit page layout ID %s</source>
         <target>Uredi postavitev strani z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.copy">
-        <source>Duplicate page layout ID %s</source>
-        <target>Podvoji postavitev strani z ID %s</target>
+      <trans-unit id="tl_layout.copy.1">
+        <source>Copy page layout ID %s</source>
+        <target>Kopiraj postavitev strani z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.cut">
+      <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>
         <target>Premakni postavitev strani z ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_layout.delete">
+      <trans-unit id="tl_layout.delete.1">
         <source>Delete page layout ID %s</source>
         <target>Izbriši postavitev strani z ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_layout.tableLabel">
+        <source>Layout</source>
+        <target>Postavitev</target>
       </trans-unit>
     </body>
   </file>

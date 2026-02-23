@@ -1,6 +1,0 @@
-{% trans_default_domain 'contao_default' %}
-<nav aria-label="{{ 'MSC.headerNavigation'|trans }}">
-    <a href="{{ app.request.requestUri }}#skipHeaderNav" class="invisible">{{ 'MSC.skipNavigation'|trans }}</a>
-    {{ knp_menu_render('be_header_menu', {'allow_safe_labels': true}) }}
-    <span id="skipHeaderNav" class="invisible"></span>
-</nav>

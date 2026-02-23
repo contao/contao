@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Util\ProcessUtil;
+use Doctrine\DBAL\Connection;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -37,6 +38,7 @@ class SuperviseWorkersCommand extends Command
     public function __construct(
         private readonly ContainerInterface $messengerTransportLocator,
         private readonly ProcessUtil $processUtil,
+        private readonly Connection $connection,
         private Supervisor $supervisor,
         private readonly array $workers,
     ) {
@@ -50,6 +52,10 @@ class SuperviseWorkersCommand extends Command
         foreach ($this->workers as $k => $worker) {
             $this->supervisor = $this->supervisor->withCommand($this->createCommandForWorker('worker-'.($k + 1), $worker));
         }
+
+        // Close the database connection if it was opened by some other service to
+        // free connections.
+        $this->connection->close();
 
         $io->info('Starting to supervise workers for a minute.');
         $this->supervisor->supervise();

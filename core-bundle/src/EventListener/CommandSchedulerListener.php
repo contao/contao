@@ -52,12 +52,12 @@ class CommandSchedulerListener
             return false;
         }
 
-        // Without the DB table, the cron framework cannot work
-        if (!$this->canRunDbQuery()) {
+        if ($this->autoMode && $this->cron->hasMinutelyCliCron()) {
             return false;
         }
 
-        if ($this->autoMode && $this->cron->hasMinutelyCliCron()) {
+        // Without the DB table, the cron framework cannot work
+        if (!$this->canRunDbQuery()) {
             return false;
         }
 

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\LoginController;
 use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
@@ -19,8 +20,13 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ModuleLogin::class, LoginController::class);
+
 /**
  * Front end module "login".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\LoginController instead.
  */
 class ModuleLogin extends Module
 {
@@ -71,7 +77,7 @@ class ModuleLogin extends Module
 
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
-		if ($request?->isMethod('POST'))
+		if ($request?->isMethod('POST') && $request->request->get('FORM_SUBMIT') === 'tl_login_' . $this->id)
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}

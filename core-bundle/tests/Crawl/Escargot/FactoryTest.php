@@ -31,19 +31,19 @@ class FactoryTest extends TestCase
 {
     public function testHandlesSubscribersCorrectly(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
-        $subscriber2 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber2 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber2
             ->method('getName')
             ->willReturn('subscriber-2')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack());
         $factory->addSubscriber($subscriber1);
         $factory->addSubscriber($subscriber2);
 
@@ -56,15 +56,15 @@ class FactoryTest extends TestCase
 
     public function testBuildsUriCollectionsCorrectly(): void
     {
-        $rootPage = $this->createMock(PageModel::class);
+        $rootPage = $this->createStub(PageModel::class);
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
+        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage])
         ;
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
             ->with($rootPage, [], UrlGeneratorInterface::ABSOLUTE_URL)
@@ -72,8 +72,8 @@ class FactoryTest extends TestCase
         ;
 
         $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
             ['https://example.com'],
@@ -92,13 +92,16 @@ class FactoryTest extends TestCase
 
     public function testCreatesEscargotCorrectlyWithNewJobId(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (array $defaultOptions) => $mockClient;
+
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
         $factory->addSubscriber($subscriber1);
 
         $uriCollection = new BaseUriCollection([new Uri('https://contao.org')]);
@@ -115,13 +118,16 @@ class FactoryTest extends TestCase
 
     public function testCreatesEscargotCorrectlyWithExistingJobId(): void
     {
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
-        $factory = new Factory($this->createMock(Connection::class), $this->mockContaoFramework(), $this->createMock(ContentUrlGenerator::class), new RequestStack());
+        $mockClient = new MockHttpClient();
+        $clientFactory = static fn (array $defaultOptions) => $mockClient;
+
+        $factory = new Factory($this->createStub(Connection::class), $this->createContaoFrameworkStub(), $this->createStub(ContentUrlGenerator::class), new RequestStack(), [], [], $clientFactory);
         $factory->addSubscriber($subscriber1);
 
         $queue = new InMemoryQueue();
@@ -170,30 +176,30 @@ class FactoryTest extends TestCase
         $mockClient = new MockHttpClient($expectedRequests);
         $clientFactory = static fn (array $defaultOptions) => $mockClient;
 
-        $rootPage1 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.org']);
-        $rootPage2 = $this->mockClassWithProperties(PageModel::class, ['dns' => 'contao.de']);
+        $rootPage1 = $this->createClassWithPropertiesStub(PageModel::class, ['dns' => 'contao.org']);
+        $rootPage2 = $this->createClassWithPropertiesStub(PageModel::class, ['dns' => 'contao.de']);
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $urlGenerator
             ->method('generate')
             ->willReturnCallback(static fn (PageModel $rootPage) => 'https://'.$rootPage->dns)
         ;
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
+        $pageModelAdapter = $this->createAdapterStub(['findPublishedRootPages']);
         $pageModelAdapter
             ->method('findPublishedRootPages')
             ->willReturn([$rootPage1, $rootPage2])
         ;
 
-        $subscriber1 = $this->createMock(EscargotSubscriberInterface::class);
+        $subscriber1 = $this->createStub(EscargotSubscriberInterface::class);
         $subscriber1
             ->method('getName')
             ->willReturn('subscriber-1')
         ;
 
         $factory = new Factory(
-            $this->createMock(Connection::class),
-            $this->mockContaoFramework([PageModel::class => $pageModelAdapter]),
+            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([PageModel::class => $pageModelAdapter]),
             $urlGenerator,
             new RequestStack(),
             ['https://www.foreign-domain.com'],

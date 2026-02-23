@@ -23,6 +23,9 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 {
     private readonly PropertyAccessor $propertyAccessor;
 
+    /**
+     * @internal
+     */
     public function __construct()
     {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
@@ -46,7 +49,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
             function (array $itemConfig): PictureConfigurationItem {
                 $sizeItem = $this->createPictureConfigurationItem($itemConfig);
 
-                if (!empty($itemConfig)) {
+                if ([] !== $itemConfig) {
                     $this->throwInvalidArgumentException($itemConfig, 'items');
                 }
 
@@ -60,7 +63,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         // Apply remaining data to root config
         $this->applyConfiguration($pictureConfiguration, $config);
 
-        if (!empty($config)) {
+        if ([] !== $config) {
             $this->throwInvalidArgumentException($config);
         }
 

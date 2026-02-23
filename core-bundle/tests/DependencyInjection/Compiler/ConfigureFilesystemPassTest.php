@@ -19,6 +19,7 @@ use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\Fixtures\Filesystem\FilesystemConfiguringExtension;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -48,7 +49,7 @@ class ConfigureFilesystemPassTest extends TestCase
 
     public function testCallsExtensionsToConfigureTheFilesystem(): void
     {
-        $container = $this->createMock(ContainerBuilder::class);
+        $container = $this->createStub(ContainerBuilder::class);
         $container
             ->method('getParameterBag')
             ->willReturn(new ParameterBag([
@@ -76,7 +77,7 @@ class ConfigureFilesystemPassTest extends TestCase
             $configureFilesystemExtensions[] = $extension;
         }
 
-        $regularExtension = $this->createMock(ExtensionInterface::class);
+        $regularExtension = $this->createStub(ExtensionInterface::class);
 
         $container
             ->method('getExtensions')
@@ -90,9 +91,7 @@ class ConfigureFilesystemPassTest extends TestCase
         (new ConfigureFilesystemPass())->process($container);
     }
 
-    /**
-     * @dataProvider provideSymlinks
-     */
+    #[DataProvider('provideSymlinks')]
     public function testCreatesMountsForSymlinks(string $target, string $link): void
     {
         $tempDir = $this->getTempDir();
@@ -231,6 +230,8 @@ class ConfigureFilesystemPassTest extends TestCase
             Process::fromShellCommandline($command, $cwd)->mustRun(null, ['link' => $link, 'target' => $target]);
         } else {
             chdir($cwd);
+
+            /** @phpstan-ignore filesystemcall.unsafe */
             symlink($target, $link);
         }
     }

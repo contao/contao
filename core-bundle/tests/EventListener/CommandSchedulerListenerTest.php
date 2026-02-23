@@ -18,7 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -95,7 +95,7 @@ class CommandSchedulerListenerTest extends TestCase
         $pathInfo = $ref->getProperty('pathInfo');
         $pathInfo->setValue($request, '/foo/_fragment/bar');
 
-        $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
+        $event = new TerminateEvent($this->createStub(KernelInterface::class), $request, new Response());
 
         $listener = new CommandSchedulerListener($cron, $this->mockConnection());
         $listener($event);
@@ -109,25 +109,25 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('run')
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('isConnected')
-            ->willThrowException($this->createMock(DriverException::class))
+            ->willThrowException($this->createStub(DriverException::class))
         ;
 
         $listener = new CommandSchedulerListener($cron, $connection);
         $listener($this->getTerminateEvent('contao_backend'));
     }
 
-    private function mockConnection(): Connection&MockObject
+    private function mockConnection(): Connection&Stub
     {
-        $schemaManager = $this->createMock(MySQLSchemaManager::class);
+        $schemaManager = $this->createStub(MySQLSchemaManager::class);
         $schemaManager
             ->method('tablesExist')
             ->willReturn(true)
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createStub(Connection::class);
         $connection
             ->method('isConnected')
             ->willReturn(true)
@@ -149,6 +149,6 @@ class CommandSchedulerListenerTest extends TestCase
             $request->attributes->set('_route', $route);
         }
 
-        return new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
+        return new TerminateEvent($this->createStub(KernelInterface::class), $request, new Response());
     }
 }

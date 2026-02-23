@@ -83,77 +83,50 @@ class SectionWizard extends Widget
 	 */
 	public function generate()
 	{
-		$arrButtons = array('copy', 'delete', 'drag');
-
 		// Make sure there is at least an empty array
 		if (!\is_array($this->varValue) || !$this->varValue[0])
 		{
 			$this->varValue = array(array(''));
 		}
 
-		// Add the label and the return wizard
-		$return = '<table id="ctrl_' . $this->strId . '" class="tl_sectionwizard">
-  <thead>
-  <tr>
-    <th>' . $GLOBALS['TL_LANG']['MSC']['sw_title'] . '</th>
-    <th>' . $GLOBALS['TL_LANG']['MSC']['sw_id'] . '</th>
-    <th>' . $GLOBALS['TL_LANG']['MSC']['sw_template'] . '</th>
-    <th>' . $GLOBALS['TL_LANG']['MSC']['sw_position'] . '</th>
-    <th></th>
-  </tr>
-  </thead>
-  <tbody class="sortable">';
+		$rows = array();
 
-		// Add the input fields
+		// Compile rows
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
-			$return .= '
-    <tr>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][title]" id="' . $this->strId . '_title_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['title'] ?? '') . '"></td>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][id]" id="' . $this->strId . '_id_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['id'] ?? '') . '"></td>';
+			$templateOptions = array();
 
-			$options = '';
-
-			// Add the template
-			foreach (Controller::getTemplateGroup('block_section') as $k=>$v)
+			foreach (Controller::getTemplateGroup('block_section') as $k => $v)
 			{
-				$options .= '<option value="' . self::specialcharsValue($k) . '"' . static::optionSelected($k, $this->varValue[$i]['template'] ?? null) . '>' . $v . '</option>';
+				$templateOptions[] = array(
+					'value' => self::specialcharsValue($k),
+					'label' => $v,
+					'selected' => '' !== static::optionSelected($k, $this->varValue[$i]['template'] ?? null),
+				);
 			}
 
-			$return .= '
-    <td><select name="' . $this->strId . '[' . $i . '][template]" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>';
+			$positionOptions = array();
 
-			$options = '';
-
-			// Add the positions
 			foreach (array('top', 'before', 'main', 'after', 'bottom', 'manual') as $v)
 			{
-				$options .= '<option value="' . self::specialcharsValue($v) . '"' . static::optionSelected($v, $this->varValue[$i]['position'] ?? null) . '>' . $GLOBALS['TL_LANG']['SECTIONS'][$v] . '</option>';
+				$positionOptions[] = array(
+					'value' => self::specialcharsValue($v),
+					'label' => $GLOBALS['TL_LANG']['SECTIONS'][$v],
+					'selected' => '' !== static::optionSelected($v, $this->varValue[$i]['position'] ?? null),
+				);
 			}
 
-			$return .= '
-    <td><select name="' . $this->strId . '[' . $i . '][position]" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
-    <td class="tl_right">';
-
-			// Add the buttons
-			foreach ($arrButtons as $button)
-			{
-				if ($button == 'drag')
-				{
-					$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
-				}
-				else
-				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
-				}
-			}
-
-			$return .= '</td>
-  </tr>';
+			$rows[] = array(
+				'title' => self::specialcharsValue($this->varValue[$i]['title'] ?? ''),
+				'id' => self::specialcharsValue($this->varValue[$i]['id'] ?? ''),
+				'template_options' => $templateOptions,
+				'position_options' => $positionOptions,
+			);
 		}
 
-		return $return . '
-  </tbody>
-  </table>';
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/section_wizard.html.twig', array(
+			'id' => $this->strId,
+			'rows' => $rows,
+		));
 	}
 }

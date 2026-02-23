@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\TextController;
 use Contao\StringUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class TextControllerTest extends ContentElementTestCase
 {
@@ -39,9 +40,7 @@ class TextControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    /**
-     * @dataProvider provideMediaPositions
-     */
+    #[DataProvider('provideMediaPositions')]
     public function testOutputsTextWithImage(string $floatingProperty, string $classes, bool $imageAfterText = false): void
     {
         $response = $this->renderWithModelData(

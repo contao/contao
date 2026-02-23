@@ -1,0 +1,41 @@
+{{ messages|raw }}
+
+<div id="tl_buttons">
+    <a href="{{ backUrl }}" class="header_back" title="{{ backBTTitle }}" accesskey="b">{{ backBT }}</a>
+</div>
+
+<form id="{{ formId }}" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
+    <div class="tl_formbody_edit">
+        <input type="hidden" name="FORM_SUBMIT" value="{{ formId }}">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+        <input type="hidden" name="MAX_FILE_SIZE" value="{{ fileMaxSize }}">
+
+        <fieldset class="tl_tbox nolegend">
+            <div class="widget w50">
+                <h3><label for="separator">{{ separatorLabel }}</label></h3>
+                <select name="separator" id="separator" class="tl_select" data-action="focus->contao--scroll-offset#store">
+                    {% for separator in separators %}
+                        <option value="{{ separator.value }}">{{ separator.label }}</option>
+                    {% endfor %}
+                </select>
+                {% if separatorHelp|default %}
+                    <p class="tl_help tl_tip">{{ separatorHelp }}</p>
+                {% endif %}
+            </div>
+
+            <div class="widget clr">
+                <h3>{{ sourceLabel }}</h3>
+                {{ uploader|raw }}
+                {% if sourceLabelHelp|default %}
+                    <p class="tl_help tl_tip">{{ sourceLabelHelp }}</p>
+                {% endif %}
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="tl_formbody_submit" data-controller="contao--sticky-observer">
+        <div class="tl_submit_container">
+            <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">{{ submitLabel }}</button>
+        </div>
+    </div>
+</form>

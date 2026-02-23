@@ -3,9 +3,9 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['input'];
 
-    delete () {
-        this.inputTargets.forEach((input) => {
+    delete() {
+        for (const input of this.inputTargets) {
             input.value = '';
-        })
+        }
     }
 }

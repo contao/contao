@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
+use Contao\ArrayUtil;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
@@ -26,16 +27,19 @@ class FormInsertTag
     {
     }
 
-    #[AsInsertTag('form_session_data', asFragment: true)]
+    #[AsInsertTag('form_session_data')]
     public function replaceSessionData(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        return new InsertTagResult(
-            $this->requestStack->getCurrentRequest()?->getSession()->get(Form::SESSION_KEY)?->getValue()[$insertTag->getParameters()->get(0)] ?? '',
-            OutputType::text,
-        );
+        $value = $this->requestStack->getCurrentRequest()?->getSession()->get(Form::SESSION_KEY)?->getValue()[$insertTag->getParameters()->get(0)] ?? '';
+
+        if (\is_array($value)) {
+            $value = ArrayUtil::flattenToString($value);
+        }
+
+        return new InsertTagResult($value, OutputType::text);
     }
 
-    #[AsInsertTag('form_confirmation', asFragment: true)]
+    #[AsInsertTag('form_confirmation')]
     public function replaceConfirmation(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $message = '';

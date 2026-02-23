@@ -44,8 +44,8 @@ class NewsletterChannelAccessVoter extends AbstractDataContainerVoter
         return match (true) {
             $action instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS]),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], $action->getCurrentId())
+            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], (int) $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], (int) $action->getCurrentId())
                 && $this->accessDecisionManager->decide($token, [ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS]),
         };
     }

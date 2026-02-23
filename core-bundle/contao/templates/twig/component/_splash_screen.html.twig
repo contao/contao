@@ -21,7 +21,7 @@
         @var \Contao\CoreBundle\String\HtmlAttributes splash_button_attributes
 #}
 
-{% trans_default_domain "contao_default" %}
+{% trans_default_domain 'contao_default' %}
 
 {% block splash_screen_component %}
     {% set splash_button_attributes = attrs()
@@ -41,7 +41,7 @@
     </button>
 
     {% block splash_screen_script %}
-        {% add "splash_screen_script" to body %}
+        {% add 'splash_screen_script' to body %}
             {% set script_attributes = attrs()
                 .setIfExists('nonce', csp_nonce('script-src'))
                 .mergeWith(script_attributes|default)

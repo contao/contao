@@ -10,8 +10,15 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\ChangePasswordController;
+
+trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s" is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ModuleChangePassword::class, ChangePasswordController::class);
+
 /**
  * Front end module "change password".
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\ChangePasswordController instead.
  */
 class ModuleChangePassword extends Module
 {
@@ -167,6 +174,14 @@ class ModuleChangePassword extends Module
 			$objMember->tstamp = time();
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();
+
+			// Delete unconfirmed "change password" tokens
+			$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+			foreach ($models ?? array() as $model)
+			{
+				$model->delete();
+			}
 
 			// Create a new version
 			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)

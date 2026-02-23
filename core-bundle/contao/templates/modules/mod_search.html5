@@ -6,7 +6,7 @@
     <div class="formbody">
       <div class="widget widget-text">
         <label for="ctrl_keywords_<?= $this->uniqueId ?>" class="invisible"><?= $this->keywordLabel ?></label>
-        <input type="search" name="keywords" id="ctrl_keywords_<?= $this->uniqueId ?>" class="text" value="<?= $this->keyword ?>">
+        <input type="search" name="keywords" id="ctrl_keywords_<?= $this->uniqueId ?>" class="text" value="<?= $this->keyword ?>" spellcheck="false">
       </div>
       <div class="widget widget-submit">
         <button type="submit" id="ctrl_submit_<?= $this->uniqueId ?>" class="submit"><?= $this->search ?></button>

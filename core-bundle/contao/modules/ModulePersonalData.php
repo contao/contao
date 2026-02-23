@@ -158,7 +158,7 @@ class ModulePersonalData extends Module
 			}
 
 			/** @var class-string<Widget> $strClass */
-			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
+			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? ''] ?? null;
 
 			// Continue if the class does not exist
 			if (!($arrData['eval']['feEditable'] ?? null) || !class_exists($strClass))
@@ -312,6 +312,17 @@ class ModulePersonalData extends Module
 						if (\in_array($field, array('username', 'password')))
 						{
 							$migrateSession = true;
+						}
+
+						if ($field == 'password')
+						{
+							// Delete unconfirmed "change password" tokens
+							$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+							foreach ($models ?? array() as $model)
+							{
+								$model->delete();
+							}
 						}
 					}
 				}

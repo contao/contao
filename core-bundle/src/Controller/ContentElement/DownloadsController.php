@@ -46,12 +46,16 @@ class DownloadsController extends AbstractDownloadContentElementController
         }
 
         $template->set('sort_mode', $sortMode);
-        $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
+        $template->set('randomize_order', 'random' === $model->sortBy);
 
         $downloads = $this->compileDownloadsList($filesystemItems, $model, $request);
 
         // Explicitly define title/text metadata for a single file
         if ('download' === $model->type && $model->overwriteLink && $downloads) {
+            if ($model->titleText) {
+                trigger_deprecation('contao/core-bundle', '5.3', 'Setting a download title attribute is deprecated and will no longer work in Contao 6.');
+            }
+
             $downloads[0]['title'] = $model->titleText;
             $downloads[0]['text'] = $model->linkTitle;
         }
@@ -88,8 +92,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         // Optionally filter out files without metadata
         if ('downloads' === $model->type && $model->metaIgnore) {
             $filesystemItems = $filesystemItems->filter(
-                static fn (FilesystemItem $item): bool => null !== ($metadata = $item->getExtraMetadata()['metadata'] ?? null)
-                    && null !== $metadata->getDefault(),
+                static fn (FilesystemItem $item): bool => (bool) $item->getExtraMetadata()->getLocalized()?->getDefault(),
             );
         }
 

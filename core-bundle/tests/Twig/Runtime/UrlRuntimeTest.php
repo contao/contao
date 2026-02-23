@@ -21,8 +21,7 @@ class UrlRuntimeTest extends TestCase
 {
     public function testPrefixesRelativeUrls(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $requestStack = new RequestStack([new Request()]);
 
         $runtime = new UrlRuntime($requestStack);
 
@@ -35,8 +34,7 @@ class UrlRuntimeTest extends TestCase
         $request->server->set('SCRIPT_NAME', '/managed-edition/public/index.php');
         $request->server->set('SCRIPT_FILENAME', '/managed-edition/public/index.php');
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $runtime = new UrlRuntime($requestStack);
 
@@ -54,8 +52,7 @@ class UrlRuntimeTest extends TestCase
     {
         $request = new Request();
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack = new RequestStack([$request]);
 
         $runtime = new UrlRuntime($requestStack);
 
