@@ -34,8 +34,7 @@ class RegularPageControllerTest extends TestCase
         $layoutAdapter
             ->expects($this->once())
             ->method('findById')
-            ->with(1)
-            ->willReturn($layout)
+            ->willReturnMap([[1, $layout]])
         ;
 
         $frontendIndex = $this->createMock(FrontendIndex::class);

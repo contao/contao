@@ -18,13 +18,14 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter;
+use Contao\CoreBundle\Security\Voter\DataContainer\PreviewVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class FavoritesVoterTest extends TestCase
+class PreviewVoterTest extends TestCase
 {
     public function testVoter(): void
     {
@@ -37,9 +38,9 @@ class FavoritesVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new FavoritesVoter();
+        $voter = new PreviewVoter($this->createStub(AccessDecisionManagerInterface::class));
 
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_favorites'));
+        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_preview_link'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
         $this->assertTrue($voter->supportsType(ReadAction::class));
         $this->assertTrue($voter->supportsType(UpdateAction::class));
@@ -61,8 +62,8 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction('tl_favorites', ['user' => 2]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+                new ReadAction('tl_preview_link', ['createdBy' => 2]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_preview_link'],
             ),
         );
 
@@ -71,8 +72,8 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('tl_favorites', ['user' => 3]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+                new ReadAction('tl_preview_link', ['createdBy' => 3]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_preview_link'],
             ),
         );
     }
@@ -88,14 +89,14 @@ class FavoritesVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $voter = new FavoritesVoter();
+        $voter = new PreviewVoter($this->createStub(AccessDecisionManagerInterface::class));
 
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('tl_favorites', ['user' => 2]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
+                new ReadAction('tl_preview_link', ['user' => 2]),
+                [ContaoCorePermissions::DC_PREFIX.'tl_preview_link'],
             ),
         );
     }

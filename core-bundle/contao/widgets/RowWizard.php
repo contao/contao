@@ -187,7 +187,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
@@ -197,7 +197,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
