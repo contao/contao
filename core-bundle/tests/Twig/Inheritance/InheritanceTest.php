@@ -121,7 +121,6 @@ class InheritanceTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );

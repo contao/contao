@@ -362,7 +362,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -409,7 +408,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             $projectDir,
         );
@@ -553,7 +551,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -591,7 +588,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator1,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -621,7 +617,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator2,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -658,7 +653,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -711,7 +705,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             '/',
         );
@@ -757,7 +750,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );
