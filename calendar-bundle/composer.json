@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "contao/core-bundle": "self.version",
         "php-feed-io/feed-io": "^6.0",
         "friendsofsymfony/http-cache": "^3.0",

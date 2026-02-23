@@ -331,13 +331,6 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
-    contao.doctrine.orm.fail_tolerant_proxy_cache_warmer:
-        class: Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer
-        decorates: doctrine.orm.proxy_cache_warmer
-        arguments:
-            - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
-            - '@database_connection'
-
     contao.doctrine.schema.mysql_innodb_row_size_calculator:
         class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
         arguments:
