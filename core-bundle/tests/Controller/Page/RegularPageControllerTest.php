@@ -20,7 +20,7 @@ use Contao\FrontendIndex;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegularPageControllerTest extends TestCase
