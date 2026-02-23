@@ -22,7 +22,6 @@ use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\Template;
-use Contao\TemplateLoader;
 use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +46,7 @@ class RootPageDependentModulesControllerTest extends TestCase
     {
         unset($GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([TemplateLoader::class, System::class, Config::class]);
+        $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();
     }

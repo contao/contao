@@ -26,7 +26,6 @@ use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
 use Contao\System;
-use Contao\TemplateLoader;
 use Highlight\Highlighter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
@@ -56,8 +55,6 @@ class TwigIntegrationTest extends TestCase
     protected function tearDown(): void
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
-
-        TemplateLoader::reset();
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
 

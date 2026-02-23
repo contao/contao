@@ -26,7 +26,6 @@ use Contao\FilesModel;
 use Contao\Model;
 use Contao\Model\MetadataTrait;
 use Contao\System;
-use Contao\TemplateLoader;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -57,7 +56,6 @@ class MetadataTest extends TestCase
             DcaExtractor::class,
             DcaLoader::class,
             System::class,
-            TemplateLoader::class,
         ]);
 
         parent::tearDown();

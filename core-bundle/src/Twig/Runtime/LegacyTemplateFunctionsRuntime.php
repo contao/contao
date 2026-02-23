@@ -55,7 +55,7 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
         }
 
         // Return if the section is empty (see #1115)
-        if ($matches === []) {
+        if ([] === $matches) {
             return '';
         }
 
