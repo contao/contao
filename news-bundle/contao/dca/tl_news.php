@@ -21,6 +21,7 @@ use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 System::loadLanguageFile('tl_content');
 
@@ -119,17 +120,17 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_news_archive.title',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'headline' => array
 		(
@@ -138,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'featured' => array
 		(
@@ -146,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'alias' => array
 		(
@@ -157,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'generateAlias')
 			),
-			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'author' => array
 		(
@@ -167,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'date' => array
@@ -182,7 +183,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'loadDate')
 			),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'time' => array
 		(
@@ -194,14 +195,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				array('tl_news', 'loadTime')
 			),
-			'sql'                     => "int(10) NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'default'=>0)
 		),
 		'pageTitle' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'robots' => array
 		(
@@ -209,14 +210,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'description' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'serpPreview' => array
 		(
@@ -230,41 +231,41 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'subheadline' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'teaser' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addImage' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'overwriteMeta' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'singleSRC' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%', 'mandatory'=>true),
-			'sql'                     => "binary(16) NULL"
+			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
 		),
 		'alt' => array
 		(
@@ -272,7 +273,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'imageTitle' => array
 		(
@@ -280,7 +281,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'size' => array
 		(
@@ -297,14 +298,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'fullsize' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['fullsize'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'caption' => array
 		(
@@ -312,7 +313,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'floating' => array
 		(
@@ -321,19 +322,19 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(12) NOT NULL default 'above'"
+			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'above')
 		),
 		'addEnclosure' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'enclosure' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'source' => array
 		(
@@ -342,21 +343,21 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'options_callback'        => array('tl_news', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news'],
 			'eval'                    => array('submitOnChange'=>true, 'helpwizard'=>true),
-			'sql'                     => "varchar(12) NOT NULL default 'default'"
+			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'default')
 		),
 		'linkText' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'jumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'articleId' => array
@@ -364,7 +365,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'picker',
 			'foreignKey'              => 'tl_article.title',
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
 		),
 		'url' => array
@@ -373,20 +374,20 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		),
 		'target' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'cssClass' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'searchIndexer' => array
 		(
@@ -396,7 +397,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'options'                 => array('always_index', 'never_index'),
 			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'published' => array
 		(
@@ -405,19 +406,19 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		)
 	)
 );
@@ -456,7 +457,7 @@ class tl_news extends Backend
 		{
 			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->headline, NewsArchiveModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
-		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		elseif (preg_match('/^[1-9]d*$/', $varValue))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}

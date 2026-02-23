@@ -69,15 +69,13 @@ class PaletteBuilderTest extends TestCase
         $dataContainer = $this->createStub(DC_Table::class);
         $dataContainer
             ->method('getCurrentRecord')
-            ->with(42, 'tl_foo')
-            ->willReturn($currentRecord)
+            ->willReturnMap([[42, 'tl_foo', $currentRecord]])
         ;
 
         $inputAdapter = $this->createAdapterStub(['get', 'post']);
         $inputAdapter
             ->method('get')
-            ->with('act')
-            ->willReturn($editAll ? 'editAll' : 'edit')
+            ->willReturnMap([['act', $editAll ? 'editAll' : 'edit']])
         ;
 
         $inputAdapter

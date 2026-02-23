@@ -25,7 +25,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
-use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -76,34 +75,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame('onKernelRequest', $events['kernel.request'][0][0]);
         $this->assertSame(32, $events['kernel.request'][0][1]);
-    }
-
-    public function testRegistersTheMakeResponsePrivateListenerAtTheEnd(): void
-    {
-        $container = $this->getContainerBuilder();
-
-        $makeResponsePrivateDefinition = $container->getDefinition('contao.listener.make_response_private');
-        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getMethod('makeResponsePrivate')->getAttributes()[0];
-        $makeResponsePrivatePriority = $attribute->getArguments()['priority'];
-
-        $mergeHeadersListenerDefinition = $container->getDefinition('contao.listener.merge_http_headers');
-        $attribute = (new \ReflectionClass($mergeHeadersListenerDefinition->getClass()))->getAttributes()[0];
-        $mergeHeadersListenerPriority = $attribute->getArguments()['priority'];
-
-        // Ensure that the listener is registered after the MergeHeaderListener
-        $this->assertTrue($makeResponsePrivatePriority < $mergeHeadersListenerPriority);
-
-        $clearSessionDataListenerDefinition = $container->getDefinition('contao.listener.clear_session_data');
-        $attribute = (new \ReflectionClass($clearSessionDataListenerDefinition->getClass()))->getAttributes()[0];
-        $clearSessionDataListenerPriority = $attribute->getArguments()['priority'];
-
-        // Ensure that the listener is registered after the ClearSessionDataListener
-        $this->assertTrue($makeResponsePrivatePriority < $clearSessionDataListenerPriority);
-
-        $csrfCookieListenerPriority = CsrfTokenCookieSubscriber::getSubscribedEvents()['kernel.response'][1] ?? 0;
-
-        // Ensure that the listener is registered after the CsrfTokenCookieSubscriber
-        $this->assertTrue($makeResponsePrivatePriority < (int) $csrfCookieListenerPriority);
     }
 
     public function testRegistersTheSecurityTokenCheckerWithRoleHierarchyVoter(): void

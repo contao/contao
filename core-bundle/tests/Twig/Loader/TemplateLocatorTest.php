@@ -258,8 +258,7 @@ class TemplateLocatorTest extends TestCase
         $resourceFinder = $this->createStub(ResourceFinder::class);
         $resourceFinder
             ->method('getExistingSubpaths')
-            ->with('templates')
-            ->willReturn($paths)
+            ->willReturnMap([['templates', $paths]])
         ;
 
         return new TemplateLocator($projectDir, $resourceFinder, new ThemeNamespace(), $connection);

@@ -29,15 +29,15 @@ $GLOBALS['TL_DCA']['tl_search_term'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'term' => array
 		(
-			'sql'                     => "varchar(64) BINARY NOT NULL"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'documentFrequency' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true)
 		)
 	)
 );

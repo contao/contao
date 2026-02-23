@@ -557,6 +557,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = array_intersect($allowedFields, $fields);
 		$db = Database::getInstance();
 		$virtualTargets = DcaExtractor::getInstance($this->strTable)->getVirtualTargets();
+		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
 
 		// Show all allowed fields
 		foreach ($fields as $i)
@@ -566,119 +567,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				continue;
 			}
 
-			$value = StringUtil::deserialize($row[$i]);
+			$row[$i] = $valueFormatter->format($this->strTable, $i, $row[$i], $this);
 
-			// Get the field value
-			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['foreignKey']))
+			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'textarea' && (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['allowHtml'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['preserveTags'] ?? null)))
 			{
-				$temp = array();
-				$chunks = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['foreignKey'], 2);
-
-				foreach ((array) $value as $v)
-				{
-					$objKey = $db
-						->prepare("SELECT " . Database::quoteIdentifier($chunks[1]) . " AS value FROM " . $chunks[0] . " WHERE id=?")
-						->limit(1)
-						->execute($v);
-
-					if ($objKey->numRows)
-					{
-						$temp[] = $objKey->value;
-					}
-				}
-
-				$row[$i] = implode(', ', $temp);
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'fileTree')
-			{
-				if (\is_array($value))
-				{
-					foreach ($value as $kk=>$vv)
-					{
-						if ($objFile = FilesModel::findByUuid($vv))
-						{
-							$value[$kk] = $objFile->path . ' (' . StringUtil::binToUuid($vv) . ')';
-						}
-						else
-						{
-							$value[$kk] = '';
-						}
-					}
-
-					$row[$i] = implode(', ', $value);
-				}
-				elseif ($objFile = FilesModel::findByUuid($value))
-				{
-					$row[$i] = $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
-				}
-				else
-				{
-					$row[$i] = '';
-				}
-			}
-			elseif (\is_array($value))
-			{
-				if (isset($value['value'], $value['unit']) && \count($value) == 2)
-				{
-					$row[$i] = trim($value['value'] . ', ' . $value['unit']);
-				}
-				else
-				{
-					foreach ($value as $kk=>$vv)
-					{
-						if (\is_array($vv))
-						{
-							$vals = array_values($vv);
-							$value[$kk] = array_shift($vals) . ' (' . implode(', ', array_filter($vals)) . ')';
-						}
-					}
-
-					if (ArrayUtil::isAssoc($value))
-					{
-						foreach ($value as $kk=>$vv)
-						{
-							$value[$kk] = $kk . ': ' . $vv;
-						}
-					}
-
-					$row[$i] = implode(', ', $value);
-				}
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'date')
-			{
-				$row[$i] = $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'time')
-			{
-				$row[$i] = $value ? Date::parse(Config::get('timeFormat'), $value) : '-';
-			}
-			elseif ($i == 'tstamp' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'datim' || \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
-			{
-				$row[$i] = $value ? Date::parse(Config::get('datimFormat'), $value) : '-';
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['multiple'] ?? null)))
-			{
-				$row[$i] = $value ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'email')
-			{
-				$row[$i] = Idna::decodeEmail($value);
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'textarea' && (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['allowHtml'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['preserveTags'] ?? null)))
-			{
-				$row[$i] = StringUtil::specialchars($value);
-			}
-			elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'] ?? null))
-			{
-				$row[$i] = isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) ? (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) : $row[$i];
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'] ?? null))
-			{
-				$row[$i] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'][$row[$i]] ?? null;
-			}
-			else
-			{
-				$row[$i] = $value;
+				$row[$i] = StringUtil::specialchars($row[$i]);
 			}
 
 			$label = null;
@@ -4236,8 +4129,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if ($firstOrderBy != 'sorting' && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
 				{
 					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null);
-					$remoteNew = $this->formatCurrentValue($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode);
-					$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row[$i]);
+					$group = $this->formatGroupHeader($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode, $row[$i]);
 
 					if ($group != $strGroup)
 					{
@@ -4598,7 +4490,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Process result and add label and buttons
-			$remoteCur = false;
+			$strGroup = '';
 
 			foreach ($result as $row)
 			{
@@ -4621,21 +4513,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->current[] = $row['id'];
 				$label = $this->generateRecordLabel($row, $this->strTable);
 
-				// Build the sorting groups
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) > 0)
+				// Add the group header
+				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) > 0 && !($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
 				{
 					$current = $row[$firstOrderBy];
 					$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
 					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null);
-					$remoteNew = $this->formatCurrentValue($firstOrderBy, $current, $sortingMode);
+					$group = $this->formatGroupHeader($firstOrderBy, $row[$firstOrderBy], $sortingMode, $row);
 
-					// Add the group header
-					if (($remoteNew != $remoteCur || $remoteCur === false) && !($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
+					if ($group != $strGroup)
 					{
-						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row);
-						$remoteCur = $remoteNew;
-
 						$record['group_header'] = $group;
+						$strGroup = $group;
 					}
 				}
 
@@ -5446,87 +5335,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param integer $mode
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6. Use ValueFormatter::formatGroup() instead.
 	 */
 	protected function formatCurrentValue($field, $value, $mode)
 	{
-		$remoteNew = $value; // see #3861
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "ValueFormatter::formatGroup()" instead.', __METHOD__);
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['multiple'] ?? null)))
-		{
-			$remoteNew = $value ? ucfirst($GLOBALS['TL_LANG']['MSC']['yes']) : ucfirst($GLOBALS['TL_LANG']['MSC']['no']);
-		}
-		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey']))
-		{
-			$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
+		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
 
-			$objParent = Database::getInstance()
-				->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-				->limit(1)
-				->execute($value);
-
-			if ($objParent->numRows)
-			{
-				$remoteNew = $objParent->value;
-			}
-		}
-		elseif (\in_array($mode, array(self::SORT_INITIAL_LETTER_ASC, self::SORT_INITIAL_LETTER_DESC)))
-		{
-			$remoteNew = $value ? mb_strtoupper(mb_substr($value, 0, 1)) : '-';
-		}
-		elseif (\in_array($mode, array(self::SORT_INITIAL_LETTERS_ASC, self::SORT_INITIAL_LETTERS_DESC)))
-		{
-			if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length']))
-			{
-				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'] = 2;
-			}
-
-			$remoteNew = $value ? (new UnicodeString($value))->slice(0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])->title()->toString() : '-';
-		}
-		elseif (\in_array($mode, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH)))
-		{
-			$remoteNew = $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
-		}
-		elseif (\in_array($mode, array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH)))
-		{
-			$remoteNew = $value ? date('Y-m', $value) : '-';
-			$intMonth = $value ? (date('m', $value) - 1) : '-';
-
-			if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth]))
-			{
-				$remoteNew = $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . date('Y', $value) : '-';
-			}
-		}
-		elseif (\in_array($mode, array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
-		{
-			$remoteNew = $value ? date('Y', $value) : '-';
-		}
-		else
-		{
-			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['multiple'] ?? null))
-			{
-				$remoteNew = $value ? $field : '';
-			}
-			elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['reference'] ?? null))
-			{
-				$remoteNew = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['reference'][$value] ?? null;
-			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'] ?? null))
-			{
-				$remoteNew = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$value] ?? null;
-			}
-
-			if (\is_array($remoteNew))
-			{
-				$remoteNew = $remoteNew[0];
-			}
-
-			if (empty($remoteNew))
-			{
-				$remoteNew = '-';
-			}
-		}
-
-		return $remoteNew;
+		return $valueFormatter->formatGroup($this->strTable, $field, $value, (int) $mode, $this);
 	}
 
 	/**
@@ -5541,37 +5359,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function formatGroupHeader($field, $value, $mode, $row)
 	{
-		static $lookup = array();
-
-		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'] ?? null))
-		{
-			$group = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$value] ?? null;
-		}
-		elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'] ?? null))
-		{
-			if (!isset($lookup[$field]))
-			{
-				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][0];
-				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][1];
-
-				$lookup[$field] = System::importStatic($strClass)->$strMethod($this);
-			}
-
-			$group = $lookup[$field][$value] ?? null;
-		}
-		else
-		{
-			$group = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['reference'][$value] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['reference'][$value][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['reference'][$value] ?? null);
-		}
+		$group = \is_array($GLOBALS['TL_LANG'][$this->strTable][$value] ?? null) ? $GLOBALS['TL_LANG'][$this->strTable][$value][0] : ($GLOBALS['TL_LANG'][$this->strTable][$value] ?? null);
 
 		if (empty($group))
 		{
-			$group = \is_array($GLOBALS['TL_LANG'][$this->strTable][$value] ?? null) ? $GLOBALS['TL_LANG'][$this->strTable][$value][0] : ($GLOBALS['TL_LANG'][$this->strTable][$value] ?? null);
-		}
-
-		if (empty($group))
-		{
-			$group = $value;
+			$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
+			$group = $valueFormatter->formatGroup($this->strTable, $field, $value, (int) $mode, $this);
 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['multiple'] ?? null)))
 			{
@@ -5579,7 +5372,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if ($label)
 				{
-					$group = $value == ucfirst($GLOBALS['TL_LANG']['MSC']['yes']) ? $label : \sprintf($GLOBALS['TL_LANG']['MSC']['booleanNot'], lcfirst($label));
+					$group = $value == $GLOBALS['TL_LANG']['MSC']['yes'] ? $label : \sprintf($GLOBALS['TL_LANG']['MSC']['booleanNot'], lcfirst($label));
 				}
 			}
 		}
