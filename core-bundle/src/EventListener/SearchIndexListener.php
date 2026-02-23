@@ -45,6 +45,10 @@ class SearchIndexListener
      */
     public function __invoke(TerminateEvent $event): void
     {
+        if ($this->debugMode) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         if ($response->isRedirection()) {
@@ -52,10 +56,6 @@ class SearchIndexListener
         }
 
         $request = $event->getRequest();
-
-        if ($this->debugMode) {
-            return;
-        }
 
         // Only handle GET requests (see #1194, #7240)
         if (!$request->isMethod(Request::METHOD_GET)) {
