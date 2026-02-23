@@ -248,8 +248,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
-        $this->assertSame(['https://example.com'], $definition->getArgument(4));
-        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(5));
+        $this->assertSame(['https://example.com'], $definition->getArgument(8));
+        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(9));
     }
 
     public function testConfiguresTheBackupManagerCorrectly(): void
