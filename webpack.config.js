@@ -23,7 +23,7 @@ Encore
     .cleanupOutputBeforeBuild(options => {
         options.keep = /(fonts|icons|styles)\//;
     })
-    .addStyleEntry('login', './core-bundle/assets/styles/pages/login.pcss')
+    .addStyleEntry('login', './core-bundle/assets/styles/login.pcss')
     .addStyleEntry('tinymce', './core-bundle/assets/styles/vendors/tinymce/theme/light.pcss')
     .addStyleEntry('tinymce-dark', './core-bundle/assets/styles/vendors/tinymce/theme/dark.pcss')
     .addEntry('backend', './core-bundle/assets/backend.js')
