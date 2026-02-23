@@ -119,6 +119,11 @@ class PageRegistry implements ResetInterface
         return (bool) $service;
     }
 
+    public function getPageTemplate(PageModel $pageModel): string|null
+    {
+        return $this->routeConfigs[$pageModel->type]?->getTemplate();
+    }
+
     /**
      * @return array<string>
      */

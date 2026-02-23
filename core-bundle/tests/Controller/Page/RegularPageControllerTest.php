@@ -10,14 +10,17 @@ use Contao\CoreBundle\ContentComposition\ContentCompositionBuilder;
 use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\LayoutTemplate;
+use Contao\FrontendIndex;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class RegularPageControllerTest extends TestCase
@@ -27,22 +30,30 @@ class RegularPageControllerTest extends TestCase
         $page = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 1]);
         $layout = $this->createClassWithPropertiesStub(LayoutModel::class, ['type' => 'default']);
 
-        $layoutAdapter = $this->createAdapterStub(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
+            ->expects($this->once())
             ->method('findById')
             ->with(1)
             ->willReturn($layout)
         ;
 
+        $frontendIndex = $this->createMock(FrontendIndex::class);
+        $frontendIndex
+            ->expects($this->once())
+            ->method('renderPage')
+            ->with($page)
+            ->willReturn(new Response('<alternative content>'))
+        ;
+
         $framework = $this->createContaoFrameworkStub([
             LayoutModel::class => $layoutAdapter,
+        ], [
+            FrontendIndex::class => $frontendIndex,
         ]);
-
-        $handleNonModernLayoutType = static fn (): Response => new Response('<alternative content>');
 
         $controller = $this->getRegularPageController(
             $framework,
-            $handleNonModernLayoutType,
             $this->getContentComposition(false),
         );
 
@@ -113,7 +124,7 @@ class RegularPageControllerTest extends TestCase
         ];
     }
 
-    private function getRegularPageController(ContaoFramework|null $framework = null, \Closure|null $handler = null, ContentComposition|null $contentComposition = null, CoreResponseContextFactory|null $responseContextFactory = null, ResponseContextAccessor|null $responseContextAccessor = null): RegularPageController
+    private function getRegularPageController(ContaoFramework|null $framework = null, ContentComposition|null $contentComposition = null, CoreResponseContextFactory|null $responseContextFactory = null, ResponseContextAccessor|null $responseContextAccessor = null): RegularPageController
     {
         if (!$framework) {
             $layoutAdapter = $this->createAdapterStub(['findById']);
@@ -135,16 +146,16 @@ class RegularPageControllerTest extends TestCase
             ;
         }
 
-        $controller = new RegularPageController(
-            $contentComposition ?? $this->getContentComposition(),
-            $responseContextFactory,
-            $responseContextAccessor ?? $this->createStub(ResponseContextAccessor::class),
-            $framework,
-            $handler,
-        );
+        $controller = new RegularPageController();
 
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+        $container->set('event_dispatcher', $this->createStub(EventDispatcherInterface::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor ?? $this->createStub(ResponseContextAccessor::class));
+        $container->set('contao.routing.response_context_factory', $responseContextFactory?? $this->createStub(CoreResponseContextFactory::class));
+        $container->set('contao.content_composition', $contentComposition ?? $this->getContentComposition());
+        $container->set('contao.routing.page_registry', $this->createStub(PageRegistry::class));
 
         $controller->setContainer($container);
 

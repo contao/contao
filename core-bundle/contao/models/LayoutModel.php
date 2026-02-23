@@ -19,6 +19,7 @@ use Contao\Model\Collection;
  * @property integer           $pid
  * @property integer           $tstamp
  * @property string            $name
+ * @property string            $type
  * @property string            $rows
  * @property string|array      $headerHeight
  * @property string|array      $footerHeight
