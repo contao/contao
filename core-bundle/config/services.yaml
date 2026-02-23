@@ -1444,7 +1444,6 @@ services:
             - '@cache.app'
             - '@contao.twig.loader.template_locator'
             - '@contao.twig.loader.theme_namespace'
-            - '@contao.framework'
             - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
         tags:

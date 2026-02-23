@@ -63,7 +63,6 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         private readonly CacheItemPoolInterface $cachePool,
         private readonly TemplateLocator $templateLocator,
         private readonly ThemeNamespace $themeNamespace,
-        private readonly ContaoFramework $framework,
         private readonly PageFinder $pageFinder,
         private readonly string $projectDir,
     ) {
