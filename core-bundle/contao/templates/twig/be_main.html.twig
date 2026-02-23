@@ -34,7 +34,7 @@
 %}
 
 <!DOCTYPE html>
-<html{{ rootAttributes }}>
+    <html{% block root_attributes %}{{ rootAttributes }}{% endblock %}>
 <head>
 
     {% block head %}
@@ -71,7 +71,7 @@
     {% endblock %}
 
 </head>
-<body{{ bodyAttributes }}>
+<body{% block body_attributes %}{{ bodyAttributes }}{% endblock %}>
 <a class="invisible show-on-focus" href="#main" data-turbo="false">{{ 'MSC.skipToContent'|trans }}</a>
 
 {% block header %}
@@ -102,7 +102,7 @@
 
         {% block left %}
             {% if not renderMainOnly %}
-                <aside{{ asideAttributes }}>
+                <aside{% block aside_attributes %}{{ asideAttributes }}{% endblock %}>
                     {{ menu|raw }}
                     <div class="version">
                         {% block version %}
@@ -115,7 +115,7 @@
 
         {% block main %}
             <turbo-frame id="contao-main" target="_top">
-                <main{{ mainAttributes }}>
+                <main{% block main_attributes %}{{ mainAttributes }}{% endblock %}>
                     {% block main_headline %}
                         <h1 id="main_headline">
                             {% if breadcrumb|default %}
