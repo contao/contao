@@ -20,6 +20,12 @@ Encore
             }
         };
     })
+    .cleanupOutputBeforeBuild(options => {
+        options.keep = /(fonts|icons|styles)\//;
+    })
+    .addStyleEntry('login', './core-bundle/assets/styles/pages/login.pcss')
+    .addStyleEntry('tinymce', './core-bundle/assets/styles/vendors/tinymce/theme/light.pcss')
+    .addStyleEntry('tinymce-dark', './core-bundle/assets/styles/vendors/tinymce/theme/dark.pcss')
     .addEntry('backend', './core-bundle/assets/backend.js')
     .addEntry('navigation', './core-bundle/assets/navigation.js')
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
@@ -39,58 +45,12 @@ const jsConfig = Encore.getWebpackConfig();
 
 Encore.reset();
 
-// Back end theme "flexible"
-Encore
-    .setOutputPath('core-bundle/contao/themes/flexible')
-    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible' : '/system/themes/flexible')
-    .setManifestKeyPrefix('')
-    .disableSingleRuntimeChunk()
-    .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader(options => {
-        options.postcssOptions = {
-            plugins: {
-                'postcss-preset-env': {
-                    stage: 2,
-                }
-            }
-        };
-    })
-    .configureCssLoader(options => {
-        options.url = false;
-    })
-    .cleanupOutputBeforeBuild(options => {
-        options.keep = /(fonts|icons|styles)\//;
-    })
-    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.pcss')
-    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/pages/confirm.pcss')
-    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/pages/conflict.pcss')
-    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/pages/diff.pcss')
-    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/pages/help.pcss')
-    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/pages/login.pcss')
-    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/pages/popup.pcss')
-    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/light.pcss')
-    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/dark.pcss')
-    .configureDevServerOptions(options => {
-        options.server = {
-            type: 'https',
-            options: {
-                pfx: path.join(process.env.HOME, '.symfony5/certs/default.p12')
-            }
-        };
-        options.allowedHosts = 'all';
-    })
-;
-
-const themeConfig = Encore.getWebpackConfig();
-
-Encore.reset();
-
 // Back end icons
 Encore
-    .setOutputPath('core-bundle/contao/themes/flexible/icons')
-    .setPublicPath(Encore.isDevServer() ? '/core-bundle/contao/themes/flexible/icons' : '/system/themes/flexible/icons')
+    .setOutputPath('core-bundle/public/icons')
+    .setPublicPath(Encore.isDevServer() ? '/core-bundle/public/icons' : '/bundles/contaocore/icons')
     .setManifestKeyPrefix('')
+    .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
     .addPlugin(new ImageMinimizerPlugin({
         minimizer: {
@@ -116,13 +76,9 @@ Encore
         },
     }))
     .copyFiles({
-        from: './core-bundle/contao/themes/flexible/icons',
+        from: './core-bundle/assets/icons',
         to: '[name].[ext]',
         pattern: /\.svg$/,
-    })
-    .configureWatchOptions(options => {
-        // Since we overwrite the sources, we need to prevent an endless loop.
-        options.ignored = ['**/core-bundle/contao/themes/flexible/icons'];
     })
     .configureDevServerOptions(options => {
         options.server = {
@@ -137,7 +93,6 @@ Encore
 
 const iconConfig = Encore.getWebpackConfig();
 
-delete themeConfig.devServer;
 delete iconConfig.devServer;
 
-module.exports = [jsConfig, themeConfig, iconConfig];
+module.exports = [jsConfig, iconConfig];
