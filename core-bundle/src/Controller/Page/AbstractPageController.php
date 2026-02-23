@@ -74,7 +74,7 @@ abstract class AbstractPageController extends AbstractController
             $this->container->get('contao.routing.response_context_accessor')->setResponseContext($responseContext);
         }
 
-        return $this->container->get('contao.framework')->createInstance(FrontendIndex::class)->renderPage($pageModel);
+        return $this->container->get('contao.framework')->createInstance(FrontendIndex::class)->renderLegacy($pageModel);
     }
 
     protected function handleModernLayout(PageModel $pageModel, ResponseContext|null $responseContext): Response

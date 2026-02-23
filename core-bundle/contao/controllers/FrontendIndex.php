@@ -10,14 +10,16 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\AbstractPageController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Main front end controller.
  */
-class FrontendIndex extends Frontend
+class FrontendIndex extends AbstractPageController
 {
 	/**
 	 * Render a page
@@ -28,7 +30,17 @@ class FrontendIndex extends Frontend
 	 * @throws PageNotFoundException
 	 * @throws AccessDeniedException
 	 */
-	public function renderPage(PageModel $pageModel)
+	public function renderPage(PageModel $pageModel, ResponseContext|null $responseContext = null): Response
+	{
+		@trigger_deprecation('contao/core-bundle', '5.7', 'Deprecated since Contao 5.7, use the AbstractPageController instead.');
+
+		return parent::renderPage($pageModel);
+	}
+
+	/**
+	 * @internal
+	 */
+	public function renderLegacy(PageModel $pageModel): Response
 	{
 		global $objPage;
 

@@ -41,7 +41,7 @@ class RegularPageControllerTest extends TestCase
         $frontendIndex = $this->createMock(FrontendIndex::class);
         $frontendIndex
             ->expects($this->once())
-            ->method('renderPage')
+            ->method('renderLegacy')
             ->with($page)
             ->willReturn(new Response('<alternative content>'))
         ;
