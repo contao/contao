@@ -48,6 +48,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "6.0-dev"
+        },
         "contao-manager-plugin": "Contao\\LoupeBridge\\ContaoManager\\Plugin"
     }
 }
