@@ -85,11 +85,9 @@ class SymlinksCommand extends Command
 
         $this->symlinkFiles($this->uploadPath);
         $this->symlinkModules();
-        $this->symlinkThemes();
 
-        // Symlink the assets and themes directory
+        // Symlink the assets directory
         $this->symlink('assets', Path::join($this->webDir, 'assets'));
-        $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory
         $fs->mkdir($this->logsDir); // see #8763
@@ -122,21 +120,6 @@ class SymlinksCommand extends Command
             $this->findIn(Path::join($this->projectDir, 'system/modules'))->files()->filter($filter)->name('.htaccess'),
             'system/modules',
         );
-    }
-
-    private function symlinkThemes(): void
-    {
-        $themes = $this->resourceFinder->findIn('themes')->depth(0)->directories();
-
-        foreach ($themes as $theme) {
-            $path = $this->getRelativePath($theme->getPathname());
-
-            if (Path::isBasePath('system/modules', $path)) {
-                continue;
-            }
-
-            $this->symlink($path, Path::join('system/themes', basename($path)));
-        }
     }
 
     private function createSymlinksFromFinder(Finder $finder, string $prepend): void

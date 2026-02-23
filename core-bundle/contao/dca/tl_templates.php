@@ -487,7 +487,6 @@ class tl_templates extends Backend
 		$objTemplate->from = $strCompareName;
 		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->content = $strBuffer;
-		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->host = Backend::getDecodedHostname();

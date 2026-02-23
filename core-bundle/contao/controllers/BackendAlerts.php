@@ -47,7 +47,6 @@ class BackendAlerts extends Backend
 	public function run()
 	{
 		$objTemplate = new BackendTemplate('be_alerts');
-		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['systemMessages']);
 		$objTemplate->host = Backend::getDecodedHostname();

@@ -2144,7 +2144,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
 				$objTemplate->host = Backend::getDecodedHostname();
-				$objTemplate->theme = Backend::getTheme();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->explain1 = \sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));

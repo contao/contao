@@ -44,7 +44,6 @@ class SymlinksCommandTest extends TestCase
             Path::join($this->getTempDir(), 'public'),
             Path::join($this->getTempDir(), 'system/config'),
             Path::join($this->getTempDir(), 'system/logs'),
-            Path::join($this->getTempDir(), 'system/themes'),
             Path::join($this->getTempDir(), 'var'),
         ]);
 
@@ -68,14 +67,11 @@ class SymlinksCommandTest extends TestCase
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/html +system/modules/foobar/html #', $display);
         $this->assertMatchesRegularExpression('# vendor/contao/test-bundle/Resources/contao/themes/default #', $display);
-        $this->assertMatchesRegularExpression('# system/themes/flexible +vendor/contao/test-bundle/Resources/contao/themes/flexible #', $display);
         $this->assertMatchesRegularExpression('# public/assets +assets #', $display);
-        $this->assertMatchesRegularExpression('# public/system/themes +system/themes #', $display);
         $this->assertMatchesRegularExpression('# system/logs +var/logs #', $display);
 
         $this->assertFileExists(Path::join(self::getTempDir(), 'public/files/public'));
         $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/modules/foobar'));
-        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/themes/default'));
         $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/assets'));
     }
 
