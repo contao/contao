@@ -1,9 +1,13 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "backend.css": "/bundles/contaocore/backend.732519ca.css",
 =======
   "backend.css": "/bundles/contaocore/backend.61bc5ebb.css",
 >>>>>>> 488ab4fee8 (Rebuild the assets)
+=======
+  "backend.css": "/bundles/contaocore/backend.87f96af1.css",
+>>>>>>> 00b06bf773 (Rebuild the assets)
   "backend.js": "/bundles/contaocore/backend.99869869.js",
   "navigation.css": "/bundles/contaocore/navigation.54bbedc9.css",
   "navigation.js": "/bundles/contaocore/navigation.8c222ed2.js",
@@ -18,6 +22,7 @@
   "images/arrow_left.svg": "/bundles/contaocore/images/arrow_left.42fabdc3.svg",
   "images/arrow_right--dark.svg": "/bundles/contaocore/images/arrow_right--dark.d0611da4.svg",
   "images/arrow_right.svg": "/bundles/contaocore/images/arrow_right.8a87b56c.svg",
+  "images/stop.svg": "/bundles/contaocore/images/stop.401cbefb.svg",
   "images/hints.svg": "/bundles/contaocore/images/hints.27af859f.svg",
   "images/logo--dark.svg": "/bundles/contaocore/images/logo--dark.f57d67e8.svg",
   "images/logo.svg": "/bundles/contaocore/images/logo.0bd6a1e1.svg",
