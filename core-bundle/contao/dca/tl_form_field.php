@@ -166,7 +166,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'name' => array
@@ -180,7 +180,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true, 'basicEntities'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => "text NULL"
 		),
@@ -188,13 +188,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html'),
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'basicEntities'=>true),
 			'sql'                     => "text NULL"
 		),
 		'options' => array
 		(
 			'inputType'               => 'optionWizard',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true),
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'basicEntities'=>true),
 			'xlabel' => array
 			(
 				array('tl_form_field', 'optionImportWizard')
@@ -219,7 +219,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'customRgxp' => array
@@ -232,7 +232,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'minlength' => array
@@ -340,7 +340,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'accesskey' => array
