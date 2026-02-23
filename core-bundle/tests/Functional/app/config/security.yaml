@@ -54,6 +54,11 @@ security:
             logout:
                 path: contao_frontend_logout
 
+            login_link:
+                check_route: contao_frontend_login_link
+                signature_properties: [ username, lastLogin ]
+                success_handler: contao.security.authentication_success_handler
+
     access_control:
         - { path: ^%contao.backend.route_prefix%/login$, roles: PUBLIC_ACCESS }
         - { path: ^%contao.backend.route_prefix%/logout$, roles: PUBLIC_ACCESS }
