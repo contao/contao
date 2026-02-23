@@ -13,6 +13,8 @@
         <p class="error">{{ getErrorAsString.invoke() }}</p>
     {% endif %}
 
+    {% set input_attributes = attrs(getAttributes.invoke()) %}
+
     <input{{ attrs()
         .set('type', 'text')
         .set('name', this.name)
@@ -21,7 +23,8 @@
         .addClass(this.class|default)
         .set('aria-describedby', "captcha_text_#{this.id}")
         .set('value', '')
-        .mergeWith(getAttributes.invoke())
+        .mergeWith(input_attributes)
+        .set('placeholder', input_attributes.placeholder|insert_tag)
     }}>
     <span id="captcha_text_{{ this.id }}" class="captcha_text{% if this.class|default %} {{ this.class|default }}{% endif %}">{{ getQuestion.invoke() }}</span>
     <input type="hidden" name="{{ this.name }}_hash{{ hasErrors.invoke() ? 1 + this.sum ** 2 : '' }}" value="{{ hasErrors.invoke() ? getHash.invoke() : '' }}">
