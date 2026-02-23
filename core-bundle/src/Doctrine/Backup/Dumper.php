@@ -39,6 +39,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function doDump(Connection $connection, CreateConfig $config): \Generator
     {
         yield 'SET FOREIGN_KEY_CHECKS = 0;';
@@ -81,6 +84,8 @@ class Dumper implements DumperInterface
 
     /**
      * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     *
+     * @return \Generator<string>
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
@@ -90,6 +95,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
         yield \sprintf('-- BEGIN STRUCTURE %s', $table->getName());
@@ -100,6 +108,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function dumpData(Connection $connection, Table $table): \Generator
     {
         yield \sprintf('-- BEGIN DATA %s', $table->getName());

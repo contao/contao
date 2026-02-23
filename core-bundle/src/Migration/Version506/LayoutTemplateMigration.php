@@ -88,6 +88,9 @@ class LayoutTemplateMigration extends AbstractMigration
         return $this->createResult(!$error);
     }
 
+    /**
+     * @return \Generator<string>
+     */
     private function getOldTemplatePaths(): \Generator
     {
         foreach ($this->filesystemLoader->getInheritanceChains()['layout/default'] ?? [] as $path => $logicalName) {

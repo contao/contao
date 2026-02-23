@@ -134,6 +134,9 @@ class Dbafs implements DbafsInterface, ResetInterface
         return null;
     }
 
+    /**
+     * @return \Generator<FilesystemItem>
+     */
     public function getRecords(string $path, bool $deep = false): \Generator
     {
         $path = Path::join($this->dbPathPrefix, $path);
