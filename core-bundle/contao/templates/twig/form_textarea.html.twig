@@ -26,7 +26,7 @@
         .set('cols', this.cols)
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
         .mergeWith(getAttributes.invoke())
-    }}>{{ this.value }}</textarea>
+    }}>{{ this.value|insert_tag }}</textarea>
 
     {% if this.help|default %}
         <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>

@@ -70,8 +70,9 @@ class ContentCompositionBuilderTest extends TestCase
 
     public function testInstantiatingFailsIfLayoutIsNotOfModernType(): void
     {
-        $layoutAdapter = $this->createAdapterStub(['findById']);
+        $layoutAdapter = $this->createAdapterMock(['findById']);
         $layoutAdapter
+            ->expects($this->once())
             ->method('findById')
             ->with(2)
             ->willReturn(
