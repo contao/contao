@@ -48,9 +48,9 @@ class ContaoTwigUtilTest extends TestCase
         ];
 
         yield 'legacy template' => [
-            '@Contao_Foo/foo.html5',
+            '@Contao_Foo/foo.json.twig',
             'Contao_Foo',
-            'foo.html5',
+            'foo.json.twig',
         ];
 
         yield 'only base namespace' => [
