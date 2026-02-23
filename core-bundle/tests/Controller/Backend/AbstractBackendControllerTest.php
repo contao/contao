@@ -320,8 +320,7 @@ class AbstractBackendControllerTest extends TestCase
         $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
+            ->willReturnMap([['ROLE_USER', true]])
         ;
 
         $twig = $this->createStub(Environment::class);
