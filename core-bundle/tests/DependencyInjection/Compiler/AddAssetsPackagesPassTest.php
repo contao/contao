@@ -38,9 +38,6 @@ class AddAssetsPackagesPassTest extends TestCase
         $fs->mkdir(static::getTempDir().'/ManifestJsonBundle/Resources/public');
         $fs->touch(static::getTempDir().'/ManifestJsonBundle/Resources/public/manifest.json');
 
-        $fs->mkdir(static::getTempDir().'/ThemeBundle/contao/themes/flexible');
-        $fs->touch(static::getTempDir().'/ThemeBundle/contao/themes/flexible/manifest.json');
-
         $fs->mkdir(static::getTempDir().'/RootPublicBundle/public');
     }
 

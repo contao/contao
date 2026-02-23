@@ -66,7 +66,6 @@ class SymlinksCommandTest extends TestCase
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
         $this->assertMatchesRegularExpression('# public/system/modules/foobar/html +system/modules/foobar/html #', $display);
-        $this->assertMatchesRegularExpression('# vendor/contao/test-bundle/Resources/contao/themes/default #', $display);
         $this->assertMatchesRegularExpression('# public/assets +assets #', $display);
         $this->assertMatchesRegularExpression('# system/logs +var/logs #', $display);
 

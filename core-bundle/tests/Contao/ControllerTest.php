@@ -125,7 +125,7 @@ class ControllerTest extends TestCase
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, $pageModelData);
 
         $this->assertSame($expected, Controller::getPageStatusIcon($pageModel));
-        $this->assertFileExists(__DIR__.'/../../contao/themes/flexible/icons/'.$expected);
+        $this->assertFileExists(__DIR__.'/../../public/icons/'.$expected);
     }
 
     public static function pageStatusIconProvider(): iterable

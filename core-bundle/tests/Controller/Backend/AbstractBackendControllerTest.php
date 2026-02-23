@@ -93,7 +93,6 @@ class AbstractBackendControllerTest extends TestCase
             'version' => 'my version',
             'headline' => 'dashboard',
             'title' => '',
-            'theme' => 'flexible',
             'language' => 'en',
             'host' => 'localhost',
             'charset' => 'UTF-8',
@@ -170,7 +169,6 @@ class AbstractBackendControllerTest extends TestCase
         $defaultContext = [
             'headline' => 'dashboard',
             'title' => '',
-            'theme' => 'flexible',
             'language' => 'en',
             'host' => 'localhost',
             'charset' => 'UTF-8',

@@ -629,7 +629,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function getBackendIcons(): array
     {
-        $basePath = Path::canonicalize(__DIR__.'/../../contao/themes/flexible/icons');
+        $basePath = Path::canonicalize(__DIR__.'/../../public/icons');
         $manifest = json_decode(file_get_contents(Path::join($basePath, 'manifest.json')), true, 2, JSON_THROW_ON_ERROR);
 
         $icons = [];
