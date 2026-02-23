@@ -176,13 +176,6 @@ type = XLIFF
 source_lang = en
 resource_name = v5_7-tl_settings
 
-[o:contao:p:core-bundle:r:v5_7-tl_templates]
-file_filter = contao/languages/<lang>/tl_templates.xlf
-source_file = contao/languages/en/tl_templates.xlf
-type = XLIFF
-source_lang = en
-resource_name = v5_7-tl_templates
-
 [o:contao:p:core-bundle:r:v5_7-tl_theme]
 file_filter = contao/languages/<lang>/tl_theme.xlf
 source_file = contao/languages/en/tl_theme.xlf
