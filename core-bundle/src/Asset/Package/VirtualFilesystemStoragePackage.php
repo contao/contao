@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Asset\Package;
 
+use Contao\CoreBundle\Filesystem\PublicUri\AbstractPublicUriProvider;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Symfony\Component\Asset\PackageInterface;
 
@@ -23,16 +24,23 @@ class VirtualFilesystemStoragePackage implements PackageInterface
 
     public function getVersion(string $path): string
     {
-        // TODO: Once we have native checksum support (see #7630), we could use that for
-        // the version hashes on and/or to directly generate the public URIs including
-        // the checksum/version hash.
+        if ($uri = $this->storage->generatePublicUri($path)) {
+            parse_str($uri->getQuery(), $params);
+
+            $version = $params[AbstractPublicUriProvider::VERSION_QUERY_PARAMETER] ?? null;
+            if (null !== $version && '' !== $version) {
+                return (string) $version;
+            }
+        }
+
+        // Fallback if no version could be found
         return hash('xxh3', (string) $this->storage->getLastModified($path));
     }
 
     public function getUrl(string $path): string
     {
         if ($uri = $this->storage->generatePublicUri($path)) {
-            return (string) $uri->withQuery('v='.$this->getVersion($path));
+            return (string) $uri;
         }
 
         return $path;

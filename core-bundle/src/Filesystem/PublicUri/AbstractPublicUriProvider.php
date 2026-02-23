@@ -10,7 +10,7 @@ use Psr\Http\Message\UriInterface;
 
 abstract class AbstractPublicUriProvider
 {
-    protected const VERSION_QUERY_PARAMETER = 'version';
+    public const VERSION_QUERY_PARAMETER = 'version';
 
     protected function versionizeUri(UriInterface $uri, FilesystemAdapter $adapter, string $adapterPath, Options|null $options = null): UriInterface
     {
