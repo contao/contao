@@ -28,7 +28,7 @@
         .set('cols', this.cols)
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
         .mergeWith(textarea_attributes)
-        .set('placeholder', textarea_attributes.placeholder|insert_tag)
+        .setIfExists('placeholder', textarea_attributes.placeholder|default|insert_tag)
     }}>{{ this.value|insert_tag }}</textarea>
 
     {% if this.help|default %}

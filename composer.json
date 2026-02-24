@@ -322,7 +322,7 @@
     "scripts": {
         "all": [
             "@rector",
-            "@cs",
+            "@cs-fixer",
             "@twig-cs-fixer",
             "@service-linter",
             "@monorepo-tools",
@@ -331,7 +331,7 @@
             "@phpstan",
             "@depcheck"
         ],
-        "cs": [
+        "cs-fixer": [
             "@ecs-default",
             "@ecs-legacy",
             "@ecs-template"

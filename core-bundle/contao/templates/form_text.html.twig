@@ -29,7 +29,7 @@
         .set('value', convertDate.invoke(this.value|default|insert_tag))
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
         .mergeWith(input_attributes)
-        .set('placeholder', input_attributes.placeholder|insert_tag)
+        .setIfExists('placeholder', input_attributes.placeholder|default|insert_tag)
     }}>
     {% if this.help|default %}
         <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>
