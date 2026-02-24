@@ -10,9 +10,14 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\DeprecationHelper;
 use Contao\Model\Collection;
 
+DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Extending from Hybrid is deprecated. Write a proper fragment controller instead.');
+
 /**
+ * @deprecated Extending from Hybrid is deprecated. Write a proper fragment controller instead.
+ *
  * Parent class for objects that can be modules or content elements.
  *
  * @property string $headline

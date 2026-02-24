@@ -11,11 +11,16 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\DeprecationHelper;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
+DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Extending from Module is deprecated. Write a proper fragment controller instead.');
+
 /**
+ * @deprecated Extending from Module is deprecated. Write a proper fragment controller instead.
+ *
  * Parent class for front end modules.
  *
  * @property integer $id
