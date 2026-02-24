@@ -127,16 +127,11 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             ->withSetting(Options::OPTION_CONTENT_DISPOSITION_TYPE, new ContentDispositionOption($model->inline))
         ;
 
-        // If there is a page model, take the ttl from the shared max age. Otherwise
-        // (backend preview), just set it to 0.
-        $pageModel = $this->getPageModel();
-        $ttl = $pageModel ? $this->getSharedMaxAge($pageModel) : 0;
-
         $uri = $this->generatePublicUriWithTemporaryAccess(
             $this->getVirtualFilesystem(),
             $filesystemItem,
-            $ttl,
             ['id' => $model->id, 'tstamp' => $model->tstamp],
+            null,
             $options,
         );
 

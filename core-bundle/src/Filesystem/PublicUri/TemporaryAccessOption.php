@@ -16,13 +16,14 @@ use Contao\ArrayUtil;
 
 final class TemporaryAccessOption
 {
+    public const MAX_TTL = 31_536_000;
+
     public function __construct(
-        private int $ttl,
+        private readonly int $ttl,
         private readonly string $contentHash,
     ) {
-        \assert('' !== $this->contentHash);
-        // Ensure TTL is max 1 year
-        $this->ttl = min($this->ttl, 31_536_000);
+        \assert('' !== $this->contentHash, 'Content hash must be a non-empty string');
+        \assert($this->ttl > 0 && $this->ttl <= self::MAX_TTL, \sprintf('TTL must not be 0 and not exceed one year. "%d" given.', $this->ttl)); // TTL should never exceed a year
     }
 
     public function getTtl(): int

@@ -113,7 +113,7 @@ class FileDownloadHelper
 
         $url = $this->router->generate('contao_file_stream', $parameters, RouterInterface::ABSOLUTE_URL);
 
-        return $this->signer->sign($url, $temporaryAccessOption->getTtl());
+        return $this->signer->sign($url, new \DateInterval('PT'.$temporaryAccessOption->getTtl().'S'));
     }
 
     /**
