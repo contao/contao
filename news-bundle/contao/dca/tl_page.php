@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 /*
  * This file is part of Contao.
@@ -25,7 +25,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 	'search' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('multiple' => true, 'mandatory' => true),
-	'sql' => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+	'sql' => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedSource'] = array(

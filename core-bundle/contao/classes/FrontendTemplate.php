@@ -25,8 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendTemplate extends Template
 {
-	use FrontendTemplateTrait;
-
 	/**
 	 * Unused route parameters check
 	 * @var boolean

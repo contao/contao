@@ -29,8 +29,6 @@ use Contao\Image\ImageInterface;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
@@ -131,27 +129,26 @@ class FigureRendererTest extends TestCase
             ->method('render')
         ;
 
-        // Make a template and image available at the temp dir
-        $filesystem = new Filesystem();
-        $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/foo.html5'), '<foo result>');
-
-        $filesystem->symlink(
-            Path::canonicalize(__DIR__.'/../../Fixtures/files'),
-            Path::join($this->getTempDir(), 'files'),
-        );
-
         $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturn($this->createStub(ImageInterface::class))
         ;
 
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with('@Contao/foo.html.twig', $this->anything())
+            ->willReturn('<foo result>')
+        ;
+
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
-        $container->set('filesystem', $filesystem);
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
         $container->set('contao.image.factory', $imageFactory);
+        $container->set('twig', $twig);
 
         System::setContainer($container);
 

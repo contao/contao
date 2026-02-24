@@ -205,17 +205,15 @@ class DebugContaoTwigCommand extends Command
                     ];
                 }
 
-                if (!str_ends_with($name, '.html5')) {
-                    $rows = [
-                        ...$rows,
-                        ...$this->formatMultiline(
-                            'Preview',
-                            $this->createPreview($templateInformation->getCode()),
-                            $codeCellStyle,
-                        ),
-                        ['', ''],
-                    ];
-                }
+                $rows = [
+                    ...$rows,
+                    ...$this->formatMultiline(
+                        'Preview',
+                        $this->createPreview($templateInformation->getCode()),
+                        $codeCellStyle,
+                    ),
+                    ['', ''],
+                ];
 
                 $rows[] = new TableSeparator();
             }

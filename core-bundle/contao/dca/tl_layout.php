@@ -14,7 +14,7 @@ use Contao\Controller;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
@@ -161,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'sectionWizard',
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'framework' => array
 		(
@@ -179,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'isSortable'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'combineScripts' => array
 		(
@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'default'                 => array(array('mod'=>0, 'col'=>'main', 'enable'=>1)),
 			'inputType'               => 'moduleWizard',
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'template' => array
 		(
@@ -256,7 +256,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addJQuery' => array
 		(
@@ -273,7 +273,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('j_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addMooTools' => array
 		(
@@ -290,7 +290,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('moo_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'analytics' => array
 		(
@@ -300,13 +300,13 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('analytics_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'externalJs' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'js', 'isSortable'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'scripts' => array
 		(
@@ -317,14 +317,14 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('js_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'script' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:120px', 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'static' => array
 		(

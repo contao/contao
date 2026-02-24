@@ -17,7 +17,7 @@ use Contao\DC_Table;
 use Contao\Message;
 use Contao\OptInModel;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_opt_in'] = array
 (
@@ -135,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		'emailText' => array
 		(
 			'search'                  => true,
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		)
 	)
 );

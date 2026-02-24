@@ -56,7 +56,6 @@ use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
-use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\DcaExtractor;
@@ -311,7 +310,6 @@ abstract class ContentElementTestCase extends TestCase
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             $resourceBasePath,
         );
@@ -371,7 +369,6 @@ abstract class ContentElementTestCase extends TestCase
                 FormatterRuntime::class => static fn () => new FormatterRuntime($framework),
                 CspRuntime::class => static fn () => new CspRuntime($responseContextAccessor, new WysiwygStyleProcessor([])),
                 StringRuntime::class => static fn () => new StringRuntime($framework, new HtmlDecoder($insertTagParser)),
-                SanitizerRuntime::class => static fn () => new SanitizerRuntime($environment),
             ]),
         );
 

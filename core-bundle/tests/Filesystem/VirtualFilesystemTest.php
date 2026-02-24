@@ -1009,7 +1009,7 @@ class VirtualFilesystemTest extends TestCase
      *
      * @return \Generator<T>
      */
-    private function getGenerator(array $array): \Generator
+    private function getGenerator(array $array): iterable
     {
         foreach ($array as $item) {
             yield $item;

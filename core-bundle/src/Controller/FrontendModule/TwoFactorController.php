@@ -19,10 +19,10 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
-use Contao\Template;
 use ParagonIE\ConstantTime\Base32;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -58,7 +58,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         return $services;
     }
 
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
+    protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
         $user = $this->getUser();
         $pageModel = $request->attributes->get('pageModel');
@@ -73,14 +73,14 @@ class TwoFactorController extends AbstractFrontendModuleController
         $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
         $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $template->enforceTwoFactor = $pageModel->enforceTwoFactor;
-        $template->targetPath = $return;
+        $template->set('enforceTwoFactor', $pageModel->enforceTwoFactor);
+        $template->set('targetPath', $return);
 
         $translator = $this->container->get('translator');
 
         // Inform the user if 2FA is enforced
         if ($pageModel->enforceTwoFactor) {
-            $template->message = $translator->trans('MSC.twoFactorEnforced', [], 'contao_default');
+            $template->set('message', $translator->trans('MSC.twoFactorEnforced', [], 'contao_default'));
         }
 
         $enable = 'enable' === $request->get('2fa');
@@ -100,35 +100,35 @@ class TwoFactorController extends AbstractFrontendModuleController
         }
 
         try {
-            $template->backupCodes = json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR);
+            $template->set('backupCodes', json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
         } catch (\JsonException) {
-            $template->backupCodes = [];
+            $template->set('backupCodes', []);
         }
 
         if ('tl_two_factor_generate_backup_codes' === $formId) {
-            $template->showBackupCodes = true;
-            $template->backupCodes = $this->container->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
+            $template->set('showBackupCodes', true);
+            $template->set('backupCodes', $this->container->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user));
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $formId) {
             $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
         }
 
-        $template->isEnabled = (bool) $user->useTwoFactor;
-        $template->href = $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable';
-        $template->trustedDevices = $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
+        $template->set('isEnabled', (bool) $user->useTwoFactor);
+        $template->set('href', $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable');
+        $template->set('trustedDevices', $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user));
 
         return $template->getResponse();
     }
 
-    private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, string $return): Response|null
+    private function enableTwoFactor(FragmentTemplate $template, Request $request, FrontendUser $user, string $return): Response|null
     {
         $translator = $this->container->get('translator');
         $authenticator = $this->container->get('contao.security.two_factor.authenticator');
         $exception = $this->container->get('security.authentication_utils')->getLastAuthenticationError();
 
         if ($exception instanceof InvalidTwoFactorCodeException) {
-            $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
+            $template->set('message', $translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
         }
 
         // Validate the verification code
@@ -141,7 +141,7 @@ class TwoFactorController extends AbstractFrontendModuleController
                 return new RedirectResponse($return);
             }
 
-            $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
+            $template->set('message', $translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
         }
 
         // Generate the secret
@@ -150,9 +150,9 @@ class TwoFactorController extends AbstractFrontendModuleController
             $user->save();
         }
 
-        $template->enable = true;
-        $template->secret = Base32::encodeUpperUnpadded($user->secret);
-        $template->qrCode = base64_encode($authenticator->getQrCode($user, $request));
+        $template->set('enable', true);
+        $template->set('secret', Base32::encodeUpperUnpadded($user->secret));
+        $template->set('qrCode', base64_encode($authenticator->getQrCode($user, $request)));
 
         return null;
     }
