@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\PageAccessListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
-use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -43,8 +43,121 @@ class PageAccessListenerTest extends TestCase
             ->willReturn($request)
         ;
 
-        $listener = new PageAccessListener($this->mockPageFinder(null), $security);
+        $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
+
+        $this->assertFalse($request->attributes->has('pageModel'));
+    }
+
+    public function testSetsPageModelFromGlobalWithIdInRequest(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        $request = new Request();
+        $request->attributes->set('pageModel', 42);
+
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $GLOBALS['objPage'] = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
+
+        $listener = new PageAccessListener($this->mockFramework(), $security);
+        $listener($event);
+
+        $this->assertSame($GLOBALS['objPage'], $request->attributes->get('pageModel'));
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function testSetsPageModelFromModelWithIdInRequest(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        $request = new Request();
+        $request->attributes->set('pageModel', 42);
+
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
+
+        $listener = new PageAccessListener($this->mockFramework(42, $pageModel), $security);
+        $listener($event);
+
+        $this->assertSame($pageModel, $request->attributes->get('pageModel'));
+    }
+
+    public function testSetsPageModelFromGlobalWithModelInRequest(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $GLOBALS['objPage'] = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
+
+        $listener = new PageAccessListener($this->mockFramework(), $security);
+        $listener($event);
+
+        $this->assertNotSame($pageModel, $request->attributes->get('pageModel'));
+        $this->assertSame($GLOBALS['objPage'], $request->attributes->get('pageModel'));
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function testSetsPageModelFromModelInRequest(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['id' => 42]);
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $listener = new PageAccessListener($this->mockFramework(), $security);
+        $listener($event);
+
+        $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
     public function testDeniesAccessToProtectedPageIfMemberIsNotLoggedIn(): void
@@ -63,18 +176,23 @@ class PageAccessListenerTest extends TestCase
             'groups' => [1, 2, 3],
         ]);
 
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn(new Request())
+            ->willReturn($request)
         ;
 
         $this->expectException(InsufficientAuthenticationException::class);
         $this->expectExceptionMessage('Not authenticated');
 
-        $listener = new PageAccessListener($this->mockPageFinder($pageModel), $security);
+        $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
+
+        $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
     public function testDeniesAccessToProtectedPageIfMemberIsNotInGroup(): void
@@ -95,18 +213,23 @@ class PageAccessListenerTest extends TestCase
             'groups' => [1, 2, 3],
         ]);
 
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn(new Request())
+            ->willReturn($request)
         ;
 
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage('Member does not have access to page ID 42');
 
-        $listener = new PageAccessListener($this->mockPageFinder($pageModel), $security);
+        $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
+
+        $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
     public function testDeniesAccessToProtectedPageIfMemberIsNotGuest(): void
@@ -127,18 +250,23 @@ class PageAccessListenerTest extends TestCase
             'groups' => [-1, 1],
         ]);
 
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn(new Request())
+            ->willReturn($request)
         ;
 
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage('Member does not have access to page ID 42');
 
-        $listener = new PageAccessListener($this->mockPageFinder($pageModel), $security);
+        $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
+
+        $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
     public function testGrantsAccessToProtectedPageIfMemberIsInGroup(): void
@@ -159,15 +287,20 @@ class PageAccessListenerTest extends TestCase
             'groups' => [1, 2, 3],
         ]);
 
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn(new Request())
+            ->willReturn($request)
         ;
 
-        $listener = new PageAccessListener($this->mockPageFinder($pageModel), $security);
+        $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
+
+        $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
     public function testGrantsAccessToProtectedPageIfIsGuest(): void
@@ -188,26 +321,58 @@ class PageAccessListenerTest extends TestCase
             'groups' => [-1, 1],
         ]);
 
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
         $event = $this->createMock(RequestEvent::class);
         $event
             ->expects($this->once())
             ->method('getRequest')
-            ->willReturn(new Request())
+            ->willReturn($request)
         ;
 
-        $listener = new PageAccessListener($this->mockPageFinder($pageModel), $security);
+        $listener = new PageAccessListener($this->mockFramework(), $security);
         $listener($event);
+
+        $this->assertSame($pageModel, $request->attributes->get('pageModel'));
     }
 
-    private function mockPageFinder(PageModel|null $pageModel): PageFinder&MockObject
+    private function mockFramework(int|null $id = null, PageModel|null $pageModel = null): ContaoFramework&MockObject
     {
-        $pageFinder = $this->createMock(PageFinder::class);
-        $pageFinder
+        $framework = $this->createMock(ContaoFramework::class);
+
+        if (null === $id) {
+            $framework
+                ->expects($this->never())
+                ->method('initialize')
+            ;
+
+            $framework
+                ->expects($this->never())
+                ->method('getAdapter')
+            ;
+
+            return $framework;
+        }
+
+        $pageAdapter = $this->createAdapterMock(['findById']);
+        $pageAdapter
             ->expects($this->once())
-            ->method('getCurrentPage')
+            ->method('findById')
             ->willReturn($pageModel)
         ;
 
-        return $pageFinder;
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $framework
+            ->expects($this->once())
+            ->method('getAdapter')
+            ->willReturn($pageAdapter)
+        ;
+
+        return $framework;
     }
 }

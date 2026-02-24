@@ -93,21 +93,21 @@ class ValueFormatter implements ResetInterface
     public function formatGroup(string $table, string $field, mixed $value, int $mode, mixed $dc): string
     {
         if (\in_array($mode, [DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_DAY_BOTH], true)) {
-            return $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
+            return $value ? Date::parse(Config::get('dateFormat'), (int) $value) : '-';
         }
 
         if (\in_array($mode, [DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_MONTH_BOTH], true)) {
-            $intMonth = $value ? date('m', $value) - 1 : '-';
+            $intMonth = $value ? date('m', (int) $value) - 1 : '-';
 
             if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth])) {
-                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.date('Y', $value) : '-';
+                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.date('Y', (int) $value) : '-';
             }
 
-            return $value ? date('Y-m', $value) : '-';
+            return $value ? date('Y-m', (int) $value) : '-';
         }
 
         if (\in_array($mode, [DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC, DataContainer::SORT_YEAR_BOTH], true)) {
-            return $value ? date('Y', $value) : '-';
+            return $value ? date('Y', (int) $value) : '-';
         }
 
         if ('checkbox' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null) && !($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['multiple'] ?? null)) {
