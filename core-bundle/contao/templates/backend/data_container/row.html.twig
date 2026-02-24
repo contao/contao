@@ -22,7 +22,6 @@
             selector: "ctrl_#{input_name}",
             source: "#{table}.#{id}",
             readonly: attributes.readonly|default ? true : false,
-            theme: backend_theme,
             enableAce: app.user.useCE,
             enableTinyMce: app.user.useRTE,
             type: type_and_filetype[1]|default(null),

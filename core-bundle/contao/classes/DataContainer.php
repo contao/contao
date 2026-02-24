@@ -653,7 +653,6 @@ abstract class DataContainer extends Backend
 				'input_name' => $this->strInputName,
 				'input_type' => $arrData['inputType'] ?? null,
 				'edit_multiple' => empty($arrAttributes['rte']) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrAttributes['multiple'] ?? null) && Input::get('act') == 'overrideAll',
-				'backend_theme' => Backend::getTheme(),
 			))
 		;
 	}
