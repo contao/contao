@@ -19,6 +19,7 @@ use Contao\Model\Collection;
  * @property integer           $pid
  * @property integer           $tstamp
  * @property string            $name
+ * @property string            $type
  * @property string            $rows
  * @property string|array      $headerHeight
  * @property string|array      $footerHeight
@@ -58,6 +59,7 @@ use Contao\Model\Collection;
  * @method static LayoutModel|null findOneByPid($val, array $opt=array())
  * @method static LayoutModel|null findOneByTstamp($val, array $opt=array())
  * @method static LayoutModel|null findOneByName($val, array $opt=array())
+ * @method static LayoutModel|null findOneByType($val, array $opt=array())
  * @method static LayoutModel|null findOneByRows($val, array $opt=array())
  * @method static LayoutModel|null findOneByHeaderHeight($val, array $opt=array())
  * @method static LayoutModel|null findOneByFooterHeight($val, array $opt=array())
@@ -93,6 +95,7 @@ use Contao\Model\Collection;
  * @method static Collection<LayoutModel>|null findByPid($val, array $opt=array())
  * @method static Collection<LayoutModel>|null findByTstamp($val, array $opt=array())
  * @method static Collection<LayoutModel>|null findByName($val, array $opt=array())
+ * @method static Collection<LayoutModel>|null findByType($val, array $opt=array())
  * @method static Collection<LayoutModel>|null findByRows($val, array $opt=array())
  * @method static Collection<LayoutModel>|null findByHeaderHeight($val, array $opt=array())
  * @method static Collection<LayoutModel>|null findByFooterHeight($val, array $opt=array())
@@ -132,6 +135,7 @@ use Contao\Model\Collection;
  * @method static integer countByPid($val, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByName($val, array $opt=array())
+ * @method static integer countByType($val, array $opt=array())
  * @method static integer countByRows($val, array $opt=array())
  * @method static integer countByHeaderHeight($val, array $opt=array())
  * @method static integer countByFooterHeight($val, array $opt=array())
