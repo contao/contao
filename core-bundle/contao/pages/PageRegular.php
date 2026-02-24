@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -723,12 +724,21 @@ class PageRegular extends Frontend
 		// Add the custom JavaScript
 		if ($objLayout->script)
 		{
+			$nonce = null;
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+			if ($responseContext?->has(CspHandler::class))
+			{
+				$csp = $responseContext->get(CspHandler::class);
+				$nonce = $csp->getNonce('script-src');
+			}
+
 			$customScript = trim($objLayout->script);
 
 			// Add a nonce to the <script> tags since we consider this safe user input.
 			// Do NOT copy the str_replace() into your own code unless you know what you are doing!
 			// It will defeat the purpose of CSP.
-			if ($nonce = $this->Template->nonce('script-src'))
+			if ($nonce)
 			{
 				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
 			}
