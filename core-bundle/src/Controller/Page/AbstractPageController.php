@@ -38,6 +38,11 @@ abstract class AbstractPageController extends AbstractController
 
     protected function renderPage(PageModel $pageModel, ResponseContext|null $responseContext = null): Response
     {
+        $responseContext ??= $this->container
+            ->get('contao.routing.response_context_factory')
+            ->createContaoWebpageResponseContext($pageModel)
+        ;
+
         if ($this->container->get('contao.routing.page_registry')->getPageTemplate($pageModel)) {
             return $this->handleModernLayout($pageModel, $responseContext);
         }
@@ -68,22 +73,22 @@ abstract class AbstractPageController extends AbstractController
         return $framework->getAdapter(LayoutModel::class)->findById($page->layout);
     }
 
-    protected function handleDefaultLayout(PageModel $pageModel, ResponseContext|null $responseContext): Response
+    protected function handleDefaultLayout(PageModel $pageModel, ResponseContext $responseContext): Response
     {
-        if ($responseContext) {
-            $this->container->get('contao.routing.response_context_accessor')->setResponseContext($responseContext);
-        }
-
-        return $this->container->get('contao.framework')->createInstance(FrontendIndex::class)->renderLegacy($pageModel);
-    }
-
-    protected function handleModernLayout(PageModel $pageModel, ResponseContext|null $responseContext): Response
-    {
-        $responseContext ??= $this->container
-            ->get('contao.routing.response_context_factory')
-            ->createContaoWebpageResponseContext($pageModel)
+        $this->container
+            ->get('contao.routing.response_context_accessor')
+            ->setResponseContext($responseContext)
         ;
 
+        return $this->container
+            ->get('contao.framework')
+            ->createInstance(FrontendIndex::class)
+            ->renderLegacy($pageModel)
+        ;
+    }
+
+    protected function handleModernLayout(PageModel $pageModel, ResponseContext $responseContext): Response
+    {
         $layoutTemplate = $this->container
             ->get('contao.content_composition')
             ->createContentCompositionBuilder($pageModel)

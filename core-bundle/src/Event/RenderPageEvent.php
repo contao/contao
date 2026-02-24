@@ -16,7 +16,7 @@ class RenderPageEvent extends Event
 
     public function __construct(
         private readonly PageModel $pageModel,
-        private readonly ResponseContext|null $responseContext,
+        private readonly ResponseContext $responseContext,
         private LayoutModel|null $layoutModel,
     ) {
     }
@@ -26,7 +26,7 @@ class RenderPageEvent extends Event
         return $this->pageModel;
     }
 
-    public function getResponseContext(): ResponseContext|null
+    public function getResponseContext(): ResponseContext
     {
         return $this->responseContext;
     }
