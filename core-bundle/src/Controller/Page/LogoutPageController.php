@@ -24,9 +24,8 @@ use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator;
 #[AsPage(path: '', contentComposition: false)]
 class LogoutPageController extends AbstractController
 {
-    public function __construct(
-        private readonly LogoutUrlGenerator $logoutUrlGenerator,
-    ) {
+    public function __construct(private readonly LogoutUrlGenerator $logoutUrlGenerator)
+    {
     }
 
     public function __invoke(Request $request, PageModel $pageModel): Response

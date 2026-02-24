@@ -27,9 +27,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[AsPage(contentComposition: false)]
 class ForwardPageController extends AbstractController implements DynamicRouteInterface
 {
-    public function __construct(
-        private readonly LoggerInterface|null $logger = null,
-    ) {
+    public function __construct(private readonly LoggerInterface|null $logger = null)
+    {
     }
 
     public function __invoke(Request $request, PageModel $pageModel): RedirectResponse
