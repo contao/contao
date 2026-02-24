@@ -66,7 +66,7 @@ class ArrayUtil
 
 		if (false === $json)
 		{
-			throw new \InvalidArgumentException('Cannot consistent hash array values that are not JSON encodable: ' . json_last_error_msg());
+			throw new \InvalidArgumentException('Cannot consistently hash array values that are not JSON encodable: ' . json_last_error_msg());
 		}
 
 		return hash($algorithm, $json);
