@@ -38,7 +38,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            (new MountManager($this->createStub(FileDownloadHelper::class)))->mount(new InMemoryFilesystemAdapter()),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
     }

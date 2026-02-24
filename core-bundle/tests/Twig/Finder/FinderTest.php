@@ -362,6 +362,6 @@ class FinderTest extends TestCase
             ->willReturn($catalogue)
         ;
 
-        return (new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator))->create();
+        return new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator)->create();
     }
 }

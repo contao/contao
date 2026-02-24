@@ -168,15 +168,7 @@ class TemplateStudioController extends AbstractBackendController
         $operationNames = array_keys(
             array_filter(
                 $this->operations,
-                static function (array $candidates) use ($operationContext) {
-                    foreach ($candidates as $candidate) {
-                        if ($candidate->canExecute($operationContext)) {
-                            return true;
-                        }
-                    }
-
-                    return false;
-                },
+                static fn (array $candidates) => array_any($candidates, static fn ($candidate) => $candidate->canExecute($operationContext)),
             ),
         );
 

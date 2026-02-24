@@ -150,7 +150,7 @@ class TemplateOptionsListener
             return null;
         }
 
-        $properties = (new \ReflectionClass($class))->getDefaultProperties();
+        $properties = new \ReflectionClass($class)->getDefaultProperties();
 
         return $properties['strTemplate'] ?? null;
     }

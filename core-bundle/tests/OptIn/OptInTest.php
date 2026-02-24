@@ -43,7 +43,7 @@ class OptInTest extends TestCase
             ->willReturn($model)
         ;
 
-        $token = (new OptIn($framework))->create('reg', 'foo@bar.com', ['tl_member' => [1]]);
+        $token = new OptIn($framework)->create('reg', 'foo@bar.com', ['tl_member' => [1]]);
 
         $this->assertStringMatchesFormat('reg-%x', $token->getIdentifier());
         $this->assertTrue($token->isValid());
@@ -62,7 +62,7 @@ class OptInTest extends TestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The token prefix must not be longer than 6 characters');
 
-        (new OptIn($framework))->create('registration', 'foo@bar.com', ['tl_member' => [1]]);
+        new OptIn($framework)->create('registration', 'foo@bar.com', ['tl_member' => [1]]);
     }
 
     public function testFindsAToken(): void
@@ -78,10 +78,10 @@ class OptInTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([OptInModel::class => $adapter]);
-        $token = (new OptIn($framework))->find('foobar');
+        $token = new OptIn($framework)->find('foobar');
 
         $this->assertSame('foobar', $token->getIdentifier());
-        $this->assertNull((new OptIn($framework))->find('barfoo'));
+        $this->assertNull(new OptIn($framework)->find('barfoo'));
     }
 
     public function testPurgesExpiredTokens(): void
@@ -130,7 +130,7 @@ class OptInTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);
-        (new OptIn($framework))->purgeTokens();
+        new OptIn($framework)->purgeTokens();
     }
 
     public function testProlongsExpiredTokens(): void
@@ -180,7 +180,7 @@ class OptInTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);
-        (new OptIn($framework))->purgeTokens();
+        new OptIn($framework)->purgeTokens();
 
         $this->assertSame(strtotime('+3 years', $properties['removeOn']), $token->removeOn);
     }
@@ -222,7 +222,7 @@ class OptInTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);
-        (new OptIn($framework))->purgeTokens();
+        new OptIn($framework)->purgeTokens();
     }
 
     public function testKeepsUnconfirmedTokensForTwoAdditionalDays(): void
@@ -262,6 +262,6 @@ class OptInTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);
-        (new OptIn($framework))->purgeTokens();
+        new OptIn($framework)->purgeTokens();
     }
 }

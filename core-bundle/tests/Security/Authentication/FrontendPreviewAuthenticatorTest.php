@@ -41,7 +41,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         ;
 
         $session = $this->mockSession();
-        $user = (new \ReflectionClass(FrontendUser::class))->newInstanceWithoutConstructor();
+        $user = new \ReflectionClass(FrontendUser::class)->newInstanceWithoutConstructor();
 
         $userProvider = $this->createStub(UserProviderInterface::class);
         $userProvider

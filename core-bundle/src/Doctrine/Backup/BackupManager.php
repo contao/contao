@@ -156,7 +156,7 @@ class BackupManager
         // Ensure the target file exists and is empty
         $this->backupsStorage->write($backup->getFilename(), '');
 
-        $tmpFile = (new Filesystem())->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
+        $tmpFile = new Filesystem()->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
         $fileHandle = fopen($tmpFile, 'r+w');
         $deflateContext = $config->isGzCompressionEnabled() ? deflate_init(ZLIB_ENCODING_GZIP, ['level' => 9]) : null;
 
@@ -171,10 +171,10 @@ class BackupManager
 
             $this->finishWriting($backup, $fileHandle, $deflateContext);
             $this->tidyDirectory($config->getBackup());
-            (new Filesystem())->remove($tmpFile);
+            new Filesystem()->remove($tmpFile);
         } catch (BackupManagerException $exception) {
             $this->backupsStorage->delete($backup->getFilename());
-            (new Filesystem())->remove($tmpFile);
+            new Filesystem()->remove($tmpFile);
 
             throw $exception;
         }
@@ -221,7 +221,7 @@ class BackupManager
             throw new BackupManagerException(\sprintf('Dump "%s" does not exist.', $backup->getFilename()));
         }
 
-        $tmpFile = (new Filesystem())->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
+        $tmpFile = new Filesystem()->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
         $handle = fopen($tmpFile, 'w');
         stream_copy_to_stream($this->backupsStorage->readStream($backup->getFilename()), $handle);
         fclose($handle);

@@ -80,7 +80,7 @@ class BackendHeaderListener
 
         $tree->addChild($alerts);
 
-        $profileButtonAttributes = (new HtmlAttributes())
+        $profileButtonAttributes = new HtmlAttributes()
             ->set('id', 'profileButton')
             ->set('type', 'button')
             ->set('title', $this->translator->trans('MSC.showProfile', [], 'contao_default'))
@@ -170,7 +170,7 @@ class BackendHeaderListener
 
         $submenu->addChild($colorScheme);
 
-        $burgerAttributes = (new HtmlAttributes())
+        $burgerAttributes = new HtmlAttributes()
             ->set('id', 'burger')
             ->set('type', 'button')
             ->set('title', $this->translator->trans('MSC.showMainNavigation', [], 'contao_default'))

@@ -20,7 +20,7 @@ class ConfigurationTest extends TestCase
 {
     public function testAddsTheManagerPath(): void
     {
-        $configuration = (new Processor())->processConfiguration(new Configuration(), []);
+        $configuration = new Processor()->processConfiguration(new Configuration(), []);
 
         $this->assertNull($configuration['manager_path']);
     }

@@ -46,7 +46,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller', $elementController);
         $container->setDefinition('app.fragments.module_controller', $moduleController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
@@ -88,7 +88,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller', $elementController);
         $container->setDefinition('app.fragments.module_controller', $moduleController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
@@ -160,7 +160,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
@@ -188,7 +188,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller.enhanced_text', $duplicateContentController);
         $container->setDefinition('app.fragments.content_controller.text', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
 
@@ -205,7 +205,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $this->assertFalse($container->findDefinition('app.fragments.content_controller')->isPublic());
 
@@ -223,7 +223,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.two_factor', $definition);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME);
         $pass->process($container);
@@ -248,7 +248,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
@@ -274,7 +274,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
         $pass->process($container);
@@ -300,7 +300,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('contao.fragment.compositor', new Definition());
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
 
@@ -318,19 +318,12 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
         $pass->process($container);
 
-        $definition = null;
-
-        foreach ($container->getDefinitions() as $def) {
-            if (GlobalsMapListener::class === $def->getClass()) {
-                $definition = $def;
-                break;
-            }
-        }
+        $definition = array_find($container->getDefinitions(), static fn ($def) => GlobalsMapListener::class === $def->getClass());
 
         $this->assertNotNull($definition);
 
@@ -368,7 +361,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container = $this->getContainerWithFragmentServices();
         $container->setDefinition('app.fragments.content_controller', $contentController);
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
 
@@ -387,7 +380,7 @@ class RegisterFragmentsPassTest extends TestCase
         $container->setDefinition('app.fragments.content_controller', $contentController);
         $container->setDefinition('contao.listener.data_container.template_options', $templateOptionsListener = new Definition());
 
-        (new ResolveClassPass())->process($container);
+        new ResolveClassPass()->process($container);
 
         $pass = new RegisterFragmentsPass(
             ContentElementReference::TAG_NAME,

@@ -27,7 +27,7 @@ class SystemTest extends TestCase
 
         $this->resetStaticProperties([System::class]);
 
-        (new Filesystem())->remove($this->getTempDir());
+        new Filesystem()->remove($this->getTempDir());
     }
 
     public function testFormatsANumber(): void
@@ -101,19 +101,19 @@ class SystemTest extends TestCase
     {
         $tmpDir = $this->getTempDir();
 
-        (new Filesystem())->dumpFile(
+        new Filesystem()->dumpFile(
             "$tmpDir/contao/languages/en/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "Test English";'
             .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] = "en";',
         );
 
-        (new Filesystem())->dumpFile(
+        new Filesystem()->dumpFile(
             "$tmpDir/contao/languages/de/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "Test deutsch";'
             .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "|de";',
         );
 
-        (new Filesystem())->dumpFile(
+        new Filesystem()->dumpFile(
             "$tmpDir/contao/languages/fr/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "Test français";'
             .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "|fr";',
@@ -164,7 +164,7 @@ class SystemTest extends TestCase
         $this->assertSame('Test deutsch', $GLOBALS['TL_LANG']['MSC']['test']);
         $this->assertSame('en|de', $GLOBALS['TL_LANG']['MSC']['order_test']);
 
-        (new Filesystem())->dumpFile(
+        new Filesystem()->dumpFile(
             "$tmpDir/contao/languages/de/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "changed";'
             .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "changed";',

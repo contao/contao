@@ -97,7 +97,7 @@ class TemplateLocator
             return [];
         }
 
-        $finder = (new Finder())
+        $finder = new Finder()
             ->files()
             ->in($path)
             ->name('/\.twig$/')
@@ -133,7 +133,7 @@ class TemplateLocator
 
         $namespaceRoots = [];
 
-        $finder = (new Finder())
+        $finder = new Finder()
             ->directories()
             ->in($path)
             ->sortByName()

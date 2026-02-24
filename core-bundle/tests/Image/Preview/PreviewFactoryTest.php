@@ -44,8 +44,8 @@ class PreviewFactoryTest extends TestCase
     {
         parent::tearDown();
 
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/previews'));
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'sources'));
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'assets/previews'));
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'sources'));
     }
 
     public function testMissingPreviewProvider(): void
@@ -65,7 +65,7 @@ class PreviewFactoryTest extends TestCase
             499,
         );
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $this->expectException(MissingPreviewProviderException::class);
 
@@ -76,7 +76,7 @@ class PreviewFactoryTest extends TestCase
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
         $preview = $factory->createPreview($sourcePath);
@@ -86,7 +86,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertSame(256, $preview->getDimensions()->getSize()->getHeight());
         $this->assertMatchesRegularExpression('(/[0-9a-z]/foo-[0-9a-z]{15}\.png$)', $preview->getPath());
 
-        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        new Filesystem()->dumpFile($sourcePath, 'not a PDF');
 
         $this->expectException(MissingPreviewProviderException::class);
 
@@ -107,7 +107,7 @@ class PreviewFactoryTest extends TestCase
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
         $previews = $factory->createPreviews($sourcePath, 200, 3);
@@ -145,7 +145,7 @@ class PreviewFactoryTest extends TestCase
 
         $this->assertCount(0, $previews);
 
-        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        new Filesystem()->dumpFile($sourcePath, 'not a PDF');
 
         $this->expectException(MissingPreviewProviderException::class);
 
@@ -232,32 +232,32 @@ class PreviewFactoryTest extends TestCase
         yield [[0, 0, 456], 789];
         yield [[500, 500, 456], 789];
 
-        yield [(new ResizeConfiguration())->setWidth(123)->setHeight(456), 456];
+        yield [new ResizeConfiguration()->setWidth(123)->setHeight(456), 456];
 
         yield [
-            (new PictureConfiguration())
+            new PictureConfiguration()
                 ->setSize(
-                    (new PictureConfigurationItem())
+                    new PictureConfigurationItem()
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456)),
+                        ->setResizeConfig(new ResizeConfiguration()->setWidth(123)->setHeight(456)),
                 ),
             684,
         ];
 
         yield [
-            (new PictureConfiguration())
+            new PictureConfiguration()
                 ->setSize(
-                    (new PictureConfigurationItem())
+                    new PictureConfigurationItem()
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123)),
+                        ->setResizeConfig(new ResizeConfiguration()->setWidth(123)->setHeight(123)),
                 )
                 ->setSizeItems([
-                    (new PictureConfigurationItem())
+                    new PictureConfigurationItem()
                         ->setDensities('543w, 1.2x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(100)->setHeight(150)),
-                    (new PictureConfigurationItem())
+                        ->setResizeConfig(new ResizeConfiguration()->setWidth(100)->setHeight(150)),
+                    new PictureConfigurationItem()
                         ->setDensities('432w, 1.2x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(100)->setHeight(150)),
+                        ->setResizeConfig(new ResizeConfiguration()->setWidth(100)->setHeight(150)),
                 ]),
             543,
         ];
@@ -267,14 +267,14 @@ class PreviewFactoryTest extends TestCase
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
         $preview = $factory->createPreviewImage($sourcePath);
 
         $this->assertFileExists($preview->getPath());
 
-        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        new Filesystem()->dumpFile($sourcePath, 'not a PDF');
 
         $this->expectException(MissingPreviewProviderException::class);
 
@@ -285,7 +285,7 @@ class PreviewFactoryTest extends TestCase
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
         $previews = $factory->createPreviewImages($sourcePath);
@@ -294,7 +294,7 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getPath());
         }
 
-        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        new Filesystem()->dumpFile($sourcePath, 'not a PDF');
 
         $this->expectException(MissingPreviewProviderException::class);
 
@@ -305,14 +305,14 @@ class PreviewFactoryTest extends TestCase
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
         $preview = $factory->createPreviewPicture($sourcePath);
 
         $this->assertFileExists($preview->getRawImg()['src']->getPath());
 
-        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        new Filesystem()->dumpFile($sourcePath, 'not a PDF');
 
         $this->expectException(MissingPreviewProviderException::class);
 
@@ -323,7 +323,7 @@ class PreviewFactoryTest extends TestCase
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
         $previews = $factory->createPreviewPictures($sourcePath);
@@ -332,7 +332,7 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getRawImg()['src']->getPath());
         }
 
-        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        new Filesystem()->dumpFile($sourcePath, 'not a PDF');
 
         $this->expectException(MissingPreviewProviderException::class);
 
@@ -349,15 +349,15 @@ class PreviewFactoryTest extends TestCase
 
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
-        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+        new Filesystem()->dumpFile($sourcePath, '%PDF-');
 
         $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
         $preview = $figureBuilder->build()->getImage();
 
         $this->assertFileExists(Path::join($this->getTempDir(), $preview->getImageSrc(true)));
 
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/previews'));
-        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'assets/previews'));
+        new Filesystem()->dumpFile($sourcePath, 'not a PDF');
 
         $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
 
@@ -389,7 +389,7 @@ class PreviewFactoryTest extends TestCase
                 $lastPage = min(3, $lastPage);
 
                 for ($page = $firstPage; $page <= $lastPage; ++$page) {
-                    (new Imagine())
+                    new Imagine()
                         ->create(new Box($size, $size * 2))
                         ->save($targetPath = $targetPathCallback($page).'.png')
                     ;

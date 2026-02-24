@@ -26,7 +26,7 @@ use Pdo\Mysql;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
-return (new Configuration())
+return new Configuration()
     ->ignoreUnknownClasses([
         AppBundle::class,
         FooEntity::class,

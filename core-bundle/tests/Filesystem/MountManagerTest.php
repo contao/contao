@@ -463,7 +463,7 @@ class MountManagerTest extends TestCase
 
     public function testFileExistsToleratesNonExistingMountPoints(): void
     {
-        $this->assertFalse((new MountManager($this->createStub(FileDownloadHelper::class)))->fileExists('foo'));
+        $this->assertFalse(new MountManager($this->createStub(FileDownloadHelper::class))->fileExists('foo'));
     }
 
     #[DataProvider('provideListings')]
@@ -805,7 +805,7 @@ class MountManagerTest extends TestCase
 
     private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
     {
-        return (new MountManager($this->createStub(FileDownloadHelper::class)))->mount($adapter);
+        return new MountManager($this->createStub(FileDownloadHelper::class))->mount($adapter);
     }
 
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter&MockObject

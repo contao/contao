@@ -19,7 +19,7 @@ class DocumentTest extends TestCase
 {
     public function testDocument(): void
     {
-        $document = (new Document('id', 'type', 'searchContent'))
+        $document = new Document('id', 'type', 'searchContent')
             ->withMetadata([
                 'meta' => 'data',
                 'i-should-get-stripped-because-non-utf8' => "\x80",

@@ -516,7 +516,7 @@ services:
     contao.listener.page_access:
         class: Contao\CoreBundle\EventListener\PageAccessListener
         arguments:
-            - '@contao.routing.page_finder'
+            - '@contao.framework'
             - '@security.helper'
 
     contao.listener.page_trail_cache_tags:

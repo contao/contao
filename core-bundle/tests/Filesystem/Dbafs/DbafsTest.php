@@ -1385,7 +1385,7 @@ class DbafsTest extends TestCase
 
     private function getMountManagerWithRootAdapter(): MountManager
     {
-        return (new MountManager($this->createStub(FileDownloadHelper::class)))->mount(new InMemoryFilesystemAdapter());
+        return new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter());
     }
 
     private function getDbafs(Connection|null $connection = null, VirtualFilesystemInterface|null $filesystem = null, EventDispatcherInterface|null $eventDispatcher = null): Dbafs

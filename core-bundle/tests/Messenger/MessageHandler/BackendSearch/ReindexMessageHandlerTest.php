@@ -28,7 +28,7 @@ class ReindexMessageHandlerTest extends TestCase
 {
     public function testReindex(): void
     {
-        $reindexConfig = (new ReindexConfig())
+        $reindexConfig = new ReindexConfig()
             ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
         ;
@@ -52,7 +52,7 @@ class ReindexMessageHandlerTest extends TestCase
 
     public function testMarksJobErroredIfNotOnCli(): void
     {
-        $reindexConfig = (new ReindexConfig())
+        $reindexConfig = new ReindexConfig()
             ->withJobId('foobar')
         ;
 

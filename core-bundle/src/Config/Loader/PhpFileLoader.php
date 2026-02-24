@@ -67,7 +67,7 @@ class PhpFileLoader extends Loader
      */
     private function parseFile(string $file): array
     {
-        $ast = (new ParserFactory())
+        $ast = new ParserFactory()
             ->createForHostVersion()
             ->parse(trim(file_get_contents($file)))
         ;
