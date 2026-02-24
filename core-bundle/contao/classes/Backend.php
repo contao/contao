@@ -36,48 +36,6 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * Return the current theme as string
-	 *
-	 * @return string The name of the theme
-	 */
-	public static function getTheme()
-	{
-		$theme = Config::get('backendTheme');
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
-		{
-			return $theme;
-		}
-
-		return 'flexible';
-	}
-
-	/**
-	 * Return the back end themes as array
-	 *
-	 * @return array An array of available back end themes
-	 */
-	public static function getThemes()
-	{
-		$arrReturn = array();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = Folder::scan($projectDir . '/system/themes');
-
-		foreach ($arrThemes as $strTheme)
-		{
-			if (str_starts_with($strTheme, '.') || !is_dir($projectDir . '/system/themes/' . $strTheme))
-			{
-				continue;
-			}
-
-			$arrReturn[$strTheme] = $strTheme;
-		}
-
-		return $arrReturn;
-	}
-
-	/**
 	 * Return the TinyMCE language
 	 *
 	 * @return string
