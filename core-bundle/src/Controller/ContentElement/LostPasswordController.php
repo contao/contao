@@ -96,7 +96,7 @@ class LostPasswordController extends AbstractChangePasswordContentElementControl
         $limiter = $this->rateLimiterFactory->create((string) $member->id);
 
         if (!$limiter->consume()->isAccepted()) {
-            return $this->getErrorTemplate('tooManyPasswordResetAttempts');
+            return $this->getErrorTemplateFoType('tooManyPasswordResetAttempts');
         }
 
         $optInToken = $this->optIn->create('pw', $member->email, ['tl_member' => [$member->id]]);
@@ -134,34 +134,34 @@ class LostPasswordController extends AbstractChangePasswordContentElementControl
         $optInToken = $this->optIn->find($request->query->get('token'));
 
         if (!$optInToken || $optInToken->isValid()) {
-            return $this->getErrorTemplate('invalidToken');
+            return $this->getErrorTemplateFoType('invalidToken');
         }
 
         $related = $optInToken->getRelatedRecords();
 
         if (1 !== \count($related) || 'tl_member' !== key($related)) {
-            return $this->getErrorTemplate('invalidToken');
+            return $this->getErrorTemplateFoType('invalidToken');
         }
 
         $ids = current($related);
 
         if (1 !== \count($ids)) {
-            return $this->getErrorTemplate('invalidToken');
+            return $this->getErrorTemplateFoType('invalidToken');
         }
 
         $memberModelAdapter = $this->container->get('contao.framework')->getAdapter(MemberModel::class);
         $member = $memberModelAdapter->findById($ids[0]);
 
         if (null === $member) {
-            return $this->getErrorTemplate('invalidToken');
+            return $this->getErrorTemplateFoType('invalidToken');
         }
 
         if ($optInToken->isConfirmed()) {
-            return $this->getErrorTemplate('tokenConfirmed');
+            return $this->getErrorTemplateFoType('tokenConfirmed');
         }
 
         if ($optInToken->getEmail() !== $member->email) {
-            return $this->getErrorTemplate('tokenEmailMismatch');
+            return $this->getErrorTemplateFoType('tokenEmailMismatch');
         }
 
         $form = $this->createForm(ChangePasswordType::class, []);
@@ -193,7 +193,7 @@ class LostPasswordController extends AbstractChangePasswordContentElementControl
         return $template->getResponse();
     }
 
-    private function getErrorTemplate(string $type): Response
+    private function getErrorTemplateFoType(string $type): Response
     {
         $template = new FragmentTemplate('mod_message', static fn () => new Response());
         $template->set('type', 'error');
