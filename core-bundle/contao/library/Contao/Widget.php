@@ -751,23 +751,19 @@ abstract class Widget extends Controller
 			return ($this->inputCallback)();
 		}
 
-		if ($this->useRawRequestData === true)
+		// Support arrays (thanks to Andreas Schempp)
+		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
+
+		if (!$this->allowHtml || $this->preserveTags || $this->useRawRequestData)
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-			return $request->request->get($strKey);
+			$varValue = $request->request->all()[array_shift($arrParts)] ?? null;
 		}
-
-		$strMethod = $this->allowHtml ? 'postHtml' : 'post';
-
-		if ($this->preserveTags)
+		else
 		{
-			$strMethod = 'postRaw';
+			$varValue = Input::postHtml(array_shift($arrParts), $this->decodeEntities);
 		}
-
-		// Support arrays (thanks to Andreas Schempp)
-		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
-		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
 		{
