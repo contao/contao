@@ -201,9 +201,7 @@ class FileDownloadHelper
 
     private function getSecurityTokenHash(): string|null
     {
-        $token = $this->security->getToken();
-
-        if (!$token) {
+        if (!$token = $this->security->getToken()) {
             return null;
         }
 
