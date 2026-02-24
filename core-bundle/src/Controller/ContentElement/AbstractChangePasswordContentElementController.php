@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Event\NewPasswordEvent;
-use Contao\CoreBundle\Form\Type\ChangePasswordType;
 use Contao\FrontendUser;
 use Contao\MemberModel;
 use Contao\OptInModel;
@@ -54,7 +53,9 @@ abstract class AbstractChangePasswordContentElementController extends AbstractCo
     }
 
     /**
-     * @param FormInterface<array{}|ChangePasswordType> $form
+     * @template T
+     *
+     * @param FormInterface<T> $form
      */
     protected function updatePassword(ContentModel $model, MemberModel $member, FormInterface $form): void
     {
