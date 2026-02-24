@@ -827,6 +827,18 @@
       <trans-unit id="tl_content.tableLabel">
         <source>Content element</source>
       </trans-unit>
+      <trans-unit id="tl_content.reg_skipName.0">
+        <source>Skip username</source>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_skipName.1">
+        <source>Do not require the username to request a new password.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.disableCaptcha.0">
+        <source>Disable spam protection</source>
+      </trans-unit>
+      <trans-unit id="tl_content.disableCaptcha.1">
+        <source>Here you can disable the spam protection (not recommended).</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
