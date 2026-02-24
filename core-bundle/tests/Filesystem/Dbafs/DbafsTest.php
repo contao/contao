@@ -570,7 +570,7 @@ class DbafsTest extends TestCase
     {
         $getFilesystem = static function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
-                (new MountManager(self::createStub(FileDownloadHelper::class)))->mount(new InMemoryFilesystemAdapter()),
+                new MountManager(self::createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
                 new DbafsManager(new EventDispatcher()),
             );
 

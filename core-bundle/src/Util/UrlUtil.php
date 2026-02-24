@@ -63,12 +63,14 @@ class UrlUtil
 
         $existing = [];
         $existingQueryString = $uri->getQuery();
+
         if ('' !== $existingQueryString) {
             parse_str($existingQueryString, $existing);
         }
 
         $toAdd = [];
         $queryToAdd = ltrim($queryToAdd, '?&');
+
         if ('' !== $queryToAdd) {
             parse_str($queryToAdd, $toAdd);
         }

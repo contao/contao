@@ -65,17 +65,17 @@ class FileDownloadHelper
     }
 
     /**
-     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
-     *             use "generateUrl()" instead.
-     *
      * Generate a signed file URL that a browser will display inline.
      *
      * You can optionally provide an array of $context, that will also be incorporated
      * into the URL.
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             use "generateUrl()" instead.
      */
     public function generateInlineUrl(string $url, string $path, array|null $context = null): string
     {
-        trigger_deprecation('contao/core-bundle', '6.0', 'The "generateInlineUrl()" method is deprecated. Use "generateUrl()" instead.');
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "generateUrl()" instead.', __METHOD__);
 
         return $this->generate($url, [
             self::PARAM_PATH => $path,
@@ -117,17 +117,17 @@ class FileDownloadHelper
     }
 
     /**
-     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
-     *              use "generateUrl()" instead.
-     *
      * Generate a signed file URL that a browser will download.
      *
      * You can optionally provide an array of $context, that will also be incorporated
      * into the URL.
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             use "generateUrl()" instead.
      */
     public function generateDownloadUrl(string $url, string $path, string|null $fileName = null, array|null $context = null): string
     {
-        trigger_deprecation('contao/core-bundle', '6.0', 'The "generateDownloadUrl()" method is deprecated. Use "generateUrl()" instead.');
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "generateUrl()" instead.', __METHOD__);
 
         if (null !== $fileName) {
             // Call makeDisposition() here to check if the file name is valid
@@ -163,9 +163,6 @@ class FileDownloadHelper
     }
 
     /**
-     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
-     *             use "handleRequest()" instead.
-     *
      * Handle download request and stream file contents.
      *
      * If you need to add custom logic, you can implement the $onProcess closure that
@@ -174,10 +171,13 @@ class FileDownloadHelper
      * there, otherwise return null.
      *
      * @param (\Closure(FilesystemItem, array): (Response|null))|null $onProcess
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             use "handleRequest()" instead.
      */
     public function handle(Request $request, VirtualFilesystemInterface $storage, \Closure|null $onProcess = null): Response
     {
-        trigger_deprecation('contao/core-bundle', '6.0', 'The "handle()" method is deprecated. Use "handleRequest()" instead.');
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "handleRequest()" instead.', __METHOD__);
 
         if (!$this->signer->checkRequest($request)) {
             return new Response('The provided file URL is not valid.', Response::HTTP_FORBIDDEN);

@@ -52,7 +52,6 @@ class VirtualFilesystemStoragePackageTest extends TestCase
         ;
 
         $package = new VirtualFilesystemStoragePackage($storage);
-
         $expected = hash('xxh3', '123456789');
 
         $this->assertSame($expected, $package->getVersion('some/path'));

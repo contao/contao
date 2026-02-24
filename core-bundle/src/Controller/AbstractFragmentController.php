@@ -79,6 +79,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
 
         $options ??= Options::create();
+
         $options = $options->withSetting(
             Options::OPTION_TEMPORARY_ACCESS_INFORMATION,
             TemporaryAccessOption::createFromContent($ttl, $content),

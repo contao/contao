@@ -23,7 +23,7 @@ class Options
     /**
      * @param array<string, mixed> $options
      */
-    private function __construct(private array $options = [])
+    private function __construct(private readonly array $options = [])
     {
     }
 

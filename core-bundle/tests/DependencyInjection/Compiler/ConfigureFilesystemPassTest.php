@@ -116,11 +116,11 @@ class ConfigureFilesystemPassTest extends TestCase
             ]),
         );
 
-        $container->setDefinition('contao.filesystem.file_download_helper', (new Definition(FileDownloadHelper::class))
+        $container->setDefinition('contao.filesystem.file_download_helper', new Definition(FileDownloadHelper::class)
             ->setArguments([
-                (new Definition(UriSigner::class))->setArguments(['super-secret']),
+                new Definition(UriSigner::class)->setArguments(['super-secret']),
                 new Definition(ChainRouter::class),
-                (new Definition(Security::class))->setArguments([$container]),
+                new Definition(Security::class)->setArguments([$container]),
                 new Reference('contao.filesystem.mount_manager'),
             ])
             ->setLazy(true),
@@ -129,7 +129,7 @@ class ConfigureFilesystemPassTest extends TestCase
         $container
             ->setDefinition(
                 $mountManagerId = 'contao.filesystem.mount_manager',
-                $mountManagerDefinition = (new Definition(MountManager::class))->addArgument(new Reference('contao.filesystem.file_download_helper')),
+                $mountManagerDefinition = new Definition(MountManager::class)->addArgument(new Reference('contao.filesystem.file_download_helper')),
             )
             ->setPublic(true)
         ;

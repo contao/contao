@@ -52,11 +52,11 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     /**
      * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
-     *             do not call this method at all anymore but leave handling the downloads to the new FileStreamController.
+     *             leave handling the downloads to the new FileStreamController.
      */
     protected function handleDownload(Request $request, ContentModel $model): void
     {
-        trigger_deprecation('contao/core-bundle', '6.0', 'The "handleDownload()" method is deprecated. Leave this to the new FileStreamController.');
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Leave this to the new FileStreamController.', __METHOD__);
 
         $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
             $request,
@@ -81,6 +81,11 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         }
     }
 
+    /**
+     * Backwards compatibility: keep the $request argument until Contao 7.
+     *
+     * @noinspection PhpUnusedParameterInspection
+     */
     protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model, Request $request): array
     {
         $items = array_map(

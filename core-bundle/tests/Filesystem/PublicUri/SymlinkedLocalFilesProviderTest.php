@@ -100,7 +100,6 @@ class SymlinkedLocalFilesProviderTest extends TestCase
         ;
 
         $provider = new SymlinkedLocalFilesProvider($adapter, 'upload/dir', new RequestStack());
-
         $uri = $provider->getUri($adapter, 'path/to/resource.txt', null);
 
         $this->assertNull($uri);

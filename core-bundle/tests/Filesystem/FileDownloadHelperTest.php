@@ -194,6 +194,7 @@ class FileDownloadHelperTest extends TestCase
             ->willReturnCallback(static fn (string $_route, array $params): string => 'https://example.com/_file_stream/'.$params['path'].'?'.http_build_query($params),
             )
         ;
+
         $helper = new FileDownloadHelper(
             $signer,
             $router,
