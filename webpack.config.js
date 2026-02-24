@@ -21,7 +21,7 @@ Encore
         };
     })
     .cleanupOutputBeforeBuild(options => {
-        options.keep = /(fonts|icons|styles)\//;
+        options.keep = /icons\//;
     })
     .addEntry('backend', './core-bundle/assets/backend.js')
     .addEntry('navigation', './core-bundle/assets/navigation.js')
