@@ -58,7 +58,7 @@ class ThemeOperationsListenerTest extends TestCase
             ContaoCorePermissions::USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS,
             false,
         ];
-        
+
         yield [
             'table=tl_module',
             ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES,
