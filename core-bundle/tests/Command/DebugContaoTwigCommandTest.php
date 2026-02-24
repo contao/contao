@@ -72,13 +72,13 @@ class DebugContaoTwigCommandTest extends TestCase
             ->willReturn([
                 'foo' => [
                     '/path1/foo.html.twig' => '@A/foo.html.twig',
-                    '/path2/foo.html5' => '@B/foo.html5',
+                    '/path2/foo.html.twig' => '@B/foo.html.twig',
                 ],
                 'bar' => [
                     '/path/bar.html.twig' => '@C/bar.html.twig',
                 ],
                 'baz' => [
-                    '/path/baz.html5' => '@D/baz.html5',
+                    '/path/baz.html.twig' => '@D/baz.html.twig',
                 ],
             ])
         ;
@@ -112,11 +112,12 @@ class DebugContaoTwigCommandTest extends TestCase
                   Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
-                  Original name   @B/foo.html5
+                  Original name   @B/foo.html.twig
                   @Contao name    @Contao/foo.html.twig
-                  Path            /path2/foo.html5
-                  Blocks          @B/foo.html5_block1, @B/foo.html5_block2
-                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
+                  Path            /path2/foo.html.twig
+                  Blocks          @B/foo.html.twig_block1, @B/foo.html.twig_block2
+                  Slots           @B/foo.html.twig_slot1, @B/foo.html.twig_slot2
+                  Preview         … code of @B/foo.html.twig …
                  --------------- --------------------------------------------------
                 bar
                 ===
@@ -132,15 +133,16 @@ class DebugContaoTwigCommandTest extends TestCase
                  --------------- --------------------------------------------------
                 baz
                 ===
-                 --------------- ------------------------------------------
+                 --------------- --------------------------------------------------
                   Attribute       Value
-                 --------------- ------------------------------------------
-                  Original name   @D/baz.html5
+                 --------------- --------------------------------------------------
+                  Original name   @D/baz.html.twig
                   @Contao name    @Contao/baz.html.twig
-                  Path            /path/baz.html5
-                  Blocks          @D/baz.html5_block1, @D/baz.html5_block2
-                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
-                 --------------- ------------------------------------------
+                  Path            /path/baz.html.twig
+                  Blocks          @D/baz.html.twig_block1, @D/baz.html.twig_block2
+                  Slots           @D/baz.html.twig_slot1, @D/baz.html.twig_slot2
+                  Preview         … code of @D/baz.html.twig …
+                 --------------- --------------------------------------------------
 
                 OUTPUT,
         ];
@@ -161,11 +163,12 @@ class DebugContaoTwigCommandTest extends TestCase
                   Slots           @A/foo.html.twig_slot1, @A/foo.html.twig_slot2
                   Preview         … code of @A/foo.html.twig …
                  --------------- --------------------------------------------------
-                  Original name   @B/foo.html5
+                  Original name   @B/foo.html.twig
                   @Contao name    @Contao/foo.html.twig
-                  Path            /path2/foo.html5
-                  Blocks          @B/foo.html5_block1, @B/foo.html5_block2
-                  Slots           @B/foo.html5_slot1, @B/foo.html5_slot2
+                  Path            /path2/foo.html.twig
+                  Blocks          @B/foo.html.twig_block1, @B/foo.html.twig_block2
+                  Slots           @B/foo.html.twig_slot1, @B/foo.html.twig_slot2
+                  Preview         … code of @B/foo.html.twig …
                  --------------- --------------------------------------------------
 
                 OUTPUT,
@@ -189,15 +192,16 @@ class DebugContaoTwigCommandTest extends TestCase
                  --------------- --------------------------------------------------
                 baz
                 ===
-                 --------------- ------------------------------------------
+                 --------------- --------------------------------------------------
                   Attribute       Value
-                 --------------- ------------------------------------------
-                  Original name   @D/baz.html5
+                 --------------- --------------------------------------------------
+                  Original name   @D/baz.html.twig
                   @Contao name    @Contao/baz.html.twig
-                  Path            /path/baz.html5
-                  Blocks          @D/baz.html5_block1, @D/baz.html5_block2
-                  Slots           @D/baz.html5_slot1, @D/baz.html5_slot2
-                 --------------- ------------------------------------------
+                  Path            /path/baz.html.twig
+                  Blocks          @D/baz.html.twig_block1, @D/baz.html.twig_block2
+                  Slots           @D/baz.html.twig_slot1, @D/baz.html.twig_slot2
+                  Preview         … code of @D/baz.html.twig …
+                 --------------- --------------------------------------------------
 
                 OUTPUT,
         ];

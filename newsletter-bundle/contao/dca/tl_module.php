@@ -15,7 +15,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']     = str_replace(',editable', ',editable,newsletters', $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']);
@@ -30,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_newsletter', 'getChannels'),
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('table'=>'tl_newsletter_channel', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
@@ -48,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array
 	'inputType'               => 'textarea',
 	'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
 	'explanation'             => 'insertTags',
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
@@ -62,7 +62,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1] ?? null,
 	'inputType'               => 'textarea',
 	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
@@ -70,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1] ?? null,
 	'inputType'               => 'textarea',
 	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array

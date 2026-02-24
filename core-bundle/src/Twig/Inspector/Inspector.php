@@ -175,6 +175,9 @@ class Inspector
         return $hierarchy;
     }
 
+    /**
+     * @return \Generator<array<string, mixed>>
+     */
     private function getDataFromAll(array $data): \Generator
     {
         yield $data;

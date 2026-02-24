@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Twig\Finder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -212,20 +211,6 @@ final class Finder implements \IteratorAggregate, \Countable
      */
     public function getIterator(): \Generator
     {
-        // Only include chains that contain at least one non-legacy template
-        $chains = array_filter(
-            $this->filesystem->getInheritanceChains($this->themeSlug),
-            static function (array $chain) {
-                foreach (array_keys($chain) as $path) {
-                    if ('html5' !== Path::getExtension($path, true)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            },
-        );
-
         $this->sources = [];
 
         $matchIdentifier = function (string $identifier): bool {
@@ -240,7 +225,7 @@ final class Finder implements \IteratorAggregate, \Countable
             return str_starts_with($identifier, "$this->identifier/");
         };
 
-        foreach ($chains as $identifier => $chain) {
+        foreach ($this->filesystem->getInheritanceChains($this->themeSlug) as $identifier => $chain) {
             if ($this->identifier && !$matchIdentifier($identifier)) {
                 continue;
             }

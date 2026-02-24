@@ -18,7 +18,7 @@ use Contao\FrontendUser;
 use Contao\Image;
 use Contao\MemberModel;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'inputType'               => 'checkboxWizard',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true, 'feEditable'=>true, 'feGroup'=>'login'),
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'belongsToMany', 'load'=>'lazy')
 		),
 		'login' => array
@@ -313,7 +313,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'session' => array
 		(
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'secret' => array
 		(
@@ -328,7 +328,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'backupCodes' => array
 		(
 			'eval'                    => array('doNotCopy'=>true, 'doNotShow'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'trustedTokenVersion' => array
 		(

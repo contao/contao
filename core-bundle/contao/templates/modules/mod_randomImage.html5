@@ -1,7 +1,0 @@
-<?php $this->extend('block_unsearchable'); ?>
-
-<?php $this->block('content'); ?>
-
-  <?php $this->insert('image', $this->arrData); ?>
-
-<?php $this->endblock(); ?>

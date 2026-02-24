@@ -243,7 +243,7 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('<rendered wildcard>', $response->getContent());
     }
 
-    public function provideScope(): \Generator
+    public function provideScope(): iterable
     {
         yield 'frontend' => [false];
         yield 'backend' => [true];

@@ -1,6 +1,0 @@
-
-<fieldset<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
-
-  <?php if ($this->label): ?>
-    <legend><?= $this->label ?></legend>
-  <?php endif; ?>

@@ -1,7 +1,0 @@
-<?php $this->extend('block_unsearchable'); ?>
-
-<?php $this->block('content'); ?>
-
-  <p class="<?= $this->mclass ?>"><?= $this->message ?></p>
-
-<?php $this->endblock(); ?>
