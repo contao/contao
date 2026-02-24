@@ -10,11 +10,17 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\ForwardPageController;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+trigger_deprecation('contao/core-bundle', '5.7', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', PageForward::class, ForwardPageController::class);
+
 /**
  * Provide methods to handle a forward page.
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\Page\ForwardPageController instead.
  */
 class PageForward extends Frontend
 {
