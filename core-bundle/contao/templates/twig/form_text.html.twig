@@ -17,6 +17,8 @@
         <p class="error">{{ getErrorAsString.invoke() }}</p>
     {% endif %}
 
+    {% set input_attributes = attrs(getAttributes.invoke()) %}
+
     <input{{ attrs()
         .set('type', this.type)
         .set('name', this.name)
@@ -26,9 +28,10 @@
         .addClass(this.class|default)
         .set('value', convertDate.invoke(this.value|default|insert_tag))
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
-        .mergeWith(getAttributes.invoke())
+        .mergeWith(input_attributes)
+        .setIfExists('placeholder', input_attributes.placeholder|default|insert_tag)
     }}>
     {% if this.help|default %}
-        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
+        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>
     {% endif %}
 {% endblock %}
