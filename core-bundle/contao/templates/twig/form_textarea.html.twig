@@ -17,7 +17,7 @@
         <p class="error">{{ getErrorAsString.invoke() }}</p>
     {% endif %}
 
-    {% set textarea_attributes= attrs(getAttributes.invoke()) %}
+    {% set textarea_attributes = attrs(getAttributes.invoke()) %}
 
     <textarea{{ attrs()
         .set('name', this.name)
