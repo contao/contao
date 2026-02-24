@@ -24,7 +24,7 @@ class PluginTest extends TestCase
     public function testReturnsTheBundles(): void
     {
         $parser = $this->createStub(ParserInterface::class);
-        $config = (new Plugin())->getBundles($parser)[0];
+        $config = new Plugin()->getBundles($parser)[0];
 
         $this->assertInstanceOf(BundleConfig::class, $config);
         $this->assertSame(ContaoNewsBundle::class, $config->getName());

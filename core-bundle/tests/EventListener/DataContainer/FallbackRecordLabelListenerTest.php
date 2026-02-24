@@ -25,7 +25,7 @@ class FallbackRecordLabelListenerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', []);
+        new \ReflectionClass(DcaLoader::class)->setStaticPropertyValue('arrLoaded', []);
         unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MIME']);
         $this->resetStaticProperties([System::class, Config::class]);
 
@@ -43,7 +43,7 @@ class FallbackRecordLabelListenerTest extends TestCase
     public function testGetsLabelFromTranslator(): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
-        (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
+        new \ReflectionClass(DcaLoader::class)->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
 
         $catalogue = $this->createStub(MessageCatalogueInterface::class);
         $catalogue
@@ -76,7 +76,7 @@ class FallbackRecordLabelListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_foo']['list']['sorting']['defaultSearchField'] = 'fieldA';
 
         System::setContainer($this->getContainerWithContaoConfiguration());
-        (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
+        new \ReflectionClass(DcaLoader::class)->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
 
         $translator = $this->createStub(TranslatorStub::class);
 

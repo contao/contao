@@ -103,7 +103,7 @@ class FilesystemUtilTest extends TestCase
         ];
 
         yield 'unknown UUID amongst valid' => [
-            [$file1->toBinary(), (new Uuid('a1695de1-90a8-486c-9e2f-e0567cd9c6ab'))->toBinary()],
+            [$file1->toBinary(), new Uuid('a1695de1-90a8-486c-9e2f-e0567cd9c6ab')->toBinary()],
             ['file1'],
         ];
 

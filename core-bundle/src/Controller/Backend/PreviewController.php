@@ -88,7 +88,7 @@ class PreviewController
 
         parse_str($loginUri->getQuery(), $query);
 
-        $previewUri = (new Uri($request->getUri()))
+        $previewUri = new Uri($request->getUri())
             ->withScheme($targetUri->getScheme())
             ->withHost($targetUri->getHost())
         ;

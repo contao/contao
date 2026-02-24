@@ -569,7 +569,7 @@ class DbafsTest extends TestCase
     {
         $getFilesystem = static function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
-                (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+                new MountManager()->mount(new InMemoryFilesystemAdapter()),
                 new DbafsManager(new EventDispatcher()),
             );
 
@@ -1384,7 +1384,7 @@ class DbafsTest extends TestCase
 
     private function getMountManagerWithRootAdapter(): MountManager
     {
-        return (new MountManager())->mount(new InMemoryFilesystemAdapter());
+        return new MountManager()->mount(new InMemoryFilesystemAdapter());
     }
 
     private function getDbafs(Connection|null $connection = null, VirtualFilesystemInterface|null $filesystem = null, EventDispatcherInterface|null $eventDispatcher = null): Dbafs

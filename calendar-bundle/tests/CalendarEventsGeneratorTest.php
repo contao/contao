@@ -184,7 +184,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
 
     public static function getEvent(): iterable
     {
-        $time = (new \DateTimeImmutable())->modify('+7 days');
+        $time = new \DateTimeImmutable()->modify('+7 days');
 
         yield 'Basic event' => [
             [
@@ -238,7 +238,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
         ];
 
-        $time = (new \DateTimeImmutable())->modify('+7 days')->setTime(12, 0);
+        $time = new \DateTimeImmutable()->modify('+7 days')->setTime(12, 0);
 
         yield 'Event with open ended start time' => [
             [
@@ -268,7 +268,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
         ];
 
-        $time = (new \DateTimeImmutable())->setTime(0, 0);
+        $time = new \DateTimeImmutable()->setTime(0, 0);
 
         yield 'Ongoing event' => [
             [
@@ -324,7 +324,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
         ];
 
-        $time1 = (new \DateTimeImmutable())->modify('- 1 minute');
+        $time1 = new \DateTimeImmutable()->modify('- 1 minute');
         $time2 = $time1->modify('+ 1 day');
         $time3 = $time2->modify('+ 1 day');
 

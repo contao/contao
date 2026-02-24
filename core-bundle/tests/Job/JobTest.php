@@ -92,7 +92,7 @@ class JobTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        (new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::new, 'job-type', new Owner(42)))
+        new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::new, 'job-type', new Owner(42))
             ->withIsPublic(true)
         ;
     }

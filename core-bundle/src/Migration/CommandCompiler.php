@@ -98,7 +98,7 @@ class CommandCompiler
 
     private function copyTableDefinition(Schema $targetSchema, Table $table): void
     {
-        (new \ReflectionClass(Schema::class))
+        new \ReflectionClass(Schema::class)
             ->getMethod('_addTable')
             ->invoke($targetSchema, $table)
         ;
@@ -106,7 +106,7 @@ class CommandCompiler
 
     private function copyColumnDefinition(Table $targetTable, Column $column): void
     {
-        (new \ReflectionClass(Table::class))
+        new \ReflectionClass(Table::class)
             ->getMethod('_addColumn')
             ->invoke($targetTable, $column)
         ;

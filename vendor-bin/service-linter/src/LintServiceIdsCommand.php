@@ -290,7 +290,7 @@ class LintServiceIdsCommand
                 $this->hasError = true;
 
                 $this->error('The services in the %s file are not sorted correctly.', $fileName);
-                $this->io->writeln((new \Diff($serviceIds, $sortedIds))->render(new \Diff_Renderer_Text_Unified()));
+                $this->io->writeln(new \Diff($serviceIds, $sortedIds)->render(new \Diff_Renderer_Text_Unified()));
             }
         }
 

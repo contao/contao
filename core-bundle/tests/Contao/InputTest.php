@@ -128,7 +128,7 @@ class InputTest extends TestCase
     {
         $expectedEncoded ??= $expected;
 
-        $specialchars = (new \ReflectionClass(Widget::class))->getMethod('specialcharsValue')->invoke(...);
+        $specialchars = new \ReflectionClass(Widget::class)->getMethod('specialcharsValue')->invoke(...);
 
         // html_entity_decode simulates the browser here
         $_POST = [

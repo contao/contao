@@ -39,7 +39,7 @@ class SymlinksCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        (new Filesystem())->remove([
+        new Filesystem()->remove([
             Path::join($this->getTempDir(), 'public'),
             Path::join($this->getTempDir(), 'system/config'),
             Path::join($this->getTempDir(), 'system/logs'),
@@ -75,7 +75,7 @@ class SymlinksCommandTest extends TestCase
 
     public function testConvertsAbsolutePathsToRelativePaths(): void
     {
-        $command = (new \ReflectionClass(SymlinksCommand::class))->newInstanceWithoutConstructor();
+        $command = new \ReflectionClass(SymlinksCommand::class)->newInstanceWithoutConstructor();
 
         // Use \ as directory separator in $projectDir
         $projectDir = new \ReflectionProperty(SymlinksCommand::class, 'projectDir');

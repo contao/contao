@@ -40,7 +40,7 @@ class FormatDateInsertTagTest extends TestCase
             $this->createStub(ContaoFramework::class),
             $this->createStub(LoggerInterface::class),
             $this->createStub(FragmentHandler::class),
-            (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
+            new \ReflectionClass(InsertTags::class)->newInstanceWithoutConstructor(),
         );
 
         /** @var ResolvedInsertTag $tag */

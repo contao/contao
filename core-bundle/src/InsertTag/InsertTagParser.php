@@ -362,7 +362,7 @@ class InsertTagParser implements ResetInterface
         foreach ($replaced as $result) {
             if ($result->getExpiresAt()) {
                 $this->subrequestCacheSubscriber?->addToCurrentStrategy(
-                    (new Response())->setSharedMaxAge($result->getExpiresAt()->getTimestamp() - (new \DateTimeImmutable())->getTimestamp()),
+                    new Response()->setSharedMaxAge($result->getExpiresAt()->getTimestamp() - new \DateTimeImmutable()->getTimestamp()),
                 );
             }
 

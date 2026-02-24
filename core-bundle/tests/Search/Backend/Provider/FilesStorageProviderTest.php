@@ -56,7 +56,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         $adapter->write('foo/bar.jpg', '…', new Config());
 
         $filesystem = new VirtualFilesystem(
-            (new MountManager())->mount($adapter),
+            new MountManager()->mount($adapter),
             $this->createStub(DbafsManager::class),
         );
 
@@ -113,7 +113,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         );
 
         $since = new \DateTimeImmutable('1970-01-01 01:00:00+00:00');
-        $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentsNewerThan($since)));
+        $documents = iterator_to_array($provider->updateIndex(new ReindexConfig()->limitToDocumentsNewerThan($since)));
 
         $this->assertCount(1, $documents);
 
@@ -152,7 +152,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             'files',
         );
 
-        $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentIds(new GroupedDocumentIds([FilesStorageProvider::TYPE => ['bar']]))));
+        $documents = iterator_to_array($provider->updateIndex(new ReindexConfig()->limitToDocumentIds(new GroupedDocumentIds([FilesStorageProvider::TYPE => ['bar']]))));
 
         $this->assertCount(1, $documents);
 
@@ -194,8 +194,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             'files',
         );
 
-        $allowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'foo']);
-        $disallowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'bar']);
+        $allowedDocument = new Document('', '', '')->withMetadata(['path' => 'foo']);
+        $disallowedDocument = new Document('', '', '')->withMetadata(['path' => 'bar']);
 
         $token = $this->createStub(TokenInterface::class);
 

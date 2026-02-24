@@ -154,7 +154,7 @@ class AddTokenParserTest extends TestCase
 
         $parser = new Parser($environment);
         $source = new Source($code, 'template.html.twig');
-        $tokenStream = (new Lexer($environment))->tokenize($source);
+        $tokenStream = new Lexer($environment)->tokenize($source);
 
         $this->expectException(SyntaxError::class);
         $this->expectExceptionMessage($expectedException);

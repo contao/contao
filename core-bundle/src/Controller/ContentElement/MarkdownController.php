@@ -120,7 +120,7 @@ class MarkdownController extends AbstractContentElementController
 
         $path = $filesModel->getAbsolutePath();
 
-        if (!(new Filesystem())->exists($path)) {
+        if (!new Filesystem()->exists($path)) {
             return '';
         }
 
