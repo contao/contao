@@ -28,7 +28,7 @@ class LogoutPageController extends AbstractController
     {
     }
 
-    public function __invoke(Request $request, PageModel $pageModel): Response
+    public function __invoke(Request $request, PageModel $pageModel): RedirectResponse
     {
         $redirect = $this->getRedirectUrl($pageModel, $request);
 
