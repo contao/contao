@@ -25,7 +25,6 @@ use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
@@ -48,7 +47,6 @@ class ContaoFrameworkTest extends TestCase
             DcaExtractor::class,
             Registry::class,
             System::class,
-            TemplateLoader::class,
         ]);
 
         ini_restore('intl.default_locale');

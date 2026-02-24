@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\FragmentTemplate;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 
 class FragmentTemplateTest extends TestCase
@@ -31,15 +30,12 @@ class FragmentTemplateTest extends TestCase
         $template->set('foo', 'f');
         $template->set('bar', 42);
 
-        $template->baz = true;
-
         $this->assertSame(
-            ['foobar' => 'foobar', 'foo' => 'f', 'bar' => 42, 'baz' => true],
+            ['foobar' => 'foobar', 'foo' => 'f', 'bar' => 42],
             $template->getData(),
         );
 
         $this->assertSame('f', $template->get('foo'));
-        $this->assertSame('f', $template->foo);
 
         $this->assertTrue($template->has('bar'));
         $this->assertTrue(isset($template->bar));
@@ -62,73 +58,6 @@ class FragmentTemplateTest extends TestCase
 
         $template = $this->getFragmentTemplate($callback);
         $this->assertSame($returnedResponse, $template->getResponse($preBuiltResponse));
-    }
-
-    #[DataProvider('provideIllegalParentMethods')]
-    public function testDisallowsAccessOfParentMethods(string $method): void
-    {
-        $template = $this->getFragmentTemplate();
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
-
-        $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
-
-        $args = array_map(
-            function (\ReflectionParameter $parameter) {
-                $type = $parameter->getType();
-
-                if (!$type instanceof \ReflectionNamedType) {
-                    return null;
-                }
-
-                /** @var 'bool'|'string'|'array'|class-string<object> $name */
-                $name = $type->getName();
-
-                return match ($name) {
-                    'bool' => false,
-                    'string' => '',
-                    'array' => [],
-                    default => $this->createStub($name),
-                };
-            },
-            $parent->getMethod($method)->getParameters(),
-        );
-
-        $template->$method(...$args);
-    }
-
-    public static function provideIllegalParentMethods(): iterable
-    {
-        $excluded = [
-            '__construct',
-            '__set',
-            '__get',
-            '__isset',
-            'once',
-            'setData',
-            'getData',
-            'setName',
-            'getName',
-            'getResponse',
-            'addCspSource',
-            'addCspHash',
-            'cspInlineStyle',
-            'cspInlineStyles',
-            'nonce',
-            'attr',
-            'attrs',
-        ];
-
-        $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
-
-        foreach ($parent->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if (\in_array($name = $method->getName(), $excluded, true)) {
-                continue;
-            }
-
-            yield "accessing $name()" => [$name];
-        }
     }
 
     private function getFragmentTemplate(\Closure|null $callback = null): FragmentTemplate

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -37,7 +36,7 @@ class InheritanceTest extends TestCase
     public function testInheritsMultipleTimes(): void
     {
         $environment = $this->getDemoEnvironment();
-        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This & that']);
 
         // Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<global><app><bar><foo>Content: This &amp; that</foo></bar></app></global>';
@@ -58,7 +57,7 @@ class InheritanceTest extends TestCase
         ;
 
         $environment = $this->getDemoEnvironment(pageFinder: $pageFinder);
-        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This & that']);
 
         // Theme > Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<theme><global><app><bar><foo>Content: This &amp; that</foo></bar></app></global></theme>';
@@ -83,7 +82,7 @@ class InheritanceTest extends TestCase
         $file2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2/templates/text.json.twig');
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig/html5" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
+        $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
 
         $this->getDemoEnvironment(['InvalidBundle2' => $bundlePath]);
     }
@@ -121,7 +120,6 @@ class InheritanceTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );

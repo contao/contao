@@ -67,7 +67,6 @@ use Symfony\Component\VarDumper\VarDumper;
 abstract class Template extends Controller
 {
 	use TemplateInheritance;
-	use TemplateTrait;
 
 	/**
 	 * Output buffer
@@ -272,26 +271,6 @@ abstract class Template extends Controller
 	public function getName()
 	{
 		return $this->strTemplate;
-	}
-
-	/**
-	 * Set the output format
-	 *
-	 * @param string $strFormat The output format
-	 */
-	public function setFormat($strFormat)
-	{
-		$this->strFormat = $strFormat;
-	}
-
-	/**
-	 * Return the output format
-	 *
-	 * @return string The output format
-	 */
-	public function getFormat()
-	{
-		return $this->strFormat;
 	}
 
 	/**

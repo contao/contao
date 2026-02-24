@@ -25,7 +25,6 @@ use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\ModuleModel;
 use Contao\System;
-use Contao\TemplateLoader;
 use FeedIo\Adapter\ResponseInterface;
 use FeedIo\Feed;
 use FeedIo\FeedInterface;
@@ -64,7 +63,7 @@ class FeedReaderControllerTest extends TestCase
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_LANG']);
 
-        $this->resetStaticProperties([TemplateLoader::class, System::class, Config::class]);
+        $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();
     }

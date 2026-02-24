@@ -115,6 +115,9 @@ return (new Configuration())
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
 
+    // The monorepo check requires this to be a prod dependency
+    ->ignoreErrorsOnPackage('symfony/twig-bridge', [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV])
+
     // We only use the assets from the web-auth/webauthn-stimulus package.
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
 ;

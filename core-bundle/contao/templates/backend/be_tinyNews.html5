@@ -1,9 +1,0 @@
-<?php $this->extend('be_tinyMCE'); ?>
-
-<?php $this->block('valid_elements'); ?>
-  extended_valid_elements: 'b/strong,i/em',
-<?php $this->endblock(); ?>
-
-<?php $this->block('custom'); ?>
-  doctype: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">',
-<?php $this->endblock(); ?>

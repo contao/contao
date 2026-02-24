@@ -25,7 +25,6 @@ use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -141,13 +140,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
      *           data is always added to the context of modern fragment
      *           templates.
      */
-    protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
+    protected function addHeadlineToTemplate(FragmentTemplate $template, array|string|null $headline): void
     {
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         $data = StringUtil::deserialize($headline);
-        $template->headline = \is_array($data) ? $data['value'] ?? '' : $data;
-        $template->hl = \is_array($data) && isset($data['unit']) ? $data['unit'] : 'h1';
+        $template->set('headline', \is_array($data) ? $data['value'] ?? '' : $data);
+        $template->set('hl', \is_array($data) && isset($data['unit']) ? $data['unit'] : 'h1');
     }
 
     /**
@@ -156,16 +155,16 @@ abstract class AbstractFragmentController extends AbstractController implements 
      *           Attributes data is always added to the context of modern
      *           fragment templates.
      */
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array|null $classes = null): void
+    protected function addCssAttributesToTemplate(FragmentTemplate $template, string $templateName, array|string|null $cssID, array|null $classes = null): void
     {
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         $data = StringUtil::deserialize($cssID, true);
-        $template->class = trim($templateName.' '.($data[1] ?? ''));
-        $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
+        $template->set('class', trim($templateName.' '.($data[1] ?? '')));
+        $template->set('cssID', !empty($data[0]) ? ' id="'.$data[0].'"' : '');
 
         if ($classes) {
-            $template->class .= ' '.implode(' ', $classes);
+            $template->set('class', $template->get('class').' '.implode(' ', $classes));
         }
     }
 
@@ -175,12 +174,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
      *           properties are always added to the context of modern fragment
      *           templates.
      */
-    protected function addPropertiesToTemplate(Template $template, array $properties): void
+    protected function addPropertiesToTemplate(FragmentTemplate $template, array $properties): void
     {
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         foreach ($properties as $k => $v) {
-            $template->{$k} = $v;
+            $template->set($k, $v);
         }
     }
 
@@ -190,11 +189,11 @@ abstract class AbstractFragmentController extends AbstractController implements 
      *           data is always added to the context of modern fragment
      *           templates.
      */
-    protected function addSectionToTemplate(Template $template, string $section): void
+    protected function addSectionToTemplate(FragmentTemplate $template, string $section): void
     {
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
-        $template->inColumn = $section;
+        $template->set('inColumn', $section);
     }
 
     /**

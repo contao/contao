@@ -23,7 +23,6 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
-use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsAnything;
@@ -55,7 +54,7 @@ class AbstractBackendControllerTest extends TestCase
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME']);
 
         $this->restoreServerEnvGetPost();
-        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class, TemplateLoader::class]);
+        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class]);
 
         parent::tearDown();
     }
@@ -86,8 +85,6 @@ class AbstractBackendControllerTest extends TestCase
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
         $_SERVER['HTTP_HOST'] = 'localhost';
-
-        TemplateLoader::addFile('be_main', '');
 
         $expectedContext = [
             'version' => 'my version',
@@ -141,7 +138,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $filesystem = new Filesystem();
         $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
-        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
 
         $GLOBALS['TL_LANG']['MSC'] = [
             'version' => 'version',
@@ -151,8 +147,6 @@ class AbstractBackendControllerTest extends TestCase
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
-
-        TemplateLoader::addFile('be_main', '');
 
         $container = $this->getContainerWithDefaultConfiguration($expectedContext, $request);
 
