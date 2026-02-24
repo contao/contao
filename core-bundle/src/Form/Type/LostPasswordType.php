@@ -32,6 +32,10 @@ class LostPasswordType extends AbstractContaoType
         $resolver->setDefaults([
             'askForUsername' => true,
             'addCaptcha' => true,
+            'altchaAuto' => false,
+            'altchaHideLogo' => false,
+            'altchaHideFooter' => false,
+            'altchaFloating' => false,
         ]);
     }
 
@@ -81,7 +85,16 @@ class LostPasswordType extends AbstractContaoType
         ;
 
         if ($options['addCaptcha']) {
-            $builder->add('captcha', AltchaType::class);
+            $builder->add(
+                'captcha',
+                AltchaType::class,
+                [
+                    'auto' => $options['altchaAuto'],
+                    'hide_logo' => $options['altchaHideLogo'],
+                    'hide_footer' => $options['altchaHideFooter'],
+                    'floating' => $options['altchaFloating'],
+                ],
+            );
         }
 
         $builder

@@ -48,6 +48,7 @@ class AltchaType extends AbstractType
             'auto' => false,
             'hide_logo' => false,
             'hide_footer' => false,
+            'floating' => false,
         ]);
     }
 
@@ -62,6 +63,7 @@ class AltchaType extends AbstractType
         $view->vars['auto'] = $options['auto'];
         $view->vars['hide_logo'] = $options['hide_logo'];
         $view->vars['hide_footer'] = $options['hide_footer'];
+        $view->vars['floating'] = $options['floating'];
 
         $request = $this->requestStack->getCurrentRequest();
 

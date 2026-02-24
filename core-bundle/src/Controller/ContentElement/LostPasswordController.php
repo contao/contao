@@ -56,7 +56,11 @@ class LostPasswordController extends AbstractChangePasswordContentElementControl
             [],
             [
                 'askForUsername' => !$model->reg_skipName,
-                'addCaptcha' => !$model->disableCaptcha,
+                'addCaptcha' => $model->enableCaptcha,
+                'altchaAuto' => $model->altchaAuto,
+                'altchaHideLogo' => $model->altchaHideLogo,
+                'altchaHideFooter' => $model->altchaHideFooter,
+                'altchaFloating' => $model->altchaFloating,
             ],
         );
         $form->handleRequest($request);

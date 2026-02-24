@@ -836,17 +836,41 @@
       <trans-unit id="tl_content.reg_skipName.1">
         <source>Do not require the username to request a new password.</source>
       </trans-unit>
-      <trans-unit id="tl_content.disableCaptcha.0">
-        <source>Disable spam protection</source>
+      <trans-unit id="tl_content.enableCaptcha.0">
+        <source>Enable spam protection</source>
       </trans-unit>
-      <trans-unit id="tl_content.disableCaptcha.1">
-        <source>Here you can disable the spam protection (not recommended).</source>
+      <trans-unit id="tl_content.enableCaptcha.1">
+        <source>Here you can enable the spam protection (recommended).</source>
       </trans-unit>
       <trans-unit id="tl_content.reg_password.0">
         <source>Password message</source>
       </trans-unit>
       <trans-unit id="tl_content.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaAuto.0">
+        <source>Auto verification</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaAuto.1">
+        <source>Automatically verify without user interaction.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaHideLogo.0">
+        <source>Hide logo</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaHideLogo.1">
+        <source>Hide the ALTCHA logo.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaHideFooter.0">
+        <source>Hide footer</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaHideFooter.1">
+        <source>Hide the footer (ALTCHA link).</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaFloating.0">
+        <source>Floating mode</source>
+      </trans-unit>
+      <trans-unit id="tl_content.altchaFloating.1">
+        <source>Enable the floating UI.</source>
       </trans-unit>
     </body>
   </file>
