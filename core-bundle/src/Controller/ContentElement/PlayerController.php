@@ -119,7 +119,13 @@ class PlayerController extends AbstractContentElementController
             $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC);
 
             foreach ($trackItems as $trackItem) {
-                if (!$publicUri = $this->filesStorage->generatePublicUri($trackItem->getPath())) {
+                $publicUri = $this->generatePublicUriWithTemporaryAccess(
+                    $this->filesStorage,
+                    $trackItem,
+                    ['id' => $model->id, 'tstamp' => $model->tstamp],
+                );
+
+                if (!$publicUri) {
                     continue;
                 }
 

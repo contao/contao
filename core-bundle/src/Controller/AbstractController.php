@@ -83,7 +83,7 @@ abstract class AbstractController extends SymfonyAbstractController
         ];
     }
 
-    protected function generatePublicUriWithTemporaryAccess(VirtualFilesystemInterface $filesystem, FilesystemItem $filesystemItem, array $content, int|null $ttl, Options|null $options): UriInterface|null
+    protected function generatePublicUriWithTemporaryAccess(VirtualFilesystemInterface $filesystem, FilesystemItem $filesystemItem, array $content, int|null $ttl = null, Options|null $options = null): UriInterface|null
     {
         // If there is a page model, take the ttl from the shared max age. Otherwise
         // (e.g. backend preview), set it to the maximum possible.
