@@ -55,7 +55,7 @@
             name="{{ name }}"
             maxnumber="{{ max_number }}"
             challengeurl="{{ challenge_url }}"
-            strings="{{ strings }}"
+            strings="{{ strings|raw }}"
             workerurl="{{ asset('js/worker.js', 'contao-components/altcha') }}"
 
             {%- if auto -%}

@@ -13,27 +13,41 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
-use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Form\Type\ChangePasswordType;
 use Contao\CoreBundle\Form\Type\LostPasswordType;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\OptIn\OptInInterface;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Idna;
+use Contao\MemberModel;
+use Contao\PageModel;
 use Contao\System;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsContentElement(category: 'miscellaneous')]
-class LostPasswordController extends AbstractContentElementController
+class LostPasswordController extends AbstractChangePasswordContentElementController
 {
     public function __construct(
-        private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface $translator,
+        private readonly RateLimiterFactoryInterface $rateLimiterFactory,
+        private readonly OptInInterface $optIn,
+        private readonly SimpleTokenParser $simpleTokenParser,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        $this->framework->initialize();
-        $this->framework->getAdapter(System::class)->loadLanguageFile('tl_member');
+        $this->container->get('contao.framework')->initialize();
+        $this->container->get('contao.framework')->getAdapter(System::class)->loadLanguageFile('tl_member');
 
         $this->executeOnloadCallbacks();
 
@@ -47,11 +61,23 @@ class LostPasswordController extends AbstractContentElementController
         );
         $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var MemberModel $memberModelAdapter */
+            $memberModelAdapter = $this->container->get('contao.framework')->getAdapter(MemberModel::class);
+            $member = $model->reg_skipName ?
+                $memberModelAdapter->findActiveByEmailAndUsername($form->get('email')->getData()) :
+                $memberModelAdapter->findActiveByEmailAndUsername($form->get('email')->getData(), $form->get('username')->getData());
+
+            if ($member instanceof MemberModel) {
+                return $this->sendPasswordLink($member, $model, $request);
+            }
+
+            $template->set('error', $this->translator->trans('MSC.accountNotFound', [], 'contao_default'));
+        }
+
         // Set new password
         if (str_starts_with($request->query->get('token', ''), 'pw-')) {
-            // $this->setNewPassword();
-
-            return $template->getResponse();
+            return $this->setNewPassword($template, $model, $request);
         }
 
         $template->set('form', $form->createView());
@@ -61,18 +87,114 @@ class LostPasswordController extends AbstractContentElementController
         return $template->getResponse();
     }
 
-    private function executeOnloadCallbacks(): void
+    private function sendPasswordLink(MemberModel $member, ContentModel $model, Request $request): Response
     {
-        $this->framework->getAdapter(Controller::class)->loadDataContainer('tl_member');
+        $limiter = $this->rateLimiterFactory->create((string) $member->id);
 
-        if (\is_array($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] as $callback) {
-                if (\is_array($callback)) {
-                    $this->framework->getAdapter(System::class)->importStatic($callback[0])->{$callback[1]}();
-                } elseif (\is_callable($callback)) {
-                    $callback();
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->getErrorTemplate('tooManyPasswordResetAttempts');
+        }
+
+        $optInToken = $this->optIn->create('pw', $member->email, ['tl_member' => [$member->id]]);
+        $currentPage = $this->getPageModel();
+
+        if (!$currentPage instanceof PageModel) {
+            throw new PageNotFoundException('Page not found');
+        }
+
+        $data = $member->row();
+        $data['activation'] = $optInToken->getIdentifier();
+        $data['domain'] = Idna::decode($request->getHost());
+        $data['link'] = Idna::decode($this->generateContentUrl($currentPage, ['token' => $optInToken->getIdentifier()], UrlGeneratorInterface::ABSOLUTE_URL));
+
+        // Send the token
+        $optInToken->send(
+            \sprintf($this->translator->trans('MSC.passwordSubject', [], 'contao_default'), Idna::decode($request->getHost())),
+            $this->simpleTokenParser->parse($model->reg_password, $data),
+        );
+
+        $this->logger->info('A new password has been requested for user ID '.$member->id.' ('.Idna::decodeEmail($member->email).')');
+
+        /** @var PageModel $pageModelAdapter */
+        $pageModelAdapter = $this->container->get('contao.framework')->getAdapter(PageModel::class);
+
+        if ($jumpTo = $pageModelAdapter->findById($model->jumpTo)) {
+            return new RedirectResponse($this->generateContentUrl($jumpTo));
+        }
+
+        return new RedirectResponse($this->generateContentUrl($currentPage));
+    }
+
+    private function setNewPassword(FragmentTemplate $template, ContentModel $model, Request $request): Response
+    {
+        $optInToken = $this->optIn->find($request->query->get('token'));
+
+        if (null === $optInToken || $optInToken->isValid()) {
+            return $this->getErrorTemplate('invalidToken');
+        }
+
+        $related = $optInToken->getRelatedRecords();
+
+        if (1 !== \count($related) || 'tl_member' !== key($related)) {
+            return $this->getErrorTemplate('invalidToken');
+        }
+
+        $ids = current($related);
+
+        if (1 !== \count($ids)) {
+            return $this->getErrorTemplate('invalidToken');
+        }
+
+        $memberModelAdapter = $this->container->get('contao.framework')->getAdapter(MemberModel::class);
+        $member = $memberModelAdapter->findById($ids[0]);
+
+        if (null === $member) {
+            return $this->getErrorTemplate('invalidToken');
+        }
+
+        if ($optInToken->isConfirmed()) {
+            return $this->getErrorTemplate('tokenConfirmed');
+        }
+
+        if ($optInToken->getEmail() !== $member->email) {
+            return $this->getErrorTemplate('tokenEmailMismatch');
+        }
+
+        $form = $this->createForm(ChangePasswordType::class, []);
+        $form->remove('oldpassword'); // Do not ask for the old password here, as we have a valid confirmation token.
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->updatePassword($model, $member, $form);
+
+            if ($model->reg_jumpTo) {
+                $pageModelAdapter = $this->container->get('contao.framework')->getAdapter(PageModel::class);
+                $page = $pageModelAdapter->findById($model->reg_jumpTo);
+
+                if ($page instanceof PageModel) {
+                    return new RedirectResponse($this->generateContentUrl($page));
                 }
             }
+
+            $template = new FragmentTemplate('mod_message', static fn () => new Response());
+            $template->set('type', 'confirm');
+            $template->set('message', $this->translator->trans('MSC.newPasswordSet', [], 'contao_default'));
+
+            return $template->getResponse();
         }
+
+        $template->set('form', $form->createView());
+
+        return $template->getResponse();
+    }
+
+    private function getErrorTemplate(string $type): Response
+    {
+        $template = new FragmentTemplate('mod_message', static fn () => new Response());
+        $template->set('type', 'error');
+        $template->set('message', $this->translator->trans('MSC.'.$type, [], 'contao_default'));
+
+        return $template->getResponse();
     }
 }

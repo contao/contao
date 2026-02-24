@@ -857,12 +857,23 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'reg_skipName' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'disableCaptcha' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+		),
+		'reg_jumpTo' => array
+		(
+			'inputType'               => 'pageTree',
+			'foreignKey'              => 'tl_page.title',
+			'eval'                    => array('fieldType'=>'radio'),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'reg_password' => array
+		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_content']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_content']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_content']['passwordText'] ?? null),
+			'inputType'               => 'textarea',
+			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 		),
 	)
 );

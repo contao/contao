@@ -605,6 +605,9 @@
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
       </trans-unit>
+      <trans-unit id="tl_content.email_legend">
+        <source>E-mail settings</source>
+      </trans-unit>
       <trans-unit id="tl_content.ordered">
         <source>ordered list</source>
       </trans-unit>
@@ -838,6 +841,12 @@
       </trans-unit>
       <trans-unit id="tl_content.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_password.0">
+        <source>Password message</source>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_password.1">
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
     </body>
   </file>
