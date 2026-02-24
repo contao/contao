@@ -607,6 +607,7 @@ services:
             - '@messenger.bus.default'
             - '%fragment.path%'
             - '%contao.backend.route_prefix%'
+            - '%kernel.debug%'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
