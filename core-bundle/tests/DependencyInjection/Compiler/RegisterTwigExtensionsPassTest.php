@@ -23,7 +23,7 @@ class RegisterTwigExtensionsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        (new RegisterTwigExtensionsPass())->process($container);
+        new RegisterTwigExtensionsPass()->process($container);
 
         $this->assertTrue($container->hasDefinition('twig.extension.string'));
 

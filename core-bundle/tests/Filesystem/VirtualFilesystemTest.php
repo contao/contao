@@ -911,7 +911,7 @@ class VirtualFilesystemTest extends TestCase
         }
 
         $filesystem = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            new MountManager()->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
 

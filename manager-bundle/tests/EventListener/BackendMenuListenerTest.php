@@ -136,7 +136,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event
             ->expects($this->once())
             ->method('getTree')
-            ->willReturn((new MenuFactory())->createItem('mainMenu'))
+            ->willReturn(new MenuFactory()->createItem('mainMenu'))
         ;
 
         $event
@@ -160,7 +160,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $event
             ->expects($this->once())
             ->method('getTree')
-            ->willReturn((new MenuFactory())->createItem('headerMenu'))
+            ->willReturn(new MenuFactory()->createItem('headerMenu'))
         ;
 
         $security = $this->getSecurity();

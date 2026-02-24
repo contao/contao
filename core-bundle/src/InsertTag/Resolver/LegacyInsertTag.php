@@ -656,7 +656,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 // Include .php, .tpl, .xhtml and .html5 files
-                if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && (new Filesystem())->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
+                if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && new Filesystem()->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
                     if ($subRequest) {
                         $requestStack->push($subRequest);
                     }

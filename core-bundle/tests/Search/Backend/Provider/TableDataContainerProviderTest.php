@@ -42,7 +42,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
 
         $this->resetStaticProperties([System::class, Config::class, DcaLoader::class]);
 
-        (new Filesystem())->remove(Path::join($this->getFixturesDir(), 'var/cache'));
+        new Filesystem()->remove(Path::join($this->getFixturesDir(), 'var/cache'));
 
         parent::tearDown();
     }

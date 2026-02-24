@@ -88,7 +88,7 @@ class ConfigureFilesystemPassTest extends TestCase
             ])
         ;
 
-        (new ConfigureFilesystemPass())->process($container);
+        new ConfigureFilesystemPass()->process($container);
     }
 
     #[DataProvider('provideSymlinks')]
@@ -125,7 +125,7 @@ class ConfigureFilesystemPassTest extends TestCase
             $publicUriProviderDefinition = new Definition(SymlinkedLocalFilesProvider::class),
         );
 
-        (new ConfigureFilesystemPass())->process($container);
+        new ConfigureFilesystemPass()->process($container);
 
         $methodCalls = $mountManagerDefinition->getMethodCalls();
 
@@ -206,7 +206,7 @@ class ConfigureFilesystemPassTest extends TestCase
             new Definition(SymlinkedLocalFilesProvider::class),
         );
 
-        (new ConfigureFilesystemPass())->process($container);
+        new ConfigureFilesystemPass()->process($container);
 
         $methodCalls = $mountManagerDefinition->getMethodCalls();
 

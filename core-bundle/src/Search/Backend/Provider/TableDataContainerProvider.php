@@ -122,7 +122,7 @@ class TableDataContainerProvider implements ProviderInterface
         $trail = $this->dcaUrlAnalyzer->getTrail($editUrl);
         $title = array_pop($trail)['label'];
 
-        return (new Hit($document, $title, $viewUrl))
+        return new Hit($document, $title, $viewUrl)
             ->withEditUrl($editUrl)
             ->withBreadcrumbs($trail)
             ->withContext($document->getSearchableContent())
@@ -249,7 +249,7 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        return (new Document((string) $row['id'], $this->getTypeFromTable($table), $searchableContent))->withMetadata(['table' => $table]);
+        return new Document((string) $row['id'], $this->getTypeFromTable($table), $searchableContent)->withMetadata(['table' => $table]);
     }
 
     private function getTypeFromTable(string $table): string

@@ -78,7 +78,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'href' => $href,
             'label' => $this->translator->trans('MSC.backBT', [], 'contao_default'),
             'title' => $this->translator->trans('MSC.backBTTitle', [], 'contao_default'),
-            'attributes' => (new HtmlAttributes())->addClass('header_back')->set('accesskey', 'b')->set('data-action', 'contao--scroll-offset#discard'),
+            'attributes' => new HtmlAttributes()->addClass('header_back')->set('accesskey', 'b')->set('data-action', 'contao--scroll-offset#discard'),
             'primary' => true,
         ]);
 
@@ -89,7 +89,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
     {
         $this->ensureInitialized();
 
-        $buttonAttributes = (new HtmlAttributes())
+        $buttonAttributes = new HtmlAttributes()
             ->addClass('header_filter_toggle')
             ->set('title', $this->translator->trans('DCA.toggleFilter.1', [], 'contao_default'))
             ->set('data-controller', 'contao--toggle-sender')
@@ -101,7 +101,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
         $this->append([
             'html' => \sprintf('<button%s>'.$this->translator->trans('DCA.toggleFilter.0', [], 'contao_default').'<sup data-contao--element-count-target="count"></sup></button>', $buttonAttributes),
-            'listAttributes' => (new HtmlAttributes())->set('style', 'display: none;'),
+            'listAttributes' => new HtmlAttributes()->set('style', 'display: none;'),
             'primary' => true,
         ]);
 
@@ -115,7 +115,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->append([
             'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1', true, [], false),
             'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
-            'attributes' => (new HtmlAttributes())->addClass('header_clipboard')->set('accesskey', 'x'),
+            'attributes' => new HtmlAttributes()->addClass('header_clipboard')->set('accesskey', 'x'),
             'method' => 'POST',
             'primary' => true,
         ]);
@@ -137,7 +137,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'label' => $label,
             'title' => $title,
             'icon' => $GLOBALS['TL_DCA'][$this->table]['list']['operations']['new']['icon'] ?? null,
-            'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null))->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+            'attributes' => new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null)->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
             'method' => 'POST',
             'primary' => true,
         ]);

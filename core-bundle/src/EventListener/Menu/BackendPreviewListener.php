@@ -65,7 +65,7 @@ class BackendPreviewListener
         $tree->addChild($preview);
 
         // The last two items are "submenu" and "burger", so make this the third to last
-        (new MenuManipulator())->moveToPosition($preview, $tree->count() - 3);
+        new MenuManipulator()->moveToPosition($preview, $tree->count() - 3);
     }
 
     private function getPreviewUrl(): string

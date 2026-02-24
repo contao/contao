@@ -92,7 +92,7 @@ class RegisterPagesPass implements CompilerPassInterface
         $pathRegex = null;
 
         if (\is_string($path) && str_starts_with($path, '/')) {
-            $compiledRoute = (new Route($path, $defaults, $attributes['requirements'] ?? [], $attributes['options'] ?? []))->compile();
+            $compiledRoute = new Route($path, $defaults, $attributes['requirements'] ?? [], $attributes['options'] ?? [])->compile();
             $pathRegex = $compiledRoute->getRegex();
         }
 

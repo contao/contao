@@ -630,7 +630,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $entityMetadata = new ClassMetadata(\stdClass::class);
         $entityMetadata->setIdentifier(['id']);
 
-        (new ClassMetadataBuilder($entityMetadata))
+        new ClassMetadataBuilder($entityMetadata)
             ->setTable('tl_page')
             ->addField('id', 'integer')
             ->addField('published', 'boolean')
@@ -639,7 +639,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ;
 
         $manager = $this->getTestEntityManager();
-        $schema = (new SchemaTool($manager))->getSchemaFromMetadata([$entityMetadata]);
+        $schema = new SchemaTool($manager)->getSchemaFromMetadata([$entityMetadata]);
 
         $provider = $this->getDcaSchemaProvider($dcaMetadata);
         $provider->appendToSchema($schema);

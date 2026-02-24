@@ -39,6 +39,6 @@ class TriggerReindexOnTableDataContainerInvalidationListener
             return;
         }
 
-        $this->backendSearch->reindex((new ReindexConfig())->limitToDocumentIds($documentIds));
+        $this->backendSearch->reindex(new ReindexConfig()->limitToDocumentIds($documentIds));
     }
 }
