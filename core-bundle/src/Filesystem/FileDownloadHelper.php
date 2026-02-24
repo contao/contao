@@ -100,7 +100,7 @@ class FileDownloadHelper
 
         if (null !== $fileName) {
             // Call makeDisposition() here to check if the file name is valid
-            HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName, 'f');
+            HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName);
             $parameters[self::TOKEN_PARAM] = $fileName;
         }
 
@@ -149,7 +149,7 @@ class FileDownloadHelper
         }
 
         // Token does not match
-        if ($this->getSecurityTokenHash() !== $request->query->get('token')) {
+        if ($this->getSecurityTokenHash() !== $request->query->get(self::TOKEN_PARAM)) {
             return new Response('The provided token is not valid.', Response::HTTP_FORBIDDEN);
         }
 
