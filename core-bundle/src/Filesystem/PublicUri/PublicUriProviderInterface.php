@@ -21,5 +21,5 @@ interface PublicUriProviderInterface
      * Returns a public URI for this resource or null if this provider does not
      * support the given adapter/path/options.
      */
-    public function getUri(FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options): UriInterface|null;
+    public function getUri(FilesystemAdapter $adapter, string $adapterPath, Options|null $options): UriInterface|null;
 }

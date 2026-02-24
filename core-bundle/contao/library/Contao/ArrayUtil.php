@@ -45,17 +45,31 @@ class ArrayUtil
 	/**
 	 * Recursively sort an array by key.
 	 */
-	public static function recursiveKeySort(array &$array): void
+	public static function recursiveKeySort(array &$array, int $flags = SORT_REGULAR): void
 	{
 		foreach ($array as &$value)
 		{
 			if (\is_array($value))
 			{
-				self::recursiveKeySort($value);
+				self::recursiveKeySort($value, $flags);
 			}
 		}
 
-		ksort($array);
+		ksort($array, $flags);
+	}
+
+	public static function consistentHash(array $array, string $algorithm = 'xxh3'): string
+	{
+		self::recursiveKeySort($array);
+
+		$json = json_encode($array, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRESERVE_ZERO_FRACTION);
+
+		if (false === $json)
+		{
+			throw new \InvalidArgumentException('Cannot consistently hash array values that are not JSON encodable: ' . json_last_error_msg());
+		}
+
+		return hash($algorithm, $json);
 	}
 
 	/**

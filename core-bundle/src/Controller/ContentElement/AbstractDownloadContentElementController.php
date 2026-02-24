@@ -11,6 +11,7 @@ use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\PublicUri\ContentDispositionOption;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -22,6 +23,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeConfiguration;
 use Contao\LayoutModel;
 use Contao\StringUtil;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,16 +32,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class AbstractDownloadContentElementController extends AbstractContentElementController
 {
-    public function __invoke(Request $request, ContentModel $model, string $section, array|null $classes = null): Response
-    {
-        // TODO: Remove method and move logic into its own action, once we have a
-        // strategy how to handle permissions for downloads via a real route. See #4862
-        // for more details.
-        $this->handleDownload($request, $model);
-
-        return parent::__invoke($request, $model, $section, $classes);
-    }
-
     /**
      * @return array<string>
      */
@@ -58,21 +50,14 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     abstract protected function getFilesystemItems(Request $request, ContentModel $model): FilesystemItemIterator;
 
-    protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model, Request $request): array
-    {
-        return array_map(
-            fn (FilesystemItem $filesystemItem): array => [
-                'href' => $this->generateDownloadUrl($filesystemItem, $model, $request),
-                'file' => $filesystemItem,
-                'show_file_previews' => $model->showPreview,
-                'file_previews' => $this->getPreviewsForContentModel($filesystemItem, $model),
-            ],
-            iterator_to_array($filesystemItems),
-        );
-    }
-
+    /**
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             leave handling the downloads to the new FileStreamController.
+     */
     protected function handleDownload(Request $request, ContentModel $model): void
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Leave this to the new FileStreamController.', __METHOD__);
+
         $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
             $request,
             $this->getVirtualFilesystem(),
@@ -96,6 +81,29 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         }
     }
 
+    /**
+     * Backwards compatibility: keep the $request argument until Contao 7.
+     *
+     * @noinspection PhpUnusedParameterInspection
+     */
+    protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model, Request $request): array
+    {
+        $items = array_map(
+            fn (FilesystemItem $filesystemItem): array => [
+                'href' => $this->generateDownloadUrl($filesystemItem, $model),
+                'file' => $filesystemItem,
+                'show_file_previews' => $model->showPreview,
+                'file_previews' => $this->getPreviewsForContentModel($filesystemItem, $model),
+            ],
+            iterator_to_array($filesystemItems),
+        );
+
+        return array_values(array_filter(
+            $items,
+            static fn (array $item) => null !== $item['href'],
+        ));
+    }
+
     protected function applyDownloadableFileExtensionsFilter(FilesystemItemIterator $filesystemItemIterator): FilesystemItemIterator
     {
         $this->initializeContaoFramework();
@@ -115,24 +123,24 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
      * If the content should be displayed inline or if the resource does not have a
      * public URI, a URL pointing to this controller's download action will be
      * generated, otherwise the direct download URL will be returned.
+     *
+     * Note: You have to check permissions yourself **before** calling this
      */
-    protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
+    protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model): string|null
     {
-        $path = $filesystemItem->getPath();
-        $inline = $model->inline;
+        $options = Options::create()
+            ->withSetting(Options::OPTION_CONTENT_DISPOSITION_TYPE, new ContentDispositionOption($model->inline))
+        ;
 
-        if ($publicUri = $this->getVirtualFilesystem()->generatePublicUri($path, new ContentDispositionOption($inline))) {
-            return (string) $publicUri;
-        }
+        $uri = $this->generatePublicUriWithTemporaryAccess(
+            $this->getVirtualFilesystem(),
+            $filesystemItem,
+            ['id' => $model->id, 'tstamp' => $model->tstamp],
+            null,
+            $options,
+        );
 
-        // TODO: Use an exclusive route once we have a strategy how to handle permissions
-        // for it. Right now we use the current route and then throw a ResponseException
-        // to initiate the download.
-        $context = ['id' => $model->id];
-
-        return $inline
-            ? $this->container->get('contao.filesystem.file_download_helper')->generateInlineUrl($request->getUri(), $path, $context)
-            : $this->container->get('contao.filesystem.file_download_helper')->generateDownloadUrl($request->getUri(), $path, $filesystemItem->getName(), $context);
+        return $uri instanceof UriInterface ? (string) $uri : null;
     }
 
     /**

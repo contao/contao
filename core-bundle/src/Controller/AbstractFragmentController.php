@@ -15,6 +15,10 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -25,6 +29,7 @@ use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -60,6 +65,36 @@ abstract class AbstractFragmentController extends AbstractController implements 
     protected function getPageModel(): PageModel|null
     {
         return $this->container->get('contao.routing.page_finder')->getCurrentPage();
+    }
+
+    protected function generatePublicUriWithTemporaryAccess(VirtualFilesystemInterface $filesystem, FilesystemItem $filesystemItem, array $content, int|null $ttl = null, Options|null $options = null): UriInterface|null
+    {
+        // If there is a page model, take the ttl from the shared max age. Otherwise
+        // (e.g. backend preview), set it to the maximum possible.
+        if (null === $ttl) {
+            $pageModel = $this->getPageModel();
+            $ttl = $pageModel ? $this->getSharedMaxAge($pageModel) : TemporaryAccessOption::MAX_TTL;
+            // Could still be configured to 0 (if caching is disabled on page)
+            $ttl = $ttl <= 0 ? TemporaryAccessOption::MAX_TTL : $ttl;
+        }
+
+        $options ??= Options::create();
+
+        $options = $options->withSetting(
+            Options::OPTION_TEMPORARY_ACCESS_INFORMATION,
+            TemporaryAccessOption::createFromContent($ttl, $content),
+        );
+
+        return $filesystem->generatePublicUri($filesystemItem->getPath(), $options);
+    }
+
+    protected function getSharedMaxAge(PageModel $pageModel): int
+    {
+        if ($pageModel->cache > 0) {
+            return $pageModel->cache;
+        }
+
+        return 0;
     }
 
     /**
