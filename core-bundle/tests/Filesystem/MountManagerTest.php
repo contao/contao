@@ -33,6 +33,110 @@ use Psr\Http\Message\UriInterface;
 
 class MountManagerTest extends TestCase
 {
+    public function testGetReturnsNullIfFileDoesNotExist(): void
+    {
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->expects($this->once())
+            ->method('fileExists')
+            ->with('bar/test.zip')
+            ->willReturn(false)
+        ;
+
+        $adapter
+            ->expects($this->never())
+            ->method('mimeType')
+        ;
+
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
+        $manager->mount($adapter, 'foo');
+
+        $this->assertNull($manager->get('foo/bar/test.zip'));
+    }
+
+    public function testGetBuildsItemAndLoadsMissingMetadataLazily(): void
+    {
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->expects($this->once())
+            ->method('fileExists')
+            ->with('bar/test.zip')
+            ->willReturn(true)
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('mimeType')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', null, null, null, 'application/zip'))
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('lastModified')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', null, null, 123450, null))
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('fileSize')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', 1024, null, null, null))
+        ;
+
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
+        $manager->mount($adapter, 'foo');
+
+        $item = $manager->get('foo/bar/test.zip');
+
+        $this->assertSame('foo/bar/test.zip', $item->getPath());
+        $this->assertTrue($item->isFile());
+
+        $this->assertSame('application/zip', $item->getMimeType());
+        $this->assertSame(1024, $item->getFileSize());
+        $this->assertSame(123450, $item->getLastModified());
+    }
+
+    public function testGetDoesNotLoadLazyMetadataIfMimeTypeAlreadyProvidedIt(): void
+    {
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->expects($this->once())
+            ->method('fileExists')
+            ->with('bar/test.zip')
+            ->willReturn(true)
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('mimeType')
+            ->with('bar/test.zip')
+            ->willReturn(new FileAttributes('bar/test.zip', 1024, null, 123450, 'application/zip'))
+        ;
+
+        $adapter
+            ->expects($this->never())
+            ->method('lastModified')
+        ;
+
+        $adapter
+            ->expects($this->never())
+            ->method('fileSize')
+        ;
+
+        $manager = new MountManager($this->createStub(FileDownloadHelper::class));
+        $manager->mount($adapter, 'foo');
+
+        $item = $manager->get('foo/bar/test.zip');
+
+        $this->assertInstanceOf(FilesystemItem::class, $item);
+        $this->assertSame('foo/bar/test.zip', $item->getPath());
+        $this->assertSame('application/zip', $item->getMimeType());
+        $this->assertSame(1024, $item->getFileSize());
+        $this->assertSame(123450, $item->getLastModified());
+    }
+
     public function testMountAdapters(): void
     {
         $manager = $this->getMountManagerWithRootAdapter($rootAdapter = new InMemoryFilesystemAdapter());

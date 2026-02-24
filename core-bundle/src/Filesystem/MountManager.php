@@ -284,9 +284,9 @@ class MountManager
         $item = FilesystemItem::fromStorageAttributes($storageAttributes, $prefix);
 
         return $item->withMetadataIfNotDefined(
-            fn () => $this->getLastModified($adapterPath),
-            fn () => $this->getFileSize($adapterPath),
-            fn () => $this->getMimeType($adapterPath),
+            fn () => $this->getLastModified($path),
+            fn () => $this->getFileSize($path),
+            fn () => $this->getMimeType($path),
         );
     }
 
