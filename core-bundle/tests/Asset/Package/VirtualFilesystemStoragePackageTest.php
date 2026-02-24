@@ -30,6 +30,48 @@ class VirtualFilesystemStoragePackageTest extends TestCase
         );
     }
 
+    public function testGetVersionFallsBackToLastModifiedHashIfNoVersionCouldBeFound(): void
+    {
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->expects($this->exactly(2))
+            ->method('generatePublicUri')
+            ->willReturnMap([
+                ['some/path', new Uri('https://base-url/some/path')],
+                ['some/empty-version', new Uri('https://base-url/some/empty-version?'.AbstractPublicUriProvider::VERSION_QUERY_PARAMETER.'=')],
+            ])
+        ;
+
+        $storage
+            ->expects($this->exactly(2))
+            ->method('getLastModified')
+            ->willReturnMap([
+                ['some/path', 123456789],
+                ['some/empty-version', 123456789],
+            ])
+        ;
+
+        $package = new VirtualFilesystemStoragePackage($storage);
+
+        $expected = hash('xxh3', '123456789');
+
+        $this->assertSame($expected, $package->getVersion('some/path'));
+        $this->assertSame($expected, $package->getVersion('some/empty-version'));
+    }
+
+    public function testGetVersionReturnsEmptyStringIfNoPublicUriCanBeGenerated(): void
+    {
+        $storage = $this->createStub(VirtualFilesystem::class);
+        $storage
+            ->method('generatePublicUri')
+            ->willReturn(null)
+        ;
+
+        $package = new VirtualFilesystemStoragePackage($storage);
+
+        $this->assertSame('', $package->getVersion('some/path'));
+    }
+
     public function testGetUrl(): void
     {
         $package = $this->getPackage();
