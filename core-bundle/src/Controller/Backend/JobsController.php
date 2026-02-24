@@ -30,7 +30,7 @@ class JobsController extends AbstractBackendController
     #[Route(
         '%contao.backend.route_prefix%/jobs/pending',
         name: '_contao_jobs_pending.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]

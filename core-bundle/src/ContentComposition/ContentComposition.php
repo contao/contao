@@ -62,7 +62,7 @@ class ContentComposition
         // Always use the deferred renderer for the layout template
         $builder->setRenderer($this->deferredRenderer);
 
-        if ($template = $this->pageRegistry->getRoute($page)->getDefault('_template')) {
+        if ($template = $this->pageRegistry->getPageTemplate($page)) {
             $builder->useCustomLayoutTemplate($template);
         }
 
