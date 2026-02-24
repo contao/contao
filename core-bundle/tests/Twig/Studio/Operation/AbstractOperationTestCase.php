@@ -136,8 +136,7 @@ abstract class AbstractOperationTestCase extends TestCase
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton
             ->method('getContent')
-            ->with($basedOnName)
-            ->willReturn('new template content')
+            ->willReturnMap([[$basedOnName, 'new template content']])
         ;
 
         $factory = $this->createMock(TemplateSkeletonFactory::class);
@@ -154,8 +153,7 @@ abstract class AbstractOperationTestCase extends TestCase
         $skeleton = $this->createStub(TemplateSkeleton::class);
         $skeleton
             ->method('getContent')
-            ->with($basedOnName)
-            ->willReturn('new template content')
+            ->willReturnMap([[$basedOnName, 'new template content']])
         ;
 
         $factory = $this->createStub(TemplateSkeletonFactory::class);

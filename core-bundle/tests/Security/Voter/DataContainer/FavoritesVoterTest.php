@@ -94,7 +94,7 @@ class FavoritesVoterTest extends TestCase
             VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction('tl_favorites', ['user' => 3]),
+                new ReadAction('tl_favorites', ['user' => 2]),
                 [ContaoCorePermissions::DC_PREFIX.'tl_favorites'],
             ),
         );
