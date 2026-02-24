@@ -46,7 +46,6 @@ abstract class AbstractCreateLegacyVariantOperation extends AbstractOperation
 
         // Do not allow creating subdirectories
         $newIdentifier = str_replace('/', '-', "{$context->getIdentifier()}_$identifierFragment");
-
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
