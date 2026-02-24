@@ -66,7 +66,7 @@ class RenameVariantOperationTest extends AbstractOperationTestCase
 
     public function testStreamDialogWhenRenamingVariantTemplate(): void
     {
-        $loader = $this->createContaoFilesystemLoaderStub();
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('exists')
             ->willReturnCallback(

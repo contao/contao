@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @experimental
  */
-abstract class AbstractCreateVariantOperation extends AbstractOperation
+abstract class AbstractCreateLegacyVariantOperation extends AbstractOperation
 {
     public function canExecute(OperationContext $context): bool
     {
@@ -18,7 +18,15 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
             return false;
         }
 
-        return 1 === preg_match('%^'.preg_quote($this->getPrefix(), '%').'/[^_/][^/]*$%', $context->getIdentifier());
+        if ($this->disallowCustomName()) {
+            return $context->getIdentifier() === $this->getPrefix();
+        }
+
+        if (1 !== preg_match('%^'.preg_quote($this->getPrefix(), '%').'_[^/]+$%', $context->getIdentifier())) {
+            return false;
+        }
+
+        return !$this->userTemplateExists($context, true);
     }
 
     public function execute(Request $request, OperationContext $context): Response|null
@@ -30,12 +38,14 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
                 'operation_type' => 'create',
                 'identifier' => $context->getIdentifier(),
                 'extension' => $context->getExtension(),
+                'separator' => '_',
                 'suggested_identifier_fragment' => $this->suggestIdentifierFragmentName($context->getIdentifier(), $context->getExtension()),
-                'allowed_identifier_fragment_pattern' => $this->buildAllowedIdentifierFragmentsPattern($context->getIdentifier()),
+                'allowed_identifier_fragment_pattern' => $this->buildAllowedIdentifierFragmentsPattern($context->getIdentifier(), $context->getThemeSlug()),
             ]);
         }
 
-        $newIdentifier = "{$context->getIdentifier()}/$identifierFragment";
+        // Do not allow creating subdirectories
+        $newIdentifier = str_replace('/', '-', "{$context->getIdentifier()}_$identifierFragment");
         $newStoragePath = "$newIdentifier.{$context->getExtension()}";
 
         if ($this->getUserTemplatesStorage()->fileExists($newStoragePath)) {
@@ -58,21 +68,25 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
     }
 
     /**
-     * Return the template identifier prefix this operation is targeting (e.g.
-     * "content_element").
+     * Return the template identifier prefix this operation is targeting (e.g. "ce").
      */
     abstract protected function getPrefix(): string;
 
-    private function buildAllowedIdentifierFragmentsPattern(string $identifier): string
+    /**
+     * Return true if no name is allowed after the prefix.
+     */
+    protected function disallowCustomName(): bool
+    {
+        return false;
+    }
+
+    private function buildAllowedIdentifierFragmentsPattern(string $identifier, string|null $themeSlug): string
     {
         $existingVariantNames = array_map(
-            static fn (string $variantIdentifier): string => substr($variantIdentifier, \strlen($identifier) + 1),
-            array_keys(
-                iterator_to_array(
-                    $this->getTwigFinder()
-                        ->identifier($identifier)
-                        ->withVariants(true),
-                ),
+            static fn ($candidate): string => substr($candidate, \strlen($identifier) + 1),
+            array_filter(
+                array_keys($this->getContaoFilesystemLoader()->getInheritanceChains($themeSlug)),
+                static fn (string $candidate) => str_starts_with($candidate, "{$identifier}_"),
             ),
         );
 
@@ -87,12 +101,12 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
     {
         $loader = $this->getContaoFilesystemLoader();
 
-        $identifierFragmentBase = 'new_variant';
+        $identifierFragmentBase = 'new-variant';
         $identifierFragment = $identifierFragmentBase;
 
         $index = 2;
 
-        while ($loader->exists("@Contao/$identifier/$identifierFragment.$extension")) {
+        while ($loader->exists("@Contao/{$identifier}_$identifierFragment.$extension")) {
             $identifierFragment = "$identifierFragmentBase$index";
             ++$index;
         }

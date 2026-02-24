@@ -13,9 +13,10 @@ use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Extend default palette
 PaletteManipulator::create()
-	->addLegend('feed_legend', 'modules_legend', PaletteManipulator::POSITION_BEFORE)
+	->addLegend('feed_legend', null, PaletteManipulator::POSITION_BEFORE)
 	->addField('newsfeeds', 'feed_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_layout')
+	->applyToPalette('modern', 'tl_layout')
 ;
 
 // Extend fields
