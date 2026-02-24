@@ -80,7 +80,7 @@
       <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
         <source>Create a new variant template for the %s legacy content element</source>
       </trans-unit>
-      <trans-unit id="template_studio.operation.create_legacy_frontend_module_element_variant.0">
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
         <source>Create variant</source>
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_frontend_module_element_variant.1">
