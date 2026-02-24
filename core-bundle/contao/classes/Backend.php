@@ -424,7 +424,7 @@ abstract class Backend extends Controller
 			$do = Input::get('do');
 
 			// Only render the breadcrumb for DC_Table (see #9514)
-			if (is_a(DC_Table::class, DataContainer::getDriverForTable($strTable), true))  {
+			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))  {
 				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
 			}
 
