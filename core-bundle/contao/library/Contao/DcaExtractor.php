@@ -425,10 +425,10 @@ class DcaExtractor extends Controller
 
 					if (isset($config['foreignKey']))
 					{
-						$table = explode('.', $config['foreignKey'])[0];
+						$table = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($config['foreignKey'])->getTableName();
 					}
 
-					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
+					$arrRelations[$field] = array_replace(array('table'=>$table, 'field'=>'id'), $config['relation']);
 
 					// Store the field delimiter if the related IDs are stored in CSV format (see #257)
 					if (isset($config['eval']['csv']))

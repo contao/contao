@@ -1314,9 +1314,9 @@ abstract class Widget extends Controller
 		// Foreign key
 		elseif (isset($arrData['foreignKey']))
 		{
-			$arrKey = explode('.', $arrData['foreignKey'], 2);
+			$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($arrData['foreignKey']);
 			$strField = Database::quoteIdentifier($arrData['relation']['field'] ?? 'id');
-			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+			$objOptions = Database::getInstance()->query("SELECT $strField as id, " . $fk->getColumnExpression() . " AS value FROM " . $fk->getTableName() . " WHERE tstamp>0 ORDER BY value");
 
 			$arrData['options'] = array();
 
