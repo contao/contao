@@ -66,7 +66,6 @@ class AddFeedsFromLayoutListenerTest extends ContaoTestCase
         $layoutModel->calendarfeeds = 'a:1:{i:0;i:3;}';
 
         $currentPage = $this->createStub(PageModel::class);
-
         $collection = new Collection([$calendarFeedPage], 'tl_page');
 
         $adapters = [
