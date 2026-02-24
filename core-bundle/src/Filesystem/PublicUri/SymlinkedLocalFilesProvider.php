@@ -79,6 +79,7 @@ class SymlinkedLocalFilesProvider extends AbstractPublicUriProvider implements P
     private function isPublic(FilesystemAdapter $adapter, string $adapterPath): bool
     {
         $pathChunks = explode('/', $adapterPath);
+        array_pop($pathChunks);
 
         foreach ($pathChunks as $pathChunk) {
             // TODO: Can we find a more performant way of doing this?

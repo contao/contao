@@ -75,4 +75,34 @@ class SymlinkedLocalFilesProviderTest extends TestCase
 
         $this->assertNull($uri);
     }
+
+    public function testGetUriReturnsNullIfResourceIsNotPublic(): void
+    {
+        $adapter = $this->createMock(LocalFilesystemAdapter::class);
+        $adapter
+            ->expects($this->exactly(3))
+            ->method('fileExists')
+            ->willReturnMap([
+                ['path/to/resource.txt', true],
+                // No public marker anywhere in the checked chunks.
+                ['path/'.Dbafs::FILE_MARKER_PUBLIC, false],
+                ['to/'.Dbafs::FILE_MARKER_PUBLIC, false],
+            ])
+        ;
+
+        $adapter
+            ->expects($this->exactly(2))
+            ->method('directoryExists')
+            ->willReturnMap([
+                ['path', true],
+                ['to', true],
+            ])
+        ;
+
+        $provider = new SymlinkedLocalFilesProvider($adapter, 'upload/dir', new RequestStack());
+
+        $uri = $provider->getUri($adapter, 'path/to/resource.txt', null);
+
+        $this->assertNull($uri);
+    }
 }
