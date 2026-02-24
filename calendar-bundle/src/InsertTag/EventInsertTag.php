@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\InsertTag;
 
 use Contao\CalendarEventsModel;
-use Contao\CalendarFeedModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
@@ -44,30 +43,11 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
 
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        if ('calendar_feed' === $insertTag->getName()) {
-            trigger_deprecation('contao/core-bundle', '5.6', 'Using the "calendar_feed" insert tag is deprecated and will no longer work in Contao 6. Use the "link_url" insert tag instead.', __METHOD__);
-
-            return $this->replaceCalendarFeedInsertTag($insertTag->getParameters()->get(0));
-        }
-
         return $this->replaceEventInsertTag(
             $insertTag->getName(),
             $insertTag->getParameters()->get(0),
             \array_slice($insertTag->getParameters()->all(), 1),
         );
-    }
-
-    private function replaceCalendarFeedInsertTag(string $feedId): InsertTagResult
-    {
-        $this->framework->initialize();
-
-        $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
-
-        if (!$feed = $adapter->findById($feedId)) {
-            return new InsertTagResult('');
-        }
-
-        return new InsertTagResult(\sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias), OutputType::url);
     }
 
     private function replaceEventInsertTag(string $insertTag, string $idOrAlias, array $arguments): InsertTagResult
