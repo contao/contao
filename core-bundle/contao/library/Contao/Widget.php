@@ -797,6 +797,15 @@ abstract class Widget extends Controller
 			return $varInput;
 		}
 
+		// Ensure UTF-8 string
+		if (\is_string($varInput) && 1 !== preg_match('//u', $varInput))
+		{
+			$subBefore = mb_substitute_character();
+			mb_substitute_character(0xFFFD);
+			$varInput = mb_convert_encoding($varInput, 'UTF-8', 'UTF-8');
+			mb_substitute_character($subBefore);
+		}
+
 		if (!$this->doNotTrim && \is_string($varInput))
 		{
 			$varInput = trim($varInput);
