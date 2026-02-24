@@ -848,6 +848,12 @@
       <trans-unit id="tl_content.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
+      <trans-unit id="tl_content.reg_jumpTo.0">
+        <source>Confirmation page</source>
+      </trans-unit>
+      <trans-unit id="tl_content.reg_jumpTo.1">
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+      </trans-unit>
       <trans-unit id="tl_content.altchaAuto.0">
         <source>Auto verification</source>
       </trans-unit>
