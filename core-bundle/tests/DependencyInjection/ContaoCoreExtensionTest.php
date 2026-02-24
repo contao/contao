@@ -516,7 +516,7 @@ class ContaoCoreExtensionTest extends TestCase
         $filesystem = new Filesystem();
         $filesystem->dumpFile($composerJsonFilePath, json_encode($composerJson, JSON_THROW_ON_ERROR));
 
-        (new ContaoCoreExtension())->load([], $container);
+        new ContaoCoreExtension()->load([], $container);
 
         $filesystem->remove($composerJsonFilePath);
 
@@ -540,7 +540,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        (new ContaoCoreExtension())->load([], $container);
+        new ContaoCoreExtension()->load([], $container);
 
         $icons = $container->getParameter('contao.backend.icons');
 
@@ -643,7 +643,7 @@ class ContaoCoreExtensionTest extends TestCase
             ->willReturn($dbafsDefinition)
         ;
 
-        (new ContaoCoreExtension())->configureFilesystem($config);
+        new ContaoCoreExtension()->configureFilesystem($config);
     }
 
     public function testHstsSecurityConfiguration(): void
@@ -654,7 +654,7 @@ class ContaoCoreExtensionTest extends TestCase
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(31536000, $listener->getArgument(1));
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'security' => [
@@ -671,7 +671,7 @@ class ContaoCoreExtensionTest extends TestCase
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(500, $listener->getArgument(1));
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'security' => [
@@ -699,7 +699,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'backend_search' => [
@@ -747,7 +747,7 @@ class ContaoCoreExtensionTest extends TestCase
             $processor->getArgument(0),
         );
 
-        (new ContaoCoreExtension())->load(
+        new ContaoCoreExtension()->load(
             [
                 'contao' => [
                     'csp' => [
@@ -899,6 +899,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'methods' => ['GET'],
                     'contentComposition' => true,
                     'urlSuffix' => 'html',
+                    'template' => null,
                 ],
             )
         ;
@@ -965,7 +966,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsCronJob::class][0](
             $definition,
             new AsCronJob('daily'),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 
@@ -992,7 +993,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsHook::class][0](
             $definition,
             new AsHook('activateAccount', null, 32),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 
@@ -1030,7 +1031,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsCallback::class][0](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', null, 32),
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 
@@ -1055,7 +1056,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[$attributeClass][0](
             $definition,
             $attribute,
-            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)->getMethod('someMethod'),
         );
     }
 

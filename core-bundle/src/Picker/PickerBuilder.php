@@ -78,13 +78,7 @@ class PickerBuilder implements PickerBuilderInterface
             $providers = array_intersect_key($providers, array_flip($allowed));
         }
 
-        foreach ($providers as $provider) {
-            if ($provider->supportsContext($context)) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($providers, static fn ($provider) => $provider->supportsContext($context));
     }
 
     public function getUrl(string $context, array $extras = [], string $value = ''): string

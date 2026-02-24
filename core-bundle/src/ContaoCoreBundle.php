@@ -62,7 +62,7 @@ class ContaoCoreBundle extends Bundle
 
     public function boot(): void
     {
-        (new Request())->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
+        new Request()->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
     }
 
     public function getContainerExtension(): ContaoCoreExtension

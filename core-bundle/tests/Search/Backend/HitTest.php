@@ -23,7 +23,7 @@ class HitTest extends TestCase
     {
         $figureBuilder = $this->createStub(FigureBuilder::class);
 
-        $hit = (new Hit(new Document('42', 'type', 'searchable'), 'title', 'https://example.com'))
+        $hit = new Hit(new Document('42', 'type', 'searchable'), 'title', 'https://example.com')
             ->withContext('context')
             ->withImageFigureBuilder($figureBuilder)
             ->withEditUrl('https://example.com?edit=true')

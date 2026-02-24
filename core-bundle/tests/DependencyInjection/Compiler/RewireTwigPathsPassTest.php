@@ -25,7 +25,7 @@ class RewireTwigPathsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $baseLoader = (new Definition(FilesystemLoader::class))
+        $baseLoader = new Definition(FilesystemLoader::class)
             ->addMethodCall('addPath', ['path1', 'namespace1'])
             ->addMethodCall('addPath', ['path2', 'namespace2'])
             ->addMethodCall('foo')
@@ -38,7 +38,7 @@ class RewireTwigPathsPassTest extends TestCase
             'contao.twig.fail_tolerant_filesystem_loader' => $loader,
         ]);
 
-        (new RewireTwigPathsPass())->process($container);
+        new RewireTwigPathsPass()->process($container);
 
         $this->assertFalse($baseLoader->hasMethodCall('addPath'));
         $this->assertTrue($baseLoader->hasMethodCall('foo'));
@@ -55,7 +55,7 @@ class RewireTwigPathsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $baseLoader = (new Definition(FilesystemLoader::class))
+        $baseLoader = new Definition(FilesystemLoader::class)
             ->addMethodCall('foo')
         ;
 
@@ -66,7 +66,7 @@ class RewireTwigPathsPassTest extends TestCase
             'contao.twig.fail_tolerant_filesystem_loader' => $loader,
         ]);
 
-        (new RewireTwigPathsPass())->process($container);
+        new RewireTwigPathsPass()->process($container);
 
         $this->assertTrue($baseLoader->hasMethodCall('foo'));
         $this->assertEmpty($loader->getMethodCalls());

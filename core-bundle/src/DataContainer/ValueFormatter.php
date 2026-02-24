@@ -125,7 +125,7 @@ class ValueFormatter implements ResetInterface
         };
 
         if ($value && $length) {
-            $value = (new UnicodeString($value))->slice(0, $length)->title()->toString();
+            $value = new UnicodeString($value)->slice(0, $length)->title()->toString();
         }
 
         return $value ?: '-';
@@ -186,8 +186,8 @@ class ValueFormatter implements ResetInterface
         uksort(
             $options,
             static function ($a, $b) {
-                $a = (new UnicodeString($a))->folded();
-                $b = (new UnicodeString($b))->folded();
+                $a = new UnicodeString($a)->folded();
+                $b = new UnicodeString($b)->folded();
 
                 if ($a->toString() === $b->toString()) {
                     return 0;

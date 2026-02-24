@@ -140,7 +140,7 @@ class AddInsertTagsPass implements CompilerPassInterface
      */
     private function getResolveNestedTagsFromMethod(string $class, string $method): bool
     {
-        return match ($type = (string) (((new \ReflectionMethod($class, $method))->getParameters()[0] ?? null)?->getType() ?? 'NULL')) {
+        return match ($type = (string) ((new \ReflectionMethod($class, $method)->getParameters()[0] ?? null)?->getType() ?? 'NULL')) {
             ResolvedInsertTag::class => true,
             ParsedInsertTag::class => false,
             default => throw new InvalidDefinitionException(\sprintf('The "%s::%s" method has an invalid parameter type. Expected "%s" or "%s", got "%s".', $class, $method, ResolvedInsertTag::class, ParsedInsertTag::class, $type)),

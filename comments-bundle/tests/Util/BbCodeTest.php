@@ -26,7 +26,7 @@ class BbCodeTest extends TestCase
             'com_code' => 'Code:',
         ];
 
-        $this->assertSame($expectedHtml, (new BbCode())->toHtml($bbCode));
+        $this->assertSame($expectedHtml, new BbCode()->toHtml($bbCode));
 
         unset($GLOBALS['TL_LANG']);
     }

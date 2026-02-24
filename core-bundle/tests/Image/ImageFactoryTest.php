@@ -58,7 +58,7 @@ class ImageFactoryTest extends TestCase
 
     protected function tearDown(): void
     {
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'assets/images'));
 
         $this->resetStaticProperties([System::class, File::class, Files::class]);
 
@@ -113,7 +113,7 @@ class ImageFactoryTest extends TestCase
 
         $path = Path::join($this->getTempDir(), 'assets/images/dummy.jpg');
 
-        (new Filesystem())->dumpFile($path, '');
+        new Filesystem()->dumpFile($path, '');
 
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
@@ -405,7 +405,7 @@ class ImageFactoryTest extends TestCase
 
     public function testCreatesAnImageObjectFromAnImageObjectWithAResizeConfiguration(): void
     {
-        $resizeConfig = (new ResizeConfiguration())
+        $resizeConfig = new ResizeConfiguration()
             ->setWidth(100)
             ->setHeight(200)
             ->setMode(ResizeConfiguration::MODE_BOX)

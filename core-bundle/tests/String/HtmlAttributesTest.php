@@ -710,7 +710,7 @@ class HtmlAttributesTest extends TestCase
 
     public function testAllowsChaining(): void
     {
-        $attributes = (new HtmlAttributes())
+        $attributes = new HtmlAttributes()
             ->addClass('block headline foo')
             ->removeClass('foo')
             ->set('style', 'color: red;')
@@ -751,14 +751,14 @@ class HtmlAttributesTest extends TestCase
     public function testStripsLeadingWhitespaceIfEmpty(): void
     {
         $this->assertSame('', (string) new HtmlAttributes());
-        $this->assertSame('', (new HtmlAttributes())->toString());
-        $this->assertSame('', (new HtmlAttributes())->toString(false));
+        $this->assertSame('', new HtmlAttributes()->toString());
+        $this->assertSame('', new HtmlAttributes()->toString(false));
     }
 
     #[DataProvider('provideBooleanAttributes')]
     public function testCorrectlySerializesBooleanAttributes(array $attrArray, string $attrString): void
     {
-        $this->assertSame($attrString, (new HtmlAttributes($attrArray))->toString(false));
+        $this->assertSame($attrString, new HtmlAttributes($attrArray)->toString(false));
         $this->assertSame($attrArray, iterator_to_array(new HtmlAttributes($attrString)));
     }
 

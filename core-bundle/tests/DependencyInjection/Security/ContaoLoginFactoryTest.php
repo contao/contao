@@ -22,7 +22,7 @@ class ContaoLoginFactoryTest extends TestCase
 {
     public function testReturnsTheCorrectKey(): void
     {
-        $this->assertSame('contao-login', (new ContaoLoginFactory())->getKey());
+        $this->assertSame('contao-login', new ContaoLoginFactory()->getKey());
     }
 
     public function testConfiguresTheContainerServices(): void

@@ -1016,7 +1016,7 @@ class FigureBuilderTest extends TestCase
             $resource = $getFilesModel($resource[1], $resource[2] ?? null);
         }
 
-        (new DcaLoader('tl_files'))->load();
+        new DcaLoader('tl_files')->load();
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['title' => ''];
 
         [$absoluteFilePath] = self::getTestFilePaths();

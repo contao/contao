@@ -498,7 +498,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $platform = new MySQLPlatform();
-        $comparator = (new MySQLSchemaManager($schemaManagerConnection, $platform))->createComparator();
+        $comparator = new MySQLSchemaManager($schemaManagerConnection, $platform)->createComparator();
 
         $schemaManager = $this->createStub(MySQLSchemaManager::class);
         $schemaManager

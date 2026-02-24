@@ -310,7 +310,7 @@ class PluginTest extends ContaoTestCase
         foreach ($files as $file) {
             $this->assertContains(
                 'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
-                (new Plugin())->getApiCommands(),
+                new Plugin()->getApiCommands(),
             );
         }
     }
@@ -337,7 +337,7 @@ class PluginTest extends ContaoTestCase
                     'debug',
                 ],
             ],
-            (new Plugin())->getApiFeatures(),
+            new Plugin()->getApiFeatures(),
         );
     }
 
@@ -345,7 +345,7 @@ class PluginTest extends ContaoTestCase
     {
         $container = $this->getContainer();
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -356,7 +356,7 @@ class PluginTest extends ContaoTestCase
     {
         $container = $this->getContainer();
 
-        (new Plugin())->getExtensionConfig('contao', [], $container);
+        new Plugin()->getExtensionConfig('contao', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -369,7 +369,7 @@ class PluginTest extends ContaoTestCase
         $container = $this->getContainer();
         $container->setParameter('contao.dns_mapping', ['example.com' => 'example.local']);
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -397,7 +397,7 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -468,7 +468,7 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -508,7 +508,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -532,7 +532,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
     }
@@ -561,7 +561,7 @@ class PluginTest extends ContaoTestCase
         error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         error_reporting($er);
 
@@ -587,7 +587,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
     }
@@ -621,7 +621,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -731,7 +731,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -774,7 +774,7 @@ class PluginTest extends ContaoTestCase
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', 'mail');
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
@@ -790,7 +790,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('framework', [], $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('framework', [], $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -808,7 +808,7 @@ class PluginTest extends ContaoTestCase
         $expect = $extensionConfigs;
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('framework', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
 
@@ -825,7 +825,7 @@ class PluginTest extends ContaoTestCase
         $expect = $extensionConfigs;
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('framework', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('framework', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
@@ -841,7 +841,7 @@ class PluginTest extends ContaoTestCase
         $container->setParameter('mailer_port', $port);
         $container->setParameter('mailer_encryption', $encryption);
 
-        (new Plugin())->getExtensionConfig('framework', [], $container);
+        new Plugin()->getExtensionConfig('framework', [], $container);
 
         $bag = $container->getParameterBag()->all();
 
@@ -970,7 +970,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
 
         $expectedConfigs = [
             [
@@ -1006,7 +1006,7 @@ class PluginTest extends ContaoTestCase
         ];
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+        $extensionConfig = new Plugin()->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
     }

@@ -105,7 +105,7 @@ class PlayerController extends AbstractContentElementController
             function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
                 $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
-                return (new HtmlAttributes())
+                return new HtmlAttributes()
                     ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;
@@ -133,7 +133,7 @@ class PlayerController extends AbstractContentElementController
                     continue;
                 }
 
-                $tracks[] = (new HtmlAttributes())
+                $tracks[] = new HtmlAttributes()
                     ->setIfExists('kind', $textTrack->getType()?->value)
                     ->set('label', $label)
                     ->set('srclang', $textTrack->getSourceLanguage())
@@ -178,7 +178,7 @@ class PlayerController extends AbstractContentElementController
             function (FilesystemItem $item) use (&$captions): HtmlAttributes {
                 $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
-                return (new HtmlAttributes())
+                return new HtmlAttributes()
                     ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', (string) $this->publicUriByStoragePath[$item->getPath()])
                 ;

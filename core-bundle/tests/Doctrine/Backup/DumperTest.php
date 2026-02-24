@@ -60,14 +60,14 @@ class DumperTest extends ContaoTestCase
         ;
 
         $dumper = new Dumper();
-        $config = (new CreateConfig($backup))->withGzCompression(false);
+        $config = new CreateConfig($backup)->withGzCompression(false);
 
         iterator_to_array($dumper->dump($connection, $config), false);
     }
 
     public static function successfulDumpProvider(): iterable
     {
-        $tinyint = (new MySQLPlatform())->getBooleanTypeDeclarationSQL([]);
+        $tinyint = new MySQLPlatform()->getBooleanTypeDeclarationSQL([]);
         $tableOptions = ['charset' => 'utf8', 'collation' => 'utf8_unicode_ci', 'engine' => 'InnoDB'];
 
         yield 'Empty table without data' => [

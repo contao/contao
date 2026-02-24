@@ -64,7 +64,7 @@ class SchemaOrgRuntimeTest extends TestCase
             ->willReturn(null)
         ;
 
-        (new SchemaOrgRuntime($accessor))->add(['foo']);
+        new SchemaOrgRuntime($accessor)->add(['foo']);
     }
 
     public function testToleratesMissingJsonLdManager(): void
@@ -76,6 +76,6 @@ class SchemaOrgRuntimeTest extends TestCase
             ->willReturn(new ResponseContext())
         ;
 
-        (new SchemaOrgRuntime($accessor))->add(['foo']);
+        new SchemaOrgRuntime($accessor)->add(['foo']);
     }
 }

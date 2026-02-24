@@ -40,7 +40,7 @@ class BackupManagerTest extends ContaoTestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            new MountManager()->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
     }
@@ -112,7 +112,7 @@ class BackupManagerTest extends ContaoTestCase
         $backup = Backup::createNew(\DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-03T13:36:00+00:00'));
 
         $manager = $this->getBackupManager($connection, $dumper);
-        $config = (new CreateConfig($backup))->withGzCompression(false);
+        $config = new CreateConfig($backup)->withGzCompression(false);
         $manager->create($config);
 
         $this->assertSame(
@@ -349,7 +349,7 @@ class BackupManagerTest extends ContaoTestCase
                 -- BEGIN STRUCTURE tl_article
                 DROP TABLE IF EXISTS `tl_article`;
                 BACKUP,
-            (new RestoreConfig($backup))->withIgnoreOriginCheck(true),
+            new RestoreConfig($backup)->withIgnoreOriginCheck(true),
             [
                 'SET NAMES utf8;',
                 'SET FOREIGN_KEY_CHECKS = 0;',

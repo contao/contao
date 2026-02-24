@@ -125,7 +125,7 @@ class CronTest extends TestCase
 
         $entity
             ->method('getLastRun')
-            ->willReturn((new \DateTime())->modify('-1 hours'))
+            ->willReturn(new \DateTime()->modify('-1 hours'))
         ;
 
         $cronjob = $this->createMock(TestCronJob::class);
@@ -234,7 +234,7 @@ class CronTest extends TestCase
 
         $entity
             ->method('getLastRun')
-            ->willReturn((new \DateTime())->modify('+2 hours'))
+            ->willReturn(new \DateTime()->modify('+2 hours'))
         ;
 
         $entity
@@ -282,7 +282,7 @@ class CronTest extends TestCase
 
         $entity
             ->method('getLastRun')
-            ->willReturn((new \DateTime())->modify('+2 hours'))
+            ->willReturn(new \DateTime()->modify('+2 hours'))
         ;
 
         $entity
@@ -322,7 +322,7 @@ class CronTest extends TestCase
 
     public function testMinutelyCronJob(): void
     {
-        $lastRun = (new \DateTime())->modify('-1 hours');
+        $lastRun = new \DateTime()->modify('-1 hours');
 
         $entity = $this->createMock(CronJobEntity::class);
         $entity
@@ -376,7 +376,7 @@ class CronTest extends TestCase
 
     public function testMinutelyCronJobResetsLastRunInWebScope(): void
     {
-        $lastRun = (new \DateTime())->modify('-1 hours');
+        $lastRun = new \DateTime()->modify('-1 hours');
 
         $entity = $this->createMock(CronJobEntity::class);
         $entity
@@ -422,7 +422,7 @@ class CronTest extends TestCase
 
     public function testResetsLastRunForSkippedCronJobs(): void
     {
-        $previousRun = (new \DateTime())->modify('-1 hours');
+        $previousRun = new \DateTime()->modify('-1 hours');
         $matcher = $this->exactly(2);
 
         $entity = $this->createMock(CronJobEntity::class);
@@ -485,7 +485,7 @@ class CronTest extends TestCase
 
     public function testResetsLastRunForSkippedAsyncCronJobs(): void
     {
-        $previousRun = (new \DateTime())->modify('-1 hours');
+        $previousRun = new \DateTime()->modify('-1 hours');
         $matcher = $this->exactly(2);
 
         $entity = $this->createMock(CronJobEntity::class);

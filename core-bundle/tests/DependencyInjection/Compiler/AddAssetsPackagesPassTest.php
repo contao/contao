@@ -69,14 +69,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $pass->process($container);
 
         $calls = $container->getDefinition('assets.packages')->getMethodCalls();
-        $found = false;
-
-        foreach ($calls as $call) {
-            if ('addPackage' === $call[0] && 'bar_foo' === $call[1][0]) {
-                $found = true;
-                break;
-            }
-        }
+        $found = array_any($calls, static fn ($call) => 'addPackage' === $call[0] && 'bar_foo' === $call[1][0]);
 
         $this->assertFalse($found);
     }
@@ -90,14 +83,7 @@ class AddAssetsPackagesPassTest extends TestCase
         $pass->process($container);
 
         $calls = $container->getDefinition('assets.packages')->getMethodCalls();
-        $found = false;
-
-        foreach ($calls as $call) {
-            if ('addPackage' === $call[0] && 'foo_bar' === $call[1][0]) {
-                $found = true;
-                break;
-            }
-        }
+        $found = array_any($calls, static fn ($call) => 'addPackage' === $call[0] && 'foo_bar' === $call[1][0]);
 
         $this->assertTrue($found);
         $this->assertTrue($container->hasDefinition('assets._package_foo_bar'));

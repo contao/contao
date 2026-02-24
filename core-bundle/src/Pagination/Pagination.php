@@ -124,7 +124,7 @@ class Pagination implements PaginationInterface
         $params = $this->config->getRequest()?->query->all() ?? [];
         $params[$this->getQueryParameterName()] = $page;
 
-        return (string) (new Uri($this->config->getRequest()?->getRequestUri() ?? ''))->withQuery(http_build_query($params));
+        return (string) new Uri($this->config->getRequest()?->getRequestUri() ?? '')->withQuery(http_build_query($params));
     }
 
     public function getQueryParameterName(): string

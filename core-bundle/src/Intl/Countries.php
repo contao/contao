@@ -59,7 +59,7 @@ class Countries
             }
         }
 
-        (new \Collator($displayLocale))->asort($countries);
+        new \Collator($displayLocale)->asort($countries);
 
         return $countries;
     }

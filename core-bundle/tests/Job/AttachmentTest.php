@@ -30,7 +30,7 @@ class AttachmentTest extends TestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            new MountManager()->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
     }

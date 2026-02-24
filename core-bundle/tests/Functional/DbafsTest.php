@@ -37,7 +37,7 @@ class DbafsTest extends FunctionalTestCase
         parent::setUp();
 
         $this->filesystem = new VirtualFilesystem(
-            (new MountManager())->mount($this->adapter = new InMemoryFilesystemAdapter()),
+            new MountManager()->mount($this->adapter = new InMemoryFilesystemAdapter()),
             $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class)),
         );
 
