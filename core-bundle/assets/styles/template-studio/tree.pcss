@@ -1,4 +1,7 @@
 #template-studio--tree {
+    display: flex;
+    flex-flow: column;
+    
     &,
     > * {
         height: 100%;
@@ -6,13 +9,14 @@
     }
 
     .search-filter {
+        height: auto;
         position: relative;
         vertical-align: initial;
 
         svg {
             position: absolute;
             left: 7px;
-            top: 3px;
+            top: 6px;
             pointer-events: none;
             color: var(--gray);
         }
@@ -38,45 +42,47 @@
         height: 100%;
         overflow: auto;
         white-space: nowrap;
-        padding: 4px;
 
         ol {
             padding: 0;
             margin: 0;
         }
 
-        > ol > li {
-            > ol {
-                li {
-                    margin-left: 0.75em;
-                    border-left: thin solid var(--tree-line);
-
-                    &::before {
-                        content: "";
-                        width: 0.5em;
-                        height: 0.75em;
-                        vertical-align: top;
-                        border-bottom: thin solid var(--tree-line);
-                        display: inline-block;
-                    }
-
-                    &:last-child {
-                        border-left: none;
+        > ol {
+            padding: 4px;
+            > li {
+                > ol {
+                    li {
+                        margin-left: 0.75em;
+                        border-left: thin solid var(--tree-line);
 
                         &::before {
-                            border-left: thin solid var(--tree-line);
+                            content: "";
+                            width: 0.5em;
+                            height: 0.75em;
+                            vertical-align: top;
+                            border-bottom: thin solid var(--tree-line);
+                            display: inline-block;
+                        }
+
+                        &:last-child {
+                            border-left: none;
+
+                            &::before {
+                                border-left: thin solid var(--tree-line);
+                            }
+                        }
+
+                        > :not(ol) {
+                            display: inline-flex;
+                            align-items: center;
                         }
                     }
-
-                    > :not(ol) {
-                        display: inline-flex;
-                        align-items: center;
-                    }
                 }
-            }
 
-            > .node {
-                margin-left: 4px;
+                > .node {
+                    margin-left: 4px;
+                }
             }
         }
 
