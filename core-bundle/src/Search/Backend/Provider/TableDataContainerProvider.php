@@ -195,6 +195,9 @@ class TableDataContainerProvider implements ProviderInterface
         return array_filter($tables, fn (string $table): bool => $config->getLimitedDocumentIds()->hasType($this->getTypeFromTable($table)));
     }
 
+    /**
+     * @return \Generator<Document>
+     */
     private function findDocuments(string $table, ReindexConfig $reindexConfig): \Generator
     {
         if (!isset($GLOBALS['TL_DCA'][$table]['fields'])) {

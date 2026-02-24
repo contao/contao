@@ -22,7 +22,7 @@ use Twig\Environment;
 
 abstract class AbstractOperationTestCase extends TestCase
 {
-    public static function provideCommonContextsForExistingAndNonExistingUserTemplates(): \Generator
+    public static function provideCommonContextsForExistingAndNonExistingUserTemplates(): iterable
     {
         yield 'user template exists already' => [
             static::getOperationContext('content_element/existing_user_template'),
@@ -45,7 +45,7 @@ abstract class AbstractOperationTestCase extends TestCase
         ];
     }
 
-    public static function provideCommonThemeAndPathForNonExistingUserTemplate(): \Generator
+    public static function provideCommonThemeAndPathForNonExistingUserTemplate(): iterable
     {
         yield 'no theme' => [
             null, 'content_element/no_user_template.html.twig',
@@ -56,7 +56,7 @@ abstract class AbstractOperationTestCase extends TestCase
         ];
     }
 
-    public static function provideCommonThemeAndPathForExistingUserTemplate(): \Generator
+    public static function provideCommonThemeAndPathForExistingUserTemplate(): iterable
     {
         yield 'no theme' => [
             null, 'content_element/existing_user_template.html.twig',

@@ -12,7 +12,7 @@ use Contao\Backend;
 use Contao\Controller;
 use Contao\Database;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['listing'] = '{title_legend},name,headline,type;{config_legend},list_table,list_fields,list_where,list_search,list_sort,perPage,list_info,list_info_where;{template_legend:hide},list_layout,list_info_layout;{protected_legend:hide},protected;{expert_legend:hide},cssID';
@@ -30,42 +30,42 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
 (
 	'inputType'               => 'text',
 	'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_where'] = array
 (
 	'inputType'               => 'text',
 	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_search'] = array
 (
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_sort'] = array
 (
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info'] = array
 (
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_where'] = array
 (
 	'inputType'               => 'text',
 	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array

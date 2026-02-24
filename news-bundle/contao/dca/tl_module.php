@@ -15,7 +15,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Add a palette selector
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'news_format';
@@ -33,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_archives'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_news', 'getNewsArchives'),
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('table'=>'tl_news_archive', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
