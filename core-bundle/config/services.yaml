@@ -40,15 +40,6 @@ services:
         arguments:
             - '@filesystem'
 
-    contao.cache.entity_tags:
-        class: Contao\CoreBundle\Cache\EntityCacheTags
-        public: true
-        arguments:
-            - '@contao.cache.tag_manager'
-        deprecated:
-            package: contao/core-bundle
-            version: 5.5
-
     contao.cache.tag_manager:
         class: Contao\CoreBundle\Cache\CacheTagManager
         public: true
@@ -1569,7 +1560,6 @@ services:
             - '@contao.repository.webauthn_user_entity'
 
     # Autowiring aliases
-    Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\ContentComposition\ContentComposition: '@contao.content_composition'
