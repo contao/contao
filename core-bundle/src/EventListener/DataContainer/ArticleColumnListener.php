@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\ArticleModel;
+use Contao\Backend;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -21,41 +21,77 @@ use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\DataContainer;
 use Contao\LayoutModel;
 use Contao\PageModel;
+use Contao\StringUtil;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\RequestStack;
 
+#[AsCallback(table: 'tl_article', target: 'fields.inColumn.options')]
 class ArticleColumnListener
 {
     public function __construct(
-        private readonly Inspector $inspector,
         private readonly ContaoFramework $framework,
         private readonly PageRegistry $pageRegistry,
+        private readonly Inspector $inspector,
+        private readonly RequestStack $requestStack,
+        private readonly Connection $connection,
     ) {
     }
 
-    #[AsCallback(table: 'tl_article', target: 'fields.inColumn.load')]
-    public function setSlotOptions(string $value, DataContainer $dc): string
+    public function __invoke(DataContainer $dc): array
     {
-        if (!$article = $this->framework->getAdapter(ArticleModel::class)->findById($dc->id)) {
-            return $value;
+        $currentRecord = $dc->getCurrentRecord();
+
+        if ($currentRecord) {
+            return $this->getPageOptions((int) $currentRecord['pid']);
         }
 
-        $page = $article->getRelated('pid');
+        // Show all sections (e.g. "override all" mode)
+        $selectedIds = $this->requestStack->getSession()->all()['CURRENT']['IDS'] ?? [];
 
-        if (!$page instanceof PageModel) {
-            return $value;
+        if ([] === $selectedIds) {
+            return [];
         }
 
-        if (!$template = $this->pageRegistry->getRoute($page)->getDefault('_template')) {
-            if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->loadDetails()->layout)) {
-                return $value;
-            }
+        $pageIds = $this->connection->fetchFirstColumn(
+            'SELECT DISTINCT pid FROM tl_article WHERE id IN (?)',
+            [$selectedIds],
+            [ArrayParameterType::INTEGER],
+        );
 
-            if ('modern' !== $layout->type) {
-                return $value;
-            }
+        return array_intersect(...array_map(
+            fn ($id) => $this->getPageOptions((int) $id),
+            $pageIds,
+        ));
+    }
 
-            $template = $layout->template;
+    private function getPageOptions(int $pageId): array
+    {
+        $pageModel = $this->framework->getAdapter(PageModel::class)->findWithDetails($pageId);
+
+        if (!$pageModel) {
+            return [];
         }
 
+        if ($template = $this->pageRegistry->getPageTemplate($pageModel)) {
+            return $this->getSlots($template);
+        }
+
+        $layout = $this->framework->getAdapter(LayoutModel::class)->findById($pageModel->layout);
+
+        if (!$layout) {
+            return [];
+        }
+
+        return match ($layout->type) {
+            'default' => $this->getLayoutSections($layout),
+            'modern' => $this->getSlots($layout->template),
+            default => [],
+        };
+    }
+
+    private function getSlots(string $template): array
+    {
         try {
             $slots = $this->inspector
                 ->inspectTemplate("@Contao/$template.html.twig")
@@ -71,9 +107,25 @@ class ArticleColumnListener
             $options[$slot] = "{% slot $slot %}";
         }
 
-        $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options'] = $options;
-        unset($GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback']);
+        return $options;
+    }
 
-        return $value;
+    private function getLayoutSections(LayoutModel $layoutModel): array
+    {
+        $options = [];
+        $modules = StringUtil::deserialize($layoutModel->modules);
+
+        if (empty($modules) || !\is_array($modules)) {
+            return [];
+        }
+
+        // Find all sections with an article module (see #6094)
+        foreach ($modules as $module) {
+            if (0 === (int) $module['mod'] && ($module['enable'] ?? null)) {
+                $options[] = $module['col'];
+            }
+        }
+
+        return Backend::convertLayoutSectionIdsToAssociativeArray($options);
     }
 }

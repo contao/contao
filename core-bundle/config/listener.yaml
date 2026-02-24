@@ -72,9 +72,11 @@ services:
     contao.listener.data_container.article_column:
         class: Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener
         arguments:
-            - '@contao.twig.inspector'
             - '@contao.framework'
             - '@contao.routing.page_registry'
+            - '@contao.twig.inspector'
+            - '@request_stack'
+            - '@database_connection'
 
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
@@ -605,6 +607,7 @@ services:
             - '@messenger.bus.default'
             - '%fragment.path%'
             - '%contao.backend.route_prefix%'
+            - '%kernel.debug%'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
