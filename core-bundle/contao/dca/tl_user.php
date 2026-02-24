@@ -138,15 +138,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, Input::get('do') != 'user'),
 			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
-		'backendTheme' => array
-		(
-			'inputType'               => 'select',
-			'options_callback' => static function () {
-				return Backend::getThemes();
-			},
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
-		),
 		'backendWidth' => array
 		(
 			'inputType'               => 'select',

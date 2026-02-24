@@ -20,7 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Finder\Finder;
 
 /**
  * @internal
@@ -73,32 +72,6 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
                 $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $packageVersion, $context));
                 $packages->addMethodCall('addPackage', [$packageName, new Reference($serviceId)]);
-            }
-
-            // Add the "contao/themes" folder
-            if (is_dir($path = Path::join($meta[$name]['path'], 'contao/themes'))) {
-                $themes = Finder::create()
-                    ->directories()
-                    ->depth(0)
-                    ->in($path)
-                ;
-
-                foreach ($themes as $theme) {
-                    $packageVersion = $version;
-                    $packageName = 'system/themes/'.$theme->getBasename();
-                    $serviceId = 'assets._package_'.$packageName;
-
-                    if (is_file($manifestPath = Path::join($path, $theme->getBasename(), 'manifest.json'))) {
-                        $def = new ChildDefinition('assets.json_manifest_version_strategy');
-                        $def->replaceArgument(0, $manifestPath);
-
-                        $container->setDefinition('assets._version_'.$packageName, $def);
-                        $packageVersion = new Reference('assets._version_'.$packageName);
-                    }
-
-                    $container->setDefinition($serviceId, $this->createPackageDefinition($packageName, $packageVersion, $context));
-                    $packages->addMethodCall('addPackage', [$packageName, new Reference($serviceId)]);
-                }
             }
         }
     }

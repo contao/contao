@@ -9,7 +9,7 @@
     <meta name="referrer" content="origin">
     <meta name="turbo-visit-control" content="reload">
 
-    <link rel="stylesheet" href="{{ asset('conflict.css', 'system/themes/' ~ theme) }}">
+    <link rel="stylesheet" href="{{ asset('backend.css', 'contao_core') }}">
     {{ stylesheets|default|raw }}
 
     <script>{{ getLocaleString.invoke()|raw }}</script>
@@ -19,7 +19,7 @@
     {{ javascripts|default|raw }}
 
 </head>
-<body>
+<body class="be_conflict">
 
 <div id="container">
     <main id="main">

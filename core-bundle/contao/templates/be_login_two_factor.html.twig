@@ -16,7 +16,7 @@
             <meta name="robots" content="noindex,follow">
         {% endblock %}
 
-        <link rel="stylesheet" href="{{ asset('login.css', 'system/themes/' ~ theme) }}">
+        <link rel="stylesheet" href="{{ asset('login.css', 'contao_core') }}">
         {{ stylesheets|default|raw }}
 
         <script>{{ getLocaleString.invoke()|raw }}</script>

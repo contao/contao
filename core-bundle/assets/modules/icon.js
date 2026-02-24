@@ -1,4 +1,4 @@
-import manifest from '../../contao/themes/flexible/icons/manifest.json';
+import manifest from '../../public/icons/manifest.json';
 
 /**
  * Create an icon template for the given name. You can call "getHtml()"
