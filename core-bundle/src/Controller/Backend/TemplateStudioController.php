@@ -27,7 +27,6 @@ use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
-use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -192,37 +191,19 @@ class TemplateStudioController extends AbstractBackendController
             $source = $this->loader->getSourceContext($logicalName);
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
             $isComponent = $templateInformation->isComponent();
-            $isLegacyTemplate = str_ends_with($logicalName, '.html5');
-
-            $getLegacyTemplateCode = static function (string $identifier): string {
-                $template = new class($identifier) extends Template {
-                    public function getCode(): string
-                    {
-                        $path = $this->getTemplatePath($this->strTemplate, $this->strFormat);
-
-                        return @file_get_contents($path) ?: '(Template not found)';
-                    }
-                };
-
-                return $template->getCode();
-            };
-
             $templateNameInformation = $this->getTemplateNameInformation($logicalName);
 
             $template = [
                 ...$templateNameInformation,
                 'path' => $source->getPath(),
-                'code' => $isLegacyTemplate ? $getLegacyTemplateCode($templateNameInformation['identifier']) : $source->getCode(),
-                'type' => $isLegacyTemplate ? 'php' : $templateNameInformation['extension'],
+                'code' => $source->getCode(),
+                'type' => $templateNameInformation['extension'],
                 'is_origin' => $i === $numTemplates - 1,
                 'is_component' => $isComponent,
                 'relation' => [
                     'shadowed' => $shadowed,
                     'warning' => false,
                     'not_analyzable' => false,
-                    'legacy_pair' => !str_contains($templateNameInformation['identifier'], '/')
-                        && $this->loader->exists("@Contao/{$templateNameInformation['identifier']}.html5")
-                        && 'Contao_Global' !== $templateNameInformation['namespace'],
                 ],
                 'annotations' => $canEdit && 0 === $i
                     ? $this->getAnnotations($logicalName, $templateInformation)

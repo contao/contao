@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
-use Contao\TemplateLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
@@ -64,7 +62,6 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         private readonly CacheItemPoolInterface $cachePool,
         private readonly TemplateLocator $templateLocator,
         private readonly ThemeNamespace $themeNamespace,
-        private readonly ContaoFramework $framework,
         private readonly PageFinder $pageFinder,
         private readonly string $projectDir,
     ) {
@@ -113,36 +110,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 
         $path = Path::makeAbsolute($path, $this->projectDir);
 
-        // The Contao PHP templates will still be rendered by the Contao framework via a
-        // PhpTemplateProxyNode. We're removing the source to not confuse Twig's lexer
-        // and parser and just keep the block names. At some point we may transpile the
-        // source to valid Twig instead and drop the proxy.
-        if ('html5' !== Path::getExtension($path, true)) {
-            return new Source(file_get_contents($path), $templateName, $path);
-        }
-
-        $getExtendedTemplate = static function ($path): string|null {
-            if (1 === preg_match('/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i', (string) file_get_contents($path), $match)) {
-                return $match[1];
-            }
-
-            return null;
-        };
-
-        // Use the default path of the template if it extends itself
-        if (($extendedTemplate = $getExtendedTemplate($path)) && "@Contao/$extendedTemplate.html5" === $name) {
-            $this->framework->initialize();
-            $path = $this->framework->getAdapter(TemplateLoader::class)->getDefaultPath($extendedTemplate, 'html5');
-        }
-
-        // Look up the blocks of the parent template if present
-        if (($extendedTemplate = $getExtendedTemplate($path)) && "@Contao/$extendedTemplate.html5" !== $name) {
-            return new Source($this->getSourceContext("@Contao/$extendedTemplate.html5")->getCode(), $templateName, $path);
-        }
-
-        preg_match_all('/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i', (string) file_get_contents($path), $matches);
-
-        return new Source(implode("\n", $matches[1]), $templateName, $path);
+        return new Source(file_get_contents($path), $templateName, $path);
     }
 
     /**
@@ -316,7 +284,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      *   [
      *     'foo' => [
      *       '/path/to/foo.html.twig' => '@Some/foo.html.twig',
-     *       '/other/path/to/foo.html5' => '@Other/foo.html5',
+     *       '/other/path/to/foo.html.twig' => '@Other/foo.html.twig',
      *     ],
      *   ]
      *
@@ -486,18 +454,14 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         foreach ($templatesByNamespace as $namespace => $templates) {
             uksort(
                 $templates,
-                // Order by identifier (asc) and extension (desc). This way ".html.twig"
-                // templates come before ".html5" templates for the same identifier.
+                // Order by identifier (asc) and extension (desc)
                 static fn ($a, $b) => ContaoTwigUtil::getIdentifier((string) $a) <=> ContaoTwigUtil::getIdentifier((string) $b) ?:
                     Path::getExtension((string) $b, true) <=> Path::getExtension((string) $a, true),
             );
 
             foreach ($templates as $shortName => $path) {
                 $identifier = ContaoTwigUtil::getIdentifier((string) $shortName);
-
-                $type = \in_array($extension = ContaoTwigUtil::getExtension($path), ['html.twig', 'html5'], true)
-                    ? 'html.twig/html5'
-                    : $extension;
+                $type = ContaoTwigUtil::getExtension($path);
 
                 // Make sure all files grouped under a certain identifier share the same type
                 if (null === ($existingType = $typeByIdentifier[$identifier] ?? null)) {

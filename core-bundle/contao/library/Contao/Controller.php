@@ -48,39 +48,6 @@ abstract class Controller extends System
 	protected static $arrQueryCache = array();
 
 	/**
-	 * Find a particular template file and return its path
-	 *
-	 * @param string $strTemplate The name of the template
-	 *
-	 * @return string The path to the template file
-	 *
-	 * @throws \RuntimeException If the template group folder is insecure
-	 */
-	public static function getTemplate($strTemplate)
-	{
-		$strTemplate = basename($strTemplate);
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		// Check for a theme folder
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
-		{
-			global $objPage;
-
-			if ($objPage->templateGroup ?? null)
-			{
-				if (Validator::isInsecurePath($objPage->templateGroup))
-				{
-					throw new \RuntimeException('Invalid path ' . $objPage->templateGroup);
-				}
-
-				return TemplateLoader::getPath($strTemplate, 'html5', $objPage->templateGroup);
-			}
-		}
-
-		return TemplateLoader::getPath($strTemplate, 'html5');
-	}
-
-	/**
 	 * Return all template files of a particular group as array
 	 *
 	 * @param string $strPrefix           The template name prefix (e.g. "ce_")
@@ -129,9 +96,6 @@ abstract class Controller extends System
 				array_keys($templateHierarchy->getInheritanceChains()),
 				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
 			),
-			// Merge with the templates from the TemplateLoader for backwards
-			// compatibility in case someone has added templates manually
-			TemplateLoader::getPrefixedFiles($strPrefix),
 		);
 
 		foreach ($prefixedFiles as $strTemplate)

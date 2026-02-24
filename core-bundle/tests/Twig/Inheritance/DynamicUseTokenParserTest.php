@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -140,7 +139,6 @@ class DynamicUseTokenParserTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             $themeNamespace,
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );

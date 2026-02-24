@@ -100,7 +100,7 @@ class TemplateLocator
         $finder = (new Finder())
             ->files()
             ->in($path)
-            ->name('/(\.twig|\.html5)$/')
+            ->name('/\.twig$/')
         ;
 
         if (!$this->isNamespaceRoot($path)) {

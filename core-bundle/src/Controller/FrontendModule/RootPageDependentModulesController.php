@@ -15,9 +15,9 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 use Contao\Controller;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\StringUtil;
-use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -66,7 +66,7 @@ class RootPageDependentModulesController extends AbstractFrontendModuleControlle
         return new Response($content);
     }
 
-    public function getResponse(Template $template, ModuleModel $model, Request $request): Response
+    public function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
         throw new \LogicException('This method should never be called');
     }

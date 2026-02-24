@@ -1175,9 +1175,6 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
-    contao.security.data_container.legacy_templates_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\LegacyTemplatesVoter
-
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
         arguments:
@@ -1440,7 +1437,6 @@ services:
             - '@cache.app'
             - '@contao.twig.loader.template_locator'
             - '@contao.twig.loader.theme_namespace'
-            - '@contao.framework'
             - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
         tags:
@@ -1523,7 +1519,7 @@ services:
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
         arguments:
-            - '@contao.framework'
+            - '@twig'
 
     contao.twig.loader.template_locator:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator

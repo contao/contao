@@ -13,13 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
-use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\InsertTag\InsertTagSubscription;
-use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
-use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -28,24 +24,16 @@ use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Contao\CoreBundle\Twig\Loader\TemplateLocator;
-use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
-use Contao\FrontendTemplate;
 use Contao\System;
-use Contao\TemplateLoader;
-use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -72,8 +60,6 @@ class TwigIntegrationTest extends TestCase
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
-        TemplateLoader::reset();
-
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
@@ -84,10 +70,6 @@ class TwigIntegrationTest extends TestCase
     public function testRendersWidgets(): void
     {
         $content = "{{ strClass }}\n{{ strLabel }} {{ this.label }}\n {{ getErrorAsString }}";
-
-        // Setup legacy framework and environment
-        (new Filesystem())->touch(Path::join($this->getTempDir(), 'templates/form_text.html5'));
-        TemplateLoader::addFile('form_text', 'templates');
 
         $environment = new Environment(new ArrayLoader(['@Contao/form_text.html.twig' => $content]));
 
@@ -127,98 +109,6 @@ class TwigIntegrationTest extends TestCase
 
         $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse(), 'HTML is built correctly');
         $this->assertTrue($request->attributes->get('_contao_widget_error'), 'error attribute is set');
-    }
-
-    public function testRendersTwigTemplateWithLegacyParent(): void
-    {
-        (new Filesystem())->dumpFile(
-            Path::join($this->getTempDir(), 'templates/legacy_template.html5'),
-            <<<'EOF'
-                <?php
-                    echo $this->value;
-                    echo ',test1';
-                    $this->block('a');
-                    echo ',test2';
-                    $this->endblock('a');
-                    echo ',test3';
-                    $this->block('b');
-                    echo ',test4';
-                    $this->block('b1');
-                    echo ',test5';
-                    $this->endblock('b1');
-                    echo ',test6';
-                    $this->endblock('b');
-                    echo ',test7';
-                EOF,
-        );
-
-        TemplateLoader::addFile('legacy_template', 'templates');
-
-        (new Filesystem())->dumpFile(
-            Path::join($this->getTempDir(), 'templates/twig_template.html.twig'),
-            <<<'EOF'
-                {% extends "@Contao/legacy_template.html5" %}
-                {% block a %}<<{{ parent() }}>>{% endblock %}
-                {% block b1 %}{{ parent() }},({{ value }}){% endblock %}
-                EOF,
-        );
-
-        $templateLocator = new TemplateLocator(
-            $this->getTempDir(),
-            $this->createStub(ResourceFinder::class),
-            $themeNamespace = new ThemeNamespace(),
-            $this->createStub(Connection::class),
-        );
-
-        $filesystemLoader = new ContaoFilesystemLoader(
-            new NullAdapter(),
-            $templateLocator,
-            $themeNamespace,
-            $this->createStub(ContaoFramework::class),
-            $this->createStub(PageFinder::class),
-            $this->getTempDir(),
-        );
-
-        $environment = new Environment($filesystemLoader);
-
-        $environment->addExtension(
-            new ContaoExtension(
-                $environment,
-                $filesystemLoader,
-                $this->createStub(ContaoVariable::class),
-                new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
-            ),
-        );
-
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
-        $filesystemLoader
-            ->method('exists')
-            ->willReturnMap([['@Contao/twig_template.html.twig', true]])
-        ;
-
-        $filesystemLoader
-            ->method('getFirst')
-            ->willReturnMap([['twig_template', '/path/to/twig_template.html.twig']])
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('twig', $environment);
-        $container->set(ContextFactory::class, new ContextFactory($this->mockScopeMatcher()));
-        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
-
-        $insertTagParser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
-        $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
-
-        $container->set('contao.insert_tag.parser', $insertTagParser);
-
-        System::setContainer($container);
-
-        $template = new FrontendTemplate('twig_template');
-        $template->setData(['value' => 'value{{br}}']);
-
-        $obLevel = ob_get_level();
-        $this->assertSame('value<br>,test1<<,test2>>,test3,test4,test5,(value{{br}}),test6,test7', $template->parse());
-        $this->assertSame($obLevel, ob_get_level());
     }
 
     public function testRendersAttributes(): void
