@@ -8,7 +8,6 @@
       <trans-unit id="MOD.calendar.1">
         <source>Manage events and display them in a calendar or event list</source>
       </trans-unit>
-
       <trans-unit id="MOD.tl_calendar_events">
         <source>Events</source>
       </trans-unit>
