@@ -421,9 +421,12 @@ abstract class Backend extends Controller
 				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
 			}
 
-			$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
-
 			$do = Input::get('do');
+
+			// Do not render the breadcrumb for files (see #9514)
+			if ($do != 'files' && $do != 'tpl_editor') {
+				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			}
 
 			// Add the current action
 			if (Input::get('id'))
