@@ -48,7 +48,7 @@ final class ContaoTwigUtil
      */
     public static function isLegacyTemplate(string $logicalName): bool
     {
-        trigger_deprecation('contao/core-bundle', '6.0', 'Calling ContaoTwigUtil::isLegacyTemplate() is deprecated and will be removed in Contao 7.');
+        trigger_deprecation('contao/core-bundle', '6.0', 'Calling ContaoTwigUtil::isLegacyTemplate() is deprecated and will no longer work in Contao 7.');
 
         if (null === $parts = self::parseContaoName($logicalName)) {
             return false;
