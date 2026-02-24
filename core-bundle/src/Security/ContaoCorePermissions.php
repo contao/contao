@@ -143,6 +143,11 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_IMAGE_SIZES = 'contao_user.themes.image_sizes';
 
     /**
+     * Access is granted if the current user can access layouts in themes.
+     */
+    public const USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS = 'contao_user.themes.elements';
+
+    /**
      * Access is granted if the current user can access front end modules in themes.
      */
     public const USER_CAN_ACCESS_FRONTEND_MODULES = 'contao_user.themes.modules';

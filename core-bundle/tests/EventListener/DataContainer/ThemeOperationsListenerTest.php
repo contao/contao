@@ -48,6 +48,18 @@ class ThemeOperationsListenerTest extends TestCase
     public static function themeOperationsProvider(): iterable
     {
         yield [
+            'table=tl_content',
+            ContaoCorePermissions::USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS,
+            true,
+        ];
+
+        yield [
+            'table=tl_content',
+            ContaoCorePermissions::USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS,
+            false,
+        ];
+        
+        yield [
             'table=tl_module',
             ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES,
             true,
