@@ -7,7 +7,7 @@
     {% block content %}
         {# Operations #}
         {% if operations|length %}
-            <form class="operations" method="post">
+            <form class="operations" method="post" enctype="multipart/form-data">
                 {% for operation in operations %}
                     {{ include('@Contao/backend/template_studio/editor/_operation_button.html.twig') }}
                 {% endfor %}
