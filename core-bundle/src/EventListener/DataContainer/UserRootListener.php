@@ -79,7 +79,7 @@ class UserRootListener implements ResetInterface
 
         $rootField = $GLOBALS['TL_DCA'][$table]['config']['userRoot'];
         $root = $user->{$rootField};
-        $root = array_filter($root ?? [], is_numeric(...));
+        $root = array_filter((array) $root, is_numeric(...));
 
         if ([] === $root) {
             $root = [0];
