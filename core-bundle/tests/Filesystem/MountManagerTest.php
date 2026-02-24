@@ -15,8 +15,10 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\PublicUri\ContentDispositionOption;
 use Contao\CoreBundle\Filesystem\PublicUri\Options;
 use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
@@ -30,6 +32,7 @@ use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\UriInterface;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 class MountManagerTest extends TestCase
 {
@@ -722,6 +725,82 @@ class MountManagerTest extends TestCase
             'https://some-service.org/user42/other.jpg',
             (string) $mountManager->generatePublicUri('foo/other.jpg', $options),
         );
+    }
+
+    public function testGeneratePublicUriReturnsNullIfNoProviderAndNoTemporaryAccessOption(): void
+    {
+        $fooAdapter = $this->createStub(FilesystemAdapter::class);
+
+        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
+        $fileDownloadHelper
+            ->expects($this->never())
+            ->method('generateUrl')
+        ;
+
+        $publicUriProvider = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider
+            ->expects($this->once())
+            ->method('getUri')
+            ->with($fooAdapter, 'bar/baz.jpg', null)
+            ->willReturn(null)
+        ;
+
+        $mountManager = new MountManager($fileDownloadHelper, [$publicUriProvider]);
+        $mountManager->mount($fooAdapter, 'foo');
+
+        $this->assertNull($mountManager->generatePublicUri('foo/bar/baz.jpg'));
+    }
+
+    #[DataProvider('provideTemporaryPublicUriDispositions')]
+    public function testGeneratePublicUriFallsBackToTemporaryPublicUriWithDisposition(string $expectedDisposition, ContentDispositionOption|null $contentDispositionOption = null): void
+    {
+        $fooAdapter = $this->createStub(FilesystemAdapter::class);
+        $temporaryAccessOption = TemporaryAccessOption::createFromContent(60, ['foo' => 'bar']);
+
+        $options = Options::create();
+        $options = $options->withSetting(Options::OPTION_TEMPORARY_ACCESS_INFORMATION, $temporaryAccessOption);
+
+        if ($contentDispositionOption) {
+            $options = $options->withSetting(Options::OPTION_CONTENT_DISPOSITION_TYPE, $contentDispositionOption);
+        }
+
+        $fileDownloadHelper = $this->createMock(FileDownloadHelper::class);
+        $fileDownloadHelper
+            ->expects($this->once())
+            ->method('generateUrl')
+            ->with('foo/bar/baz.jpg', $temporaryAccessOption, null, $expectedDisposition)
+            ->willReturn('https://example.com/not-relevant-for-this-test')
+        ;
+
+        $publicUriProvider = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider
+            ->expects($this->once())
+            ->method('getUri')
+            ->with($fooAdapter, 'bar/baz.jpg', $options)
+            ->willReturn(null)
+        ;
+
+        $mountManager = new MountManager($fileDownloadHelper, [$publicUriProvider]);
+        $mountManager->mount($fooAdapter, 'foo');
+
+        $this->assertSame('https://example.com/not-relevant-for-this-test', (string) $mountManager->generatePublicUri('foo/bar/baz.jpg', $options));
+    }
+
+    public static function provideTemporaryPublicUriDispositions(): iterable
+    {
+        yield 'Default disposition inline' => [
+            HeaderUtils::DISPOSITION_INLINE,
+        ];
+
+        yield 'Explicit disposition inline' => [
+            HeaderUtils::DISPOSITION_INLINE,
+            new ContentDispositionOption(true),
+        ];
+
+        yield 'Explicit disposition attachment' => [
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            new ContentDispositionOption(false),
+        ];
     }
 
     private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
