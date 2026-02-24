@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem\PublicUri;
 
+use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
@@ -22,7 +23,22 @@ class SymlinkedLocalFilesProviderTest extends TestCase
 {
     public function testGetUri(): void
     {
-        $adapter = $this->createStub(LocalFilesystemAdapter::class);
+        $adapter = $this->createMock(LocalFilesystemAdapter::class);
+        $adapter
+            ->expects($this->exactly(2))
+            ->method('fileExists')
+            ->willReturnMap([
+                ['path/to/resource.txt', true],
+                ['path/'.Dbafs::FILE_MARKER_PUBLIC, true],
+            ])
+        ;
+
+        $adapter
+            ->expects($this->once())
+            ->method('directoryExists')
+            ->with('path')
+            ->willReturn(true)
+        ;
 
         $request = $this->createStub(Request::class);
         $request

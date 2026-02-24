@@ -14,7 +14,7 @@ abstract class AbstractPublicUriProvider
 
     protected function versionizeUri(UriInterface $uri, FilesystemAdapter $adapter, string $adapterPath, Options|null $options = null): UriInterface
     {
-        if (true !== $options->get(Options::OPTION_ADD_VERSION_QUERY_PARAMETER)) {
+        if (true !== $options?->get(Options::OPTION_ADD_VERSION_QUERY_PARAMETER)) {
             return $uri;
         }
 

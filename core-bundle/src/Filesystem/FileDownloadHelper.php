@@ -65,6 +65,25 @@ class FileDownloadHelper
     }
 
     /**
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     * *              use "generateUrl()" instead.
+     * *
+     * Generate a signed file URL that a browser will display inline.
+     *
+     * You can optionally provide an array of $context, that will also be incorporated
+     * into the URL.
+     */
+    public function generateInlineUrl(string $url, string $path, array|null $context = null): string
+    {
+        trigger_deprecation('contao/core-bundle', '6.0', 'The "generateInlineUrl()" method is deprecated. Use "generateUrl()" instead.');
+
+        return $this->generate($url, [
+            self::PARAM_PATH => $path,
+            self::PARAM_CONTEXT => null !== $context ? serialize($context) : null,
+        ]);
+    }
+
+    /**
      * Generate a signed file URL that a browser will download.
      */
     public function generateUrl(string $path, TemporaryAccessOption $temporaryAccessOption, string|null $fileName = null, string $disposition = HeaderUtils::DISPOSITION_INLINE): string
