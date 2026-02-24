@@ -21,9 +21,9 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * @extends AbstractContaoFormType<LostPasswordType>
+ * @extends AbstractContaoType<LostPasswordType>
  */
-class LostPasswordType extends AbstractContaoFormType
+class LostPasswordType extends AbstractContaoType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
