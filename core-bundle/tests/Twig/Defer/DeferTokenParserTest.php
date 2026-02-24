@@ -76,7 +76,7 @@ class DeferTokenParserTest extends TestCase
 
         $this->assertSame(
             '1',
-            (new DeferredRenderer($environment))->render('template.html.twig', $this->getDefaultContext()),
+            new DeferredRenderer($environment)->render('template.html.twig', $this->getDefaultContext()),
             'deferred order using the deferred renderer',
         );
     }

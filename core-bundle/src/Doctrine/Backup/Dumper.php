@@ -51,7 +51,7 @@ class Dumper implements DumperInterface
         $schemaManager = $connection->createSchemaManager();
         $platform = clone $connection->getDatabasePlatform();
 
-        $reflection = (new \ReflectionClass($platform))->getProperty('_keywords');
+        $reflection = new \ReflectionClass($platform)->getProperty('_keywords');
         $reflection->setValue($platform, $this->getCompatibleKeywords());
 
         foreach ($this->getTablesToDump($schemaManager, $config) as $table) {

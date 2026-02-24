@@ -26,7 +26,7 @@ class DeprecationsNodeVisitorTest extends TestCase
 {
     public function testHashHighPriority(): void
     {
-        $this->assertSame(10, (new DeprecationsNodeVisitor())->getPriority());
+        $this->assertSame(10, new DeprecationsNodeVisitor()->getPriority());
     }
 
     public function testTriggersInsertTagDeprecation(): void

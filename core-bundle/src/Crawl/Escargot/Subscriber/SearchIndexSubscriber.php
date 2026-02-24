@@ -134,7 +134,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         }
 
         // Skip any redirected URLs that are now outside our base hosts (#4213)
-        $actualHost = (new Uri($response->getInfo('url')))->getHost();
+        $actualHost = new Uri($response->getInfo('url'))->getHost();
 
         if ($crawlUri->getUri()->getHost() !== $actualHost && !$this->escargot->getBaseUris()->containsHost($actualHost)) {
             $this->logWithCrawlUri(

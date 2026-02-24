@@ -2037,7 +2037,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
 				$objTemplate->host = Backend::getDecodedHostname();
-				$objTemplate->theme = Backend::getTheme();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->explain1 = \sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
@@ -3391,7 +3390,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			// Ensure correct sorting of root IDs, e.g. if user is given access to a limited set of root page.
 			$topMostRootIds = $db
-				->prepare("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ') ORDER BY sorting, id')
+				->prepare("SELECT id FROM $table WHERE id IN (" . implode(',', array_map('\intval', $this->root)) . ') ORDER BY sorting, id')
 				->execute()
 				->fetchEach('id');
 		}
@@ -4920,7 +4919,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (!empty($this->root) && \is_array($this->root))
 			{
-				$arrProcedure[] = 'id IN(' . implode(',', $this->root) . ')';
+				$arrProcedure[] = 'id IN(' . implode(',', array_map('\intval', $this->root)) . ')';
 			}
 
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -5522,7 +5521,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// $this->root might not have a correct order here, let's make sure it's ordered by sorting
 		if ($this->root && $db->fieldExists('sorting', $table))
 		{
-			$this->root = $db->execute("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ") ORDER BY sorting, id")->fetchEach('id');
+			$this->root = $db->execute("SELECT id FROM $table WHERE id IN (" . implode(',', array_map('\intval', $this->root)) . ") ORDER BY sorting, id")->fetchEach('id');
 		}
 	}
 

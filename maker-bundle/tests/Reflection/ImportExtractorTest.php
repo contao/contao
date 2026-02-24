@@ -25,7 +25,7 @@ class ImportExtractorTest extends TestCase
     #[DataProvider('methodProvider')]
     public function testExtraction(array $uses, MethodDefinition $method): void
     {
-        $this->assertSame($uses, (new ImportExtractor())->extract($method));
+        $this->assertSame($uses, new ImportExtractor()->extract($method));
     }
 
     public static function methodProvider(): iterable

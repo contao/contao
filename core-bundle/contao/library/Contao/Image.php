@@ -16,55 +16,6 @@ use Symfony\Component\Filesystem\Path;
 
 class Image
 {
-	private static array $deprecated = array
-	(
-		'alias',
-		'copychilds',
-		'copychilds_',
-		'filemanager',
-		'folMinus',
-		'folPlus',
-		'header',
-		'header_',
-		'important',
-		'manager',
-		'pickfile',
-		'settings',
-		'unpublished',
-	);
-
-	private static array $disabled = array
-	(
-		'admin_',
-		'admin_two_factor_',
-		'article_',
-		'children_',
-		'copy_',
-		'cut_',
-		'delete_',
-		'diff_',
-		'diffTemplate_',
-		'edit_',
-		'editor_',
-		'featured_',
-		'group_',
-		'layout_',
-		'member_',
-		'member_two_factor_',
-		'mgroup_',
-		'modules_',
-		'parent_',
-		'pasteafter_',
-		'pasteinto_',
-		'share_',
-		'sizes_',
-		'su_',
-		'theme_export_',
-		'user_',
-		'user_two_factor_',
-		'visible_',
-	);
-
 	private static array $htmlTemplateCache = array();
 
 	/**
@@ -95,15 +46,6 @@ class Image
 
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
-		if (\in_array($filename, self::$deprecated))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6.');
-		}
-		elseif (\in_array($filename, self::$disabled))
-		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
-		}
-
 		// Use path from icon manifest
 		$icons = System::getContainer()->getParameter('contao.backend.icons');
 
@@ -112,16 +54,7 @@ class Image
 			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
-		$theme = Backend::getTheme();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		// Prefer SVG icons
-		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
-		{
-			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
-		}
-
-		return 'system/themes/' . $theme . '/images/' . $src;
+		return 'bundles/contaocore/icons/' . $src;
 	}
 
 	/**

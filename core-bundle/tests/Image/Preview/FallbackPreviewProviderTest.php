@@ -25,17 +25,17 @@ class FallbackPreviewProviderTest extends TestCase
     {
         parent::tearDown();
 
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images/previews'));
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'assets/images/previews'));
     }
 
     public function testSupports(): void
     {
-        $this->assertTrue((new FallbackPreviewProvider())->supports(Path::join($this->getTempDir(), 'foo/bar.something')));
+        $this->assertTrue(new FallbackPreviewProvider()->supports(Path::join($this->getTempDir(), 'foo/bar.something')));
     }
 
     public function testGetFileHeaderSize(): void
     {
-        $this->assertSame(0, (new FallbackPreviewProvider())->getFileHeaderSize());
+        $this->assertSame(0, new FallbackPreviewProvider()->getFileHeaderSize());
     }
 
     public function testGeneratePreviews(): void
@@ -49,14 +49,14 @@ class FallbackPreviewProviderTest extends TestCase
             return $targetPath;
         };
 
-        (new Filesystem())->mkdir(\dirname($targetPath));
+        new Filesystem()->mkdir(\dirname($targetPath));
 
         $this->assertSame(
             ["$targetPath.svg"],
-            (new FallbackPreviewProvider())->generatePreviews($sourcePath, 1024, $targetPathCallback),
+            new FallbackPreviewProvider()->generatePreviews($sourcePath, 1024, $targetPathCallback),
         );
 
-        $size = (new Imagine())->open("$targetPath.svg")->getSize();
+        $size = new Imagine()->open("$targetPath.svg")->getSize();
 
         $this->assertSame(1024, $size->getWidth());
         $this->assertSame(1024, $size->getHeight());
@@ -64,6 +64,6 @@ class FallbackPreviewProviderTest extends TestCase
 
         $this->expectException(UnableToGeneratePreviewException::class);
 
-        (new FallbackPreviewProvider())->generatePreviews($sourcePath, 1024, $targetPathCallback, 2, 2);
+        new FallbackPreviewProvider()->generatePreviews($sourcePath, 1024, $targetPathCallback, 2, 2);
     }
 }

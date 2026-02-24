@@ -16,6 +16,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\TestCase\FunctionalTestCase;
@@ -37,7 +38,7 @@ class DbafsTest extends FunctionalTestCase
         parent::setUp();
 
         $this->filesystem = new VirtualFilesystem(
-            (new MountManager())->mount($this->adapter = new InMemoryFilesystemAdapter()),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount($this->adapter = new InMemoryFilesystemAdapter()),
             $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class)),
         );
 

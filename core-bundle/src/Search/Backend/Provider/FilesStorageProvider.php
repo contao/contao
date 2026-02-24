@@ -112,7 +112,7 @@ class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInt
             'act' => 'edit',
         ]);
 
-        $hit = (new Hit($document, $item->getName(), $viewUrl))
+        $hit = new Hit($document, $item->getName(), $viewUrl)
             ->withEditUrl($editUrl)
             ->withContext($document->getSearchableContent())
             ->withMetadata([

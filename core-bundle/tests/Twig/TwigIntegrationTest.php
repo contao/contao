@@ -44,7 +44,7 @@ class TwigIntegrationTest extends TestCase
     {
         parent::setUp();
 
-        (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
+        new Filesystem()->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         $GLOBALS['TL_FFL'] = [
             'text' => FormText::class,
@@ -58,7 +58,7 @@ class TwigIntegrationTest extends TestCase
 
     protected function tearDown(): void
     {
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'templates'));
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
 

@@ -36,48 +36,6 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * Return the current theme as string
-	 *
-	 * @return string The name of the theme
-	 */
-	public static function getTheme()
-	{
-		$theme = Config::get('backendTheme');
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		if ($theme && $theme != 'flexible' && is_dir($projectDir . '/system/themes/' . $theme))
-		{
-			return $theme;
-		}
-
-		return 'flexible';
-	}
-
-	/**
-	 * Return the back end themes as array
-	 *
-	 * @return array An array of available back end themes
-	 */
-	public static function getThemes()
-	{
-		$arrReturn = array();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = Folder::scan($projectDir . '/system/themes');
-
-		foreach ($arrThemes as $strTheme)
-		{
-			if (str_starts_with($strTheme, '.') || !is_dir($projectDir . '/system/themes/' . $strTheme))
-			{
-				continue;
-			}
-
-			$arrReturn[$strTheme] = $strTheme;
-		}
-
-		return $arrReturn;
-	}
-
-	/**
 	 * Return the TinyMCE language
 	 *
 	 * @return string
@@ -421,9 +379,13 @@ abstract class Backend extends Controller
 				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
 			}
 
-			$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
-
 			$do = Input::get('do');
+
+			// Only render the breadcrumb for DC_Table (see #9514)
+			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
+			{
+				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			}
 
 			// Add the current action
 			if (Input::get('id'))

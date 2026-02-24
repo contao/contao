@@ -54,7 +54,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
 
     public function testStreamDialogWhenCreatingVariantTemplate(): void
     {
-        $loader = $this->createContaoFilesystemLoaderStub();
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('exists')
             ->willReturnCallback(

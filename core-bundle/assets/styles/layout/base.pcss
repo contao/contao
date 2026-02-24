@@ -1,0 +1,46 @@
+/* Account for the jump links bar */
+html {
+    scroll-padding-top: 36px;
+    scroll-behavior: smooth;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Skip link */
+.show-on-focus:focus {
+    clip-path: revert;
+    height: auto;
+    width: auto;
+    margin: 4px;
+    padding: 9px;
+    position: absolute;
+    z-index: 999;
+    background-color: var(--content-bg);
+    border-radius: var(--border-radius);
+}
+
+/* Body */
+body {
+    background: var(--body-bg);
+    overflow-y: scroll;
+}
+
+body.popup {
+    background: var(--content-bg);
+}
+
+.mw1280 {
+    --backend-width: 1280px;
+}
+
+.mw1440 {
+    --backend-width: 1440px;
+}
+
+.mw1920 {
+    --backend-width: 1920px;
+}

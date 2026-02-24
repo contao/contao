@@ -73,8 +73,8 @@ class CalendarEventsGenerator
                     }
 
                     $count = 0;
-                    $eventStartTime = (new \DateTime())->setTimestamp($eventModel->startTime);
-                    $eventEndTime = (new \DateTime())->setTimestamp($eventModel->endTime);
+                    $eventStartTime = new \DateTime()->setTimestamp($eventModel->startTime);
+                    $eventEndTime = new \DateTime()->setTimestamp($eventModel->endTime);
                     $modifier = '+ '.$repeat['value'].' '.$repeat['unit'];
 
                     while ($eventEndTime < $rangeEnd) {
@@ -265,8 +265,8 @@ class CalendarEventsGenerator
         }
 
         // Get today's start and end timestamp
-        $this->todayBegin ??= (new \DateTimeImmutable())->setTime(0, 0);
-        $this->todayEnd ??= (new \DateTimeImmutable())->setTime(23, 59, 59);
+        $this->todayBegin ??= new \DateTimeImmutable()->setTime(0, 0);
+        $this->todayEnd ??= new \DateTimeImmutable()->setTime(23, 59, 59);
 
         // Mark past and upcoming events (see #3692)
         if ($end < $this->todayBegin->getTimestamp()) {

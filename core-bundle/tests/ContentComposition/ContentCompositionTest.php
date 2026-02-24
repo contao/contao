@@ -18,12 +18,12 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class ContentCompositionTest extends TestCase
@@ -45,18 +45,12 @@ class ContentCompositionTest extends TestCase
         $page = $this->createClassWithPropertiesStub(PageModel::class);
         $page->adminEmail = 'foo@bar.com';
 
-        $route = $this->createMock(PageRoute::class);
-        $route
-            ->expects($this->once())
-            ->method('getDefault')
-            ->with('_template')
-            ->willReturn('page/foo')
-        ;
-
-        $pageRegistry = $this->createStub(PageRegistry::class);
+        $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
-            ->method('getRoute')
-            ->willReturnMap([[$page, $route]])
+            ->expects($this->once())
+            ->method('getPageTemplate')
+            ->with($page)
+            ->willReturn('page/foo')
         ;
 
         $contentComposition = new ContentComposition(
@@ -70,6 +64,7 @@ class ContentCompositionTest extends TestCase
             $this->createStub(RequestStack::class),
             $this->createStub(LocaleAwareInterface::class),
             $pageRegistry,
+            $this->createStub(EventDispatcherInterface::class),
         );
 
         $builder = $contentComposition->createContentCompositionBuilder($page);

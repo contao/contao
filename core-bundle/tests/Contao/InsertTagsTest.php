@@ -423,7 +423,7 @@ class InsertTagsTest extends TestCase
 
         $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class), null, $allowedTags);
 
-        $output = (string) (new InsertTags())->replaceInternal($source, false, $insertTagParser);
+        $output = (string) new InsertTags()->replaceInternal($source, false, $insertTagParser);
 
         $this->assertSame($expected, $output);
 
@@ -1102,12 +1102,12 @@ class InsertTagsTest extends TestCase
         }
 
         if ('infinite-recursion' === $tagParts[0]) {
-            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+            return (string) new InsertTags()->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
         }
 
         if ('infinite-try-catch' === $tagParts[0]) {
             try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+                return (string) new InsertTags()->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
@@ -1117,12 +1117,12 @@ class InsertTagsTest extends TestCase
 
         if ('infinite-retry' === $tagParts[0]) {
             try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+                return (string) new InsertTags()->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
                 if ((int) $tagParts[1] >= 100) {
-                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+                    return (string) new InsertTags()->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
                 }
 
                 throw $exception;

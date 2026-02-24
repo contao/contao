@@ -166,13 +166,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         // Check hierarchy
         $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
-        foreach (array_keys($chain) as $path) {
-            if ($isExpired($path, $time)) {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all(array_keys($chain), static fn ($path) => !$isExpired($path, $time));
     }
 
     /**

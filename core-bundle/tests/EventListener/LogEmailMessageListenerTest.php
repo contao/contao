@@ -33,7 +33,7 @@ class LogEmailMessageListenerTest extends TestCase
             ->with('An e-mail has been sent to "Foo Bar" <foobar@example.com>, CC to lorem@example.com, "Max Meladze" <ipsum@example.com>, BCC to dolor@example.com')
         ;
 
-        $emailMessage = (new Email())
+        $emailMessage = new Email()
             ->from('contao@example.com')
             ->to(new Address('foobar@example.com', 'Foo Bar'))
             ->cc(new Address('lorem@example.com'), new Address('ipsum@example.com', 'Max Meladze'))
@@ -57,7 +57,7 @@ class LogEmailMessageListenerTest extends TestCase
             ->with('Failed to send e-mail to "Foo Bar" <foobar@example.com>, CC to lorem@example.com, "Max Meladze" <ipsum@example.com>, BCC to dolor@example.com')
         ;
 
-        $emailMessage = (new Email())
+        $emailMessage = new Email()
             ->from('contao@example.com')
             ->to(new Address('foobar@example.com', 'Foo Bar'))
             ->cc(new Address('lorem@example.com'), new Address('ipsum@example.com', 'Max Meladze'))

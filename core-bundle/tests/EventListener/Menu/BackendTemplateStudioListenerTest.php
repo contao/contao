@@ -138,7 +138,7 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $item
             ->expects($this->once())
             ->method('getChild')
-            ->willReturn((new MenuFactory())->createItem('design'))
+            ->willReturn(new MenuFactory()->createItem('design'))
         ;
 
         $event = $this->createMock(MenuEvent::class);

@@ -31,7 +31,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $this->resetStaticProperties([Terminal::class]);
 
         $dir = $this->getTempDir();
-        (new Filesystem())->remove([Path::join($dir, '.env'), Path::join($dir, '.env.local')]);
+        new Filesystem()->remove([Path::join($dir, '.env'), Path::join($dir, '.env.local')]);
 
         parent::tearDown();
     }
@@ -56,13 +56,13 @@ class ContaoSetupCommandTest extends ContaoTestCase
             ;
         }
 
-        $phpPath = (new PhpExecutableFinder())->find();
+        $phpPath = new PhpExecutableFinder()->find();
 
         $this->assertStringContainsString('php', $phpPath);
 
         array_unshift($phpFlags, '-dmemory_limit=1G');
 
-        $commandFilePath = (new \ReflectionClass(ContaoSetupCommand::class))->getFileName();
+        $commandFilePath = new \ReflectionClass(ContaoSetupCommand::class)->getFileName();
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
@@ -81,7 +81,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $projectDir = $this->getTempDir();
         $command = new ContaoSetupCommand($projectDir, Path::join($projectDir, 'public'), 'secret', $createProcessHandler);
 
-        (new CommandTester($command))->execute([], $options);
+        new CommandTester($command)->execute([], $options);
 
         $this->assertSame(8, $invocationCount);
 
@@ -194,7 +194,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $this->assertFileExists($dotEnvFile);
         $this->assertFileExists($dotEnvLocalFile);
 
-        $vars = (new Dotenv())->parse(file_get_contents($dotEnvLocalFile));
+        $vars = new Dotenv()->parse(file_get_contents($dotEnvLocalFile));
 
         $this->assertArrayHasKey('APP_SECRET', $vars);
         $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));
@@ -244,7 +244,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $this->assertFileExists($dotEnvLocalTargetFile);
         $this->assertTrue(is_link($dotEnvLocalFile));
 
-        $vars = (new Dotenv())->parse(file_get_contents($dotEnvLocalTargetFile));
+        $vars = new Dotenv()->parse(file_get_contents($dotEnvLocalTargetFile));
 
         $this->assertArrayHasKey('APP_SECRET', $vars);
         $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));

@@ -93,7 +93,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         ++$this->stats['ok'];
 
         // Skip any redirected URLs that are now outside our base hosts (#4213)
-        $actualHost = (new Uri($response->getInfo('url')))->getHost();
+        $actualHost = new Uri($response->getInfo('url'))->getHost();
 
         if ($crawlUri->getUri()->getHost() !== $actualHost && !$this->escargot->getBaseUris()->containsHost($actualHost)) {
             return SubscriberInterface::DECISION_NEGATIVE;

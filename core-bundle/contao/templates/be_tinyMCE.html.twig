@@ -28,7 +28,7 @@
                 {% endblock %}
 
                 {% block content_css %}
-                content_css: document.documentElement.dataset.colorScheme === 'dark' ? '{{ asset('tinymce-dark.css', 'system/themes/' ~ theme)|e('js') }}' : '{{ asset('tinymce.css', 'system/themes/' ~ theme)|e('js') }}',
+                content_css: document.documentElement.dataset.colorScheme === 'dark' ? '{{ asset('tinymce-dark.css', 'contao_core')|e('js') }}' : '{{ asset('tinymce.css', 'contao_core')|e('js') }}',
                 {% endblock %}
 
                 {% block plugins %}

@@ -38,7 +38,7 @@ class QueryTest extends TestCase
 
     public function testWithoutTypeAndTag(): void
     {
-        $query = (new Query(20, 'keywords', 'type', 'tag'))
+        $query = new Query(20, 'keywords', 'type', 'tag')
             ->withoutType()
             ->withoutTag()
         ;
@@ -49,7 +49,7 @@ class QueryTest extends TestCase
 
     public function testEquals(): void
     {
-        $this->assertTrue((new Query(20, 'keywords', 'type', 'tag'))->equals(new Query(20, 'keywords', 'type', 'tag')));
-        $this->assertFalse((new Query(20, 'something', 'type', 'tag'))->equals(new Query(20, 'keywords', 'type', 'tag')));
+        $this->assertTrue(new Query(20, 'keywords', 'type', 'tag')->equals(new Query(20, 'keywords', 'type', 'tag')));
+        $this->assertFalse(new Query(20, 'something', 'type', 'tag')->equals(new Query(20, 'keywords', 'type', 'tag')));
     }
 }

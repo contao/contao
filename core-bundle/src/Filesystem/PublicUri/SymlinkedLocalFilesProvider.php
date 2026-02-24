@@ -12,13 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\PublicUri;
 
+use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
+class SymlinkedLocalFilesProvider extends AbstractPublicUriProvider implements PublicUriProviderInterface
 {
     /**
      * @var \WeakMap<LocalFilesystemAdapter, string>
@@ -46,13 +47,24 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
      * Generates public URLs for the symlinked local files, so that they can be
      * provided directly by the web server.
      */
-    public function getUri(FilesystemAdapter $adapter, string $adapterPath, OptionsInterface|null $options): UriInterface|null
+    public function getUri(FilesystemAdapter $adapter, string $adapterPath, Options|null $options): UriInterface|null
     {
-        if ($options || null === ($rootPath = ($this->adapters[$adapter] ?? null))) {
+        if (null === ($rootPath = ($this->adapters[$adapter] ?? null))) {
             return null;
         }
 
-        return new Uri(\sprintf('%s/%s/%s', $this->getSchemeAndHost(), $rootPath, $adapterPath));
+        // If it's not a file, return null
+        if (!$adapter->fileExists($adapterPath)) {
+            return null;
+        }
+
+        if (!$this->isPublic($adapter, $adapterPath)) {
+            return null;
+        }
+
+        $uri = new Uri(\sprintf('%s/%s/%s', $this->getSchemeAndHost(), $rootPath, $adapterPath));
+
+        return $this->versionizeUri($uri, $adapter, $adapterPath, $options);
     }
 
     private function getSchemeAndHost(): string
@@ -62,5 +74,14 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
         }
 
         return $request->getSchemeAndHttpHost();
+    }
+
+    private function isPublic(FilesystemAdapter $adapter, string $adapterPath): bool
+    {
+        $pathChunks = explode('/', $adapterPath);
+        array_pop($pathChunks);
+
+        // TODO: Can we find a more performant way of doing this?
+        return array_any($pathChunks, static fn ($pathChunk) => $adapter->directoryExists($pathChunk) && $adapter->fileExists($pathChunk.'/'.Dbafs::FILE_MARKER_PUBLIC));
     }
 }

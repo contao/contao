@@ -186,7 +186,7 @@ class WidgetTest extends TestCase
         }
 
         if (isset($parameters[2])) {
-            $widget = (new \ReflectionClass(TextField::class))->newInstanceWithoutConstructor();
+            $widget = new \ReflectionClass(TextField::class)->newInstanceWithoutConstructor();
             $widget->addAttributes($attrs);
             $this->assertSame($parameters[2], $widget->value);
         }

@@ -34,9 +34,9 @@ class AddResourcesPathsPassTest extends TestCase
         ];
 
         $meta = [
-            'FrameworkBundle' => ['path' => (new FrameworkBundle())->getPath()],
-            'ContaoTestBundle' => ['path' => (new ContaoTestBundle())->getPath()],
-            'ContaoNewBundle' => ['path' => (new ContaoNewBundle())->getPath()],
+            'FrameworkBundle' => ['path' => new FrameworkBundle()->getPath()],
+            'ContaoTestBundle' => ['path' => new ContaoTestBundle()->getPath()],
+            'ContaoNewBundle' => ['path' => new ContaoNewBundle()->getPath()],
             'foobar' => ['path' => $fixturesDir.'/system/modules/foobar'],
         ];
 

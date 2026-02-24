@@ -32,8 +32,8 @@ class BackendHelperRuntimeTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->icon(
-            'icon.svg', 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->icon(
+            'icon.svg', 'alt', new HtmlAttributes()->set('foo', 'bar'),
         ));
     }
 
@@ -49,8 +49,8 @@ class BackendHelperRuntimeTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $this->createStub(FilesystemItem::class), 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
+            $this->createStub(FilesystemItem::class), 'alt', new HtmlAttributes()->set('foo', 'bar'),
         ));
     }
 
@@ -75,8 +75,8 @@ class BackendHelperRuntimeTest extends TestCase
 
         $GLOBALS['TL_MIME'] = ['jpg' => ['image/jpeg', 'image.svg']];
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $fileitem, 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
+            $fileitem, 'alt', new HtmlAttributes()->set('foo', 'bar'),
         ));
 
         unset($GLOBALS['TL_MIME']);
@@ -101,8 +101,8 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('image/jpeg')
         ;
 
-        $this->assertSame('icon HTML', (new BackendHelperRuntime($framework))->fileIcon(
-            $fileitem, 'alt', (new HtmlAttributes())->set('foo', 'bar'),
+        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
+            $fileitem, 'alt', new HtmlAttributes()->set('foo', 'bar'),
         ));
     }
 }

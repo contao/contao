@@ -98,25 +98,25 @@ class SearchIndexSubscriberTest extends TestCase
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.',
-            (new CrawlUri(new Uri('https://original.contao.org'), 0, true))->addTag(RobotsSubscriber::TAG_NOFOLLOW),
+            new CrawlUri(new Uri('https://original.contao.org'), 0, true)->addTag(RobotsSubscriber::TAG_NOFOLLOW),
         ];
 
         yield 'Test skips URIs where the original URI was marked "noindex" in the robots.txt' => [
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+            new CrawlUri(new Uri('https://contao.org'), 0)->addTag(RobotsSubscriber::TAG_NOINDEX),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because it was marked "noindex" in the robots.txt.',
         ];
 
         yield 'Test skips URIs that were disallowed by the robots.txt content' => [
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_DISALLOWED_ROBOTS_TXT),
+            new CrawlUri(new Uri('https://contao.org'), 0)->addTag(RobotsSubscriber::TAG_DISALLOWED_ROBOTS_TXT),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.',
         ];
 
         yield 'Test skips URIs that contained the no-html-type tag' => [
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE),
+            new CrawlUri(new Uri('https://contao.org'), 0)->addTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because when the crawl URI was found, the "type" attribute was present and did not contain "text/html".',
@@ -130,7 +130,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test skips URIs that were marked to be skipped by the data attribue' => [
-            (new CrawlUri(new Uri('https://contao.org/foobar'), 0))->addTag(SearchIndexSubscriber::TAG_SKIP),
+            new CrawlUri(new Uri('https://contao.org/foobar'), 0)->addTag(SearchIndexSubscriber::TAG_SKIP),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because it was marked to be skipped using the data-skip-search-index attribute.',
@@ -221,7 +221,7 @@ class SearchIndexSubscriberTest extends TestCase
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.',
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+            new CrawlUri(new Uri('https://contao.org'), 0)->addTag(RobotsSubscriber::TAG_NOINDEX),
         ];
     }
 
@@ -303,7 +303,7 @@ class SearchIndexSubscriberTest extends TestCase
             'Do not request because it was marked "noindex" in the <meta name="robots"> HTML tag.',
             ['ok' => 0, 'warning' => 0, 'error' => 0],
             [],
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+            new CrawlUri(new Uri('https://contao.org'), 0)->addTag(RobotsSubscriber::TAG_NOINDEX),
         ];
 
         yield 'Test index URIs where the header robots tag contains "noindex" and JSON "searchIndexer" is set to "always_index"' => [
@@ -312,7 +312,7 @@ class SearchIndexSubscriberTest extends TestCase
             'Robots:noindex is ignored because of searchIndexer:always_index. Forwarded to the search indexer. Was indexed successfully.',
             ['ok' => 1, 'warning' => 0, 'error' => 0],
             [],
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+            new CrawlUri(new Uri('https://contao.org'), 0)->addTag(RobotsSubscriber::TAG_NOINDEX),
             'always_index',
         ];
 
