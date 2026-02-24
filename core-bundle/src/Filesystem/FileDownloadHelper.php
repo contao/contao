@@ -66,8 +66,8 @@ class FileDownloadHelper
 
     /**
      * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
-     * *              use "generateUrl()" instead.
-     * *
+     *             use "generateUrl()" instead.
+     *
      * Generate a signed file URL that a browser will display inline.
      *
      * You can optionally provide an array of $context, that will also be incorporated

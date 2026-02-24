@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
@@ -24,7 +25,10 @@ use Contao\LayoutModel;
 use Contao\StringUtil;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class AbstractDownloadContentElementController extends AbstractContentElementController
 {
@@ -46,11 +50,42 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     abstract protected function getFilesystemItems(Request $request, ContentModel $model): FilesystemItemIterator;
 
-    protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model): array
+    /**
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             do not call this method at all anymore but leave handling the downloads to the new FileStreamController.
+     */
+    protected function handleDownload(Request $request, ContentModel $model): void
+    {
+        trigger_deprecation('contao/core-bundle', '6.0', 'The "handleDownload()" method is deprecated. Leave this to the new FileStreamController.');
+
+        $response = $this->container->get('contao.filesystem.file_download_helper')->handle(
+            $request,
+            $this->getVirtualFilesystem(),
+            function (FilesystemItem $item, array $context) use ($model, $request): Response|null {
+                // Do not handle downloads from other DownloadController elements on the same
+                // page (see #5568)
+                if ($model->id !== ($context['id'] ?? null)) {
+                    return new Response('', Response::HTTP_NO_CONTENT);
+                }
+
+                if (!$this->getFilesystemItems($request, $model)->any(static fn (FilesystemItem $listItem) => $listItem->getPath() === $item->getPath())) {
+                    return new Response('The resource can not be accessed anymore.', Response::HTTP_GONE);
+                }
+
+                return null;
+            },
+        );
+
+        if ($response instanceof StreamedResponse || $response instanceof BinaryFileResponse) {
+            throw new ResponseException($response);
+        }
+    }
+
+    protected function compileDownloadsList(FilesystemItemIterator $filesystemItems, ContentModel $model, Request $request): array
     {
         $items = array_map(
             fn (FilesystemItem $filesystemItem): array => [
-                'href' => $this->generateDownloadUrl($filesystemItem, $model),
+                'href' => $this->generateDownloadUrl($filesystemItem, $model, $request),
                 'file' => $filesystemItem,
                 'show_file_previews' => $model->showPreview,
                 'file_previews' => $this->getPreviewsForContentModel($filesystemItem, $model),
