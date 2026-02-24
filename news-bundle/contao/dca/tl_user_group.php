@@ -9,7 +9,7 @@
  */
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Extend the default palette
 PaletteManipulator::create()
@@ -25,6 +25,6 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['news'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_news_archive.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );

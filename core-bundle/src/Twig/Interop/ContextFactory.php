@@ -118,6 +118,8 @@ final class ContextFactory
 
     /**
      * Returns all members including those that were dynamically set ($this->foo = 'bar').
+     *
+     * @return \Generator<string, mixed>
      */
     private function getAllMembers(object $object): \Generator
     {

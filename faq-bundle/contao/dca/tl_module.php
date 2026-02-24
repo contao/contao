@@ -10,7 +10,7 @@
 
 use Contao\Backend;
 use Contao\Database;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['faqlist']   = '{title_legend},name,headline,type;{config_legend},faq_categories,faq_readerModule;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_categories'] = array
 	'inputType'               => 'checkboxWizard',
 	'foreignKey'              => 'tl_faq_category.title',
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 

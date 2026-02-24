@@ -12,7 +12,7 @@ use Contao\Backend;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_log'] = array
 (
@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		'text' => array
 		(
 			'search'                  => true,
-			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'func' => array
 		(

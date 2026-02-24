@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class NewsletterRecipientsAccessVoterTest extends AbstractAccessVoterTestCase
 {
-    public static function votesProvider(): \Generator
+    public static function votesProvider(): iterable
     {
         yield [
             ['pid' => 42],

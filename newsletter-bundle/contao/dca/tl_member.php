@@ -9,7 +9,7 @@
  */
 
 use Contao\Newsletter;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Add palette
 $GLOBALS['TL_DCA']['tl_member']['palettes']['default'] = str_replace('assignDir;', 'assignDir;{newsletter_legend:hide},newsletter;', $GLOBALS['TL_DCA']['tl_member']['palettes']['default']);
@@ -31,6 +31,6 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['newsletter'] = array
 	(
 		array(Newsletter::class, 'synchronize')
 	),
-	'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
