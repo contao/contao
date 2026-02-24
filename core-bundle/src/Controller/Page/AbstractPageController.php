@@ -56,7 +56,7 @@ abstract class AbstractPageController extends AbstractController
         return match ($layoutType) {
             'modern' => $this->handleModernLayout($pageModel, $responseContext),
             'default' => $this->handleDefaultLayout($pageModel, $responseContext),
-            default => throw new \LogicException(\sprintf('Unknown layout type "%s"', (string) $layoutType)),
+            default => throw new \LogicException(\sprintf('Unknown layout type "%s"', $layoutType)),
         };
     }
 

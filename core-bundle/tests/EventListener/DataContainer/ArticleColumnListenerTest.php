@@ -65,8 +65,9 @@ class ArticleColumnListenerTest extends TestCase
         $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
-            ->with('@Contao/layout/foo.html.twig')
-            ->willReturn($templateInformation)
+            ->willReturnMap([
+                ['@Contao/layout/foo.html.twig', $templateInformation],
+            ])
         ;
 
         $articleColumnListener = new ArticleColumnListener(
@@ -138,8 +139,9 @@ class ArticleColumnListenerTest extends TestCase
         $inspector = $this->createStub(Inspector::class);
         $inspector
             ->method('inspectTemplate')
-            ->with('@Contao/layout/foo.html.twig')
-            ->willReturn($templateInformation)
+            ->willReturnMap([
+                ['@Contao/layout/foo.html.twig', $templateInformation],
+            ])
         ;
 
         $articleColumnListener = new ArticleColumnListener(

@@ -28,10 +28,13 @@ class FrontendIndex extends Frontend
 	 * @throws \LogicException
 	 * @throws PageNotFoundException
 	 * @throws AccessDeniedException
+	 *
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+	 *             use the AbstractPageController instead.
 	 */
 	public function renderPage(PageModel $pageModel): Response
 	{
-		@trigger_deprecation('contao/core-bundle', '5.7', 'Deprecated since Contao 5.7, use the AbstractPageController instead.');
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the AbstractPageController instead.', __METHOD__);
 
 		return System::getContainer()->get(RegularPageController::class)($pageModel);
 	}
