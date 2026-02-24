@@ -30,7 +30,7 @@ use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 class SearchIndexListenerTest extends TestCase
 {
     #[DataProvider('getRequestResponse')]
-    public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete): void
+    public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete, bool $debug): void
     {
         $dispatchCount = (int) $index + (int) $delete;
 
@@ -51,7 +51,7 @@ class SearchIndexListenerTest extends TestCase
 
         $event = new TerminateEvent($this->createStub(HttpKernelInterface::class), $request, $response);
 
-        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $features);
+        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $debug, $features);
         $listener($event);
     }
 
@@ -76,7 +76,7 @@ class SearchIndexListenerTest extends TestCase
         ;
 
         $event = new TerminateEvent($this->createStub(HttpKernelInterface::class), $request, $response);
-        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', SearchIndexListener::FEATURE_INDEX);
+        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', false, SearchIndexListener::FEATURE_INDEX);
 
         // Should index (total expected count: 1)
         $listener($event);
@@ -95,7 +95,7 @@ class SearchIndexListenerTest extends TestCase
             new InMemoryStorage(),
         );
 
-        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', SearchIndexListener::FEATURE_INDEX, $rateLimiter);
+        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', false, SearchIndexListener::FEATURE_INDEX, $rateLimiter);
 
         // Should index because the rate limiter sees this response for the first time
         // (total expected count: 3)
@@ -113,6 +113,7 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             true,
             false,
+            false,
         ];
 
         yield 'Should not index because even though the response was successful and contains ld+json information, it was disabled by the feature flag' => [
@@ -121,12 +122,23 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE,
             false,
             false,
+            false,
+        ];
+
+        yield 'Should be skipped because kernel.debug is true' => [
+            Request::create('/foobar'),
+            new Response(),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+            true,
         ];
 
         yield 'Should be skipped because it is not a GET request' => [
             Request::create('/foobar', 'POST'),
             new Response('', Response::HTTP_INTERNAL_SERVER_ERROR),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
             false,
             false,
         ];
@@ -137,12 +149,14 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             false,
+            false,
         ];
 
         yield 'Should be skipped because it was a redirect' => [
             Request::create('/foobar'),
             new RedirectResponse('https://somewhere.else'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
             false,
             false,
         ];
@@ -153,12 +167,14 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             false,
+            false,
         ];
 
         yield 'Should be skipped because it is a contao backend request' => [
             Request::create('/contao?do=article'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
             false,
             false,
         ];
@@ -169,6 +185,7 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             false,
+            false,
         ];
 
         yield 'Should be deleted because the response was "not found" (404)' => [
@@ -177,6 +194,7 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
+            false,
         ];
 
         yield 'Should be deleted because the response was "gone" (410)' => [
@@ -185,12 +203,14 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
+            false,
         ];
 
         yield 'Should not be deleted because even though the response was "not found" (404), it was disabled by the feature flag' => [
             Request::create('/foobar'),
             new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"","protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
             SearchIndexListener::FEATURE_INDEX,
+            false,
             false,
             false,
         ];
@@ -204,6 +224,7 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
+            false,
         ];
 
         $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"","protected":false,"groups":[],"fePreview":false}</script></body></html>', 500);
@@ -215,6 +236,7 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             false,
+            false,
         ];
 
         yield 'Should index and not delete because searchIndexer is set to "always_index"' => [
@@ -222,6 +244,7 @@ class SearchIndexListenerTest extends TestCase
             new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@graph":[{"@type":"Page","pageId":2,"searchIndexer":"always_index","protected":false,"groups":[],"fePreview":false}]}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             true,
+            false,
             false,
         ];
 
@@ -231,6 +254,7 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
+            false,
         ];
 
         yield 'Should not index but should delete because the meta robots tag contains "noindex"' => [
@@ -239,12 +263,14 @@ class SearchIndexListenerTest extends TestCase
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
+            false,
         ];
 
         yield 'Should not index and delete because the meta robots tag contains "noindex" and response is unsuccessful' => [
             Request::create('/foobar'),
             new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"","protected":false,"groups":[],"fePreview":false}</script></body></html>', 500),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
             false,
             false,
         ];
@@ -260,6 +286,7 @@ class SearchIndexListenerTest extends TestCase
                 Request::create('/foobar'),
                 new Response('', $status),
                 SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+                false,
                 false,
                 false,
             ];
