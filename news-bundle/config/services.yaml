@@ -31,7 +31,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
-            - '@contao.routing.response_context_accessor'
 
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener

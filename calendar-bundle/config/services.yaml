@@ -40,7 +40,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
-            - '@contao.routing.response_context_accessor'
 
     contao_calendar.listener.calendar_feed:
         class: Contao\CalendarBundle\EventListener\CalendarFeedListener

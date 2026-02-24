@@ -23,7 +23,6 @@ use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 class ContentCompositionTest extends TestCase
@@ -64,7 +63,6 @@ class ContentCompositionTest extends TestCase
             $this->createStub(RequestStack::class),
             $this->createStub(LocaleAwareInterface::class),
             $pageRegistry,
-            $this->createStub(EventDispatcherInterface::class),
         );
 
         $builder = $contentComposition->createContentCompositionBuilder($page);

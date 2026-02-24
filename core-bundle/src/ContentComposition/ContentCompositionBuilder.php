@@ -6,7 +6,6 @@ namespace Contao\CoreBundle\ContentComposition;
 
 use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Event\LayoutEvent;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
@@ -28,7 +27,6 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
@@ -71,7 +69,6 @@ class ContentCompositionBuilder
         RendererInterface $renderer,
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
-        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly PageModel $page,
     ) {
         $this->slotRenderer = $this->renderer = $renderer;
@@ -240,8 +237,6 @@ class ContentCompositionBuilder
         $this->addDefaultDataToTemplate($template, $this->page, $layout);
         $this->addCompositedContentToTemplate($template, $this->elementReferencesBySlot);
         $this->addResponseContextToTemplate($template, $this->responseContext);
-
-        $this->eventDispatcher->dispatch(new LayoutEvent($template, $this->page, $layout, $this->responseContext));
 
         return $template;
     }
