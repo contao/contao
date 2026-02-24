@@ -65,7 +65,9 @@ class FallbackRecordLabelListenerTest extends TestCase
             ->willReturn('Edit 123')
         ;
 
-        $listener = new FallbackRecordLabelListener($translator);
+        $formatter = $this->createStub(FallbackRecordLabelListener::class);
+
+        $listener = new FallbackRecordLabelListener($translator, $formatter);
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123]));
 
         $this->assertSame('Edit 123', $event->getLabel());
@@ -79,8 +81,9 @@ class FallbackRecordLabelListenerTest extends TestCase
         (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
 
         $translator = $this->createStub(TranslatorStub::class);
+        $formatter = $this->createStub(FallbackRecordLabelListener::class);
 
-        $listener = new FallbackRecordLabelListener($translator);
+        $listener = new FallbackRecordLabelListener($translator, $formatter);
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B &amp; B)</span>']));
 
         $this->assertSame('A (B & B)', $event->getLabel());
