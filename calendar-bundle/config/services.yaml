@@ -35,6 +35,13 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.listener.add_feeds_from_layout:
+        class: Contao\CalendarBundle\EventListener\AddFeedsFromLayoutListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+            - '@contao.routing.response_context_accessor'
+
     contao_calendar.listener.calendar_feed:
         class: Contao\CalendarBundle\EventListener\CalendarFeedListener
         arguments:
@@ -73,12 +80,6 @@ services:
             - '@translator'
         tags:
             - { name: contao.callback, table: tl_calendar_events, target: config.onbeforesubmit }
-
-    contao_calendar.listener.generate_page:
-        class: Contao\CalendarBundle\EventListener\GeneratePageListener
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.content_url_generator'
 
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener

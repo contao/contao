@@ -26,6 +26,13 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_news.listener.add_feeds_from_layout:
+        class: Contao\NewsBundle\EventListener\AddFeedsFromLayoutListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+            - '@contao.routing.response_context_accessor'
+
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
         arguments:
@@ -51,12 +58,6 @@ services:
             - '@translator'
         tags:
             - { name: contao.callback, table: tl_news, target: config.onbeforesubmit }
-
-    contao_news.listener.generate_page:
-        class: Contao\NewsBundle\EventListener\GeneratePageListener
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.content_url_generator'
 
     contao_news.listener.news_feed:
         class: Contao\NewsBundle\EventListener\NewsFeedListener
