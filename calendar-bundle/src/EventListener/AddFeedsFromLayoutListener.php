@@ -13,11 +13,15 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\EventListener;
 
 use Contao\CalendarBundle\Controller\Page\CalendarFeedController;
-use Contao\CoreBundle\Event\RenderPageEvent;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\Event\LayoutEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -29,21 +33,38 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @internal
  */
-#[AsEventListener]
 class AddFeedsFromLayoutListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ContentUrlGenerator $urlGenerator,
+        private readonly ResponseContextAccessor $responseContextAccessor,
     ) {
     }
 
-    public function __invoke(RenderPageEvent $event): void
+    #[AsHook('generatePage')]
+    public function onGeneratePage(PageModel $pageModel, LayoutModel $layout): void
     {
-        if (
-            !($layout = $event->getLayout())
-            || !$event->getResponseContext()->has(HtmlHeadBag::class)
-        ) {
+        if (!$responseContext = $this->responseContextAccessor->getResponseContext()) {
+            return;
+        }
+
+        $this->addFeedsToResponseContext($layout, $responseContext);
+    }
+
+    #[AsEventListener]
+    public function onLayoutEvent(LayoutEvent $event): void
+    {
+        if (!$responseContext = $event->getResponseContext()) {
+            return;
+        }
+
+        $this->addFeedsToResponseContext($event->getLayout(), $responseContext);
+    }
+
+    private function addFeedsToResponseContext(LayoutModel $layout, ResponseContext $responseContext): void
+    {
+        if (!$responseContext->has(HtmlHeadBag::class)) {
             return;
         }
 
@@ -59,7 +80,7 @@ class AddFeedsFromLayoutListener
             return;
         }
 
-        $headBag = $event->getResponseContext()->get(HtmlHeadBag::class);
+        $headBag = $responseContext->get(HtmlHeadBag::class);
 
         foreach ($feeds as $feed) {
             if (CalendarFeedController::TYPE !== $feed->type) {
