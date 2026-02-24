@@ -1035,7 +1035,7 @@ abstract class Controller extends System
 
 		if (!empty($pairs))
 		{
-			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
+			$uri = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 		}
 
 		return $request->getBaseUrl() . $request->getPathInfo() . $uri;
