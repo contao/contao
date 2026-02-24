@@ -544,8 +544,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $icons = $container->getParameter('contao.backend.icons');
 
-        $this->assertArrayHasKey('save.svg', $icons);
-        $this->assertSame('/system/themes/flexible/icons/help.svg', $icons['help.svg']['path']);
+        $this->assertArrayHasKey('help.svg', $icons);
+        $this->assertMatchesRegularExpression('~^/bundles/contaocore/icons/help\.[a-f0-9]{8}\.svg$~', $icons['help.svg']['path']);
         $this->assertSame('14', $icons['help.svg']['width']);
         $this->assertSame('14', $icons['help.svg']['height']);
     }
