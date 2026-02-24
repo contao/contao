@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\VirtualFieldsHandler;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
@@ -23,6 +24,7 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\DC_Table;
+use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
@@ -49,6 +51,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
         private readonly TranslatorInterface $translator,
+        private readonly VirtualFieldsHandler $virtualFieldsHandler,
     ) {
     }
 
@@ -211,8 +214,10 @@ class TableDataContainerProvider implements ProviderInterface
             },
         );
 
+        $virtualFields = $this->contaoFramework->createInstance(DcaExtractor::class, [$table])->getVirtualFields();
+
         // Only select the rows we need so we don't transfer the entire database when indexing
-        $select = array_unique(['id', ...array_keys($searchableFields)]);
+        $select = array_unique(['id', ...array_map(static fn (string $field) => $virtualFields[$field] ?? $field, array_keys($searchableFields))]);
 
         $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
@@ -235,7 +240,7 @@ class TableDataContainerProvider implements ProviderInterface
 
     private function createDocumentFromRow(string $table, array $row, array $fieldsConfig, array $searchableFields): Document|null
     {
-        $searchableContent = $this->extractSearchableContent($row, $fieldsConfig, $searchableFields);
+        $searchableContent = $this->extractSearchableContent($table, $row, $fieldsConfig, $searchableFields);
 
         if ('' === $searchableContent) {
             return null;
@@ -249,9 +254,12 @@ class TableDataContainerProvider implements ProviderInterface
         return self::TYPE_PREFIX.$table;
     }
 
-    private function extractSearchableContent(array $row, array $fieldsConfig, array $searchableFields): string
+    private function extractSearchableContent(string $table, array $row, array $fieldsConfig, array $searchableFields): string
     {
         $searchableContent = [];
+
+        // Expand virtual fields
+        $row = $this->virtualFieldsHandler->expandFields($row, $table);
 
         foreach (array_keys($searchableFields) as $field) {
             if (isset($row[$field])) {

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\ClipboardManager;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
@@ -213,7 +214,20 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, Input::post('cut') !== null ? 'cutAll' : 'copyAll', Input::post('copyMultiple') !== null);
+				$security = $container->get('security.helper');
+
+				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
+				$ids = array_filter($ids, fn ($id) => $security->isGranted(...$this->getClipboardPermission($mode, $id)));
+
+				if (empty($ids))
+				{
+					System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
+				}
+				else
+				{
+					System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, $mode, Input::post('copyMultiple') !== null);
+				}
+
 				$this->redirect($this->getReferer());
 			}
 		}
@@ -297,6 +311,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
+			$this->denyAccessUnlessGranted(...$this->getClipboardPermission(Input::get('mode'), Input::get('id')));
+
 			$mode = Input::get('mode');
 
 			if ($mode != 'create' && $mode != 'move')
@@ -481,9 +497,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->addBackButton();
 		}
 
-		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
-			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
 			{
 				$operations->append(array(
 					'href' => $this->addToUrl($hrfNew),
@@ -494,7 +510,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				));
 			}
 
-			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'file'))))
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'file'))))
 			{
 				$operations->append(array(
 					'href' => $this->addToUrl('&amp;act=paste&amp;mode=move'),
@@ -522,8 +538,16 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->addFilterButton();
 		}
 
+		$pasteTop = $blnClipboard
+			&& empty($this->arrFilemounts)
+			&& !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null)
+			&& ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false
+			&& $this->canPasteClipboard($arrClipboard, array('pid' => $this->strUploadPath));
+
+		$panel = $this->panel();
+
 		// Build the tree
-		$return = $this->panel() . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
+		$return = $panel . '<div class="content-inner">' . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
@@ -536,7 +560,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" class="tl_tree_checkbox" data-action="contao--check-all#toggleAll">
 </div>' : '') . '
 <ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
+  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . ($pasteTop ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -554,7 +578,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </form>';
 		}
 
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
+		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null))
 		{
 			$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
 			$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
@@ -582,7 +606,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		return '<div
 				class="tree-view"
-				data-controller="contao--toggle-nodes"
+				data-controller="contao--toggle-nodes' . ($panel ? ' contao--element-count' : '') . '"
 				data-contao--toggle-nodes-toggle-action-value="toggleFileManager"
 				data-contao--toggle-nodes-load-action-value="loadFileManager"
 				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
@@ -592,6 +616,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
 				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
+				' . ($panel ? 'data-contao--element-count-selector-value=".active:not(#tl_search_term,#tl_limit)"' : '') . '
 			>' . $return . '</div>';
 	}
 
@@ -612,7 +637,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function create()
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
@@ -1081,6 +1106,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function move($blnIsAjax=false)
 	{
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null))
+		{
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not movable.');
+		}
+
 		$strFolder = Input::get('pid', true);
 
 		if (!file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
@@ -2109,9 +2139,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$strSource = gzencode($strSource);
 				}
 
-				// Write the file
-				$objFile->write($strSource);
-				$objFile->close();
+				// Write the file using the VFS (see #9450)
+				System::getContainer()
+					->get('contao.filesystem.virtual.files')
+					->write(Path::makeRelative($objFile->path, 'files'), $strSource)
+				;
 
 				// Update the database
 				if ($this->blnIsDbAssisted && $objMeta !== null)
@@ -2749,7 +2781,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 					$imagePasteInto = Image::getHtml('pasteinto.svg', \sprintf($labelPasteInto[1], $currentEncoded));
 
-					if ((\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder))) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder))))
+					if ((\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder))) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentFolder)))
 					{
 						$return .= Image::getHtml('pasteinto--disabled.svg');
 					}
@@ -2761,10 +2793,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Default buttons
 				else
 				{
-					// Only show the upload button for mounted folders
+					// Show the upload button for mounted folders. This is added here because regular operations are not rendered for the root mounts.
 					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
 					{
-						if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
+						if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
 						{
 							$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 
@@ -2842,7 +2874,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf($GLOBALS['TL_LANG'][$this->strTable]['dragFile'][1] ?? $GLOBALS['TL_LANG']['DCA']['drag'][1] ?? '', $currentEncoded)) . '</button>';
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open click->contao--check-all#toggleInput">' . $dragHandle . '<div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + ($dragHandle ? 0 : 16)) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
@@ -2921,7 +2953,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
-			$strField = Input::post('tl_field', true);
+			$strField = Input::post('tl_search', true);
 			$strKeyword = ltrim(Input::postRaw('tl_value'), '*');
 
 			if ($strField && !\in_array($strField, $searchFields, true))
@@ -2961,14 +2993,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		return '
     <fieldset class="tl_search tl_subpanel">
       <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
-      <label for="search_type">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
+      <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
       <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select id="search_type" name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-			' . implode("\n", $options) . '
+          <select id="tl_search" name="tl_search" class="tl_select' . ($active ? ' active' : '') . '">
+            ' . implode("\n", $options) . '
           </select>
       </div>
-      <label for="search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
-      <input id="search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '" data-contao--filter-target="filter" data-action="contao--filter#updateCount">
+      <label for="tl_search_term">' . $GLOBALS['TL_LANG']['MSC']['keyword'] . '</label>
+      <input id="tl_search_term" type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </fieldset>';
 	}
 
@@ -3217,6 +3249,41 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		sort($visibleRootTrails);
 
 		$this->visibleRootTrails = $visibleRootTrails;
+	}
+
+	protected function canPasteClipboard(array $arrClipboard, array $new): bool
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($arrClipboard['mode'] === 'create')
+		{
+			return $security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], 0, $new));
+		}
+
+		foreach ((array) $arrClipboard['id'] as $id)
+		{
+			if (!$security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], $id, $new)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected function getClipboardPermission(string $mode, $id, array|null $new = null): array
+	{
+		$action = match ($mode)
+		{
+			'move',
+			ClipboardManager::MODE_CREATE => new CreateAction($this->strTable, $new),
+			ClipboardManager::MODE_CUT,
+			ClipboardManager::MODE_CUT_ALL => new UpdateAction($this->strTable, array('id' => $id), (array) $new),
+			ClipboardManager::MODE_COPY,
+			ClipboardManager::MODE_COPY_ALL => new CreateAction($this->strTable, array_replace(array('id' => $id), (array) $new))
+		};
+
+		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
 	}
 
 	private function getParentFilemounts(string $filemount): array

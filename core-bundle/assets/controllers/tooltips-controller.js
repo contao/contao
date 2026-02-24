@@ -12,6 +12,7 @@ export default class TooltipsController extends Controller {
         'p.tl_tip': { x: 0, y: 23, useContent: true },
         '#home[title]': { x: 6, y: 42 },
         '#tmenu a[title]': { x: 0, y: 42 },
+        '#tmenu button[title]': { x: 0, y: 42 },
         'a[title][class^="group-"]': { x: -6, y: 27 },
         'a[title].navigation': { x: 25, y: 32 },
         'img[title].gimage': { x: -9, y: 60 },
@@ -19,6 +20,7 @@ export default class TooltipsController extends Controller {
         'a[title].picker-wizard': { x: -4, y: 30 },
         'button img[alt]': { x: -9, y: 30 },
         '.tl_panel button[title]': { x: 0, y: 36 },
+        '.jump-target-scroll button[title]': { x: -4, y: 36 },
         'button[title].unselectable': { x: -4, y: 20 },
         'button[title]:not(.unselectable)': { x: -9, y: 30 },
         'a[title]:not(.picker-wizard)': { x: -9, y: 30 },
@@ -166,7 +168,7 @@ export default class TooltipsController extends Controller {
     /**
      * Migrate legacy targets to proper controller targets.
      */
-    static afterLoad(identifier, application) {
+    static afterLoad(identifier) {
         const targetSelectors = Object.keys(TooltipsController.defaultOptionsMap);
 
         const migrateTarget = (el) => {

@@ -18,6 +18,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 System::loadLanguageFile('tl_user');
 
@@ -50,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('name'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'name'
 		),
 		'label' => array
@@ -64,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
+		'default'                     => '{title_legend},name;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms;{amg_legend},amg;{cud_legend},cud;{alexf_legend:hide},alexf;{account_legend},disable,start,stop',
 	),
 
 	// Fields
@@ -72,18 +73,18 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'name' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'modules' => array
 		(
@@ -93,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options_callback'        => array('tl_user_group', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'themes' => array
 		(
@@ -102,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options'                 => array('modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'elements' => array
 		(
@@ -112,7 +113,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options_callback'        => array('tl_user_group', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'fields' => array
 		(
@@ -122,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options'                 => array_keys($GLOBALS['TL_FFL']),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'frontendModules' => array
 		(
@@ -131,14 +132,14 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'pagemounts' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['pagemounts'],
 			'inputType'               => 'pageTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('table'=>'tl_page', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'alpty' => array
@@ -148,14 +149,14 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'filemounts' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['filemounts'],
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'fop' => array
 		(
@@ -165,7 +166,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options'                 => array('f1', 'f2', 'f3', 'f4', 'f5', 'f6'),
 			'reference'               => &$GLOBALS['TL_LANG']['FOP'],
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'imageSizes' => array
 		(
@@ -176,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getAllOptions();
 			},
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'forms' => array
 		(
@@ -184,17 +185,8 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_form.title',
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-		),
-		'formp' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['formp'],
-			'inputType'               => 'checkbox',
-			'options'                 => array('create', 'delete'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
 		),
 		'amg' => array
 		(
@@ -202,8 +194,15 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+		),
+		'cud' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['cud'],
+			'search'                  => true,
+			'inputType'               => 'cud',
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'alexf' => array
 		(
@@ -211,26 +210,26 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getExcludedFields'),
 			'eval'                    => array('multiple'=>true, 'size'=>36, 'collapseUncheckedGroups'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'disable' => array
 		(
 			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'')
 		)
 	)
 );

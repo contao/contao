@@ -653,6 +653,10 @@
         <source>Show the details of page ID %s</source>
         <target>Details der Seite ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_page.versions.1">
+        <source>Show the versions of page ID %s</source>
+        <target>Versionen der Seite ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Seite ID %s bearbeiten</target>
@@ -808,6 +812,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 Jahr</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Seite</target>
       </trans-unit>
     </body>
   </file>

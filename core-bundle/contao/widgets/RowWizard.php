@@ -136,6 +136,11 @@ class RowWizard extends Widget
 					$varValue[$i][$key] = $widget->value;
 				}
 			}
+
+			if (\in_array('enable', $this->actions))
+			{
+				$varValue[$i]['enable'] = $this->getPost($this->strId . '[' . $i . '][enable]');
+			}
 		}
 
 		if ($this->hasErrors())
@@ -182,7 +187,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
@@ -192,7 +197,7 @@ class RowWizard extends Widget
 
 					$header[] = array();
 					$footer[] = array('description' => $widget->description ?? '');
-					$columns[] = array(...Widget::getAttributesFromDca($options, $key), 'widget' => $widget);
+					$columns[] = array(...Widget::getAttributesFromDca($options, $key, null, $this->strField, $this->strTable, $this->objDca), 'widget' => $widget);
 					continue;
 				}
 
@@ -276,15 +281,7 @@ class RowWizard extends Widget
 		$data = $widgetClass::getAttributesFromDca($options, $key, $value, $this->strField, $this->strTable, $this->objDca);
 
 		$data['name'] = $this->strId . '[' . $increment . '][' . $data['name'] . ']';
-
-		if (\in_array($data['type'] ?? null, array('checkbox', 'label'), true))
-		{
-			$data['id'] = $data['name'];
-		}
-		else
-		{
-			$data['id'] .= '_' . $increment;
-		}
+		$data['id'] = $data['name'];
 
 		return $this->widgets[$increment][$key] = array(new $widgetClass($data), $data);
 	}

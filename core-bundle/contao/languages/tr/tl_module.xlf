@@ -2,8 +2,8 @@
   <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="tr">
     <body>
       <trans-unit id="tl_module.name.0">
-        <source>Title</source>
-        <target>Başlık</target>
+        <source>Internal title</source>
+        <target>İç başlık</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -575,7 +575,7 @@
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
-        <target>Metin/HTML</target>
+        <target>Yazı/HTML</target>
       </trans-unit>
       <trans-unit id="tl_module.protected_legend">
         <source>Access protection</source>
@@ -665,12 +665,16 @@ Böyle bir istekte bulunmadıysanız, lütfen site yöneticisi ile görüşün.
         <source>Show the details of module ID %s</source>
         <target>%s kimlikli modülün ayrıntılarını görüntüle</target>
       </trans-unit>
+      <trans-unit id="tl_module.versions.1">
+        <source>Show the versions of module ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>%s kimlikli modülü düzenle</target>
       </trans-unit>
       <trans-unit id="tl_module.copy.1">
         <source>Copy module ID %s</source>
+        <target>%s kimlikli modülü kopyala</target>
       </trans-unit>
       <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
@@ -679,6 +683,10 @@ Böyle bir istekte bulunmadıysanız, lütfen site yöneticisi ile görüşün.
       <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>%s kimlikli modülü sil</target>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Modül</target>
       </trans-unit>
     </body>
   </file>

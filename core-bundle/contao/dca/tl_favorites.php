@@ -17,9 +17,8 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	'config' => array
 	(
 		'dataContainer'               => DC_Table::class,
-		'notCreatable'                => true,
-		'notCopyable'                 => true,
 		'backendSearchIgnore'         => true,
+		'permissions'                 => array(),
 		'sql' => array
 		(
 			'keys' => array
@@ -59,23 +58,23 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'sorting' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'user' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'title' => array
 		(
@@ -83,15 +82,15 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'url' => array
 		(
 			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>1022, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(1022) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
 		)
 	)
 );

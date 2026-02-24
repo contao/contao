@@ -1,0 +1,73 @@
+{% trans_default_domain 'contao_default' %}
+
+{% extends '@KnpMenu/menu.html.twig' %}
+
+{% block item %}
+    {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
+        {% set item = item.setAttributes(
+            item.getAttributes()|merge({
+                class: 'has-subitems',
+            }),
+        ) %}
+    {% elseif item.extra('index') %}
+        {% set item = item.setAttributes(
+            item.getAttributes()|merge({
+                style: 'margin-left:' ~ ((item.extra('index') - 1) * 10) ~ 'px',
+            }),
+        ) %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{% block spanElement %}
+    {% if item.name == 'ancestor_trail' %}
+        {{ _self.generate_dropdown_button('MSC.trail'|trans, '…', 'trail') }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block linkElement %}
+    {{ _self.generate_link_prefix(item) }}
+    {{ parent() }}
+{% endblock %}
+
+{% block list %}
+    {% set list_attributes = attrs()
+        .addClass('subitems-list')
+        .addClass('trail-list', item.name == 'ancestor_trail')
+        .addClass('siblings-list', item.extra('has_siblings'))
+        .set('data-controller', 'contao--toggle-receiver')
+        .set('data-contao--toggle-receiver-active-class', 'active')
+        .set('data-action', 'keydown.esc@document->contao--toggle-receiver#close mouseleave->contao--toggle-receiver#close')
+        .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#breadcrumb .trail-toggle', item.name == 'ancestor_trail')
+        .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#breadcrumb .siblings-toggle', item.extra('has_siblings'))
+    %}
+    {% if item.extra('has_siblings') or item.name == 'ancestor_trail' %}
+        <ul{{ list_attributes }}>
+            {{ block('children') }}
+        </ul>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% macro generate_dropdown_button(title, label, type) %}
+    {% set button_attributes = attrs()
+        .addClass(type ~ '-toggle')
+        .set('type', 'button')
+        .set('data-controller', 'contao--toggle-sender')
+        .set('data-action', 'contao--toggle-sender#toggle:prevent mouseenter->contao--toggle-sender#open:prevent mouseleave->contao--toggle-sender#close:prevent')
+        .set('data-contao--toggle-sender-contao--toggle-receiver-outlet', '#breadcrumb .' ~ type ~ '-list')
+        .set('title', title)
+    %}
+    <button{{ button_attributes }}>{{ label }}</button>
+{% endmacro %}
+
+{% macro generate_link_prefix(item) %}
+    {% if item.extra('has_siblings') %}
+        {{ _self.generate_dropdown_button('MSC.siblings'|trans, '›', 'siblings') }}
+    {% elseif item.parent.name == 'ancestor_trail' and item.name != 'ancestor_trail_0' %}
+        {{ backend_icon('corner-down-right', attributes: attrs().set('width', 14).set('height', 14)) }}
+    {% endif %}
+{% endmacro %}

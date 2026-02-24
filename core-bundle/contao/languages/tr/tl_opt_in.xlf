@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_opt_in.emailText">
         <source>E-mail text</source>
-        <target>E-posta metni</target>
+        <target>E-posta yazısı</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.show.1">
         <source>Show the details of token ID %s</source>

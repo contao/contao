@@ -222,7 +222,7 @@ class BackendAccessVoterTest extends TestCase
 
     public function testGrantsAccessToChildPages(): void
     {
-        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['pagemounts' => [1, 2, 3]]);
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 1, 'pagemounts' => [1, 2, 3]]);
 
         $token = $this->createMock(TokenInterface::class);
         $token

@@ -7,10 +7,14 @@
         "@stylistic/stylelint-config"
     ],
     "rules": {
+        "declaration-property-value-keyword-no-deprecated": null,
         "import-notation": null,
         "no-descending-specificity": null,
+        "no-duplicate-selectors": null,
+        "property-no-deprecated": null,
         "selector-class-pattern": null,
         "selector-id-pattern": null,
-        "@stylistic/indentation": 4
+        "@stylistic/indentation": 4,
+        "@stylistic/max-line-length": null
     }
 }

@@ -197,10 +197,6 @@
         <source>Rebuild index</source>
         <target>Suchindex aufbauen</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.backend_search.confirmation">
-        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
-        <target>Der Aufbau läuft. In der Jobübersicht finden Sie den aktuellen Stand des Prozesses.</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

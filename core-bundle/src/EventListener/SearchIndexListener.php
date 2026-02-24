@@ -36,6 +36,7 @@ class SearchIndexListener
         private readonly MessageBusInterface $messageBus,
         private readonly string $fragmentPath = '_fragment',
         private readonly string $contaoBackendRoutePrefix = '/contao',
+        private readonly bool $debugMode = false,
         private readonly int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
         private readonly RateLimiterFactory|null $rateLimiterFactory = null,
     ) {
@@ -46,6 +47,10 @@ class SearchIndexListener
      */
     public function __invoke(TerminateEvent $event): void
     {
+        if ($this->debugMode) {
+            return;
+        }
+
         $response = $event->getResponse();
 
         if ($response->isRedirection()) {

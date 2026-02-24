@@ -3,14 +3,14 @@
         {
             const config = {
                 min_height: 336,
-                language: '{{ tinyMceLanguage|e('js') }}>',
+                language: '{{ tinyMceLanguage|e('js') }}',
                 element_format: 'html',
                 document_base_url: '{{ (app.request.schemeAndHttpHost ~ app.request.basePath ~ '/')|e('js') }}',
                 entities: '160,nbsp,60,lt,62,gt,173,shy',
                 license_key: 'gpl',
                 branding: false,
                 promotion: false,
-                skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'tinymce-5-dark' : 'tinymce-5'),
+                skin: (document.documentElement.dataset.colorScheme === 'dark' ? 'oxide-dark' : 'oxide'),
                 setup: function (editor) {
                     editor.getElement().removeAttribute('required');
                     document.querySelectorAll('[accesskey]').forEach(function (el) {

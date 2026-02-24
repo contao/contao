@@ -38,7 +38,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'faqs';
-$GLOBALS['TL_PERMISSIONS'][] = 'faqp';
 
 // Models
 $GLOBALS['TL_MODELS']['tl_faq_category'] = FaqCategoryModel::class;

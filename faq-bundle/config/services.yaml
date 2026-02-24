@@ -27,6 +27,11 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
+    contao_faq.migration.field_permission:
+        class: Contao\FaqBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
+
     contao_faq.migration.overwrite_meta:
         class: Contao\FaqBundle\Migration\OverwriteMetaMigration
         arguments:
@@ -54,3 +59,8 @@ services:
         class: Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_faq.security.legacy_backend_access_voter:
+        class: Contao\FaqBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }

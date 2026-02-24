@@ -3,7 +3,7 @@ services:
         autoconfigure: true
 
     _instanceof:
-        Contao\CoreBundle\Form\Type\AbstractContaoFormType:
+        Contao\CoreBundle\Form\Type\AbstractContaoType:
             calls:
                 - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
 
@@ -22,6 +22,12 @@ services:
             - '@request_stack'
         tags:
             - 'form.type'
+
+    contao.form.change_password_type:
+        class: Contao\CoreBundle\Form\Type\ChangePasswordType
+
+    contao.form.close_account_type:
+        class: Contao\CoreBundle\Form\Type\CloseAccountType
 
     contao.form.lost_password_type:
         class: Contao\CoreBundle\Form\Type\LostPasswordType

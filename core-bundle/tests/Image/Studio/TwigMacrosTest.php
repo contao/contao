@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
@@ -575,7 +574,6 @@ class TwigMacrosTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),

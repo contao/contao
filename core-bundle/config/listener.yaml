@@ -74,6 +74,7 @@ services:
         arguments:
             - '@contao.twig.inspector'
             - '@contao.framework'
+            - '@contao.routing.page_registry'
 
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
@@ -97,6 +98,12 @@ services:
         arguments:
             - '@security.helper'
 
+    contao.listener.data_container.content_element_view:
+        class: Contao\CoreBundle\EventListener\DataContainer\ContentElementViewListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+
     contao.listener.data_container.content_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener
         arguments:
@@ -106,6 +113,12 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener
         arguments:
             - '@contao.csp.parser'
+
+    contao.listener.data_container.cud_permission:
+        class: Contao\CoreBundle\EventListener\DataContainer\CudPermissionListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.resource_finder'
 
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
@@ -192,6 +205,7 @@ services:
             - '@contao.framework'
             - '@translator'
             - '@router'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
@@ -253,7 +267,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '@security.helper'
             - '@request_stack'
             - '@translator'
@@ -345,6 +358,13 @@ services:
         arguments:
             - '@security.helper'
 
+    contao.listener.data_container.user_root:
+        class: Contao\CoreBundle\EventListener\DataContainer\UserRootListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@database_connection'
+
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
         arguments:
@@ -431,6 +451,12 @@ services:
         arguments:
             - '@contao.routing.scope_matcher'
 
+    contao.listener.menu.backend_breadcrumb:
+        class: Contao\CoreBundle\EventListener\Menu\BackendBreadcrumbListener
+        arguments:
+            - '@security.helper'
+            - '@contao.data_container.dca_url_analyzer'
+
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
         arguments:
@@ -492,11 +518,6 @@ services:
             - '@request_stack'
             - '@translator'
             - '%contao.template_studio.enabled%'
-
-    contao.listener.merge_http_headers:
-        class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener
-        arguments:
-            - '@contao.framework'
 
     contao.listener.page_access:
         class: Contao\CoreBundle\EventListener\PageAccessListener
@@ -579,6 +600,7 @@ services:
             - '@messenger.bus.default'
             - '%fragment.path%'
             - '%contao.backend.route_prefix%'
+            - '%kernel.debug%'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
@@ -629,6 +651,11 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
+
+    contao.listener.virtual_fields_mapping:
+        class: Contao\CoreBundle\EventListener\VirtualFieldsMappingListener
+        arguments:
+            - '@doctrine.orm.entity_manager'
 
     contao.listener.webauthn_route_backend:
         class: Contao\CoreBundle\EventListener\WebauthnRouteListener

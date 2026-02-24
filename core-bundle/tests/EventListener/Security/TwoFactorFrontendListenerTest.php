@@ -528,22 +528,24 @@ class TwoFactorFrontendListenerTest extends TestCase
         return $event;
     }
 
-    private function mockPageFinder(PageModel|null $rootPage = null, PageModel|null $errorPage = null): PageFinder&MockObject
+    private function mockPageFinder(PageModel $rootPage, PageModel|null $errorPage = null): PageFinder&MockObject
     {
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
-            ->expects($rootPage ? $this->once() : $this->any())
+            ->expects($this->once())
             ->method('findRootPageForRequest')
             ->with($this->isInstanceOf(Request::class))
             ->willReturn($rootPage)
         ;
 
-        $pageFinder
-            ->expects($errorPage ? $this->once() : $this->any())
-            ->method('findFirstPageOfTypeForRequest')
-            ->with($this->isInstanceOf(Request::class), 'error_401')
-            ->willReturn($errorPage)
-        ;
+        if ($errorPage) {
+            $pageFinder
+                ->expects($this->once())
+                ->method('findFirstPageOfTypeForRequest')
+                ->with($this->isInstanceOf(Request::class), 'error_401')
+                ->willReturn($errorPage)
+            ;
+        }
 
         return $pageFinder;
     }

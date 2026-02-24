@@ -135,6 +135,8 @@ class TemplateOptionsListener
 
     /**
      * Uses the reflection API to return the default template from a legacy class.
+     *
+     * @param class-string $legacyProxyClass
      */
     private function getLegacyDefaultIdentifier(string|null $type, string|null $legacyProxyClass): string|null
     {

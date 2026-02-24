@@ -13,14 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser\ForeignKeyExpression;
 use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ValueFormatterTest extends TestCase
@@ -47,7 +47,7 @@ class ValueFormatterTest extends TestCase
                 ->expects($this->atLeastOnce())
                 ->method('parse')
                 ->willReturnMap(array_map(
-                    static fn ($v) => [$dca['eval']['rgxp'].'Format', $v, $dca['eval']['rgxp'].': '.date('c', (int) $v)],
+                    static fn ($v) => [$dca['eval']['rgxp'].'Format', (int) $v, $dca['eval']['rgxp'].': '.date('c', (int) $v)],
                     (array) ($rawValues ?? $value),
                 ))
             ;
@@ -64,6 +64,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -225,6 +226,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $translator,
         );
 
@@ -329,6 +331,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -351,7 +354,7 @@ class ValueFormatterTest extends TestCase
             Config::class => $configAdapter,
         ]);
 
-        $connection = $this->mockConnection();
+        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('fetchOne')
@@ -359,9 +362,17 @@ class ValueFormatterTest extends TestCase
             ->willReturn('bar')
         ;
 
+        $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
+        $foreignKeyParser
+            ->expects($this->once())
+            ->method('parse')
+            ->willReturnCallback(static fn ($v) => (new ForeignKeyExpression('tl_foo', '`name`'))->withColumnName('name')->withKey('foo'))
+        ;
+
         $valueFormatter = new ValueFormatter(
             $framework,
             $connection,
+            $foreignKeyParser,
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -393,6 +404,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $this->createStub(TranslatorInterface::class),
         );
 
@@ -512,8 +524,7 @@ class ValueFormatterTest extends TestCase
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
-            ->with('dateFormat')
-            ->willReturn('Y-m-d')
+            ->willReturnMap([['dateFormat', 'Y-m-d']])
         ;
 
         $dateAdapter = $this->createAdapterStub(['parse']);
@@ -539,6 +550,7 @@ class ValueFormatterTest extends TestCase
         $valueFormatter = new ValueFormatter(
             $framework,
             $this->createStub(Connection::class),
+            $this->createStub(ForeignKeyParser::class),
             $translator,
         );
 
@@ -655,23 +667,5 @@ class ValueFormatterTest extends TestCase
                 ['value' => '176468900', 'label' => '1975'],
             ],
         ];
-    }
-
-    private function mockConnection(): Connection&MockObject
-    {
-        $databasePlatform = $this->createStub(AbstractPlatform::class);
-        $databasePlatform
-            ->method('quoteSingleIdentifier')
-            ->willReturnCallback(static fn ($v) => '`'.$v.'`')
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('getDatabasePlatform')
-            ->willReturn($databasePlatform)
-        ;
-
-        return $connection;
     }
 }

@@ -212,6 +212,9 @@
       <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_news.versions.1">
+        <source>Show the versions of news item ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
       </trans-unit>
@@ -240,10 +243,10 @@
         <source>Publish news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
-        <source>Publish</source>
+        <source>Unpublish</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.4">
-        <source>Unpublish</source>
+        <source>Publish</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>

@@ -8,7 +8,7 @@ export default class extends Controller {
         el.select();
     }
 
-    cancelEdit(e) {
+    cancelEdit() {
         this.nameInputTarget.value = this.nameInputTarget.getAttribute('value');
         this.formTarget.requestSubmit();
     }

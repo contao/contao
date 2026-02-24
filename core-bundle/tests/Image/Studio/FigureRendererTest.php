@@ -249,8 +249,7 @@ class FigureRendererTest extends TestCase
         $twig = $this->createStub(Environment::class);
         $twig
             ->method('render')
-            ->with($expectedTemplate, ['figure' => $figure])
-            ->willReturn('<result>')
+            ->willReturnMap([[$expectedTemplate, ['figure' => $figure], '<result>']])
         ;
 
         return new FigureRenderer($studio, $twig);

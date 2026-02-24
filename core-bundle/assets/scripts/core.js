@@ -317,7 +317,7 @@ window.AjaxRequest =
 					img = next.getFirst('div.list_icon');
 				}
 			} else if (el.closest('.tl_listing_container') && el.getParent('tr')) {
-				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
+				img = el.getParent('td').getPrevious('td').getElement('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
 				}
@@ -377,9 +377,9 @@ window.AjaxRequest =
 			image.set('data-state', !published ? 1 : 0);
 		});
 
-		if (!published && $(el).get('data-title')) {
+		if (el.title && !published && $(el).get('data-title')) {
 			el.title = label = $(el).get('data-title');
-		} else if (published && $(el).get('data-title-disabled')) {
+		} else if (el.title && published && $(el).get('data-title-disabled')) {
 			el.title = label = $(el).get('data-title-disabled');
 		}
 
@@ -531,7 +531,6 @@ window.Backend =
 			'width': width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -554,7 +553,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -579,7 +577,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -606,7 +603,6 @@ window.Backend =
 		var M = new SimpleModal({
 			'width': opt.width,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() {
 				document.body.setStyle('overflow', 'hidden');
@@ -964,7 +960,7 @@ window.Backend =
 				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
-				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				x: cloneBase.getPosition(cloneBase.getOffsetParent()).x,
 				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
 			}).setStyle('display', 'none');
 
@@ -2108,7 +2104,6 @@ window.addEvent('domready', function() {
 	Backend.tableWizardSetWidth();
 
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 
 	if ($('sbtog')) {
 		Theme.setupSplitButtonToggle();

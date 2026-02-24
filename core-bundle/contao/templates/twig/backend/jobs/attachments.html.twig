@@ -1,0 +1,17 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set attachment_attributes = attrs().set('data-job-attachments', job.uuid) %}
+
+{% if job.completed %}
+    <ul{{ attachment_attributes }}>
+        {% for attachment in attachments %}
+            <li>
+                <a href="{{ attachment.downloadUrl }}" title="{{ attachment.fileLabel|trans }}">
+                    {{ backend_icon('theme_import.svg') }} {{ attachment.filesystemItem.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <span{{ attachment_attributes.addClass('pending') }}>…</span>
+{% endif %}

@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
 		'notDeletable'                => true,
+		'permissions'                 => array(),
 		'backendSearchIgnore'         => true,
 		'sql' => array
 		(
@@ -32,12 +33,8 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			(
 				'id' => 'primary',
 				'uuid' => 'index',
-				'pid' => 'index',
-				'tstamp' => 'index',
-				'type' => 'index',
-				'owner' => 'index',
-				'status' => 'index',
-				'public' => 'index',
+				'createdAt' => 'index',
+				'pid,owner,public,status,tstamp' => 'index',
 			)
 		)
 	),
@@ -48,13 +45,13 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_SORTED,
-			'fields'                  => array('tstamp'),
-			'panelLayout'             => 'filter;limit',
-			'headerFields'            => array('tstamp', 'type', 'uuid', 'status', 'owner'),
+			'fields'                  => array('createdAt'),
+			'panelLayout'             => 'filter,limit',
+			'headerFields'            => array('createdAt', 'type', 'uuid', 'status', 'owner'),
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'type', 'progress', 'status', 'owner'),
+			'fields'                  => array('createdAt', 'type', 'progress', 'status', 'owner', 'attachments'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -69,34 +66,38 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true),
 		),
 		'uuid' => array
 		(
-			'sql'                     => array('type' => 'string', 'length' => 36, 'default' => ''),
+			'sql'                     => array('type'=>'string', 'length'=>36, 'default'=>''),
 		),
 		'pid' => array
 		(
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 		),
 		'tstamp' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['jobs']['tstamp'],
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
+		),
+		'createdAt' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['jobs']['created_at'],
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 		),
 		'type' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['type'],
 			'inputType'               => 'select',
-			'reference'               => &$GLOBALS['TL_LANG']['jobs']['typeLabel'],
-			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
+			'reference'               => &$GLOBALS['TL_LANG']['jobs']['type_label'],
+			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>true),
 		),
 		'owner' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['owner'],
 			'foreignKey'              => 'tl_user.name',
-			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 		),
 		'progress' => array
 		(
@@ -107,15 +108,19 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['jobs']['status'],
 			'inputType'               => 'select',
 			'enum'                    => Status::class,
-			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => true),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>true),
+		),
+		'attachments' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['jobs']['attachments'],
 		),
 		'public' => array
 		(
-			'sql'                     => array('type' => 'boolean', 'default' => false),
+			'sql'                     => array('type'=>'boolean', 'default'=>false),
 		),
 		'jobData' => array
 		(
-			'sql'                     => array('type' => 'text', 'notnull' => false),
+			'sql'                     => array('type'=>'text', 'notnull'=>false),
 		),
 	)
 );

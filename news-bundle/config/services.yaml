@@ -94,6 +94,13 @@ services:
         class: Contao\NewsBundle\Migration\FeedMigration
         arguments:
             - '@database_connection'
+            - '@filesystem'
+            - '%contao.web_dir%'
+
+    contao_news.migration.field_permission:
+        class: Contao\NewsBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
 
     contao_news.migration.overwrite_meta:
         class: Contao\NewsBundle\Migration\OverwriteMetaMigration
@@ -112,6 +119,11 @@ services:
         class: Contao\NewsBundle\Routing\NewsResolver
         arguments:
             - '@contao.framework'
+
+    contao_news.security.legacy_backend_access_voter:
+        class: Contao\NewsBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao_news.security.news_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsAccessVoter

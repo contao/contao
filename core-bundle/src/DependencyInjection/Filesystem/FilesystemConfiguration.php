@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Filesystem;
 
+use Contao\CoreBundle\Asset\Package\VirtualFilesystemStoragePackage;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -195,6 +196,34 @@ class FilesystemConfiguration
         // Register the DBAFS in the DbafsManager using the same prefix as the associated
         // virtual filesystem
         $this->registerDbafs($definition, $prefix);
+
+        return $definition;
+    }
+
+    /**
+     * Adds an asset package service able to serve the given VFS. The asset package will be
+     * registered under the package name "contao_vfs.<identifier>", where <identifier> is
+     * the given $identifier if defined or the $virtualFilesystemName else.
+     *
+     * @return Definition the newly created definition
+     */
+    public function addAssetPackage(string $virtualFilesystemName, string|null $identifier = null): Definition
+    {
+        if (null === ($virtualFilesystem = $this->getVirtualFilesystem($virtualFilesystemName))) {
+            throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));
+        }
+
+        // Add the storage package service
+        $definition = new Definition(
+            VirtualFilesystemStoragePackage::class,
+            [new Reference($virtualFilesystem[0])],
+        );
+
+        $identifier ??= $virtualFilesystemName;
+
+        $definition->addTag('assets.package', ['package' => "contao_vfs.$identifier"]);
+
+        $this->container->setDefinition("contao.assets.package.vfs.$identifier", $definition);
 
         return $definition;
     }

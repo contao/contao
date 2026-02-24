@@ -9,13 +9,10 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\PageModel;
-use Contao\StringUtil;
-use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_calendar'] = array
 (
@@ -27,18 +24,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_calendar', 'adjustDca'),
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_calendar', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_calendar', 'adjustPermissions')
-		),
+		'userRoot'                    => 'calendars',
 		'oninvalidate_cache_tags_callback' => array
 		(
 			array('tl_calendar', 'addSitemapCacheInvalidationTag'),
@@ -61,7 +47,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
@@ -89,25 +75,25 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'title' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'jumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'protected' => array
@@ -115,14 +101,14 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'groups' => array
 		(
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		)
 	)
@@ -135,118 +121,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
  */
 class tl_calendar extends Backend
 {
-	/**
-	 * Set the root IDs.
-	 */
-	public function adjustDca()
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->calendars) || !is_array($user->calendars))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->calendars;
-		}
-
-		$GLOBALS['TL_DCA']['tl_calendar']['list']['sorting']['root'] = $root;
-	}
-
-	/**
-	 * Add the new calendar to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->calendars) || !is_array($user->calendars))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->calendars;
-		}
-
-		// The calendar is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_calendar']) && in_array($insertId, $arrNew['tl_calendar']))
-		{
-			$db = Database::getInstance();
-
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, calendars, calendarp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrCalendarp = StringUtil::deserialize($objGroup->calendarp);
-
-					if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
-					{
-						$arrCalendars = StringUtil::deserialize($objGroup->calendars, true);
-						$arrCalendars[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET calendars=? WHERE id=?")->execute(serialize($arrCalendars), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT calendars, calendarp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrCalendarp = StringUtil::deserialize($objUser->calendarp);
-
-				if (is_array($arrCalendarp) && in_array('create', $arrCalendarp))
-				{
-					$arrCalendars = StringUtil::deserialize($objUser->calendars, true);
-					$arrCalendars[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET calendars=? WHERE id=?")->execute(serialize($arrCalendars), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->calendars = $root;
-		}
-	}
-
 	/**
 	 * @param DataContainer $dc
 	 *

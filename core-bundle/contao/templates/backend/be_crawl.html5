@@ -26,19 +26,74 @@
             <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlDepth.1') ?></p>
           <?php endif; ?>
         </div>
-        <?php if ($this->memberWidget): ?>
+        <?php if ($this->indexProtected): ?>
           <div class="widget w50 clr">
-            <?= $this->memberWidget->parse() ?>
-            <?php if (!$this->memberWidget->hasErrors()): ?>
+            <h3><label for="crawl_member"><?= $this->trans('tl_maintenance.crawlMember.0') ?></label></h3>
+            <input type="text" name="crawl_member" id="crawl_member" list="userlist" class="tl_text user" placeholder="<?= $this->trans('MSC.username') ?>" value="<?= $this->user ?>">
+            <datalist id="userlist"></datalist>
+            <?php if ($this->invalidUser): ?>
+              <p class="tl_error tl_tip"><?= $this->trans('ERR.previewSwitchInvalidUsername', [$this->user]) ?></p>
+            <?php else: ?>
               <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlMember.1') ?></p>
             <?php endif; ?>
           </div>
         <?php endif; ?>
       </fieldset>
     </div>
-    <div class="tl_submit_container">
-      <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
-    </div>
+    <?php if ($this->isActive): ?>
+      <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+          <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
+          <a href="" class="tl_submit"><?= $this->trans('MSC.cancelBT') ?></a>
+        </div>
+      </div>
+    <?php else: ?>
+      <div class="tl_submit_container">
+        <button type="submit" class="tl_submit"><?= $this->trans('tl_maintenance.startCrawling') ?></button>
+      </div>
+    <?php endif; ?>
   </form>
 
 </div>
+
+<script>
+  (function () {
+    const userField = document.querySelector('input[name="crawl_member"]');
+    const userList = document.querySelector('datalist[id="userlist"]');
+
+    if (userField && userList && document.createElement('datalist') && window.HTMLDataListElement) {
+      let timer;
+
+      userField.addEventListener('input', function () {
+        userField.setCustomValidity('');
+
+        if (userField.value.length < 2) {
+          return;
+        }
+
+        if (timer) {
+          clearTimeout(timer);
+        }
+
+        timer = setTimeout(function () {
+          fetch(document.location.href, {
+            method: 'POST',
+            body: new URLSearchParams({
+              FORM_SUBMIT: 'datalist_members',
+              REQUEST_TOKEN: document.querySelector('input[name="REQUEST_TOKEN"]').value,
+              trigger_crawl: true,
+              value: userField.value
+            })
+          }).then((response) => {
+            userList.innerHTML = '';
+            response.json().then(json => json.forEach(item => {
+              const option = document.createElement('option');
+              option.value = item;
+              userList.appendChild(option);
+            }));
+          });
+        }, 300);
+      });
+    }
+  })();
+</script>

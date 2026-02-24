@@ -16,7 +16,6 @@ use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarModel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Environment;
@@ -24,6 +23,7 @@ use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 // Backwards compatibility
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
@@ -35,18 +35,11 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
 		'backendSearchIgnore'         => true,
+		'userRoot'                    => 'calendarfeeds',
 		'onload_callback' => array
 		(
 			array('tl_calendar_feed', 'checkPermission'),
 			array('tl_calendar_feed', 'generateFeed')
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_calendar_feed', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_calendar_feed', 'adjustPermissions')
 		),
 		'onsubmit_callback' => array
 		(
@@ -72,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'title'
 		),
 		'label' => array
@@ -112,18 +105,18 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'title' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'alias' => array
 		(
@@ -134,7 +127,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			(
 				array('tl_calendar_feed', 'checkFeedAlias')
 			),
-			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'language' => array
 		(
@@ -142,7 +135,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'filter'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>32, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'calendars' => array
 		(
@@ -150,7 +143,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_calendar_feed', 'getAllowedCalendars'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL",
+			'sql'                     => array('type'=>'blob', 'length'=>MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 			'relation'                => array('table'=>'tl_calendar_feed', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'format' => array
@@ -159,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'inputType'               => 'select',
 			'options'                 => array('rss'=>'RSS 2.0', 'atom'=>'Atom'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default 'rss'"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'rss')
 		),
 		'source' => array
 		(
@@ -167,13 +160,13 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'options'                 => array('source_teaser', 'source_text'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar_feed'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default 'source_teaser'"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'source_teaser')
 		),
 		'maxItems' => array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 25"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>25)
 		),
 		'feedBase' => array
 		(
@@ -181,14 +174,14 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'description' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>MySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'imgSize' => array
 		(
@@ -197,7 +190,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback'	      => array('contao.listener.image_size_options', '__invoke'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 	)
 );
@@ -300,93 +293,6 @@ class tl_calendar_feed extends Backend
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar feeds.');
 				}
 				break;
-		}
-	}
-
-	/**
-	 * Add the new calendar feed to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->calendarfeeds) || !is_array($user->calendarfeeds))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->calendarfeeds;
-		}
-
-		// The calendar feed is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$db = Database::getInstance();
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_calendar_feed']) && in_array($insertId, $arrNew['tl_calendar_feed']))
-		{
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, calendarfeeds, calendarfeedp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrCalendarfeedp = StringUtil::deserialize($objGroup->calendarfeedp);
-
-					if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
-					{
-						$arrCalendarfeeds = StringUtil::deserialize($objGroup->calendarfeeds, true);
-						$arrCalendarfeeds[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT calendarfeeds, calendarfeedp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrCalendarfeedp = StringUtil::deserialize($objUser->calendarfeedp);
-
-				if (is_array($arrCalendarfeedp) && in_array('create', $arrCalendarfeedp))
-				{
-					$arrCalendarfeeds = StringUtil::deserialize($objUser->calendarfeeds, true);
-					$arrCalendarfeeds[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET calendarfeeds=? WHERE id=?")->execute(serialize($arrCalendarfeeds), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->calendarfeeds = $root;
 		}
 	}
 

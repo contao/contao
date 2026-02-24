@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send</source>
+        <target>Wyślij</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
@@ -227,6 +228,9 @@
       <trans-unit id="tl_newsletter.show.1">
         <source>Show the details of newsletter ID %s</source>
         <target>Pokaż szczegóły newslettera ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.versions.1">
+        <source>Show the versions of newsletter ID %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
@@ -247,6 +251,10 @@
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
         <target>Wklej do tego kanału</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
       </trans-unit>
     </body>
   </file>

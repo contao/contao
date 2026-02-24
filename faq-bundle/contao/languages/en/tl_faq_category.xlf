@@ -35,6 +35,9 @@
       <trans-unit id="tl_faq_category.show.1">
         <source>Show the details of category ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_faq_category.versions.1">
+        <source>Show the versions of category ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_faq_category.edit.1">
         <source>Edit category ID %s</source>
       </trans-unit>

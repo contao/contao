@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
@@ -363,8 +362,7 @@ class PreviewToolbarListenerTest extends TestCase
         $loader = $this->createStub(LoaderInterface::class);
         $loader
             ->method('exists')
-            ->with('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig')
-            ->willReturn($legacyTemplateExists)
+            ->willReturnMap([['@ContaoCore/Frontend/preview_toolbar_base_js.html.twig', $legacyTemplateExists]])
         ;
 
         $twig = $this->createMock(Environment::class);
@@ -443,11 +441,6 @@ class PreviewToolbarListenerTest extends TestCase
     private function mockRouterWithContext(): RouterInterface&Stub
     {
         $router = $this->createStub(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->with('contao_backend_switch', [], UrlGeneratorInterface::ABSOLUTE_PATH)
-        ;
-
         $router
             ->method('getContext')
             ->willReturn(new RequestContext())

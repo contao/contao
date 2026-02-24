@@ -197,10 +197,6 @@
         <source>Rebuild index</source>
         <target>Bygg om index</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.backend_search.confirmation">
-        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
-        <target>Återuppbyggnad pågår. Kontrollera jobböversikten för uppdateringar om processen.</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>

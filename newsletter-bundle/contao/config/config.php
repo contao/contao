@@ -44,7 +44,6 @@ $GLOBALS['TL_HOOKS']['closeAccount'][] = array(Newsletter::class, 'removeSubscri
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'newsletters';
-$GLOBALS['TL_PERMISSIONS'][] = 'newsletterp';
 
 // Models
 $GLOBALS['TL_MODELS']['tl_newsletter_channel'] = NewsletterChannelModel::class;

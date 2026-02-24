@@ -7,7 +7,7 @@
         <span class="upper">{{ wildcard }}</span>
         {% if link|default %}
             <br>
-            {{ link }} (<a href="{{ href ~ '&rt=' ~ contao.request_token }}" class="tl_gray">ID: {{ id }}</a>)
+            {{ link }} (<a href="{{ href ~ '&rt=' ~ contao.request_token }}" onclick="Backend.openModalIframe({ title: '{{ link|e('js') }}', url:this.href + '&amp;popup=1&amp;nb=1' });return false" class="tl_gray">ID: {{ id }}</a>)
         {% endif %}
     </div>
 {% endif %}

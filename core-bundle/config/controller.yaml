@@ -20,17 +20,6 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
-        Contao\CoreBundle\Controller\Page\AbstractLayoutPageController:
-            tags:
-                - { name: container.service_subscriber, id: contao.routing.page_finder }
-                - { name: container.service_subscriber, id: contao.routing.response_context_accessor }
-                - { name: container.service_subscriber, id: contao.routing.response_context_factory }
-                - { name: container.service_subscriber, id: contao.security.token_checker }
-                - { name: container.service_subscriber, id: contao.image.picture_factory }
-                - { name: container.service_subscriber, id: contao.image.preview_factory }
-                - { name: container.service_subscriber, id: contao.assets.assets_context }
-                - { name: container.service_subscriber, id: contao.twig.defer.renderer }
-
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\AltchaController:
         arguments:
@@ -93,6 +82,23 @@ services:
     Contao\CoreBundle\Controller\ContentElement\AccordionController:
         arguments:
             - '@contao.framework'
+
+    Contao\CoreBundle\Controller\ContentElement\ChangePasswordController:
+        arguments:
+            - '@contao.framework'
+            - '@security.password_hasher_factory'
+            - '@contao.routing.content_url_generator'
+            - '@event_dispatcher'
+            - '@router.default'
+
+    Contao\CoreBundle\Controller\ContentElement\CloseAccountController:
+        arguments:
+            - '@contao.framework'
+            - '@event_dispatcher'
+            - '@security.helper'
+            - '@contao.routing.content_url_generator'
+            - '@monolog.logger.contao.access'
+            - '@contao.filesystem.virtual.files'
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
@@ -164,6 +170,14 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\TwoFactorController:
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.two_factor.backup_code_manager'
+            - '@contao.security.two_factor.trusted_device_manager'
+            - '@contao.security.two_factor.authenticator'
+            - '@security.authentication_utils'
+
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 
     Contao\CoreBundle\Controller\ContentElement\VideoController:
@@ -233,7 +247,12 @@ services:
         arguments:
             - '@contao.routing.content_url_generator'
 
-    Contao\CoreBundle\Controller\Page\RegularPageController: ~
+    Contao\CoreBundle\Controller\Page\RegularPageController:
+        arguments:
+            - '@contao.content_composition'
+            - '@contao.routing.response_context_factory'
+            - '@contao.routing.response_context_accessor'
+            - '@contao.framework'
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:

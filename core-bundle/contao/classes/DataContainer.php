@@ -1037,9 +1037,22 @@ abstract class DataContainer extends Backend
 	 */
 	protected function panel()
 	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? null))
+		$panelLayout = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '';
+
+		if (!$panelLayout)
 		{
 			return '';
+		}
+
+		$panels = StringUtil::trimsplit('[;,]', $panelLayout);
+
+		// Force consistent order in Contao 5.7+ because the filter panel has moved from the top to the right.
+		// Separating into rows using ";" has no meaning anymore and for UX purposes, we want consistency so
+		// the order should always be search,filter,sort,limit.
+		// But if any custom panels have been used, we do not interfere with the settings.
+		if (empty(array_diff($panels, array('search', 'filter', 'sort', 'limit'))))
+		{
+			$panelLayout = implode(',', array_values(array_intersect(array('search', 'filter', 'sort', 'limit'), $panels)));
 		}
 
 		// Reset all filters
@@ -1062,7 +1075,7 @@ abstract class DataContainer extends Backend
 
 		$intFilterPanel = 0;
 		$arrPanels = array();
-		$arrPanes = StringUtil::trimsplit(';', $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '');
+		$arrPanes = StringUtil::trimsplit(';', $panelLayout);
 
 		foreach ($arrPanes as $strPanel)
 		{
@@ -1144,34 +1157,10 @@ abstract class DataContainer extends Backend
 			$this->reload();
 		}
 
-		$return = '';
-		$intTotal = \count($arrPanels);
-
-		for ($i=0; $i<$intTotal; $i++)
-		{
-			$return .= '
-<div class="tl_panel">
-  ' . $arrPanels[$i] . '
-</div>';
-		}
-
-		$submit = '
-<div class="tl_submit_panel tl_subpanel" data-controller="contao--sticky-observer">
-  <button name="filter" id="filter" class="tl_submit filter_apply">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_submit filter_reset">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
-</div>';
-
-		$return = '
-<form class="tl_form content-filter" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '" data-turbo-frame="contao-main">
-<button type="button" class="close" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['close']) . '" aria-controls="content-filter" data-action="contao--toggle-state#close">×</button>
-<div class="tl_formbody">
-  <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-  ' . $return . '
-</div>' . $submit . '
-</form>';
-
-		return $return;
+		return System::getContainer()->get('twig')->render('@Contao/backend/data_container/panel.html.twig', array(
+			'panels' => $arrPanels,
+			'active' => $this->panelActive,
+		));
 	}
 
 	/**

@@ -3,7 +3,7 @@
   <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en">
     <body>
       <trans-unit id="tl_module.name.0">
-        <source>Title</source>
+        <source>Internal title</source>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -491,6 +491,9 @@ If you did not request this e-mail, please contact the website administrator.
       </trans-unit>
       <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_module.versions.1">
+        <source>Show the versions of module ID %s</source>
       </trans-unit>
       <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>

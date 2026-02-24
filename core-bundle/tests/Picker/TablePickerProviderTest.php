@@ -569,7 +569,7 @@ class TablePickerProviderTest extends ContaoTestCase
                 $module,
                 [
                     'label' => 'MOD.'.$module.'.0',
-                    'linkAttributes' => ['class' => $module],
+                    'linkAttributes' => ['class' => $module.'Picker'],
                     'current' => $current === $module,
                     'uri' => '',
                 ],
@@ -603,7 +603,7 @@ class TablePickerProviderTest extends ContaoTestCase
             $expectedCurrent = [[$current]];
         }
 
-        $config = $this->createStub(PickerConfig::class);
+        $config = $expectedCurrent ? $this->createMock(PickerConfig::class) : $this->createStub(PickerConfig::class);
         $config
             ->method('getContext')
             ->willReturn('dc.'.$table)

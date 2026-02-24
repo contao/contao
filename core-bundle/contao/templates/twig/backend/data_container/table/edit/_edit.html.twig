@@ -2,10 +2,12 @@
 
 {% set wrapper_attributes = attrs()
     .set('data-controller', 'contao--jump-targets', add_jump_targets|default(true))
+    .set('data-contao--jump-targets-prev-label-value', 'MSC.scrollLeft'|trans, add_jump_targets|default(true))
+    .set('data-contao--jump-targets-next-label-value', 'MSC.scrollRight'|trans, add_jump_targets|default(true))
 %}
 <div{{ wrapper_attributes }}>
     {% if add_jump_targets|default(true) %}
-        <div class="jump-targets">
+        <div class="jump-targets" data-controller="contao--sticky-observer">
             <div class="inner" data-contao--jump-targets-target="navigation"></div>
         </div>
     {% endif %}

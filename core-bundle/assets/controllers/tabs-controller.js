@@ -34,8 +34,16 @@ export default class TabsController extends Controller {
 
                   return button;
               })();
+
         selectButton.addEventListener('click', () => {
             this.selectTab(panel);
+        });
+
+        selectButton.addEventListener('auxclick', (event) => {
+            if (1 === event.button) {
+                // Remove the panel and let the disconnect handler do the rest
+                panel.remove();
+            }
         });
 
         const closeButton = isRestore
@@ -50,6 +58,7 @@ export default class TabsController extends Controller {
 
                   return button;
               })();
+
         closeButton.addEventListener('click', () => {
             // Remove the panel and let the disconnect handler do the rest
             panel.remove();

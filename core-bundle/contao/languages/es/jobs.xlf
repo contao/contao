@@ -1,9 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/jobs.php" source-language="en" target-language="es">
     <body>
-      <trans-unit id="jobs.tstamp.0">
+      <trans-unit id="jobs.created_at.0">
         <source>Created at</source>
         <target>Creado en</target>
+      </trans-unit>
+      <trans-unit id="jobs.progress.0">
+        <source>Progress</source>
+        <target>Progreso</target>
       </trans-unit>
       <trans-unit id="jobs.status.0">
         <source>Status</source>
@@ -12,6 +16,10 @@
       <trans-unit id="jobs.owner.0">
         <source>Initiated by</source>
         <target>Iniciado por</target>
+      </trans-unit>
+      <trans-unit id="jobs.attachments.0">
+        <source>Attachments</source>
+        <target>Documentso adjuntos</target>
       </trans-unit>
       <trans-unit id="jobs.type.0">
         <source>Type</source>
@@ -29,9 +37,13 @@
         <source>Completed</source>
         <target>Terminado</target>
       </trans-unit>
-      <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
+      <trans-unit id="jobs.type_label.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
         <target>Reconstruir el índice de búsqueda del back-end</target>
+      </trans-unit>
+      <trans-unit id="jobs.type_label.crawl">
+        <source>Crawling the website</source>
+        <target>Rastreando el sitio web</target>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>

@@ -6,6 +6,6 @@
         {% set block_token -%}
             <span class="token">{{ block }}</span>
         {%- endset %}
-        {{ 'message.open_block_info.error'|trans([block_token])|raw }}
+        {{ 'template_studio.message.open_block_info.error'|trans([block_token])|raw }}
     {% endblock %}
 {% endembed %}

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -96,7 +95,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -107,14 +105,12 @@ class TwigIntegrationTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
-            ->with('@Contao/form_text.html.twig')
-            ->willReturn(true)
+            ->willReturnMap([['@Contao/form_text.html.twig', true]])
         ;
 
         $filesystemLoader
             ->method('getFirst')
-            ->with('form_text')
-            ->willReturn('/path/to/form_text.html.twig')
+            ->willReturnMap([['form_text', '/path/to/form_text.html.twig']])
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
@@ -189,7 +185,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $filesystemLoader,
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -198,14 +193,12 @@ class TwigIntegrationTest extends TestCase
         $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
         $filesystemLoader
             ->method('exists')
-            ->with('@Contao/twig_template.html.twig')
-            ->willReturn(true)
+            ->willReturnMap([['@Contao/twig_template.html.twig', true]])
         ;
 
         $filesystemLoader
             ->method('getFirst')
-            ->with('twig_template')
-            ->willReturn('/path/to/twig_template.html.twig')
+            ->willReturnMap([['twig_template', '/path/to/twig_template.html.twig']])
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
@@ -254,7 +247,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -306,7 +298,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -350,8 +341,7 @@ class TwigIntegrationTest extends TestCase
 
         $parser
             ->method('replaceInline')
-            ->with('<i>foo</i>{{br}}')
-            ->willReturn('<i>foo</i><br>')
+            ->willReturnMap([['<i>foo</i>{{br}}', '<i>foo</i><br>']])
         ;
 
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
@@ -361,7 +351,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),
@@ -389,7 +378,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createStub(ContaoFilesystemLoader::class),
-                $this->createStub(ContaoCsrfTokenManager::class),
                 $this->createStub(ContaoVariable::class),
                 new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
             ),

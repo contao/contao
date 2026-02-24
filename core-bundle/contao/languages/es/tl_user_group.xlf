@@ -73,6 +73,10 @@
         <source>Allowed member groups</source>
         <target>Miembros de grupos permitidos</target>
       </trans-unit>
+      <trans-unit id="tl_user_group.cud_legend">
+        <source>Table permissions</source>
+        <target>Permisos de tabla</target>
+      </trans-unit>
       <trans-unit id="tl_user_group.alexf_legend">
         <source>Allowed fields</source>
         <target>Campos excluidos</target>
@@ -88,6 +92,9 @@
       <trans-unit id="tl_user_group.show.1">
         <source>Show the details of user group ID %s</source>
         <target>Mostrar los detalles del ID del grupo de usuarios %s</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.versions.1">
+        <source>Show the versions of user group ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>
@@ -124,6 +131,10 @@
       <trans-unit id="tl_user_group.toggle.4">
         <source>Activate</source>
         <target>Activar</target>
+      </trans-unit>
+      <trans-unit id="tl_user_group.tableLabel">
+        <source>User group</source>
+        <target>Grupo usuario</target>
       </trans-unit>
     </body>
   </file>

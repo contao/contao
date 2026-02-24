@@ -21,6 +21,10 @@
         <source>Title and URL</source>
         <target>題名とURL</target>
       </trans-unit>
+      <trans-unit id="tl_favorites.new.1">
+        <source>Create a new favorite</source>
+        <target>新しいお気に入りを作成</target>
+      </trans-unit>
       <trans-unit id="tl_favorites.show.1">
         <source>Show the details of favorite ID %s</source>
         <target>ID %sのお気に入りの詳細を表示</target>
@@ -33,9 +37,41 @@
         <source>Move favorite ID %s</source>
         <target>ID %sのお気に入りを移動</target>
       </trans-unit>
+      <trans-unit id="tl_favorites.copy.1">
+        <source>Copy favorite ID %s</source>
+        <target>ID %sのお気に入りを複製</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.copyChildren.1">
+        <source>Copy favorite ID %s with its children</source>
+        <target>ID %sのお気に入りを下位のお気に入りを含めて複製</target>
+      </trans-unit>
       <trans-unit id="tl_favorites.delete.1">
         <source>Delete favorite ID %s</source>
         <target>ID %sのお気に入りを削除</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pasteinto.1">
+        <source>Paste into favorite ID %s</source>
+        <target>ID %sのお気に入りの中に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pasteafter.1">
+        <source>Paste after favorite ID %s</source>
+        <target>ID %sのお気に入りの後に貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pastenewtop.1">
+        <source>Add a new favorite at the top</source>
+        <target>先頭に新しいお気に入りを追加</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pastenewafter.1">
+        <source>Add a new favorite after favorite ID %s</source>
+        <target>ID %sのお気に入りの後に新しいお気に入りを追加</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.pastenewinto.1">
+        <source>Add a new favorite inside favorite ID %s</source>
+        <target>ID %sのお気に入りの中に新しいお気に入りを追加</target>
+      </trans-unit>
+      <trans-unit id="tl_favorites.tableLabel">
+        <source>Favorite</source>
+        <target>お気に入り</target>
       </trans-unit>
     </body>
   </file>

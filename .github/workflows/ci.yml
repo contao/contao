@@ -3,7 +3,8 @@ name: CI
 on:
     pull_request: ~
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:
@@ -18,12 +19,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -46,12 +47,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -74,12 +75,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -105,14 +106,15 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install Contao
               uses: ramsey/composer-install@v3
@@ -132,12 +134,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -158,7 +160,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -168,7 +170,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -180,7 +182,7 @@ jobs:
               run: npx biome ci core-bundle/assets
 
             - name: Run Stylelint
-              run: npx stylelint --fix core-bundle/assets/styles
+              run: npx stylelint core-bundle/assets/styles core-bundle/contao/themes/flexible/styles
 
     service-linter:
         name: Service linter
@@ -189,12 +191,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -217,12 +219,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   fetch-depth: 0
                   show-progress: false
@@ -257,7 +259,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [8.3, 8.4, 8.5]
+                php: [8.4, 8.5]
         steps:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
@@ -272,7 +274,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -300,12 +302,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -334,7 +336,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -359,7 +361,7 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -369,7 +371,7 @@ jobs:
                   mysql -uroot -proot -e "CREATE database contao_test"
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -399,12 +401,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false
@@ -442,12 +444,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: json, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false

@@ -3,16 +3,17 @@ import * as focusTrap from 'focus-trap';
 import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class BackendSearchController extends Controller {
-    static targets = ['input', 'results'];
+    static targets = ['input', 'results', 'shortcut'];
 
     static values = {
         url: String,
         minCharacters: Number,
         debounceDelay: Number,
+        shortcutLabel: String,
+        shortcutMacosLabel: String,
     };
 
     static classes = ['hidden', 'initial', 'loading', 'invalid', 'results', 'error'];
-
     connect() {
         this.debounceTimeout = null;
         this.searchResultConnection = new TurboStreamConnection();
@@ -25,6 +26,12 @@ export default class BackendSearchController extends Controller {
 
     disconnect() {
         this.#stopPendingSearch();
+    }
+
+    shortcutTargetConnected() {
+        this.shortcutTarget.innerText = /^(Mac|iPhone|iPad)/.test(navigator.platform)
+            ? this.shortcutMacosLabelValue
+            : this.shortcutLabelValue;
     }
 
     async search() {
@@ -49,6 +56,23 @@ export default class BackendSearchController extends Controller {
         } else if (result.error) {
             this.#setState('error');
         }
+    }
+
+    shortcutOpen(event) {
+        const element = document.activeElement;
+
+        if (
+            element instanceof HTMLInputElement ||
+            element instanceof HTMLTextAreaElement ||
+            element instanceof HTMLSelectElement ||
+            (element instanceof HTMLElement && element.isContentEditable)
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+        this.inputTarget.focus();
+        this.#setState('initial');
     }
 
     open() {

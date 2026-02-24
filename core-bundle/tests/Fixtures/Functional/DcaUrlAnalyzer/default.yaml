@@ -5,12 +5,23 @@ tl_page:
     - id: 2
       pid: 1
       type: regular
+    - id: 3
+      type: root
+      language: en
+    - id: 4
+      pid: 3
+      type: regular
 
 tl_article:
     - id: 1
       tstamp: 1234567890
-      pid: 1
+      pid: 2
       title: Article 1
+      inColumn: main
+    - id: 2
+      tstamp: 1234567890
+      pid: 4
+      title: Article 2
       inColumn: main
 
 tl_content:

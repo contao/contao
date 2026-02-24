@@ -8,14 +8,9 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\StringUtil;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
@@ -27,18 +22,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_newsletter_channel', 'adjustDca')
-		),
-		'oncreate_callback' => array
-		(
-			array('tl_newsletter_channel', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_newsletter_channel', 'adjustPermissions')
-		),
+		'userRoot'                    => 'newsletters',
 		'sql' => array
 		(
 			'keys' => array
@@ -87,25 +71,25 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'title' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'jumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
 		'template' => array
@@ -115,14 +99,14 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mail_');
 			},
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
 		),
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w33'),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'sender' => array
 		(
@@ -130,7 +114,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'filter'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w33'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'senderName' => array
 		(
@@ -139,127 +123,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w33'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		)
 	)
 );
-
-/**
- * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @internal
- */
-class tl_newsletter_channel extends Backend
-{
-	/**
-	 * Set the root IDs.
-	 */
-	public function adjustDca()
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->newsletters) || !is_array($user->newsletters))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->newsletters;
-		}
-
-		$GLOBALS['TL_DCA']['tl_newsletter_channel']['list']['sorting']['root'] = $root;
-	}
-
-	/**
-	 * Add the new channel to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($user->newsletters) || !is_array($user->newsletters))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->newsletters;
-		}
-
-		// The channel is enabled already
-		if (in_array($insertId, $root))
-		{
-			return;
-		}
-
-		$db = Database::getInstance();
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_newsletter_channel']) && in_array($insertId, $arrNew['tl_newsletter_channel']))
-		{
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, newsletters, newsletterp FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrNewsletterp = StringUtil::deserialize($objGroup->newsletterp);
-
-					if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
-					{
-						$arrNewsletters = StringUtil::deserialize($objGroup->newsletters, true);
-						$arrNewsletters[] = $insertId;
-
-						$db->prepare("UPDATE tl_user_group SET newsletters=? WHERE id=?")->execute(serialize($arrNewsletters), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT newsletters, newsletterp FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrNewsletterp = StringUtil::deserialize($objUser->newsletterp);
-
-				if (is_array($arrNewsletterp) && in_array('create', $arrNewsletterp))
-				{
-					$arrNewsletters = StringUtil::deserialize($objUser->newsletters, true);
-					$arrNewsletters[] = $insertId;
-
-					$db->prepare("UPDATE tl_user SET newsletters=? WHERE id=?")->execute(serialize($arrNewsletters), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$root[] = $insertId;
-			$user->newsletter = $root;
-		}
-	}
-}

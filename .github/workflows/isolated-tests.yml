@@ -5,7 +5,8 @@ on:
     schedule:
         - cron: 0 13 * * MON,THU
 
-permissions: read-all
+permissions:
+    contents: read
 
 defaults:
     run:
@@ -20,12 +21,12 @@ jobs:
             - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
                   persist-credentials: false

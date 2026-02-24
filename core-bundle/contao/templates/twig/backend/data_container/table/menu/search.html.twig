@@ -6,7 +6,6 @@
         name: 'tl_search',
         title: 'MSC.field'|trans,
     }) }}
-
     <label for="tl_search_term">{{ 'MSC.keyword'|trans }}</label>
     {% set input_attributes = attrs()
         .set('type', 'search')
@@ -15,8 +14,6 @@
         .set('value', value)
         .addClass('tl_text')
         .addClass('active', active)
-        .set('data-contao--filter-target', 'filter')
-        .set('data-action', 'contao--filter#updateCount')
     %}
     <input{{ input_attributes }}/>
 </fieldset>

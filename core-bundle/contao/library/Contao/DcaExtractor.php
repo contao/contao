@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\InvalidConfigException;
+
 /**
  * Extracts DCA information and cache it
  *
@@ -87,6 +89,18 @@ class DcaExtractor extends Controller
 	 * @var boolean
 	 */
 	protected $blnIsDbTable = false;
+
+	/**
+	 * Virtual field targets
+	 * @var array
+	 */
+	protected $arrVirtualTargets = array();
+
+	/**
+	 * Virtual field to target map
+	 * @var array
+	 */
+	protected $arrVirtualFields = array();
 
 	/**
 	 * Load or create the extract
@@ -264,6 +278,26 @@ class DcaExtractor extends Controller
 	}
 
 	/**
+	 * Returns the fields used as targets for virtual fields
+	 *
+	 * @return array The virtual field targets
+	 */
+	public function getVirtualTargets()
+	{
+		return $this->arrVirtualTargets;
+	}
+
+	/**
+	 * Returns a map of virtual fields to their targets
+	 *
+	 * @return array The virtual fields map
+	 */
+	public function getVirtualFields()
+	{
+		return $this->arrVirtualFields;
+	}
+
+	/**
 	 * Return an array that can be used by the database installer
 	 *
 	 * @return array The data array
@@ -413,6 +447,50 @@ class DcaExtractor extends Controller
 				{
 					$this->arrEnums[$field] = $config['enum'];
 				}
+
+				// Store virtual field targets
+				if (($config['virtualTarget'] ?? false) && ($config['sql'] ?? null))
+				{
+					$this->arrVirtualTargets[] = $field;
+				}
+			}
+
+			// Store virtual fields
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config)
+			{
+				if (($config['sql'] ?? null) || !($config['targetColumn'] ?? null))
+				{
+					continue;
+				}
+
+				// Validate target
+				if (!\in_array($config['targetColumn'], $this->arrVirtualTargets, true))
+				{
+					throw new InvalidConfigException(\sprintf('The target column of the virtual field %s.%s does not exist.', $this->strTable, $field));
+				}
+
+				// Validate the config for virtual fields
+				if ($config['filter'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling "filter" on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				if ($config['search'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling "search" on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				if ($config['eval']['fallback'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling "eval.fallback" on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				if ($config['eval']['unique'] ?? false)
+				{
+					throw new InvalidConfigException(\sprintf('Enabling "eval.unique" on virtual field %s.%s is not supported.', $this->strTable, $field));
+				}
+
+				$this->arrVirtualFields[$field] = $config['targetColumn'];
 			}
 		}
 

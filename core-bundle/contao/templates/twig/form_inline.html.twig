@@ -2,12 +2,12 @@
     .setIfExists('action', action|default)
     .set('method', method)
     .set('enctype', enctype)
-    .set('data-ajax-form', id, ajax)
-    .mergeWith(attributes)
-    .mergeWith(novalidate)
+    .set('data-ajax-form', id|default, ajax|default)
+    .mergeWith(attributes|default)
+    .mergeWith(novalidate|default)
 }}>
     <div class="formbody">
-        {% if errors %}
+        {% if errors|default %}
             {% for error in errors %}
                 <p class="error">{{ error }}</p>
             {% endfor %}
@@ -15,7 +15,7 @@
         {% if 'get' != method %}
             <input type="hidden" name="FORM_SUBMIT" value="{{ formSubmit }}">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-            {% if maxFileSize %}
+            {% if maxFileSize|default %}
                 <input type="hidden" name="MAX_FILE_SIZE" value="{{ maxFileSize }}">
             {% endif %}
         {% endif %}

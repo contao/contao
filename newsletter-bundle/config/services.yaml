@@ -23,10 +23,20 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
+    contao_newsletter.migration.field_permission:
+        class: Contao\NewsletterBundle\Migration\FieldPermissionMigration
+        arguments:
+            - '@database_connection'
+
     contao_newsletter.routing.newsletter_resolver:
         class: Contao\NewsletterBundle\Routing\NewsletterResolver
         arguments:
             - '@contao.framework'
+
+    contao_newsletter.security.legacy_backend_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\LegacyBackendAccessVoter
+        tags:
+            - { name: security.voter, priority: 8 }
 
     contao_newsletter.security.newsletter_access_voter:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterAccessVoter

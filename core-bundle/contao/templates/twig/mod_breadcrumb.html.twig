@@ -12,7 +12,7 @@
 
     {% block headline %}
         {% if headline %}
-            <{{ hl }}>{{ headline }}</{{ hl }}>
+            <{{ hl }}>{{ headline|insert_tag_raw }}</{{ hl }}>
         {% endif %}
     {% endblock %}
 

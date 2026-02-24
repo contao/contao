@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>
-        <target>Bu etkinlik %s%s düzeninde yinelendi.</target>
+        <target>Bu etkinlik %s%s düzeninde yineleniyor.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_until">
         <source>until %s</source>
@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="PTY.calendar_feed.0">
         <source>Calendar feed</source>
+        <target>Takvim akışı</target>
       </trans-unit>
       <trans-unit id="PTY.calendar_feed.1">
         <source>Create an RSS, Atom or JSON feed from your calendars.</source>
+        <target>Takvimleriniz için bir RSS, Atom ya da JSON akışı oluşturun.</target>
       </trans-unit>
     </body>
   </file>

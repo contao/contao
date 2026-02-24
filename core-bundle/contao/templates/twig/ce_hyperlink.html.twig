@@ -4,7 +4,7 @@
 
     {% if useImage %}
         <figure class="image_container">
-            {{ embed_pre|insert_tag_raw }}
+            {{ embed_pre|default|insert_tag_raw }}
             <a{{ attrs()
                 .addClass('hyperlink_img')
                 .set('href', href|insert_tag)
@@ -13,9 +13,9 @@
                 .mergeWith(target)
                 .mergeWith(rel)
             }}>
-                {{ include('@Contao/picture_default', picture) }}
+                {{ include('@Contao/picture_default', picture, false) }}
             </a>
-            {{ embed_post|insert_tag_raw }}
+            {{ embed_post|default|insert_tag_raw }}
             {% if caption|default %}
                 <figcaption class="caption">{{ caption|sanitize_html('contao')|insert_tag_raw }}</figcaption>
             {% endif %}

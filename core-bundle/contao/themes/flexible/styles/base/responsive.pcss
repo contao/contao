@@ -4,7 +4,7 @@
         width: 100%;
         flex-shrink: 0;
         position: relative;
-        transition: transform .2s ease;
+        transition: transform 0.2s ease;
         will-change: transform;
     }
 
@@ -13,7 +13,7 @@
         width: 240px;
         flex-shrink: 0;
         margin-left: -240px;
-        transition: transform .2s ease, visibility .2s ease;
+        transition: transform 0.2s ease, visibility 0.2s ease;
         will-change: transform, visibility;
     }
 
@@ -21,6 +21,7 @@
         visibility: visible;
         transform: translateX(240px);
 
+        + #main,
         + #contao-main #main {
             transform: translateX(240px);
         }
@@ -65,7 +66,7 @@
 
     #tmenu sup {
         top: 6px;
-        font-size: .5rem;
+        font-size: 0.5rem;
     }
 
     #tmenu .icon-debug {
@@ -96,7 +97,8 @@
         padding: 0 9px;
     }
 
-    div.tl_tbox, div.tl_box {
+    div.tl_tbox,
+    div.tl_box {
         position: relative;
     }
 
@@ -105,7 +107,8 @@
         float: none;
     }
 
-    .showColumns th, .showColumns td {
+    .showColumns th,
+    .showColumns td {
         display: block;
     }
 
@@ -128,7 +131,8 @@
         padding-right: 7px !important;
     }
 
-    .tl_listing .tl_left, .tl_show td {
+    .tl_listing .tl_left,
+    .tl_show td {
         word-break: break-word;
     }
 
@@ -140,7 +144,9 @@
         display: none;
     }
 
-    #tl_buttons > ul, .tl_listing_container, fieldset > .widget-group {
+    #tl_buttons > ul,
+    .tl_listing_container,
+    fieldset > .widget-group {
         padding-left: 10px;
         padding-right: 10px;
     }
@@ -153,7 +159,8 @@
         max-width: 52vw;
     }
 
-    #paste_hint, .sort_hint {
+    #paste_hint,
+    .sort_hint {
         display: none;
     }
 
@@ -161,12 +168,13 @@
         width: 100%;
     }
 
-    #tl_maintenance_cache tr th:last-child, #tl_maintenance_cache tr td:last-child {
+    #tl_maintenance_cache tr th:last-child,
+    #tl_maintenance_cache tr td:last-child {
         display: none;
     }
 
     .tl_undo_header {
-        grid-template-columns:2fr 3fr;
+        grid-template-columns: 2fr 3fr;
     }
 
     .tl_undo_header div:not(.tstamp, .source) {
@@ -174,7 +182,6 @@
     }
 
     .tl_submit_panel {
-        margin-top: 15px;
         display: flex;
         gap: 6px;
     }
@@ -194,7 +201,7 @@
     .tl_metawizard label {
         width: auto;
         float: none;
-        font-size: .9em;
+        font-size: 0.9em;
         display: block;
         margin-top: 3px;
     }
@@ -231,7 +238,7 @@
     html[data-color-scheme="dark"] {
         #header .badge-title {
             background-color: var(--invert-text);
-            color: var(--black)
+            color: var(--black);
         }
     }
 }
@@ -247,13 +254,17 @@
 }
 
 /* Tablets */
-@media (min-width: 768px) {
-
+@media (width >= 768px) {
     .widget-group {
         --widget-gap-cols: 30px;
     }
 
-    .w16, .w25, .w33, .w50, .w66, .w75 {
+    .w16,
+    .w25,
+    .w33,
+    .w50,
+    .w66,
+    .w75 {
         --widget-cols: 6;
     }
 
@@ -288,7 +299,7 @@
 }
 
 /* Large screens */
-@media (min-width: 1280px) {
+@media (width >= 1280px) {
     .w16 {
         --widget-cols: 2;
     }
@@ -368,7 +379,7 @@
         background: var(--form-button-hover);
     }
 
-    .split-button ul:before {
+    .split-button ul::before {
         content: "";
         display: block;
         height: 0;
@@ -381,7 +392,7 @@
         border-top: 6px solid var(--form-bg);
     }
 
-    .split-button ul:after {
+    .split-button ul::after {
         content: "";
         display: block;
         height: 0;
@@ -408,10 +419,11 @@
         border-left: 0;
         border-radius: 0 var(--border-radius) var(--border-radius) 0;
         box-sizing: border-box;
-        transition: background .2s ease;
+        transition: background 0.2s ease;
     }
 
-    .split-button > button[type="button"].active, .split-button > button[type="button"]:hover {
+    .split-button > button[type="button"].active,
+    .split-button > button[type="button"]:hover {
         background: var(--form-button-hover);
     }
 

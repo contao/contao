@@ -156,7 +156,7 @@ export default class extends Controller {
     get offset() {
         const value = window.sessionStorage.getItem(this.sessionKeyValue);
 
-        return value ? Number.parseInt(value) : null;
+        return value ? Number.parseInt(value, 10) : null;
     }
 
     set offset(value) {

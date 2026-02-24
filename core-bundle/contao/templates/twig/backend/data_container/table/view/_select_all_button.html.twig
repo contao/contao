@@ -1,9 +1,0 @@
-{% trans_default_domain 'contao_default' %}
-
-{# Add a "select all" checkbox when in select or picker mode #}
-{% if as_select or (as_picker and picker.type == 'checkbox') %}
-    <div class="tl_select_trigger">
-        <label for="tl_select_trigger" class="tl_select_label">{{ 'MSC.selectAll'|trans }}</label>
-        <input type="checkbox" id="tl_select_trigger" data-action="contao--check-all#toggleAll" class="tl_tree_checkbox">
-    </div>
-{% endif %}

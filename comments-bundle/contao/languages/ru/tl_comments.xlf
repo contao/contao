@@ -169,6 +169,10 @@
         <source>Show the details of comment ID %s</source>
         <target>Показать детали комментария ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_comments.versions.1">
+        <source>Show the versions of comment ID %s</source>
+        <target>Показать версии комментария ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>
         <target>Редактировать комментарий ID %s</target>
@@ -196,6 +200,10 @@
       <trans-unit id="tl_comments.toggle.4">
         <source>Publish</source>
         <target>Опубликовать</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.tableLabel">
+        <source>Comment</source>
+        <target>Комментарий</target>
       </trans-unit>
     </body>
   </file>

@@ -1,0 +1,47 @@
+{% trans_default_domain 'contao_default' %}
+
+{% set form_attributes = attrs()
+    .set('id', 'tl_content_filter')
+    .addClass('tl_form content-filter')
+    .set('method', 'post')
+    .set('aria-label', 'MSC.searchAndFilter'|trans)
+    .set('data-turbo-frame', 'contao-main')
+    .set('data-controller', 'contao--toggle-receiver')
+    .set('data-contao--toggle-receiver-active-class', 'active')
+    .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '.header_filter_toggle')
+    .set('data-contao--element-count-target', 'parent')
+    .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+%}
+<form{{ form_attributes }}>
+    {% set close_button_attributes = attrs()
+        .set('type', 'button')
+        .addClass('close')
+        .set('title', 'DCA.toggleFilter.2'|trans)
+        .set('aria-controls', 'tl_content_filter')
+        .set('data-action', 'contao--toggle-receiver#close')
+    %}
+    <button{{ close_button_attributes }}>×</button>
+    <div class="tl_formbody">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+
+        {% for panel in panels %}
+            <div class="tl_panel">
+                {{ panel|raw }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="tl_submit_panel tl_subpanel" data-controller="contao--sticky-observer">
+        <button name="filter" id="filter" class="tl_submit filter_apply">{{ 'MSC.apply'|trans }}</button>
+
+        {% set reset_button_attributes = attrs()
+            .setIfExists('disabled', not active)
+            .set('name', 'filter_reset')
+            .set('id', 'filter_reset')
+            .set('value', 1)
+            .addClass(['tl_submit', 'filter_reset'])
+        %}
+        <button{{ reset_button_attributes }}>{{ 'MSC.reset'|trans }}</button>
+    </div>
+</form>
