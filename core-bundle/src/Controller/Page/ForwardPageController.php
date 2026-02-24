@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -31,7 +32,7 @@ class ForwardPageController extends AbstractController implements DynamicRouteIn
     ) {
     }
 
-    public function __invoke(Request $request, PageModel $pageModel): Response
+    public function __invoke(Request $request, PageModel $pageModel): RedirectResponse
     {
         $forwardPage = $this->getForwardPage($pageModel);
 
