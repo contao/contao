@@ -31,7 +31,7 @@ class Validator
 	 */
 	public static function isNumeric($varValue)
 	{
-		return preg_match('/^-?\d+(\.\d+)?$/', $varValue);
+		return 1 === preg_match('/^-?\d+(\.\d+)?$/', $varValue);
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Validator
 	 */
 	public static function isNatural($varValue)
 	{
-		return preg_match('/^\d+$/', $varValue);
+		return 1 === preg_match('/^\d+$/', $varValue);
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Validator
 	 */
 	public static function isAlphabetic($varValue)
 	{
-		return preg_match('/^[\pL .-]+$/u', $varValue);
+		return 1 === preg_match('/^[\pL .-]+$/u', $varValue);
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Validator
 	 */
 	public static function isAlphanumeric($varValue)
 	{
-		return preg_match('/^[\w .-]+$/u', $varValue);
+		return 1 === preg_match('/^[\w .-]+$/u', $varValue);
 	}
 
 	/**
@@ -91,7 +91,7 @@ class Validator
 	 */
 	public static function isDate($varValue)
 	{
-		return preg_match('~^' . Date::getRegexp(Date::getNumericDateFormat()) . '$~i', $varValue);
+		return 1 === preg_match('~^' . Date::getRegexp(Date::getNumericDateFormat()) . '$~i', $varValue);
 	}
 
 	/**
@@ -103,7 +103,7 @@ class Validator
 	 */
 	public static function isTime($varValue)
 	{
-		return preg_match('~^' . Date::getRegexp(Date::getNumericTimeFormat()) . '$~i', $varValue);
+		return 1 === preg_match('~^' . Date::getRegexp(Date::getNumericTimeFormat()) . '$~i', $varValue);
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Validator
 	 */
 	public static function isDatim($varValue)
 	{
-		return preg_match('~^' . Date::getRegexp(Date::getNumericDatimFormat()) . '$~i', $varValue);
+		return 1 === preg_match('~^' . Date::getRegexp(Date::getNumericDatimFormat()) . '$~i', $varValue);
 	}
 
 	/**
@@ -140,7 +140,7 @@ class Validator
 		 *
 		 * @see https://github.com/php/php-src/blob/master/ext/filter/logical_filters.c#L601
 		 */
-		return preg_match('/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))]))$/iDu', Idna::encodeEmail($varValue));
+		return 1 === preg_match('/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E\pL\pN]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F\pL\pN]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-+[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-+[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))]))$/iDu', Idna::encodeEmail($varValue));
 	}
 
 	/**
@@ -160,7 +160,7 @@ class Validator
 		{
 		}
 
-		return preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~|-]+$/u', $varValue);
+		return 1 === preg_match('/^[\w\/.*+?$#%:,;{}()[\]@&!=~|-]+$/u', $varValue);
 	}
 
 	/**
@@ -184,7 +184,7 @@ class Validator
 	 */
 	public static function isAlias($varValue)
 	{
-		return preg_match('/^[\w.-]+$/u', $varValue);
+		return 1 === preg_match('/^[\w.-]+$/u', $varValue);
 	}
 
 	/**
@@ -196,7 +196,7 @@ class Validator
 	 */
 	public static function isFolderAlias($varValue)
 	{
-		return preg_match('(^(?!/)[\w/.-]+(?<!/)$)u', $varValue);
+		return 1 === preg_match('(^(?!/)[\w/.-]+(?<!/)$)u', $varValue);
 	}
 
 	/**
@@ -208,7 +208,7 @@ class Validator
 	 */
 	public static function isPhone($varValue)
 	{
-		return preg_match('/^[+(]?(\d+[ +()\/-]*)+$/', $varValue);
+		return 1 === preg_match('/^[+(]?(\d+[ +()\/-]*)+$/', $varValue);
 	}
 
 	/**
@@ -232,7 +232,7 @@ class Validator
 	 */
 	public static function isLocale($varValue)
 	{
-		return preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $varValue);
+		return 1 === preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $varValue);
 	}
 
 	/**
@@ -244,7 +244,7 @@ class Validator
 	 */
 	public static function isLanguage($varValue)
 	{
-		return preg_match('/^[a-z]{2}(-[A-Z]{2})?$/', $varValue);
+		return 1 === preg_match('/^[a-z]{2}(-[A-Z]{2})?$/', $varValue);
 	}
 
 	/**
@@ -287,7 +287,7 @@ class Validator
 	{
 		if (\is_string($varValue) && \strlen($varValue) == 36)
 		{
-			return preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-1[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/', $varValue);
+			return 1 === preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-1[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/', $varValue);
 		}
 
 		return false;
@@ -389,6 +389,6 @@ class Validator
 	 */
 	public static function isFieldName($strName)
 	{
-		return preg_match('/^[A-Za-z0-9[\]_-]+$/', $strName);
+		return 1 === preg_match('/^[A-Za-z0-9[\]_-]+$/', $strName);
 	}
 }

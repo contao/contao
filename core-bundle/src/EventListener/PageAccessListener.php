@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -32,7 +30,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class PageAccessListener
 {
     public function __construct(
-        private readonly ContaoFramework $framework,
+        private readonly PageFinder $pageFinder,
         private readonly Security $security,
     ) {
     }
@@ -44,7 +42,7 @@ class PageAccessListener
     {
         $request = $event->getRequest();
 
-        if (!$pageModel = $this->getPageModel($request)) {
+        if (!$pageModel = $this->pageFinder->getCurrentPage($request)) {
             return;
         }
 
@@ -66,33 +64,5 @@ class PageAccessListener
         if (!$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)) {
             throw new AccessDeniedException('Member does not have access to page ID '.$pageModel->id);
         }
-    }
-
-    private function getPageModel(Request $request): PageModel|null
-    {
-        if (!$request->attributes->has('pageModel')) {
-            return null;
-        }
-
-        $pageModel = $request->attributes->get('pageModel');
-
-        if (
-            isset($GLOBALS['objPage'])
-            && $GLOBALS['objPage'] instanceof PageModel
-            && (
-                ($pageModel instanceof PageModel && (int) $pageModel->id === $GLOBALS['objPage']->id)
-                || (!$pageModel instanceof PageModel && $GLOBALS['objPage']->id === (int) $pageModel)
-            )
-        ) {
-            return $GLOBALS['objPage'];
-        }
-
-        if ($pageModel instanceof PageModel) {
-            return $pageModel;
-        }
-
-        $this->framework->initialize();
-
-        return $this->framework->getAdapter(PageModel::class)->findById((int) $pageModel);
     }
 }

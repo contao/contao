@@ -899,6 +899,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'methods' => ['GET'],
                     'contentComposition' => true,
                     'urlSuffix' => 'html',
+                    'template' => null,
                 ],
             )
         ;
