@@ -423,8 +423,8 @@ abstract class Backend extends Controller
 
 			$do = Input::get('do');
 
-			// Do not render the breadcrumb for files (see #9514)
-			if ($do != 'files' && $do != 'tpl_editor') {
+			// Only render the breadcrumb for DC_Table (see #9514)
+			if (is_a(DC_Table::class, DataContainer::getDriverForTable($strTable), true))  {
 				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
 			}
 
