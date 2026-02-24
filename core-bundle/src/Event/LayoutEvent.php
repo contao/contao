@@ -20,11 +20,14 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class LayoutEvent extends Event
 {
+    /**
+     * @internal
+     */
     public function __construct(
         private readonly LayoutTemplate $template,
         private readonly PageModel $page,
-        private readonly LayoutModel|null $layout = null,
-        private readonly ResponseContext|null $responseContext = null,
+        private readonly LayoutModel|null $layout,
+        private readonly ResponseContext|null $responseContext,
     ) {
     }
 
