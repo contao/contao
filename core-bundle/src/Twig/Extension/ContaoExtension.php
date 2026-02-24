@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
@@ -75,7 +74,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     public function __construct(
         private readonly Environment $environment,
         private readonly ContaoFilesystemLoader $filesystemLoader,
-        ContaoCsrfTokenManager $tokenManager,
         private readonly ContaoVariable $contaoVariable,
         private readonly InspectorNodeVisitor $inspectorNodeVisitor,
     ) {
@@ -94,22 +92,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);
-
-        $this->environment->addGlobal(
-            'request_token',
-            new class($tokenManager) implements \Stringable {
-                public function __construct(private readonly ContaoCsrfTokenManager $tokenManager)
-                {
-                }
-
-                public function __toString(): string
-                {
-                    trigger_deprecation('contao/core-bundle', '5.3', 'The "request_token" Twig variable is deprecated and will no longer work in Contao 6. Use the "contao.request_token" variable instead.');
-
-                    return $this->tokenManager->getDefaultTokenValue();
-                }
-            },
-        );
     }
 
     public function getGlobals(): array

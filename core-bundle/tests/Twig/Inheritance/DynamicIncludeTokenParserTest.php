@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -138,7 +137,6 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment->addExtension(new ContaoExtension(
             $environment,
             $filesystemLoader,
-            $this->createStub(ContaoCsrfTokenManager::class),
             $this->createStub(ContaoVariable::class),
             new InspectorNodeVisitor($this->createStub(Storage::class), $environment),
         ));
