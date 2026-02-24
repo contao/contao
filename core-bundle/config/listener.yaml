@@ -231,7 +231,6 @@ services:
         arguments:
             - '@contao.routing.page_registry'
             - '@security.helper'
-            - '@?event_dispatcher'
 
     contao.listener.data_container.page_url:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUrlListener
