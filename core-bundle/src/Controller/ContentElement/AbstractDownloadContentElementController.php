@@ -85,7 +85,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     {
         $items = array_map(
             fn (FilesystemItem $filesystemItem): array => [
-                'href' => $this->generateDownloadUrl($filesystemItem, $model, $request),
+                'href' => $this->generateDownloadUrl($filesystemItem, $model),
                 'file' => $filesystemItem,
                 'show_file_previews' => $model->showPreview,
                 'file_previews' => $this->getPreviewsForContentModel($filesystemItem, $model),
