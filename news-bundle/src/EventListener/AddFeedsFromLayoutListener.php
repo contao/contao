@@ -55,11 +55,11 @@ class AddFeedsFromLayoutListener
     #[AsEventListener]
     public function onLayoutEvent(LayoutEvent $event): void
     {
-        if (!$responseContext = $event->getResponseContext()) {
+        if (!($layout = $event->getLayout()) || !($responseContext = $event->getResponseContext())) {
             return;
         }
 
-        $this->addFeedsToResponseContext($event->getLayout(), $responseContext);
+        $this->addFeedsToResponseContext($layout, $responseContext);
     }
 
     private function addFeedsToResponseContext(LayoutModel $layout, ResponseContext $responseContext): void
