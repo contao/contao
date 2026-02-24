@@ -1,0 +1,5 @@
+{% if label and app.user.showHelp %}
+    <p{{ attrs().addClass(['tl_help', 'tl_tip', class]) }}>
+        {{ label }}
+    </p>
+{% endif %}

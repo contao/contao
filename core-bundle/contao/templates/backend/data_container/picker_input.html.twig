@@ -1,0 +1,15 @@
+{% if type in ['radio', 'checkbox'] %}
+    {% set input_attributes = attrs()
+        .set('type', type)
+        .set('name', 'picker', type == 'radio')
+        .set('name', 'picker[]', type == 'checkbox')
+        .set('id', "picker_#{id}")
+        .addClass("tl_tree_#{type}")
+        .set('value', value)
+        .set('data-contao--check-all-target', 'input')
+        .set('data-action', 'focus->contao--scroll-offset#store contao--check-all#toggleInput')
+        .set('data-contao--scroll-offset-target', 'scrollTo', selected)
+        .mergeWith(attributes)
+    %}
+    <input{{ input_attributes }}>
+{% endif %}
