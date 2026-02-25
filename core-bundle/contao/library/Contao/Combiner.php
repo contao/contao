@@ -260,45 +260,6 @@ class Combiner extends System
 	}
 
 	/**
-	 * Generates the debug markup.
-	 *
-	 * @param string $strUrl An optional URL to prepend
-	 *
-	 * @return string The debug markup
-	 *
-	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6.
-	 */
-	protected function getDebugMarkup($strUrl)
-	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s::%s()" is deprecated and will no longer work in Contao 6.', __CLASS__, __METHOD__);
-
-		$return = $this->getFileUrls($strUrl);
-
-		foreach ($return as $k=>$v)
-		{
-			$options = StringUtil::resolveFlaggedUrl($v);
-			$return[$k] = $v;
-
-			if ($options->mtime)
-			{
-				$return[$k] .= '?v=' . substr(md5($options->mtime), 0, 8);
-			}
-
-			if ($options->media)
-			{
-				$return[$k] .= '" media="' . $options->media;
-			}
-		}
-
-		if ($this->strMode == self::JS)
-		{
-			return implode('"></script><script src="', $return);
-		}
-
-		return implode('"><link rel="stylesheet" href="', $return);
-	}
-
-	/**
 	 * Generate the combined file and return its path
 	 *
 	 * @param string $strUrl An optional URL to prepend
