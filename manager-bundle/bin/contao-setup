@@ -39,8 +39,8 @@ $kernel = ContaoKernel::fromInput($projectDir, new ArrayInput(['--env' => 'prod'
 $devKernel = ContaoKernel::fromInput($projectDir, new ArrayInput(['--env' => 'dev']));
 
 // Purge the cache in case it is corrupted
-(new Filesystem())->remove($kernel->getCacheDir());
-(new Filesystem())->remove($devKernel->getCacheDir());
+new Filesystem()->remove($kernel->getCacheDir());
+new Filesystem()->remove($devKernel->getCacheDir());
 
 unset($devKernel);
 
