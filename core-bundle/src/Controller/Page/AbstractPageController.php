@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\ContentComposition\ContentComposition;
 use Contao\CoreBundle\Controller\AbstractController;
-use Contao\CoreBundle\Event\RenderPageEvent;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -44,19 +44,14 @@ abstract class AbstractPageController extends AbstractController
 
         $layoutModel = $this->getLayout($pageModel);
 
-        $event = new RenderPageEvent($pageModel, $responseContext, $layoutModel);
-        $this->container->get('event_dispatcher')->dispatch($event);
-
-        if ($response = $event->getResponse()) {
-            return $response;
+        if (!$layoutModel) {
+            throw new NoLayoutSpecifiedException();
         }
 
-        $layoutType = $event->getLayout()?->type;
-
-        return match ($layoutType) {
+        return match ($layoutModel->type) {
             'modern' => $this->handleModernLayout($pageModel, $responseContext),
             'default' => $this->handleDefaultLayout($pageModel, $responseContext),
-            default => throw new \LogicException(\sprintf('Unknown layout type "%s"', $layoutType)),
+            default => throw new \LogicException(\sprintf('Unknown layout type "%s"', $layoutModel->type)),
         };
     }
 

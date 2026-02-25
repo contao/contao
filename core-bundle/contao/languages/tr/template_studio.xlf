@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
+        <target>Kalıp ara…</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
@@ -96,6 +97,29 @@
         <source>Rename the %s variant template</source>
         <target>%s çeşit kalıbının adını değiştirin</target>
       </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.0">
+        <source>Create variant</source>
+        <target>Çeşit oluşturun</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
+        <source>Create a new variant template for the %s legacy content element</source>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
+        <source>Create variant</source>
+        <target>Çeşit oluşturun</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.1">
+        <source>Create a new variant template for the %s front end module</source>
+        <target>%s içerik ön yüz modülü için yeni bir çeşit kalıbı oluşturun</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.0">
+        <source>Create variant</source>
+        <target>Çeşit oluşturun</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>%s yerleşimi için yeni bir çeşit kalıbı oluşturun</target>
+      </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>
         <target>%s kalıbınız oluşturuldu.</target>
@@ -150,11 +174,11 @@
       </trans-unit>
       <trans-unit id="template_studio.dialog.create_variant">
         <source>You are creating a new variant template for %s. Please define a unique name.</source>
-        <target>%s için yeni bir çeşit kalıbı oluşturuyorsunuz. Lütfen eşsiz bir ad verin.</target>
+        <target>%s için yeni bir çeşit kalıbı oluşturuyorsunuz. Lütfen benzersiz bir ad verin.</target>
       </trans-unit>
       <trans-unit id="template_studio.dialog.rename_variant">
         <source>Please define a new unique name for the variant template %s.</source>
-        <target>Lütfen %s çeşit kalıbına yeni bir eşsiz ad verin.</target>
+        <target>Lütfen %s çeşit kalıbına yeni bir benzersiz ad verin.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.legacy_pair">
         <source>The %identifier% template is provided in two formats. When making adjustments, prefer the Twig format to stay compatible with Contao 6.</source>

@@ -39,6 +39,7 @@ class ContentCompositionBuilderTest extends TestCase
             $GLOBALS['TL_BODY'],
             $GLOBALS['TL_STYLE_SHEETS'],
             $GLOBALS['TL_CSS'],
+            $GLOBALS['TL_JAVASCRIPT'],
             $GLOBALS['objPage'],
         );
 
@@ -191,6 +192,7 @@ class ContentCompositionBuilderTest extends TestCase
         $GLOBALS['TL_BODY'][] = '<script>/* additional script */</script>';
         $GLOBALS['TL_STYLE_SHEETS'][] = '<link rel="stylesheet" href="additional_stylesheet.css">';
         $GLOBALS['TL_CSS'][] = 'additional_stylesheet_filename.css|123';
+        $GLOBALS['TL_JAVASCRIPT'][] = 'additional_javascript_filename.js|123|async|defer';
 
         $parameters = $this
             ->getContentCompositionBuilder()
@@ -203,6 +205,7 @@ class ContentCompositionBuilderTest extends TestCase
             'head' => $htmlHeadBag,
             'end_of_head' => [
                 '<link rel="stylesheet" href="https://static-url/additional_stylesheet_filename.css?v=202cb962">',
+                '<script src="https://static-url/additional_javascript_filename.js?v=202cb962" async defer></script>',
                 '<link rel="stylesheet" href="additional_stylesheet.css">',
                 '<meta content="additional-tag">',
             ],
