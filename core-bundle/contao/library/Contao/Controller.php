@@ -264,13 +264,6 @@ abstract class Controller extends System
 			{
 				$strArticle = Input::get('articles');
 
-				if (str_contains($strArticle, ':'))
-				{
-					trigger_deprecation('contao/core-bundle', '5.3', 'Passing the column of an article in the URL is deprecated. Only provide the article alias instead.');
-
-					list(, $strArticle) = explode(':', Input::get('articles'));
-				}
-
 				$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
 
 				// Send a 404 header if there is no published article
