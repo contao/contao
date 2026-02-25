@@ -39,7 +39,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
             ],
         ];
 
-        $frontendTemplate = new \ReflectionClass(FrontendTemplate::class)->newInstanceWithoutConstructor();
+        $frontendTemplate = (new \ReflectionClass(FrontendTemplate::class))->newInstanceWithoutConstructor();
         $frontendTemplate->setData($defaultData);
 
         $twig = $this->createMock(Environment::class);
@@ -93,7 +93,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
             ],
         ];
 
-        $frontendTemplate = new \ReflectionClass(FrontendTemplate::class)->newInstanceWithoutConstructor();
+        $frontendTemplate = (new \ReflectionClass(FrontendTemplate::class))->newInstanceWithoutConstructor();
         $frontendTemplate->setData($defaultData);
 
         $twig = $this->createMock(Environment::class);
