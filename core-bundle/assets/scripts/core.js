@@ -715,27 +715,6 @@ window.Backend =
 	},
 
 	/**
-	 * Toggle checkboxes
-	 *
-	 * @param {object} el   The DOM element
-	 * @param {string} [id] The ID of the target element
-	 */
-	toggleCheckboxes: function(el, id) {
-		var items = $$('input'),
-			status = $(el).checked ? 'checked' : '';
-
-		for (var i=0; i<items.length; i++) {
-			if (items[i].type.toLowerCase() != 'checkbox') {
-				continue;
-			}
-			if (id !== undefined && id != items[i].id.substr(0, id.length)) {
-				continue;
-			}
-			items[i].checked = status;
-		}
-	},
-
-	/**
 	 * Enable drag and drop for the file tree
 	 *
 	 * @param {object} ul      The DOM element
