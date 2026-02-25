@@ -736,32 +736,6 @@ window.Backend =
 	},
 
 	/**
-	 * Toggle a checkbox group
-	 *
-	 * @param {object} el The DOM element
-	 * @param {string} id The ID of the target element
-	 */
-	toggleCheckboxGroup: function(el, id) {
-		console.warn('Backend.toggleCheckboxGroup() is deprecated. Please use the Stimulus controllers instead.');
-
-		var cls = $(el).className,
-			status = $(el).checked ? 'checked' : '';
-
-		if (cls == 'tl_checkbox') {
-			var cbx = $(id) ? $$('#' + id + ' .tl_checkbox') : $(el).getParent('fieldset').getElements('.tl_checkbox');
-			cbx.each(function(checkbox) {
-				checkbox.checked = status;
-			});
-		} else if (cls == 'tl_tree_checkbox') {
-			$$('#' + id + ' .parent .tl_tree_checkbox').each(function(checkbox) {
-				checkbox.checked = status;
-			});
-		}
-
-		window.dispatchEvent(new Event('store-scroll-offset'));
-	},
-
-	/**
 	 * Enable drag and drop for the file tree
 	 *
 	 * @param {object} ul      The DOM element
