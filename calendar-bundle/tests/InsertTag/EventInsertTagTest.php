@@ -14,7 +14,6 @@ namespace Contao\CalendarBundle\Tests\InsertTag;
 
 use Contao\CalendarBundle\InsertTag\EventInsertTag;
 use Contao\CalendarEventsModel;
-use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
