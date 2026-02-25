@@ -9,7 +9,6 @@
  */
 
 use Contao\CalendarEventsModel;
-use Contao\CalendarFeedModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Controller\Backend\CsvImportController;
 use Contao\ModuleCalendar;
@@ -47,5 +46,4 @@ $GLOBALS['TL_PERMISSIONS'][] = 'calendars';
 
 // Models
 $GLOBALS['TL_MODELS']['tl_calendar_events'] = CalendarEventsModel::class;
-$GLOBALS['TL_MODELS']['tl_calendar_feed'] = CalendarFeedModel::class;
 $GLOBALS['TL_MODELS']['tl_calendar'] = CalendarModel::class;

@@ -37,9 +37,6 @@ class BasicEntitiesMigration extends AbstractBasicEntitiesMigration
             ['tl_calendar_events', 'description'],
             ['tl_calendar_events', 'pageTitle'],
 
-            ['tl_calendar_feed', 'title'],
-            ['tl_calendar_feed', 'description'],
-
             ['tl_comments', 'comment'],
 
             ['tl_content', 'headline'],

@@ -29,13 +29,6 @@ type = XLIFF
 source_lang = en
 resource_name = v5_7-tl_calendar_events
 
-[o:contao:p:calendar-bundle:r:v5_7-tl_calendar_feed]
-file_filter = contao/languages/<lang>/tl_calendar_feed.xlf
-source_file = contao/languages/en/tl_calendar_feed.xlf
-type = XLIFF
-source_lang = en
-resource_name = v5_7-tl_calendar_feed
-
 [o:contao:p:calendar-bundle:r:v5_7-tl_layout]
 file_filter = contao/languages/<lang>/tl_layout.xlf
 source_file = contao/languages/en/tl_layout.xlf

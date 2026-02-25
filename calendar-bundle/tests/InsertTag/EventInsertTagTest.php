@@ -14,8 +14,6 @@ namespace Contao\CalendarBundle\Tests\InsertTag;
 
 use Contao\CalendarBundle\InsertTag\EventInsertTag;
 use Contao\CalendarEventsModel;
-use Contao\CalendarFeedModel;
-use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
@@ -26,25 +24,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class EventInsertTagTest extends ContaoTestCase
 {
-    public function testReplacesTheCalendarFeedTag(): void
-    {
-        $feedModel = $this->createClassWithPropertiesStub(CalendarFeedModel::class);
-        $feedModel->feedBase = 'http://localhost/';
-        $feedModel->alias = 'events';
-
-        $adapters = [
-            CalendarFeedModel::class => $this->createConfiguredAdapterStub(['findById' => $feedModel]),
-        ];
-
-        $framework = $this->createContaoFrameworkStub($adapters);
-        $urlGenerator = $this->createStub(ContentUrlGenerator::class);
-
-        $listener = new EventInsertTag($framework, $urlGenerator);
-        $url = $listener(new ResolvedInsertTag('calendar_feed', new ResolvedParameters(['2']), []));
-
-        $this->assertEquals(new InsertTagResult('http://localhost/share/events.xml', OutputType::url), $url);
-    }
-
     #[DataProvider('replacesTheEventTagsProvider')]
     public function testReplacesTheEventTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
@@ -186,13 +165,11 @@ class EventInsertTagTest extends ContaoTestCase
     {
         $adapters = [
             CalendarEventsModel::class => $this->createConfiguredAdapterStub(['findByIdOrAlias' => null]),
-            CalendarFeedModel::class => $this->createConfiguredAdapterStub(['findById' => null]),
         ];
 
         $urlGenerator = $this->createStub(ContentUrlGenerator::class);
         $listener = new EventInsertTag($this->createContaoFrameworkStub($adapters), $urlGenerator);
 
-        $this->assertSame('', $listener(new ResolvedInsertTag('calendar_feed', new ResolvedParameters(['3']), []))->getValue());
         $this->assertSame('', $listener(new ResolvedInsertTag('event_url', new ResolvedParameters(['3']), []))->getValue());
     }
 }
