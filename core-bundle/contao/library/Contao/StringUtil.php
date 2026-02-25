@@ -1151,8 +1151,6 @@ class StringUtil
 	 */
 	public static function ampersand($strString, $blnEncode=true): string
 	{
-		trigger_deprecation('contao/core-bundle', '6.0', \sprintf('Using "%s" is deprecated and will be removed in Contao 7.', __METHOD__));
-
 		return preg_replace('/&(amp;)?/i', $blnEncode ? '&amp;' : '&', $strString);
 	}
 
