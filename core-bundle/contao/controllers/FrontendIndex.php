@@ -55,6 +55,7 @@ class FrontendIndex extends Frontend
 			$GLOBALS['TL_JQUERY'] ?? array(),
 			$GLOBALS['TL_USER_CSS'] ?? array(),
 			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array(),
+			$GLOBALS['TL_JAVASCRIPT'] ?? array(),
 			System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext()
 		);
 
@@ -65,9 +66,7 @@ class FrontendIndex extends Frontend
 
 			return $objHandler->getResponse($objPage, true);
 		}
-
-		// Render the error page (see #5570)
-		catch (UnusedArgumentsException $e)
+		finally
 		{
 			// Restore the globals (see #7659)
 			list(
@@ -77,12 +76,11 @@ class FrontendIndex extends Frontend
 				$GLOBALS['TL_JQUERY'],
 				$GLOBALS['TL_USER_CSS'],
 				$GLOBALS['TL_FRAMEWORK_CSS'],
+				$GLOBALS['TL_JAVASCRIPT'],
 				$responseContext
 			) = $arrBackup;
 
 			System::getContainer()->get('contao.routing.response_context_accessor')->setResponseContext($responseContext);
-
-			throw $e;
 		}
 	}
 }
