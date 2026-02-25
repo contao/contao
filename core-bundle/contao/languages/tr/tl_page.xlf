@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias.1">
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
-        <target>Sayfa kısaltması sayfanın sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Sayfa kısaltması sayfanın sayısal kimliği olarak kullanılacak benzersiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
@@ -655,6 +655,7 @@
       </trans-unit>
       <trans-unit id="tl_page.versions.1">
         <source>Show the versions of page ID %s</source>
+        <target>%s kimlikli sayfanın sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>

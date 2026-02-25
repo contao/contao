@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
@@ -39,6 +40,7 @@ class ContentComposition
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
         private readonly PageRegistry $pageRegistry,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -53,6 +55,7 @@ class ContentComposition
             $this->defaultRenderer,
             $this->requestStack,
             $this->translator,
+            $this->eventDispatcher,
             $page,
         );
 

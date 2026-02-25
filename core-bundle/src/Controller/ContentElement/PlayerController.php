@@ -55,7 +55,7 @@ class PlayerController extends AbstractContentElementController
         // Find and order source files
         $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->playerSRC ?: '');
 
-        if (!$sourceFiles = $this->getSourceFiles($filesystemItems)) {
+        if (!$sourceFiles = $this->getSourceFiles($model, $filesystemItems)) {
             return new Response();
         }
 
@@ -119,7 +119,13 @@ class PlayerController extends AbstractContentElementController
             $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC);
 
             foreach ($trackItems as $trackItem) {
-                if (!$publicUri = $this->filesStorage->generatePublicUri($trackItem->getPath())) {
+                $publicUri = $this->generatePublicUriWithTemporaryAccess(
+                    $this->filesStorage,
+                    $trackItem,
+                    ['id' => $model->id, 'tstamp' => $model->tstamp],
+                );
+
+                if (!$publicUri) {
                     continue;
                 }
 
@@ -217,13 +223,19 @@ class PlayerController extends AbstractContentElementController
     /**
      * @return list<FilesystemItem>
      */
-    private function getSourceFiles(FilesystemItemIterator $filesystemItems): array
+    private function getSourceFiles(ContentModel $model, FilesystemItemIterator $filesystemItems): array
     {
         $filesystemItems = $filesystemItems->sort(SortMode::mediaTypePriority);
         $items = [];
 
         foreach ($filesystemItems as $item) {
-            if (!$publicUri = $this->filesStorage->generatePublicUri($item->getPath())) {
+            $publicUri = $this->generatePublicUriWithTemporaryAccess(
+                $this->filesStorage,
+                $item,
+                ['id' => $model->id, 'tstamp' => $model->tstamp],
+            );
+
+            if (!$publicUri) {
                 continue;
             }
 

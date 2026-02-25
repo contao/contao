@@ -1907,6 +1907,7 @@
       </trans-unit>
       <trans-unit id="MSC.noResultWithFilter">
         <source>No records match the current filter settings.</source>
+        <target>Geçerli süzgeç ayarlarına uyan bir kayıt bulunamadı.</target>
       </trans-unit>
       <trans-unit id="MSC.searchExclude">
         <source>Unsynchronized directories are not included in the search results.</source>
@@ -2090,7 +2091,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileUuid">
         <source>Unique ID</source>
-        <target>Eşsiz kimlik</target>
+        <target>Benzersiz kimlik</target>
       </trans-unit>
       <trans-unit id="MSC.fileImageSize">
         <source>Width/height in pixel</source>
