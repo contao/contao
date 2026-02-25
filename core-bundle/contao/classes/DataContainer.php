@@ -753,26 +753,6 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * Generate possible palette names from an array by taking the first value and either adding or not adding the following values
-	 *
-	 * @param array $names
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
-	 *             use the "contao.data_container.palette_builder" service instead.
-	 */
-	protected function combiner($names)
-	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
-
-		return System::getContainer()
-			->get('contao.data_container.palette_builder')
-			->combiner($names)
-		;
-	}
-
-	/**
 	 * Return a query string that switches into edit mode
 	 *
 	 * @param integer $id
