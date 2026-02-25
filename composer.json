@@ -167,6 +167,7 @@
         "toflar/cronjob-supervisor": "^2.0",
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
+        "twig/intl-extra": "^3.10",
         "twig/string-extra": "^3.0",
         "twig/twig": "^3.10.2",
         "ua-parser/uap-php": "^3.9",
