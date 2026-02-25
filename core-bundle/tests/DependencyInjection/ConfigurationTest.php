@@ -221,15 +221,6 @@ class ConfigurationTest extends TestCase
         yield [ResizeConfiguration::MODE_BOX];
         yield [ResizeConfiguration::MODE_PROPORTIONAL];
         yield [ResizeConfiguration::MODE_CROP];
-        yield ['left_top'];
-        yield ['center_top'];
-        yield ['right_top'];
-        yield ['left_center'];
-        yield ['center_center'];
-        yield ['right_center'];
-        yield ['left_bottom'];
-        yield ['center_bottom'];
-        yield ['right_bottom'];
     }
 
     public function testDeniesInvalidCrawlUris(): void
