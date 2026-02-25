@@ -403,7 +403,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'referer':
-                        $result = Controller::getReferer(true);
+                        $result = Controller::getReferer();
                         break;
 
                     case 'files_url':

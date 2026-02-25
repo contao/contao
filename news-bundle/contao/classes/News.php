@@ -48,7 +48,7 @@ class News extends Frontend
 		}
 		catch (ExceptionInterface)
 		{
-			return StringUtil::ampersand(Environment::get('requestUri'));
+			return Environment::get('requestUri');
 		}
 
 		return $url;
