@@ -24,6 +24,8 @@ class Calendar extends Frontend
 	/**
 	 * Current events
 	 * @var array
+	 *
+	 * @deprecated Deprecated sind Contao 5.7, to be removed in Contao 6
 	 */
 	protected $arrEvents = array();
 
@@ -129,6 +131,9 @@ class Calendar extends Frontend
 	 * Generate an XML file and save it to the root directory
 	 *
 	 * @param array $arrFeed
+	 *
+	 * @deprecated Deprecated sind Contao 5.7, to be removed in Contao 6;
+	 *             use the "calendar_feed" page instead
 	 */
 	protected function generateFiles($arrFeed)
 	{
