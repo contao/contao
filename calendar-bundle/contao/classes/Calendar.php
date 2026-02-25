@@ -16,6 +16,27 @@ namespace Contao;
 class Calendar extends Frontend
 {
 	/**
+	 * Current events
+	 * @var array
+	 *
+	 * @deprecated Deprecated sind Contao 6.0, to be removed in Contao 7;
+	 */
+	protected $arrEvents = array();
+
+	/**
+	 * Generate an XML file and save it to the root directory
+	 *
+	 * @param array $arrFeed
+	 *
+	 * @deprecated Deprecated sind Contao 6.0, to be removed in Contao 7;
+	 *             use the "calendar_feed" page instead
+	 */
+	protected function generateFiles($arrFeed)
+	{
+		trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use the "calendar_feed" page instead.', __METHOD__);
+	}
+
+	/**
 	 * Calculate the span between two timestamps in days
 	 *
 	 * @param integer $intStart

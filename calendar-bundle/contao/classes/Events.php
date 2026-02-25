@@ -27,6 +27,22 @@ abstract class Events extends Module
 	protected $strUrl;
 
 	/**
+	 * Today 00:00:00
+	 * @var string
+	 *
+	 * @deprecated Deprecated sind Contao 6.0, to be removed in Contao 7;
+	 */
+	protected $intTodayBegin;
+
+	/**
+	 * Today 23:59:59
+	 * @var string
+	 *
+	 * @deprecated Deprecated sind Contao 6.0, to be removed in Contao 7;
+	 */
+	protected $intTodayEnd;
+
+	/**
 	 * Current events
 	 * @var array
 	 */
