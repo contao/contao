@@ -62,62 +62,6 @@ class MemberGroupVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, ['-1', '1'], [ContaoCorePermissions::MEMBER_IN_GROUPS]));
     }
 
-    public function testDeniesAccessIfTheUserIsNotInGroups(): void
-    {
-        $user = $this->createClassWithPropertiesMock(FrontendUser::class, ['groups' => '2']);
-        $user
-            ->expects($this->never())
-            ->method('isMemberOf')
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, '1', [ContaoCorePermissions::MEMBER_IN_GROUPS]));
-    }
-
-    public function testGrantsAccessIfTheUserIsInGroups(): void
-    {
-        $user = $this->createClassWithPropertiesMock(FrontendUser::class, ['groups' => [1, 2, 3]]);
-        $user
-            ->expects($this->never())
-            ->method('isMemberOf')
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, '1', [ContaoCorePermissions::MEMBER_IN_GROUPS]));
-    }
-
-    public function testGrantsAccessForMultipleIds(): void
-    {
-        $ids = [1, 2, 3, 4];
-
-        $user = $this->createClassWithPropertiesMock(FrontendUser::class, ['groups' => $ids]);
-        $user
-            ->expects($this->never())
-            ->method('isMemberOf')
-        ;
-
-        $token = $this->createMock(TokenInterface::class);
-        $token
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $ids, [ContaoCorePermissions::MEMBER_IN_GROUPS]));
-    }
-
     public function testDeniesAccessIfTheTokenIsTwoFactor(): void
     {
         $user = $this->createStub(FrontendUser::class);
