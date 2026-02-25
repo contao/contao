@@ -435,6 +435,13 @@ services:
             - '@translator'
             - '@contao.framework'
 
+    contao.listener.legacy_route_parameters:
+        class: Contao\CoreBundle\EventListener\LegacyRouteParametersListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@contao.framework'
+            - '@contao.routing.response_context_accessor'
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
