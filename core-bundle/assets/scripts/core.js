@@ -700,21 +700,6 @@ window.Backend =
 	},
 
 	/**
-	 * Scroll the window to a certain vertical position
-	 *
-	 * @param {int} offset The offset to scroll to
-	 */
-	vScrollTo: function(offset) {
-		if (window.console) {
-			console.warn('Backend.vScrollTo() is deprecated. Please use the Stimulus controller instead.');
-		}
-
-		window.addEvent('load', function() {
-			window.scrollTo(null, parseInt(offset));
-		});
-	},
-
-	/**
 	 * Enable drag and drop for the file tree
 	 *
 	 * @param {object} ul      The DOM element
