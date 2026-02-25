@@ -41,7 +41,6 @@ use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\StringUtil;
-use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
@@ -137,14 +136,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'figure',
                 [FigureRuntime::class, 'buildFigure'],
-            ),
-            new TwigFunction(
-                'contao_figure',
-                [FigureRuntime::class, 'renderFigure'],
-                [
-                    'is_safe' => ['html'],
-                    'deprecation_info' => new DeprecatedCallableInfo('contao/core-bundle', '5.0', 'figure'),
-                ],
             ),
             new TwigFunction(
                 'picture_config',
