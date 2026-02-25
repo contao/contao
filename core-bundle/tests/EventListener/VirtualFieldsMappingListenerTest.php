@@ -36,7 +36,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             'palettes' => ['default' => 'foobar'],
         ];
 
-        (new VirtualFieldsMappingListener())('tl_foobar');
+        new VirtualFieldsMappingListener()('tl_foobar');
 
         $this->assertSame($expected, $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
@@ -134,7 +134,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             'palettes' => ['default' => 'foobar'],
         ];
 
-        (new VirtualFieldsMappingListener())('tl_foobar');
+        new VirtualFieldsMappingListener()('tl_foobar');
 
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
@@ -156,7 +156,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             ],
         ];
 
-        (new VirtualFieldsMappingListener())('tl_foobar');
+        new VirtualFieldsMappingListener()('tl_foobar');
 
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
@@ -200,7 +200,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             ->willReturn($classMetaDataFactory)
         ;
 
-        (new VirtualFieldsMappingListener($entityManager))('tl_foobar');
+        new VirtualFieldsMappingListener($entityManager)('tl_foobar');
 
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
@@ -222,7 +222,7 @@ class VirtualFieldsMappingListenerTest extends TestCase
             'palettes' => ['default' => 'foobar'],
         ];
 
-        (new VirtualFieldsMappingListener())('tl_foobar');
+        new VirtualFieldsMappingListener()('tl_foobar');
 
         $this->assertSame(['foobar' => ['inputType' => 'text']], $GLOBALS['TL_DCA']['tl_foobar']['fields']);
 
