@@ -56,6 +56,7 @@ class FrontendIndex extends Frontend
 			$GLOBALS['TL_USER_CSS'] ?? array(),
 			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array(),
 			$GLOBALS['TL_JAVASCRIPT'] ?? array(),
+			$GLOBALS['TL_CSS'] ?? array(),
 			System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext()
 		);
 
@@ -77,6 +78,7 @@ class FrontendIndex extends Frontend
 				$GLOBALS['TL_USER_CSS'],
 				$GLOBALS['TL_FRAMEWORK_CSS'],
 				$GLOBALS['TL_JAVASCRIPT'],
+				$GLOBALS['TL_CSS'],
 				$responseContext
 			) = $arrBackup;
 
