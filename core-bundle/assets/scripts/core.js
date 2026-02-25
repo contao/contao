@@ -762,24 +762,6 @@ window.Backend =
 	},
 
 	/**
-	 * Toggle checkbox elements
-	 *
-	 * @param {string} el  The DOM element
-	 * @param {string} cls The CSS class name
-	 */
-	toggleCheckboxElements: function(el, cls) {
-		var status = $(el).checked ? 'checked' : '';
-
-		$$('.' + cls).each(function(checkbox) {
-			if (checkbox.hasClass('tl_checkbox')) {
-				checkbox.checked = status;
-			}
-		});
-
-		window.dispatchEvent(new Event('store-scroll-offset'));
-	},
-
-	/**
 	 * Enable drag and drop for the file tree
 	 *
 	 * @param {object} ul      The DOM element
