@@ -105,7 +105,7 @@ class TemplateTest extends TestCase
 
             public function parse(): string
             {
-                return $this->testBuffer;
+                return System::getContainer()->get('contao.insert_tag.parser')->replace($this->testBuffer);
             }
 
             public function testCompile(): string
