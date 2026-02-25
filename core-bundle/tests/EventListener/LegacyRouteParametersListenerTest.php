@@ -37,6 +37,7 @@ class LegacyRouteParametersListenerTest extends TestCase
             $GLOBALS['TL_JQUERY'],
             $GLOBALS['TL_USER_CSS'],
             $GLOBALS['TL_FRAMEWORK_CSS'],
+            $GLOBALS['TL_JAVASCRIPT'],
         );
 
         parent::tearDown();
@@ -65,7 +66,7 @@ class LegacyRouteParametersListenerTest extends TestCase
             ->method('getAdapter')
         ;
 
-        $listener = new LegacyRouteParametersListener($scopeMatcher, $framework, $this->createStub(ResponseContextAccessor::class));
+        $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
         $listener->onResponse($event);
     }
 
@@ -106,7 +107,7 @@ class LegacyRouteParametersListenerTest extends TestCase
             ->willReturn($inputAdapter)
         ;
 
-        $listener = new LegacyRouteParametersListener($scopeMatcher, $framework, $this->createStub(ResponseContextAccessor::class));
+        $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
         $listener->onResponse($event);
     }
 
@@ -162,14 +163,7 @@ class LegacyRouteParametersListenerTest extends TestCase
             ->willReturn($inputAdapter)
         ;
 
-        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
-        $responseContextAccessor
-            ->expects($this->once())
-            ->method('setResponseContext')
-            ->with(null)
-        ;
-
-        $listener = new LegacyRouteParametersListener($scopeMatcher, $framework, $responseContextAccessor);
+        $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
         $listener->onRequest($requestEvent);
         $listener->onResponse($responseEvent);
     }

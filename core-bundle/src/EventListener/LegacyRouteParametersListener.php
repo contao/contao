@@ -33,7 +33,6 @@ class LegacyRouteParametersListener
     public function __construct(
         private readonly ScopeMatcher $scopeMatcher,
         private readonly ContaoFramework $framework,
-        private readonly ResponseContextAccessor $responseContextAccessor,
     ) {
     }
 
@@ -52,6 +51,7 @@ class LegacyRouteParametersListener
             $GLOBALS['TL_JQUERY'] ?? [],
             $GLOBALS['TL_USER_CSS'] ?? [],
             $GLOBALS['TL_FRAMEWORK_CSS'] ?? [],
+            $GLOBALS['TL_JAVASCRIPT'] ?? [],
         ];
     }
 
@@ -76,12 +76,10 @@ class LegacyRouteParametersListener
                 $GLOBALS['TL_JQUERY'],
                 $GLOBALS['TL_USER_CSS'],
                 $GLOBALS['TL_FRAMEWORK_CSS'],
+                $GLOBALS['TL_JAVASCRIPT'],
             ] = $this->globalsBackup;
 
             $this->globalsBackup = [];
-
-            // Reset the response context
-            $this->responseContextAccessor->setResponseContext(null);
 
             throw new UnusedArgumentsException(\sprintf('Unused arguments: %s', implode(', ', $unused)));
         }
