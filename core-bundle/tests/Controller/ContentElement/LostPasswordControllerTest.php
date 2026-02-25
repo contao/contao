@@ -167,7 +167,7 @@ class LostPasswordControllerTest extends ContentElementTestCase
     }
 
     #[DataProvider('getOptInTokenAndMemberData')]
-    public function testOptInTokenAndMemberVariants(bool $isTokenValid, bool $isTokenConfirmed, bool $hasMember, array $optInData, string $email, int $expected,): void
+    public function testOptInTokenAndMemberVariants(bool $isTokenValid, bool $isTokenConfirmed, bool $hasMember, array $optInData, string $email, int $expected): void
     {
         $member = $this->createClassWithPropertiesStub(MemberModel::class);
         $member->id = 1;
