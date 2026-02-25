@@ -211,15 +211,7 @@ class ResultTest extends TestCase
      */
     private function createResults(array $data): array
     {
-        /** @phpstan-ignore classConstant.internalClass */
-        $reflection = new \ReflectionClass(ArrayResult::class);
-
-        if (\count($reflection->getConstructor()->getParameters()) > 1) {
-            $result = new ArrayResult(array_keys($data[0] ?? []), array_map(array_values(...), $data));
-        } else {
-            /** @phpstan-ignore arguments.count, argument.type */
-            $result = new ArrayResult($data);
-        }
+        $result = new ArrayResult(array_keys($data[0] ?? []), $data);
 
         return [
             new Result(

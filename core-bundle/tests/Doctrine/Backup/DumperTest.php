@@ -358,18 +358,8 @@ class DumperTest extends ContaoTestCase
 
         $calls = [];
 
-        /** @phpstan-ignore classConstant.internalClass */
-        $reflection = new \ReflectionClass(ArrayResult::class);
-        $dbal41 = \count($reflection->getConstructor()->getParameters()) > 1;
-
         foreach ($queries as $query => $results) {
-            if ($dbal41) {
-                $result = new ArrayResult(array_keys($results[0] ?? []), $results);
-            } else {
-                /** @phpstan-ignore arguments.count */
-                $result = new ArrayResult($results);
-            }
-
+            $result = new ArrayResult(array_keys($results[0] ?? []), $results);
             $calls[] = [$query, [], [], null, new Result($result, $connection)];
         }
 
