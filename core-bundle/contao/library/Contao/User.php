@@ -272,38 +272,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * Return true if the user is member of a particular group
-	 *
-	 * @param mixed $ids A single group ID or an array of group IDs
-	 *
-	 * @return boolean True if the user is a member of the group
-	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
-	 */
-	public function isMemberOf($ids)
-	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
-
-		// Filter non-numeric values
-		$ids = array_filter((array) $ids, static function ($val) { return (string) (int) $val === (string) $val; });
-
-		if (empty($ids))
-		{
-			return false;
-		}
-
-		$groups = StringUtil::deserialize($this->groups, true);
-
-		// No groups assigned
-		if (empty($groups))
-		{
-			return false;
-		}
-
-		return \count(array_intersect($ids, $groups)) > 0;
-	}
-
-	/**
 	 * Set all user properties from a database record
 	 */
 	abstract protected function setUserFromDb();
