@@ -215,7 +215,7 @@ class ResultTest extends TestCase
             array_keys($data[0] ?? []),
             // Remove all keys because ArrayResult incorrectly expects list<list<mixed>> even
             // though it handles list<array<mixed>> just fine as well.
-            array_values(array_map(array_values(...), $data)),
+            array_map(array_values(...), $data),
         );
 
         return [
