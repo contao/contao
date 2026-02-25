@@ -66,7 +66,7 @@ class FrontendIndex extends Frontend
 
 			return $objHandler->getResponse($objPage, true);
 		}
-		finally
+		catch (\Throwable $e)
 		{
 			// Restore the globals (see #7659)
 			list(
@@ -81,6 +81,8 @@ class FrontendIndex extends Frontend
 			) = $arrBackup;
 
 			System::getContainer()->get('contao.routing.response_context_accessor')->setResponseContext($responseContext);
+
+			throw $e;
 		}
 	}
 }
