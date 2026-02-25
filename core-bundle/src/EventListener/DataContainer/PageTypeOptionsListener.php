@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
@@ -38,6 +39,13 @@ class PageTypeOptionsListener
 
         if ('tl_user' === $dc->table || 'tl_user_group' === $dc->table) {
             return array_values($options);
+        }
+
+        if ($this->eventDispatcher) {
+            $options = $this->eventDispatcher
+                ->dispatch(new FilterPageTypeEvent($options, $dc))
+                ->getOptions()
+            ;
         }
 
         // Return if there is no current page, e.g. in the help wizard (see #7137)

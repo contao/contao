@@ -38,3 +38,8 @@ events:
         return_type: void
         arguments:
             event: Contao\CoreBundle\Event\SlugValidCharactersEvent
+
+    Contao\CoreBundle\Event\FilterPageTypeEvent:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\FilterPageTypeEvent
