@@ -17,8 +17,10 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\FrontendIndex;
+use Contao\Input;
 use Contao\LayoutModel;
 use Contao\PageModel;
+use Contao\UnusedArgumentsException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,9 +47,17 @@ class RegularPageControllerTest extends TestCase
             ->willReturn(new Response('<alternative content>'))
         ;
 
+        $inputAdapter = $this->createAdapterMock(['getUnusedRouteParameters']);
+        $inputAdapter
+            ->expects($this->once())
+            ->method('getUnusedRouteParameters')
+            ->willReturn([])
+        ;
+
         $framework = $this->createContaoFrameworkStub(
             [
                 LayoutModel::class => $layoutAdapter,
+                Input::class => $inputAdapter,
             ],
             [
                 FrontendIndex::class => $frontendIndex,
@@ -108,6 +118,18 @@ class RegularPageControllerTest extends TestCase
         $this->assertSame($response, $finalizedResponse);
     }
 
+    public function testThrowsUnusedArgumentsException(): void
+    {
+        $this->expectException(UnusedArgumentsException::class);
+        $this->expectExceptionMessage('Unused arguments: foo');
+
+        $page = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 1]);
+
+        $controller = $this->getRegularPageController(unusedRouteParams: ['foo']);
+
+        $controller($page);
+    }
+
     public static function providePageCacheSettings(): iterable
     {
         yield 'disabled' => [
@@ -126,7 +148,7 @@ class RegularPageControllerTest extends TestCase
         ];
     }
 
-    private function getRegularPageController(ContaoFramework|null $framework = null, ContentComposition|null $contentComposition = null, CoreResponseContextFactory|null $responseContextFactory = null, ResponseContextAccessor|null $responseContextAccessor = null): RegularPageController
+    private function getRegularPageController(ContaoFramework|null $framework = null, ContentComposition|null $contentComposition = null, CoreResponseContextFactory|null $responseContextFactory = null, ResponseContextAccessor|null $responseContextAccessor = null, array $unusedRouteParams = []): RegularPageController
     {
         if (!$framework) {
             $layoutAdapter = $this->createAdapterStub(['findById']);
@@ -135,8 +157,16 @@ class RegularPageControllerTest extends TestCase
                 ->willReturn($this->createClassWithPropertiesStub(LayoutModel::class, ['type' => 'modern']))
             ;
 
+            $inputAdapter = $this->createAdapterMock(['getUnusedRouteParameters']);
+            $inputAdapter
+                ->expects($this->once())
+                ->method('getUnusedRouteParameters')
+                ->willReturn($unusedRouteParams)
+            ;
+
             $framework = $this->createContaoFrameworkStub([
                 LayoutModel::class => $layoutAdapter,
+                Input::class => $inputAdapter,
             ]);
         }
 
