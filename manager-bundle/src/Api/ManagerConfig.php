@@ -21,7 +21,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ManagerConfig
 {
-    private string $configFile;
+    private readonly string $configFile;
 
     private readonly Filesystem $filesystem;
 
