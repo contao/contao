@@ -133,7 +133,7 @@ class LostPasswordController extends AbstractChangePasswordContentElementControl
     {
         $optInToken = $this->optIn->find($request->query->get('token'));
 
-        if (!$optInToken || $optInToken->isValid()) {
+        if (!$optInToken || !$optInToken->isValid()) {
             return $this->getErrorTemplateFoType('invalidToken');
         }
 

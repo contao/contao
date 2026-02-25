@@ -18,6 +18,7 @@ use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\LostPasswordController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\OptIn\OptInToken;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\String\SimpleTokenParser;
@@ -160,6 +161,50 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
+    }
+
+    public function testReturnsWithInvalidToken(): void
+    {
+        $member = $this->createClassWithPropertiesStub(MemberModel::class);
+
+        $container = $this->getContainerWithFrameworkTemplate($member);
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member));
+
+        $optInToken = $this->createMock(OptInToken::class);
+        $optInToken
+            ->expects($this->once())
+            ->method('isValid')
+            ->willReturn(false)
+        ;
+
+        $optInToken
+            ->expects($this->never())
+            ->method('getRelatedRecords')
+        ;
+
+        $optIn = $this->createMock(OptIn::class);
+        $optIn
+            ->expects($this->once())
+            ->method('find')
+            ->willReturn($optInToken)
+        ;
+
+        $controller = new LostPasswordController(
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(RateLimiterFactoryInterface::class),
+            $optIn,
+            $this->createStub(SimpleTokenParser::class),
+            $this->createStub(LoggerInterface::class),
+        );
+        $controller->setContainer($container);
+
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
+        $request = new Request();
+        $request->query->set('token', 'pw-notasecrettoken');
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**
