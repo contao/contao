@@ -414,7 +414,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $expectedChains = [
             'text' => [
                 $themePath = Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
-                $globalPath = Path::join($projectDir, 'templates/text.html.twig') => '@Contao_User/text.html.twig',
+                $userPath = Path::join($projectDir, 'templates/text.html.twig') => '@Contao_User/text.html.twig',
                 $appPath = Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
                 $barPath = Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
                 $fooPath = Path::join($projectDir, 'system/modules/foo/templates/any/text.html.twig') => '@Contao_foo/text.html.twig',
@@ -450,25 +450,25 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame(
             '@Contao_User/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $themePath, 'my_theme'),
-            'chain: theme -> global',
+            'chain: theme -> user',
         );
 
         $this->assertSame(
             '@Contao_User/text.html.twig',
             $loader->getDynamicParent('text.html.twig', 'other/template.html.twig'),
-            'chain: root -> global (using short name)',
+            'chain: root -> user (using short name)',
         );
 
         $this->assertSame(
             '@Contao_User/text.html.twig',
             $loader->getDynamicParent('text', 'other/template.html.twig'),
-            'chain: root -> global (using identifier)',
+            'chain: root -> user (using identifier)',
         );
 
         $this->assertSame(
             '@Contao_App/text.html.twig',
-            $loader->getDynamicParent('text.html.twig', $globalPath),
-            'chain: global -> app',
+            $loader->getDynamicParent('text.html.twig', $userPath),
+            'chain: user -> app',
         );
 
         $this->assertSame(

@@ -1922,9 +1922,6 @@
       <trans-unit id="MSC.totalPages">
         <source>Page %s of %s</source>
       </trans-unit>
-      <trans-unit id="MSC.global">
-        <source>global</source>
-      </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
       </trans-unit>
