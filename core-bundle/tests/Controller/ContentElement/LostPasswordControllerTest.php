@@ -54,6 +54,19 @@ class LostPasswordControllerTest extends ContentElementTestCase
         unset($GLOBALS['TL_DCA']);
     }
 
+    public function testHasSubscribedServices(): void
+    {
+        $controller = new LostPasswordController(
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(RateLimiterFactoryInterface::class),
+            $this->createStub(OptIn::class),
+            $this->createStub(SimpleTokenParser::class),
+            $this->createStub(LoggerInterface::class),
+        );
+
+        $this->assertArrayHasKey('security.password_hasher_factory', $controller->getSubscribedServices());
+    }
+
     public function testExecutesOnloadCallbacks(): void
     {
         $member = $this->createClassWithPropertiesStub(MemberModel::class);
@@ -119,38 +132,11 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $container = $this->getContainerWithFrameworkTemplate($member, true, $page, '/foobar');
         $container->set('contao.framework', $this->mockFrameworkWithTemplate($member));
 
-        $rateLimit = $this->createMock(RateLimit::class);
-        $rateLimit
-            ->expects($this->once())
-            ->method('isAccepted')
-            ->willReturn(true)
-        ;
-
-        $rateLimiter = $this->createMock(LimiterInterface::class);
-        $rateLimiter
-            ->expects($this->once())
-            ->method('consume')
-            ->willReturn($rateLimit)
-        ;
-
-        $rateLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
-        $rateLimiterFactory
-            ->expects($this->once())
-            ->method('create')
-            ->willReturn($rateLimiter)
-        ;
-
-        $simpleTokenParser = $this->createMock(SimpleTokenParser::class);
-        $simpleTokenParser
-            ->expects($this->once())
-            ->method('parse')
-        ;
-
         $controller = new LostPasswordController(
             $this->createStub(TranslatorInterface::class),
-            $rateLimiterFactory,
+            $this->mockRateLimiterFactory(),
             $this->createStub(OptIn::class),
-            $simpleTokenParser,
+            $this->mockSimpleTokenParser(),
             $this->createStub(LoggerInterface::class),
         );
         $controller->setContainer($container);
@@ -176,48 +162,17 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $container = $this->getContainerWithFrameworkTemplate($member);
         $container->set('contao.framework', $this->mockFrameworkWithTemplate($hasMember ? $member : null));
 
-        $optInToken = $this->createMock(OptInToken::class);
-        $optInToken
-            ->expects($this->once())
-            ->method('isValid')
-            ->willReturn($isTokenValid)
-        ;
-
-        $optInToken
-            ->expects($isTokenValid ? $this->once() : $this->never())
-            ->method('getRelatedRecords')
-            ->willReturn($optInData)
-        ;
-
-        $optInToken
-            ->expects($isTokenValid && $hasMember ? $this->once() : $this->never())
-            ->method('isConfirmed')
-            ->willReturn($isTokenConfirmed)
-        ;
-
-        $optInToken
-            ->expects('' !== $email ? $this->once() : $this->never())
-            ->method('getEmail')
-            ->willReturn($email)
-        ;
-
-        $optIn = $this->createMock(OptIn::class);
-        $optIn
-            ->expects($this->once())
-            ->method('find')
-            ->willReturn($optInToken)
-        ;
-
         $controller = new LostPasswordController(
             $this->createStub(TranslatorInterface::class),
             $this->createStub(RateLimiterFactoryInterface::class),
-            $optIn,
+            $this->mockOptIn($isTokenValid, $isTokenConfirmed, $hasMember, $optInData, $email),
             $this->createStub(SimpleTokenParser::class),
             $this->createStub(LoggerInterface::class),
         );
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
+
         $request = new Request();
         $request->query->set('token', 'pw-notasecrettoken');
 
@@ -428,10 +383,15 @@ class LostPasswordControllerTest extends ContentElementTestCase
             ->willReturn(null)
         ;
 
+        $optInToken = $this->createStub(OptInModel::class);
+        $optInToken
+            ->method('delete')
+        ;
+
         $optInAdapter = $this->createAdapterStub(['findUnconfirmedByRelatedTableAndId']);
         $optInAdapter
             ->method('findUnconfirmedByRelatedTableAndId')
-            ->willReturn(null)
+            ->willReturn([$optInToken])
         ;
 
         $framework = $this->createContaoFrameworkStub([
@@ -445,6 +405,8 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $versions = $this->createStub(Versions::class);
 
         if ($hasVersions) {
+            $GLOBALS['TL_DCA']['tl_member']['config']['enableVersioning'] = true;
+
             $versions = $this->createMock(Versions::class);
             $versions
                 ->expects($this->once())
@@ -459,6 +421,11 @@ class LostPasswordControllerTest extends ContentElementTestCase
             $versions
                 ->expects($this->once())
                 ->method('initialize')
+            ;
+
+            $versions
+                ->expects($this->once())
+                ->method('create')
             ;
         }
 
@@ -523,5 +490,79 @@ class LostPasswordControllerTest extends ContentElementTestCase
         System::setContainer($container);
 
         return $container;
+    }
+
+    private function mockRateLimiterFactory(): MockObject|RateLimiterFactoryInterface|Stub
+    {
+        $rateLimit = $this->createMock(RateLimit::class);
+        $rateLimit
+            ->expects($this->once())
+            ->method('isAccepted')
+            ->willReturn(true)
+        ;
+
+        $rateLimiter = $this->createMock(LimiterInterface::class);
+        $rateLimiter
+            ->expects($this->once())
+            ->method('consume')
+            ->willReturn($rateLimit)
+        ;
+
+        $rateLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
+        $rateLimiterFactory
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($rateLimiter)
+        ;
+
+        return $rateLimiterFactory;
+    }
+
+    private function mockSimpleTokenParser(): MockObject|SimpleTokenParser|Stub
+    {
+        $simpleTokenParser = $this->createMock(SimpleTokenParser::class);
+        $simpleTokenParser
+            ->expects($this->once())
+            ->method('parse')
+        ;
+
+        return $simpleTokenParser;
+    }
+
+    private function mockOptIn(bool $isTokenValid, bool $isTokenConfirmed, bool $hasMember, array $optInData, string $email): MockObject|OptIn|Stub
+    {
+        $optInToken = $this->createMock(OptInToken::class);
+        $optInToken
+            ->expects($this->once())
+            ->method('isValid')
+            ->willReturn($isTokenValid)
+        ;
+
+        $optInToken
+            ->expects($isTokenValid ? $this->once() : $this->never())
+            ->method('getRelatedRecords')
+            ->willReturn($optInData)
+        ;
+
+        $optInToken
+            ->expects($isTokenValid && $hasMember ? $this->once() : $this->never())
+            ->method('isConfirmed')
+            ->willReturn($isTokenConfirmed)
+        ;
+
+        $optInToken
+            ->expects('' !== $email ? $this->once() : $this->never())
+            ->method('getEmail')
+            ->willReturn($email)
+        ;
+
+        $optIn = $this->createMock(OptIn::class);
+        $optIn
+            ->expects($this->once())
+            ->method('find')
+            ->willReturn($optInToken)
+        ;
+
+        return $optIn;
     }
 }
