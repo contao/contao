@@ -26,6 +26,7 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\MemberModel;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\LoggerInterface;
@@ -163,7 +164,8 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
-    public function testReturnsWithInvalidToken(): void
+    #[DataProvider('getOptInTokenData')]
+    public function testOptInTokenVariants(bool $isTokenValid, array $optInData, int $expected): void
     {
         $member = $this->createClassWithPropertiesStub(MemberModel::class);
 
@@ -174,12 +176,13 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $optInToken
             ->expects($this->once())
             ->method('isValid')
-            ->willReturn(false)
+            ->willReturn($isTokenValid)
         ;
 
         $optInToken
-            ->expects($this->never())
+            ->expects($isTokenValid ? $this->once() : $this->never())
             ->method('getRelatedRecords')
+            ->willReturn($optInData)
         ;
 
         $optIn = $this->createMock(OptIn::class);
@@ -205,6 +208,21 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    public static function getOptInTokenData(): iterable
+    {
+        yield 'Return when token is invalid' => [
+            false, [], Response::HTTP_OK,
+        ];
+
+        yield 'Return when there are no related records' => [
+            true, [], Response::HTTP_OK,
+        ];
+
+        yield 'Return when the user ID is missing' => [
+            true, ['tl_member' => []], Response::HTTP_OK,
+        ];
     }
 
     /**
