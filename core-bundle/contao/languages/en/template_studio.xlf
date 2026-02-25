@@ -21,7 +21,7 @@
         <source>Search templates…</source>
       </trans-unit>
       <trans-unit id="template_studio.user_filter">
-        <source>Show only modified templates</source>
+        <source>Show only my templates</source>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>

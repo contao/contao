@@ -15,7 +15,7 @@ export default class extends Controller {
         'editor',
         'editorAnnotations',
         'nameNode',
-        'filter',
+        'nameFilter',
         'userFilter',
     ];
 
@@ -85,10 +85,10 @@ export default class extends Controller {
         this.contentTarget.requestFullscreen();
     }
 
-    filter(_event) {
-        const term = this.filterTarget.value.trim().toLowerCase();
+    filter() {
+        const term = this.nameFilterTarget.value.trim().toLowerCase();
 
-        this.filterTarget.classList.toggle('active', term);
+        this.nameFilterTarget.classList.toggle('active', term);
 
         for (const nameTarget of this.nameNodeTargets) {
             nameTarget.classList.toggle(
