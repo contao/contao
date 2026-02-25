@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Controller\CspReporterController;
-use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -23,7 +23,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\FrontendUser;
-use Contao\Image\PictureConfiguration;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Spatie\SchemaOrg\ImageObject;
@@ -46,7 +45,7 @@ class CoreResponseContextFactory
         private readonly CspHandlerFactory $cspHandlerFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,
-        private readonly FigureRenderer $figureRenderer,
+        private readonly Studio $studio,
     ) {
     }
 
@@ -114,7 +113,12 @@ class CoreResponseContextFactory
 
         $jsonLdManager = $context->get(JsonLdManager::class);
         if ($pageModel->primaryImage) {
-            if ($figure = $this->figureRenderer->buildFigure($pageModel->primaryImage, new PictureConfiguration(null, null, 'proportional'))) {
+            $figureBuilder = $this->studio->createFigureBuilder()
+                ->fromUuid($pageModel->primaryImage)
+                ->setSize('proportional')
+            ;
+
+            if ($figure = $figureBuilder->buildIfResourceExists()) {
                 $imageObject = new ImageObject();
 
                 foreach ($figure->getSchemaOrgData() as $key => $value) {

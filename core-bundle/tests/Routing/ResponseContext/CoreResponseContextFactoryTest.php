@@ -17,8 +17,9 @@ use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
-use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
@@ -31,7 +32,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use Contao\Image\PictureConfiguration;
 use Contao\PageModel;
 use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
@@ -72,7 +72,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
-            $this->createStub(FigureRenderer::class),
+            $this->createStub(Studio::class),
         );
 
         $factory->createResponseContext();
@@ -96,7 +96,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
-            $this->createStub(FigureRenderer::class),
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -204,7 +204,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $cpHandlerFactory,
             $urlGenerator,
             $security,
-            $this->createStub(FigureRenderer::class),
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -290,12 +290,32 @@ class CoreResponseContextFactoryTest extends TestCase
             ]),
         );
 
-        $figureRenderer = $this->createMock(FigureRenderer::class);
-        $figureRenderer
+        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder
             ->expects($this->once())
-            ->method('buildFigure')
-            ->with('uuid', $this->isInstanceOf(PictureConfiguration::class))
+            ->method('fromUuid')
+            ->with('uuid')
+            ->willReturnSelf()
+        ;
+
+        $figureBuilder
+            ->expects($this->once())
+            ->method('setSize')
+            ->with('proportional')
+            ->willReturnSelf()
+        ;
+
+        $figureBuilder
+            ->expects($this->once())
+            ->method('buildIfResourceExists')
             ->willReturn($figure)
+        ;
+
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->expects($this->once())
+            ->method('createFigureBuilder')
+            ->willReturn($figureBuilder)
         ;
 
         $factory = new CoreResponseContextFactory(
@@ -308,7 +328,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
-            $figureRenderer,
+            $studio,
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -373,7 +393,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
-            $this->createStub(FigureRenderer::class),
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -421,7 +441,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
-            $this->createStub(FigureRenderer::class),
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
