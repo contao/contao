@@ -42,7 +42,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 
     protected function addSharedMaxAgeToResponse(Response $response, ContentModel $model): void
     {
-        $time = time();
+        $time = $this->container->get('clock')->now()->getTimestamp();
         $min = [];
 
         if ('' !== $model->start && $model->start > $time) {
