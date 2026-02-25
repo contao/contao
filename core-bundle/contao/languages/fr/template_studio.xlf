@@ -96,6 +96,29 @@
         <source>Rename the %s variant template</source>
         <target>Renommer le modèle de variante %s</target>
       </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.0">
+        <source>Create variant</source>
+        <target>Créer une variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
+        <source>Create a new variant template for the %s legacy content element</source>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
+        <source>Create variant</source>
+        <target>Créer une variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.1">
+        <source>Create a new variant template for the %s front end module</source>
+        <target>Créer un nouveau modèle de variante pour le module front-end %s</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.0">
+        <source>Create variant</source>
+        <target>Créer une variante</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>Créer un nouveau modèle de variante pour la présentation %s</target>
+      </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>
         <target>Votre modèle pour %s a été créé.</target>
