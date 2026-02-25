@@ -667,6 +667,7 @@ Böyle bir istekte bulunmadıysanız, lütfen site yöneticisi ile görüşün.
       </trans-unit>
       <trans-unit id="tl_module.versions.1">
         <source>Show the versions of module ID %s</source>
+        <target>%s kimlikli modülün sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
