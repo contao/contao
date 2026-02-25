@@ -94,7 +94,7 @@ class LayoutTemplateMigration extends AbstractMigration
     private function getOldTemplatePaths(): \Generator
     {
         foreach ($this->filesystemLoader->getInheritanceChains()['layout/default'] ?? [] as $path => $logicalName) {
-            if (\in_array(ContaoTwigUtil::parseContaoName($logicalName)[0], ['Contao_App', 'Contao_Global'], true)) {
+            if (\in_array(ContaoTwigUtil::parseContaoName($logicalName)[0], ['Contao_App', 'Contao_User'], true)) {
                 yield $path;
             }
         }

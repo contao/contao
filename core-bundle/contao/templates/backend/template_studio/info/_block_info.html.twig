@@ -44,7 +44,7 @@
                 <div{{ element_attributes }}>
                     {{ include('@Contao/backend/template_studio/_template_badges.html.twig', {
                         badges: [
-                            element.template.namespace == 'Contao_Global' ? 'user' : null,
+                            element.template.namespace == 'Contao_User' ? 'user' : null,
                             element.info.type.value == 'origin' ? 'origin' : null,
                             element.info.prototype ? 'prototype' : null,
                         ]|filter(e => e is not null),

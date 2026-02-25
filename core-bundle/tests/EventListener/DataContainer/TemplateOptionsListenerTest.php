@@ -66,7 +66,7 @@ class TemplateOptionsListenerTest extends TestCase
         $this->assertSame(
             [
                 '' => 'content_element/foo [App]',
-                'content_element/foo/variant' => 'content_element/foo/variant [Global]',
+                'content_element/foo/variant' => 'content_element/foo/variant [User]',
             ],
             $callback($this->mockDataContainer('tl_content', ['type' => 'foo_element_type'])),
         );
@@ -156,7 +156,7 @@ class TemplateOptionsListenerTest extends TestCase
             'foo_element_type',
             [
                 '' => 'content_element/foo [App]',
-                'content_element/foo/variant' => 'content_element/foo/variant [Global]',
+                'content_element/foo/variant' => 'content_element/foo/variant [User]',
             ],
         ];
 
@@ -224,7 +224,7 @@ class TemplateOptionsListenerTest extends TestCase
                     '/templates/content_element/foo.html.twig' => '@Contao_App/content_element/foo.html.twig',
                 ],
                 'content_element/foo/variant' => [
-                    '/templates/content_element/foo/variant.html.twig' => '@Contao_Global/content_element/foo/variant.html.twig',
+                    '/templates/content_element/foo/variant.html.twig' => '@Contao_User/content_element/foo/variant.html.twig',
                 ],
                 'frontend_module/_partial' => [
                     '/templates/frontend_module/_partial.html.twig' => '@Contao_App/frontend_module/_partial.html.twig',
