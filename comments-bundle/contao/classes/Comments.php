@@ -17,6 +17,8 @@ use Contao\CoreBundle\Exception\PageOutOfRangeException;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email as EmailMessage;
 
 /**
  * Class Comments
@@ -361,17 +363,17 @@ class Comments extends Frontend
 			}
 
 			// Prepare the notification mail
-			$objEmail = new Email();
-			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
-			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-			$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
+			$objEmail = new EmailMessage()
+				->from(new Address($GLOBALS['TL_ADMIN_EMAIL'] ?? null, $GLOBALS['TL_ADMIN_NAME'] ?? null))
+				->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host'))))
+			;
 
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
 			$strComment = StringUtil::decodeEntities($strComment);
 
 			// Add the comment details
-			$objEmail->text = \sprintf(
+			$strText = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
 				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
 				$strComment,
@@ -382,17 +384,19 @@ class Comments extends Frontend
 			// Add a moderation hint to the e-mail (see #7478)
 			if ($objConfig->moderate)
 			{
-				$objEmail->text .= "\n" . $GLOBALS['TL_LANG']['MSC']['com_moderated'] . "\n";
+				$strText .= "\n" . $GLOBALS['TL_LANG']['MSC']['com_moderated'] . "\n";
 			}
 
+			$objEmail->text($strText);
+
 			// Do not send notifications twice
-			if (\is_array($varNotifies))
+			$varNotifies = array_unique(array($varNotifies));
+
+			if (!empty($varNotifies))
 			{
-				$objEmail->sendTo(array_unique($varNotifies));
-			}
-			elseif ($varNotifies)
-			{
-				$objEmail->sendTo($varNotifies); // see #5443
+				$objEmail->to(...$varNotifies);
+
+				System::getContainer()->get('mailer')->send($objEmail);
 			}
 
 			// Pending for approval
@@ -613,12 +617,14 @@ class Comments extends Frontend
 				// Prepare the URL
 				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
-				$objEmail = new Email();
-				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
-				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-				$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
-				$objEmail->text = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
-				$objEmail->sendTo($objNotify->email);
+				$objEmail = new EmailMessage()
+					->from(new Address($GLOBALS['TL_ADMIN_EMAIL'] ?? null, $GLOBALS['TL_ADMIN_NAME'] ?? null))
+					->to($objNotify->email)
+					->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host'))))
+					->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove)))
+				;
+
+				System::getContainer()->get('mailer')->send($objEmail);
 			}
 		}
 
