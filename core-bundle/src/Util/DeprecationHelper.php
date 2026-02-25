@@ -23,7 +23,7 @@ class DeprecationHelper
      * @param string $message The message of the deprecation
      * @param mixed  ...$args Values to insert in the message using printf() formatting
      */
-    public static function triggerIfCalledFromOutside(string $package, string $version, string $message, mixed ...$args): void
+    public static function triggerIfObjectFromOutside(string $package, string $version, string $message, mixed ...$args): void
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
 

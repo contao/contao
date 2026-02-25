@@ -84,7 +84,7 @@ abstract class Hybrid extends Frontend
 	 */
 	public function __construct($objElement, $strColumn='main', $strTypePrefix=null)
 	{
-		DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Extending from Hybrid is deprecated. Write a proper fragment controller instead.');
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from Hybrid is deprecated. Write a proper fragment controller instead.');
 
 		parent::__construct();
 

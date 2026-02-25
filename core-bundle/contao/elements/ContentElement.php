@@ -146,7 +146,7 @@ abstract class ContentElement extends Frontend
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
-		DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Extending from ContentElement is deprecated. Write a proper fragment controller instead.');
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from ContentElement is deprecated. Write a proper fragment controller instead.');
 
 		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{

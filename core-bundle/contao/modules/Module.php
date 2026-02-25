@@ -126,7 +126,7 @@ abstract class Module extends Frontend
 	 */
 	public function __construct($objModule, $strColumn='main')
 	{
-		DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Extending from Module is deprecated. Write a proper fragment controller instead.');
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from Module is deprecated. Write a proper fragment controller instead.');
 
 		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
