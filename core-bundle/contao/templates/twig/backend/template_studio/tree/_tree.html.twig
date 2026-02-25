@@ -51,6 +51,16 @@
     %}
     <input{{ search_input_attributes }}>
 </label>
+<label class="user-filter">
+    {% set search_input_attributes = attrs()
+        .set('name', 'template-studio--user-filter')
+        .set('type', 'checkbox')
+        .set('data-contao--template-studio-target', 'userFilter')
+        .set('data-action', 'change->contao--template-studio#filter')
+    %}
+    <input{{ search_input_attributes }}>
+    <span>{{ 'template_studio.user_filter'|trans }}</span>
+</label>
 
 {# Tree #}
 <form method="get" data-turbo-stream>

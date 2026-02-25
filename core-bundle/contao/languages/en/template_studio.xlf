@@ -20,6 +20,9 @@
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only modified templates</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
       </trans-unit>
