@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'url' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'text' => array
 		(
