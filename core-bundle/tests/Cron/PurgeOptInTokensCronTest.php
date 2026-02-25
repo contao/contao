@@ -26,6 +26,6 @@ class PurgeOptInTokensCronTest extends ContaoTestCase
             ->method('purgeTokens')
         ;
 
-        (new PurgeOptInTokensCron($optIn, null))();
+        new PurgeOptInTokensCron($optIn, null)();
     }
 }
