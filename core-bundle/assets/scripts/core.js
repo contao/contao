@@ -1580,55 +1580,6 @@ window.Backend =
 	},
 
 	/**
-	 * Checkbox wizard
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	checkboxWizard: function(id) {
-		console.warn('Backend.checkboxWizard() is deprecated. Please use the Stimulus controller instead.');
-
-		var container = $(id).getElement('.sortable'),
-			makeSortable = function(container) {
-				new Sortables(container, {
-					constrain: true,
-					opacity: 0.6,
-					handle: '.drag-handle'
-				});
-			},
-			addEventsTo = function(span) {
-				var nspan;
-				span.getElements('button').each(function(bt) {
-					if (bt.hasEvent('click')) return;
-					bt.addEvent('keydown', function(e) {
-						if (e.event.keyCode == 38) {
-							e.preventDefault();
-							if ((nspan = span.getPrevious('span'))) {
-								span.inject(nspan, 'before');
-							} else {
-								span.inject(container, 'bottom');
-							}
-							bt.focus();
-						} else if (e.event.keyCode == 40) {
-							e.preventDefault();
-							if (nspan = span.getNext('span')) {
-								span.inject(nspan, 'after');
-							} else {
-								span.inject(container, 'top');
-							}
-							bt.focus();
-						}
-					});
-				});
-			};
-
-		makeSortable(container);
-
-		container.getChildren().each(function(span) {
-			addEventsTo(span);
-		});
-	},
-
-	/**
 	 * Update the fields of the imageSize widget upon change
 	 */
 	enableImageSizeWidgets: function() {
