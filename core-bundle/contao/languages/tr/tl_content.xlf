@@ -951,10 +951,11 @@
       </trans-unit>
       <trans-unit id="tl_content.show.1">
         <source>Show the details of content element ID %s</source>
-        <target>%s kimlikli içerik bileşeninin bilgilerini görüntüle</target>
+        <target>%s kimlikli içerik bileşeninin ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.versions.1">
         <source>Show the versions of content element ID %s</source>
+        <target>%s kimlikli içerik bileşeninin sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_content.cut.1">
         <source>Move content element ID %s</source>
