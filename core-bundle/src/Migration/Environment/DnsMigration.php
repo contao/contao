@@ -16,6 +16,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Schema\Column;
 
 class DnsMigration extends AbstractMigration
 {
@@ -33,13 +34,16 @@ class DnsMigration extends AbstractMigration
 
         $schemaManager = $this->db->createSchemaManager();
 
-        if (!$schemaManager->tablesExist(['tl_page'])) {
+        if (!$schemaManager->tableExists('tl_page')) {
             return false;
         }
 
-        $columns = $schemaManager->listTableColumns('tl_page');
+        $columns = array_map(
+            static fn (Column $column): string => $column->getObjectName()->toString(),
+            $schemaManager->introspectTableColumnsByUnquotedName('tl_page'),
+        );
 
-        if (!isset($columns['dns']) || !isset($columns['type']) || !isset($columns['usessl'])) {
+        if (!\in_array('dns', $columns, true) || !\in_array('type', $columns, true) || !\in_array('usessl', $columns, true)) {
             return false;
         }
 

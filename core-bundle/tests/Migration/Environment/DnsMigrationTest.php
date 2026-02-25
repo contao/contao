@@ -19,6 +19,9 @@ use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class DnsMigrationTest extends TestCase
@@ -36,8 +39,8 @@ class DnsMigrationTest extends TestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->expects($this->once())
-            ->method('tablesExist')
-            ->with(['tl_page'])
+            ->method('tableExists')
+            ->with('tl_page')
             ->willReturn(false)
         ;
 
@@ -58,14 +61,14 @@ class DnsMigrationTest extends TestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->expects($this->once())
-            ->method('tablesExist')
-            ->with(['tl_page'])
+            ->method('tableExists')
+            ->with('tl_page')
             ->willReturn(true)
         ;
 
         $schemaManager
             ->expects($this->once())
-            ->method('listTableColumns')
+            ->method('introspectTableColumnsByUnquotedName')
             ->with('tl_page')
             ->willReturn([])
         ;
@@ -88,16 +91,20 @@ class DnsMigrationTest extends TestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->expects($this->once())
-            ->method('tablesExist')
-            ->with(['tl_page'])
+            ->method('tableExists')
+            ->with('tl_page')
             ->willReturn(true)
         ;
 
         $schemaManager
             ->expects($this->once())
-            ->method('listTableColumns')
+            ->method('introspectTableColumnsByUnquotedName')
             ->with('tl_page')
-            ->willReturn(['dns' => true, 'type' => true, 'usessl' => true])
+            ->willReturn([
+                new Column('dns', Type::getType(Types::STRING)),
+                new Column('type', Type::getType(Types::STRING)),
+                new Column('usessl', Type::getType(Types::BOOLEAN)),
+            ])
         ;
 
         $db = $this->createMock(Connection::class);

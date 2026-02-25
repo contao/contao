@@ -957,8 +957,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function getExtraMetadataColumns(): array
     {
         $columns = array_map(
-            static fn (Column $column): string => $column->getName(),
-            $this->connection->createSchemaManager()->listTableColumns($this->table),
+            static fn (Column $column): string => $column->getObjectName()->toString(),
+            $this->connection->createSchemaManager()->introspectTableColumnsByUnquotedName($this->table),
         );
 
         $defaultFields = [
