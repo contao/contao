@@ -4657,7 +4657,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					'&#41;' => ')',
 					'&#92;' => '\\\\',
 					'&#61;' => '=',
-					'&' => '&',
+					'&amp;' => '&',
 				);
 
 				$strReplacePrefix = str_repeat('REPLACE(', \count($arrReplace));
