@@ -27,6 +27,20 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RegularPageControllerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset(
+            $GLOBALS['TL_HEAD'],
+            $GLOBALS['TL_BODY'],
+            $GLOBALS['TL_MOOTOOLS'],
+            $GLOBALS['TL_JQUERY'],
+            $GLOBALS['TL_USER_CSS'],
+            $GLOBALS['TL_FRAMEWORK_CSS'],
+        );
+
+        parent::tearDown();
+    }
+
     public function testHandlesNonModernLayoutType(): void
     {
         $page = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 1]);
