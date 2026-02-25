@@ -64,6 +64,6 @@ class FrontendIndex extends Frontend
 		$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
 		$objHandler = new $pageType();
 
-		return $objHandler->getResponse($objPage, true);
+		return $objHandler->getResponse($objPage);
 	}
 }

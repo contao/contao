@@ -30,8 +30,6 @@ class FrontendTemplate extends Template
 	/**
 	 * Unused route parameters check
 	 * @var boolean
-	 *
-	 * @deprecated Deprecated sind Contao 5.7, to be removed in Contao 6
 	 */
 	protected $blnCheckRequest = false;
 
@@ -66,10 +64,7 @@ class FrontendTemplate extends Template
 	 */
 	public function getResponse($blnCheckRequest=false, $blnForceCacheHeaders=false)
 	{
-		if ($blnCheckRequest)
-		{
-			trigger_deprecation('contao/core-bundle', '5.7', 'Passing true for $blnCheckRequest is deprecated.');
-		}
+		$this->blnCheckRequest = $blnCheckRequest;
 
 		$this->compile();
 
@@ -111,6 +106,12 @@ class FrontendTemplate extends Template
 			{
 				$this->strBuffer = System::importStatic($callback[0])->{$callback[1]}($this->strBuffer, $this->strTemplate);
 			}
+		}
+
+		// Check whether all route parameters have been used (see #4277)
+		if ($this->blnCheckRequest && Input::getUnusedRouteParameters())
+		{
+			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedRouteParameters()));
 		}
 
 		global $objPage;
