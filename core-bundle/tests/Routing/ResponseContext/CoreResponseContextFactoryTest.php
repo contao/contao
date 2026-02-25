@@ -265,9 +265,6 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $requestStack = new RequestStack([Request::create('https://example.com/')]);
 
-        $user = $this->createClassWithPropertiesStub(FrontendUser::class);
-        $user->groups = serialize($memberGroups);
-
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
         $pageModel->id = 1;
         $pageModel->title = 'My title';
