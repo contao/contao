@@ -38,7 +38,7 @@ class WebauthnRouteListenerTest extends TestCase
             'webauthn.controller.security.contao_backend.request.result',
         ];
 
-        (new WebauthnRouteListener($routes, 'backend'))($event);
+        new WebauthnRouteListener($routes, 'backend')($event);
 
         $this->assertSame($resultingScope, $request->attributes->get('_scope'));
     }
@@ -68,7 +68,7 @@ class WebauthnRouteListenerTest extends TestCase
             'webauthn.controller.security.contao_frontend.request.result',
         ];
 
-        (new WebauthnRouteListener($routes, 'frontend'))($event);
+        new WebauthnRouteListener($routes, 'frontend')($event);
 
         $this->assertSame($resultingScope, $request->attributes->get('_scope'));
     }
