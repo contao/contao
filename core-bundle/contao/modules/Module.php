@@ -16,8 +16,6 @@ use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
-DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Extending from Module is deprecated. Write a proper fragment controller instead.');
-
 /**
  * @deprecated Extending from Module is deprecated. Write a proper fragment controller instead.
  *
@@ -128,6 +126,8 @@ abstract class Module extends Frontend
 	 */
 	public function __construct($objModule, $strColumn='main')
 	{
+		DeprecationHelper::triggerIfCalledFromOutside('contao/core-bundle', '6.0', 'Extending from Module is deprecated. Write a proper fragment controller instead.');
+
 		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
 			$objModel = $objModule;

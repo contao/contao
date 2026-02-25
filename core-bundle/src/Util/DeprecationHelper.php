@@ -25,9 +25,9 @@ class DeprecationHelper
      */
     public static function triggerIfCalledFromOutside(string $package, string $version, string $message, mixed ...$args): void
     {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
 
-        if (isset($backtrace[0]['class']) && str_starts_with($backtrace[0]['class'], 'Contao\\')) {
+        if (isset($backtrace[1]['object']) && str_starts_with(\get_class($backtrace[1]['object']), 'Contao\\')) {
             return;
         }
 
