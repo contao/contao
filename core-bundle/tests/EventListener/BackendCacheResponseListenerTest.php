@@ -35,7 +35,7 @@ class BackendCacheResponseListenerTest extends TestCase
             $response,
         );
 
-        (new BackendCacheResponseListener($this->createScopeMatcher(false)))($event);
+        new BackendCacheResponseListener($this->createScopeMatcher(false))($event);
 
         $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
     }
@@ -51,7 +51,7 @@ class BackendCacheResponseListenerTest extends TestCase
             $response,
         );
 
-        (new BackendCacheResponseListener($this->createScopeMatcher(false)))($event);
+        new BackendCacheResponseListener($this->createScopeMatcher(false))($event);
 
         $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
     }
@@ -67,7 +67,7 @@ class BackendCacheResponseListenerTest extends TestCase
             $response,
         );
 
-        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+        new BackendCacheResponseListener($this->createScopeMatcher(true))($event);
 
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }
@@ -88,7 +88,7 @@ class BackendCacheResponseListenerTest extends TestCase
             $response,
         );
 
-        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+        new BackendCacheResponseListener($this->createScopeMatcher(true))($event);
 
         $this->assertTrue($response->headers->hasCacheControlDirective('max-age'));
     }
@@ -109,7 +109,7 @@ class BackendCacheResponseListenerTest extends TestCase
             $response,
         );
 
-        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+        new BackendCacheResponseListener($this->createScopeMatcher(true))($event);
 
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }
@@ -130,7 +130,7 @@ class BackendCacheResponseListenerTest extends TestCase
             $response,
         );
 
-        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+        new BackendCacheResponseListener($this->createScopeMatcher(true))($event);
 
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }
@@ -150,7 +150,7 @@ class BackendCacheResponseListenerTest extends TestCase
             $response,
         );
 
-        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+        new BackendCacheResponseListener($this->createScopeMatcher(true))($event);
 
         $this->assertSame(['Origin', 'Accept', 'Turbo-Frame'], $response->getVary());
     }

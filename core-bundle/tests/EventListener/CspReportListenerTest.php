@@ -61,6 +61,6 @@ class CspReportListenerTest extends TestCase
 
         $event = new ReportEvent($report);
 
-        (new CspReportListener($logger))($event);
+        new CspReportListener($logger)($event);
     }
 }

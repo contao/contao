@@ -35,9 +35,4 @@ class BinaryStringType extends Type
     {
         return self::NAME;
     }
-
-    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
-    {
-        return true;
-    }
 }
