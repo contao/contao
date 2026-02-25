@@ -27,6 +27,8 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -879,6 +881,8 @@ class ContentCompositionListenerTest extends TestCase
     #[DataProvider('moduleConfigProvider')]
     public function testUsesTheLayoutColumnForNewArticle(array $modules, string $expectedColumn): void
     {
+        $clock = new MockClock();
+
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -921,7 +925,7 @@ class ContentCompositionListenerTest extends TestCase
         $article = [
             'pid' => 17,
             'sorting' => 128,
-            'tstamp' => time(),
+            'tstamp' => $clock->now()->getTimestamp(),
             'author' => 1,
             'inColumn' => $expectedColumn,
             'title' => 'foo',
@@ -949,7 +953,7 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $listener = $this->getListener($framework, pageRegistry: $pageRegistry, connection: $connection, requestStack: $requestStack);
+        $listener = $this->getListener($framework, pageRegistry: $pageRegistry, connection: $connection, requestStack: $requestStack, clock: $clock);
         $listener->generateArticleForPage($dc);
     }
 
@@ -1060,14 +1064,15 @@ class ContentCompositionListenerTest extends TestCase
         return $page;
     }
 
-    private function getListener(ContaoFramework|null $framework = null, PageRegistry|null $pageRegistry = null, Connection|null $connection = null, RequestStack|null $requestStack = null, UrlGeneratorInterface|null $urlGenerator = null): ContentCompositionListener
+    private function getListener(ContaoFramework|null $framework = null, PageRegistry|null $pageRegistry = null, Connection|null $connection = null, RequestStack|null $requestStack = null, UrlGeneratorInterface|null $urlGenerator = null, ClockInterface|null $clock = null): ContentCompositionListener
     {
         $framework ??= $this->createContaoFrameworkStub([PageModel::class => $this->createAdapterStub(['findById'])]);
         $pageRegistry ??= $this->createStub(PageRegistry::class);
         $connection ??= $this->createStub(Connection::class);
         $requestStack ??= $this->createStub(RequestStack::class);
         $urlGenerator ??= $this->createStub(UrlGeneratorInterface::class);
+        $clock ??= new MockClock();
 
-        return new ContentCompositionListener($framework, $this->security, $pageRegistry, $connection, $requestStack, $urlGenerator);
+        return new ContentCompositionListener($framework, $this->security, $pageRegistry, $connection, $requestStack, $urlGenerator, $clock);
     }
 }
