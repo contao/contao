@@ -67,6 +67,7 @@ class FrontendIndex extends Frontend
 
 			return $objHandler->getResponse($objPage, true);
 		}
+		// Render the error page (see #5570)
 		catch (\Throwable $e)
 		{
 			// Restore the globals (see #7659)
