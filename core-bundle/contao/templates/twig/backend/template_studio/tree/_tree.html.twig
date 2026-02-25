@@ -44,12 +44,22 @@
     {% set search_input_attributes = attrs()
         .set('name', 'template-studio--search-filter')
         .set('type', 'search')
-        .set('data-contao--template-studio-target', 'filter')
+        .set('data-contao--template-studio-target', 'nameFilter')
         .set('placeholder', 'template_studio.search_filter'|trans)
         .set('autocomplete', 'off')
         .set('data-action', 'input->contao--template-studio#filter')
     %}
     <input{{ search_input_attributes }}>
+</label>
+<label class="user-filter">
+    {% set search_input_attributes = attrs()
+        .set('name', 'template-studio--user-filter')
+        .set('type', 'checkbox')
+        .set('data-contao--template-studio-target', 'userFilter')
+        .set('data-action', 'change->contao--template-studio#filter')
+    %}
+    <input{{ search_input_attributes }}>
+    <span>{{ 'template_studio.user_filter'|trans }}</span>
 </label>
 
 {# Tree #}

@@ -103,6 +103,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_news.migration.keep_canonical:
+        class: Contao\NewsBundle\Migration\KeepCanonicalMigration
+        arguments:
+            - '@database_connection'
+
     contao_news.migration.overwrite_meta:
         class: Contao\NewsBundle\Migration\OverwriteMetaMigration
         arguments:

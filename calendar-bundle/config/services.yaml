@@ -113,6 +113,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_calendar.migration.keep_canonical:
+        class: Contao\CalendarBundle\Migration\KeepCanonicalMigration
+        arguments:
+            - '@database_connection'
+
     contao_calendar.migration.overwrite_meta:
         class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
         arguments:
