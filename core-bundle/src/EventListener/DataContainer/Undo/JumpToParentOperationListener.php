@@ -104,7 +104,7 @@ class JumpToParentOperationListener
             $params['id'] = $parent['id'];
         }
 
-        return http_build_query($params, '', '&amp;', PHP_QUERY_RFC3986);
+        return http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
 
     private function getModuleForTable(string $table): array|null
