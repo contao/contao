@@ -155,7 +155,7 @@ class FigureRendererTest extends TestCase
         // Render a figure with a PHP template
         $figureRenderer = new FigureRenderer($studio, $twig);
 
-        $this->assertSame('<foo result>', $figureRenderer->render('files/public/foo.jpg', null, [], 'foo'));
+        $this->assertSame('<foo result>', $figureRenderer->render('files/public/foo.jpg', null, [], '@Contao/foo.html.twig'));
     }
 
     public function testFailsWithInvalidConfiguration(): void
@@ -165,32 +165,6 @@ class FigureRendererTest extends TestCase
         $this->expectException(NoSuchPropertyException::class);
 
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
-    }
-
-    #[DataProvider('provideInvalidTemplates')]
-    public function testFailsWithInvalidTemplate(string $invalidTemplate): void
-    {
-        $figureRenderer = $this->getFigureRenderer();
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/Invalid Contao template name ".*"\./');
-
-        $figureRenderer->render(1, null, [], $invalidTemplate);
-    }
-
-    public static function provideInvalidTemplates(): iterable
-    {
-        yield 'not treated as Twig template, has extension' => [
-            'foo.twig',
-        ];
-
-        yield 'contains slashes' => [
-            '/some/path/foo',
-        ];
-
-        yield 'contains whitespaces' => [
-            'f oo',
-        ];
     }
 
     public function testReturnsNullIfTheResourceDoesNotExist(): void
@@ -213,7 +187,7 @@ class FigureRendererTest extends TestCase
         $this->assertNull($figureRenderer->render('invalid-resource', null));
     }
 
-    private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRenderer
+    private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@Contao/component/_figure.html.twig'): FigureRenderer
     {
         $figure = new Figure($this->createStub(ImageResult::class));
 

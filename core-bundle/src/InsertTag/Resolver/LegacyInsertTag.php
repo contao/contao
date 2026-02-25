@@ -479,7 +479,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $size = $configuration['size'] ?? null;
-                $template = $configuration['template'] ?? '@ContaoCore/Image/Studio/figure.html.twig';
+                $template = $configuration['template'] ?? '@Contao/component/_figure.html.twig';
 
                 unset($configuration['size'], $configuration['template']);
 
