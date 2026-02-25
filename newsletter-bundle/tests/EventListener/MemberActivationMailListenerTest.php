@@ -35,7 +35,7 @@ class MemberActivationMailListenerTest extends ContaoTestCase
             ->willReturn(['Channel 1', 'Channel 2'])
         ;
 
-        (new MemberActivationMailListener($connection))($event);
+        new MemberActivationMailListener($connection)($event);
 
         $this->assertSame(['channels' => "Channel 1\nChannel 2"], $event->getSimpleTokens());
     }
@@ -51,7 +51,7 @@ class MemberActivationMailListenerTest extends ContaoTestCase
             ->method('fetchFirstColumn')
         ;
 
-        (new MemberActivationMailListener($connection))($event);
+        new MemberActivationMailListener($connection)($event);
 
         $this->assertSame([], $event->getSimpleTokens());
     }

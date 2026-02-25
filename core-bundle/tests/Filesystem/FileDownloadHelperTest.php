@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -189,10 +190,9 @@ class FileDownloadHelperTest extends TestCase
                     && 'content-hash' === ($params['ctx'] ?? null)
                     && !isset($params['t']),
                 ),
-                RouterInterface::ABSOLUTE_URL,
+                UrlGeneratorInterface::ABSOLUTE_URL,
             )
-            ->willReturnCallback(static fn (string $_route, array $params): string => 'https://example.com/_file_stream/'.$params['path'].'?'.http_build_query($params),
-            )
+            ->willReturnCallback(static fn (string $_route, array $params): string => 'https://example.com/_file_stream/'.$params['path'].'?'.http_build_query($params))
         ;
 
         $helper = new FileDownloadHelper(

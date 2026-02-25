@@ -211,7 +211,12 @@ class ResultTest extends TestCase
      */
     private function createResults(array $data): array
     {
-        $result = new ArrayResult(array_keys($data[0] ?? []), $data);
+        $result = new ArrayResult(
+            array_keys($data[0] ?? []),
+            // Remove all keys because ArrayResult incorrectly expects list<list<mixed>> even
+            // though it handles list<array<mixed>> just fine as well.
+            array_map(array_values(...), $data),
+        );
 
         return [
             new Result(
