@@ -2073,33 +2073,33 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (Input::get('table') !== null)
 				{
-					$strUrl .= '&amp;table=' . Input::get('table');
+					$strUrl .= '&table=' . Input::get('table');
 				}
 
 				// Tree view
 				if ($this->treeView)
 				{
-					$strUrl .= '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId;
+					$strUrl .= '&act=create&mode=1&pid=' . $this->intId;
 				}
 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . ($currentRecord['pid'] ?? null);
+					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=create&mode=1&pid=' . $this->intId : '&act=create&mode=2&pid=' . ($currentRecord['pid'] ?? null);
 
 					if (($currentRecord['ptable'] ?? null) === $this->strTable)
 					{
-						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+						$strUrl .= '&ptable=' . $currentRecord['ptable'];
 					}
 				}
 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&amp;act=create&amp;mode=2&amp;pid=' . $this->intCurrentPid : '&amp;act=create';
+					$strUrl .= $this->ptable ? '&act=create&mode=2&pid=' . $this->intCurrentPid : '&act=create';
 				}
 
-				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+				$this->redirect($strUrl . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 			}
 			elseif (Input::post('saveNduplicate') !== null)
 			{
@@ -2109,33 +2109,33 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (Input::get('table') !== null)
 				{
-					$strUrl .= '&amp;table=' . Input::get('table');
+					$strUrl .= '&table=' . Input::get('table');
 				}
 
 				// Tree view
 				if ($this->treeView)
 				{
-					$strUrl .= '&amp;act=copy&amp;mode=1&amp;id=' . $this->intId . '&amp;pid=' . $this->intId;
+					$strUrl .= '&act=copy&mode=1&id=' . $this->intId . '&pid=' . $this->intId;
 				}
 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
+					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&act=copy&mode=1&pid=' . $this->intId . '&id=' . $this->intId : '&act=copy&mode=2&pid=' . $this->intCurrentPid . '&id=' . $this->intId;
 
 					if (($currentRecord['ptable'] ?? null) === $this->strTable)
 					{
-						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+						$strUrl .= '&ptable=' . $currentRecord['ptable'];
 					}
 				}
 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId : '&amp;act=copy&amp;id=' . $this->intId;
+					$strUrl .= $this->ptable ? '&act=copy&mode=2&pid=' . $this->intCurrentPid . '&id=' . $this->intId : '&act=copy&id=' . $this->intId;
 				}
 
-				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+				$this->redirect($strUrl . '&rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 			}
 
 			$this->reload();
@@ -2170,7 +2170,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ((string) $currentRecord['tstamp'] === '0')
 		{
-			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
+			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
 		}
 
 		$parameters['global_operations'] = Input::get('nb')
@@ -3437,7 +3437,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				else
 				{
-					$operations->addPasteButton('pasteroot', $this->strTable, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
+					$operations->addPasteButton('pasteroot', $this->strTable, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=0' . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 				}
 			}
 			elseif (!$blnModeTreeExtended && Input::get('act') != 'select' && $canAddNew && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => 0, 'sorting' => 0))))
@@ -3753,7 +3753,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
@@ -3762,7 +3762,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 						}
 					}
@@ -3783,7 +3783,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 						}
 
@@ -3796,7 +3796,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 							else
 							{
-								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
+								$operations->addPasteButton('pasteinto', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $id . (!\is_array($arrClipboard['id']) ? '&id=' . $arrClipboard['id'] : '')));
 							}
 						}
 					}
@@ -3975,7 +3975,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($blnClipboard)
 			{
 				$headerOperations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-				$headerOperations->addPasteButton('pastetop', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')));
+				$headerOperations->addPasteButton('pastetop', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=2&pid=' . $objParent->id . (!$blnMultiboard ? '&id=' . $arrClipboard['id'] : '')));
 			}
 			else
 			{
@@ -4188,14 +4188,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						elseif ($blnMultiboard)
 						{
 							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']));
+							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id']));
 						}
 
 						// Paste buttons
 						elseif ($blnClipboard)
 						{
 							$recordOperations->addSeparator();
-							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']));
+							$recordOperations->addPasteButton('pasteafter', $table, $this->addToUrl('act=' . $arrClipboard['mode'] . '&mode=1&pid=' . $row[$i]['id'] . '&id=' . $arrClipboard['id']));
 						}
 
 						// Create new button
@@ -4657,7 +4657,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					'&#41;' => ')',
 					'&#92;' => '\\\\',
 					'&#61;' => '=',
-					'&amp;' => '&',
+					'&' => '&',
 				);
 
 				$strReplacePrefix = str_repeat('REPLACE(', \count($arrReplace));
