@@ -1047,16 +1047,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-	 *             use copyChildren() instead.
-	 */
-	protected function copyChilds($table, $insertID, $id, $parentId)
-	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "copyChildren()" instead.', __METHOD__);
-		$this->copyChildren($table, $insertID, $id, $parentId);
-	}
-
-	/**
 	 * Duplicate all child records of a duplicated record
 	 *
 	 * @param string  $table
@@ -1722,16 +1712,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->redirect($this->getReferer());
-	}
-
-	/**
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-	 *             use deleteChildren() instead.
-	 */
-	protected function deleteChilds($table, $id, &$delete)
-	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "deleteChildren()" instead.', __METHOD__);
-		$this->deleteChildren($table, $id, $delete);
 	}
 
 	/**
