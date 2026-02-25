@@ -123,13 +123,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $strTable;
 
 	/**
-	 * Cookie name
-	 * @var string
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
-	 */
-	protected $strCookie;
-
-	/**
 	 * Data
 	 * @var array
 	 */
