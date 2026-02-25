@@ -22,10 +22,12 @@ use Contao\CoreBundle\OptIn\OptInToken;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\String\SimpleTokenParser;
-use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\FrontendTemplate;
 use Contao\MemberModel;
+use Contao\OptInModel;
 use Contao\PageModel;
 use Contao\System;
+use Contao\Versions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -164,13 +166,15 @@ class LostPasswordControllerTest extends ContentElementTestCase
         $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
-    #[DataProvider('getOptInTokenData')]
-    public function testOptInTokenVariants(bool $isTokenValid, array $optInData, int $expected): void
+    #[DataProvider('getOptInTokenAndMemberData')]
+    public function testOptInTokenAndMemberVariants(bool $isTokenValid, bool $isTokenConfirmed, bool $hasMember, array $optInData, string $email, int $expected,): void
     {
         $member = $this->createClassWithPropertiesStub(MemberModel::class);
+        $member->id = 1;
+        $member->email = 'email@example.com';
 
         $container = $this->getContainerWithFrameworkTemplate($member);
-        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member));
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate($hasMember ? $member : null));
 
         $optInToken = $this->createMock(OptInToken::class);
         $optInToken
@@ -183,6 +187,18 @@ class LostPasswordControllerTest extends ContentElementTestCase
             ->expects($isTokenValid ? $this->once() : $this->never())
             ->method('getRelatedRecords')
             ->willReturn($optInData)
+        ;
+
+        $optInToken
+            ->expects($isTokenValid && $hasMember ? $this->once() : $this->never())
+            ->method('isConfirmed')
+            ->willReturn($isTokenConfirmed)
+        ;
+
+        $optInToken
+            ->expects('' !== $email ? $this->once() : $this->never())
+            ->method('getEmail')
+            ->willReturn($email)
         ;
 
         $optIn = $this->createMock(OptIn::class);
@@ -207,22 +223,151 @@ class LostPasswordControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame($expected, $response->getStatusCode());
     }
 
-    public static function getOptInTokenData(): iterable
+    public static function getOptInTokenAndMemberData(): iterable
     {
         yield 'Return when token is invalid' => [
-            false, [], Response::HTTP_OK,
+            false, false, false, [], '', Response::HTTP_OK,
         ];
 
         yield 'Return when there are no related records' => [
-            true, [], Response::HTTP_OK,
+            true, false, false, [], '', Response::HTTP_OK,
         ];
 
         yield 'Return when the user ID is missing' => [
-            true, ['tl_member' => []], Response::HTTP_OK,
+            true, false, false, ['tl_member' => []], '', Response::HTTP_OK,
         ];
+
+        yield 'Return when the user is null' => [
+            true, false, false, ['tl_member' => [1]], '', Response::HTTP_OK,
+        ];
+
+        yield 'Return when the token is already confirmed' => [
+            true, true, true, ['tl_member' => [1]], '', Response::HTTP_OK,
+        ];
+
+        yield 'Return when the token email is not the same as the user email' => [
+            true, false, true, ['tl_member' => [1]], 'foo@bar.com', Response::HTTP_OK,
+        ];
+
+        yield 'Return when form is not valid' => [
+            true, false, true, ['tl_member' => [1]], 'email@example.com', Response::HTTP_OK,
+        ];
+    }
+
+    public function testUpdatesPassword(): void
+    {
+        $member = $this->createClassWithPropertiesStub(MemberModel::class);
+        $member->id = 1;
+        $member->email = 'email@example.com';
+
+        $container = $this->getContainerWithFrameworkTemplate($member);
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member, false, true));
+
+        $lostPasswordForm = $this->createMock(FormInterface::class);
+        $lostPasswordForm
+            ->expects($this->once())
+            ->method('handleRequest')
+        ;
+
+        $lostPasswordForm
+            ->expects($this->once())
+            ->method('isSubmitted')
+            ->willReturn(false)
+        ;
+
+        $changePasswordForm = $this->createMock(FormInterface::class);
+        $changePasswordForm
+            ->expects($this->once())
+            ->method('handleRequest')
+        ;
+
+        $changePasswordForm
+            ->expects($this->once())
+            ->method('isSubmitted')
+            ->willReturn(true)
+        ;
+
+        $changePasswordForm
+            ->expects($this->once())
+            ->method('isValid')
+            ->willReturn(true)
+        ;
+
+        $formField = $this->createMock(FormInterface::class);
+        $formField
+            ->expects($this->exactly(2))
+            ->method('getData')
+            ->willReturn('foobar')
+        ;
+
+        $changePasswordForm
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->with('newpassword')
+            ->willReturn($formField)
+        ;
+
+        $formFactory = $this->createMock(FormFactoryInterface::class);
+        $formFactory
+            ->expects($this->exactly(2))
+            ->method('create')
+            ->willReturnOnConsecutiveCalls($lostPasswordForm, $changePasswordForm)
+        ;
+
+        $container->set('form.factory', $formFactory);
+
+        $optInToken = $this->createMock(OptInToken::class);
+        $optInToken
+            ->expects($this->once())
+            ->method('isValid')
+            ->willReturn(true)
+        ;
+
+        $optInToken
+            ->expects($this->once())
+            ->method('getRelatedRecords')
+            ->willReturn(['tl_member' => [1]])
+        ;
+
+        $optInToken
+            ->expects($this->once())
+            ->method('isConfirmed')
+            ->willReturn(false)
+        ;
+
+        $optInToken
+            ->expects($this->once())
+            ->method('getEmail')
+            ->willReturn('email@example.com')
+        ;
+
+        $optIn = $this->createMock(OptIn::class);
+        $optIn
+            ->expects($this->once())
+            ->method('find')
+            ->willReturn($optInToken)
+        ;
+
+        $controller = new LostPasswordController(
+            $this->createStub(TranslatorInterface::class),
+            $this->createStub(RateLimiterFactoryInterface::class),
+            $optIn,
+            $this->createStub(SimpleTokenParser::class),
+            $this->createStub(LoggerInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->createClassWithPropertiesStub(ContentModel::class);
+        $request = new Request();
+        $request->query->set('token', 'pw-notasecrettoken');
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**
@@ -237,7 +382,7 @@ class LostPasswordControllerTest extends ContentElementTestCase
         if ($form) {
             $formFactory = $this->createMock(FormFactoryInterface::class);
             $formFactory
-                ->expects($this->once())
+                ->expects($this->atLeastOnce())
                 ->method('create')
                 ->willReturn($form)
             ;
@@ -246,13 +391,16 @@ class LostPasswordControllerTest extends ContentElementTestCase
         return $formFactory;
     }
 
-    private function mockFrameworkWithTemplate(MemberModel|null $member = null, bool $hasCallback = false): ContaoFramework|MockObject|Stub
+    private function mockFrameworkWithTemplate(MemberModel|null $member = null, bool $hasCallback = false, bool $hasVersions = false): ContaoFramework|MockObject|Stub
     {
-        $template = new FragmentTemplate('lost_password', static fn () => new Response());
-
-        $memberAdapter = $this->createAdapterStub(['findActiveByEmailAndUsername']);
+        $memberAdapter = $this->createAdapterStub(['findActiveByEmailAndUsername', 'findById']);
         $memberAdapter
             ->method('findActiveByEmailAndUsername')
+            ->willReturn($member)
+        ;
+
+        $memberAdapter
+            ->method('findById')
             ->willReturn($member)
         ;
 
@@ -280,16 +428,49 @@ class LostPasswordControllerTest extends ContentElementTestCase
             ->willReturn(null)
         ;
 
+        $optInAdapter = $this->createAdapterStub(['findUnconfirmedByRelatedTableAndId']);
+        $optInAdapter
+            ->method('findUnconfirmedByRelatedTableAndId')
+            ->willReturn(null)
+        ;
+
         $framework = $this->createContaoFrameworkStub([
             MemberModel::class => $memberAdapter,
             Controller::class => $this->createAdapterStub(['loadDataContainer']),
             System::class => $systemAdapter,
             PageModel::class => $pageAdapter,
+            OptInModel::class => $optInAdapter,
         ]);
+
+        $versions = $this->createStub(Versions::class);
+
+        if ($hasVersions) {
+            $versions = $this->createMock(Versions::class);
+            $versions
+                ->expects($this->once())
+                ->method('setUsername')
+            ;
+
+            $versions
+                ->expects($this->once())
+                ->method('setEditUrl')
+            ;
+
+            $versions
+                ->expects($this->once())
+                ->method('initialize')
+            ;
+        }
+
+        $template = $this->createStub(FrontendTemplate::class);
+        $template
+            ->method('getResponse')
+            ->willReturn(new Response())
+        ;
 
         $framework
             ->method('createInstance')
-            ->willReturn($template)
+            ->willReturnMap([[FrontendTemplate::class, ['ce_lost_password'], $template], [Versions::class, ['tl_member', 1], $versions]])
         ;
 
         return $framework;
@@ -313,19 +494,6 @@ class LostPasswordControllerTest extends ContentElementTestCase
             ->expects(null !== $formIsValid ? $this->once() : $this->never())
             ->method('isValid')
             ->willReturn((bool) $formIsValid)
-        ;
-
-        $formField = $this->createMock(FormInterface::class);
-        $formField
-            ->expects($formIsValid ? $this->exactly(2) : $this->never())
-            ->method('getData')
-            ->willReturn('12345678')
-        ;
-
-        $form
-            ->expects($formIsValid ? $this->exactly(2) : $this->never())
-            ->method('get')
-            ->willReturn($formField)
         ;
 
         $pageFinder = $this->createMock(PageFinder::class);
