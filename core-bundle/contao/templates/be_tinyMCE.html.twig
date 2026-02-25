@@ -29,7 +29,7 @@
                     Backend.openModalSelector({
                         'id': 'tl_listing',
                         'title': document.getElement('.tox-dialog__title').get('text'),
-                        'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&amp;extras[fieldType]=radio&amp;extras[filesOnly]=true&amp;extras[source]={{ source|e('js') }}&amp;value=' + value + '&amp;popup=1',
+                        'url': Contao.routes.backend_picker + '?context=' + (meta.filetype == 'file' ? 'link' : 'file') + '&extras[fieldType]=radio&extras[filesOnly]=true&extras[source]={{ source|e('js') }}&value=' + value + '&popup=1',
                         'callback': function (table, val) {
                             document.getElement('.tox-dialog input')?.focus();
                             callback(val.join(','));
