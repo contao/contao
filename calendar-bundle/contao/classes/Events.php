@@ -353,7 +353,7 @@ abstract class Events extends Module
 		}
 		catch (ExceptionInterface)
 		{
-			return StringUtil::ampersand(Environment::get('requestUri'));
+			return Environment::get('requestUri');
 		}
 
 		return $url;

@@ -133,7 +133,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
             // Add the parent table to the href
             if (isset($v['href'])) {
-                $v['href'] .= '&amp;table='.$table;
+                $v['href'] .= '&table='.$table;
             } else {
                 $v['href'] = 'table='.$table;
             }
@@ -275,7 +275,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         if (isset($config['href'])) {
-            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].(Input::get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
         }
 
         return null;
