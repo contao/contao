@@ -5313,26 +5313,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param string  $field
 	 * @param mixed   $value
 	 * @param integer $mode
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6. Use ValueFormatter::formatGroup() instead.
-	 */
-	protected function formatCurrentValue($field, $value, $mode)
-	{
-		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "ValueFormatter::formatGroup()" instead.', __METHOD__);
-
-		$valueFormatter = System::getContainer()->get('contao.data_container.value_formatter');
-
-		return $valueFormatter->formatGroup($this->strTable, $field, $value, (int) $mode, $this);
-	}
-
-	/**
-	 * Return the formatted group header as string
-	 *
-	 * @param string  $field
-	 * @param mixed   $value
-	 * @param integer $mode
 	 * @param array   $row
 	 *
 	 * @return string
