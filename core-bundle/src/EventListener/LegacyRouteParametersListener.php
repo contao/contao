@@ -79,8 +79,6 @@ class LegacyRouteParametersListener
                 $GLOBALS['TL_JAVASCRIPT'],
             ] = $this->globalsBackup;
 
-            $this->globalsBackup = [];
-
             throw new UnusedArgumentsException(\sprintf('Unused arguments: %s', implode(', ', $unused)));
         }
     }
