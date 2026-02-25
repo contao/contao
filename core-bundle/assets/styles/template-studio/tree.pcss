@@ -8,14 +8,10 @@
         overflow: hidden;
     }
 
-    .user-filter,
-    .search-filter {
-        height: 32px;
-    }
-
     .user-filter {
+        flex: 0 0 18px;
         padding: 4px 8px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         display: flex;
         align-items: center;
         gap: 5px;
@@ -26,8 +22,10 @@
     }
 
     .search-filter {
+        flex: 0 0 28px;
         position: relative;
         vertical-align: initial;
+        border-bottom: 1px solid var(--border);
 
         svg {
             position: absolute;
