@@ -164,49 +164,4 @@ export default class TooltipsController extends Controller {
 
         return { x: -9, y: 30 };
     }
-
-    /**
-     * Migrate legacy targets to proper controller targets.
-     */
-    static afterLoad(identifier) {
-        const targetSelectors = Object.keys(TooltipsController.defaultOptionsMap);
-
-        const migrateTarget = (el) => {
-            for (const target of targetSelectors) {
-                if (!el.hasAttribute(`data-${identifier}-target`) && el.matches(target)) {
-                    el.setAttribute(`data-${identifier}-target`, 'tooltip');
-                }
-
-                for (const sel of el.querySelectorAll(target)) {
-                    if (!sel.hasAttribute(`data-${identifier}-target`)) {
-                        sel.setAttribute(`data-${identifier}-target`, 'tooltip');
-                    }
-                }
-            }
-        };
-
-        new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                if (mutation.type !== 'childList') {
-                    continue;
-                }
-
-                for (const node of mutation.addedNodes) {
-                    if (!(node instanceof HTMLElement)) {
-                        continue;
-                    }
-
-                    migrateTarget(node);
-                }
-            }
-        }).observe(document, {
-            childList: true,
-            subtree: true,
-        });
-
-        // Initially migrate all targets that are already in the DOM
-        for (const el of document.querySelectorAll(targetSelectors.join(','))) {
-            migrateTarget(el);
-        }
-    }
 }
