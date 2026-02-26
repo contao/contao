@@ -106,7 +106,7 @@ class ContentVimeo extends ContentElement
 
 		if (!empty($params))
 		{
-			$url .= (str_contains($url, '?') ? '&amp;' : '?') . implode('&amp;', $params);
+			$url .= (str_contains($url, '?') ? '&' : '?') . implode('&', $params);
 		}
 
 		if ($this->playerStart > 0)

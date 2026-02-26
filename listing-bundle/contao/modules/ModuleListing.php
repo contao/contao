@@ -239,13 +239,13 @@ class ModuleListing extends Module
 		{
 			if ($fragment && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
 			{
-				$strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
+				$strUrl .= (!$blnQuery ? '?' : '&') . $fragment;
 				$blnQuery = true;
 			}
 		}
 
 		$this->Template->url = $strUrl;
-		$strVarConnector = $blnQuery ? '&amp;' : '?';
+		$strVarConnector = $blnQuery ? '&' : '?';
 
 		// Prepare the data arrays
 		$arrTh = array();
@@ -279,7 +279,7 @@ class ModuleListing extends Module
 			$arrTh[] = array
 			(
 				'link' => $strField,
-				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
+				'href' => ($strUrl . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&sort=' . $sort,
 				'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class
 			);

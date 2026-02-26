@@ -129,7 +129,7 @@ class ContentYouTube extends ContentElement
 
 		if (!empty($params))
 		{
-			$url .= '?' . implode('&amp;', $params);
+			$url .= '?' . implode('&', $params);
 		}
 
 		// Add a splash image
