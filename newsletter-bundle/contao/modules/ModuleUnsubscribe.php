@@ -286,12 +286,16 @@ class ModuleUnsubscribe extends Module
 		// Confirmation e-mail
 		$objEmail = new Email()
 			->to($strEmail)
-			->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? null))
 			->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))))
 			->text(StringUtil::decodeEntities(System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData)))
 		;
 
-		System::getContainer()->get('mailer')->send($objEmail);
+		if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+		{
+			$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
+		}
+
+		System::getContainer()->get('contao.mailer')->send($objEmail);
 
 		// Redirect to the jumpTo page
 		if ($objTarget = PageModel::findById($this->objModel->jumpTo))

@@ -240,13 +240,17 @@ class tl_comments extends Backend
 				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
 				$objEmail = new Email()
-					->from(new Address($GLOBALS['TL_ADMIN_EMAIL'] ?? null, $GLOBALS['TL_ADMIN_NAME'] ?? null))
 					->to($objNotify->email)
 					->subject(sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplySubject'], Idna::decode(Environment::get('host'))))
 					->text(StringUtil::decodeEntities(sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyReplyMessage'], $objNotify->name, $strUrl . '#c' . $dc->id, $strUrl . '?token=' . $objNotify->tokenRemove)))
 				;
 
-				System::getContainer()->get('mailer')->send($objEmail);
+				if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+				{
+					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
+				}
+
+				System::getContainer()->get('contao.mailer')->send($objEmail);
 			}
 		}
 

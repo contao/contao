@@ -471,7 +471,7 @@ class Newsletter extends Backend
 		{
 			$objEmail->to($arrRecipient['email']);
 
-			System::getContainer()->get('mailer')->send($objEmail);
+			System::getContainer()->get('contao.mailer')->send($objEmail);
 		}
 		catch (RfcComplianceException|HandlerFailedException|TransportException $e)
 		{

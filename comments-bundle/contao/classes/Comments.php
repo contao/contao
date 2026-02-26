@@ -364,9 +364,13 @@ class Comments extends Frontend
 
 			// Prepare the notification mail
 			$objEmail = new EmailMessage()
-				->from(new Address($GLOBALS['TL_ADMIN_EMAIL'] ?? null, $GLOBALS['TL_ADMIN_NAME'] ?? null))
 				->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host'))))
 			;
+
+			if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+			{
+				$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
+			}
 
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
@@ -396,7 +400,7 @@ class Comments extends Frontend
 			{
 				$objEmail->to(...$varNotifies);
 
-				System::getContainer()->get('mailer')->send($objEmail);
+				System::getContainer()->get('contao.mailer')->send($objEmail);
 			}
 
 			// Pending for approval
@@ -618,13 +622,17 @@ class Comments extends Frontend
 				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
 				$objEmail = new EmailMessage()
-					->from(new Address($GLOBALS['TL_ADMIN_EMAIL'] ?? null, $GLOBALS['TL_ADMIN_NAME'] ?? null))
 					->to($objNotify->email)
 					->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host'))))
 					->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove)))
 				;
 
-				System::getContainer()->get('mailer')->send($objEmail);
+				if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+				{
+					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
+				}
+
+				System::getContainer()->get('contao.mailer')->send($objEmail);
 			}
 		}
 

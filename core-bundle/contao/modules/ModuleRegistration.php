@@ -593,7 +593,7 @@ class ModuleRegistration extends Module
 
 		$objEmail = new EmailMessage()
 			->to($GLOBALS['TL_ADMIN_EMAIL'])
-			->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? null))
+			->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''))
 			->subject(\sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host'))))
 		;
 
@@ -619,6 +619,6 @@ class ModuleRegistration extends Module
 
 		$objEmail->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n"));
 
-		System::getContainer()->get('mailer')->send($objEmail);
+		System::getContainer()->get('contao.mailer')->send($objEmail);
 	}
 }

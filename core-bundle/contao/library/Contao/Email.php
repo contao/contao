@@ -127,7 +127,7 @@ class Email
 	 */
 	public function __construct()
 	{
-		$this->objMailer = System::getContainer()->get('mailer');
+		$this->objMailer = System::getContainer()->get('contao.mailer');
 		$this->strCharset = System::getContainer()->getParameter('kernel.charset');
 		$this->objMessage = new EmailMessage();
 	}
