@@ -39,7 +39,7 @@ class DnsMigration extends AbstractMigration
         }
 
         $columns = array_map(
-            static fn (Column $column): string => $column->getObjectName()->toString(),
+            static fn (Column $column): string => $column->getObjectName()->getIdentifier()->getValue(),
             $schemaManager->introspectTableColumnsByUnquotedName('tl_page'),
         );
 

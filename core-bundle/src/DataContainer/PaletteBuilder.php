@@ -259,7 +259,7 @@ class PaletteBuilder
     private function getAdminFields(string $table): array
     {
         $adminFields = [];
-        $columns = array_map(static fn (Column $column) => $column->getObjectName()->toString(), $this->connection->createSchemaManager()->introspectTableColumnsByUnquotedName($table));
+        $columns = array_map(static fn (Column $column) => $column->getObjectName()->getIdentifier()->getValue(), $this->connection->createSchemaManager()->introspectTableColumnsByUnquotedName($table));
 
         if (\in_array('pid', $columns, true)) {
             $adminFields[] = 'pid';
