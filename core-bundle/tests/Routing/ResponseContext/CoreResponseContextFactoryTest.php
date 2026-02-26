@@ -297,12 +297,6 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $figureBuilder
             ->expects($this->once())
-            ->method('setSize')
-            ->willReturnSelf()
-        ;
-
-        $figureBuilder
-            ->expects($this->once())
             ->method('buildIfResourceExists')
             ->willReturn($figure)
         ;
