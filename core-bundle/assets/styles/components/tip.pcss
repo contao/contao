@@ -5,38 +5,32 @@
     cursor: help;
 }
 
-.tip {
-    position: relative;
-    max-width: 80vw;
+#tooltip {
+    display: none;
+    width: max-content;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--invert-bg);
+    color: var(--invert-text);
     padding: 6px 9px;
     border-radius: var(--border-radius);
-    background: var(--invert-bg);
-    z-index: 99;
     pointer-events: none;
+    z-index: 99;
+
+    div {
+        line-height: 1.3;
+    }
+
+    :is(div, a, span) {
+        color: var(--invert-text);
+    }
 }
 
-.tip div {
-    line-height: 1.3;
-}
-
-.tip div,
-.tip a,
-.tip span {
-    color: var(--invert-text);
-}
-
-.tip::before {
-    content: "";
-    height: 6px;
+#tooltip_arrow {
     position: absolute;
-    top: -13px;
-    left: 9px;
-    border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 7px solid var(--invert-bg);
-}
-
-.tip--rtl::before {
-    left: auto;
-    right: 9px;
+    background: var(--invert-bg);
+    width: 9px;
+    height: 9px;
+    transform: rotate(45deg);
 }
