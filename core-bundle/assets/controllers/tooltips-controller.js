@@ -1,64 +1,86 @@
 import { Controller } from '@hotwired/stimulus';
+import * as Position from '../modules/position';
 
 export default class TooltipsController extends Controller {
     #tooltip = null;
+    #tooltipContainer = null;
+    #tooltipArrow = null;
     #timer = null;
     #activeTargets = new Set();
     #removeClickTargetHandlerDelegates = new Map();
 
-    static defaultOptionsMap = {
-        'a img[alt]': { x: -9, y: 30 },
-        '.sgallery img[alt]': { x: 0, y: 75 },
-        'p.tl_tip': { x: 0, y: 23, useContent: true },
-        '#home[title]': { x: 6, y: 42 },
-        '#tmenu a[title]': { x: 0, y: 42 },
-        '#tmenu button[title]': { x: 0, y: 42 },
-        'a[title][class^="group-"]': { x: -6, y: 27 },
-        'a[title].navigation': { x: 25, y: 32 },
-        'img[title].gimage': { x: -9, y: 60 },
-        'img[title]:not(.gimage)': { x: -9, y: 30 },
-        'a[title].picker-wizard': { x: -4, y: 30 },
-        'button img[alt]': { x: -9, y: 30 },
-        '.tl_panel button[title]': { x: 0, y: 36 },
-        '.jump-target-scroll button[title]': { x: -4, y: 36 },
-        'button[title].unselectable': { x: -4, y: 20 },
-        'button[title]:not(.unselectable)': { x: -9, y: 30 },
-        'a[title]:not(.picker-wizard)': { x: -9, y: 30 },
-        'input[title]': { x: -9, y: 30 },
-        'time[title]': { x: -9, y: 26 },
-        'span[title]': { x: -9, y: 26 },
-    };
+    static htmlElements = ['p.tl_tip'];
+
+    static elements = [
+        'a img[alt]',
+        '.sgallery img[alt]',
+        'p.tl_tip',
+        '#home[title]',
+        '#tmenu a[title]',
+        '#tmenu button[title]',
+        'a[title][class^="group-"]',
+        'a[title].navigation',
+        'img[title].gimage',
+        'img[title]:not(.gimage)',
+        'a[title].picker-wizard',
+        'button img[alt]',
+        '.tl_panel button[title]',
+        '.jump-target-scroll button[title]',
+        'button[title].unselectable',
+        'button[title]:not(.unselectable)',
+        'a[title]:not(.picker-wizard)',
+        'input[title]',
+        'time[title]',
+        'span[title]',
+    ];
 
     /**
      * There is one controller handling multiple tooltip targets. The tooltip
      * DOM element is shared across targets.
      */
     connect() {
-        this.#tooltip = document.body.querySelector('body > div[role="tooltip"]') ?? this.#createTipContainer();
+        if (null === this.#tooltip) {
+            this.#createTipContainer();
+        }
     }
 
     disconnect() {
-        this.#tooltip.remove();
+        this.#destroyTipContainer();
     }
 
     tooltipTargetConnected(el) {
-        el.addEventListener('mouseenter', (e) => this.#showTooltip(e.target, 1000));
-        el.addEventListener('touchend', (e) => this.#showTooltip(e.target));
-        el.addEventListener('mouseleave', (e) => this.#hideTooltip(e.target));
+        el.addEventListener('mouseenter', this.#showTooltip.bind(this, el, null, 1000));
+        el.addEventListener('touchend', this.#showTooltip.bind(this, el, null, 0));
+        el.addEventListener('mouseleave', this.#hideTooltip.bind(this, el));
 
-        // In case the tooltip target is inside a link or button, also close it
-        // when a click happened
         const clickTarget = el.closest('button, a');
 
         if (clickTarget) {
+            clickTarget.addEventListener('focus', this.#showTooltip.bind(this, el, clickTarget, 500));
+            clickTarget.addEventListener('blur', this.#hideTooltip.bind(this, el));
+
+            // In case the tooltip target is inside a link or button, also close it
+            // when a click happened
             const handler = () => this.#hideTooltip(el);
 
             clickTarget.addEventListener('click', handler);
-            this.#removeClickTargetHandlerDelegates.set(el, () => el.removeEventListener('click', handler));
+            this.#removeClickTargetHandlerDelegates.set(el, () => {
+                el.removeEventListener('click', handler);
+                el.removeEventListener('blur', this.#hideTooltip.bind(this));
+            });
+        } else {
+            el.addEventListener('focus', this.#showTooltip.bind(this, el, null, 500));
+            el.addEventListener('blur', this.#hideTooltip.bind(this, el));
         }
     }
 
     tooltipTargetDisconnected(el) {
+        el.removeEventListener('mouseenter', this.#showTooltip);
+        el.removeEventListener('focus', this.#showTooltip);
+        el.removeEventListener('touchend', this.#showTooltip);
+        el.removeEventListener('mouseleave', this.#hideTooltip);
+        el.removeEventListener('blur', this.#hideTooltip);
+
         if (this.#activeTargets.has(el)) {
             this.#hideTooltip(el);
         }
@@ -73,31 +95,48 @@ export default class TooltipsController extends Controller {
         [...this.#activeTargets].filter((el) => !el.contains(e.target)).forEach(this.#hideTooltip.bind(this));
     }
 
-    #createTipContainer() {
-        const tooltip = document.createElement('div');
-        tooltip.setAttribute('role', 'tooltip');
-        tooltip.classList.add('tip');
-        tooltip.style.position = 'absolute';
-        tooltip.style.display = 'none';
+    #includeHtml(el) {
+        for (const selector of TooltipsController.htmlElements) {
+            if (el.matches(selector)) {
+                return true;
+            }
+        }
 
-        document.body.appendChild(tooltip);
-
-        return tooltip;
+        return false;
     }
 
-    #showTooltip(el, delay = 0) {
-        const options = this.#getOptionsForElement(el);
+    #createTipContainer() {
+        this.#tooltip = document.createElement('div');
+        this.#tooltip.setAttribute('role', 'tooltip');
+        this.#tooltip.id = 'tooltip';
+
+        this.#tooltipContainer = document.createElement('div');
+        this.#tooltipContainer.id = 'tooltip_content';
+
+        this.#tooltipArrow = document.createElement('div');
+        this.#tooltipArrow.id = 'tooltip_arrow';
+
+        this.#tooltip.appendChild(this.#tooltipContainer);
+        this.#tooltip.appendChild(this.#tooltipArrow);
+        document.body.appendChild(this.#tooltip);
+    }
+
+    #destroyTipContainer() {
+        this.#tooltip?.remove();
+        this.#tooltip = this.#tooltipContainer = this.#tooltipArrow = null;
+    }
+
+    #updateContent(el) {
         let text;
 
-        if (options.useContent) {
+        if (this.#includeHtml(el)) {
             text = el.innerHTML;
         } else if (el instanceof HTMLImageElement) {
             text = el.getAttribute('alt');
             text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
         } else {
             text = el.getAttribute('title');
-            el.setAttribute('data-original-title', text);
-            el.removeAttribute('title');
+            this.#migrateElementTitle(el, true);
             text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
         }
 
@@ -105,71 +144,59 @@ export default class TooltipsController extends Controller {
             return;
         }
 
-        clearTimeout(this.#timer);
-        this.#tooltip.style.willChange = 'display,contents';
-
-        this.#timer = setTimeout(() => {
-            this.#activeTargets.add(el);
-
-            const position = el.getBoundingClientRect();
-            const rtl = getComputedStyle(el).direction === 'rtl';
-            const clientWidth = document.documentElement.clientWidth;
-
-            if ((rtl && position.x < 200) || (!rtl && position.x < clientWidth - 200)) {
-                this.#tooltip.style.left = `${window.scrollX + position.left + options.x}px`;
-                this.#tooltip.style.right = 'auto';
-                this.#tooltip.classList.remove('tip--rtl');
-            } else {
-                this.#tooltip.style.left = 'auto';
-                this.#tooltip.style.right = `${clientWidth - window.scrollX - position.right + options.x}px`;
-                this.#tooltip.classList.add('tip--rtl');
-            }
-
-            this.#tooltip.innerHTML = `<div>${text}</div>`;
-            this.#tooltip.style.top = `${window.scrollY + position.top + options.y}px`;
-            this.#tooltip.style.display = 'block';
-            this.#tooltip.style.willChange = 'auto';
-        }, delay);
+        this.#tooltipContainer.innerHTML = text;
     }
 
-    #hideTooltip(el, delay = 0) {
-        if (el.hasAttribute('data-original-title')) {
+    #updatePosition(el) {
+        Position.compute(el, this.#tooltip, this.#tooltipArrow);
+    }
+
+    #migrateElementTitle(el, setTitle = false) {
+        if (!el) {
+            return;
+        }
+
+        const hasDataTitle = el.hasAttribute('data-original-title');
+
+        if (setTitle && !hasDataTitle) {
+            el.setAttribute('data-original-title', el.getAttribute('title'));
+            el.removeAttribute('title');
+        } else if (hasDataTitle) {
             if (!el.hasAttribute('title')) {
                 el.setAttribute('title', el.getAttribute('data-original-title'));
             }
 
             el.removeAttribute('data-original-title');
         }
-
-        clearTimeout(this.#timer);
-        this.#tooltip.style.willChange = 'auto';
-
-        if (this.#tooltip.style.display === 'block') {
-            this.#activeTargets.delete(el);
-
-            this.#tooltip.style.willChange = 'display';
-            this.#timer = setTimeout(() => {
-                this.#tooltip.style.display = 'none';
-                this.#tooltip.style.willChange = 'auto';
-            }, delay);
-        }
     }
 
-    #getOptionsForElement(el) {
-        for (const [criteria, defaultOptions] of Object.entries(TooltipsController.defaultOptionsMap)) {
-            if (el.matches(criteria)) {
-                return defaultOptions;
-            }
-        }
+    #showTooltip(el, parentAnchor = null, delay = 0) {
+        this.#updateContent(el);
 
-        return { x: -9, y: 30 };
+        clearTimeout(this.#timer);
+        this.#tooltip.style.willChange = 'display,contents';
+
+        this.#timer = setTimeout(() => {
+            this.#activeTargets.add(el);
+            this.#updatePosition(parentAnchor ?? el);
+            this.#tooltip.style.display = 'block';
+            this.#tooltip.style.willChange = 'auto';
+        }, delay);
+    }
+
+    #hideTooltip(el) {
+        this.#migrateElementTitle(el);
+
+        clearTimeout(this.#timer);
+        this.#activeTargets.delete(el);
+        this.#tooltip.style.display = 'none';
     }
 
     /**
      * Migrate legacy targets to proper controller targets.
      */
     static afterLoad(identifier) {
-        const targetSelectors = Object.keys(TooltipsController.defaultOptionsMap);
+        const targetSelectors = TooltipsController.elements;
 
         const migrateTarget = (el) => {
             for (const target of targetSelectors) {
