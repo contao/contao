@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\Config;
+use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
 use Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener;
 use Contao\CoreBundle\Tests\Fixtures\TranslatorStub;
@@ -34,7 +35,7 @@ class FallbackRecordLabelListenerTest extends TestCase
 
     public function testIgnoresOtherIdentifiers(): void
     {
-        $listener = new FallbackRecordLabelListener($this->createStub(TranslatorStub::class));
+        $listener = new FallbackRecordLabelListener($this->createStub(TranslatorStub::class), $this->createStub(ValueFormatter::class));
         $listener($event = new DataContainerRecordLabelEvent('contao.something.tl_foo.123', ['id' => 123]));
 
         $this->assertNull($event->getLabel());
@@ -66,7 +67,7 @@ class FallbackRecordLabelListenerTest extends TestCase
             ->willReturn('Edit 123')
         ;
 
-        $listener = new FallbackRecordLabelListener($translator);
+        $listener = new FallbackRecordLabelListener($translator, $this->createStub(ValueFormatter::class));
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123]));
 
         $this->assertSame('Edit 123', $event->getLabel());
@@ -81,7 +82,7 @@ class FallbackRecordLabelListenerTest extends TestCase
 
         $translator = $this->createStub(TranslatorStub::class);
 
-        $listener = new FallbackRecordLabelListener($translator);
+        $listener = new FallbackRecordLabelListener($translator, $this->createStub(ValueFormatter::class));
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B &amp; B)</span>']));
 
         $this->assertSame('A (B & B)', $event->getLabel());
