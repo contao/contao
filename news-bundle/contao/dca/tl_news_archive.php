@@ -117,7 +117,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('Article', 'BlogPosting', 'NewsArticle'),
-			'default'                 => 'NewsArticle',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => 'NewsArticle')
 		)
