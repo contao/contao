@@ -114,7 +114,6 @@ class FallbackRecordLabelListenerTest extends TestCase
             ->with('tl_foo', 'fieldA', '1772131097', null)
             ->willReturn('2026-02-26')
         ;
-        //dd($formatter->format('tl_foo', 'fieldA', '1772131097', null));
 
         $listener = new FallbackRecordLabelListener($translator, $formatter);
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => '1772131097']));
