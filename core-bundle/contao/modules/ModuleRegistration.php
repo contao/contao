@@ -619,6 +619,6 @@ class ModuleRegistration extends Module
 
 		$objEmail->text(StringUtil::decodeEntities(\sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n"));
 
-		System::getContainer()->get('contao.mailer')->send($objEmail);
+		System::getContainer()->get('mailer')->send($objEmail);
 	}
 }

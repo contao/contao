@@ -576,7 +576,7 @@ class Form extends Hybrid
 			}
 
 			// Send the e-mail
-			System::getContainer()->get('contao.mailer')->send($email);
+			System::getContainer()->get('mailer')->send($email);
 		}
 
 		// Store the values in the database

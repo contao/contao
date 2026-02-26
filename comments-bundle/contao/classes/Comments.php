@@ -400,7 +400,7 @@ class Comments extends Frontend
 			{
 				$objEmail->to(...$varNotifies);
 
-				System::getContainer()->get('contao.mailer')->send($objEmail);
+				System::getContainer()->get('mailer')->send($objEmail);
 			}
 
 			// Pending for approval
@@ -607,7 +607,7 @@ class Comments extends Frontend
 					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
 				}
 
-				System::getContainer()->get('contao.mailer')->send($objEmail);
+				System::getContainer()->get('mailer')->send($objEmail);
 			}
 		}
 

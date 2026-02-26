@@ -250,7 +250,7 @@ class tl_comments extends Backend
 					$objEmail->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
 				}
 
-				System::getContainer()->get('contao.mailer')->send($objEmail);
+				System::getContainer()->get('mailer')->send($objEmail);
 			}
 		}
 
