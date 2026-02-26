@@ -103,7 +103,7 @@ class DnsMigrationTest extends TestCase
             ->willReturn([
                 new Column('dns', Type::getType(Types::STRING)),
                 new Column('type', Type::getType(Types::STRING)),
-                new Column('usessl', Type::getType(Types::BOOLEAN)),
+                new Column('useSSL', Type::getType(Types::BOOLEAN)),
             ])
         ;
 
