@@ -50,7 +50,7 @@ class FallbackRecordLabelListener
         $defaultSearchField = $GLOBALS['TL_DCA'][$table]['list']['sorting']['defaultSearchField'] ?? null;
 
         if ($defaultSearchField && ($label = $event->getData()[$defaultSearchField] ?? null)) {
-            $event->setLabel(trim(StringUtil::decodeEntities(strip_tags((string) $this->valueFormatter->format($table, $defaultSearchField, $label, null)))));
+            $event->setLabel(trim(StringUtil::decodeEntities(strip_tags($this->valueFormatter->format($table, $defaultSearchField, $label, null)))));
         } else {
             $messageDomain = "contao_$table";
 
