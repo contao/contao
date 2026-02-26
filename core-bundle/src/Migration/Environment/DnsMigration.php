@@ -43,7 +43,7 @@ class DnsMigration extends AbstractMigration
             $schemaManager->introspectTableColumnsByUnquotedName('tl_page'),
         );
 
-        if (!\in_array('dns', $columns, true) || !\in_array('type', $columns, true) || !\in_array('usessl', $columns, true)) {
+        if (!\in_array('dns', $columns, true) || !\in_array('type', $columns, true) || !\in_array('useSSL', $columns, true)) {
             return false;
         }
 
