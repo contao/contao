@@ -481,7 +481,10 @@ class Form extends Hybrid
 			}
 
 			// Set the admin e-mail as "from" address
-			$email->from(new Address($GLOBALS['TL_ADMIN_EMAIL'] ?? null, $GLOBALS['TL_ADMIN_NAME'] ?? null));
+			if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+			{
+				$email->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
+			}
 
 			// Get the "reply to" address
 			if (!empty($arrSubmitted['email']))
@@ -573,7 +576,7 @@ class Form extends Hybrid
 			}
 
 			// Send the e-mail
-			System::getContainer()->get('mailer')->send($email);
+			System::getContainer()->get('contao.mailer')->send($email);
 		}
 
 		// Store the values in the database
