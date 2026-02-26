@@ -211,15 +211,12 @@ class ResultTest extends TestCase
      */
     private function createResults(array $data): array
     {
-        /** @phpstan-ignore classConstant.internalClass */
-        $reflection = new \ReflectionClass(ArrayResult::class);
-
-        if (\count($reflection->getConstructor()->getParameters()) > 1) {
-            $result = new ArrayResult(array_keys($data[0] ?? []), array_map(array_values(...), $data));
-        } else {
-            /** @phpstan-ignore arguments.count, argument.type */
-            $result = new ArrayResult($data);
-        }
+        $result = new ArrayResult(
+            array_keys($data[0] ?? []),
+            // Remove all keys because ArrayResult incorrectly expects list<list<mixed>> even
+            // though it handles list<array<mixed>> just fine as well.
+            array_map(array_values(...), $data),
+        );
 
         return [
             new Result(

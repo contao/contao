@@ -14,11 +14,15 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Fragment\FragmentHandler;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Contao\Template;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\VarDumper\VarDumper;
 use Twig\Environment;
 
@@ -28,7 +32,10 @@ class TemplateTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -105,7 +112,7 @@ class TemplateTest extends TestCase
 
             public function parse(): string
             {
-                return $this->testBuffer;
+                return System::getContainer()->get('contao.insert_tag.parser')->replace($this->testBuffer);
             }
 
             public function testCompile(): string
