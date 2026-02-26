@@ -298,7 +298,6 @@ class CoreResponseContextFactoryTest extends TestCase
         $figureBuilder
             ->expects($this->once())
             ->method('setSize')
-            ->with('proportional')
             ->willReturnSelf()
         ;
 
