@@ -16,7 +16,6 @@ use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
-use Symfony\Component\Mime\Part\DataPart;
 
 /**
  * Provide methods to handle front end forms.
@@ -521,17 +520,17 @@ class Form extends Hybrid
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
-				$email->addPart(new DataPart($objTemplate->parse(), 'form.xml', 'application/xml'));
+				$email->embed($objTemplate->parse(), 'form.xml', 'application/xml');
 			}
 
 			// Attach CSV file
 			if ($this->format == 'csv')
 			{
-				$email->addPart(new DataPart(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values'));
+				$email->embed(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
 			}
 			elseif ($this->format == 'csv_excel')
 			{
-				$email->addPart(new DataPart(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values'));
+				$email->embed(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
@@ -555,7 +554,7 @@ class Form extends Hybrid
 							continue;
 						}
 
-						$email->addPart(new DataPart(file_get_contents($file['tmp_name']), $file['name'], $file['type']));
+						$email->embedFromPath($file['tmp_name'], $file['name'], $file['type']);
 					}
 				}
 			}
