@@ -12,6 +12,9 @@ namespace Contao;
 
 /**
  * Front end module "lost password".
+ *
+ * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+ *             use the content element instead.
  */
 class ModuleLostPassword extends Module
 {

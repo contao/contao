@@ -54,14 +54,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
     {
         $container = $this->getContainerWithFrameworkTemplate();
 
-        $controller = new ChangePasswordController(
-            $this->getDefaultFramework(),
-            $this->createStub(PasswordHasherFactoryInterface::class),
-            $this->createStub(ContentUrlGenerator::class),
-            $this->createStub(EventDispatcherInterface::class),
-            $this->createStub(RouterInterface::class),
-        );
-
+        $controller = new ChangePasswordController();
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -74,18 +67,9 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
     public function testReturnsIfNoFrontendMember(): void
     {
-        $container = $this->getContainerWithFrameworkTemplate(
-            $this->createStub(FrontendUser::class),
-        );
+        $container = $this->getContainerWithFrameworkTemplate($this->createStub(FrontendUser::class));
 
-        $controller = new ChangePasswordController(
-            $this->mockFrameworkWithTemplate(),
-            $this->createStub(PasswordHasherFactoryInterface::class),
-            $this->createStub(ContentUrlGenerator::class),
-            $this->createStub(EventDispatcherInterface::class),
-            $this->createStub(RouterInterface::class),
-        );
-
+        $controller = new ChangePasswordController();
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -100,19 +84,10 @@ class ChangePasswordControllerTest extends ContentElementTestCase
     {
         $member = $this->createClassWithPropertiesStub(MemberModel::class);
 
-        $container = $this->getContainerWithFrameworkTemplate(
-            $this->createStub(FrontendUser::class),
-            $member,
-        );
+        $container = $this->getContainerWithFrameworkTemplate($this->createStub(FrontendUser::class), $member);
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member, null, null, null, true));
 
-        $controller = new ChangePasswordController(
-            $this->mockFrameworkWithTemplate($member, null, null, null, true),
-            $this->createStub(PasswordHasherFactoryInterface::class),
-            $this->createStub(ContentUrlGenerator::class),
-            $this->createStub(EventDispatcherInterface::class),
-            $this->createStub(RouterInterface::class),
-        );
-
+        $controller = new ChangePasswordController();
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -137,14 +112,7 @@ class ChangePasswordControllerTest extends ContentElementTestCase
 
         $container = $this->getContainerWithFrameworkTemplate($user, $member, false);
 
-        $controller = new ChangePasswordController(
-            $this->mockFrameworkWithTemplate($member),
-            $this->createStub(PasswordHasherFactoryInterface::class),
-            $this->createStub(ContentUrlGenerator::class),
-            $this->createStub(EventDispatcherInterface::class),
-            $this->createStub(RouterInterface::class),
-        );
-
+        $controller = new ChangePasswordController();
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -163,8 +131,6 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $member = $this->createClassWithPropertiesStub(MemberModel::class);
         $member->id = 1;
         $member->username = 'username';
-
-        $container = $this->getContainerWithFrameworkTemplate($user, $member, true);
 
         $optIn = $this->createClassWithPropertiesStub(OptInModel::class);
 
@@ -215,14 +181,13 @@ class ChangePasswordControllerTest extends ContentElementTestCase
             ->willReturn('/')
         ;
 
-        $controller = new ChangePasswordController(
-            $this->mockFrameworkWithTemplate($member, $this->createStub(PageModel::class), $optIn, $versions),
-            $passwordHasherFactory,
-            $contentUrlGenerator,
-            $eventDispatcher,
-            $this->createStub(RouterInterface::class),
-        );
+        $container = $this->getContainerWithFrameworkTemplate($user, $member, true);
+        $container->set('contao.framework', $this->mockFrameworkWithTemplate($member, $this->createStub(PageModel::class), $optIn, $versions));
+        $container->set('security.password_hasher_factory', $passwordHasherFactory);
+        $container->set('contao.routing.content_url_generator', $contentUrlGenerator);
+        $container->set('event_dispatcher', $eventDispatcher);
 
+        $controller = new ChangePasswordController();
         $controller->setContainer($container);
 
         $model = $this->createClassWithPropertiesStub(ContentModel::class);
@@ -373,6 +338,9 @@ class ChangePasswordControllerTest extends ContentElementTestCase
         $container->set('contao.routing.content_url_generator', $this->createStub(ContentUrlGenerator::class));
         $container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
         $container->set('form.factory', $this->mockFormFactory(null !== $formIsValid ? $form : null));
+        $container->set('security.password_hasher_factory', $this->createStub(PasswordHasherFactoryInterface::class));
+        $container->set('event_dispatcher', $this->createStub(EventDispatcherInterface::class));
+        $container->set('router', $this->createStub(RouterInterface::class));
 
         System::setContainer($container);
 

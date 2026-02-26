@@ -78,7 +78,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource', 'showPreview'),
+		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource', 'showPreview', 'enableCaptcha'),
 		'default'                     => '{type_legend},type',
 		'headline'                    => '{type_legend},type,headline,title;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'text'                        => '{type_legend},type,headline,title;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
@@ -116,7 +116,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'manage_passkeys'             => '{type_legend},type,headline,title;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'two_factor'                  => '{type_legend},type,headline,title;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'change_password'             => '{type_legend},type,headline,title;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'close_account'               => '{type_legend},type,headline,title;{config_legend},reg_close,reg_deleteDir;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
+		'close_account'               => '{type_legend},type,headline,title;{config_legend},reg_close,reg_deleteDir;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'lost_password'				  => '{type_legend},title,headline,type;{config_legend},reg_skipName,enableCaptcha;{redirect_legend},jumpTo;{email_legend:hide},reg_jumpTo,reg_password;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
 	),
 
 	// Sub-palettes
@@ -131,7 +132,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'splashImage'                 => 'singleSRC,size',
 		'markdownSource_sourceText'   => 'code',
 		'markdownSource_sourceFile'   => 'singleSRC',
-		'showPreview'                 => 'size,fullsize,numberOfItems'
+		'showPreview'                 => 'size,fullsize,numberOfItems',
+		'enableCaptcha'			      => 'altchaAuto,altchaHideLogo,altchaHideFooter,altchaFloating'
 	),
 
 	// Fields
@@ -852,7 +854,50 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-		)
+		),
+		'reg_skipName' => array
+		(
+			'inputType'               => 'checkbox',
+		),
+		'enableCaptcha' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true),
+		),
+		'reg_jumpTo' => array
+		(
+			'inputType'               => 'pageTree',
+			'foreignKey'              => 'tl_page.title',
+			'eval'                    => array('fieldType'=>'radio'),
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'reg_password' => array
+		(
+			'default'                 => is_array($GLOBALS['TL_LANG']['tl_content']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_content']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_content']['passwordText'] ?? null),
+			'inputType'               => 'textarea',
+			'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
+		),
+		'altchaAuto' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('onfocus', 'onsubmit'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+		),
+		'altchaHideLogo' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w16'),
+		),
+		'altchaHideFooter' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w16'),
+		),
+		'altchaFloating' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w16'),
+		),
 	)
 );
 

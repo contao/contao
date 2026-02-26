@@ -84,12 +84,6 @@ services:
             - '@contao.framework'
 
     Contao\CoreBundle\Controller\ContentElement\ChangePasswordController:
-        arguments:
-            - '@contao.framework'
-            - '@security.password_hasher_factory'
-            - '@contao.routing.content_url_generator'
-            - '@event_dispatcher'
-            - '@router.default'
 
     Contao\CoreBundle\Controller\ContentElement\CloseAccountController:
         arguments:
@@ -138,6 +132,14 @@ services:
             - '@translator'
             - '@event_dispatcher'
             - '@contao.framework'
+
+    Contao\CoreBundle\Controller\ContentElement\LostPasswordController:
+        arguments:
+            - '@translator'
+            - '@contao.rate_limit.member_password_factory'
+            - '@contao.opt_in'
+            - '@contao.string.simple_token_parser'
+            - '@monolog.logger.contao.access'
 
     Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
         arguments:
