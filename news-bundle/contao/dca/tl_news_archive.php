@@ -63,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected'),
-		'default'                     => '{title_legend},title,jumpTo;{protected_legend:hide},protected'
+		'default'                     => '{title_legend},title,jumpTo,jsonLdType;{protected_legend:hide},protected'
 	),
 
 	// Sub-palettes
