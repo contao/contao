@@ -98,6 +98,15 @@ class FrontendController extends AbstractController
         return $response;
     }
 
+    /**
+     * Symfony will authenticate the user automatically by calling this route.
+     */
+    #[Route('/_contao/login-link', name: 'contao_frontend_login_link')]
+    public function loginAction(): never
+    {
+        throw new \RuntimeException('The user was not logged in correctly.');
+    }
+
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

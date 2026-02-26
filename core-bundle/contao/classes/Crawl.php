@@ -65,27 +65,20 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		if ($this->isActive() && $this->valid)
 		{
-			$headers = array();
-			$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
-
 			if ($indexProtected)
 			{
-				if (!$objAuthenticator->authenticateFrontendUser($user, false))
+				$hasMember = System::getContainer()->get('database_connection')
+					->prepare('SELECT id FROM tl_member WHERE username = :username')
+					->executeQuery(array('username' => $user))
+					->fetchAssociative();
+
+				if (false === $hasMember)
 				{
 					$template->invalidUser = true;
-					$objAuthenticator->removeFrontendAuthentication();
 					System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
 
 					return $template->parse();
 				}
-
-				// TODO: we need a way to authenticate with a token instead of our own cookie
-				$session = System::getContainer()->get('request_stack')->getSession();
-				$headers = array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId()));
-			}
-			else
-			{
-				$objAuthenticator->removeFrontendAuthentication();
 			}
 
 			$subscribers = $subscribersWidget->value;
@@ -93,7 +86,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 			$jobs = System::getContainer()->get('contao.job.jobs');
 			$job = $jobs->createJob('crawl');
-			$jobs->dispatchJob(new CrawlMessage($subscribers, $maxDepth, $headers), $job);
+			$jobs->dispatchJob(new CrawlMessage($subscribers, $maxDepth, array(), $user), $job);
 
 			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['confirmJobAdded'], self::class);
 
