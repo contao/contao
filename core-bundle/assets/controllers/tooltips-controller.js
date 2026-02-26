@@ -49,14 +49,14 @@ export default class TooltipsController extends Controller {
     }
 
     tooltipTargetConnected(el) {
-        el.addEventListener('mouseenter', this.#showTooltip.bind(this, el, 1000));
-        el.addEventListener('touchend', this.#showTooltip.bind(this, el, 0));
+        el.addEventListener('mouseenter', this.#showTooltip.bind(this, el, null, 1000));
+        el.addEventListener('touchend', this.#showTooltip.bind(this, el, null, 0));
         el.addEventListener('mouseleave', this.#hideTooltip.bind(this, el));
 
         const clickTarget = el.closest('button, a');
 
         if (clickTarget) {
-            clickTarget.addEventListener('focus', this.#showTooltip.bind(this, el, 500, clickTarget));
+            clickTarget.addEventListener('focus', this.#showTooltip.bind(this, el, clickTarget, 500));
             clickTarget.addEventListener('blur', this.#hideTooltip.bind(this, el));
 
             // In case the tooltip target is inside a link or button, also close it
@@ -69,7 +69,7 @@ export default class TooltipsController extends Controller {
                 el.removeEventListener('blur', this.#hideTooltip.bind(this));
             });
         } else {
-            el.addEventListener('focus', this.#showTooltip.bind(this, el, 500));
+            el.addEventListener('focus', this.#showTooltip.bind(this, el, null, 500));
             el.addEventListener('blur', this.#hideTooltip.bind(this, el));
         }
     }
@@ -170,7 +170,7 @@ export default class TooltipsController extends Controller {
         }
     }
 
-    #showTooltip(el, delay = 0, parentAnchor = null) {
+    #showTooltip(el, parentAnchor = null, delay = 0) {
         this.#updateContent(el);
 
         clearTimeout(this.#timer);
