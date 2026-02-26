@@ -1928,7 +1928,7 @@ window.Theme =
 	 */
 	setupTextareaResizing: function() {
 		if (window.console) {
-			console.warn('Theme.setupMenuToggle() is deprecated. Please use the Stimulus controller instead.');
+			console.warn('Theme.setupTextareaResizing() is deprecated. Please use the Stimulus controller instead.');
 		}
 
 		$$('.tl_textarea').each(function(el) {
