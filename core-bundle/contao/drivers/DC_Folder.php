@@ -2140,11 +2140,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 
 				// Write the file using the VFS if possible (see #9450)
-				if (Path::isBasePath('files', $objFile->path))
+				$uploadPath = System::getContainer()->getParameter('contao.upload_path');
+
+				if (Path::isBasePath($uploadPath, $objFile->path))
 				{
 					System::getContainer()
 						->get('contao.filesystem.virtual.files')
-						->write(Path::makeRelative($objFile->path, 'files'), $strSource)
+						->write(Path::makeRelative($objFile->path, $uploadPath), $strSource)
 					;
 				}
 				else
