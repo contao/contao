@@ -63,7 +63,7 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(0, new Reference($twoFactorFirewallConfigId))
             ->replaceArgument(2, new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
             ->replaceArgument(3, new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
-            ->replaceArgument(4, new Reference((new TwoFactorServicesFactory())->createAuthenticationRequiredHandler($container, $firewallName, $config, $twoFactorFirewallConfigId)))
+            ->replaceArgument(4, new Reference(new TwoFactorServicesFactory()->createAuthenticationRequiredHandler($container, $firewallName, $config, $twoFactorFirewallConfigId)))
         ;
 
         $this->createTwoFactorPreparationListener($container, $firewallName);

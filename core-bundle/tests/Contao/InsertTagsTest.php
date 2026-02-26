@@ -298,7 +298,7 @@ class InsertTagsTest extends TestCase
 
     public static function provideFigureInsertTags(): iterable
     {
-        $defaultTemplate = '@ContaoCore/Image/Studio/figure.html.twig';
+        $defaultTemplate = '@Contao/component/_figure.html.twig';
 
         yield 'without any configuration' => [
             '{{figure::123}}',
@@ -423,7 +423,7 @@ class InsertTagsTest extends TestCase
 
         $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class), null, $allowedTags);
 
-        $output = (string) (new InsertTags())->replaceInternal($source, false, $insertTagParser);
+        $output = (string) new InsertTags()->replaceInternal($source, false, $insertTagParser);
 
         $this->assertSame($expected, $output);
 
@@ -679,12 +679,12 @@ class InsertTagsTest extends TestCase
 
         yield 'Unclosed insert tag' => [
             '<span title="{{xx">}} class="broken-out">',
-            '<span title="[{]xx">}} class="broken-out">',
+            '<span title="&#123;&#123;xx">}} class="broken-out">',
         ];
 
         yield 'Trick comments detection with insert tag' => [
             '<!-- {{plain::--}}> got you! -->',
-            '<!-- [{]plain::--[}]> got you! -->',
+            '<!-- &#123;&#123;plain::--&#125;&#125;> got you! -->',
         ];
 
         yield 'Do not destroy JSON attributes' => [
@@ -710,6 +710,16 @@ class InsertTagsTest extends TestCase
         yield 'Trick insert tag detection with JSON' => [
             '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
             '<span data-myjson=\'{"foo":{"&quot;:&quot;baz&quot;\'>',
+        ];
+
+        yield 'Literal insert tags' => [
+            'foo [{] bar [}] baz',
+            'foo &#123;&#123; bar &#125;&#125; baz',
+        ];
+
+        yield 'literal insert tags inside script tag are not replaced' => [
+            '[{] <script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script> [}]',
+            '&#123;&#123; <script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script> &#125;&#125;',
         ];
     }
 
@@ -1033,7 +1043,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $output = $insertTagParser->replaceInline('{{infinite-try-catch::1}}');
 
-        $this->assertSame('[{]infinite-try-catch::66[}]', $output);
+        $this->assertSame('&#123;&#123;infinite-try-catch::66&#125;&#125;', $output);
     }
 
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
@@ -1102,12 +1112,12 @@ class InsertTagsTest extends TestCase
         }
 
         if ('infinite-recursion' === $tagParts[0]) {
-            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+            return (string) new InsertTags()->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
         }
 
         if ('infinite-try-catch' === $tagParts[0]) {
             try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+                return (string) new InsertTags()->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
@@ -1117,12 +1127,12 @@ class InsertTagsTest extends TestCase
 
         if ('infinite-retry' === $tagParts[0]) {
             try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+                return (string) new InsertTags()->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
                 if ((int) $tagParts[1] >= 100) {
-                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+                    return (string) new InsertTags()->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
                 }
 
                 throw $exception;

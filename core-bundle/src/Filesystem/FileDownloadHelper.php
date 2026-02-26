@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\Filesystem\PublicUri\TemporaryAccessOption;
 use Contao\StringUtil;
 use Nyholm\Psr7\Uri;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -21,6 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * This helper class makes it easier to generate and handle streamed file
@@ -40,6 +44,9 @@ use Symfony\Component\HttpFoundation\UriSigner;
  */
 class FileDownloadHelper
 {
+    /**
+     * @deprecated can be removed as soon as the deprecated methods are removed
+     */
     private const PARAM_PATH = 'p';
 
     private const PARAM_CONTEXT = 'ctx';
@@ -48,8 +55,14 @@ class FileDownloadHelper
 
     private const PARAM_FILE_NAME = 'f';
 
-    public function __construct(private readonly UriSigner $signer)
-    {
+    private const TOKEN_PARAM = 't';
+
+    public function __construct(
+        private readonly UriSigner $signer,
+        private readonly RouterInterface $router,
+        private readonly Security $security,
+        private readonly MountManager $mountManager,
+    ) {
     }
 
     /**
@@ -57,9 +70,14 @@ class FileDownloadHelper
      *
      * You can optionally provide an array of $context, that will also be incorporated
      * into the URL.
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             use "generateUrl()" instead.
      */
     public function generateInlineUrl(string $url, string $path, array|null $context = null): string
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "generateUrl()" instead.', __METHOD__);
+
         return $this->generate($url, [
             self::PARAM_PATH => $path,
             self::PARAM_CONTEXT => null !== $context ? serialize($context) : null,
@@ -68,12 +86,50 @@ class FileDownloadHelper
 
     /**
      * Generate a signed file URL that a browser will download.
+     */
+    public function generateUrl(string $path, TemporaryAccessOption $temporaryAccessOption, string|null $fileName = null, string $disposition = HeaderUtils::DISPOSITION_INLINE): string
+    {
+        if (!\in_array($disposition, [HeaderUtils::DISPOSITION_ATTACHMENT, HeaderUtils::DISPOSITION_INLINE], true)) {
+            throw new \InvalidArgumentException(\sprintf('The disposition must be either "%s" or "%s".', HeaderUtils::DISPOSITION_ATTACHMENT, HeaderUtils::DISPOSITION_INLINE));
+        }
+
+        $parameters = [
+            'path' => $path,
+            self::PARAM_DISPOSITION => $disposition,
+            self::PARAM_CONTEXT => $temporaryAccessOption->getContentHash(), // Invalidates the URLs when the content changes
+        ];
+
+        if (null !== $fileName) {
+            // Call makeDisposition() here to check if the file name is valid
+            HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName);
+            $parameters[self::TOKEN_PARAM] = $fileName;
+        }
+
+        // When user is logged in, ensure the URL is private
+        $tokenHash = $this->getSecurityTokenHash();
+
+        if (null !== $tokenHash) {
+            $parameters[self::TOKEN_PARAM] = $tokenHash;
+        }
+
+        $url = $this->router->generate('contao_file_stream', $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->signer->sign($url, new \DateInterval('PT'.$temporaryAccessOption->getTtl().'S'));
+    }
+
+    /**
+     * Generate a signed file URL that a browser will download.
      *
      * You can optionally provide an array of $context, that will also be incorporated
      * into the URL.
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             use "generateUrl()" instead.
      */
     public function generateDownloadUrl(string $url, string $path, string|null $fileName = null, array|null $context = null): string
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "generateUrl()" instead.', __METHOD__);
+
         if (null !== $fileName) {
             // Call makeDisposition() here to check if the file name is valid
             HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, $fileName, 'f');
@@ -87,6 +143,26 @@ class FileDownloadHelper
         ]);
     }
 
+    public function handleRequest(Request $request, string $path): Response
+    {
+        if (!$this->signer->checkRequest($request)) {
+            return new Response('The provided file URL is not valid.', Response::HTTP_FORBIDDEN);
+        }
+
+        // Token does not match
+        if ($this->getSecurityTokenHash() !== $request->query->get(self::TOKEN_PARAM)) {
+            return new Response('The provided token is not valid.', Response::HTTP_FORBIDDEN);
+        }
+
+        $file = $this->mountManager->get($path);
+
+        if (!$file) {
+            return new Response('The requested resource does not exist.', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->generateResponse($this->mountManager->readStream($path), $request, $file);
+    }
+
     /**
      * Handle download request and stream file contents.
      *
@@ -96,9 +172,14 @@ class FileDownloadHelper
      * there, otherwise return null.
      *
      * @param (\Closure(FilesystemItem, array): (Response|null))|null $onProcess
+     *
+     * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7;
+     *             use "handleRequest()" instead.
      */
     public function handle(Request $request, VirtualFilesystemInterface $storage, \Closure|null $onProcess = null): Response
     {
+        trigger_deprecation('contao/core-bundle', '6.0', 'Using "%s()" is deprecated and will no longer work in Contao 7. Use "handleRequest()" instead.', __METHOD__);
+
         if (!$this->signer->checkRequest($request)) {
             return new Response('The provided file URL is not valid.', Response::HTTP_FORBIDDEN);
         }
@@ -116,7 +197,23 @@ class FileDownloadHelper
             }
         }
 
-        $stream = $storage->readStream($file->getPath());
+        return $this->generateResponse($storage->readStream($file->getPath()), $request, $file);
+    }
+
+    private function getSecurityTokenHash(): string|null
+    {
+        if (!$token = $this->security->getToken()) {
+            return null;
+        }
+
+        return hash('xxh3', serialize($token));
+    }
+
+    /**
+     * @param resource $stream
+     */
+    private function generateResponse($stream, Request $request, FilesystemItem $file): Response
+    {
         $metadata = stream_get_meta_data($stream);
 
         // Prefer sendfile for local resources

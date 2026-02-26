@@ -127,10 +127,8 @@ class CachingTraversableTest extends TestCase
      * @param list<array{0: TKey, 1: TValue}> $items
      *
      * @param-out list<int> $generatorLog
-     *
-     * @return \Generator<TKey, TValue>
      */
-    private function generateItems(array $items, array|null &$generatorLog = null): \Generator
+    private function generateItems(array $items, array|null &$generatorLog = null): iterable
     {
         $generatorLog = [];
 

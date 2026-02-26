@@ -55,7 +55,7 @@ class PlayerController extends AbstractContentElementController
         // Find and order source files
         $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->playerSRC ?: '');
 
-        if (!$sourceFiles = $this->getSourceFiles($filesystemItems)) {
+        if (!$sourceFiles = $this->getSourceFiles($model, $filesystemItems)) {
             return new Response();
         }
 
@@ -105,7 +105,7 @@ class PlayerController extends AbstractContentElementController
             function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
                 $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
-                return (new HtmlAttributes())
+                return new HtmlAttributes()
                     ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;
@@ -119,7 +119,13 @@ class PlayerController extends AbstractContentElementController
             $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC);
 
             foreach ($trackItems as $trackItem) {
-                if (!$publicUri = $this->filesStorage->generatePublicUri($trackItem->getPath())) {
+                $publicUri = $this->generatePublicUriWithTemporaryAccess(
+                    $this->filesStorage,
+                    $trackItem,
+                    ['id' => $model->id, 'tstamp' => $model->tstamp],
+                );
+
+                if (!$publicUri) {
                     continue;
                 }
 
@@ -133,7 +139,7 @@ class PlayerController extends AbstractContentElementController
                     continue;
                 }
 
-                $tracks[] = (new HtmlAttributes())
+                $tracks[] = new HtmlAttributes()
                     ->setIfExists('kind', $textTrack->getType()?->value)
                     ->set('label', $label)
                     ->set('srclang', $textTrack->getSourceLanguage())
@@ -178,7 +184,7 @@ class PlayerController extends AbstractContentElementController
             function (FilesystemItem $item) use (&$captions): HtmlAttributes {
                 $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
-                return (new HtmlAttributes())
+                return new HtmlAttributes()
                     ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', (string) $this->publicUriByStoragePath[$item->getPath()])
                 ;
@@ -217,13 +223,19 @@ class PlayerController extends AbstractContentElementController
     /**
      * @return list<FilesystemItem>
      */
-    private function getSourceFiles(FilesystemItemIterator $filesystemItems): array
+    private function getSourceFiles(ContentModel $model, FilesystemItemIterator $filesystemItems): array
     {
         $filesystemItems = $filesystemItems->sort(SortMode::mediaTypePriority);
         $items = [];
 
         foreach ($filesystemItems as $item) {
-            if (!$publicUri = $this->filesStorage->generatePublicUri($item->getPath())) {
+            $publicUri = $this->generatePublicUriWithTemporaryAccess(
+                $this->filesStorage,
+                $item,
+                ['id' => $model->id, 'tstamp' => $model->tstamp],
+            );
+
+            if (!$publicUri) {
                 continue;
             }
 

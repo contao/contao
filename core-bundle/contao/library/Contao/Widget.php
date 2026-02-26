@@ -102,12 +102,7 @@ use Doctrine\DBAL\Types\Types;
  */
 abstract class Widget extends Controller
 {
-	use TemplateInheritance {
-		TemplateInheritance::renderTwigSurrogateIfExists as baseRenderTwigSurrogateIfExists;
-	}
-	use TemplateTrait;
-
-	private bool $enableSurrogateRendering = true;
+	use TemplateInheritance;
 
 	/**
 	 * Id
@@ -751,23 +746,19 @@ abstract class Widget extends Controller
 			return ($this->inputCallback)();
 		}
 
-		if ($this->useRawRequestData === true)
+		// Support arrays (thanks to Andreas Schempp)
+		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
+
+		if (!$this->allowHtml || $this->preserveTags || $this->useRawRequestData)
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-			return $request->request->get($strKey);
+			$varValue = $request->request->all()[array_shift($arrParts)] ?? null;
 		}
-
-		$strMethod = $this->allowHtml ? 'postHtml' : 'post';
-
-		if ($this->preserveTags)
+		else
 		{
-			$strMethod = 'postRaw';
+			$varValue = Input::postHtml(array_shift($arrParts), $this->decodeEntities);
 		}
-
-		// Support arrays (thanks to Andreas Schempp)
-		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
-		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
 		{
@@ -799,6 +790,15 @@ abstract class Widget extends Controller
 			}
 
 			return $varInput;
+		}
+
+		// Ensure UTF-8 string
+		if (\is_string($varInput) && 1 !== preg_match('//u', $varInput))
+		{
+			$subBefore = mb_substitute_character();
+			mb_substitute_character(0xFFFD);
+			$varInput = mb_convert_encoding($varInput, 'UTF-8', 'UTF-8');
+			mb_substitute_character($subBefore);
 		}
 
 		if (!$this->doNotTrim && \is_string($varInput))
@@ -1560,25 +1560,5 @@ abstract class Widget extends Controller
 			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
 			StringUtil::specialchars((string) $strString, false, true),
 		);
-	}
-
-	protected function renderTwigSurrogateIfExists(): string|null
-	{
-		return $this->enableSurrogateRendering ? $this->baseRenderTwigSurrogateIfExists() : null;
-	}
-
-	/**
-	 * @interal
-	 */
-	public function renderLegacyFromTwig(array $blocks): string
-	{
-		$this->arrBlocks = $blocks;
-		$this->enableSurrogateRendering = false;
-
-		$return = $this->inherit();
-
-		$this->enableSurrogateRendering = true;
-
-		return $return;
 	}
 }

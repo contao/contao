@@ -46,7 +46,7 @@ class FallbackRecordLabelListener
             return;
         }
 
-        (new DcaLoader($table))->load();
+        new DcaLoader($table)->load();
 
         $defaultSearchField = $GLOBALS['TL_DCA'][$table]['list']['sorting']['defaultSearchField'] ?? null;
 

@@ -54,7 +54,7 @@ class SetDotEnvCommand extends Command
         $dumper->dump();
 
         if (!file_exists($path)) {
-            (new Filesystem())->touch($path);
+            new Filesystem()->touch($path);
         }
 
         return 0;

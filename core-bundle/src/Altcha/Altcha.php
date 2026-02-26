@@ -97,7 +97,7 @@ class Altcha
             return false;
         }
 
-        $entity = new AltchaEntity($json['challenge'], (new \DateTimeImmutable())->setTimestamp($expiry));
+        $entity = new AltchaEntity($json['challenge'], new \DateTimeImmutable()->setTimestamp($expiry));
 
         // Save the solved challenge in the database to prevent replay attacks
         $this->entityManager->persist($entity);

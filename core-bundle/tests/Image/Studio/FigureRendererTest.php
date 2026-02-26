@@ -29,8 +29,6 @@ use Contao\Image\ImageInterface;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
@@ -131,34 +129,33 @@ class FigureRendererTest extends TestCase
             ->method('render')
         ;
 
-        // Make a template and image available at the temp dir
-        $filesystem = new Filesystem();
-        $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/foo.html5'), '<foo result>');
-
-        $filesystem->symlink(
-            Path::canonicalize(__DIR__.'/../../Fixtures/files'),
-            Path::join($this->getTempDir(), 'files'),
-        );
-
         $imageFactory = $this->createStub(ImageFactoryInterface::class);
         $imageFactory
             ->method('create')
             ->willReturn($this->createStub(ImageInterface::class))
         ;
 
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with('@Contao/foo.html.twig', $this->anything())
+            ->willReturn('<foo result>')
+        ;
+
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
-        $container->set('filesystem', $filesystem);
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
         $container->set('contao.image.factory', $imageFactory);
+        $container->set('twig', $twig);
 
         System::setContainer($container);
 
         // Render a figure with a PHP template
         $figureRenderer = new FigureRenderer($studio, $twig);
 
-        $this->assertSame('<foo result>', $figureRenderer->render('files/public/foo.jpg', null, [], 'foo'));
+        $this->assertSame('<foo result>', $figureRenderer->render('files/public/foo.jpg', null, [], '@Contao/foo.html.twig'));
     }
 
     public function testFailsWithInvalidConfiguration(): void
@@ -168,32 +165,6 @@ class FigureRendererTest extends TestCase
         $this->expectException(NoSuchPropertyException::class);
 
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
-    }
-
-    #[DataProvider('provideInvalidTemplates')]
-    public function testFailsWithInvalidTemplate(string $invalidTemplate): void
-    {
-        $figureRenderer = $this->getFigureRenderer();
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/Invalid Contao template name ".*"\./');
-
-        $figureRenderer->render(1, null, [], $invalidTemplate);
-    }
-
-    public static function provideInvalidTemplates(): iterable
-    {
-        yield 'not treated as Twig template, has extension' => [
-            'foo.twig',
-        ];
-
-        yield 'contains slashes' => [
-            '/some/path/foo',
-        ];
-
-        yield 'contains whitespaces' => [
-            'f oo',
-        ];
     }
 
     public function testReturnsNullIfTheResourceDoesNotExist(): void
@@ -216,7 +187,7 @@ class FigureRendererTest extends TestCase
         $this->assertNull($figureRenderer->render('invalid-resource', null));
     }
 
-    private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRenderer
+    private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@Contao/component/_figure.html.twig'): FigureRenderer
     {
         $figure = new Figure($this->createStub(ImageResult::class));
 

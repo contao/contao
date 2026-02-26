@@ -16,54 +16,122 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\FrontendTemplate;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Twig\Error\RuntimeError;
+use Twig\Environment;
 
 class LegacyTemplateFunctionsRuntimeTest extends TestCase
 {
-    #[DataProvider('provideMethodCalls')]
-    public function testDelegatesCalls(string $methodName, string $delegatedMethodName): void
+    #[DataProvider('provideLayoutSectionData')]
+    public function testRenderLayoutSection(string|null $templateName, string $expectedRenderedTemplateName): void
     {
-        $frontendTemplate = $this->createMock(FrontendTemplate::class);
-        $frontendTemplate
-            ->expects($this->once())
-            ->method($delegatedMethodName)
-            ->with('key', 'template')
-            ->willReturnCallback(
-                static function (): void {
-                    echo 'output';
-                },
-            )
-        ;
-
-        $context = [
-            'Template' => $frontendTemplate,
+        $defaultData = [
+            'positions' => [
+                'after' => [
+                    'prefooter' => [
+                        'title' => 'prefooter',
+                        'id' => 'prefooter',
+                        'template' => 'block_foo',
+                        'position' => 'after',
+                    ],
+                ],
+            ],
+            'sections' => [
+                'prefooter' => '<content>',
+            ],
         ];
 
-        $runtime = $this->getRuntime();
+        $frontendTemplate = new \ReflectionClass(FrontendTemplate::class)->newInstanceWithoutConstructor();
+        $frontendTemplate->setData($defaultData);
 
-        $this->assertSame('output', $runtime->$methodName($context, 'key', 'template'));
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with($expectedRenderedTemplateName, [...$defaultData, ...[
+                'id' => 'prefooter',
+                'content' => '<content>',
+            ]])
+            ->willReturn('<result>')
+        ;
+
+        $runtime = new LegacyTemplateFunctionsRuntime($twig);
+
+        $this->assertSame(
+            '<result>',
+            $runtime->renderLayoutSection(['Template' => $frontendTemplate], 'prefooter', $templateName),
+        );
     }
 
-    #[DataProvider('provideMethodCalls')]
-    public function testThrowsIfTemplateNotInContext(string $methodName, string $delegatedMethodName): void
+    public static function provideLayoutSectionData(): iterable
     {
-        $runtime = $this->getRuntime();
+        yield 'default template' => [
+            null,
+            '@Contao/block_foo.html.twig',
+        ];
 
-        $this->expectException(RuntimeError::class);
-        $this->expectExceptionMessage("The \"contao_$delegatedMethodName\" function cannot be used in this template.");
-
-        $runtime->$methodName([], 'foo');
+        yield 'custom template' => [
+            'block_bar',
+            '@Contao/block_bar.html.twig',
+        ];
     }
 
-    public static function provideMethodCalls(): iterable
+    #[DataProvider('provideLayoutSectionsData')]
+    public function testRenderLayoutSections(string|null $templateName, string $expectedRenderedTemplateName): void
     {
-        yield 'sections' => ['renderLayoutSections', 'sections'];
+        $defaultData = [
+            'positions' => [
+                'after' => [
+                    'prefooter' => [
+                        'title' => 'prefooter',
+                        'id' => 'prefooter',
+                        'template' => 'block_foo',
+                        'position' => 'after',
+                    ],
+                ],
+            ],
+            'sections' => [
+                'prefooter' => '<content>',
+            ],
+        ];
 
-        yield 'section' => ['renderLayoutSection', 'section'];
+        $frontendTemplate = new \ReflectionClass(FrontendTemplate::class)->newInstanceWithoutConstructor();
+        $frontendTemplate->setData($defaultData);
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with($expectedRenderedTemplateName, [...$defaultData, ...[
+                'matches' => [
+                    'prefooter' => [
+                        'title' => 'prefooter',
+                        'id' => 'prefooter',
+                        'template' => 'block_foo',
+                        'position' => 'after',
+                        'content' => '<content>',
+                    ],
+                ],
+            ]])
+            ->willReturn('<result>')
+        ;
+
+        $runtime = new LegacyTemplateFunctionsRuntime($twig);
+
+        $this->assertSame(
+            '<result>',
+            $runtime->renderLayoutSections(['Template' => $frontendTemplate], 'after', $templateName),
+        );
     }
 
-    private function getRuntime(): LegacyTemplateFunctionsRuntime
+    public static function provideLayoutSectionsData(): iterable
     {
-        return new LegacyTemplateFunctionsRuntime($this->createContaoFrameworkStub());
+        yield 'default template' => [
+            null,
+            '@Contao/block_sections.html.twig',
+        ];
+
+        yield 'custom template' => [
+            'block_sections_foo',
+            '@Contao/block_sections_foo.html.twig',
+        ];
     }
 }

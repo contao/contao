@@ -616,7 +616,6 @@ class Versions extends Controller
 		$objTemplate->to = $intTo;
 		$objTemplate->from = $intFrom;
 		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->host = Backend::getDecodedHostname();
@@ -659,7 +658,7 @@ class Versions extends Controller
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
-<a href="' . Backend::addToUrl('versions=1&amp;popup=1') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
+<a href="' . Backend::addToUrl('versions=1&popup=1') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
 </div>
 </form>
 
@@ -729,7 +728,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)), StringUtil::ampersand(ltrim($arrRow['editUrl'], '/')));
+				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)), ltrim($arrRow['editUrl'], '/'));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -782,9 +781,9 @@ class Versions extends Controller
 
 				$operations->append(array(
 					'label' => $translator->trans('MSC.showDifferences', array(), 'contao_default'),
-					'href' => $v['to'] > 1 ? $v['editUrl'] . '&amp;from=' . $v['from'] . '&amp;to=' . $v['to'] . '&amp;versions=1' ?? null : null,
+					'href' => $v['to'] > 1 ? $v['editUrl'] . '&from=' . $v['from'] . '&to=' . $v['to'] . '&versions=1' ?? null : null,
 					'icon' => $v['to'] > 1 ? 'diff.svg' : 'diff--disabled.svg',
-					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'" . $translator->trans('MSC.recordOfTable', array($v['pid'], $v['fromTable']), 'contao_default') . "',url:`\${this.href}&amp;popup=1`});return false"),
+					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'" . $translator->trans('MSC.recordOfTable', array($v['pid'], $v['fromTable']), 'contao_default') . "',url:`\${this.href}&popup=1`});return false"),
 				));
 			}
 

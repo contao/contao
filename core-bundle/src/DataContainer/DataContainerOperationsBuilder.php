@@ -123,7 +123,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             }
 
             if ('edit' === $k) {
-                $v['attributes'] = (new HtmlAttributes($v['attributes'] ?? null))->set(
+                $v['attributes'] = new HtmlAttributes($v['attributes'] ?? null)->set(
                     'onclick',
                     "Backend.openModalIframe({title:'".str_replace("'", "\\'", \sprintf($v['label'][1] ?? '%s', $record['id']))."', url:this.href+'&popup=1&nb=1'});return false",
                 );
@@ -133,7 +133,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
             // Add the parent table to the href
             if (isset($v['href'])) {
-                $v['href'] .= '&amp;table='.$table;
+                $v['href'] .= '&table='.$table;
             } else {
                 $v['href'] = 'table='.$table;
             }
@@ -194,7 +194,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         $this->append([
             'label' => $label,
             'title' => $title,
-            'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null))->set('data-action', 'contao--scroll-offset#store'),
+            'attributes' => new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null)->set('data-action', 'contao--scroll-offset#store'),
             'icon' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['icon'] ?? 'new.svg',
             'href' => $this->getNewHref($mode, $pid, $id),
             'method' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['method'] ?? 'POST',
@@ -275,7 +275,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         if (isset($config['href'])) {
-            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&id='.$record['id'].(Input::get('nb') ? '&nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
         }
 
         return null;
@@ -351,7 +351,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             ->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')')
         ;
 
-        $iconAttributes = (new HtmlAttributes())
+        $iconAttributes = new HtmlAttributes()
             ->set('data-icon', $icon)
             ->set('data-icon-disabled', $_icon)
             ->set('data-state', $state)

@@ -97,10 +97,10 @@ class TemplateLocator
             return [];
         }
 
-        $finder = (new Finder())
+        $finder = new Finder()
             ->files()
             ->in($path)
-            ->name('/(\.twig|\.html5)$/')
+            ->name('/\.twig$/')
         ;
 
         if (!$this->isNamespaceRoot($path)) {
@@ -133,7 +133,7 @@ class TemplateLocator
 
         $namespaceRoots = [];
 
-        $finder = (new Finder())
+        $finder = new Finder()
             ->directories()
             ->in($path)
             ->sortByName()

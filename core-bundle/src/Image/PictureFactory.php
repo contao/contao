@@ -58,7 +58,7 @@ class PictureFactory implements PictureFactoryInterface
         private readonly bool $bypassCache,
         private readonly array $imagineOptions,
     ) {
-        $this->preserveMetadataFields = (new ResizeOptions())->getPreserveCopyrightMetadata();
+        $this->preserveMetadataFields = new ResizeOptions()->getPreserveCopyrightMetadata();
     }
 
     public function setDefaultDensities(string $densities): static

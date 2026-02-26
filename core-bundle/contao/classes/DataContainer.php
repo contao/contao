@@ -703,7 +703,6 @@ abstract class DataContainer extends Backend
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
-			$objTemplate->theme = Backend::getTheme();
 			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
 			$objTemplate->aceType = Backend::getAceType($type);
 			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
@@ -782,7 +781,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function switchToEdit($id)
 	{
-		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&' : '') . 'act=edit&id=' . rawurlencode($id);
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
 		return Backend::addToUrl($strRequest, true, $arrUnset);

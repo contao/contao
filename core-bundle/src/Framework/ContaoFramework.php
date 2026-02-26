@@ -22,7 +22,6 @@ use Contao\InsertTags;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -171,7 +170,6 @@ class ContaoFramework implements ResetInterface
         $this->registerHookListeners();
 
         Input::initialize();
-        TemplateLoader::initialize();
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
@@ -185,7 +183,6 @@ class ContaoFramework implements ResetInterface
         static $basicClasses = [
             'System',
             'Config',
-            'TemplateLoader',
         ];
 
         foreach ($basicClasses as $class) {

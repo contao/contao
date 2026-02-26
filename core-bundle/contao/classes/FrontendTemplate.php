@@ -25,8 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendTemplate extends Template
 {
-	use FrontendTemplateTrait;
-
 	/**
 	 * Unused route parameters check
 	 * @var boolean
@@ -121,15 +119,6 @@ class FrontendTemplate extends Template
 		{
 			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
-
-		// Replace literal insert tags (see #670, #3249)
-		$this->strBuffer = preg_replace_callback(
-			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
-			static function ($matches) {
-				return $matches[0][0] === '<' ? $matches[0] : '&#' . \ord($matches[0][1]) . ';&#' . \ord($matches[0][1]) . ';';
-			},
-			$this->strBuffer
-		);
 	}
 
 	/**

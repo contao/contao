@@ -14,6 +14,7 @@ use Contao\Controller;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
@@ -83,17 +84,17 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'name' => array
 		(
@@ -102,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'type' => array
 		(
@@ -118,21 +119,21 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'options'                 => array('1rw', '2rwh', '2rwf', '3rw'),
 			'eval'                    => array('helpwizard'=>true, 'cols'=>4, 'submitOnChange'=>true),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'sql'                     => "varchar(8) NOT NULL default '2rwh'"
+			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'2rwh')
 		),
 		'headerHeight' => array
 		(
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'footerHeight' => array
 		(
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'cols' => array
 		(
@@ -140,27 +141,27 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'options'                 => array('1cl', '2cll', '2clr', '3cl'),
 			'eval'                    => array('helpwizard'=>true, 'cols'=>4, 'submitOnChange'=>true),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'sql'                     => "varchar(8) NOT NULL default '2cll'"
+			'sql'                     => array('type'=>'string', 'length'=>8, 'default'=>'2cll')
 		),
 		'widthLeft' => array
 		(
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'widthRight' => array
 		(
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'sections' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'sectionWizard',
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'framework' => array
 		(
@@ -172,25 +173,25 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			(
 				array('tl_layout', 'checkFramework')
 			),
-			'sql'                     => "varchar(255) NOT NULL default 'a:2:{i:0;s:10:\"layout.css\";i:1;s:14:\"responsive.css\";}'"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'a:2:{i:0;s:10:"layout.css";i:1;s:14:"responsive.css";}')
 		),
 		'external' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'isSortable'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'combineScripts' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => true)
+			'sql'                     => array('type'=>'boolean', 'default'=>true)
 		),
 		'modules' => array
 		(
 			'default'                 => array(array('mod'=>0, 'col'=>'main', 'enable'=>1)),
 			'inputType'               => 'moduleWizard',
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'template' => array
 		(
@@ -200,13 +201,13 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'mandatory' => true, 'chosen'=>true, 'tl_class'=>'w50', 'submitOnChange'=>true),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
 		),
 		'minifyMarkup' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type' => 'boolean', 'default' => true)
+			'sql'                     => array('type'=>'boolean', 'default'=>true)
 		),
 		'lightboxSize' => array
 		(
@@ -220,48 +221,48 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'viewport' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default 'width=device-width,initial-scale=1.0,shrink-to-fit=no'"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'width=device-width,initial-scale=1.0,shrink-to-fit=no')
 		),
 		'titleTag' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'placeholder'=>'{{page::pageTitle}} - {{page::rootPageTitle}}', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'cssClass' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'onload' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'head' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addJQuery' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'jquery' => array
 		(
@@ -272,13 +273,13 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('j_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'addMooTools' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'mootools' => array
 		(
@@ -289,7 +290,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('moo_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'analytics' => array
 		(
@@ -299,13 +300,13 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('analytics_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'externalJs' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'js', 'isSortable'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'scripts' => array
 		(
@@ -316,27 +317,27 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 				return Controller::getTemplateGroup('js_');
 			},
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'script' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:120px', 'preserveTags'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'static' => array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type' => 'boolean', 'default' => false)
+			'sql'                     => array('type'=>'boolean', 'default'=>false)
 		),
 		'width' => array
 		(
 			'inputType'               => 'inputUnit',
 			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'align' => array
 		(
@@ -344,7 +345,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'options'                 => array('left', 'center', 'right'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default 'center'"
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'center')
 		)
 	)
 );

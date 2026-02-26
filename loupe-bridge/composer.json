@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "cmsig/seal-loupe-adapter": "^0.12.6",
         "contao/core-bundle": "self.version",
         "loupe/loupe": "^0.13.2"
@@ -48,6 +48,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "6.0-dev"
+        },
         "contao-manager-plugin": "Contao\\LoupeBridge\\ContaoManager\\Plugin"
     }
 }

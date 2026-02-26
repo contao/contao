@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "ext-dom": "*",
         "ext-filter": "*",
         "ext-hash": "*",
@@ -65,9 +65,9 @@
         "contao/image": "^1.2",
         "contao/imagine-svg": "^1.0.2",
         "doctrine/collections": "^2.1",
-        "doctrine/dbal": "^3.7 || ^4.3",
+        "doctrine/dbal": "^4.3",
         "doctrine/doctrine-bundle": "^2.8",
-        "doctrine/orm": "^2.17 || ^3.0",
+        "doctrine/orm": "^3.4",
         "doctrine/persistence": "^3.2",
         "dragonmantank/cron-expression": "^3.4",
         "enshrined/svg-sanitize": "^0.22",
@@ -154,7 +154,6 @@
         "symfony/var-dumper": "^7.4",
         "symfony/yaml": "^7.4",
         "terminal42/escargot": "^1.6.3",
-        "terminal42/service-annotation-bundle": "^1.1",
         "toflar/cronjob-supervisor": "^2.0",
         "twig/string-extra": "^3.0",
         "twig/twig": "^3.21",
@@ -171,7 +170,6 @@
         "contao/manager-plugin": "^2.3.1",
         "contao/news-bundle": "self.version",
         "contao/test-case": "self.version",
-        "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
         "phpunit/phpunit": "^12.4",
         "sebastian/diff": "^7.0",
@@ -222,6 +220,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "6.0-dev"
+        },
         "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     }
 }

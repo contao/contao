@@ -403,7 +403,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'referer':
-                        $result = Controller::getReferer(true);
+                        $result = Controller::getReferer();
                         break;
 
                     case 'files_url':
@@ -479,7 +479,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $size = $configuration['size'] ?? null;
-                $template = $configuration['template'] ?? '@ContaoCore/Image/Studio/figure.html.twig';
+                $template = $configuration['template'] ?? '@Contao/component/_figure.html.twig';
 
                 unset($configuration['size'], $configuration['template']);
 
@@ -656,7 +656,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 // Include .php, .tpl, .xhtml and .html5 files
-                if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && (new Filesystem())->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
+                if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && new Filesystem()->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
                     if ($subRequest) {
                         $requestStack->push($subRequest);
                     }

@@ -1,0 +1,12 @@
+{# Show a message #}
+{% embed '@Contao/backend/component/message/add_message.stream.html.twig' %}
+    {% trans_default_domain 'contao_template_studio' %}
+
+    {% block content %}
+        {% set identifier_token -%}
+            <span class="token">{{ context.identifier }}</span>
+        {%- endset %}
+
+        {{ translation_key|trans([identifier_token])|raw }}
+    {% endblock %}
+{% endembed %}

@@ -1,0 +1,60 @@
+{% trans_default_domain 'contao_template_studio' %}
+
+{% macro tree_node(tree) %}
+<ol>
+    {% for name, node in tree %}
+        {% if node is not iterable %}
+            {% set leaf_node = node %}
+        {% elseif node|length <= 1 and node|first is not iterable %}
+            {% set leaf_node = node|first %}
+        {% else %}
+            {% set leaf_node = null %}
+        {% endif %}
+
+        {% set node_attributes = attrs()
+            .set('data-contao--template-studio-target', 'nameNode', leaf_node)
+            .set('data-name', leaf_node.identifier|default, leaf_node)
+        %}
+        <li{{ node_attributes }}>
+            {% if leaf_node %}
+                {% with {identifier: leaf_node.identifier} %}
+                    {% embed '@Contao/backend/template_studio/_template_identifier_button.html.twig' %}
+                        {% block inner %}
+                            {{ backend_icon('code.svg') }}
+                            <span{{ attrs().addClass('user', leaf_node.hasUserTemplate) }}>{{ identifier }}</span>
+                        {% endblock %}
+                    {% endembed %}
+                {% endwith %}
+            {% else %}
+                <span class="node">{{ name|default("(#{'template_studio.not_prefixed'|trans})") }}</span>
+                {{ _self.tree_node(node) }}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ol>
+{% endmacro %}
+
+{# Search field #}
+<label class="search-filter">
+    <span class="invisible">{{ 'template_studio.search_filter'|trans }}</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+    </svg>
+
+    {% set search_input_attributes = attrs()
+        .set('name', 'template-studio--search-filter')
+        .set('type', 'search')
+        .set('data-contao--template-studio-target', 'filter')
+        .set('placeholder', 'template_studio.search_filter'|trans)
+        .set('autocomplete', 'off')
+        .set('data-action', 'input->contao--template-studio#filter')
+    %}
+    <input{{ search_input_attributes }}>
+</label>
+
+{# Tree #}
+<form method="get" data-turbo-stream>
+    <nav>
+        {{ _self.tree_node(tree) }}
+    </nav>
+</form>

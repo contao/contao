@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -144,32 +143,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame('@Contao_Theme_my_theme/text.html.twig', $source->getName());
         $this->assertSame(Path::join($projectDir, 'templates/my/theme/text.html.twig'), Path::normalize($source->getPath()));
         $this->assertStringContainsString('<theme>', $source->getCode());
-    }
-
-    public function testGetsSourceContextFromHtml5File(): void
-    {
-        $loader = $this->getContaoFilesystemLoaderWithPaths(
-            $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $source = $loader->getSourceContext('@Contao/foo.html5');
-
-        $this->assertSame('@Contao/foo.html5', $source->getName());
-        $this->assertSame(Path::join($projectDir, 'templates/foo.html5'), Path::normalize($source->getPath()));
-        $this->assertSame("A\nB", $source->getCode(), 'block names must end up as tokens separated by \n');
-    }
-
-    public function testGetsSourceContextFromNestedHtml5File(): void
-    {
-        $loader = $this->getContaoFilesystemLoaderWithPaths(
-            $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'),
-        );
-
-        $source = $loader->getSourceContext('@Contao/bar.html5');
-
-        $this->assertSame('@Contao/bar.html5', $source->getName());
-        $this->assertSame(Path::join($projectDir, 'templates/bar.html5'), Path::normalize($source->getPath()));
-        $this->assertSame("A\nB", $source->getCode(), 'block names including those of parent templates must end up as tokens separated by \n');
     }
 
     public function testExists(): void
@@ -388,7 +361,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -435,7 +407,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             $projectDir,
         );
@@ -579,7 +550,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $this->createStub(TemplateLocator::class),
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder,
             '/',
         );
@@ -617,7 +587,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator1,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -647,7 +616,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             $cacheAdapter,
             $templateLocator2,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -684,7 +652,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $this->createStub(PageFinder::class),
             '/',
         );
@@ -737,7 +704,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             '/',
         );
@@ -783,7 +749,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             new NullAdapter(),
             $templateLocator,
             new ThemeNamespace(),
-            $this->createStub(ContaoFramework::class),
             $pageFinder ?? $this->createStub(PageFinder::class),
             $projectDir,
         );

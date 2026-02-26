@@ -40,15 +40,6 @@ services:
         arguments:
             - '@filesystem'
 
-    contao.cache.entity_tags:
-        class: Contao\CoreBundle\Cache\EntityCacheTags
-        public: true
-        arguments:
-            - '@contao.cache.tag_manager'
-        deprecated:
-            package: contao/core-bundle
-            version: 5.5
-
     contao.cache.tag_manager:
         class: Contao\CoreBundle\Cache\CacheTagManager
         public: true
@@ -84,6 +75,7 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.routing.page_registry'
+            - '@event_dispatcher'
 
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
@@ -327,13 +319,6 @@ services:
             - '@contao.framework'
             - '@doctrine'
 
-    contao.doctrine.orm.fail_tolerant_proxy_cache_warmer:
-        class: Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer
-        decorates: doctrine.orm.proxy_cache_warmer
-        arguments:
-            - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
-            - '@database_connection'
-
     contao.doctrine.schema.mysql_innodb_row_size_calculator:
         class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
         arguments:
@@ -369,12 +354,17 @@ services:
 
     contao.filesystem.file_download_helper:
         class: Contao\CoreBundle\Filesystem\FileDownloadHelper
+        lazy: true
         arguments:
             - '@uri_signer'
+            - '@router'
+            - '@security.helper'
+            - '@contao.filesystem.mount_manager'
 
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
+            - '@contao.filesystem.file_download_helper'
             - !tagged_iterator contao.public_file_uri_provider
 
     contao.filesystem.public_uri.flysystem_default_provider:
@@ -1182,9 +1172,6 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
-    contao.security.data_container.legacy_templates_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\LegacyTemplatesVoter
-
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
         arguments:
@@ -1424,7 +1411,6 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.filesystem_loader'
-            - '@contao.csrf.token_manager'
             - '@contao.twig.global.variable'
             - '@contao.twig.inspector_node_visitor'
 
@@ -1448,7 +1434,6 @@ services:
             - '@cache.app'
             - '@contao.twig.loader.template_locator'
             - '@contao.twig.loader.theme_namespace'
-            - '@contao.framework'
             - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
         tags:
@@ -1531,7 +1516,7 @@ services:
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
         arguments:
-            - '@contao.framework'
+            - '@twig'
 
     contao.twig.loader.template_locator:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator
@@ -1575,7 +1560,6 @@ services:
             - '@contao.repository.webauthn_user_entity'
 
     # Autowiring aliases
-    Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\ContentComposition\ContentComposition: '@contao.content_composition'

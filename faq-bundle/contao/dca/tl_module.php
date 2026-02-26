@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\Database;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['faqlist']   = '{title_legend},name,headline,type;{config_legend},faq_categories,faq_readerModule;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
@@ -22,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_categories'] = array
 	'inputType'               => 'checkboxWizard',
 	'foreignKey'              => 'tl_faq_category.title',
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => "blob NULL",
+	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
@@ -32,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['faq_readerModule'] = array
 	'options_callback'        => array('tl_module_faq', 'getReaderModules'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "int(10) unsigned NOT NULL default 0",
+	'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 	'relation'                => array('table'=>'tl_module', 'type'=>'hasMany', 'load'=>'lazy')
 );
 

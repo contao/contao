@@ -79,11 +79,11 @@ class ContextFactoryTest extends TestCase
 
                 OUTPUT;
 
-        $context = (new ContextFactory($this->mockScopeMatcher()))->fromContaoTemplate($template);
+        $context = new ContextFactory($this->mockScopeMatcher())->fromContaoTemplate($template);
 
         $this->assertSame($template, $context['Template']);
 
-        $output = (new Environment(new ArrayLoader(['test.html.twig' => $content])))->render('test.html.twig', $context);
+        $output = new Environment(new ArrayLoader(['test.html.twig' => $content]))->render('test.html.twig', $context);
 
         $this->assertSame($expectedOutput, $output);
     }
@@ -98,7 +98,7 @@ class ContextFactoryTest extends TestCase
             ],
         ];
 
-        $context = (new ContextFactory($this->mockScopeMatcher()))->fromData($data);
+        $context = new ContextFactory($this->mockScopeMatcher())->fromData($data);
 
         $this->assertSame('a', $context['foo']);
         $this->assertSame('b', $context['bar']());
@@ -108,7 +108,7 @@ class ContextFactoryTest extends TestCase
     public function testCreateContextFromClass(): void
     {
         $object = new ChildClassWithMembersStub();
-        $context = (new ContextFactory($this->mockScopeMatcher()))->fromClass($object);
+        $context = new ContextFactory($this->mockScopeMatcher())->fromClass($object);
 
         $expectedFields = [
             'PROTECTED_CONSTANT' => 2,
@@ -167,7 +167,7 @@ class ContextFactoryTest extends TestCase
 
         $content = '{{ lazy }}';
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $content]));
-        $context = (new ContextFactory($this->mockScopeMatcher()))->fromContaoTemplate($template);
+        $context = new ContextFactory($this->mockScopeMatcher())->fromContaoTemplate($template);
 
         $this->expectException(RuntimeError::class);
 
@@ -194,7 +194,7 @@ class ContextFactoryTest extends TestCase
             ->willReturn([])
         ;
 
-        $context = (new ContextFactory($scopeMatcher))->fromContaoTemplate($template);
+        $context = new ContextFactory($scopeMatcher)->fromContaoTemplate($template);
 
         $this->assertArrayHasKey('as_editor_view', $context);
         $this->assertTrue($context['as_editor_view']);

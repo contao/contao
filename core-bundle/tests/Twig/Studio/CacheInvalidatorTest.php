@@ -54,7 +54,7 @@ class CacheInvalidatorTest extends TestCase
             ])
         ;
 
-        (new CacheInvalidator($twig, $loader))->invalidateCache('@Contao/foo.html.twig');
+        new CacheInvalidator($twig, $loader)->invalidateCache('@Contao/foo.html.twig');
 
         $this->assertEqualsCanonicalizing($expectedTemplatesToBeInvalidated, $invalidatedTemplates);
     }

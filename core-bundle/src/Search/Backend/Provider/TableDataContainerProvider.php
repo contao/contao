@@ -122,7 +122,7 @@ class TableDataContainerProvider implements ProviderInterface
         $trail = $this->dcaUrlAnalyzer->getTrail($editUrl);
         $title = array_pop($trail)['label'];
 
-        return (new Hit($document, $title, $viewUrl))
+        return new Hit($document, $title, $viewUrl)
             ->withEditUrl($editUrl)
             ->withBreadcrumbs($trail)
             ->withContext($document->getSearchableContent())
@@ -195,6 +195,9 @@ class TableDataContainerProvider implements ProviderInterface
         return array_filter($tables, fn (string $table): bool => $config->getLimitedDocumentIds()->hasType($this->getTypeFromTable($table)));
     }
 
+    /**
+     * @return \Generator<Document>
+     */
     private function findDocuments(string $table, ReindexConfig $reindexConfig): \Generator
     {
         if (!isset($GLOBALS['TL_DCA'][$table]['fields'])) {
@@ -246,7 +249,7 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        return (new Document((string) $row['id'], $this->getTypeFromTable($table), $searchableContent))->withMetadata(['table' => $table]);
+        return new Document((string) $row['id'], $this->getTypeFromTable($table), $searchableContent)->withMetadata(['table' => $table]);
     }
 
     private function getTypeFromTable(string $table): string

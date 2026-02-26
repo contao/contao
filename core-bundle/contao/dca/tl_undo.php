@@ -15,6 +15,7 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Symfony\Component\Yaml\Yaml;
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
@@ -66,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'undo' => array
 			(
-				'href'                => '&amp;act=undo',
+				'href'                => '&act=undo',
 				'icon'                => 'undo.svg',
 				'method'              => 'POST'
 			),
@@ -83,46 +84,46 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'pid' => array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
 			'foreignKey'              => 'tl_user.username',
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
 		'tstamp' => array
 		(
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'fromTable' => array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'query' => array
 		(
-			'sql'                     => "text NULL"
+			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
 		),
 		'affectedRows' => array
 		(
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>0)
 		),
 		'data' => array
 		(
 			'search'                  => true,
 			'eval'                    => array('doNotShow'=>true),
-			'sql'                     => "mediumblob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
 		),
 		'preview' => array
 		(
 			'eval'                    => array('doNotShow'=>true),
-			'sql'                     => "mediumblob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
 		)
 	)
 );

@@ -21,7 +21,7 @@ class ReindexMessageTest extends TestCase
 {
     public function testGetter(): void
     {
-        $reindexConfig = (new ReindexConfig())
+        $reindexConfig = new ReindexConfig()
             ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
         ;

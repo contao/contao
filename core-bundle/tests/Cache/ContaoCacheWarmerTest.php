@@ -38,7 +38,7 @@ class ContaoCacheWarmerTest extends TestCase
     {
         parent::setUp();
 
-        (new Filesystem())->mkdir([
+        new Filesystem()->mkdir([
             Path::join(self::getTempDir(), 'var/cache'),
             Path::join(self::getTempDir(), 'other'),
         ]);
@@ -58,7 +58,7 @@ class ContaoCacheWarmerTest extends TestCase
 
     protected function tearDown(): void
     {
-        (new Filesystem())->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
+        new Filesystem()->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
 
         unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 

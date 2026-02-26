@@ -219,6 +219,7 @@ class ModuleListing extends Module
 			try
 			{
 				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
+				$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
 			}
 			catch (PageOutOfRangeException $e)
 			{
@@ -238,13 +239,13 @@ class ModuleListing extends Module
 		{
 			if ($fragment && strncasecmp($fragment, 'order_by', 8) !== 0 && strncasecmp($fragment, 'sort', 4) !== 0 && strncasecmp($fragment, $id, \strlen($id)) !== 0)
 			{
-				$strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
+				$strUrl .= (!$blnQuery ? '?' : '&') . $fragment;
 				$blnQuery = true;
 			}
 		}
 
 		$this->Template->url = $strUrl;
-		$strVarConnector = $blnQuery ? '&amp;' : '?';
+		$strVarConnector = $blnQuery ? '&' : '?';
 
 		// Prepare the data arrays
 		$arrTh = array();
@@ -278,7 +279,7 @@ class ModuleListing extends Module
 			$arrTh[] = array
 			(
 				'link' => $strField,
-				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
+				'href' => ($strUrl . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&sort=' . $sort,
 				'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class
 			);
@@ -325,12 +326,9 @@ class ModuleListing extends Module
 		$this->Template->thead = $arrTh;
 		$this->Template->tbody = $arrTd;
 
-		// Pagination
-		$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+		// Template variables
 		$this->Template->per_page = $per_page;
 		$this->Template->total = $objTotal->count;
-
-		// Template variables
 		$this->Template->details = (bool) $this->list_info;
 		$this->Template->search_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
 		$this->Template->per_page_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);

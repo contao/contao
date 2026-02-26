@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Tests\Job;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FileDownloadHelper;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -37,7 +38,7 @@ abstract class AbstractJobsTestCase extends ContaoTestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            new MountManager($this->createStub(FileDownloadHelper::class))->mount(new InMemoryFilesystemAdapter()),
             $this->createStub(DbafsManager::class),
         );
     }

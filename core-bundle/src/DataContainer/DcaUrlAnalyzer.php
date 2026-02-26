@@ -104,7 +104,7 @@ class DcaUrlAnalyzer
                     'id' => $pid,
                 ];
 
-                (new DcaLoader($table))->load();
+                new DcaLoader($table)->load();
                 $currentRecord = $this->getCurrentRecord($id, $table);
 
                 // Select the parent node
@@ -144,7 +144,7 @@ class DcaUrlAnalyzer
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
             $this->framework->getAdapter(System::class)->loadLanguageFile($table);
-            (new DcaLoader($table))->load();
+            new DcaLoader($table)->load();
 
             $query = [
                 'do' => $do,
@@ -296,7 +296,7 @@ class DcaUrlAnalyzer
             return [null, null];
         }
 
-        (new DcaLoader($table))->load();
+        new DcaLoader($table)->load();
 
         if (!is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
             return [null, null];
@@ -357,7 +357,7 @@ class DcaUrlAnalyzer
 
     private function findPtable(string $table, int|null $id): string|null
     {
-        (new DcaLoader($table))->load();
+        new DcaLoader($table)->load();
 
         if (DataContainer::MODE_TREE_EXTENDED === $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode']) {
             return null;
@@ -395,7 +395,7 @@ class DcaUrlAnalyzer
      */
     private function findParentFromRecord(string $table, int $id): array|null
     {
-        (new DcaLoader($table))->load();
+        new DcaLoader($table)->load();
 
         if (DataContainer::MODE_TREE_EXTENDED === $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode']) {
             return null;
@@ -435,7 +435,7 @@ class DcaUrlAnalyzer
 
         $pid = (int) ($currentRecord['pid'] ?? null);
 
-        (new DcaLoader($table))->load();
+        new DcaLoader($table)->load();
 
         if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null) {
             $ptable = (string) ($currentRecord['ptable'] ?? null);
@@ -452,7 +452,7 @@ class DcaUrlAnalyzer
 
     private function getCurrentRecord(int $id, string $table): array|null
     {
-        return (new \ReflectionClass(DC_Table::class))
+        return new \ReflectionClass(DC_Table::class)
             ->newInstanceWithoutConstructor()
             ->getCurrentRecord($id, $table)
         ;
@@ -491,7 +491,7 @@ class DcaUrlAnalyzer
             return null;
         }
 
-        (new DcaLoader($table))->load();
+        new DcaLoader($table)->load();
 
         if (!($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)) {
             return null;
@@ -533,7 +533,7 @@ class DcaUrlAnalyzer
             return null;
         }
 
-        (new DcaLoader($table))->load();
+        new DcaLoader($table)->load();
 
         $tableQuoted = $this->connection->quoteIdentifier($table);
 

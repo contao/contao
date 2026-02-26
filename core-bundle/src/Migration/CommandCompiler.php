@@ -55,12 +55,7 @@ class CommandCompiler
             $this->copyMissingTablesAndColumns($fromSchema, $toSchema);
         }
 
-        if (class_exists(ComparatorConfig::class)) {
-            $comparator = $schemaManager->createComparator(new ComparatorConfig(false, false));
-        } else {
-            // Backwards compatibility for doctrine/dbal 3.x
-            $comparator = $schemaManager->createComparator();
-        }
+        $comparator = $schemaManager->createComparator(new ComparatorConfig(false, false));
 
         // Get a list of SQL statements from the schema diff
         $schemaDiff = $comparator->compareSchemas($fromSchema, $toSchema);
@@ -98,7 +93,7 @@ class CommandCompiler
 
     private function copyTableDefinition(Schema $targetSchema, Table $table): void
     {
-        (new \ReflectionClass(Schema::class))
+        new \ReflectionClass(Schema::class)
             ->getMethod('_addTable')
             ->invoke($targetSchema, $table)
         ;
@@ -106,7 +101,7 @@ class CommandCompiler
 
     private function copyColumnDefinition(Table $targetTable, Column $column): void
     {
-        (new \ReflectionClass(Table::class))
+        new \ReflectionClass(Table::class)
             ->getMethod('_addColumn')
             ->invoke($targetTable, $column)
         ;

@@ -17,6 +17,7 @@ use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
 use Contao\System;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_theme'] = array
 (
@@ -131,11 +132,11 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
+			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
 		),
 		'name' => array
 		(
@@ -144,7 +145,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'author' => array
 		(
@@ -153,26 +154,26 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'flag'                    => DataContainer::SORT_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
 		),
 		'folders' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
 		),
 		'screenshot' => array
 		(
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'isGallery'=>true, 'extensions'=>'%contao.image.valid_extensions%'),
-			'sql'                     => "binary(16) NULL"
+			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
 		),
 		'templates' => array
 		(
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		)
 	)
 );

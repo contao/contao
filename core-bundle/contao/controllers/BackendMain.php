@@ -236,7 +236,6 @@ class BackendMain extends Backend
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$renderMainOnly  = $request->query->has('popup') || 'contao-main' === $request->headers->get('turbo-frame');
 
-		$data['theme'] = Backend::getTheme();
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
 		$data['title'] = StringUtil::specialchars(preg_replace('/^\s*›\s*|\s*›\s*$/u', '', strip_tags(preg_replace('/<span.*?>/', ' › ', $data['title'] ?? ''))));
 		$data['host'] = Backend::getDecodedHostname();

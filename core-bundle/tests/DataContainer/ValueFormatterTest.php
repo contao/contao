@@ -366,7 +366,7 @@ class ValueFormatterTest extends TestCase
         $foreignKeyParser
             ->expects($this->once())
             ->method('parse')
-            ->willReturnCallback(static fn ($v) => (new ForeignKeyExpression('tl_foo', '`name`'))->withColumnName('name')->withKey('foo'))
+            ->willReturnCallback(static fn ($v) => new ForeignKeyExpression('tl_foo', '`name`')->withColumnName('name')->withKey('foo'))
         ;
 
         $valueFormatter = new ValueFormatter(

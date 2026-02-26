@@ -102,7 +102,7 @@ final class GlobalStateWatcher implements Extension
             'toFile' => 'after',
         ];
 
-        return (new Differ(new StrictUnifiedDiffOutputBuilder($options)))->diff($before, $after);
+        return new Differ(new StrictUnifiedDiffOutputBuilder($options))->diff($before, $after);
     }
 
     private function buildGlobalKeys(): string
@@ -229,7 +229,7 @@ final class GlobalStateWatcher implements Extension
                 }
             }
 
-            foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
+            foreach (new \ReflectionClass($class)->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
                 if (!$property->isInitialized()) {
                     continue;
                 }
