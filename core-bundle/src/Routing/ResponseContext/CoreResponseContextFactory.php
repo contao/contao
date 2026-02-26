@@ -115,7 +115,6 @@ class CoreResponseContextFactory
         if ($pageModel->primaryImage) {
             $figureBuilder = $this->studio->createFigureBuilder()
                 ->fromUuid($pageModel->primaryImage)
-                ->setSize('proportional')
             ;
 
             if ($figure = $figureBuilder->buildIfResourceExists()) {
