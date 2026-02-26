@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
 use Contao\DcaLoader;
-use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
