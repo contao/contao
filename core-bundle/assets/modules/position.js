@@ -10,7 +10,7 @@ export function compute(anchor, element, arrowEl) {
             top: `${y}px`,
         });
 
-        const {x: arrowX, y: arrowY} = middlewareData.arrow;
+        const { x: arrowX, y: arrowY } = middlewareData.arrow;
 
         const staticSide = {
             top: 'bottom',

@@ -148,7 +148,7 @@ export default class TooltipsController extends Controller {
     }
 
     #updatePosition(el) {
-        Position.compute(el, this.#tooltip, this.#tooltipArrow)
+        Position.compute(el, this.#tooltip, this.#tooltipArrow);
     }
 
     #migrateElementTitle(el, setTitle = false) {
