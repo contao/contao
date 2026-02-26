@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\FilesModel;
-use Contao\FrontendTemplate;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -46,7 +45,7 @@ class FigureRenderer
      * @param array<string, mixed>                                $configuration Configuration for the FigureBuilder
      * @param string                                              $template      A Contao or Twig template
      */
-    public function render(FilesModel|FilesystemItem|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
+    public function render(FilesModel|FilesystemItem|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@Contao/component/_figure.html.twig'): string|null
     {
         if (!$figure = $this->buildFigure($from, $size, $configuration)) {
             return null;
@@ -89,17 +88,6 @@ class FigureRenderer
 
     private function renderTemplate(Figure $figure, string $template): string
     {
-        if (1 === preg_match('/\.html\.twig$/', $template)) {
-            return $this->twig->render($template, ['figure' => $figure]);
-        }
-
-        if (1 !== preg_match('/^[^\/.\s]*$/', $template)) {
-            throw new \InvalidArgumentException(\sprintf('Invalid Contao template name "%s".', $template));
-        }
-
-        $imageTemplate = new FrontendTemplate($template);
-        $figure->applyLegacyTemplateData($imageTemplate);
-
-        return $imageTemplate->parse();
+        return $this->twig->render($template, ['figure' => $figure]);
     }
 }
