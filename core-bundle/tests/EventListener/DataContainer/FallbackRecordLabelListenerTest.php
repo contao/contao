@@ -118,6 +118,6 @@ class FallbackRecordLabelListenerTest extends TestCase
         $listener = new FallbackRecordLabelListener($translator, $formatter);
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => '1772131097']));
 
-        $this->assertSame('', $event->getLabel());
+        $this->assertSame('2026-02-26', $event->getLabel());
     }
 }
