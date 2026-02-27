@@ -1,0 +1,62 @@
+
+{% trans_default_domain 'contao_default' %}
+
+{% set row_attributes = attrs()
+    .addClass(classes)
+    .addClass('widget')
+    .addClass('wizard', has_wizards|default)
+    .addClass('dcaPicker', has_dca_picker|default)
+    .addClass('cbx', input_type == 'checkbox' and not attributes.multiple|default and classes|filter(c => c matches '/^w\d+$/')|length)
+    .addClass('inline', input_type == 'text' and attributes.multiple|default and has_wizards|default)
+    .set('data-contao--scroll-offset-target', 'widgetError', error)
+    .set('data-controller', 'contao--color-picker', attributes.colorpicker|default)
+    .set('data-contao--color-picker-theme-value', 'monolith', attributes.colorpicker|default)
+%}
+<div{{ row_attributes }}>
+    {{ widget|raw }}
+
+    {% if attributes.rte|default %}
+        {% set type_and_filetype = attributes.rte|split('|') %}
+
+        {{ include("@Contao/be_#{type_and_filetype.0}.html.twig", {
+            selector: "ctrl_#{input_name}",
+            source: "#{table}.#{id}",
+            readonly: attributes.readonly|default ? true : false,
+            enableAce: app.user.useCE,
+            enableTinyMce: app.user.useRTE,
+            type: type_and_filetype[1]|default(null),
+            aceType: ace_type,
+            tinyMceLanguage: tiny_mce_language,
+            fileBrowserTypes: file_browser_types|join(' '),
+        }, false) }}
+    {% endif %}
+
+    {% if not edit_multiple %}
+        {{ help|trans }}
+    {% endif %}
+</div>
+
+{% if edit_multiple %}
+    <div class="widget">
+        <fieldset class="tl_radio_container">
+            <legend>{{ 'MSC.updateMode'|trans }}</legend>
+
+            {% for i, operation in {1: 'add', 2: 'remove', 0: 'replace'} %}
+                {% set input_attributes = attrs()
+                    .set('type', 'radio')
+                    .set('name', "#{input_name}_update")
+                    .set('id', "opt_#{input_name}_update_#{i}")
+                    .addClass('tl_radio')
+                    .set('value', operation)
+                    .set('data-action', 'focus->contao--scroll-offset#store')
+                %}
+                {% set label_attributes = attrs()
+                    .set('for', "opt_#{input_name}_update_#{i}")
+                %}
+                <input{{ input_attributes }}> <label{{ label_attributes }}>{{ "MSC.update#{operation|capitalize}"|trans }}</label><br>
+            {% endfor %}
+        </fieldset>
+
+        {{ help|trans }}
+    </div>
+{% endif %}

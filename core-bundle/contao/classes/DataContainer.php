@@ -562,98 +562,58 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		$wizard = '';
-		$strHelpClass = '';
+		// Custom wizards
+		$customWizards = array();
 
-		// Date picker
-		if ($arrAttributes['datepicker'] ?? null)
-		{
-			$rgxp = $arrAttributes['rgxp'] ?? 'date';
-			$format = Date::formatToJs(Config::get($rgxp . 'Format'));
-
-			switch ($rgxp)
-			{
-				case 'datim':
-					$time = ",\n        timePicker: true";
-					break;
-
-				case 'time':
-					$time = ",\n        pickOnly: \"time\"";
-					break;
-
-				default:
-					$time = '';
-					break;
-			}
-
-			$strOnSelect = '';
-
-			// Trigger the auto-submit function (see #8603)
-			if ($arrAttributes['submitOnChange'] ?? null)
-			{
-				$strOnSelect = ",\n        onSelect: function() { Backend.autoSubmit(\"" . $this->strTable . "\"); }";
-			}
-
-			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
-  <script>
-    new Picker.Date($("ctrl_' . $objWidget->id . '"), {
-      draggable: false,
-      toggle: $("toggle_' . $objWidget->id . '"),
-      format: "' . $format . '",
-      positionOffset: {x:-211,y:-209}' . $time . ',
-      pickerClass: "datepicker_bootstrap",
-      useFadeInOut: !Browser.ie' . $strOnSelect . ',
-      startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
-      titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
-    });
-  </script>';
-		}
-
-		// Color picker
-		if ($blnColorPicker)
-		{
-			$wizard .= '<div data-contao--color-picker-target="button"></div>';
-		}
-
-		$arrClasses = StringUtil::trimsplit(' ', $arrAttributes['tl_class'] ?? '');
-
-		// DCA picker
-		if (isset($arrAttributes['dcaPicker']) && (\is_array($arrAttributes['dcaPicker']) || $arrAttributes['dcaPicker'] === true))
-		{
-			$arrClasses[] = 'dcapicker';
-			$wizard .= Backend::getDcaPickerWizard($arrAttributes['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
-		}
-
-		// Add a custom wizard
 		if (\is_array($arrData['wizard'] ?? null))
 		{
 			foreach ($arrData['wizard'] as $callback)
 			{
 				if (\is_array($callback))
 				{
-					$wizard .= System::importStatic($callback[0])->{$callback[1]}($this);
+					$customWizards[] = System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
-					$wizard .= $callback($this);
+					$customWizards[] = $callback($this);
 				}
 			}
 		}
 
-		$hasWizardClass = \in_array('wizard', $arrClasses);
+		$parameters = array(
+			'classes' => StringUtil::trimsplit(' ', $arrAttributes['tl_class'] ?? ''),
+		);
 
-		if ($wizard && !($arrAttributes['disabled'] ?? false) && !($arrAttributes['readonly'] ?? false))
+		if (!($arrAttributes['disabled'] ?? false) && !($arrAttributes['readonly'] ?? false))
 		{
-			$objWidget->wizard = $wizard;
+			$hasDcaPicker = isset($arrAttributes['dcaPicker']) && (\is_array($arrAttributes['dcaPicker']) || $arrAttributes['dcaPicker'] === true);
+			$parameters['has_dca_picker'] = $hasDcaPicker;
 
-			if (!$hasWizardClass)
+			$wizards = System::getContainer()
+				->get('twig')
+				->render('@Contao/backend/data_container/wizards.html.twig', array(
+					'id' => $this->intId,
+					'table' => $this->strTable,
+					'input_name' => $this->strInputName,
+					'attributes' => $arrAttributes,
+					'error' => $objWidget->hasErrors(),
+					'js_date_format' => ($arrAttributes['datepicker'] ?? null) ?
+						Date::formatToJs(Config::get(($arrAttributes['rgxp'] ?? 'date') . 'Format')) : null,
+					'dca_picker_wizard' => $hasDcaPicker ?
+						Backend::getDcaPickerWizard($arrAttributes['dcaPicker'], $this->strTable, $this->strField, $this->strInputName) : null,
+					'custom_wizards' => $customWizards,
+				))
+			;
+
+			if (trim($wizards))
 			{
-				$arrClasses[] = 'wizard';
+				$objWidget->wizard = $wizards;
+				$parameters['has_wizards'] = true;
 			}
 		}
-		elseif ($hasWizardClass)
+		else
 		{
-			unset($arrClasses[array_search('wizard', $arrClasses)]);
+			$parameters['classes'] = array_diff($parameters['classes'], array('wizard'));
 		}
 
 		// Set correct form enctype
@@ -662,30 +622,8 @@ abstract class DataContainer extends Backend
 			$this->blnUploadable = true;
 		}
 
-		$arrClasses[] = 'widget';
-
-		// Mark floated single checkboxes
-		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrAttributes['multiple'] ?? null) && preg_grep('/^w\d+$/', $arrClasses))
-		{
-			$arrClasses[] = 'cbx';
-		}
-		elseif (($arrData['inputType'] ?? null) == 'text' && ($arrAttributes['multiple'] ?? null) && \in_array('wizard', $arrClasses))
-		{
-			$arrClasses[] = 'inline';
-		}
-
-		if (!empty($arrClasses))
-		{
-			$arrAttributes['tl_class'] = implode(' ', array_unique($arrClasses));
-		}
-
-		$updateMode = '';
-
-		// Replace the textarea with an RTE instance
 		if (!empty($arrAttributes['rte']))
 		{
-			list($file, $type) = explode('|', $arrAttributes['rte'], 2) + array(null, null);
-
 			$fileBrowserTypes = array();
 			$pickerBuilder = System::getContainer()->get('contao.picker.builder');
 
@@ -697,39 +635,26 @@ abstract class DataContainer extends Backend
 				}
 			}
 
-			$objTemplate = new BackendTemplate('be_' . $file);
-			$objTemplate->selector = 'ctrl_' . $this->strInputName;
-			$objTemplate->type = $type;
-			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
-			$objTemplate->source = $this->strTable . '.' . $this->intId;
-			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
-			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
-			$objTemplate->aceType = Backend::getAceType($type);
-			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
-			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
-
-			$updateMode = $objTemplate->parse();
-
-			unset($file, $type, $pickerBuilder, $fileBrowserTypes, $fileBrowserType);
+			$parameters['ace_type'] = Backend::getAceType(explode('|', $arrAttributes['rte'])[1] ?? null);
+			$parameters['tiny_mce_language'] = Backend::getTinyMceLanguage();
+			$parameters['file_browser_types'] = $fileBrowserTypes;
 		}
 
-		// Handle multi-select fields in "override all" mode
-		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrAttributes['multiple'] ?? null) && Input::get('act') == 'overrideAll')
-		{
-			$updateMode = '
-</div>
-<div class="widget">
-  <fieldset class="tl_radio_container">
-  <legend>' . $GLOBALS['TL_LANG']['MSC']['updateMode'] . '</legend>
-    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_1" class="tl_radio" value="add" data-action="focus->contao--scroll-offset#store"> <label for="opt_' . $this->strInputName . '_update_1">' . $GLOBALS['TL_LANG']['MSC']['updateAdd'] . '</label><br>
-    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_2" class="tl_radio" value="remove" data-action="focus->contao--scroll-offset#store"> <label for="opt_' . $this->strInputName . '_update_2">' . $GLOBALS['TL_LANG']['MSC']['updateRemove'] . '</label><br>
-    <input type="radio" name="' . $this->strInputName . '_update" id="opt_' . $this->strInputName . '_update_0" class="tl_radio" value="replace" checked="checked" data-action="focus->contao--scroll-offset#store"> <label for="opt_' . $this->strInputName . '_update_0">' . $GLOBALS['TL_LANG']['MSC']['updateReplace'] . '</label>
-  </fieldset>';
-		}
-
-		return '
-<div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . ($objWidget->hasErrors() ? ' data-contao--scroll-offset-target="widgetError"' : '') . ($blnColorPicker ? ' data-controller="contao--color-picker" data-contao--color-picker-theme-value="monolith"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
-</div>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/row.html.twig', array(
+				...$parameters,
+				'table' => $this->strTable,
+				'id' => $this->intId,
+				'attributes' => $arrAttributes,
+				'widget' => $objWidget->parse(),
+				'error' => $objWidget->hasErrors(),
+				'help' => !$objWidget->hasErrors() ? $this->help('', $objWidget->description) : '',
+				'input_name' => $this->strInputName,
+				'input_type' => $arrData['inputType'] ?? null,
+				'edit_multiple' => empty($arrAttributes['rte']) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrAttributes['multiple'] ?? null) && Input::get('act') == 'overrideAll',
+			))
+		;
 	}
 
 	/**
@@ -741,15 +666,13 @@ abstract class DataContainer extends Backend
 	 */
 	public function help($strClass='', $strDescription=null)
 	{
-		$return = $strDescription ?? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null;
-
-		if (!$return || !Config::get('showHelp'))
-		{
-			return '';
-		}
-
-		return '
-  <p class="tl_help tl_tip' . $strClass . '">' . $return . '</p>';
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/help.html.twig', array(
+				'label' => $strDescription ?? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1] ?? null,
+				'class' => $strClass,
+			))
+		;
 	}
 
 	/**
@@ -982,30 +905,16 @@ abstract class DataContainer extends Backend
 	 */
 	protected function getPickerInputField($value, $attributes='')
 	{
-		$id = is_numeric($value) ? $value : md5($value);
-
-		if (!\in_array($this->strPickerFieldType, array('checkbox', 'radio')))
-		{
-			return '';
-		}
-
-		$checked = Widget::optionChecked($value, $this->arrPickerValue);
-
-		if ($checked)
-		{
-			$checked .= ' data-contao--scroll-offset-target="scrollTo"';
-		}
-
-		return \sprintf(
-			' <input type="%s" name="picker%s" id="picker_%s" class="tl_tree_%s" value="%s" data-contao--check-all-target="input" data-action="focus->contao--scroll-offset#store contao--check-all#toggleInput" %s%s>',
-			$this->strPickerFieldType,
-			$this->strPickerFieldType === 'checkbox' ? '[]' : '',
-			$id,
-			$this->strPickerFieldType,
-			StringUtil::specialchars(($this->objPickerCallback)($value)),
-			$checked,
-			$attributes
-		);
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/data_container/picker_input.html.twig', array(
+				'type' => $this->strPickerFieldType,
+				'id' => is_numeric($value) ? $value : md5($value),
+				'value' => ($this->objPickerCallback)($value),
+				'selected' => \in_array($value, $this->arrPickerValue, true),
+				'attributes' => $attributes,
+			))
+		;
 	}
 
 	/**
