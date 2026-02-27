@@ -88,7 +88,8 @@ class FallbackRecordLabelListenerTest extends TestCase
             ->expects($this->once())
             ->method('format')
             ->with('tl_foo', 'fieldA', 'A <span>(B &amp; B)</span>', null)
-            ->willReturn('A (B & B)');
+            ->willReturn('A (B & B)')
+        ;
 
         $listener = new FallbackRecordLabelListener($translator, $formatter);
         $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B &amp; B)</span>']));
