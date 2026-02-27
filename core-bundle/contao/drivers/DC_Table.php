@@ -4043,8 +4043,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Order by the foreign key
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey']))
 			{
-				$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey'], 2);
-				$orderBy[0] = "(SELECT " . Database::quoteIdentifier($key[1]) . " FROM " . $key[0] . " WHERE " . $this->strTable . "." . Database::quoteIdentifier($firstOrderBy) . "=" . $key[0] . ".id)";
+				$dcaExtractor = $this->framework->createInstance(DcaExtractor::class, array($this->strTable));
+				$fkField = $dcaExtractor->getRelations()[$firstOrderBy]['field'] ?? 'id';
+				$fkField = Database::quoteIdentifier($fkField);
+
+				$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['foreignKey']);
+				$orderBy[0] = "(SELECT " . $fk->getColumnExpression() . " FROM " . $fk->getTableName() . " WHERE " . $this->strTable . "." . Database::quoteIdentifier($firstOrderBy) . "=" . $fk->getTableName() . ".$fkField)";
 			}
 		}
 		elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? null))
@@ -4326,8 +4330,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey']))
 				{
-					$chunks = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey'], 2);
-					$orderBy[$k] = "(SELECT " . Database::quoteIdentifier($chunks[1]) . " FROM " . $chunks[0] . " WHERE " . $chunks[0] . ".id=" . $this->strTable . "." . $key . ")";
+					$dcaExtractor = $this->framework->createInstance(DcaExtractor::class, array($this->strTable));
+					$fkField = $dcaExtractor->getRelations()[$key]['field'] ?? 'id';
+					$fkField = Database::quoteIdentifier($fkField);
+
+					$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey']);
+					$orderBy[$k] = "(SELECT " . $fk->getColumnExpression() . " FROM " . $fk->getTableName() . " WHERE " . $fk->getTableName() . ".$fkField=" . $this->strTable . "." . $key . ")";
 				}
 
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
@@ -4673,8 +4681,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
-				$this->procedure[] = "(" . \sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . \sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
+				$dcaExtractor = $this->framework->createInstance(DcaExtractor::class, array($this->strTable));
+				$fkField = $dcaExtractor->getRelations()[$fld]['field'] ?? 'id';
+				$fkField = Database::quoteIdentifier($fkField);
+
+				$fk = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']);
+				$this->procedure[] = "(" . \sprintf($strPattern, $fk->getColumnExpression()) . " OR " . \sprintf($strPattern, "(SELECT " . $fk->getColumnExpression() . " FROM " . $fk->getTableName() . " WHERE " . $fk->getTableName() . ".$fkField=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $searchValue;
 			}
 			else
