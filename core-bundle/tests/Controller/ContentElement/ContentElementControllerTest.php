@@ -22,6 +22,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,6 +38,7 @@ class ContentElementControllerTest extends TestCase
         $this->container = $this->getContainerWithContaoConfiguration();
         $this->container->set('contao.cache.tag_manager', $this->createStub(CacheTagManager::class));
         $this->container->set('contao.twig.filesystem_loader', $this->createStub(ContaoFilesystemLoader::class));
+        $this->container->set('clock', new MockClock());
 
         System::setContainer($this->container);
     }
@@ -258,7 +260,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testSetsTheSharedMaxAgeIfTheElementHasAStopDate(): void
     {
-        $time = time();
+        $time = $this->container->get('clock')->now()->getTimestamp();
         $stop = strtotime('+2 weeks', $time);
         $expires = $stop - $time;
 
