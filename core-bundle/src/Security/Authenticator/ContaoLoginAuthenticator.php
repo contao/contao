@@ -16,13 +16,11 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -73,7 +71,6 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private readonly TokenStorageInterface $tokenStorage,
         private readonly PageRegistry $pageRegistry,
         private readonly HttpKernelInterface $httpKernel,
-        private readonly RequestStack $requestStack,
         private readonly TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
         private readonly Environment $twig,
@@ -184,13 +181,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function isInteractive(): bool
     {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            return false;
-        }
-
-        $page = $request->attributes->get('pageModel');
-
-        return $page instanceof PageModel;
+        return true;
     }
 
     private function getCredentials(Request $request): array
