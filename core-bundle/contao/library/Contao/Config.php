@@ -305,20 +305,6 @@ class Config
 	}
 
 	/**
-	 * Return true if the installation is complete
-	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
-	 *
-	 * @return boolean True if the installation is complete
-	 */
-	public static function isComplete()
-	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s" is deprecated an will no longer work in Contao 6.', __METHOD__);
-
-		return true;
-	}
-
-	/**
 	 * Add a configuration variable to the local configuration file
 	 *
 	 * @param string $strKey   The full variable name

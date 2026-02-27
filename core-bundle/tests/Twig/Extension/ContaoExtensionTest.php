@@ -81,7 +81,6 @@ class ContaoExtensionTest extends TestCase
             'include' => ['all'],
             'attrs' => [],
             'figure' => [],
-            'contao_figure' => ['html'],
             'picture_config' => [],
             'insert_tag' => [],
             'add_schema_org' => [],

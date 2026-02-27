@@ -322,13 +322,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$children = Input::get('children');
 
-			// Backwards compatibility
-			if (Input::get('childs') !== null)
-			{
-				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
-				$children = Input::get('childs');
-			}
-
 			System::getContainer()->get('contao.data_container.clipboard_manager')->set($this->strTable, $this->urlEncode($this->intId), $children, $mode);
 		}
 

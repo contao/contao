@@ -264,13 +264,6 @@ abstract class Controller extends System
 			{
 				$strArticle = Input::get('articles');
 
-				if (str_contains($strArticle, ':'))
-				{
-					trigger_deprecation('contao/core-bundle', '5.3', 'Passing the column of an article in the URL is deprecated. Only provide the article alias instead.');
-
-					list(, $strArticle) = explode(':', Input::get('articles'));
-				}
-
 				$objArticle = ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, $objPage->id);
 
 				// Send a 404 header if there is no published article
@@ -1201,52 +1194,6 @@ abstract class Controller extends System
 	public static function resetControllerCache()
 	{
 		self::$arrQueryCache = array();
-	}
-
-	/**
-	 * Redirect to a front end page
-	 *
-	 * @param integer $intPage    The page ID
-	 * @param string  $strArticle An optional article alias
-	 * @param boolean $blnReturn  If true, return the URL and don't redirect
-	 *
-	 * @return string The URL of the target page
-	 *
-	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-	 *             use the contao_backend_preview route instead.
-	 */
-	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
-	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
-
-		if (($intPage = (int) $intPage) <= 0)
-		{
-			return '';
-		}
-
-		$objPage = PageModel::findWithDetails($intPage);
-
-		if ($objPage === null)
-		{
-			return '';
-		}
-
-		$strParams = null;
-
-		// Add the /article/ fragment (see #673)
-		if ($strArticle)
-		{
-			$strParams = '/articles/' . $strArticle;
-		}
-
-		$strUrl = $objPage->getPreviewUrl($strParams);
-
-		if (!$blnReturn)
-		{
-			$this->redirect($strUrl);
-		}
-
-		return $strUrl;
 	}
 
 	/**
