@@ -10,9 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\DeprecationHelper;
 use Contao\Model\Collection;
 
 /**
+ * @deprecated Extending from Hybrid is deprecated. Write a proper fragment controller instead.
+ *
  * Parent class for objects that can be modules or content elements.
  *
  * @property string $headline
@@ -81,6 +84,8 @@ abstract class Hybrid extends Frontend
 	 */
 	public function __construct($objElement, $strColumn='main', $strTypePrefix=null)
 	{
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from Hybrid is deprecated. Write a proper fragment controller instead.');
+
 		parent::__construct();
 
 		// Store the parent element (see #4556)
