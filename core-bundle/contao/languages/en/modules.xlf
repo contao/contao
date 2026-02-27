@@ -158,6 +158,9 @@
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
       </trans-unit>
+      <trans-unit id="MOD.elements">
+        <source>Content elements</source>
+      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
       </trans-unit>
