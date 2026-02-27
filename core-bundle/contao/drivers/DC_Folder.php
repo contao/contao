@@ -153,6 +153,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$this->intId = Input::get('id', true);
+		$this->strTable = $strTable;
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
@@ -232,7 +233,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? false;
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
 
