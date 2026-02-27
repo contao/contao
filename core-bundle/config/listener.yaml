@@ -169,6 +169,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
             - '@translator'
+            - '@contao.data_container.value_formatter'
 
     contao.listener.data_container.file_image_preview:
         class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
