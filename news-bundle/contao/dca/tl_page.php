@@ -65,5 +65,5 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['imgSize'] = array(
 	'reference' => &$GLOBALS['TL_LANG']['MSC'],
 	'eval' => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'),
 	'options_callback' => array('contao.listener.image_size_options', '__invoke'),
-	'sql' => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+	'sql' => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 );
