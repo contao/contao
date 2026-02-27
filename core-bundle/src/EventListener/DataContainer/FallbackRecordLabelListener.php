@@ -29,8 +29,7 @@ class FallbackRecordLabelListener
     public function __construct(
         private readonly TranslatorInterface&TranslatorBagInterface $translator,
         private readonly ValueFormatter $valueFormatter,
-    )
-    {
+    ) {
     }
 
     public function __invoke(DataContainerRecordLabelEvent $event): void
