@@ -54,16 +54,16 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($twoFactorFirewallConfigId, new ChildDefinition(TwoFactorFactory::FIREWALL_CONFIG_DEFINITION_ID))
-            ->replaceArgument(0, $config)
-            ->replaceArgument(1, $firewallName)
+            ->replaceArgument('$options', $config)
+            ->replaceArgument('$firewallName', $firewallName)
         ;
 
         $container
             ->setDefinition($twoFactorAuthenticatorId, new ChildDefinition(TwoFactorFactory::AUTHENTICATOR_DEFINITION_ID))
-            ->replaceArgument(0, new Reference($twoFactorFirewallConfigId))
-            ->replaceArgument(2, new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
-            ->replaceArgument(3, new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
-            ->replaceArgument(4, new Reference((new TwoFactorServicesFactory())->createAuthenticationRequiredHandler($container, $firewallName, $config, $twoFactorFirewallConfigId)))
+            ->replaceArgument('$twoFactorFirewallConfig', new Reference($twoFactorFirewallConfigId))
+            ->replaceArgument('$successHandler', new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
+            ->replaceArgument('$failureHandler', new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
+            ->replaceArgument('$authenticationRequiredHandler', new Reference((new TwoFactorServicesFactory())->createAuthenticationRequiredHandler($container, $firewallName, $config, $twoFactorFirewallConfigId)))
         ;
 
         $this->createTwoFactorPreparationListener($container, $firewallName);
@@ -74,11 +74,11 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($authenticatorId, new ChildDefinition('contao.security.login_authenticator'))
-            ->replaceArgument(0, new Reference($userProviderId))
-            ->replaceArgument(1, new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
-            ->replaceArgument(2, new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
-            ->replaceArgument(11, new Reference($twoFactorAuthenticatorId))
-            ->replaceArgument(12, $options)
+            ->replaceArgument('$userProvider', new Reference($userProviderId))
+            ->replaceArgument('$successHandler', new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
+            ->replaceArgument('$failureHandler', new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
+            ->replaceArgument('$twoFactorAuthenticator', new Reference($twoFactorAuthenticatorId))
+            ->replaceArgument('$options', $options)
         ;
 
         return $authenticatorId;
@@ -100,9 +100,9 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($firewallConfigId, new ChildDefinition(TwoFactorFactory::PROVIDER_PREPARATION_LISTENER_DEFINITION_ID))
-            ->replaceArgument(3, $firewallName)
-            ->replaceArgument(4, true)
-            ->replaceArgument(5, false)
+            ->replaceArgument('$firewallName', $firewallName)
+            ->replaceArgument('$prepareOnLogin', true)
+            ->replaceArgument('$prepareOnAccessDenied', false)
             ->addTag('kernel.event_subscriber')
         ;
     }
@@ -113,7 +113,7 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($listenerId, new ChildDefinition(TwoFactorFactory::AUTHENTICATION_TOKEN_CREATED_LISTENER_DEFINITION_ID))
-            ->replaceArgument(0, $firewallName)
+            ->replaceArgument('$firewallName', $firewallName)
             // Important: register event only for the specific firewall
             ->addTag('kernel.event_subscriber', ['dispatcher' => 'security.event_dispatcher.'.$firewallName])
         ;
