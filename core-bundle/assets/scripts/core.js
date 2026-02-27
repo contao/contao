@@ -721,6 +721,8 @@ window.Backend =
 	 * @param {string} [id] The ID of the target element
 	 */
 	toggleCheckboxes: function(el, id) {
+		console.warn('Backend.toggleCheckboxes() is deprecated. Please use the Stimulus controllers instead.');
+
 		var items = $$('input'),
 			status = $(el).checked ? 'checked' : '';
 
@@ -768,6 +770,8 @@ window.Backend =
 	 * @param {string} cls The CSS class name
 	 */
 	toggleCheckboxElements: function(el, cls) {
+		console.warn('Backend.toggleCheckboxElements() is deprecated. Please use the Stimulus controllers instead.');
+
 		var status = $(el).checked ? 'checked' : '';
 
 		$$('.' + cls).each(function(checkbox) {
@@ -1896,6 +1900,10 @@ window.Theme =
 	 * Stop the propagation of click events of certain elements
 	 */
 	stopClickPropagation: function() {
+		if (window.console && ($$('.picker_selector').length || $$('.click2edit').length)) {
+			console.warn('Theme.stopClickPropagation() is deprecated. Prevent propagation in your own event listeners instead.');
+		}
+
 		// Do not propagate the click events of the icons
 		$$('.picker_selector').each(function(ul) {
 			ul.getElements('a').each(function(el) {
@@ -1919,6 +1927,10 @@ window.Theme =
 	 * Set up the textarea resizing
 	 */
 	setupTextareaResizing: function() {
+		if (window.console) {
+			console.warn('Theme.setupTextareaResizing() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		$$('.tl_textarea').each(function(el) {
 			if (Browser.ie6 || Browser.ie7 || Browser.ie8) return;
 			if (el.hasClass('noresize') || el.retrieve('autogrow')) return;
