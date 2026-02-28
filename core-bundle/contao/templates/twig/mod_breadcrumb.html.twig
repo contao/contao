@@ -20,7 +20,7 @@
         <ul>
             {% for item in items %}
                 {% if item.isActive %}
-                    <li class="active" aria-current="page">{{ item.link|insert_tag }}</li>
+                    <li class="active">{{ item.link|insert_tag }}</li>
                 {% else %}
                     <li><a href="{{ item.href }}">{{ item.link }}</a></li>
                 {% endif %}
