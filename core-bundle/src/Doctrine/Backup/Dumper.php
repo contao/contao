@@ -51,12 +51,16 @@ class Dumper implements DumperInterface
         $schemaManager = $connection->createSchemaManager();
         $platform = clone $connection->getDatabasePlatform();
 
+        // This logic has to remain here until Doctrine updates its own
+        // AbstractPlatform::getCreateTableSQL() to not use deprecated methods
+        // internally. Once this is the case, all keywords should be quoted by default
+        // and the keywords can be dropped.
         $reflection = new \ReflectionClass($platform)->getProperty('_keywords');
         $reflection->setValue($platform, $this->getCompatibleKeywords());
 
         foreach ($this->getTablesToDump($schemaManager, $config) as $table) {
             yield from $this->dumpSchema($platform, $table);
-            yield from $this->dumpData($connection, $table);
+            yield from $this->dumpData($connection, $platform, $table);
         }
 
         yield from $this->dumpViews($schemaManager, $platform);
@@ -89,9 +93,9 @@ class Dumper implements DumperInterface
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
-        foreach ($schemaManager->listViews() as $view) {
-            yield \sprintf('-- BEGIN VIEW %s', $view->getName());
-            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
+        foreach ($schemaManager->introspectViews() as $view) {
+            yield \sprintf('-- BEGIN VIEW %s', $view->getObjectName()->toString());
+            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getObjectName()->toSQL($platform), $view->getSql());
         }
     }
 
@@ -100,8 +104,8 @@ class Dumper implements DumperInterface
      */
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
-        yield \sprintf('-- BEGIN STRUCTURE %s', $table->getName());
-        yield \sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
+        yield \sprintf('-- BEGIN STRUCTURE %s', $table->getObjectName()->toString());
+        yield \sprintf('DROP TABLE IF EXISTS %s;', $table->getObjectName()->toSQL($platform));
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
             yield $statement.';';
@@ -111,24 +115,27 @@ class Dumper implements DumperInterface
     /**
      * @return \Generator<string>
      */
-    private function dumpData(Connection $connection, Table $table): \Generator
+    private function dumpData(Connection $connection, AbstractPlatform $platform, Table $table): \Generator
     {
-        yield \sprintf('-- BEGIN DATA %s', $table->getName());
+        yield \sprintf('-- BEGIN DATA %s', $table->getObjectName()->toString());
 
         $values = [];
         $columnBindingTypes = [];
         $columnUtf8Charsets = [];
+        $quotedColumnNames = [];
 
         foreach ($table->getColumns() as $column) {
-            $columnName = $column->getName();
-            $values[] = "`$columnName` AS `$columnName`";
+            $columnName = $column->getObjectName()->toString();
+            $columnNameQuoted = $column->getObjectName()->toSQL($platform);
+            $quotedColumnNames[$columnName] = $columnNameQuoted;
+            $values[] = "$columnNameQuoted AS $columnNameQuoted";
             $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
-            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getPlatformOptions()['charset'] ?? ''), ['utf8', 'utf8mb4'], true);
+            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getCharset() ?? ''), ['utf8', 'utf8mb4'], true);
         }
 
         $values = implode(', ', $values);
-        $tableName = $table->getName();
-        $rows = $connection->executeQuery("SELECT $values FROM `$tableName`");
+        $tableName = $table->getObjectName()->toSQL($platform);
+        $rows = $connection->executeQuery("SELECT $values FROM $tableName");
 
         /** @var array<string, float|int|string|null> $row[] */
         foreach ($rows->iterateAssociative() as $row) {
@@ -136,7 +143,7 @@ class Dumper implements DumperInterface
             $insertValues = [];
 
             foreach ($row as $columnName => $value) {
-                $insertColumns[] = "`$columnName`";
+                $insertColumns[] = $quotedColumnNames[$columnName] ?? throw new BackupManagerException('This should not happen.');
 
                 $insertValues[] = $this->formatValueForDump(
                     $value,
@@ -149,7 +156,7 @@ class Dumper implements DumperInterface
             $insertColumns = implode(', ', $insertColumns);
             $insertValues = implode(', ', $insertValues);
 
-            yield "INSERT INTO `$tableName` ($insertColumns) VALUES ($insertValues);";
+            yield "INSERT INTO $tableName ($insertColumns) VALUES ($insertValues);";
         }
     }
 
@@ -194,11 +201,11 @@ class Dumper implements DumperInterface
      */
     private function getTablesToDump(AbstractSchemaManager $schemaManager, CreateConfig $config): array
     {
-        $allTables = $schemaManager->listTables();
+        $allTables = $schemaManager->introspectTables();
         $filteredTables = [];
 
         foreach ($allTables as $table) {
-            if (\in_array($table->getName(), $config->getTablesToIgnore(), true)) {
+            if (\in_array($table->getObjectName()->toString(), $config->getTablesToIgnore(), true)) {
                 continue;
             }
 
