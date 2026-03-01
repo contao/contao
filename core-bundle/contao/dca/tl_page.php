@@ -21,7 +21,6 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Input;
-use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -245,7 +244,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -785,42 +784,6 @@ class tl_page extends Backend
 				$GLOBALS['TL_DCA']['tl_page']['fields']['type']['default'] = 'root';
 			}
 		}
-	}
-
-	/**
-	 * Return the title tag from the associated page layout
-	 *
-	 * @param PageModel $page
-	 *
-	 * @return string
-	 */
-	public function getTitleTag(PageModel $page)
-	{
-		$page->loadDetails();
-
-		if (!$layout = LayoutModel::findById($page->layout))
-		{
-			return '';
-		}
-
-		$origObjPage = $GLOBALS['objPage'] ?? null;
-
-		// Override the global page object, so we can replace the insert tags
-		$GLOBALS['objPage'] = $page;
-
-		$title = implode(
-			'%s',
-			array_map(
-				static function ($strVal) {
-					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
-				},
-				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
-			)
-		);
-
-		$GLOBALS['objPage'] = $origObjPage;
-
-		return $title;
 	}
 
 	/**
