@@ -44,6 +44,13 @@ class FrontendIndex extends Frontend
 	 */
 	public function renderLegacy(PageModel $pageModel): Response
 	{
+		$layout = LayoutModel::findById($pageModel->layout);
+
+		if (null !== $layout && 'modern' === $layout->type)
+		{
+			return System::getContainer()->get(RegularPageController::class)($pageModel);
+		}
+
 		global $objPage;
 
 		$objPage = $pageModel;

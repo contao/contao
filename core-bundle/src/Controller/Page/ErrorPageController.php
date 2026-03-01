@@ -40,6 +40,7 @@ class ErrorPageController extends AbstractController implements ContentCompositi
         return $this->framework
             ->createInstance(FrontendIndex::class)
             ->renderPage($pageModel)
+            ->setStatusCode((int) substr($pageModel->type, -3))
         ;
     }
 
