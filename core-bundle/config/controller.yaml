@@ -237,7 +237,10 @@ services:
 
     Contao\CoreBundle\Controller\Page\ErrorPageController:
         arguments:
-            - '@contao.framework'
+            - '@uri_signer'
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
 
     Contao\CoreBundle\Controller\Page\ForwardPageController:
         arguments:
