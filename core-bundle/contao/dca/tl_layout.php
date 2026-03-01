@@ -159,6 +159,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'sections' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'sectionWizard',
 			'sql'                     => "blob NULL"
 		),
@@ -196,6 +197,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
@@ -225,6 +227,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'viewport' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default 'width=device-width,initial-scale=1.0,shrink-to-fit=no'"
@@ -239,6 +242,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'cssClass' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -246,6 +250,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'onload' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -267,6 +272,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('j_');
@@ -284,6 +290,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'filter'                  => true,
 			'search'                  => true,
+			'backendSearch'           => false,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('moo_');
