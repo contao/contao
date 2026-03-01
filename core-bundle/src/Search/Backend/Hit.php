@@ -26,7 +26,7 @@ final class Hit
     public function __construct(
         private readonly Document $document,
         private readonly string $title,
-        private readonly string $viewUrl,
+        private string $viewUrl,
     ) {
     }
 
@@ -75,10 +75,26 @@ final class Hit
         return $this->metadata;
     }
 
+    public function withViewUrl(string $viewUrl): self
+    {
+        $clone = clone $this;
+        $clone->viewUrl = $viewUrl;
+
+        return $clone;
+    }
+
     public function withEditUrl(string $editUrl): self
     {
         $clone = clone $this;
         $clone->editUrl = $editUrl;
+
+        return $clone;
+    }
+
+    public function withVisibleType(string $visibleType): self
+    {
+        $clone = clone $this;
+        $clone->visibleType = $visibleType;
 
         return $clone;
     }
@@ -111,14 +127,6 @@ final class Hit
     {
         $clone = clone $this;
         $clone->metadata = $metadata;
-
-        return $clone;
-    }
-
-    public function withVisibleType(string $visibleType): self
-    {
-        $clone = clone $this;
-        $clone->visibleType = $visibleType;
 
         return $clone;
     }
