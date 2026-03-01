@@ -130,6 +130,14 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
+                ->scalarNode('auto_refresh_template_hierarchy')
+                    ->info('Automatically refreshes the template hierarchy on every request.')
+                    ->defaultNull()
+                    ->validate()
+                        ->ifTrue(static fn ($v) => null !== $v && !\is_bool($v))
+                        ->thenInvalid('Must be boolean or null.')
+                    ->end()
+                ->end()
             ->end()
         ;
 

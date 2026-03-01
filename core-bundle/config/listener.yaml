@@ -713,4 +713,3 @@ services:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.environment%'
