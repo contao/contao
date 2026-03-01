@@ -107,7 +107,6 @@ use Contao\TextField;
 use Contao\Theme;
 use Contao\ThemeModel;
 use Contao\TimePeriod;
-use Contao\TrblField;
 use Contao\Upload;
 use Contao\UserGroupModel;
 use Contao\UserModel;
@@ -302,7 +301,6 @@ $GLOBALS['BE_FFL'] = array
 	'radio'                   => RadioButton::class,
 	'radioTable'              => RadioTable::class,
 	'inputUnit'               => InputUnit::class,
-	'trbl'                    => TrblField::class,
 	'chmod'                   => ChmodTable::class,
 	'cud'                     => CudTable::class,
 	'picker'                  => Picker::class,
