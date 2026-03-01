@@ -14,6 +14,8 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email as EmailMessage;
 
 /**
  * Provide methods to handle front end forms.
@@ -461,18 +463,21 @@ class Form extends Hybrid
 				$recipients[$k] = str_replace(array('[', ']', '"'), array('<', '>', ''), $v);
 			}
 
-			$email = new Email();
+			$email = new EmailMessage();
+			$email->to(...$recipients);
 
 			// Get subject and message
 			if ($this->format == 'email')
 			{
 				$message = $arrSubmitted['message'] ?? '';
-				$email->subject = $arrSubmitted['subject'] ?? '';
+				$email->subject($arrSubmitted['subject'] ?? '');
 			}
 
 			// Set the admin e-mail as "from" address
-			$email->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
-			$email->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
+			if (null !== $GLOBALS['TL_ADMIN_EMAIL'] && '' !== $GLOBALS['TL_ADMIN_EMAIL'])
+			{
+				$email->from(new Address($GLOBALS['TL_ADMIN_EMAIL'], $GLOBALS['TL_ADMIN_NAME'] ?? ''));
+			}
 
 			// Get the "reply to" address
 			if (!empty($arrSubmitted['email']))
@@ -493,15 +498,15 @@ class Form extends Hybrid
 			}
 
 			// Fallback to default subject
-			if (!$email->subject)
+			if (!$email->getSubject())
 			{
-				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+				$email->subject(html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8'));
 			}
 
 			// Send copy to sender
 			if (!empty($arrSubmitted['cc']) && !empty($arrSubmitted['email']))
 			{
-				$email->sendCc($arrSubmitted['email']);
+				$email->cc($arrSubmitted['email']);
 			}
 
 			// Attach XML file
@@ -515,17 +520,17 @@ class Form extends Hybrid
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
-				$email->attachFileFromString($objTemplate->parse(), 'form.xml', 'application/xml');
+				$email->embed($objTemplate->parse(), 'form.xml', 'application/xml');
 			}
 
 			// Attach CSV file
 			if ($this->format == 'csv')
 			{
-				$email->attachFileFromString(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
+				$email->embed(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
 			}
 			elseif ($this->format == 'csv_excel')
 			{
-				$email->attachFileFromString(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
+				$email->embed(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
 			}
 
 			$uploaded = '';
@@ -549,22 +554,22 @@ class Form extends Hybrid
 							continue;
 						}
 
-						$email->attachFileFromString(file_get_contents($file['tmp_name']), $file['name'], $file['type']);
+						$email->embedFromPath($file['tmp_name'], $file['name'], $file['type']);
 					}
 				}
 			}
 
 			$uploaded = trim($uploaded) ? "\n\n---\n" . $uploaded : '';
-			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
+			$email->text(StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n");
 
 			// Set the transport
 			if (!empty($this->mailerTransport))
 			{
-				$email->addHeader('X-Transport', $this->mailerTransport);
+				$email->getHeaders()->addTextHeader('X-Transport', $this->mailerTransport);
 			}
 
 			// Send the e-mail
-			$email->sendTo($recipients);
+			System::getContainer()->get('mailer')->send($email);
 		}
 
 		// Store the values in the database
