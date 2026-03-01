@@ -417,7 +417,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             $themeSlugs[] = (string) $slug;
         }
 
-        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_Global'];
+        $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_User'];
 
         foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
             foreach ($resourcesPaths as $path) {

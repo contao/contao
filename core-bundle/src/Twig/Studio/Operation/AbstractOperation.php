@@ -110,7 +110,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
 
         $userTemplateExists = match ($context->isThemeContext()) {
             true => str_starts_with($namespace, 'Contao_Theme_') && !ContaoTwigUtil::isLegacyTemplate($first),
-            false => 'Contao_Global' === $namespace,
+            false => 'Contao_User' === $namespace,
         };
 
         return $userTemplateExists && (!$exclusive || 1 === \count($chains));
