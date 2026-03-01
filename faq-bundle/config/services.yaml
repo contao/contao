@@ -49,8 +49,3 @@ services:
         class: Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter
         arguments:
             - '@security.access.decision_manager'
-
-    contao_faq.security.legacy_backend_access_voter:
-        class: Contao\FaqBundle\Security\Voter\LegacyBackendAccessVoter
-        tags:
-            - { name: security.voter, priority: 8 }
