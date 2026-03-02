@@ -338,7 +338,7 @@ class FinderTest extends TestCase
 
                     return match ($id) {
                         'MSC.templatesTheme' => \sprintf('Theme %s', $parameters[0]),
-                        'MSC.global' => 'Global',
+                        'MSC.user' => 'User',
                         default => throw new \LogicException('Unsupported translation id.'),
                     };
                 },

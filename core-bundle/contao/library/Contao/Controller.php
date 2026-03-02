@@ -147,7 +147,7 @@ abstract class Controller extends System
 					}
 				}
 
-				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'] ?? 'global';
+				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['user'] ?? 'user';
 			}
 		}
 
@@ -159,7 +159,7 @@ abstract class Controller extends System
 
 			if (file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
 			{
-				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['global'];
+				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['user'];
 			}
 		}
 
