@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\DeprecationHelper;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
@@ -82,6 +83,9 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $groups
  * @property string  $cssID
  * @property string  $hl
+ *
+ * @deprecated extending from Module is deprecated since Contao 6 and will no
+ *             longer work in Contao 7; use a fragment controller instead
  */
 abstract class Module extends Frontend
 {
@@ -123,6 +127,8 @@ abstract class Module extends Frontend
 	 */
 	public function __construct($objModule, $strColumn='main')
 	{
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from Module is deprecated and will no longer work in Contao 7. Use a fragment controller instead.');
+
 		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
 			$objModel = $objModule;
