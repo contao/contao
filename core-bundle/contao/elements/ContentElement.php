@@ -14,8 +14,6 @@ use Contao\CoreBundle\Util\DeprecationHelper;
 use Contao\Model\Collection;
 
 /**
- * @deprecated Extending from ContentElement is deprecated. Write a proper fragment controller instead.
- *
  * Parent class for content elements.
  *
  * @property string|integer    $id
@@ -105,6 +103,9 @@ use Contao\Model\Collection;
  * @property string  $classes
  * @property integer $origId
  * @property string  $hl
+ *
+ * @deprecated extending from ContentElement is deprecated since Contao 6 and will
+ *             no longer work in Contao 7; use a fragment controller instead
  */
 abstract class ContentElement extends Frontend
 {
@@ -146,7 +147,7 @@ abstract class ContentElement extends Frontend
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
-		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from ContentElement is deprecated. Write a proper fragment controller instead.');
+		DeprecationHelper::triggerIfObjectFromOutside('contao/core-bundle', '6.0', 'Extending from ContentElement is deprecated and will no longer work in Contao 7. Use a fragment controller instead.');
 
 		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{

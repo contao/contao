@@ -15,10 +15,9 @@ namespace Contao\CoreBundle\Util;
 class DeprecationHelper
 {
     /**
-     * Triggers a deprecation notice only if its not called from within the
-     * Contao namespace.
+     * Triggers a deprecation if called from outside the Contao namespace.
      *
-     * @param string $package The name of the Composer package that is triggering the deprecation
+     * @param string $package The name of the Composer package that triggers the deprecation
      * @param string $version The version of the package that introduced the deprecation
      * @param string $message The message of the deprecation
      * @param mixed  ...$args Values to insert in the message using printf() formatting
@@ -27,7 +26,7 @@ class DeprecationHelper
     {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
 
-        if (isset($backtrace[1]['object']) && str_starts_with(\get_class($backtrace[1]['object']), 'Contao\\')) {
+        if (isset($backtrace[1]['object']) && str_starts_with($backtrace[1]['object']::class, 'Contao\\')) {
             return;
         }
 
