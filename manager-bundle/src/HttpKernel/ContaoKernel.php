@@ -84,7 +84,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getLogDir(): string
     {
-        return Path::join($this->getProjectDir(), 'var/logs');
+        return Path::join($this->getProjectDir(), 'var/log');
     }
 
     public function getPluginLoader(): PluginLoader

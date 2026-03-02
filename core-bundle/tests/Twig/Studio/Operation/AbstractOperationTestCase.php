@@ -189,7 +189,7 @@ abstract class AbstractOperationTestCase extends TestCase
                 null,
                 [
                     'content_element/existing_user_template' => [
-                        'path/to/content_element/existing_user_template.html.twig' => '@Contao_Global/content_element/existing_user_template.html.twig',
+                        'path/to/content_element/existing_user_template.html.twig' => '@Contao_User/content_element/existing_user_template.html.twig',
                     ],
                     'content_element/no_user_template' => [
                         'path/to/content_element/no_user_template.html.twig' => '@Contao_ContaoCoreBundle/content_element/no_user_template.html.twig',

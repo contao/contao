@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 		return Controller::getTemplateGroup('nl_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 /**
