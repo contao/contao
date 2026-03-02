@@ -53,9 +53,10 @@ class FileInsertTagTest extends TestCase
 
         $listener = new FileInsertTag($storage);
 
-        $this->assertSame($expectedUri, $listener(
-            new ResolvedInsertTag('file', new ResolvedParameters(['2c6bd7fa-7d0d-4f31-9f8a-2f74a5a8c7d1']), []),
-        )->getValue());
+        $this->assertSame(
+            $expectedUri,
+            $listener(new ResolvedInsertTag('file', new ResolvedParameters(['2c6bd7fa-7d0d-4f31-9f8a-2f74a5a8c7d1']), []))->getValue(),
+        );
     }
 
     public function testInvalidUUidReturnsEmpty(): void
@@ -68,8 +69,6 @@ class FileInsertTagTest extends TestCase
 
         $listener = new FileInsertTag($storage);
 
-        $this->assertSame('', $listener(
-            new ResolvedInsertTag('file', new ResolvedParameters(['invalid']), []),
-        )->getValue());
+        $this->assertSame('', $listener(new ResolvedInsertTag('file', new ResolvedParameters(['invalid']), []))->getValue());
     }
 }
