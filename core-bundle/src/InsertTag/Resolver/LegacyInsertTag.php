@@ -34,7 +34,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -65,7 +64,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[AsInsertTag('figure')]
 #[AsInsertTag('image')]
 #[AsInsertTag('picture')]
-#[AsInsertTag('file')]
 /**
  * @internal
  *
@@ -616,66 +614,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 } catch (\Exception) {
                     $result = '';
                 }
-                break;
-
-            // Files (UUID or template path)
-            case 'file':
-                $uuid = $insertTag->getParameters()->get(0);
-
-                if (Validator::isUuid($uuid) && ($objFile = FilesModel::findByUuid($uuid))) {
-                    $result = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().System::urlEncode($objFile->path);
-                    break;
-                }
-
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates is deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
-
-                $requestStack = $this->container->get('request_stack');
-                $subRequest = null;
-                $arrGet = $_GET;
-                $strFile = $insertTag->getParameters()->get(0);
-
-                // Take arguments and add them to the $_GET array
-                if (str_contains($strFile, '?')) {
-                    $subRequest = $requestStack->getCurrentRequest()->duplicate();
-                    $arrChunks = explode('?', urldecode($strFile));
-                    $strSource = StringUtil::decodeEntities($arrChunks[1]);
-                    $arrParams = explode('&', $strSource);
-
-                    foreach ($arrParams as $strParam) {
-                        $arrParam = explode('=', $strParam);
-                        $subRequest->query->set($arrParam[0], $arrParam[1]);
-                        $_GET[$arrParam[0]] = $arrParam[1];
-                    }
-
-                    $strFile = $arrChunks[0];
-                }
-
-                // Check the path
-                if (Validator::isInsecurePath($strFile)) {
-                    throw new \RuntimeException('Invalid path '.$strFile);
-                }
-
-                // Include .php, .tpl, .xhtml and .html5 files
-                if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && new Filesystem()->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
-                    if ($subRequest) {
-                        $requestStack->push($subRequest);
-                    }
-
-                    ob_start();
-
-                    try {
-                        include $this->container->getParameter('kernel.project_dir').'/templates/'.$strFile;
-                        $result = ob_get_contents();
-                    } finally {
-                        ob_end_clean();
-
-                        if ($subRequest) {
-                            $requestStack->pop();
-                        }
-                    }
-                }
-
-                $_GET = $arrGet;
                 break;
         }
 
