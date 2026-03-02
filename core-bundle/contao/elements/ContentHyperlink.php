@@ -37,10 +37,6 @@ class ContentHyperlink extends ContentElement
 		{
 			$this->url = StringUtil::encodeEmail($this->url);
 		}
-		else
-		{
-			$this->url = StringUtil::ampersand($this->url);
-		}
 
 		$embed = explode('%s', $this->embed);
 

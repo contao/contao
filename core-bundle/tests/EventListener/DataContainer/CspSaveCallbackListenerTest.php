@@ -26,6 +26,6 @@ class CspSaveCallbackListenerTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unknown CSP directive name: foobar');
 
-        (new CspSaveCallbackListener($cspParser))("foobar 'self'");
+        new CspSaveCallbackListener($cspParser)("foobar 'self'");
     }
 }

@@ -47,7 +47,7 @@ abstract class AbstractBackendController extends AbstractController
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
         $getBackendContext = function () {
-            $template = (new class() extends BackendMain {
+            $template = new class() extends BackendMain {
                 public function __invoke(): BackendTemplate
                 {
                     // Create an empty template, so that the template engine's parse() method won't
@@ -68,7 +68,7 @@ abstract class AbstractBackendController extends AbstractController
 
                     return $this->Template;
                 }
-            })();
+            }();
 
             return $this->container
                 ->get('contao.twig.interop.context_factory')

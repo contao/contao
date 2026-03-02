@@ -179,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'requireItem' => array
 		(
@@ -442,7 +442,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'urlSuffix' => array
 		(
@@ -682,7 +682,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options'                 => array('rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'),
 			'eval'                    => array('tl_class' => 'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'rss', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'rss', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'maxFeedItems' => array
 		(
@@ -705,7 +705,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 	)
 );

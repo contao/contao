@@ -65,7 +65,7 @@ class ModuleBreadcrumb extends Module
 
 		// Get all pages up to the root page
 		$parents = array_reverse($objPage->trail);
-		array_pop($parents); // Remove current page (last trail item)
+		array_shift($parents); // Remove current page
 		$objPages = PageModel::findMultipleByIds($parents);
 
 		if ($objPages !== null)

@@ -101,23 +101,6 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
-    contao_calendar.migration.feed:
-        class: Contao\CalendarBundle\Migration\FeedMigration
-        arguments:
-            - '@database_connection'
-            - '@filesystem'
-            - '%contao.web_dir%'
-
-    contao_calendar.migration.field_permission:
-        class: Contao\CalendarBundle\Migration\FieldPermissionMigration
-        arguments:
-            - '@database_connection'
-
-    contao_calendar.migration.overwrite_meta:
-        class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
-        arguments:
-            - '@database_connection'
-
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
         arguments:

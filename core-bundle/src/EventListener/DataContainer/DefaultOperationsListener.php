@@ -129,7 +129,7 @@ class DefaultOperationsListener
             if (DataContainer::MODE_TREE_EXTENDED !== ($GLOBALS['TL_DCA'][$ctable]['list']['sorting']['mode'] ?? null)) {
                 $operations += [
                     'children' => [
-                        'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
+                        'href' => 'table='.$ctable.($ctable === $table ? '&ptable='.$table : ''),
                         'icon' => 'children.svg',
                         'prefetch' => true,
                         'attributes' => 'data-contao--deeplink-target="secondary"',
@@ -143,7 +143,7 @@ class DefaultOperationsListener
         if ($hasPtable || $isTreeMode) {
             if ($canCopy) {
                 $operations['copy'] = [
-                    'href' => 'act=paste&amp;mode=copy',
+                    'href' => 'act=paste&mode=copy',
                     'method' => 'POST',
                     'icon' => 'copy.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
@@ -152,7 +152,7 @@ class DefaultOperationsListener
 
                 if ($isTreeMode) {
                     $operations['copyChildren'] = [
-                        'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'href' => 'act=paste&mode=copy&children=1',
                         'method' => 'POST',
                         'icon' => 'copychildren.svg',
                         'attributes' => 'data-action="contao--scroll-offset#store"',
@@ -163,7 +163,7 @@ class DefaultOperationsListener
 
             if ($canSort) {
                 $operations['cut'] = [
-                    'href' => 'act=paste&amp;mode=cut',
+                    'href' => 'act=paste&mode=cut',
                     'method' => 'POST',
                     'icon' => 'cut.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
@@ -191,7 +191,7 @@ class DefaultOperationsListener
 
         if ($canEdit && null !== ($toggleField = $this->getToggleField($table))) {
             $operations['toggle'] = [
-                'href' => 'act=toggle&amp;field='.$toggleField,
+                'href' => 'act=toggle&field='.$toggleField,
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->toggleCallback($table, $toggleField),
