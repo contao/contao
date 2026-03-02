@@ -123,7 +123,7 @@ class Image
 
 			foreach (array('data-icon', 'data-icon-disabled') as $icon)
 			{
-				if (isset($attributesObject[$icon]))
+				if (isset($lightAttributes[$icon]))
 				{
 					$fileName = pathinfo($lightAttributes[$icon], PATHINFO_BASENAME);
 
