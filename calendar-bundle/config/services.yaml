@@ -35,6 +35,13 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.listener.add_feeds_from_layout:
+        class: Contao\CalendarBundle\EventListener\AddFeedsFromLayoutListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+            - '@contao.routing.response_context_accessor'
+
     contao_calendar.listener.calendar_feed:
         class: Contao\CalendarBundle\EventListener\CalendarFeedListener
         arguments:
@@ -74,12 +81,6 @@ services:
         tags:
             - { name: contao.callback, table: tl_calendar_events, target: config.onbeforesubmit }
 
-    contao_calendar.listener.generate_page:
-        class: Contao\CalendarBundle\EventListener\GeneratePageListener
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.content_url_generator'
-
     contao_calendar.listener.preview_url_convert:
         class: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
         arguments:
@@ -99,23 +100,6 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
-
-    contao_calendar.migration.feed:
-        class: Contao\CalendarBundle\Migration\FeedMigration
-        arguments:
-            - '@database_connection'
-            - '@filesystem'
-            - '%contao.web_dir%'
-
-    contao_calendar.migration.field_permission:
-        class: Contao\CalendarBundle\Migration\FieldPermissionMigration
-        arguments:
-            - '@database_connection'
-
-    contao_calendar.migration.overwrite_meta:
-        class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
-        arguments:
-            - '@database_connection'
 
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider

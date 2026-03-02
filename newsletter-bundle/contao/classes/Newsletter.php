@@ -409,17 +409,11 @@ class Newsletter extends Backend
 	 * @param array  $arrRecipient
 	 * @param string $text
 	 * @param string $html
-	 * @param string $css
 	 *
 	 * @return boolean
 	 */
-	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
+	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html)
 	{
-		if (\count(\func_get_args()) > 5)
-		{
-			trigger_deprecation('contao/newsletter-bundle', '5.3', 'Passing CSS to the Newsletter::sendNewsletter() method is deprecated and will no longer work in Contao 6. Add the CSS in the template instead.');
-		}
-
 		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
@@ -986,31 +980,6 @@ class Newsletter extends Backend
 					->execute($objUser->email);
 			}
 		}
-	}
-
-	/**
-	 * Purge subscriptions that have not been activated within 24 hours
-	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             use NewsletterRecipientsModel::findExpiredSubscriptions() instead.
-	 */
-	public function purgeSubscriptions()
-	{
-		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "NewsletterRecipientsModel::findExpiredSubscriptions()" instead.', __METHOD__);
-
-		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
-
-		if ($objRecipient === null)
-		{
-			return;
-		}
-
-		foreach ($objRecipient as $objModel)
-		{
-			$objModel->delete();
-		}
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the unactivated newsletter subscriptions');
 	}
 
 	/**

@@ -21,7 +21,7 @@ class NewsletterRecipientsEditButtonsListenerTest extends TestCase
     #[DataProvider('buttonProvider')]
     public function testRemovesSaveNCloseButton(array $buttons, array $expected): void
     {
-        $result = (new NewsletterRecipientsEditButtonsListener())($buttons);
+        $result = new NewsletterRecipientsEditButtonsListener()($buttons);
 
         $this->assertSame($result, $expected);
     }

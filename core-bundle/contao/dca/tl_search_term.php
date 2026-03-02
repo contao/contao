@@ -33,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_search_term'] = array
 		),
 		'term' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
 		),
 		'documentFrequency' => array
 		(

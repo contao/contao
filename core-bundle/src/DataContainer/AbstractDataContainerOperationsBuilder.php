@@ -258,22 +258,22 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     {
         $url = match ($mode) {
             self::CREATE_NEW => 'act=create',
-            self::CREATE_PASTE => 'act=paste&amp;mode=create',
-            self::CREATE_AFTER => 'act=create&amp;mode=1',
+            self::CREATE_PASTE => 'act=paste&mode=create',
+            self::CREATE_AFTER => 'act=create&mode=1',
             self::CREATE_TOP,
-            self::CREATE_INTO => 'act=create&amp;mode=2',
+            self::CREATE_INTO => 'act=create&mode=2',
         };
 
         if (null !== $pid) {
-            $url .= '&amp;pid='.$pid;
+            $url .= '&pid='.$pid;
         }
 
         if (null !== $id) {
-            $url .= '&amp;id='.$id;
+            $url .= '&id='.$id;
         }
 
         if ($this->framework->getAdapter(Input::class)->get('nb')) {
-            $url .= '&amp;nc=1';
+            $url .= '&nc=1';
         }
 
         return $this->framework->getAdapter(Backend::class)->addToUrl($url, true, [], false);

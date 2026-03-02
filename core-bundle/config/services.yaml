@@ -40,15 +40,6 @@ services:
         arguments:
             - '@filesystem'
 
-    contao.cache.entity_tags:
-        class: Contao\CoreBundle\Cache\EntityCacheTags
-        public: true
-        arguments:
-            - '@contao.cache.tag_manager'
-        deprecated:
-            package: contao/core-bundle
-            version: 5.5
-
     contao.cache.tag_manager:
         class: Contao\CoreBundle\Cache\CacheTagManager
         public: true
@@ -84,6 +75,7 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.routing.page_registry'
+            - '@event_dispatcher'
 
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
@@ -612,6 +604,11 @@ services:
 
     contao.insert_tag.resolver.empty:
         class: Contao\CoreBundle\InsertTag\Resolver\EmptyInsertTag
+
+    contao.insert_tag.resolver.file:
+        class: Contao\CoreBundle\InsertTag\Resolver\FileInsertTag
+        arguments:
+            - '@contao.filesystem.virtual.files'
 
     contao.insert_tag.resolver.form:
         class: Contao\CoreBundle\InsertTag\Resolver\FormInsertTag
@@ -1261,7 +1258,6 @@ services:
             - '@security.token_storage'
             - '@contao.routing.page_registry'
             - '@http_kernel'
-            - '@request_stack'
             - !abstract set by ContaoLoginFactory::createAuthenticator()
             - !abstract set by ContaoLoginFactory::createAuthenticator()
             - '@twig'
@@ -1568,7 +1564,6 @@ services:
             - '@contao.repository.webauthn_user_entity'
 
     # Autowiring aliases
-    Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\ContentComposition\ContentComposition: '@contao.content_composition'

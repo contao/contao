@@ -52,7 +52,7 @@ class TwigIntegrationTest extends TestCase
 
         $GLOBALS['TL_LANG']['MSC'] = [
             'mandatory' => 'mandatory',
-            'global' => 'global',
+            'user' => 'user',
         ];
     }
 

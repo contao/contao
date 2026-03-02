@@ -46,6 +46,6 @@ class PurgeTempFolderCronTest extends ContaoTestCase
             ))
         ;
 
-        (new PurgeTempFolderCron($filesystem, $projectDir, null))();
+        new PurgeTempFolderCron($filesystem, $projectDir, null)();
     }
 }

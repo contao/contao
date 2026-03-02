@@ -84,7 +84,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getLogDir(): string
     {
-        return Path::join($this->getProjectDir(), 'var/logs');
+        return Path::join($this->getProjectDir(), 'var/log');
     }
 
     public function getPluginLoader(): PluginLoader
@@ -310,11 +310,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             if ($container->fileExists($path = Path::join($projectDir, 'config', $file.$ext))) {
                 $exists[] = $path;
             }
-        }
-
-        if ($container->fileExists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a %s.yml file is deprecated and will no longer work in Contao 6. Use a %s.yaml file instead', $file, $file);
-            $exists[] = $path;
         }
 
         return $exists[0] ?? null;
