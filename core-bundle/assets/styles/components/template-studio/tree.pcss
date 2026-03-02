@@ -8,10 +8,24 @@
         overflow: hidden;
     }
 
+    .user-filter {
+        flex: 0 0 18px;
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        input {
+            margin: 0;
+        }
+    }
+
     .search-filter {
-        height: fit-content;
+        flex: 0 0 28px;
         position: relative;
         vertical-align: initial;
+        border-bottom: 1px solid var(--border);
 
         svg {
             position: absolute;
@@ -24,6 +38,7 @@
 
         input {
             box-sizing: border-box;
+            height: 100%;
             width: 100%;
             padding: 6px 8px 6px 26px;
             outline: none;

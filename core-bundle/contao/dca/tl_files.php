@@ -113,14 +113,14 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			),
 			'copy' => array
 			(
-				'href'                => 'act=paste&amp;mode=copy',
+				'href'                => 'act=paste&mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
 				'button_callback'     => array('tl_files', 'canRenameFile')
 			),
 			'cut' => array
 			(
-				'href'                => 'act=paste&amp;mode=cut',
+				'href'                => 'act=paste&mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
 				'button_callback'     => array('tl_files', 'canRenameFile')
@@ -141,7 +141,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'-',
 			'upload' => array
 			(
-				'href'                => 'act=move&amp;mode=2',
+				'href'                => 'act=move&mode=2',
 				'icon'                => 'new.svg',
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'uploadFile')
@@ -723,7 +723,7 @@ class tl_files extends Backend
 		}
 		else
 		{
-			$operation->setUrl(Backend::addToUrl($operation['href'] . '&amp;pid=' . $row['id']));
+			$operation->setUrl(Backend::addToUrl($operation['href'] . '&pid=' . $row['id']));
 		}
 	}
 
