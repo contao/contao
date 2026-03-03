@@ -248,7 +248,7 @@ class CombinerTest extends TestCase
 
     public function testDoesNotAddCharset(): void
     {
-        $this->filesystem->dumpFile($this->getTempDir().'/file.scss', ".foobar { content: 'ö' }");
+        $this->filesystem->dumpFile($this->getTempDir().'/file.scss', '.foobar { content: "ö" }');
 
         $combiner = new Combiner();
         $combiner->add('file.scss');
