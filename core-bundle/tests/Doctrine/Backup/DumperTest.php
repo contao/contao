@@ -334,13 +334,13 @@ class DumperTest extends ContaoTestCase
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->expects($this->once())
-            ->method('listTables')
+            ->method('introspectTables')
             ->willReturn($tables)
         ;
 
         $schemaManager
             ->expects($this->once())
-            ->method('listViews')
+            ->method('introspectViews')
             ->willReturn($views)
         ;
 
