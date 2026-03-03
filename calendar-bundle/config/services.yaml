@@ -57,6 +57,11 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.migration.keep_canonical:
+        class: Contao\CalendarBundle\Migration\KeepCanonicalMigration
+        arguments:
+            - '@database_connection'
+
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
         arguments:

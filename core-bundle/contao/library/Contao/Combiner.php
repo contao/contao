@@ -403,6 +403,7 @@ class Combiner extends System
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
 			$objCompiler->setOutputStyle($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED);
+			$objCompiler->setCharset(false);
 
 			if ($blnDebug)
 			{
