@@ -59,26 +59,26 @@ class ControllerTest extends TestCase
 
         $this->assertSame('/', Controller::addToUrl(''));
         $this->assertSame('/?do=page', Controller::addToUrl('do=page'));
-        $this->assertSame('/?do=page&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo'));
+        $this->assertSame('/?do=page&rt=foo', Controller::addToUrl('do=page&rt=foo'));
         $this->assertSame('/?do=page', Controller::addToUrl('do=page'));
-        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&id=2'));
-        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&amp;id=2'));
-        $this->assertSame('/?act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20'));
+        $this->assertSame('/?act=edit&id=2', Controller::addToUrl('act=edit&id=2'));
+        $this->assertSame('/?act=edit&id=2', Controller::addToUrl('act=edit&id=2'));
+        $this->assertSame('/?act=edit&foo=%2B&bar=%20', Controller::addToUrl('act=edit&foo=%2B&bar=%20'));
 
         $this->assertSame('/', Controller::addToUrl('', false));
         $this->assertSame('/?do=page', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?do=page&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
+        $this->assertSame('/?do=page&rt=foo', Controller::addToUrl('do=page&rt=foo', false));
         $this->assertSame('/?do=page', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('/?act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
+        $this->assertSame('/?act=edit&id=2', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?act=edit&id=2', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?act=edit&foo=%2B&bar=%20', Controller::addToUrl('act=edit&foo=%2B&bar=%20', false));
 
         $this->assertSame('/?do=page', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?do=page&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
+        $this->assertSame('/?do=page&rt=foo', Controller::addToUrl('do=page&rt=foo', false));
         $this->assertSame('/?do=page', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('/?act=edit&amp;id=2', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('/?act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
+        $this->assertSame('/?act=edit&id=2', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?act=edit&id=2', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?act=edit&foo=%2B&bar=%20', Controller::addToUrl('act=edit&foo=%2B&bar=%20', false));
     }
 
     public function testAddToUrlWithQueryString(): void
@@ -91,32 +91,32 @@ class ControllerTest extends TestCase
 
         System::setContainer($container);
 
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl(''));
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('do=page'));
-        $this->assertSame('/?do=page&amp;id=4&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo'));
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('do=page'));
-        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&id=2'));
-        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&amp;id=2'));
-        $this->assertSame('/?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20'));
-        $this->assertSame('/?do=page&amp;key=foo', Controller::addToUrl('key=foo', true, ['id']));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl(''));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('do=page'));
+        $this->assertSame('/?do=page&id=4&rt=foo', Controller::addToUrl('do=page&rt=foo'));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('do=page'));
+        $this->assertSame('/?do=page&id=2&act=edit', Controller::addToUrl('act=edit&id=2'));
+        $this->assertSame('/?do=page&id=2&act=edit', Controller::addToUrl('act=edit&id=2'));
+        $this->assertSame('/?do=page&id=4&act=edit&foo=%2B&bar=%20', Controller::addToUrl('act=edit&foo=%2B&bar=%20'));
+        $this->assertSame('/?do=page&key=foo', Controller::addToUrl('key=foo', true, ['id']));
 
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('', false));
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?do=page&amp;id=4&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('/?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
-        $this->assertSame('/?do=page&amp;key=foo', Controller::addToUrl('key=foo', false, ['id']));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('', false));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&id=4&rt=foo', Controller::addToUrl('do=page&rt=foo', false));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&id=2&act=edit', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?do=page&id=2&act=edit', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?do=page&id=4&act=edit&foo=%2B&bar=%20', Controller::addToUrl('act=edit&foo=%2B&bar=%20', false));
+        $this->assertSame('/?do=page&key=foo', Controller::addToUrl('key=foo', false, ['id']));
 
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('', false));
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?do=page&amp;id=4&amp;rt=foo', Controller::addToUrl('do=page&amp;rt=foo', false));
-        $this->assertSame('/?do=page&amp;id=4', Controller::addToUrl('do=page', false));
-        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&id=2', false));
-        $this->assertSame('/?do=page&amp;id=2&amp;act=edit', Controller::addToUrl('act=edit&amp;id=2', false));
-        $this->assertSame('/?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
-        $this->assertSame('/?do=page&amp;key=foo', Controller::addToUrl('key=foo', true, ['id']));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('', false));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&id=4&rt=foo', Controller::addToUrl('do=page&rt=foo', false));
+        $this->assertSame('/?do=page&id=4', Controller::addToUrl('do=page', false));
+        $this->assertSame('/?do=page&id=2&act=edit', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?do=page&id=2&act=edit', Controller::addToUrl('act=edit&id=2', false));
+        $this->assertSame('/?do=page&id=4&act=edit&foo=%2B&bar=%20', Controller::addToUrl('act=edit&foo=%2B&bar=%20', false));
+        $this->assertSame('/?do=page&key=foo', Controller::addToUrl('key=foo', true, ['id']));
     }
 
     #[DataProvider('pageStatusIconProvider')]

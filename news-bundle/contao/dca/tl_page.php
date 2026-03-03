@@ -34,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedSource'] = array(
 	'options' => array('source_teaser', 'source_text'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_page'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => array('type'=>'string', 'length'=>32, 'default'=>'source_teaser', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql' => array('type'=>'string', 'length'=>32, 'default'=>'source_teaser', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedFeatured'] = array(
@@ -43,5 +43,5 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedFeatured'] = array(
 	'options' => array('all_items', 'featured', 'unfeatured'),
 	'reference' => &$GLOBALS['TL_LANG']['tl_page'],
 	'eval' => array('tl_class' => 'w50'),
-	'sql' => array('type'=>'string', 'length'=>16, 'default'=>'all_items', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+	'sql' => array('type'=>'string', 'length'=>16, 'default'=>'all_items', 'platformOptions'=>array('collation'=>'ascii_bin'))
 );

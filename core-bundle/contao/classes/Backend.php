@@ -158,7 +158,7 @@ abstract class Backend extends Controller
 
 		if ($addRequestToken)
 		{
-			$strRequest .= ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+			$strRequest .= ($strRequest ? '&' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		return parent::addToUrl($strRequest, $blnAddRef, $arrUnset);

@@ -59,7 +59,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'url' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'addedOn' => array
 		(

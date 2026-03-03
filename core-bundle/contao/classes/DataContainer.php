@@ -781,7 +781,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function switchToEdit($id)
 	{
-		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&' : '') . 'act=edit&id=' . rawurlencode($id);
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
 		return Backend::addToUrl($strRequest, true, $arrUnset);
