@@ -218,6 +218,8 @@ class TableDataContainerProvider implements ProviderInterface
 
         // Only select the rows we need so we don't transfer the entire database when indexing
         $select = array_unique(['id', ...array_map(static fn (string $field) => $virtualFields[$field] ?? $field, array_keys($searchableFields))]);
+        // Quote identifiers to handle field names that are MySQL reserved keywords
+        $select = array_map(fn (string $col) => $this->connection->quoteIdentifier($col), $select);
 
         $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
