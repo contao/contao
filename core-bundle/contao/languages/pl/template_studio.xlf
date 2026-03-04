@@ -24,6 +24,9 @@
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
         <target>Zapisz</target>
@@ -184,7 +187,7 @@
         <target>Szablon %identifier% jest dostępny w dwóch formatach. Podczas wprowadzania zmian preferuj format Twig, aby zachować kompatybilność z Contao 6.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>Relacja szablonu nie może zostać przeanalizowana, ponieważ zawiera błędy.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">

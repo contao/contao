@@ -864,7 +864,7 @@ class Newsletter extends Backend
 			{
 				$db
 					->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
-					->execute($intId, $objUser->email, $objUser->disable ? '' : 1, $blnIsFrontend ? $time : '');
+					->execute($intId, $objUser->email, $objUser->disable ? 0 : 1, $blnIsFrontend ? $time : '');
 			}
 		}
 
