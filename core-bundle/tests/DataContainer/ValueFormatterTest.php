@@ -19,6 +19,7 @@ use Contao\CoreBundle\DataContainer\ValueFormatter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -348,11 +349,17 @@ class ValueFormatterTest extends TestCase
 
         $configAdapter = $this->createAdapterStub(['get']);
         $dateAdapter = $this->createAdapterStub(['parse']);
+        $dcaExtractor = $this->createStub(DcaExtractor::class);
 
-        $framework = $this->createContaoFrameworkStub([
-            Date::class => $dateAdapter,
-            Config::class => $configAdapter,
-        ]);
+        $framework = $this->createContaoFrameworkStub(
+            [
+                Date::class => $dateAdapter,
+                Config::class => $configAdapter,
+            ],
+            [
+                DcaExtractor::class => $dcaExtractor,
+            ],
+        );
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -360,6 +367,76 @@ class ValueFormatterTest extends TestCase
             ->method('fetchOne')
             ->with('SELECT `name` FROM tl_foo WHERE id=?', [42])
             ->willReturn('bar')
+        ;
+
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
+        ;
+
+        $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
+        $foreignKeyParser
+            ->expects($this->once())
+            ->method('parse')
+            ->willReturnCallback(static fn ($v) => (new ForeignKeyExpression('tl_foo', '`name`'))->withColumnName('name')->withKey('foo'))
+        ;
+
+        $valueFormatter = new ValueFormatter(
+            $framework,
+            $connection,
+            $foreignKeyParser,
+            $this->createStub(TranslatorInterface::class),
+        );
+
+        $result = $valueFormatter->formatListing(
+            'tl_foo',
+            'foo:tl_foo.name',
+            ['foo' => 42],
+            $this->createStub(DataContainer::class),
+        );
+
+        $this->assertSame('bar', $result);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    public function testFormatListingWithForeignKeyUsesRelatedField(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = [];
+
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
+
+        $dcaExtractor = $this->createMock(DcaExtractor::class);
+        $dcaExtractor
+            ->expects($this->once())
+            ->method('getRelations')
+            ->willReturn([
+                'foo' => ['field' => 'bar'],
+            ])
+        ;
+
+        $framework = $this->createContaoFrameworkStub(
+            [
+                Date::class => $dateAdapter,
+                Config::class => $configAdapter,
+            ],
+            [
+                DcaExtractor::class => $dcaExtractor,
+            ],
+        );
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT `name` FROM tl_foo WHERE bar=?', [42])
+            ->willReturn('bar')
+        ;
+
+        $connection
+            ->method('quoteIdentifier')
+            ->willReturnArgument(0)
         ;
 
         $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
