@@ -45,13 +45,6 @@ class BackendUser extends User
 	protected $strTable = 'tl_user';
 
 	/**
-	 * Name of the current cookie
-	 * @var string
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
-	 */
-	protected $strCookie = 'BE_USER_AUTH';
-
-	/**
 	 * File mount IDs
 	 * @var array
 	 */
@@ -71,7 +64,6 @@ class BackendUser extends User
 		parent::__construct();
 
 		$this->strIp = Environment::get('ip');
-		$this->strHash = Input::cookie($this->strCookie);
 	}
 
 	/**

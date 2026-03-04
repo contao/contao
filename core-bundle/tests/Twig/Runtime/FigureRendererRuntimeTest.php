@@ -37,38 +37,4 @@ class FigureRendererRuntimeTest extends TestCase
             new FigureRuntime($figureRenderer)->buildFigure('123', '_my_size', ['foo' => 'bar']),
         );
     }
-
-    public function testDelegatesCallsWhenRenderingFigure(): void
-    {
-        $figureRenderer = $this->createMock(FigureRenderer::class);
-        $figureRenderer
-            ->expects($this->once())
-            ->method('render')
-            ->with('123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig')
-            ->willReturn('<result>')
-        ;
-
-        $figureRendererRuntime = new FigureRuntime($figureRenderer);
-
-        $this->expectUserDeprecationMessageMatches('/Using the "contao_figure" Twig function is deprecated/');
-
-        $result = $figureRendererRuntime->renderFigure('123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig');
-
-        $this->assertSame('<result>', $result);
-    }
-
-    public function testUsesFigureTemplateByDefaultWhenRenderingFigure(): void
-    {
-        $figureRenderer = $this->createMock(FigureRenderer::class);
-        $figureRenderer
-            ->expects($this->once())
-            ->method('render')
-            ->with(1, null, [], '@ContaoCore/Image/Studio/figure.html.twig')
-            ->willReturn('<result>')
-        ;
-
-        $this->expectUserDeprecationMessageMatches('/Using the "contao_figure" Twig function is deprecated/');
-
-        new FigureRuntime($figureRenderer)->renderFigure(1, null);
-    }
 }

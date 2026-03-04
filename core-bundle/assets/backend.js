@@ -7,7 +7,6 @@ import TextareaAutogrow from 'stimulus-textarea-autogrow';
 
 import './scripts/mootao.js';
 import './scripts/core.js';
-import './scripts/limit-height.js';
 
 import './styles/backend.pcss';
 

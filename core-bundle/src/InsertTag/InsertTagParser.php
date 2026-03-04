@@ -188,17 +188,6 @@ class InsertTagParser implements ResetInterface
         return $this->toChunkedText($this->handleCaching($this->executeReplace($input, false)));
     }
 
-    /**
-     * @deprecated Deprecated since Contao 5.1, to be removed in Contao 6;
-     *             use renderTag() instead.
-     */
-    public function render(string $input): string
-    {
-        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, self::class);
-
-        return $this->renderTag($input)->getValue();
-    }
-
     public function renderTag(InsertTag|string $input): InsertTagResult
     {
         if ($input instanceof InsertTag) {

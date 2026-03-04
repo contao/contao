@@ -31,13 +31,6 @@ class FrontendUser extends User
 	protected $strTable = 'tl_member';
 
 	/**
-	 * Name of the current cookie
-	 * @var string
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
-	 */
-	protected $strCookie = 'FE_USER_AUTH';
-
-	/**
 	 * Group login page
 	 * @var string
 	 */
@@ -63,7 +56,6 @@ class FrontendUser extends User
 		parent::__construct();
 
 		$this->strIp = Environment::get('ip');
-		$this->strHash = Input::cookie($this->strCookie);
 	}
 
 	/**

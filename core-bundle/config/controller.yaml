@@ -27,7 +27,7 @@ services:
 
     Contao\CoreBundle\Controller\Backend\BackendController: ~
 
-    Contao\CoreBundle\Controller\BackendCsvImportController:
+    Contao\CoreBundle\Controller\Backend\CsvImportController:
         public: true
         arguments:
             - '@contao.framework'
