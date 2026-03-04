@@ -38,6 +38,18 @@ abstract class AbstractPageController extends AbstractController
 
     protected function renderPage(PageModel $pageModel, ResponseContext|null $responseContext = null): Response
     {
+        // Unset some legacy globals (#7659)
+        unset(
+            $GLOBALS['TL_HEAD'],
+            $GLOBALS['TL_BODY'],
+            $GLOBALS['TL_MOOTOOLS'],
+            $GLOBALS['TL_JQUERY'],
+            $GLOBALS['TL_USER_CSS'],
+            $GLOBALS['TL_FRAMEWORK_CSS'],
+            $GLOBALS['TL_JAVASCRIPT'],
+            $GLOBALS['TL_CSS'],
+        );
+
         if ($this->container->get('contao.routing.page_registry')->getPageTemplate($pageModel)) {
             return $this->handleModernLayout($pageModel, $responseContext);
         }
