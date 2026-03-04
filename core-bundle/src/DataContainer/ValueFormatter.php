@@ -488,7 +488,7 @@ class ValueFormatter implements ResetInterface
     private function flatten(mixed $value): string
     {
         if (\is_array($value)) {
-            if (isset($value['value'], $value['unit']) && \count($value) == 2) {
+            if (isset($value['value'], $value['unit']) && 2 === \count($value)) {
                 return trim($value['value'].', '.$value['unit']);
             }
 
