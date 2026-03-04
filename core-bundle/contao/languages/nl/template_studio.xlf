@@ -24,6 +24,9 @@
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
         <target>Opslaan</target>
@@ -184,7 +187,7 @@
         <target>De %identifier% template wordt in twee formaten aangeboden. Bij het aanpassen ervan, geef de voorkeur aan het Twig-formaat om compatibel te blijven met Contao 6.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>De relatie van de template kan niet worden geanalyseerd omdat deze fouten bevat.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">

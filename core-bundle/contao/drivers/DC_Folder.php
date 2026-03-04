@@ -153,6 +153,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$this->intId = Input::get('id', true);
+		$this->strTable = $strTable;
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
@@ -232,7 +233,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? false;
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
 
@@ -2139,11 +2139,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$strSource = gzencode($strSource);
 				}
 
-				// Write the file using the VFS (see #9450)
-				System::getContainer()
-					->get('contao.filesystem.virtual.files')
-					->write(Path::makeRelative($objFile->path, 'files'), $strSource)
-				;
+				// Write the file using the VFS if possible (see #9450)
+				$uploadPath = System::getContainer()->getParameter('contao.upload_path');
+
+				if (Path::isBasePath($uploadPath, $objFile->path))
+				{
+					System::getContainer()
+						->get('contao.filesystem.virtual.files')
+						->write(Path::makeRelative($objFile->path, $uploadPath), $strSource)
+					;
+				}
+				else
+				{
+					$objFile->write($strSource);
+					$objFile->close();
+				}
 
 				// Update the database
 				if ($this->blnIsDbAssisted && $objMeta !== null)
