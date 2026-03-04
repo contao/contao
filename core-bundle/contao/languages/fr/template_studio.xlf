@@ -24,6 +24,9 @@
       <trans-unit id="template_studio.search_filter">
         <source>Search templates…</source>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
         <target>Sauvegarder</target>
@@ -54,7 +57,7 @@
       </trans-unit>
       <trans-unit id="template_studio.operation.create_content_element_variant.1">
         <source>Create a new variant template for the %s content element</source>
-        <target>Créer un nouveau modèle de variante pour l'élément de contenu %s</target>
+        <target>Créer un nouveau modèle de variante pour l&apos;élément de contenu %s</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.rename_content_element_variant.0">
         <source>Rename variant</source>
@@ -125,7 +128,7 @@
       </trans-unit>
       <trans-unit id="template_studio.message.create.error">
         <source>Your template for %s could not be created.</source>
-        <target>Votre modèle pour %s n'a pas pu être créé.</target>
+        <target>Votre modèle pour %s n&apos;a pas pu être créé.</target>
       </trans-unit>
       <trans-unit id="template_studio.message.create_variant.success">
         <source>The %s variant template was created.</source>
@@ -133,7 +136,7 @@
       </trans-unit>
       <trans-unit id="template_studio.message.create_variant.error">
         <source>A variant template for %s could not be created.</source>
-        <target>Un modèle de variante pour %s n'a pas pu être créé.</target>
+        <target>Un modèle de variante pour %s n&apos;a pas pu être créé.</target>
       </trans-unit>
       <trans-unit id="template_studio.message.rename_variant.success">
         <source>The variant template was renamed to %s.</source>
@@ -141,7 +144,7 @@
       </trans-unit>
       <trans-unit id="template_studio.message.rename_variant.error">
         <source>The variant template %s could not be renamed.</source>
-        <target>Le modèle de variante %s n'a pas pu être renommé.</target>
+        <target>Le modèle de variante %s n&apos;a pas pu être renommé.</target>
       </trans-unit>
       <trans-unit id="template_studio.message.save.success">
         <source>Your template for %s was saved.</source>
@@ -149,7 +152,7 @@
       </trans-unit>
       <trans-unit id="template_studio.message.save.error">
         <source>Your template for %s could not be saved.</source>
-        <target>Votre modèle pour %s n'a pas pu être sauvegardé.</target>
+        <target>Votre modèle pour %s n&apos;a pas pu être sauvegardé.</target>
       </trans-unit>
       <trans-unit id="template_studio.message.delete.success">
         <source>Your template for %s was deleted.</source>
@@ -157,15 +160,15 @@
       </trans-unit>
       <trans-unit id="template_studio.message.delete.error">
         <source>Your template for %s could not be deleted.</source>
-        <target>Votre modèle pour %s n'a pas pu être supprimé.</target>
+        <target>Votre modèle pour %s n&apos;a pas pu être supprimé.</target>
       </trans-unit>
       <trans-unit id="template_studio.message.open_tab.error">
         <source>The template %s cannot be found or opened in an editor tab.</source>
-        <target>Le modèle %s ne peut être trouvé ou ouvert dans un onglet de l'éditeur.</target>
+        <target>Le modèle %s ne peut être trouvé ou ouvert dans un onglet de l&apos;éditeur.</target>
       </trans-unit>
       <trans-unit id="template_studio.message.open_block_info.error">
         <source>The block %s was not found yet. Did you save the template?</source>
-        <target>Le bloc %s n'a pas encore été trouvé. Avez-vous sauvegardé le modèle ?</target>
+        <target>Le bloc %s n&apos;a pas encore été trouvé. Avez-vous sauvegardé le modèle ?</target>
       </trans-unit>
       <trans-unit id="template_studio.dialog.delete.confirm">
         <source>This deletes your template for %s and cannot be undone.</source>
@@ -184,16 +187,16 @@
         <target>Le modèle %identifier% est fourni en deux formats. Lors de vos ajustements, préférez le format Twig pour rester compatible avec Contao 6.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>La relation du modèle ne peut pas être analysée car elle contient des erreurs.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">
         <source>This template overwrites all previously defined content because it does not extend %previous%.</source>
-        <target>Ce modèle écrase tout le contenu précédemment défini car il n'étend pas %previous%.</target>
+        <target>Ce modèle écrase tout le contenu précédemment défini car il n&apos;étend pas %previous%.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_use_warning">
         <source>This template ignores all previously defined content because it does not use %previous%.</source>
-        <target>Ce modèle ignore tout le contenu précédemment défini car il n'utilise pas %previous%.</target>
+        <target>Ce modèle ignore tout le contenu précédemment défini car il n&apos;utilise pas %previous%.</target>
       </trans-unit>
       <trans-unit id="template_studio.info.block.title">
         <source>Hierarchy of block %block%</source>
@@ -201,15 +204,15 @@
       </trans-unit>
       <trans-unit id="template_studio.info.block.hierarchy">
         <source>Block %block% is originally defined in the %namespace% namespace and is modified %modify_count% time(s) when rendering the %target_template% template.</source>
-        <target>Le bloc %block% est défini à l'origine dans l'espace de noms %namespace% et est modifié %modify_count% fois lors du rendu du modèle %target_template%.</target>
+        <target>Le bloc %block% est défini à l&apos;origine dans l&apos;espace de noms %namespace% et est modifié %modify_count% fois lors du rendu du modèle %target_template%.</target>
       </trans-unit>
       <trans-unit id="template_studio.info.block.flat_hierarchy">
         <source>Block %block% is originally defined in the %target_template% template.</source>
-        <target>Le bloc %block% est défini à l'origine dans le modèle %target_template%.</target>
+        <target>Le bloc %block% est défini à l&apos;origine dans le modèle %target_template%.</target>
       </trans-unit>
       <trans-unit id="template_studio.info.block.overwrite_warning">
         <source>This template defines content for the %block% block without using the %expression_to_use% expression. This overwrites previously defined content.</source>
-        <target>Ce modèle définit du contenu pour le bloc %block% sans utiliser l'expression %expression_to_use%. Cela écrase le contenu précédemment défini.</target>
+        <target>Ce modèle définit du contenu pour le bloc %block% sans utiliser l&apos;expression %expression_to_use%. Cela écrase le contenu précédemment défini.</target>
       </trans-unit>
     </body>
   </file>
