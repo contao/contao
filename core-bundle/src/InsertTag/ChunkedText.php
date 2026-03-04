@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 /**
- * @implements \IteratorAggregate<int, array{0:int, 1:string}>
+ * @implements \IteratorAggregate<int, array{0: int, 1: string}>
  */
 final class ChunkedText implements \IteratorAggregate, \Stringable
 {
@@ -36,7 +36,7 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
     }
 
     /**
-     * @return \Generator<array{0:self::TYPE_*, 1:string}>
+     * @return \Generator<array{0: self::TYPE_*, 1: string}>
      */
     public function getIterator(): \Generator
     {

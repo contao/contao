@@ -76,7 +76,7 @@ class InsertTagParser implements ResetInterface
     private array $blockSubscriptionEndTags = [];
 
     /**
-     * @var array<string, \Closure(InsertTagFlag, InsertTagResult):InsertTagResult>
+     * @var array<string, \Closure(InsertTagFlag, InsertTagResult): InsertTagResult>
      */
     private array $flagCallbacks = [];
 

@@ -21,7 +21,7 @@ class AsContentElement
     public array $attributes;
 
     /**
-     * @param array{allowedTypes?:list<string>}|bool $nestedFragments
+     * @param array{allowedTypes?: list<string>}|bool $nestedFragments
      */
     public function __construct(string|null $type = null, string $category = 'miscellaneous', string|null $template = null, string|null $method = null, string|null $renderer = null, array|bool $nestedFragments = false, int $priority = 0, mixed ...$attributes)
     {

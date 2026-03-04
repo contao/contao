@@ -338,7 +338,7 @@ class ContentCompositionBuilder
 
         $template->set('response_context', new class($responseContextData) {
             /**
-             * @param array<string, \Closure():mixed|mixed> $data
+             * @param array<string, \Closure(): mixed|mixed> $data
              */
             public function __construct(private array $data)
             {

@@ -35,10 +35,6 @@ class ManagerConfig
 
         $this->filesystem = $filesystem ?: new Filesystem();
         $this->configFile = Path::join($projectDir, 'config/contao-manager.yaml');
-
-        if ($this->filesystem->exists($this->configFile)) {
-            return;
-        }
     }
 
     public function all(): array
