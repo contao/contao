@@ -41,7 +41,7 @@ class ErrorPageController extends AbstractPageController implements ContentCompo
     public function __invoke(PageModel $pageModel, Request $request): Response
     {
         // Handle redirect for 401, 403, 404
-        if ('error_503' !== $pageModel->type && $pageModel->autoforward && $pageModel->jumpTo) {
+        if (\in_array($pageModel->type, ['error_401', 'error_403', 'error_404'], true) && $pageModel->autoforward && $pageModel->jumpTo) {
             $pageAdapter = $this->getContaoAdapter(PageModel::class);
 
             if (!$target = $pageAdapter->findById($pageModel->jumpTo)) {
@@ -66,7 +66,7 @@ class ErrorPageController extends AbstractPageController implements ContentCompo
 
     public function supportsContentComposition(PageModel $pageModel): bool
     {
-        return 'error_503' === $pageModel->type || !$pageModel->autoforward;
+        return 'error_503' === $pageModel->type || (\in_array($pageModel->type, ['error_401', 'error_403', 'error_404'], true) && !$pageModel->autoforward);
     }
 
     protected function setCacheHeaders(Response $response, PageModel $pageModel): Response
