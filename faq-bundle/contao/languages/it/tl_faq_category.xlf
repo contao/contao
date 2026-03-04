@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data e ora dell'ultima revisione</target>
+        <target>Data e ora dell&apos;ultima revisione</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.title_legend">
         <source>Title and redirect</source>

@@ -91,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.canonicalLink.0">
         <source>Canonical URL</source>
+        <target>Canonical URL</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>

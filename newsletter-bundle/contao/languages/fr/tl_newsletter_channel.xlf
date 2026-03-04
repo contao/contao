@@ -15,39 +15,39 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.jumpTo.1">
         <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
-        <target>Sélectionner la page vers laquelle les visiteurs seront redirigés après avoir cliqué sur un bulletin d'information.</target>
+        <target>Sélectionner la page vers laquelle les visiteurs seront redirigés après avoir cliqué sur un bulletin d&apos;information.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.0">
         <source>E-mail template</source>
-        <target>Modèle d'e-mail</target>
+        <target>Modèle d&apos;e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
         <source>Here you can select an e-mail template.</source>
-        <target>Vous pouvez choisir un modèle d'email.</target>
+        <target>Vous pouvez choisir un modèle d&apos;email.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.0">
         <source>Mailer transport</source>
-        <target>Envoi d'e-mail</target>
+        <target>Envoi d&apos;e-mail</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.1">
         <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
-        <target>Vous pouvez remplacer la méthode d'envoi d'email utilisée pour cette liste de diffusion.</target>
+        <target>Vous pouvez remplacer la méthode d&apos;envoi d&apos;email utilisée pour cette liste de diffusion.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>
-        <target>Adresse e-mail de l'expéditeur</target>
+        <target>Adresse e-mail de l&apos;expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.1">
         <source>Please enter the e-mail address of the sender.</source>
-        <target>Saisir l'adresse e-mail de l'expéditeur.</target>
+        <target>Saisir l&apos;adresse e-mail de l&apos;expéditeur.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.0">
         <source>Sender name</source>
-        <target>Nom de l'expéditeur</target>
+        <target>Nom de l&apos;expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.senderName.1">
         <source>Here you can enter an optional sender name.</source>
-        <target>Ici, vous pouvez saisir un nom optionnel pour l'expéditeur.</target>
+        <target>Ici, vous pouvez saisir un nom optionnel pour l&apos;expéditeur.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.tstamp.0">
         <source>Revision date</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender_legend">
         <source>Sender settings</source>
-        <target>Paramètres de l'expéditeur</target>
+        <target>Paramètres de l&apos;expéditeur</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.0">
         <source>New</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.children">
         <source>Edit the newsletters of channel ID %s</source>
-        <target>Éditer les bulletins d'information de la liste de diffusion ID %s</target>
+        <target>Éditer les bulletins d&apos;information de la liste de diffusion ID %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy">
         <source>Duplicate channel ID %s</source>

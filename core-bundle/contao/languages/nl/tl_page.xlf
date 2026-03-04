@@ -126,7 +126,7 @@
         <target>Taal reservepagina</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Toon deze pagina als er geen pagina is in de taal van de bezoeker.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.1">
         <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
-        <target>Contao verwijdert standaard de queryparameters in de canonieke URL. Hier kunt u een door komma's gescheiden lijst met queryparameters toevoegen die u wilt bewaren. Gebruik &quot;*&quot; als jokerteken.</target>
+        <target>Contao verwijdert standaard de queryparameters in de canonieke URL. Hier kunt u een door komma&apos;s gescheiden lijst met queryparameters toevoegen die u wilt bewaren. Gebruik &quot;*&quot; als jokerteken.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -311,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.1">
         <source>Assign a page layout to the page and its subpages.</source>
-        <target>Wijs een lay-out toe aan een pagina en onderliggende subpagina's.</target>
+        <target>Wijs een lay-out toe aan een pagina en onderliggende subpagina&apos;s.</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.0">
         <source>Page layout</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
-        <target>Pagina opmaken kunt u beheren met de &quot;thema's&quot; module.</target>
+        <target>Pagina opmaken kunt u beheren met de &quot;thema&apos;s&quot; module.</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
@@ -327,7 +327,7 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
-        <target>Hier kunt u een andere lay-out voor subpagina's selecteren.</target>
+        <target>Hier kunt u een andere lay-out voor subpagina&apos;s selecteren.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_page.includeCache.1">
         <source>Set cache timeout values for the page and its subpages.</source>
-        <target>Stel cache time-out waardes in voor de pagina en subpagina's.</target>
+        <target>Stel cache time-out waardes in voor de pagina en subpagina&apos;s.</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Shared cache timeout</source>
@@ -391,7 +391,7 @@
       </trans-unit>
       <trans-unit id="tl_page.chmod.1">
         <source>Please assign the access rights for the page and its subpages.</source>
-        <target>Toewijzen van toegangsrechten voor de pagina en zijn subpagina's.</target>
+        <target>Toewijzen van toegangsrechten voor de pagina en zijn subpagina&apos;s.</target>
       </trans-unit>
       <trans-unit id="tl_page.noSearch.0">
         <source>Do not search</source>
@@ -647,7 +647,7 @@
       </trans-unit>
       <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
-        <target>Dupliceer pagina ID %s met subpagina's</target>
+        <target>Dupliceer pagina ID %s met subpagina&apos;s</target>
       </trans-unit>
       <trans-unit id="tl_page.delete">
         <source>Delete page ID %s</source>
@@ -687,11 +687,11 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
-        <target>De volgende pagina's hebben een vergelijkbare alias die mogelijk in strijd is met deze pagina. Als de URL niet correct is opgelost, probeer dan de prioriteit van de routes te wijzigen.</target>
+        <target>De volgende pagina&apos;s hebben een vergelijkbare alias die mogelijk in strijd is met deze pagina. Als de URL niet correct is opgelost, probeer dan de prioriteit van de routes te wijzigen.</target>
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
-        <target>Schakel canonieke URL's in de hoofdpagina van de website in om deze configuratie in te schakelen.</target>
+        <target>Schakel canonieke URL&apos;s in de hoofdpagina van de website in om deze configuratie in te schakelen.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

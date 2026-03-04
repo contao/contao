@@ -159,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.box.1">
         <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>Obraz zostanie przeskalowany proporcjonalnie tak, aby żaden z jego boków nie przekroczył podanych wymiarów. Działa to podobnie jak wartość &lt;em&gt;contain&lt;/em&gt; w CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.0">
         <source>Crop</source>
@@ -166,6 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>Obraz zostanie przeskalowany do dokładnie podanych wymiarów. W razie potrzeby zostanie przycięty, z zachowaniem istotnego obszaru, jeśli został określony. Działa to podobnie jak wartość &lt;em&gt;cover&lt;/em&gt; w CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>

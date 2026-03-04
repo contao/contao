@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.pid.1">
         <source>Name of the associated user</source>
-        <target>Nom de l'utilisateur associé</target>
+        <target>Nom de l&apos;utilisateur associé</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
         <source>Source</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.affectedRows.1">
         <source>Number of records included in the undo step</source>
-        <target>Nombre d'enregistrements affectés</target>
+        <target>Nombre d&apos;enregistrements affectés</target>
       </trans-unit>
       <trans-unit id="tl_undo.query.0">
         <source>Details</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_undo.query.1">
         <source>Details of the undo step</source>
-        <target>Détails de l'entrée courante</target>
+        <target>Détails de l&apos;entrée courante</target>
       </trans-unit>
       <trans-unit id="tl_undo.data.0">
         <source>Data</source>
@@ -43,11 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
-        <target>Rétablir l'élément ID %s</target>
+        <target>Rétablir l&apos;élément ID %s</target>
       </trans-unit>
       <trans-unit id="tl_undo.parent_modal">
         <source>Show origin of %s ID %s</source>
-        <target>Afficher l'origine de %s ID %s</target>
+        <target>Afficher l&apos;origine de %s ID %s</target>
       </trans-unit>
     </body>
   </file>

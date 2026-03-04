@@ -6,7 +6,7 @@
       </trans-unit>
       <trans-unit id="tl_files.preview.1">
         <source>Mark the important part of the image with your mouse cursor.</source>
-        <target>Contrassegna come importante una parte dell'immagine con il cursore del mouse.</target>
+        <target>Contrassegna come importante una parte dell&apos;immagine con il cursore del mouse.</target>
       </trans-unit>
       <trans-unit id="tl_files.name.0">
         <source>Name</source>
@@ -78,7 +78,7 @@
       </trans-unit>
       <trans-unit id="tl_files.importantPartHeight.1">
         <source>Here you can enter the height of the important part.</source>
-        <target>Qui è possibile inserire l'altezza della parte importante.</target>
+        <target>Qui è possibile inserire l&apos;altezza della parte importante.</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
         <source>Metadata</source>
@@ -130,7 +130,7 @@
       </trans-unit>
       <trans-unit id="tl_files.browseFiles">
         <source>Browse files</source>
-        <target>Sfoglia l'elenco dei file</target>
+        <target>Sfoglia l&apos;elenco dei file</target>
       </trans-unit>
       <trans-unit id="tl_files.clearList">
         <source>Clear list</source>
@@ -138,7 +138,7 @@
       </trans-unit>
       <trans-unit id="tl_files.startUpload">
         <source>Start upload</source>
-        <target>Inizia l'upload</target>
+        <target>Inizia l&apos;upload</target>
       </trans-unit>
       <trans-unit id="tl_files.dropzone">
         <source>Click or drop files here to upload</source>
@@ -162,7 +162,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncChanged">
         <source>Updated the hash of the file or folder &quot;%s&quot;</source>
-        <target>Aggiornato l'hash del file o della cartella &quot;%s&quot;</target>
+        <target>Aggiornato l&apos;hash del file o della cartella &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.syncUnchanged">
         <source>Found the file or folder &quot;%s&quot;</source>
@@ -258,7 +258,7 @@
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.1">
         <source>Paste into folder &quot;%s&quot;</source>
-        <target>Incolla all'interno della cartella &quot;%s&quot;</target>
+        <target>Incolla all&apos;interno della cartella &quot;%s&quot;</target>
       </trans-unit>
     </body>
   </file>

@@ -134,7 +134,7 @@
         <target>HTML-kod</target>
       </trans-unit>
       <trans-unit id="tl_content.unfilteredHtml.1">
-        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <source>Take care when pasting things you don&apos;t understand. This could allow attackers to steal your identity or take control of the whole system.</source>
         <target>Var försiktig när du klistrar in saker du inte förstår. Detta kan tillåta angripare att stjäla din identitet eller ta kontroll över hela systemet.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
-        <target>Länktiteln kommer att visas för besökaren istället för URL'en.&lt;br /&gt;Om du använder en bildlänk kommer bilden att visas istället för länktiteln.</target>
+        <target>Länktiteln kommer att visas för besökaren istället för URL&apos;en.&lt;br /&gt;Om du använder en bildlänk kommer bilden att visas istället för länktiteln.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.0">
         <source>Overwrite link</source>

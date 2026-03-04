@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR-compliant.</source>
-        <target>Qui puoi ad es. inserisci una nota privacy per rendere l'iscrizione alla newsletter conforme al GDPR.</target>
+        <target>Qui puoi ad es. inserisci una nota privacy per rendere l&apos;iscrizione alla newsletter conforme al GDPR.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>
@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.0">
         <source>Unsubscription message</source>
-        <target>E-mail cancellare l'iscrizione.</target>
+        <target>E-mail cancellare l&apos;iscrizione.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
@@ -84,11 +84,11 @@ If you did not subscribe yourself, please ignore this e-mail.
 
 su ##domain##.
 
-Clicca il seguente link di attivazione per completare l'iscrizione: 
+Clicca il seguente link di attivazione per completare l&apos;iscrizione: 
 
 ##link##
 
-Se l'iscrizione non è avvenuta per opera tua, ti preghiamo di ignorare questa e-mail.
+Se l&apos;iscrizione non è avvenuta per opera tua, ti preghiamo di ignorare questa e-mail.
 </target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">

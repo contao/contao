@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_article.title.1">
         <source>Please enter the article title.</source>
-        <target>Inserisci il titolo dell'articolo</target>
+        <target>Inserisci il titolo dell&apos;articolo</target>
       </trans-unit>
       <trans-unit id="tl_article.alias.0">
         <source>Article alias</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_article.alias.1">
         <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
-        <target>L'alias dell'articolo è il nome che verrà visualizzato al posto del suo ID numerico</target>
+        <target>L&apos;alias dell&apos;articolo è il nome che verrà visualizzato al posto del suo ID numerico</target>
       </trans-unit>
       <trans-unit id="tl_article.author.0">
         <source>Author</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_article.author.1">
         <source>Here you can change the author of the article.</source>
-        <target>Inserisci il nome dell'autore</target>
+        <target>Inserisci il nome dell&apos;autore</target>
       </trans-unit>
       <trans-unit id="tl_article.inColumn.0">
         <source>Display in</source>
@@ -31,15 +31,15 @@
       </trans-unit>
       <trans-unit id="tl_article.inColumn.1">
         <source>Please choose the layout section you want the article to be displayed in.</source>
-        <target>Seleziona la sezione di layout in cui desideri che venga visualizzato l'articolo</target>
+        <target>Seleziona la sezione di layout in cui desideri che venga visualizzato l&apos;articolo</target>
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
-        <target>ID e classe css per l'anteprima</target>
+        <target>ID e classe css per l&apos;anteprima</target>
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.1">
         <source>Here you can set an ID and one or more classes for the teaser element.</source>
-        <target>Qui puoi specificare un ID per il foglio di stile (attributo &quot;id&quot; del tag HTML) e una o più classi per il foglio di stile (attributo &quot;class&quot; del tag HTML) che ti permettono di formattare l'anteprima dell'articolo tramite un foglio di stile CSS.</target>
+        <target>Qui puoi specificare un ID per il foglio di stile (attributo &quot;id&quot; del tag HTML) e una o più classi per il foglio di stile (attributo &quot;class&quot; del tag HTML) che ti permettono di formattare l&apos;anteprima dell&apos;articolo tramite un foglio di stile CSS.</target>
       </trans-unit>
       <trans-unit id="tl_article.showTeaser.0">
         <source>Show teaser</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_article.showTeaser.1">
         <source>Show the article teaser if there are multiple articles.</source>
-        <target>Mostra l'anteprima se ci sono più articoli</target>
+        <target>Mostra l&apos;anteprima se ci sono più articoli</target>
       </trans-unit>
       <trans-unit id="tl_article.teaser.0">
         <source>Article teaser</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_article.teaser.1">
         <source>The article teaser can also be displayed with the content element &quot;article teaser&quot;.</source>
-        <target>L'anteprima dell'articolo può essere visualizzata anche mediante l'utilizzo dell'elemento &quot;Anteprima articolo&quot;</target>
+        <target>L&apos;anteprima dell&apos;articolo può essere visualizzata anche mediante l&apos;utilizzo dell&apos;elemento &quot;Anteprima articolo&quot;</target>
       </trans-unit>
       <trans-unit id="tl_article.printable.0">
         <source>Syndication</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_article.printable.1">
         <source>Here you can choose which options are available.</source>
-        <target>Mostra un link alla versione pdf dell'articolo</target>
+        <target>Mostra un link alla versione pdf dell&apos;articolo</target>
       </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
         <source>Article template</source>
@@ -71,15 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_article.customTpl.1">
         <source>Here you can select the article template.</source>
-        <target>Qui puoi selezionare il template dell'articolo.</target>
+        <target>Qui puoi selezionare il template dell&apos;articolo.</target>
       </trans-unit>
       <trans-unit id="tl_article.protected.0">
         <source>Protect article</source>
-        <target>Proteggi l'articolo</target>
+        <target>Proteggi l&apos;articolo</target>
       </trans-unit>
       <trans-unit id="tl_article.protected.1">
         <source>Show the article to certain member groups only.</source>
-        <target>Restringi la visualizzazione dell'articolo a determinati gruppi</target>
+        <target>Restringi la visualizzazione dell&apos;articolo a determinati gruppi</target>
       </trans-unit>
       <trans-unit id="tl_article.groups.0">
         <source>Allowed member groups</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_article.groups.1">
         <source>These groups will be able to see the article.</source>
-        <target>Seleziona i gruppi abilitati alla visualizzazione dell'articolo</target>
+        <target>Seleziona i gruppi abilitati alla visualizzazione dell&apos;articolo</target>
       </trans-unit>
       <trans-unit id="tl_article.cssID.0">
         <source>CSS ID/class</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_article.published.1">
         <source>Make the article publicly visible on the website.</source>
-        <target>Se non selezioni questa opzione, l'articolo non sarà visibile ai visitatori del sito.</target>
+        <target>Se non selezioni questa opzione, l&apos;articolo non sarà visibile ai visitatori del sito.</target>
       </trans-unit>
       <trans-unit id="tl_article.start.0">
         <source>Show from</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_article.start.1">
         <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se vuoi evitare che l'articolo venga visualizzato sul sito prima di una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <target>Se vuoi evitare che l&apos;articolo venga visualizzato sul sito prima di una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
         <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Se vuoi evitare che l'articolo venga visualizzato sul sito dopo una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <target>Se vuoi evitare che l&apos;articolo venga visualizzato sul sito dopo una certa data/ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_article.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data e ora dell'ultima revisione</target>
+        <target>Data e ora dell&apos;ultima revisione</target>
       </trans-unit>
       <trans-unit id="tl_article.title_legend">
         <source>Title and author</source>
@@ -191,11 +191,11 @@
       </trans-unit>
       <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
-        <target>Modifica l'articolo ID %s</target>
+        <target>Modifica l&apos;articolo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.children">
         <source>Edit the content elements of article ID %s</source>
-        <target>Modifica gli elementi di contenuto dell'articolo ID %s</target>
+        <target>Modifica gli elementi di contenuto dell&apos;articolo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_article.toggle.0">
         <source>Publish/unpublish article</source>
-        <target>Cambia stato pubblicazione dell'articolo</target>
+        <target>Cambia stato pubblicazione dell&apos;articolo</target>
       </trans-unit>
       <trans-unit id="tl_article.toggle.1">
         <source>Unpublish article ID %s</source>
@@ -223,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
-        <target>Incolla dopo l'articolo ID %s</target>
+        <target>Incolla dopo l&apos;articolo ID %s</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>

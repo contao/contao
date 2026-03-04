@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
-        <target>Limita l'accesso all'URL specificato</target>
+        <target>Limita l&apos;accesso all&apos;URL specificato</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
-        <target>Consenti l'accesso solo all'URL specificato anziché all'intero sito web.</target>
+        <target>Consenti l&apos;accesso solo all&apos;URL specificato anziché all&apos;intero sito web.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
-        <target>L'utente che ha creato il collegamento di anteprima</target>
+        <target>L&apos;utente che ha creato il collegamento di anteprima</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>

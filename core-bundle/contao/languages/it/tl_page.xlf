@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alias.1">
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
-        <target>L'alias è un riferimento univoco alla pagina che può essere usato, al posto dell'ID numerico, quando si richiamano le pagine. E' utile specialmente quando Contao usa gli URL statici</target>
+        <target>L&apos;alias è un riferimento univoco alla pagina che può essere usato, al posto dell&apos;ID numerico, quando si richiamano le pagine. E&apos; utile specialmente quando Contao usa gli URL statici</target>
       </trans-unit>
       <trans-unit id="tl_page.requireItem.0">
         <source>Require an item</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
-        <target>Attivare un errore 404 se l'URL della pagina non contiene un alias dell'elemento.</target>
+        <target>Attivare un errore 404 se l&apos;URL della pagina non contiene un alias dell&apos;elemento.</target>
       </trans-unit>
       <trans-unit id="tl_page.routePath.0">
         <source>Route path</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routePath.1">
         <source>A preview of the final path (possibly with placeholders) to match this page.</source>
-        <target>Un'anteprima del percorso finale (possibilmente con segnaposto) da abbinare a questa pagina.</target>
+        <target>Un&apos;anteprima del percorso finale (possibilmente con segnaposto) da abbinare a questa pagina.</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
-        <target>In modo opzionale, configurare la priorità per l'ordine dei percorsi. Predefinito: 0</target>
+        <target>In modo opzionale, configurare la priorità per l&apos;ordine dei percorsi. Predefinito: 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
-        <target>Inserisci la lingua della pagina secondo lo standard ISO-639 (ad esempio &quot;en&quot; per l'inglese o &quot;en_US&quot; per l'inglese americano).</target>
+        <target>Inserisci la lingua della pagina secondo lo standard ISO-639 (ad esempio &quot;en&quot; per l&apos;inglese o &quot;en_US&quot; per l&apos;inglese americano).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -115,18 +115,18 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.0">
         <source>Redirect to last page visited</source>
-        <target>Reindirizza all'ultima pagina visitata</target>
+        <target>Reindirizza all&apos;ultima pagina visitata</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
-        <target>Reindirizzare il membro all'ultima pagina visitata anziché alla pagina di reindirizzamento.</target>
+        <target>Reindirizzare il membro all&apos;ultima pagina visitata anziché alla pagina di reindirizzamento.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
         <target>Lingua predefinita</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Mostra questa pagina se nessuna pagina è compatibile con la lingua del visitatore</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_page.dns.1">
         <source>Here you can restrict the access to the website to a certain domain name.</source>
-        <target>E' possibile limitare l'accesso al sito tramite il nome a dominio.</target>
+        <target>E&apos; possibile limitare l&apos;accesso al sito tramite il nome a dominio.</target>
       </trans-unit>
       <trans-unit id="tl_page.staticFiles.0">
         <source>Files URL</source>
@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_page.staticFiles.1">
         <source>The files URL applies to the &lt;em&gt;files&lt;/em&gt; directory (page speed optimization).</source>
-        <target>L'URL file si applica alla cartella &lt;em&gt;files&lt;/em&gt; (ottimizzazione del caricamento della pagina).</target>
+        <target>L&apos;URL file si applica alla cartella &lt;em&gt;files&lt;/em&gt; (ottimizzazione del caricamento della pagina).</target>
       </trans-unit>
       <trans-unit id="tl_page.staticPlugins.0">
         <source>Assets URL</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_page.staticPlugins.1">
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
-        <target>L'URL plugin si applica a tutte le risorse nella cartella &lt;em&gt;plugins&lt;/em&gt; (ottimizzazione del caricamento della pagina).</target>
+        <target>L&apos;URL plugin si applica a tutte le risorse nella cartella &lt;em&gt;plugins&lt;/em&gt; (ottimizzazione del caricamento della pagina).</target>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.0">
         <source>Mailer transport</source>
@@ -207,11 +207,11 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.1">
         <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
-        <target>Come impostazione predefinita, Contao rimuove i parametri di query nell'URL canonico. Qui puoi aggiungere un elenco separato da virgole di parametri di query da preservare. Usa &quot;*&quot; come carattere jolly.</target>
+        <target>Come impostazione predefinita, Contao rimuove i parametri di query nell&apos;URL canonico. Qui puoi aggiungere un elenco separato da virgole di parametri di query da preservare. Usa &quot;*&quot; come carattere jolly.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
-        <target>Indirizzo e-mail dell'amministratore del sito</target>
+        <target>Indirizzo e-mail dell&apos;amministratore del sito</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
@@ -243,7 +243,7 @@
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.0">
         <source>Valid alias characters</source>
-        <target>Caratteri validi per l'alias</target>
+        <target>Caratteri validi per l&apos;alias</target>
       </trans-unit>
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
@@ -283,11 +283,11 @@
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
-        <target>Inoltra ad un'altra pagina</target>
+        <target>Inoltra ad un&apos;altra pagina</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.1">
         <source>Redirect visitors to another page (e.g. a login page).</source>
-        <target>Selezionando quest'opzione i visitatori verranno rediretti ad un'altra pagina</target>
+        <target>Selezionando quest&apos;opzione i visitatori verranno rediretti ad un&apos;altra pagina</target>
       </trans-unit>
       <trans-unit id="tl_page.protected.0">
         <source>Protect page</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_page.protected.1">
         <source>Restrict page access to certain member groups.</source>
-        <target>Scegliendo questa opzione sarà possibile limitare l'accesso a determinati gruppi</target>
+        <target>Scegliendo questa opzione sarà possibile limitare l&apos;accesso a determinati gruppi</target>
       </trans-unit>
       <trans-unit id="tl_page.groups.0">
         <source>Allowed member groups</source>
@@ -311,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.1">
         <source>Assign a page layout to the page and its subpages.</source>
-        <target>Ogni pagina utilizza lo stesso layout della sua pagina genitore. Selezionando quest'opzione sarà possibile assegnare un layout diverso a questa pagina ed alle sue sotto pagine</target>
+        <target>Ogni pagina utilizza lo stesso layout della sua pagina genitore. Selezionando quest&apos;opzione sarà possibile assegnare un layout diverso a questa pagina ed alle sue sotto pagine</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.0">
         <source>Page layout</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
-        <target>Seleziona un layout. E' possibile gestire i layout utilizzando il modulo &lt;em&gt;layout di pagina&lt;/em&gt;</target>
+        <target>Seleziona un layout. E&apos; possibile gestire i layout utilizzando il modulo &lt;em&gt;layout di pagina&lt;/em&gt;</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
@@ -351,7 +351,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysLoadFromCache.1">
         <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
-        <target>Carica sempre questa pagina dalla cache condivisa, anche se un membro ha effettuato l'accesso. In questo caso non puoi più personalizzare la pagina per i membri connessi!</target>
+        <target>Carica sempre questa pagina dalla cache condivisa, anche se un membro ha effettuato l&apos;accesso. In questo caso non puoi più personalizzare la pagina per i membri connessi!</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Private cache timeout</source>
@@ -391,7 +391,7 @@
       </trans-unit>
       <trans-unit id="tl_page.chmod.1">
         <source>Please assign the access rights for the page and its subpages.</source>
-        <target>Ogni pagina ha tre livelli di accesso: uno per l'utente, uno per il gruppo, e uno per tutti gli altri. Puoi assegnare permessi differenti ad ogni livello</target>
+        <target>Ogni pagina ha tre livelli di accesso: uno per l&apos;utente, uno per il gruppo, e uno per tutti gli altri. Puoi assegnare permessi differenti ad ogni livello</target>
       </trans-unit>
       <trans-unit id="tl_page.noSearch.0">
         <source>Do not search</source>
@@ -437,7 +437,7 @@
       </trans-unit>
       <trans-unit id="tl_page.accesskey.1">
         <source>A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
-        <target>Un 'access key' è un singolo caratteri che può essere assegnato ad un elemento di navigazione. Questi caratteri vengono generalmente usati per fornire un accesso rapido ad alcuni elementi del sito (di solito premendo il tasto ALT + access key)</target>
+        <target>Un &apos;access key&apos; è un singolo caratteri che può essere assegnato ad un elemento di navigazione. Questi caratteri vengono generalmente usati per fornire un accesso rapido ad alcuni elementi del sito (di solito premendo il tasto ALT + access key)</target>
       </trans-unit>
       <trans-unit id="tl_page.published.0">
         <source>Publish page</source>
@@ -465,11 +465,11 @@
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
-        <target>Applica l'autenticazione a due fattori</target>
+        <target>Applica l&apos;autenticazione a due fattori</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.1">
         <source>Enforce two-factor authentication for all members.</source>
-        <target>Applica l'autenticazione a due fattori per tutti i membri.</target>
+        <target>Applica l&apos;autenticazione a due fattori per tutti i membri.</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.0">
         <source>Two-factor redirect page</source>
@@ -477,7 +477,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
-        <target>Scegli la pagina in cui i membri verranno reindirizzati per impostare l'autenticazione a due fattori.</target>
+        <target>Scegli la pagina in cui i membri verranno reindirizzati per impostare l&apos;autenticazione a due fattori.</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCsp.0">
         <source>Enable CSP</source>
@@ -685,7 +685,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
-        <target>Le pagine seguenti hanno un alias simile che potrebbe entrare in conflitto con questa pagina. Se l'URL non viene risolto correttamente, prova a modificare la priorità dei percorsi.</target>
+        <target>Le pagine seguenti hanno un alias simile che potrebbe entrare in conflitto con questa pagina. Se l&apos;URL non viene risolto correttamente, prova a modificare la priorità dei percorsi.</target>
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>

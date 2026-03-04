@@ -375,9 +375,11 @@
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Istnieje co najmniej jeden moduł „dane osobowe”, który umożliwia zmianę hasła. Stanowi to lukę bezpieczeństwa i nie będzie już działać w Contao 6. Zamiast tego użyj modułu „zmiana hasła”.</target>
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element ID %d nie może zostać tutaj wstawiony, ponieważ koliduje z istniejącym elementem.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2389,9 +2391,11 @@
       </trans-unit>
       <trans-unit id="MSC.reauthenticate">
         <source>Please enter your password to verify your identity.</source>
+        <target>Wprowadź hasło, aby potwierdzić swoją tożsamość.</target>
       </trans-unit>
       <trans-unit id="MSC.verify">
         <source>Verify</source>
+        <target>Zweryfikuj</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2503,6 +2507,7 @@
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
         <source>Share on X (formerly Twitter)</source>
+        <target>Udostępnij na X (dawniej Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2586,6 +2591,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Zbyt wiele razy próbowano zresetować hasło. Spróbuj ponownie za 15 minut.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2821,6 +2827,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>Adres URL podglądu nie może zostać wygenerowany, ponieważ formularz zawiera błędy.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

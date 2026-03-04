@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.alias.1">
         <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
-        <target>Un alias di una FAQ è un riferimento alla domanda che potrai richiamare al posto dell'ID della domanda.</target>
+        <target>Un alias di una FAQ è un riferimento alla domanda che potrai richiamare al posto dell&apos;ID della domanda.</target>
       </trans-unit>
       <trans-unit id="tl_faq.author.0">
         <source>Author</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.author.1">
         <source>Here you can change the author of the FAQ.</source>
-        <target>Cambia l'autore della FAQ</target>
+        <target>Cambia l&apos;autore della FAQ</target>
       </trans-unit>
       <trans-unit id="tl_faq.answer.0">
         <source>Answer</source>
@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.addImage.0">
         <source>Add an image</source>
-        <target>Aggiungi un'immagine</target>
+        <target>Aggiungi un&apos;immagine</target>
       </trans-unit>
       <trans-unit id="tl_faq.addImage.1">
         <source>Add an image to the FAQ.</source>

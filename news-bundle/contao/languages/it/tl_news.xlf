@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
-        <target>Puoi modificare l'autore dell'ultima news</target>
+        <target>Puoi modificare l&apos;autore dell&apos;ultima news</target>
       </trans-unit>
       <trans-unit id="tl_news.date.0">
         <source>Date</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
-        <target>Inserisci l'ora della news</target>
+        <target>Inserisci l&apos;ora della news</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_news.subheadline.1">
         <source>Here you can enter a subheadline.</source>
-        <target>E' possibile inserire un sottotitolo.</target>
+        <target>E&apos; possibile inserire un sottotitolo.</target>
       </trans-unit>
       <trans-unit id="tl_news.teaser.0">
         <source>News teaser</source>
@@ -99,11 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_news.addImage.0">
         <source>Add an image</source>
-        <target>Aggiungi un'immagine</target>
+        <target>Aggiungi un&apos;immagine</target>
       </trans-unit>
       <trans-unit id="tl_news.addImage.1">
         <source>Add an image to the news item.</source>
-        <target>Se selezioni questa opzione verrà aggiunta un'immagine alla news.</target>
+        <target>Se selezioni questa opzione verrà aggiunta un&apos;immagine alla news.</target>
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.0">
         <source>Add enclosures</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_news.source.1">
         <source>Here you can override the default redirect target.</source>
-        <target>Ignora il valore di default di reindirizzamento dell'obbiettivo e di destinazione di un collegamento interno o esterno al posto della pagina.</target>
+        <target>Ignora il valore di default di reindirizzamento dell&apos;obbiettivo e di destinazione di un collegamento interno o esterno al posto della pagina.</target>
       </trans-unit>
       <trans-unit id="tl_news.default.0">
         <source>Use default</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_news.default.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to the default page of the news archive.</source>
-        <target>Cliccando il link &quot;continua...&quot; i visitatori verranno indirizzati alla pagina di default dell'archivio news.</target>
+        <target>Cliccando il link &quot;continua...&quot; i visitatori verranno indirizzati alla pagina di default dell&apos;archivio news.</target>
       </trans-unit>
       <trans-unit id="tl_news.internal.0">
         <source>Page</source>
@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_news.internal.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to a page.</source>
-        <target>Cliccando il link &quot;continua...&quot; i visitatori verranno indirizzati ad una pagina interna dove potranno leggere l'articolo completo.</target>
+        <target>Cliccando il link &quot;continua...&quot; i visitatori verranno indirizzati ad una pagina interna dove potranno leggere l&apos;articolo completo.</target>
       </trans-unit>
       <trans-unit id="tl_news.article.0">
         <source>Article</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
-        <target>Seleziona l'articolo alla quale i visitatori verranno reindirizzati quando cliccano la news.</target>
+        <target>Seleziona l&apos;articolo alla quale i visitatori verranno reindirizzati quando cliccano la news.</target>
       </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_news.featured.1">
         <source>Show the news item in a featured news list.</source>
-        <target>Mostra l'elemento news in una lista di notizie in evidenza.</target>
+        <target>Mostra l&apos;elemento news in una lista di notizie in evidenza.</target>
       </trans-unit>
       <trans-unit id="tl_news.published.0">
         <source>Publish item</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_news.tstamp.1">
         <source>Date and time of the latest revision</source>
-        <target>Data e ora dell'ultima revisione</target>
+        <target>Data e ora dell&apos;ultima revisione</target>
       </trans-unit>
       <trans-unit id="tl_news.title_legend">
         <source>Title and author</source>
@@ -283,7 +283,7 @@
       </trans-unit>
       <trans-unit id="tl_news.show">
         <source>Show the details of news item ID %s</source>
-        <target>Mostra i dettagli dell'elemento ID %s</target>
+        <target>Mostra i dettagli dell&apos;elemento ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_news.delete">
         <source>Delete news item ID %s</source>
-        <target>Cancella l'elemento news ID %s</target>
+        <target>Cancella l&apos;elemento news ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
         <source>Publish/unpublish news item</source>

@@ -358,7 +358,7 @@
         <target>HTML kodu</target>
       </trans-unit>
       <trans-unit id="tl_module.unfilteredHtml.1">
-        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <source>Take care when pasting things you don&apos;t understand. This could allow attackers to steal your identity or take control of the whole system.</source>
         <target>Anlamadığınız şeyleri yapıştırırken dikkatli olun. Bu tür eylemler, saldırganların kimliğinizi çalmasına veya tüm sistemin denetimini ele geçirmesine neden olabilir.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">

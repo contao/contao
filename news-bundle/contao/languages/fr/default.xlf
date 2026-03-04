@@ -19,7 +19,7 @@
       </trans-unit>
       <trans-unit id="MSC.emptyList">
         <source>Currently there are no news items.</source>
-        <target>Actuellement, il n'y a pas d'actualité.</target>
+        <target>Actuellement, il n&apos;y a pas d&apos;actualité.</target>
       </trans-unit>
       <trans-unit id="MSC.news_items">
         <source>%d item(s)</source>
@@ -39,15 +39,15 @@
       </trans-unit>
       <trans-unit id="MSC.newsOverview">
         <source>Back to the news overview</source>
-        <target>Retour à l'aperçu des actualités</target>
+        <target>Retour à l&apos;aperçu des actualités</target>
       </trans-unit>
       <trans-unit id="PTY.news_feed.0">
         <source>News feed</source>
-        <target>Flux d'actualités</target>
+        <target>Flux d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="PTY.news_feed.1">
         <source>Create an RSS, Atom or JSON feed from your news archives.</source>
-        <target>Créer un flux RSS, Atom ou JSON à partir de vos archives d'actualités.</target>
+        <target>Créer un flux RSS, Atom ou JSON à partir de vos archives d&apos;actualités.</target>
       </trans-unit>
     </body>
   </file>

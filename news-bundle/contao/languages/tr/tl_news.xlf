@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
         <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Haber tanıtımı, haber listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku...&quot; bağlantısı otomatik olarak eklenir.</target>
+        <target>Haber tanıtımı, haber listesinde tüm makalenin yerine görüntülenir. &quot;Devamını oku…&quot; bağlantısı otomatik olarak eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>

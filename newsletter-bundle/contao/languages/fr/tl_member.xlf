@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_member.newsletter.0">
         <source>Newsletters</source>
-        <target>Bulletins d'information</target>
+        <target>Bulletins d&apos;information</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter.1">
-        <source>Here you can manage the member's subscriptions.</source>
-        <target>Gérer les inscriptions des membres aux bulletins d'information.</target>
+        <source>Here you can manage the member&apos;s subscriptions.</source>
+        <target>Gérer les inscriptions des membres aux bulletins d&apos;information.</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter_legend">
         <source>Subscriptions</source>

@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
-        <target>L'informazione esiste già!</target>
+        <target>L&apos;informazione esiste già!</target>
       </trans-unit>
       <trans-unit id="ERR.mandatory">
         <source>Field &quot;%s&quot; must not be empty!</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="ERR.emails">
         <source>There is at least one invalid e-mail address!</source>
-        <target>C'è almeno un indirizzo di posta elettronica non valido!</target>
+        <target>C&apos;è almeno un indirizzo di posta elettronica non valido!</target>
       </trans-unit>
       <trans-unit id="ERR.url">
         <source>Please enter a valid URL format and encode special characters!</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="ERR.time">
         <source>Please enter the time as &quot;%s&quot;!</source>
-        <target>Inserisci l'ora nel formato &quot;%s&quot;!</target>
+        <target>Inserisci l&apos;ora nel formato &quot;%s&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.dateTime">
         <source>Please enter date and time as &quot;%s&quot;!</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="ERR.filename">
         <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!</source>
-        <target>Il nome dell'ultimo file caricato conteneva caratteri non validi oppure aveva un nome più lungo di 255 caratteri!</target>
+        <target>Il nome dell&apos;ultimo file caricato conteneva caratteri non validi oppure aveva un nome più lungo di 255 caratteri!</target>
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
@@ -131,23 +131,23 @@
       </trans-unit>
       <trans-unit id="ERR.filewidth">
         <source>File %s exceeds the maximum image width of %d pixels!</source>
-        <target>Il file %s eccede la larghezza massima dell' immagine ( %d pixels)</target>
+        <target>Il file %s eccede la larghezza massima dell&apos; immagine ( %d pixels)</target>
       </trans-unit>
       <trans-unit id="ERR.fileheight">
         <source>File %s exceeds the maximum image height of %d pixels!</source>
-        <target>Il file %s eccede l' altezza massima di una immagine (%d pixels)</target>
+        <target>Il file %s eccede l&apos; altezza massima di una immagine (%d pixels)</target>
       </trans-unit>
       <trans-unit id="ERR.fileerror">
         <source>Error %s occurred when uploading file %s!</source>
-        <target>Errore %s durante l'upload del file %s!</target>
+        <target>Errore %s durante l&apos;upload del file %s!</target>
       </trans-unit>
       <trans-unit id="ERR.filetarget">
         <source>Cannot move %s to %s because the target exists!</source>
-        <target>Non è possibile spostare %s su %s in quanto l'elemento esiste già!</target>
+        <target>Non è possibile spostare %s su %s in quanto l&apos;elemento esiste già!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidReferer">
         <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
-        <target>Accesso vietato! L'indirizzo host attuale (%s) non coincide con con l'indirizzo host della pagina di provenienza (%s)!</target>
+        <target>Accesso vietato! L&apos;indirizzo host attuale (%s) non coincide con con l&apos;indirizzo host della pagina di provenienza (%s)!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidPass">
         <source>Invalid password!</source>
@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasExists">
         <source>The alias &quot;%s&quot; already exists!</source>
-        <target>L'alias di pagina &quot;%s&quot; già esistente!</target>
+        <target>L&apos;alias di pagina &quot;%s&quot; già esistente!</target>
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
-        <target>Il prefisso URL&quot;%s&quot;è già utilizzato da un'altra pagina principale del sito Web con lo stesso nome di dominio!</target>
+        <target>Il prefisso URL&quot;%s&quot;è già utilizzato da un&apos;altra pagina principale del sito Web con lo stesso nome di dominio!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
@@ -243,7 +243,7 @@
       </trans-unit>
       <trans-unit id="ERR.extensionsOnly">
         <source>You can only select &quot;%s&quot; files!</source>
-        <target>E' possibile selezionare solamente &quot;%s&quot; files!</target>
+        <target>E&apos; possibile selezionare solamente &quot;%s&quot; files!</target>
       </trans-unit>
       <trans-unit id="ERR.forbiddenExtensions">
         <source>The following file extensions are not allowed: %s</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
-        <target>E' possibile definire soltanto una pagina root per domain con una lingua predifinita.</target>
+        <target>E&apos; possibile definire soltanto una pagina root per domain con una lingua predifinita.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -311,7 +311,7 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
-        <target>L'immagine supera le dimensioni massime di %s x %s.</target>
+        <target>L&apos;immagine supera le dimensioni massime di %s x %s.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="ERR.emptyTitleOrId">
         <source>Please enter both title and ID!</source>
-        <target>Inserisci prego sia il titolo che l'ID!</target>
+        <target>Inserisci prego sia il titolo che l&apos;ID!</target>
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionTitle">
         <source>Duplicate layout section title &quot;%s&quot;!</source>
@@ -327,7 +327,7 @@
       </trans-unit>
       <trans-unit id="ERR.duplicateSectionId">
         <source>Duplicate layout section ID &quot;%s&quot;!</source>
-        <target>Duplicare l'ID &quot;%s&quot; della sezione del layout!</target>
+        <target>Duplicare l&apos;ID &quot;%s&quot; della sezione del layout!</target>
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
@@ -363,7 +363,7 @@
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
-        <target>L'ora di fine deve essere successiva all'ora di inizio.</target>
+        <target>L&apos;ora di fine deve essere successiva all&apos;ora di inizio.</target>
       </trans-unit>
       <trans-unit id="ERR.noAdminEmailUrl">
         <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
@@ -371,7 +371,7 @@
       </trans-unit>
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
-        <target>Non è stato impostato alcun indirizzo e-mail per l'amministratore, contattare l'amministratore del sito.</target>
+        <target>Non è stato impostato alcun indirizzo e-mail per l&apos;amministratore, contattare l&apos;amministratore del sito.</target>
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
@@ -401,7 +401,7 @@
       </trans-unit>
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
-        <target>Genera un'intestazione (h1-h6).</target>
+        <target>Genera un&apos;intestazione (h1-h6).</target>
       </trans-unit>
       <trans-unit id="CTE.miscellaneous">
         <source>Miscellaneous</source>
@@ -473,19 +473,19 @@
       </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
         <source>Accordion wrapper start</source>
-        <target>Inizio dell'elemento fisarmonica</target>
+        <target>Inizio dell&apos;elemento fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
-        <target>Genera l'elemento di partenza di un elemento fisarmonica.</target>
+        <target>Genera l&apos;elemento di partenza di un elemento fisarmonica.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
         <source>Accordion wrapper stop</source>
-        <target>Fine dell'elemento fisarmonica</target>
+        <target>Fine dell&apos;elemento fisarmonica</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
-        <target>Genera l'elemento di chiusura di un elemento fisarmonica.</target>
+        <target>Genera l&apos;elemento di chiusura di un elemento fisarmonica.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
         <source>Accordion single element</source>
@@ -537,7 +537,7 @@
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
-        <target>Genera l'elemento di partenza di un elemento slider.</target>
+        <target>Genera l&apos;elemento di partenza di un elemento slider.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
         <source>Slider wrapper stop</source>
@@ -545,7 +545,7 @@
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
-        <target>Genera l'elemento di chiusura di un elemento slider.</target>
+        <target>Genera l&apos;elemento di chiusura di un elemento slider.</target>
       </trans-unit>
       <trans-unit id="CTE.links">
         <source>Link elements</source>
@@ -717,7 +717,7 @@
       </trans-unit>
       <trans-unit id="FFL.text.1">
         <source>A single-line input field for a short or medium text.</source>
-        <target>Il campo testo è una singola linea per l'inserimento di un testo di piccole o medie dimensioni.</target>
+        <target>Il campo testo è una singola linea per l&apos;inserimento di un testo di piccole o medie dimensioni.</target>
       </trans-unit>
       <trans-unit id="FFL.password.0">
         <source>Password field</source>
@@ -725,7 +725,7 @@
       </trans-unit>
       <trans-unit id="FFL.password.1">
         <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
-        <target>Il campo password è un campo a singola linea per l'inserimento di una password.</target>
+        <target>Il campo password è un campo a singola linea per l&apos;inserimento di una password.</target>
       </trans-unit>
       <trans-unit id="FFL.textarea.0">
         <source>Textarea</source>
@@ -733,7 +733,7 @@
       </trans-unit>
       <trans-unit id="FFL.textarea.1">
         <source>A multi-line input field for a medium or long text.</source>
-        <target>L' area di testo è un campo multi-linea per l'inserimento di un testo di medie o lunghe dimensioni.</target>
+        <target>L&apos; area di testo è un campo multi-linea per l&apos;inserimento di un testo di medie o lunghe dimensioni.</target>
       </trans-unit>
       <trans-unit id="FFL.select.0">
         <source>Select menu</source>
@@ -773,7 +773,7 @@
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
-        <target>Un dispositivo di scorrimento dell'intervallo per selezionare un valore o un intervallo di valori tra un minimo e un massimo specificati.</target>
+        <target>Un dispositivo di scorrimento dell&apos;intervallo per selezionare un valore o un intervallo di valori tra un minimo e un massimo specificati.</target>
       </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
@@ -797,7 +797,7 @@
       </trans-unit>
       <trans-unit id="FFL.submit.1">
         <source>A button to submit the form.</source>
-        <target>Il campo invio contiene il pulsante Invia e i dati dell'intestazione. (es. soggetto e destinatario dell'e-mail)</target>
+        <target>Il campo invio contiene il pulsante Invia e i dati dell&apos;intestazione. (es. soggetto e destinatario dell&apos;e-mail)</target>
       </trans-unit>
       <trans-unit id="PTY.regular.0">
         <source>Regular page</source>
@@ -805,7 +805,7 @@
       </trans-unit>
       <trans-unit id="PTY.regular.1">
         <source>A regular page contains articles and content elements. It is the default page type.</source>
-        <target>Una pagina standard contiene articoli e contenuti. E' il tipo di pagina predefinito.</target>
+        <target>Una pagina standard contiene articoli e contenuti. E&apos; il tipo di pagina predefinito.</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.0">
         <source>External redirect</source>
@@ -813,15 +813,15 @@
       </trans-unit>
       <trans-unit id="PTY.redirect.1">
         <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
-        <target>Questa pagina reindirizza automaticamente l'utente verso un URL esterno. Funziona come un collegamento.</target>
+        <target>Questa pagina reindirizza automaticamente l&apos;utente verso un URL esterno. Funziona come un collegamento.</target>
       </trans-unit>
       <trans-unit id="PTY.forward.0">
         <source>Internal redirect</source>
-        <target>Inoltro ad un'altra pagina</target>
+        <target>Inoltro ad un&apos;altra pagina</target>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page.</source>
-        <target>Questo tipo di pagina inoltra automaticamente i visitatori a un'altra pagina.</target>
+        <target>Questo tipo di pagina inoltra automaticamente i visitatori a un&apos;altra pagina.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
@@ -837,7 +837,7 @@
       </trans-unit>
       <trans-unit id="PTY.logout.1">
         <source>This type of page automatically logs out the user.</source>
-        <target>Questo tipo di pagina disconnette automaticamente l'utente.</target>
+        <target>Questo tipo di pagina disconnette automaticamente l&apos;utente.</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
@@ -897,7 +897,7 @@
       </trans-unit>
       <trans-unit id="FOP.f5">
         <source>Edit files in the source editor</source>
-        <target>Modifica i file nell'editor di codice</target>
+        <target>Modifica i file nell&apos;editor di codice</target>
       </trans-unit>
       <trans-unit id="FOP.f6">
         <source>Synchronize the file system with the database</source>
@@ -1169,7 +1169,7 @@
       </trans-unit>
       <trans-unit id="MSC.url.1">
         <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
-        <target>Inserisci l'URL di destinazione compreso il protocollo di rete (es: &lt;em&gt;http://www.domain.com&lt;/em&gt;). Per inserire un collegamento ad un indirizzo e-mail inserisci &lt;em&gt;mailto:name@domain.com&lt;/em&gt;. E' anche possibile utilizzare tags di inserimento (es: &lt;em&gt;link_url&lt;/em&gt;).</target>
+        <target>Inserisci l&apos;URL di destinazione compreso il protocollo di rete (es: &lt;em&gt;http://www.domain.com&lt;/em&gt;). Per inserire un collegamento ad un indirizzo e-mail inserisci &lt;em&gt;mailto:name@domain.com&lt;/em&gt;. E&apos; anche possibile utilizzare tags di inserimento (es: &lt;em&gt;link_url&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="MSC.target.0">
         <source>Open in new window</source>
@@ -1177,7 +1177,7 @@
       </trans-unit>
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
-        <target>Se scegli questa opzione, l'URL di destinazione si aprirà in una nuova finestra del browser.</target>
+        <target>Se scegli questa opzione, l&apos;URL di destinazione si aprirà in una nuova finestra del browser.</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -1209,7 +1209,7 @@
       </trans-unit>
       <trans-unit id="MSC.imgSize.1">
         <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Se si inserisce solo la larghezza o l'altezza dell'immagine, essa verrà ridimensionata proporzionalmente. Se si immettono entrambe le misure e l'immagine supera i limiti, quest'ultima verrà tagliata. Se si lasciano vuoti i campi verrà visualizzata con la dimensione originale.</target>
+        <target>Se si inserisce solo la larghezza o l&apos;altezza dell&apos;immagine, essa verrà ridimensionata proporzionalmente. Se si immettono entrambe le misure e l&apos;immagine supera i limiti, quest&apos;ultima verrà tagliata. Se si lasciano vuoti i campi verrà visualizzata con la dimensione originale.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1241,15 +1241,15 @@
       </trans-unit>
       <trans-unit id="MSC.lw_up">
         <source>Move the element one position up</source>
-        <target>Sposta l'elemento sopra</target>
+        <target>Sposta l&apos;elemento sopra</target>
       </trans-unit>
       <trans-unit id="MSC.lw_down">
         <source>Move the element one position down</source>
-        <target>Sposta l'elemento sotto</target>
+        <target>Sposta l&apos;elemento sotto</target>
       </trans-unit>
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
-        <target>Elimina l'elemento</target>
+        <target>Elimina l&apos;elemento</target>
       </trans-unit>
       <trans-unit id="MSC.ow_import.0">
         <source>CSV import</source>
@@ -1417,7 +1417,7 @@
       </trans-unit>
       <trans-unit id="MSC.custom.1">
         <source>The image will be resized to the given dimensions.</source>
-        <target>L'immagine verrà ridimensionata alle dimensioni fornite.</target>
+        <target>L&apos;immagine verrà ridimensionata alle dimensioni fornite.</target>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1425,7 +1425,7 @@
       </trans-unit>
       <trans-unit id="MSC.proportional.1">
         <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Il lato più lungo dell'immagine viene variato in base alle dimensioni indicate e l'immagine viene ridimensionata in modo proporzionale.</target>
+        <target>Il lato più lungo dell&apos;immagine viene variato in base alle dimensioni indicate e l&apos;immagine viene ridimensionata in modo proporzionale.</target>
       </trans-unit>
       <trans-unit id="MSC.box.0">
         <source>Fit the box</source>
@@ -1433,7 +1433,7 @@
       </trans-unit>
       <trans-unit id="MSC.box.1">
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Il lato più corto dell'immagine viene variato in base alle dimensioni indicate e l'immagine viene ridimensionata in modo proporzionale.</target>
+        <target>Il lato più corto dell&apos;immagine viene variato in base alle dimensioni indicate e l&apos;immagine viene ridimensionata in modo proporzionale.</target>
       </trans-unit>
       <trans-unit id="MSC.crop.0">
         <source>Crop (important part)</source>
@@ -1441,7 +1441,7 @@
       </trans-unit>
       <trans-unit id="MSC.crop.1">
         <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
-        <target>Mantiene la parte importante di un'immagine specificata nella gestione file. Se necessario, l'immagine verrà ritagliata.</target>
+        <target>Mantiene la parte importante di un&apos;immagine specificata nella gestione file. Se necessario, l&apos;immagine verrà ritagliata.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1449,7 +1449,7 @@
       </trans-unit>
       <trans-unit id="MSC.left_top.1">
         <source>Preserves the left part of a landscape image and the top part of a portrait image.</source>
-        <target>Mantiene la parte sinistra di un'immagine tipo paesaggio e la parte alta di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte sinistra di un&apos;immagine tipo paesaggio e la parte alta di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.center_top.0">
         <source>Center | Top</source>
@@ -1457,7 +1457,7 @@
       </trans-unit>
       <trans-unit id="MSC.center_top.1">
         <source>Preserves the center part of a landscape image and the top part of a portrait image.</source>
-        <target>Mantiene la parte centrale di un'immagine tipo paesaggio e la parte alta di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte centrale di un&apos;immagine tipo paesaggio e la parte alta di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.right_top.0">
         <source>Right | Top</source>
@@ -1465,7 +1465,7 @@
       </trans-unit>
       <trans-unit id="MSC.right_top.1">
         <source>Preserves the right part of a landscape image and the top part of a portrait image.</source>
-        <target>Mantiene la parte destra di un'immagine tipo paesaggio e la parte alta di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte destra di un&apos;immagine tipo paesaggio e la parte alta di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.left_center.0">
         <source>Left | Center</source>
@@ -1473,7 +1473,7 @@
       </trans-unit>
       <trans-unit id="MSC.left_center.1">
         <source>Preserves the left part of a landscape image and the center part of a portrait image.</source>
-        <target>Mantiene la parte centrale di un'immagine tipo paesaggio e la parte centrale di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte centrale di un&apos;immagine tipo paesaggio e la parte centrale di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.center_center.0">
         <source>Center | Center</source>
@@ -1481,7 +1481,7 @@
       </trans-unit>
       <trans-unit id="MSC.center_center.1">
         <source>Preserves the center part of a landscape image and the center part of a portrait image.</source>
-        <target>Mantiene la parte centrale di un'immagine tipo paesaggio e la parte centrale di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte centrale di un&apos;immagine tipo paesaggio e la parte centrale di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.right_center.0">
         <source>Right | Center</source>
@@ -1489,7 +1489,7 @@
       </trans-unit>
       <trans-unit id="MSC.right_center.1">
         <source>Preserves the right part of a landscape image and the center part of a portrait image.</source>
-        <target>Mantiene la parte destra di un'immagine tipo paesaggio e la parte centrale di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte destra di un&apos;immagine tipo paesaggio e la parte centrale di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.left_bottom.0">
         <source>Left | Bottom</source>
@@ -1497,7 +1497,7 @@
       </trans-unit>
       <trans-unit id="MSC.left_bottom.1">
         <source>Preserves the left part of a landscape image and the bottom part of a portrait image.</source>
-        <target>Mantiene la parte sinistra di un'immagine tipo paesaggio e la parte bassa di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte sinistra di un&apos;immagine tipo paesaggio e la parte bassa di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.center_bottom.0">
         <source>Center | Bottom</source>
@@ -1505,7 +1505,7 @@
       </trans-unit>
       <trans-unit id="MSC.center_bottom.1">
         <source>Preserves the center part of a landscape image and the bottom part of a portrait image.</source>
-        <target>Mantiene la parte centrale di un'immagine tipo paesaggio e la parte bassa di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte centrale di un&apos;immagine tipo paesaggio e la parte bassa di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.right_bottom.0">
         <source>Right | Bottom</source>
@@ -1513,7 +1513,7 @@
       </trans-unit>
       <trans-unit id="MSC.right_bottom.1">
         <source>Preserves the right part of a landscape image and the bottom part of a portrait image.</source>
-        <target>Mantiene la parte destra di un'immagine tipo paesaggio e la parte bassa di un'immagine tipo ritratto.</target>
+        <target>Mantiene la parte destra di un&apos;immagine tipo paesaggio e la parte bassa di un&apos;immagine tipo ritratto.</target>
       </trans-unit>
       <trans-unit id="MSC.id.0">
         <source>ID</source>
@@ -1617,7 +1617,7 @@
       </trans-unit>
       <trans-unit id="MSC.move">
         <source>Move the item via drag and drop</source>
-        <target>Sposta l'elemento trascinandolo in modalità drag &amp; drop</target>
+        <target>Sposta l&apos;elemento trascinandolo in modalità drag &amp; drop</target>
       </trans-unit>
       <trans-unit id="MSC.move_up.0">
         <source>Move up</source>
@@ -1625,7 +1625,7 @@
       </trans-unit>
       <trans-unit id="MSC.move_up.1">
         <source>Move the item one position up</source>
-        <target>Sposta l'elemento nella posizione superiore</target>
+        <target>Sposta l&apos;elemento nella posizione superiore</target>
       </trans-unit>
       <trans-unit id="MSC.move_down.0">
         <source>Move down</source>
@@ -1633,7 +1633,7 @@
       </trans-unit>
       <trans-unit id="MSC.move_down.1">
         <source>Move the item one position down</source>
-        <target>Sposta l'elemento nella posizione inferiore</target>
+        <target>Sposta l&apos;elemento nella posizione inferiore</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.0">
         <source>Back end keyboard shortcuts</source>
@@ -1697,7 +1697,7 @@
       </trans-unit>
       <trans-unit id="MSC.backToTopTitle">
         <source>Go to the top of the page</source>
-        <target>Vai all'inizio della pagina</target>
+        <target>Vai all&apos;inizio della pagina</target>
       </trans-unit>
       <trans-unit id="MSC.home">
         <source>Home</source>
@@ -1745,7 +1745,7 @@
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
-        <target>Sicuro di voler eliminare l'elemento ID %s?</target>
+        <target>Sicuro di voler eliminare l&apos;elemento ID %s?</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -1865,7 +1865,7 @@
       </trans-unit>
       <trans-unit id="MSC.fullsize">
         <source>Open full size image in a new window</source>
-        <target>Apri l'immagine a dimensione piena in una nuova finestra</target>
+        <target>Apri l&apos;immagine a dimensione piena in una nuova finestra</target>
       </trans-unit>
       <trans-unit id="MSC.datepicker">
         <source>Date picker</source>
@@ -2249,7 +2249,7 @@
       </trans-unit>
       <trans-unit id="MSC.adminText">
         <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
-        <target>Un nuovo utente (ID %s) si è registrato al sito. Se non è stata scelta l'attivazione tramite e-mail, dovrai connetterti all'amministrazione del sito per abilitare il nuovo account manualmente.</target>
+        <target>Un nuovo utente (ID %s) si è registrato al sito. Se non è stata scelta l&apos;attivazione tramite e-mail, dovrai connetterti all&apos;amministrazione del sito per abilitare il nuovo account manualmente.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
@@ -2321,7 +2321,7 @@
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>
-        <target>Modifica l'elemento</target>
+        <target>Modifica l&apos;elemento</target>
       </trans-unit>
       <trans-unit id="MSC.table">
         <source>Table</source>
@@ -2349,7 +2349,7 @@
       </trans-unit>
       <trans-unit id="MSC.selectNewPosition">
         <source>Next, please choose the (new) position of the element</source>
-        <target>Si prega di scegliere la (nuova) posizione dell'elemento</target>
+        <target>Si prega di scegliere la (nuova) posizione dell&apos;elemento</target>
       </trans-unit>
       <trans-unit id="MSC.go">
         <source>Go</source>
@@ -2461,11 +2461,11 @@
       </trans-unit>
       <trans-unit id="MSC.fileExceeds">
         <source>Image %s is too big to be resized automatically.</source>
-        <target>L'immagine %s è troppo grande per essere ridimensionata automaticamente.</target>
+        <target>L&apos;immagine %s è troppo grande per essere ridimensionata automaticamente.</target>
       </trans-unit>
       <trans-unit id="MSC.fileResized">
         <source>Image %s was scaled down to the maximum dimensions.</source>
-        <target>L'immagine %s è stata ridotta alle massime dimensioni consentite.</target>
+        <target>L&apos;immagine %s è stata ridotta alle massime dimensioni consentite.</target>
       </trans-unit>
       <trans-unit id="MSC.searchLabel">
         <source>Search</source>
@@ -2521,7 +2521,7 @@
       </trans-unit>
       <trans-unit id="MSC.readMore">
         <source>Read the article: %s</source>
-        <target>Leggi l'articolo: %s</target>
+        <target>Leggi l&apos;articolo: %s</target>
       </trans-unit>
       <trans-unit id="MSC.targetPage">
         <source>Target page</source>
@@ -2577,7 +2577,7 @@
       </trans-unit>
       <trans-unit id="MSC.tokenEmailMismatch">
         <source>The e-mail address of the token does not match</source>
-        <target>L'indirizzo e-mail del token non coincide</target>
+        <target>L&apos;indirizzo e-mail del token non coincide</target>
       </trans-unit>
       <trans-unit id="MSC.resendToken">
         <source>The token has been re-sent to %s.</source>
@@ -2676,19 +2676,19 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
-        <target>Qui è possibile abilitare l'autenticazione a due fattori, che aggiunge un ulteriore livello di sicurezza al proprio account. Oltre al nome utente e alla password, è necessario inserire un codice di verifica generato da un'applicazione a due fattori come 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator o qualsiasi altra applicazione TOTP.</target>
+        <target>Qui è possibile abilitare l&apos;autenticazione a due fattori, che aggiunge un ulteriore livello di sicurezza al proprio account. Oltre al nome utente e alla password, è necessario inserire un codice di verifica generato da un&apos;applicazione a due fattori come 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator o qualsiasi altra applicazione TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
-        <target>Per favore, scansionare il codice QR con l'applicazione 2FA/TOTP.</target>
+        <target>Per favore, scansionare il codice QR con l&apos;applicazione 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
-        <target>L'autenticazione a due fattori è stata attivata.</target>
+        <target>L&apos;autenticazione a due fattori è stata attivata.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorEnforced">
         <source>Please enable up two-factor authentication before you continue.</source>
-        <target>Si prega di abilitare l'autenticazione a due fattori prima di continuare.</target>
+        <target>Si prega di abilitare l&apos;autenticazione a due fattori prima di continuare.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
@@ -2728,7 +2728,7 @@
       </trans-unit>
       <trans-unit id="MSC.favorite">
         <source>Save URL as favorite</source>
-        <target>Salva l'URL come preferito</target>
+        <target>Salva l&apos;URL come preferito</target>
       </trans-unit>
       <trans-unit id="MSC.editFavorites">
         <source>Edit favorites</source>
@@ -2736,11 +2736,11 @@
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
-        <target>C'è almeno un utente abituale con accesso all'editor di template. Poiché i template sono file PHP, questi utenti hanno implicitamente il pieno controllo del sistema!</target>
+        <target>C&apos;è almeno un utente abituale con accesso all&apos;editor di template. Poiché i template sono file PHP, questi utenti hanno implicitamente il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>C'è almeno un gruppo di utenti che concede l'accesso all'editor di template. Poiché i template sono file PHP, gli utenti di questi gruppi hanno implicitamente il pieno controllo del sistema!</target>
+        <target>C&apos;è almeno un gruppo di utenti che concede l&apos;accesso all&apos;editor di template. Poiché i template sono file PHP, gli utenti di questi gruppi hanno implicitamente il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2748,7 +2748,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>Esiste almeno un gruppo di utenti che concede l'autorizzazione per importare temi. Poiché i temi possono contenere modelli arbitrari e i modelli sono file PHP, gli utenti di questi gruppi implicitamente hanno il pieno controllo del sistema!</target>
+        <target>Esiste almeno un gruppo di utenti che concede l&apos;autorizzazione per importare temi. Poiché i temi possono contenere modelli arbitrari e i modelli sono file PHP, gli utenti di questi gruppi implicitamente hanno il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
@@ -2756,11 +2756,11 @@
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
-        <target>Esiste almeno un gruppo di utenti che ha l'accesso all'elemento HTML non filtrato. Poiché il codice HTML di questo elemento non viene filtrato, gli utenti di questi gruppi hanno potenzialmente il pieno controllo sul sistema!</target>
+        <target>Esiste almeno un gruppo di utenti che ha l&apos;accesso all&apos;elemento HTML non filtrato. Poiché il codice HTML di questo elemento non viene filtrato, gli utenti di questi gruppi hanno potenzialmente il pieno controllo sul sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.userUnfilteredHtml">
         <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
-        <target>C'è almeno un utente con accesso all'elemento HTML non filtrato. Poiché il codice HTML di quell'elemento non viene filtrato, questi utenti hanno potenzialmente il pieno controllo sul sistema!</target>
+        <target>C&apos;è almeno un utente con accesso all&apos;elemento HTML non filtrato. Poiché il codice HTML di quell&apos;elemento non viene filtrato, questi utenti hanno potenzialmente il pieno controllo sul sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2820,7 +2820,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
-        <target>L'URL di anteprima non può essere generato, perché il percorso ha dei parametri obbligatori.</target>
+        <target>L&apos;URL di anteprima non può essere generato, perché il percorso ha dei parametri obbligatori.</target>
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
@@ -2867,7 +2867,7 @@
       </trans-unit>
       <trans-unit id="MSC.editImageSize">
         <source>Edit the image size</source>
-        <target>Modifica la dimensione dell'immagine</target>
+        <target>Modifica la dimensione dell&apos;immagine</target>
       </trans-unit>
       <trans-unit id="MSC.booleanNot">
         <source>Not %s</source>
@@ -2983,7 +2983,7 @@
       </trans-unit>
       <trans-unit id="SECTIONS.before">
         <source>After the page header</source>
-        <target>Dopo l'intestazione della pagina</target>
+        <target>Dopo l&apos;intestazione della pagina</target>
       </trans-unit>
       <trans-unit id="SECTIONS.main">
         <source>Inside the main column</source>
@@ -3043,11 +3043,11 @@
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
-        <target>Mostra i dettagli dell'elemento ID %s</target>
+        <target>Mostra i dettagli dell&apos;elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
-        <target>Modifica l'elemento ID %s</target>
+        <target>Modifica l&apos;elemento ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
@@ -3067,11 +3067,11 @@
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>
-        <target>Modifica gli elementi figlio dell'elemento ID%s</target>
+        <target>Modifica gli elementi figlio dell&apos;elemento ID%s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
         <source>Publish/unpublish element</source>
-        <target>Publica/non pubblicare l'elemento</target>
+        <target>Publica/non pubblicare l&apos;elemento</target>
       </trans-unit>
       <trans-unit id="DCA.toggle.1">
         <source>Unpublish element ID %s</source>
@@ -3103,7 +3103,7 @@
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
-        <target>Crea un nuovo elemento dopo l'elemento ID %s</target>
+        <target>Crea un nuovo elemento dopo l&apos;elemento ID %s</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

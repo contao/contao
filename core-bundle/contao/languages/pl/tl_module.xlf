@@ -179,9 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.0">
         <source>Require full authentication</source>
+        <target>Wymagane pełne uwierzytelnienie</target>
       </trans-unit>
       <trans-unit id="tl_module.reqFullAuth.1">
         <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Użytkownicy posiadający wyłącznie plik cookie &quot;zapamiętaj mnie&quot; muszą potwierdzić swoją tożsamość, aby uzyskać dostęp do modułu.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -356,7 +358,7 @@
         <target>Kod HTML</target>
       </trans-unit>
       <trans-unit id="tl_module.unfilteredHtml.1">
-        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <source>Take care when pasting things you don&apos;t understand. This could allow attackers to steal your identity or take control of the whole system.</source>
         <target>Zachowaj ostrożność podczas wklejania informacji, których nie rozumiesz. Może to umożliwić napastnikom kradzież tożsamości użytkownika lub przejęcie kontroli nad całym systemem.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">
@@ -365,7 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
         <source>Here you can define how long the feed is being cached.</source>
-        <target>Tutaj możesz zdefiniować, jak długo cache'owany jest kanał.</target>
+        <target>Tutaj możesz zdefiniować, jak długo cache&apos;owany jest kanał.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>
@@ -521,6 +523,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Wybierz moduł dla &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Si vous souhaitez empêcher le groupe d'être actif avant une certaine date/heure, vous pouvez l'indiquer ici. Sinon, laissez le champ vide.</target>
+        <target>Si vous souhaitez empêcher le groupe d&apos;être actif avant une certaine date/heure, vous pouvez l&apos;indiquer ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
         <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
-        <target>Si vous souhaitez empêcher le groupe d'être actif après une certaine date/heure, vous pouvez l'indiquer ici. Sinon, laissez le champ vide.</target>
+        <target>Si vous souhaitez empêcher le groupe d&apos;être actif après une certaine date/heure, vous pouvez l&apos;indiquer ici. Sinon, laissez le champ vide.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>

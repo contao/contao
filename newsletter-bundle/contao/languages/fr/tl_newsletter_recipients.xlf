@@ -6,8 +6,8 @@
         <target>Adresse e-mail.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email.1">
-        <source>Please enter the recipient's e-mail address.</source>
-        <target>Saisir l'adresse e-mail du destinataire.</target>
+        <source>Please enter the recipient&apos;s e-mail address.</source>
+        <target>Saisir l&apos;adresse e-mail du destinataire.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
         <source>Activate recipient</source>
@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.addedOn.0">
         <source>Subscription date</source>
-        <target>Date d'abonnement</target>
+        <target>Date d&apos;abonnement</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.addedOn.1">
         <source>The date of subscription.</source>
-        <target>La date d'abonnement.</target>
+        <target>La date d&apos;abonnement.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.ip.0">
         <source>IP address</source>
@@ -31,15 +31,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.ip.1">
         <source>The IP address of the subscriber.</source>
-        <target>L'adresse IP de l'abonné.</target>
+        <target>L&apos;adresse IP de l&apos;abonné.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.0">
         <source>Activation token</source>
-        <target>Jeton d'activation</target>
+        <target>Jeton d&apos;activation</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.token.1">
         <source>The activation token of the subscription.</source>
-        <target>Le jeton d'activation de l'abonnement.</target>
+        <target>Le jeton d&apos;activation de l&apos;abonnement.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.email_legend">
         <source>E-mail address</source>
@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.import.1">
         <source>Import recipients from a CSV file</source>
-        <target>Importer les destinataires à partir d'un fichier CSV</target>
+        <target>Importer les destinataires à partir d&apos;un fichier CSV</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.0">
         <source>New</source>

@@ -2,6 +2,38 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.45] (2026-03-04)
+
+**Fixed issues:**
+
+- [#9617] Fix the active status assignment when synchronizing newsletter recipients ([zonky2])
+- [#9308] Always allow pages to be copied to clipboard ([fritzmg])
+- [#9611] Remove `@charset` and BOM from the compiled SCSS files ([fritzmg])
+- [#9597] Trigger the `InteractiveLoginEvent` for the back end login ([falkgeist])
+- [#9591] Remove `preserveTags` for password fields ([fritzmg])
+- [#9574] Reset the globals and the response context on error pages ([fritzmg])
+- [#9571] Use `platformOptions` instead of `customSchemaOptions` ([fritzmg])
+- [#9564] Add the missing migration service definitions ([Toflar])
+- [#9509] Fix the boolean return types of the validator ([ausi])
+- [#9489] Do not dispatch search index messages in debug mode ([lukasbableck])
+- [#9486] Remove the `value` field from the `password` palette ([fritzmg])
+- [#9467] Add the missing `basicEntities` conversion for form fields ([fritzmg])
+- [#9419] Allow to enable basic entities for the `MetaWizard` ([fritzmg])
+- [#9395] Purge `tl_cron_job` records older than 1 year ([fritzmg])
+- [#9418] Remove HTML in the tooltip of `fileTree` preview images ([fritzmg])
+- [#9425] Fix an error in the profiler ([fritzmg])
+- [#9416] Delete old XML files when migrating news feeds ([fritzmg])
+- [#9415] Normalize the URL field length ([fritzmg])
+- [#9400] Always use the `contao.listener.image_size_options` service ([fritzmg])
+- [#9396] Normalize the `imageSize` fields ([fritzmg])
+- [#9387] Do not show an error for unexpected subsequent migrations ([ausi])
+- [#9345] Fix the line height for select and input fields ([fritzmg])
+- [#9354] Add a BC comment for `doctrine/dbal < 4.5.0` ([ausi])
+- [#9339] Do not run migrations that were not previously pending ([ausi])
+- [#9328] Prevent circular references when nesting records ([patrickjDE])
+- [#9285] Check for `FORM_SUBMIT` in `ModuleLogin::generate()` ([fritzmg])
+- [#9213] Fix the Contao icon color in the profiler ([lukasbableck])
+
 ## [5.3.44] (2026-01-12)
 
 **Fixed issues:**
@@ -475,7 +507,7 @@ This project adheres to [Semantic Versioning].
 - [#7435] Restore the previous messages order in `DC_Table` ([fritzmg])
 - [#7439] Use `ERR.submit` in all DC forms ([fritzmg])
 - [#7367] Improve the visibility of the `.limit_toggler` in the back end ([lukasbableck])
-- [#7416] Encode mailto addresses in the markdown element ([Toflar])
+- [#7416] Encode mailto addresses in the Markdown element ([Toflar])
 - [#7407] Add the `DataContainer::getActiveRecord()` method ([Toflar])
 - [#7422] Prevent endless recursion when copying elements with children ([ausi])
 
@@ -865,6 +897,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.45]: https://github.com/contao/contao/releases/tag/5.3.45
 [5.3.44]: https://github.com/contao/contao/releases/tag/5.3.44
 [5.3.43]: https://github.com/contao/contao/releases/tag/5.3.43
 [5.3.42]: https://github.com/contao/contao/releases/tag/5.3.42
@@ -960,6 +993,7 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [veronikaplenta]: https://github.com/veronikaplenta
 [zoglo]: https://github.com/zoglo
+[zonky2]: https://github.com/zonky2
 [#5424]: https://github.com/contao/contao/pull/5424
 [#5810]: https://github.com/contao/contao/pull/5810
 [#6157]: https://github.com/contao/contao/pull/6157
@@ -1540,3 +1574,30 @@ This project adheres to [Semantic Versioning].
 [#9168]: https://github.com/contao/contao/pull/9168
 [#9182]: https://github.com/contao/contao/pull/9182
 [#9200]: https://github.com/contao/contao/pull/9200
+[#9213]: https://github.com/contao/contao/pull/9213
+[#9285]: https://github.com/contao/contao/pull/9285
+[#9308]: https://github.com/contao/contao/pull/9308
+[#9328]: https://github.com/contao/contao/pull/9328
+[#9339]: https://github.com/contao/contao/pull/9339
+[#9345]: https://github.com/contao/contao/pull/9345
+[#9354]: https://github.com/contao/contao/pull/9354
+[#9387]: https://github.com/contao/contao/pull/9387
+[#9395]: https://github.com/contao/contao/pull/9395
+[#9396]: https://github.com/contao/contao/pull/9396
+[#9400]: https://github.com/contao/contao/pull/9400
+[#9415]: https://github.com/contao/contao/pull/9415
+[#9416]: https://github.com/contao/contao/pull/9416
+[#9418]: https://github.com/contao/contao/pull/9418
+[#9419]: https://github.com/contao/contao/pull/9419
+[#9425]: https://github.com/contao/contao/pull/9425
+[#9467]: https://github.com/contao/contao/pull/9467
+[#9486]: https://github.com/contao/contao/pull/9486
+[#9489]: https://github.com/contao/contao/pull/9489
+[#9509]: https://github.com/contao/contao/pull/9509
+[#9564]: https://github.com/contao/contao/pull/9564
+[#9571]: https://github.com/contao/contao/pull/9571
+[#9574]: https://github.com/contao/contao/pull/9574
+[#9591]: https://github.com/contao/contao/pull/9591
+[#9597]: https://github.com/contao/contao/pull/9597
+[#9611]: https://github.com/contao/contao/pull/9611
+[#9617]: https://github.com/contao/contao/pull/9617

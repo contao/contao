@@ -95,15 +95,15 @@
       </trans-unit>
       <trans-unit id="tl_user_group.edit">
         <source>Edit user group ID %s</source>
-        <target>Modifica l'utente del gruppo con ID %s</target>
+        <target>Modifica l&apos;utente del gruppo con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy">
         <source>Duplicate user group ID %s</source>
-        <target>Duplica l'utente del gruppo con ID %s</target>
+        <target>Duplica l&apos;utente del gruppo con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
-        <target>Elimina l'utente del gruppo con ID %s</target>
+        <target>Elimina l&apos;utente del gruppo con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle.0">
         <source>Activate/deactivate user group</source>

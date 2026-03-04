@@ -6,7 +6,7 @@
         <target>Дошло је до грешке</target>
       </trans-unit>
       <trans-unit id="XPT.matter">
-        <source>What's the matter?</source>
+        <source>What&apos;s the matter?</source>
         <target>У чему је проблем?</target>
       </trans-unit>
       <trans-unit id="XPT.howToFix">

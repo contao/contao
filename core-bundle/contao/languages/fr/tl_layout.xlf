@@ -59,11 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.headerHeight.0">
         <source>Header height</source>
-        <target>Hauteur de l'entête</target>
+        <target>Hauteur de l&apos;entête</target>
       </trans-unit>
       <trans-unit id="tl_layout.headerHeight.1">
         <source>Please enter the height of the page header.</source>
-        <target>Saisir la hauteur de l'entête de page.</target>
+        <target>Saisir la hauteur de l&apos;entête de page.</target>
       </trans-unit>
       <trans-unit id="tl_layout.footerHeight.0">
         <source>Footer height</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.1">
         <source>Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.</source>
-        <target>Ajoute une balise méta viewport dans l'entête et redimensionne les présentations basées sur les CSS en fonction de la taille de l'appareil (écran, tablette...).</target>
+        <target>Ajoute une balise méta viewport dans l&apos;entête et redimensionne les présentations basées sur les CSS en fonction de la taille de l&apos;appareil (écran, tablette...).</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.0">
         <source>12-column grid</source>
@@ -211,15 +211,15 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
-        <target>Taille de l'image pour la Lightbox</target>
+        <target>Taille de l&apos;image pour la Lightbox</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
-        <target>Ici vous pouvez sélectionner une taille d'image pour les images affichées dans la Lightbox.</target>
+        <target>Ici vous pouvez sélectionner une taille d&apos;image pour les images affichées dans la Lightbox.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
-        <target>Densités de pixels d'image par défaut</target>
+        <target>Densités de pixels d&apos;image par défaut</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.1">
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
@@ -231,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Si JavaScript est désactivé, assurez-vous de sauvegarder vos changements avant de modifier l'ordre.</target>
+        <target>Si JavaScript est désactivé, assurez-vous de sauvegarder vos changements avant de modifier l&apos;ordre.</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.minifyMarkup.1">
         <source>Minify the HTML markup before it is sent to the browser.</source>
-        <target>Réduire le code HTML avant qu'il ne soit envoyé au navigateur.</target>
+        <target>Réduire le code HTML avant qu&apos;il ne soit envoyé au navigateur.</target>
       </trans-unit>
       <trans-unit id="tl_layout.cssClass.0">
         <source>Body class</source>
@@ -367,7 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.width.1">
         <source>The overall width will be applied to the wrapper element.</source>
-        <target>La largeur totale sera appliquée à l'élément conteneur.</target>
+        <target>La largeur totale sera appliquée à l&apos;élément conteneur.</target>
       </trans-unit>
       <trans-unit id="tl_layout.align.0">
         <source>Alignment</source>
@@ -375,7 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.align.1">
         <source>Please select the alignment of the page.</source>
-        <target>Sélectionner l'alignement de la page.</target>
+        <target>Sélectionner l&apos;alignement de la page.</target>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
         <source>Title</source>

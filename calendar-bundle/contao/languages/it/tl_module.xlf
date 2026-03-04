@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.1">
         <source>Do not show running events in the list of upcoming events.</source>
-        <target>Non mostrare gli eventi in corso nell'elenco di eventi prossimi.</target>
+        <target>Non mostrare gli eventi in corso nell&apos;elenco di eventi prossimi.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_startDay.0">
         <source>Week start day</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_format.1">
         <source>Here you can choose the event list format.</source>
-        <target>Seleziona un formato per l'elenco eventi.</target>
+        <target>Seleziona un formato per l&apos;elenco eventi.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.0">
         <source>Ignore URL parameters</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_order.1">
         <source>Here you can choose the sort order.</source>
-        <target>Indicare l'ordinamento</target>
+        <target>Indicare l&apos;ordinamento</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_readerModule.0">
         <source>Event reader module</source>
@@ -107,11 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
-        <target>Utilizzare l'URL corrente per i collegamenti canonici</target>
+        <target>Utilizzare l&apos;URL corrente per i collegamenti canonici</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
-        <target>Mantenere l'URL corrente invece della pagina del lettore configurata per i collegamenti canonici.</target>
+        <target>Mantenere l&apos;URL corrente invece della pagina del lettore configurata per i collegamenti canonici.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_overview_legend">
         <source>Overview page</source>

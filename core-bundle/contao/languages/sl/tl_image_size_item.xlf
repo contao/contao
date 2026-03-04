@@ -67,12 +67,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.0">
         <source>Activate/deactivate media query</source>
+        <target>Omogoči/onemogoči &quot;media query&quot;</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.1">
         <source>Deactivate media query ID %s</source>
+        <target>Onemogoči &quot;media query&quot; z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.2">
         <source>Activate media query ID %s</source>
+        <target>Omogoči &quot;media query&quot; z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>

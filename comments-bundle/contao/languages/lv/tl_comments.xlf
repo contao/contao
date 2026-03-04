@@ -30,7 +30,7 @@
         <target>Vārds</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.1">
-        <source>Please enter the author's name.</source>
+        <source>Please enter the author&apos;s name.</source>
         <target>Lūdzu ievadiet autora īsto vārdu.</target>
       </trans-unit>
       <trans-unit id="tl_comments.email.0">

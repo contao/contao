@@ -134,7 +134,7 @@
         <target>کد HTML</target>
       </trans-unit>
       <trans-unit id="tl_content.unfilteredHtml.1">
-        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <source>Take care when pasting things you don&apos;t understand. This could allow attackers to steal your identity or take control of the whole system.</source>
         <target>هنگام چسباندن چیزهایی که متوجه نمی‌شوید مراقب باشید. این می‌تواند به مهاجمان اجازه دهد تا هویت شما را بدزدند یا کنترل کل سیستم را در دست بگیرند.</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
@@ -478,8 +478,8 @@
         <target>اندازه پلیر</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>عرض و ارتفاع پخش‌کننده رسانه برحسب پیکسل (برای نمونه 640x480).</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>عرض و ارتفاع پخش‌کننده‌ی رسانه بر حسب پیکسل (مثلاً 640x360).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>

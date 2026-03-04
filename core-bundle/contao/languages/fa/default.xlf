@@ -379,6 +379,7 @@
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>عنصر با شناسهٔ %d نمی‌تواند در اینجا درج شود زیرا با یک عنصر موجود تداخل دارد.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2590,6 +2591,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>شما بیش از حد مجاز تلاش کرده‌اید تا گذرواژه خود را بازنشانی کنید. لطفاً ۱۵ دقیقه دیگر دوباره امتحان کنید.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2825,6 +2827,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreviewPost">
         <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>امکان ایجاد URL پیش‌نمایش وجود ندارد، زیرا فرم دارای خطا است.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

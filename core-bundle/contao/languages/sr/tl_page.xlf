@@ -126,7 +126,7 @@
         <target>Резервни језик</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Прикажи ову страницу ако нема подударања са језиком посетиоца.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">

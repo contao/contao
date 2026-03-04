@@ -203,11 +203,11 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
-        <target>Dit URL-achtervoegsel leidt tot dubbele URL's (bijv. %s )!</target>
+        <target>Dit URL-achtervoegsel leidt tot dubbele URL&apos;s (bijv. %s )!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlPrefix">
         <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
-        <target>Dit URL-voorvoegsel leidt tot dubbele URL's (bijv. %s)!</target>
+        <target>Dit URL-voorvoegsel leidt tot dubbele URL&apos;s (bijv. %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -263,11 +263,11 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
-        <target>Geen enkele van de actieve website root pagina's, zonder een expliciete DNS instelling heeft de optie om terug te vallen op een andere taal, ingesteld.</target>
+        <target>Geen enkele van de actieve website root pagina&apos;s, zonder een expliciete DNS instelling heeft de optie om terug te vallen op een andere taal, ingesteld.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
-        <target>Geen enkele van de actieve website root pagina's voor &lt;strong&gt;%s&lt;/strong&gt; heeft de optie om terug te vallen op een andere taal ingesteld.</target>
+        <target>Geen enkele van de actieve website root pagina&apos;s voor &lt;strong&gt;%s&lt;/strong&gt; heeft de optie om terug te vallen op een andere taal ingesteld.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
@@ -275,11 +275,11 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
-        <target>Top-level pagina's moeten website startpagina's zijn!</target>
+        <target>Top-level pagina&apos;s moeten website startpagina&apos;s zijn!</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages which are not website root pages.</source>
-        <target>Er zijn pagina's op het hoogste niveau die geen hoofdpagina's van een website zijn.</target>
+        <target>Er zijn pagina&apos;s op het hoogste niveau die geen hoofdpagina&apos;s van een website zijn.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -1887,7 +1887,7 @@
       </trans-unit>
       <trans-unit id="MSC.ppHeadline">
         <source>Contao pages</source>
-        <target>Contao pagina's</target>
+        <target>Contao pagina&apos;s</target>
       </trans-unit>
       <trans-unit id="MSC.fpHeadline">
         <source>Contao files</source>
@@ -2103,7 +2103,7 @@
       </trans-unit>
       <trans-unit id="MSC.pagePicker">
         <source>Pages</source>
-        <target>Pagina's</target>
+        <target>Pagina&apos;s</target>
       </trans-unit>
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
@@ -2747,15 +2747,15 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
-        <target>Er is ten minste één gewone gebruiker met toestemming om thema's te importeren. Aangezien thema's willekeurige sjablonen kunnen bevatten en sjablonen PHP-bestanden zijn, hebben deze gebruikers impliciet volledige controle over het systeem!</target>
+        <target>Er is ten minste één gewone gebruiker met toestemming om thema&apos;s te importeren. Aangezien thema&apos;s willekeurige sjablonen kunnen bevatten en sjablonen PHP-bestanden zijn, hebben deze gebruikers impliciet volledige controle over het systeem!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
-        <target>Er is minimaal één gebruikersgroep die toestemming geeft om thema's te importeren. Aangezien thema's willekeurige sjablonen kunnen bevatten en sjablonen PHP-bestanden zijn, hebben gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
+        <target>Er is minimaal één gebruikersgroep die toestemming geeft om thema&apos;s te importeren. Aangezien thema&apos;s willekeurige sjablonen kunnen bevatten en sjablonen PHP-bestanden zijn, hebben gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
-        <target>Er is ten minste één gebruikersgroep die toestemming geeft voor de front-end module &quot;Listing&quot; en zijn &quot;list_*&quot; velden. Omdat ze willekeurige SQL-query's kunnen bevatten, hebben gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
+        <target>Er is ten minste één gebruikersgroep die toestemming geeft voor de front-end module &quot;Listing&quot; en zijn &quot;list_*&quot; velden. Omdat ze willekeurige SQL-query&apos;s kunnen bevatten, hebben gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
         <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
@@ -3111,11 +3111,11 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
-        <target>%d geïndexeerde URI('s) succesvol. %d mislukt.</target>
+        <target>%d geïndexeerde URI(&apos;s) succesvol. %d mislukt.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped.</source>
-        <target>%d URI('s) zijn overgeslagen.</target>
+        <target>%d URI(&apos;s) zijn overgeslagen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
