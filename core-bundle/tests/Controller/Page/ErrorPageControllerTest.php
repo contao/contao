@@ -41,7 +41,6 @@ class ErrorPageControllerTest extends TestCase
         ]);
 
         $controller = $this->getErrorPageController();
-
         $response = $controller($pageModel, new Request());
 
         $this->assertSame(404, $response->getStatusCode());
