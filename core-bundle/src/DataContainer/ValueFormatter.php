@@ -331,7 +331,7 @@ class ValueFormatter implements ResetInterface
             return Idna::decodeEmail((string) $value);
         }
 
-        return (string) $value;
+        return $this->flatten($value);
     }
 
     private function getDateOptions(string $table, string $field, array $values): array
@@ -483,5 +483,31 @@ class ValueFormatter implements ResetInterface
         }
 
         return null;
+    }
+
+    private function flatten(mixed $value): string
+    {
+        if (\is_array($value)) {
+            if (isset($value['value'], $value['unit']) && \count($value) == 2) {
+                return trim($value['value'].', '.$value['unit']);
+            }
+
+            foreach ($value as $kk => $vv) {
+                if (\is_array($vv)) {
+                    $vals = array_values($vv);
+                    $value[$kk] = array_shift($vals).' ('.implode(', ', array_filter($vals)).')';
+                }
+            }
+
+            if (ArrayUtil::isAssoc($value)) {
+                foreach ($value as $kk => $vv) {
+                    $value[$kk] = $kk.': '.$vv;
+                }
+            }
+
+            return implode(', ', $value);
+        }
+
+        return (string) $value;
     }
 }
