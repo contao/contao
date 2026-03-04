@@ -20,28 +20,12 @@ use Contao\Input;
 use Contao\UnusedArgumentsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class LegacyRouteParametersListenerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        unset(
-            $GLOBALS['TL_HEAD'],
-            $GLOBALS['TL_BODY'],
-            $GLOBALS['TL_MOOTOOLS'],
-            $GLOBALS['TL_JQUERY'],
-            $GLOBALS['TL_USER_CSS'],
-            $GLOBALS['TL_FRAMEWORK_CSS'],
-            $GLOBALS['TL_JAVASCRIPT'],
-        );
-
-        parent::tearDown();
-    }
-
     public function testDoesNotExecuteOutsideContaoFrontendMainRequest(): void
     {
         $event = new ResponseEvent(
@@ -66,7 +50,7 @@ class LegacyRouteParametersListenerTest extends TestCase
         ;
 
         $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
-        $listener->onResponse($event);
+        $listener($event);
     }
 
     public function testDoesNotThrowExceptionIfNoUnusedArguments(): void
@@ -107,19 +91,13 @@ class LegacyRouteParametersListenerTest extends TestCase
         ;
 
         $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
-        $listener->onResponse($event);
+        $listener($event);
     }
 
     public function testThrowsUnusedArgumentsExceptionWithUnusedRoutParameters(): void
     {
         $this->expectException(UnusedArgumentsException::class);
         $this->expectExceptionMessage('Unused arguments: foo');
-
-        $requestEvent = new RequestEvent(
-            $this->createStub(KernelInterface::class),
-            new Request(),
-            HttpKernelInterface::MAIN_REQUEST,
-        );
 
         $responseEvent = new ResponseEvent(
             $this->createStub(KernelInterface::class),
@@ -130,15 +108,10 @@ class LegacyRouteParametersListenerTest extends TestCase
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('isFrontendMainRequest')
-            ->willReturnCallback(
-                function (RequestEvent|ResponseEvent $event) use ($requestEvent, $responseEvent) {
-                    $this->assertTrue(($event === $requestEvent) || ($event === $responseEvent));
-
-                    return true;
-                },
-            )
+            ->with($responseEvent)
+            ->willReturn(true)
         ;
 
         $inputAdapter = $this->createAdapterMock(['getUnusedRouteParameters', 'setUnusedRouteParameters']);
@@ -163,7 +136,6 @@ class LegacyRouteParametersListenerTest extends TestCase
         ;
 
         $listener = new LegacyRouteParametersListener($scopeMatcher, $framework);
-        $listener->onRequest($requestEvent);
-        $listener->onResponse($responseEvent);
+        $listener($responseEvent);
     }
 }

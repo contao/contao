@@ -17,7 +17,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Input;
 use Contao\UnusedArgumentsException;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
@@ -25,37 +24,16 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
  *
  * @internal
  */
+#[AsEventListener(priority: 4096)]
 class LegacyRouteParametersListener
 {
-    private array $globalsBackup = [];
-
     public function __construct(
         private readonly ScopeMatcher $scopeMatcher,
         private readonly ContaoFramework $framework,
     ) {
     }
 
-    #[AsEventListener(priority: -4096)]
-    public function onRequest(RequestEvent $event): void
-    {
-        if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
-            return;
-        }
-
-        // Backup some globals (see #7659)
-        $this->globalsBackup = [
-            $GLOBALS['TL_HEAD'] ?? [],
-            $GLOBALS['TL_BODY'] ?? [],
-            $GLOBALS['TL_MOOTOOLS'] ?? [],
-            $GLOBALS['TL_JQUERY'] ?? [],
-            $GLOBALS['TL_USER_CSS'] ?? [],
-            $GLOBALS['TL_FRAMEWORK_CSS'] ?? [],
-            $GLOBALS['TL_JAVASCRIPT'] ?? [],
-        ];
-    }
-
-    #[AsEventListener(priority: 4096)]
-    public function onResponse(ResponseEvent $event): void
+    public function __invoke(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
             return;
@@ -66,17 +44,6 @@ class LegacyRouteParametersListener
         if ($unused = $input->getUnusedRouteParameters()) {
             // Mark all parameters as used
             $input->setUnusedRouteParameters([]);
-
-            // Restore the globals (see #7659)
-            [
-                $GLOBALS['TL_HEAD'],
-                $GLOBALS['TL_BODY'],
-                $GLOBALS['TL_MOOTOOLS'],
-                $GLOBALS['TL_JQUERY'],
-                $GLOBALS['TL_USER_CSS'],
-                $GLOBALS['TL_FRAMEWORK_CSS'],
-                $GLOBALS['TL_JAVASCRIPT'],
-            ] = $this->globalsBackup;
 
             throw new UnusedArgumentsException(\sprintf('Unused arguments: %s', implode(', ', $unused)));
         }
