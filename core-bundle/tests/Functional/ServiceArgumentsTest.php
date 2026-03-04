@@ -247,7 +247,14 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
     private function assertContainsInstanceOf(string $class, array $typeNames, string $message = ''): void
     {
-        $found = array_any($typeNames, static fn ($typeName) => is_a($class, $typeName, true));
+        $found = false;
+
+        foreach ($typeNames as $typeName) {
+            if (is_a($class, $typeName, true)) {
+                $found = true;
+                break;
+            }
+        }
 
         $this->assertTrue($found, $message);
     }

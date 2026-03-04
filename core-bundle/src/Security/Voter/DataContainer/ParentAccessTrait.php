@@ -44,6 +44,12 @@ trait ParentAccessTrait
             $pids[] = $newPid;
         }
 
-        return array_all($pids, fn ($pid) => $this->accessDecisionManager->decide($token, [$attribute], $pid));
+        foreach ($pids as $pid) {
+            if (!$this->accessDecisionManager->decide($token, [$attribute], $pid)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

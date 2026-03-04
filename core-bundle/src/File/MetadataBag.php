@@ -76,7 +76,13 @@ class MetadataBag implements \ArrayAccess
      */
     public function has(string ...$locales): bool
     {
-        return array_any(array_keys($this->metadata), static fn ($locale) => \in_array($locale, $locales, true));
+        foreach (array_keys($this->metadata) as $locale) {
+            if (\in_array($locale, $locales, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function empty(): bool

@@ -40,7 +40,13 @@ class HtaccessAnalyzer
     {
         $content = array_filter(file((string) $this->file));
 
-        return array_any($content, fn ($line) => $this->hasRequireGranted($line));
+        foreach ($content as $line) {
+            if ($this->hasRequireGranted($line)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

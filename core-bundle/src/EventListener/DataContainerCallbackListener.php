@@ -164,6 +164,12 @@ class DataContainerCallbackListener
             return $callback['closure'];
         }
 
-        return array_any(self::CLOSURES, static fn ($regex) => preg_match($regex, $target));
+        foreach (self::CLOSURES as $regex) {
+            if (preg_match($regex, $target)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

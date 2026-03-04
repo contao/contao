@@ -406,7 +406,15 @@ class Configuration implements ConfigurationInterface
                     ->example(['+heic', '-svgz'])
                     ->validate()
                         ->ifTrue(
-                            static fn (array $extensions): bool => array_any($extensions, static fn ($extension) => !preg_match('/^[+-]?[a-z0-9]+$/', $extension)),
+                            static function (array $extensions): bool {
+                                foreach ($extensions as $extension) {
+                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            },
                         )
                         ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
                     ->end()
@@ -614,7 +622,17 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue([])
                     ->example(['+DE', '-AT', '+AT-9', 'CH'])
                     ->validate()
-                        ->ifTrue(static fn (array $countries): bool => array_any($countries, static fn ($country) => !preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)))
+                        ->ifTrue(
+                            static function (array $countries): bool {
+                                foreach ($countries as $country) {
+                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            },
+                        )
                         ->thenInvalid('All provided countries must be two uppercase letters optionally followed by a dash and a subdivision code and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
                 ->end()
@@ -729,7 +747,17 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('additional_uris')
                     ->info('Additional URIs to crawl. By default, only the ones defined in the root pages are crawled.')
                     ->validate()
-                    ->ifTrue(static fn (array $uris): bool => array_any($uris, static fn ($uri) => !preg_match('@^https?://@', $uri)))
+                    ->ifTrue(
+                        static function (array $uris): bool {
+                            foreach ($uris as $uri) {
+                                if (!preg_match('@^https?://@', $uri)) {
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        },
+                    )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
                     ->prototype('scalar')->end()

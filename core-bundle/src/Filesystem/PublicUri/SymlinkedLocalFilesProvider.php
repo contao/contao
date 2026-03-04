@@ -82,6 +82,12 @@ class SymlinkedLocalFilesProvider extends AbstractPublicUriProvider implements P
         array_pop($pathChunks);
 
         // TODO: Can we find a more performant way of doing this?
-        return array_any($pathChunks, static fn ($pathChunk) => $adapter->directoryExists($pathChunk) && $adapter->fileExists($pathChunk.'/'.Dbafs::FILE_MARKER_PUBLIC));
+        foreach ($pathChunks as $pathChunk) {
+            if ($adapter->directoryExists($pathChunk) && $adapter->fileExists($pathChunk.'/'.Dbafs::FILE_MARKER_PUBLIC)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

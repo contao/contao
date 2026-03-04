@@ -323,7 +323,14 @@ class RegisterFragmentsPassTest extends TestCase
         $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME, 'TL_CTE', ContentProxy::class);
         $pass->process($container);
 
-        $definition = array_find($container->getDefinitions(), static fn ($def) => GlobalsMapListener::class === $def->getClass());
+        $definition = null;
+
+        foreach ($container->getDefinitions() as $def) {
+            if (GlobalsMapListener::class === $def->getClass()) {
+                $definition = $def;
+                break;
+            }
+        }
 
         $this->assertNotNull($definition);
 

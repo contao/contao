@@ -51,6 +51,12 @@ class UnwrapTwigExceptionListener
             return true;
         }
 
-        return array_any(array_keys(ExceptionConverterListener::MAPPER), static fn ($class) => is_a($throwable, $class));
+        foreach (array_keys(ExceptionConverterListener::MAPPER) as $class) {
+            if (is_a($throwable, $class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

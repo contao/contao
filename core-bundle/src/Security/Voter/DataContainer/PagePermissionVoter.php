@@ -122,12 +122,18 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             $pageIds = [(int) $action->getNewPid()];
         }
 
-        return array_any(
-            $pageIds,
-            fn ($pageId) => $this->canEdit($action, $token, $pageId)
+        // To create a record, both hierarchy and edit permissions must be available.
+        foreach ($pageIds as $pageId) {
+            if (
+                $this->canEdit($action, $token, $pageId)
                 && $this->canChangeHierarchy($action, $token, $pageId)
-                && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource()),
-        );
+                && $this->canAccessPage($token, $pageId, 'tl_article' === $action->getDataSource())
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function canRead(ReadAction $action, TokenInterface $token): bool

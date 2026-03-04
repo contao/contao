@@ -42,7 +42,13 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
 
     public function hasInsertTags(): bool
     {
-        return array_any($this->sequence, static fn ($item) => $item instanceof InsertTag);
+        foreach ($this->sequence as $item) {
+            if ($item instanceof InsertTag) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

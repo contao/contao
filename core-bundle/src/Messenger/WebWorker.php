@@ -58,7 +58,13 @@ class WebWorker
 
     public function hasCliWorkersRunning(): bool
     {
-        return array_any($this->transports, fn ($transportName) => $this->getCacheItemForTransportName($transportName)->isHit());
+        foreach ($this->transports as $transportName) {
+            if ($this->getCacheItemForTransportName($transportName)->isHit()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

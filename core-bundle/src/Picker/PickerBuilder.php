@@ -52,7 +52,7 @@ class PickerBuilder implements PickerBuilderInterface
             static fn (PickerProviderInterface $provider): bool => $provider->supportsContext($config->getContext()),
         );
 
-        if (!$providers) {
+        if ([] === $providers) {
             return null;
         }
 
@@ -78,7 +78,13 @@ class PickerBuilder implements PickerBuilderInterface
             $providers = array_intersect_key($providers, array_flip($allowed));
         }
 
-        return array_any($providers, static fn ($provider) => $provider->supportsContext($context));
+        foreach ($providers as $provider) {
+            if ($provider->supportsContext($context)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getUrl(string $context, array $extras = [], string $value = ''): string
