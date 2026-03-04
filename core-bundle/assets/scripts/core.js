@@ -1900,7 +1900,7 @@ window.Theme =
 	 * Stop the propagation of click events of certain elements
 	 */
 	stopClickPropagation: function() {
-		if (window.console && ($$('.picker_selector').length || $$('.click2edit').length)) {
+		if (window.console && $$('.picker_selector,.click2edit').length) {
 			console.warn('Theme.stopClickPropagation() is deprecated. Prevent propagation in your own event listeners instead.');
 		}
 
