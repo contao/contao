@@ -1,0 +1,48 @@
+{# Date picker #}
+{% if attributes.datepicker|default %}
+    {{ backend_icon(
+        'assets/datepicker/images/icon.svg',
+        'MSC.datepicker'|trans,
+        attrs()
+            .set('id', "toggle_#{id}")
+            .addStyle({cursor: 'pointer'})
+            .set('data-contao--tooltips-target', 'tooltip'),
+    ) }}
+    <script>
+        {% autoescape 'js' %}
+        new Picker.Date($("{{ "ctrl_#{id}" }}"), {
+            draggable: false,
+            toggle: $("{{ "toggle_#{id}" }}"),
+            format: "{{ js_date_format }}",
+            positionOffset: {x: -211, y: -209},
+            pickerClass: "datepicker_bootstrap",
+            useFadeInOut: !Browser.ie,
+            startDay: {{ 'MSC.weekOffset'|trans }},
+            titleFormat: "{{ 'MSC.titleFormat'|trans }}",
+            {% if attributes.rgxp|default == 'datim' %}
+            timePicker: true,
+            {% elseif attributes.rgxp|default == 'time' %}
+            pickOnly: "time",
+            {% endif %}
+            {% if attributes.submitOnChange|default %}
+            onSelect: function () {
+                Backend.autoSubmit("{{ table }}}");
+            },
+            {% endif %}
+        });
+        {% endautoescape %}
+    </script>
+{% endif %}
+
+{# Color picker #}
+{% if attributes.colorpicker|default %}
+    <div data-contao--color-picker-target="button"></div>
+{% endif %}
+
+{# DCA picker #}
+{{ dca_picker_wizard|default }}
+
+{# Custom wizard #}
+{% for custom_wizard in custom_wizards %}
+    {{ custom_wizard|raw }}
+{% endfor %}
