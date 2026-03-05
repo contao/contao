@@ -7,6 +7,7 @@
             .addClass('pagination')
             .set('role', 'navigation')
             .set('aria-label', 'MSC.pagination'|trans)
+            .mergeWith(pagination_attributes|default)
         %}
         <!-- indexer::stop -->
         <nav{{ pagination_attributes }}>
@@ -23,6 +24,7 @@
                                 {% set first_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.first))
                                     .addClass('first')
+                                    .mergeWith(first_attributes|default)
                                 %}
                                 <a{{ first_attributes }}>{% block pagination_first_label %}{{ 'MSC.first'|trans }}{% endblock %}</a>
                             </li>
@@ -34,6 +36,7 @@
                                 {% set previous_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.previous))
                                     .addClass('previous')
+                                    .mergeWith(previous_attributes|default)
                                 %}
                                 <a{{ previous_attributes }}>{% block pagination_previous_label %}{{ 'MSC.previous'|trans }}{% endblock %}</a>
                             </li>
@@ -67,6 +70,7 @@
                                 {% set next_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.next))
                                     .addClass('next')
+                                    .mergeWith(next_attributes|default)
                                 %}
                                 <a{{ next_attributes }}>{% block pagination_next_label %}{{ 'MSC.next'|trans }}{% endblock %}</a>
                             </li>
@@ -78,6 +82,7 @@
                                 {% set last_attributes = attrs()
                                     .set('href', pagination.urlForPage(pagination.last))
                                     .addClass('last')
+                                    .mergeWith(last_attributes|default)
                                 %}
                                 <a{{ last_attributes }}>{% block pagination_last_label %}{{ 'MSC.last'|trans }}{% endblock %}</a>
                             </li>
