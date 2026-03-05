@@ -5,6 +5,11 @@
     "require-dev": {
         "symfony/twig-bridge": "^7.4"
     },
+    "autoload": {
+        "psr-4": {
+            "Contao\\Tools\\TwigCsFixer\\": "src/"
+        }
+    },
     "config": {
         "platform": {
             "php": "8.3"

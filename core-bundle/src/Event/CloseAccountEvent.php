@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Event;
+
+use Contao\ContentModel;
+use Contao\MemberModel;
+use Symfony\Contracts\EventDispatcher\Event;
+
+class CloseAccountEvent extends Event
+{
+    public function __construct(
+        private readonly MemberModel $member,
+        private readonly ContentModel $contentModel,
+    ) {
+    }
+
+    public function getMember(): MemberModel
+    {
+        return $this->member;
+    }
+
+    public function getContentModel(): ContentModel
+    {
+        return $this->contentModel;
+    }
+}

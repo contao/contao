@@ -127,13 +127,15 @@ class TemplateOptionsListenerTest extends TestCase
             ;
         }
 
-        $connection = $this->createStub(Connection::class);
+        $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->atLeastOnce())
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
         ;
 
         $connection
+            ->expects($this->atLeastOnce())
             ->method('executeQuery')
             ->with(
                 \sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
@@ -177,8 +179,7 @@ class TemplateOptionsListenerTest extends TestCase
         $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
-            ->with('ce_text_', [], 'ce_text')
-            ->willReturn(['' => '[result from legacy class]'])
+            ->willReturnMap([['ce_text_', [], 'ce_text', ['' => '[result from legacy class]']]])
         ;
 
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);
@@ -199,8 +200,7 @@ class TemplateOptionsListenerTest extends TestCase
         $controllerAdapter = $this->createAdapterStub(['getTemplateGroup']);
         $controllerAdapter
             ->method('getTemplateGroup')
-            ->with('ce_custom_', [], 'ce_custom')
-            ->willReturn(['' => '[result from legacy class]'])
+            ->willReturnMap([['ce_custom_', [], 'ce_custom', ['' => '[result from legacy class]']]])
         ;
 
         $framework = $this->createContaoFrameworkStub([Controller::class => $controllerAdapter]);

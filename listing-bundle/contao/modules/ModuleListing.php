@@ -151,15 +151,6 @@ class ModuleListing extends Module
 		$id = 'page_l' . $this->id;
 		$per_page = (int) Input::get('per_page') ?: $this->perPage;
 
-		try
-		{
-			$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
-		}
-		catch (PageOutOfRangeException $e)
-		{
-			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
-		}
-
 		// Get the selected records
 		$strQuery = "SELECT " . Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map(array(Database::class, 'quoteIdentifier'), $arrFields));
 
@@ -225,6 +216,16 @@ class ModuleListing extends Module
 		// Limit
 		if ($per_page)
 		{
+			try
+			{
+				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
+				$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+			}
+			catch (PageOutOfRangeException $e)
+			{
+				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'), previous: $e);
+			}
+
 			$objDataStmt->limit($per_page, $pagination->getOffset());
 		}
 
@@ -325,12 +326,9 @@ class ModuleListing extends Module
 		$this->Template->thead = $arrTh;
 		$this->Template->tbody = $arrTd;
 
-		// Pagination
-		$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+		// Template variables
 		$this->Template->per_page = $per_page;
 		$this->Template->total = $objTotal->count;
-
-		// Template variables
 		$this->Template->details = (bool) $this->list_info;
 		$this->Template->search_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['search']);
 		$this->Template->per_page_label = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['list_perPage']);

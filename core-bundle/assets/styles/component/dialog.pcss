@@ -6,9 +6,12 @@ dialog[data-controller="contao--dialog"] {
     .dialog_wrapper {
         background: var(--content-bg);
         border: 1px solid var(--border);
-        box-shadow: 0 0 1em rgb(0 0 0 / 30%);
         border-radius: var(--border-radius);
         max-width: 60ch;
+
+        .tl_submit_container {
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
     }
 
     form {

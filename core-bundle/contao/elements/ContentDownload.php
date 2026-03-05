@@ -19,6 +19,9 @@ trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprec
 
 /**
  * Front end content element "download".
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use Contao\CoreBundle\Controller\ContentElement\DownloadsController instead.
  */
 class ContentDownload extends ContentElement
 {

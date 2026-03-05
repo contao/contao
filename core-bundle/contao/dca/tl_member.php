@@ -50,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'lastname'
 		),
 		'label' => array
@@ -248,7 +248,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength'), 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'minlength'=>Config::get('minPasswordLength'), 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_member', 'setNewPassword')

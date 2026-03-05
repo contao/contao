@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
  * Provide methods to manage back end controllers.
@@ -422,6 +423,12 @@ abstract class Backend extends Controller
 
 			$do = Input::get('do');
 
+			// Only render the breadcrumb for DC_Table (see #9514)
+			if (is_a(DataContainer::getDriverForTable($strTable), DC_Table::class, true))
+			{
+				$this->Template->breadcrumb = $container->get('twig')->render('@Contao/backend/data_container/breadcrumb.html.twig');
+			}
+
 			// Add the current action
 			if (Input::get('id'))
 			{
@@ -469,11 +476,20 @@ abstract class Backend extends Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
+		$container = System::getContainer();
+		$objSession = $container->get('request_stack')->getSession()->getBag('contao_backend');
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Set a new node
 		if (Input::get('pn') !== null)
 		{
+			// Check the request token
+			if ((!$request || $request->isMethodSafe()) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
+			{
+				$container->get('request_stack')->getSession()->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
+				Controller::redirect($container->get('router')->generate('contao_backend_confirm'));
+			}
+
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('pn', true)))
 			{

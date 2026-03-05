@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Slots;
 
+use Twig\Error\SyntaxError;
 use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -40,8 +41,16 @@ final class SlotTokenParser extends AbstractTokenParser
 
         $body = $this->parser->subparse($this->decideForFork(...));
 
+        $throwMissingSlotFunctionError = static function () use ($nameToken, $token, $stream): void {
+            throw new SyntaxError(\sprintf('Slot "%s" adds template content but does not call the "slot()" function.', $nameToken->getValue()), $token->getLine(), $stream->getSourceContext());
+        };
+
         if ($body->count()) {
-            $this->traverseAndReplaceSlotFunction($nameToken->getValue(), $body);
+            if (0 === $this->traverseAndReplaceSlotFunction($nameToken->getValue(), $body)) {
+                $throwMissingSlotFunctionError();
+            }
+        } elseif ($body->hasAttribute('data') && $body->getAttribute('data')) {
+            $throwMissingSlotFunctionError();
         } else {
             $line = $stream->getCurrent()->getLine();
             $body->setNode('body', new PrintNode($this->getSlotReferenceExpression($nameToken->getValue(), $line), $line));
@@ -81,7 +90,10 @@ final class SlotTokenParser extends AbstractTokenParser
         return 'slot';
     }
 
-    private function traverseAndReplaceSlotFunction(string $name, Node $node, Node|null $parent = null): void
+    /**
+     * Returns the number of slot function expressions that were replaced.
+     */
+    private function traverseAndReplaceSlotFunction(string $name, Node $node, Node|null $parent = null): int
     {
         if ($node instanceof FunctionExpression && 'slot' === $node->getAttribute('name')) {
             /** @var Node $target */
@@ -93,12 +105,16 @@ final class SlotTokenParser extends AbstractTokenParser
 
             $target->setNode('expr', $this->getSlotReferenceExpression($name, $target->getTemplateLine()));
 
-            return;
+            return 1;
         }
 
+        $count = 0;
+
         foreach ($node as $child) {
-            $this->traverseAndReplaceSlotFunction($name, $child, $node);
+            $count += $this->traverseAndReplaceSlotFunction($name, $child, $node);
         }
+
+        return $count;
     }
 
     /**

@@ -71,11 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.1">
         <source>Create a new recipient</source>
-        <target>Einen neuen Abonnent erstellen</target>
+        <target>Einen neuen Abonnenten erstellen</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.show.1">
         <source>Show the details of recipient ID %s</source>
-        <target>Details des Abonnent ID %s anzeigen</target>
+        <target>Details des Abonnenten ID %s anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.versions.1">
+        <source>Show the versions of recipient ID %s</source>
+        <target>Versionen des Abonnenten ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.edit.1">
         <source>Edit recipient ID %s</source>
@@ -112,6 +116,22 @@
       <trans-unit id="tl_newsletter_recipients.toggle.4">
         <source>Activate</source>
         <target>Aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.tableLabel">
+        <source>Newsletter recipient</source>
+        <target>Abonnent</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.0">
+        <source>Block</source>
+        <target>Blockieren</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.block.1">
+        <source>Block recipient ID %s</source>
+        <target>Abonnent ID %s blockieren</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.blockConfirm">
+        <source>Do you really want to block recipient ID %s?</source>
+        <target>Soll der Abonnent ID %s wirklich blockiert werden?</target>
       </trans-unit>
     </body>
   </file>

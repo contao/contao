@@ -179,6 +179,21 @@ class Ajax extends Backend
 			case 'reloadPicker':
 				$intId = Input::get('id', true);
 				$strField = $dc->inputName = Input::post('name');
+				$boolRowWizard = false;
+				$parts = null;
+
+				// Row wizard check
+				if (preg_match_all('/[a-zA-Z][a-zA-Z0-9]*/', $strField, $matches))
+				{
+					$parts = $matches[0] ?? null;
+					$field = $parts[0] ?? null;
+
+					if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['inputType'] ?? null) === 'rowWizard')
+					{
+						$boolRowWizard = true;
+						$strField = $field;
+					}
+				}
 
 				// Handle the keys in "edit multiple" mode
 				if (Input::get('act') == 'editAll')
@@ -233,6 +248,11 @@ class Ajax extends Backend
 
 						$varValue = $objRow->$strField;
 						$dc->activeRecord = $objRow;
+
+						if ($boolRowWizard)
+						{
+							$varValue = StringUtil::deserialize($varValue, true);
+						}
 					}
 				}
 
@@ -296,7 +316,7 @@ class Ajax extends Backend
 					}
 
 					// Keep the previous sorting order when reloading the widget
-					if ($dc->activeRecord)
+					if (!$boolRowWizard && $dc->activeRecord)
 					{
 						$varValue = ArrayUtil::sortByOrderField($varValue, $dc->activeRecord->$strField);
 					}
@@ -304,9 +324,25 @@ class Ajax extends Backend
 					$varValue = serialize($varValue);
 				}
 
+				$dcaField = $GLOBALS['TL_DCA'][$dc->table]['fields'][$strField];
+
+				if ($boolRowWizard)
+				{
+					// Search for the nested row wizard field
+					foreach ($parts as $i => $token)
+					{
+						if ($i !== 0 && isset($dcaField['fields'][$token]))
+						{
+							$dcaField = $dcaField['fields'][$token];
+						}
+					}
+				}
+
+				$inputName = $dc->inputName;
+
 				/** @var class-string<FileTree|PageTree|Picker> $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey] ?? null;
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
+				$objWidget = new $strClass($strClass::getAttributesFromDca($dcaField, $inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 

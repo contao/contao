@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -23,6 +24,11 @@ class ModuleCustomnav extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_customnav';
+
+	/**
+	 * @var Collection|null
+	 */
+	protected $objPages;
 
 	/**
 	 * Redirect to the selected page
@@ -53,6 +59,15 @@ class ModuleCustomnav extends Module
 			return '';
 		}
 
+		// Get all active pages and also include root pages if the language is added to the URL (see #72)
+		$this->objPages = PageModel::findPublishedRegularByIds($this->pages, array('includeRoot'=>true));
+
+		// Return if there are no pages
+		if ($this->objPages === null)
+		{
+			return '';
+		}
+
 		$strBuffer = parent::generate();
 
 		return $this->Template->items ? $strBuffer : '';
@@ -67,15 +82,6 @@ class ModuleCustomnav extends Module
 
 		$items = array();
 
-		// Get all active pages and also include root pages if the language is added to the URL (see #72)
-		$objPages = PageModel::findPublishedRegularByIds($this->pages, array('includeRoot'=>true));
-
-		// Return if there are no pages
-		if ($objPages === null)
-		{
-			return;
-		}
-
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
@@ -87,7 +93,7 @@ class ModuleCustomnav extends Module
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
-		foreach ($objPages as $objModel)
+		foreach ($this->objPages ?? array() as $objModel)
 		{
 			$objModel->loadDetails();
 

@@ -600,13 +600,10 @@ class Form extends Hybrid
 			{
 				foreach ($arrFiles as $k=>$v)
 				{
-					if (\array_key_exists('name', $v))
+					if (\array_key_exists('name', $v) && ($v['uploaded'] ?? null))
 					{
-						if ($v['uploaded'] ?? null)
-						{
-							$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
-							continue;
-						}
+						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
+						continue;
 					}
 
 					$arrSet[$k] = serialize(array_map(static function ($file) {
@@ -614,6 +611,8 @@ class Form extends Hybrid
 						{
 							return StringUtil::stripRootDir($file['tmp_name']);
 						}
+
+						return null;
 					}, $v));
 				}
 			}

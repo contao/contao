@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_files.preview.0">
         <source>Image preview</source>
+        <target>Vista previa de la imagen</target>
       </trans-unit>
       <trans-unit id="tl_files.preview.1">
         <source>Mark the important part of the image with your mouse cursor.</source>
@@ -268,13 +269,24 @@
         <source>Delete file or folder &quot;%s&quot;</source>
         <target>Borrar archivo o carpeta &quot;%s&quot;</target>
       </trans-unit>
-      <trans-unit id="tl_files.drag.1">
-        <source>Drag file or folder &quot;%s&quot;</source>
-        <target>Arrastre el archivo o carpeta &quot;%s&quot;</target>
+      <trans-unit id="tl_files.dragFolder.1">
+        <source>Drag folder &quot;%s&quot;</source>
+        <target>Arrastra la carpeta &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.dragFile.1">
+        <source>Drag file &quot;%s&quot;</source>
+        <target>Arrastre el archivo &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.source.0">
+        <source>Edit source</source>
       </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>Editar el texto fuente del archivo &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_files.upload.0">
+        <source>Upload files</source>
+        <target>Subir archivos</target>
       </trans-unit>
       <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>

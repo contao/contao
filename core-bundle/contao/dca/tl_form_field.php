@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'label',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),
 			'renderAsGrid'            => true,
@@ -79,8 +79,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minval,maxval,step,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple,help;{options_legend},options;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -91,7 +91,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'hidden'                      => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hiddencustom'                => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp,customRgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'captcha'                     => '{type_legend},type,label;{fconfig_legend},placeholder;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'altcha'                      => '{type_legend},type,name,label;{fconfig_legend},altchaAuto,altchaHideLogo,altchaHideFooter;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'altcha'                      => '{type_legend},type,name,label;{fconfig_legend},altchaAuto,altchaHideLogo,altchaHideFooter,altchaFloating;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'submit'                      => '{type_legend},type,slabel;{image_legend:hide},imageSubmit;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible'
 	),
 
@@ -137,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'name' => array
@@ -151,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true, 'basicEntities'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => "text NULL"
 		),
@@ -159,13 +159,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html'),
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'basicEntities'=>true),
 			'sql'                     => "text NULL"
 		),
 		'options' => array
 		(
 			'inputType'               => 'optionWizard',
-			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true),
+			'eval'                    => array('mandatory'=>true, 'allowHtml'=>true, 'basicEntities'=>true),
 			'xlabel' => array
 			(
 				array('tl_form_field', 'optionImportWizard')
@@ -190,7 +190,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'help' => array
@@ -210,7 +210,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'minlength' => array
@@ -324,7 +324,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'basicEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'accesskey' => array
@@ -374,13 +374,19 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'altchaHideLogo' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('tl_class'=>'w16'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'altchaHideFooter' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('tl_class'=>'w16'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'altchaFloating' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w16'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'autocomplete' => array

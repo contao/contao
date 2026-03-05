@@ -128,6 +128,9 @@
       <trans-unit id="tl_comments.show.1">
         <source>Show the details of comment ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_comments.versions.1">
+        <source>Show the versions of comment ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>
       </trans-unit>

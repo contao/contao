@@ -114,4 +114,12 @@ class DcaExtractorTest extends TestCase
             $extractor->getEnums(),
         );
     }
+
+    public function testExtractsVirtualFieldsAndTargets(): void
+    {
+        $extractor = DcaExtractor::getInstance('tl_test');
+
+        $this->assertSame(['virtualTarget'], $extractor->getVirtualTargets());
+        $this->assertSame(['virtualField' => 'virtualTarget'], $extractor->getVirtualFields());
+    }
 }

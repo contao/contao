@@ -34,7 +34,15 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, ResetInterface
 {
+    /**
+     * @var array<int, array<int>>
+     */
     private array $pagemountsCache = [];
+
+    /**
+     * @var array<int, array<int>>
+     */
+    private array $pagemountTrailCache = [];
 
     /**
      * @var array<int, string|false>
@@ -130,7 +138,10 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
     private function canRead(ReadAction $action, TokenInterface $token): bool
     {
-        return $this->canAccessPage($token, $this->getCurrentPageId($action), false);
+        $pageId = $this->getCurrentPageId($action);
+
+        return $this->canAccessPage($token, $pageId, false)
+            || ('tl_page' === $action->getDataSource() && \in_array($pageId, $this->getPagemountTrail($token), true));
     }
 
     private function canUpdate(UpdateAction $action, TokenInterface $token): bool
@@ -203,6 +214,28 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $database = $this->framework->createInstance(Database::class);
 
         return $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page', false, $user->pagemounts);
+    }
+
+    private function getPagemountTrail(TokenInterface $token): array
+    {
+        $user = $token->getUser();
+
+        if (!$user instanceof BackendUser) {
+            return [];
+        }
+
+        if (isset($this->pagemountTrailCache[$user->id])) {
+            return $this->pagemountTrailCache[$user->id];
+        }
+
+        $database = $this->framework->createInstance(Database::class);
+        $trails = $this->pagemountTrailCache[$user->id] = [];
+
+        foreach ($user->pagemounts as $pageId) {
+            $trails[] = $database->getParentRecords($pageId, 'tl_page');
+        }
+
+        return $this->pagemountTrailCache[$user->id] = array_map(intval(...), array_unique(array_merge(...$trails)));
     }
 
     private function getCurrentPageId(DeleteAction|ReadAction|UpdateAction $action): int

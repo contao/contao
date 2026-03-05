@@ -33,132 +33,132 @@ class ValidatorTest extends TestCase
     public static function emailProvider(): iterable
     {
         // Valid ASCII
-        yield ['niceandsimple@example.com', 1];
-        yield ['very.common@example.com', 1];
-        yield ['a.little.lengthy.but.fine@dept.example.com', 1];
-        yield ['disposable.style.email.with+symbol@example.com', 1];
-        yield ['other.email-with-dash@example.com', 1];
-        yield ['"very.unusual.@.unusual.com"@example.com', 1];
-        yield ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', 1];
-        yield ['!#$%&\'*+-/=?^_`{}|~@example.org', 1];
-        yield ['"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', 1];
+        yield ['niceandsimple@example.com', true];
+        yield ['very.common@example.com', true];
+        yield ['a.little.lengthy.but.fine@dept.example.com', true];
+        yield ['disposable.style.email.with+symbol@example.com', true];
+        yield ['other.email-with-dash@example.com', true];
+        yield ['"very.unusual.@.unusual.com"@example.com', true];
+        yield ['"very.(),:;<>[]\".VERY.\"very@\ \"very\".unusual"@strange.example.com', true];
+        yield ['!#$%&\'*+-/=?^_`{}|~@example.org', true];
+        yield ['"()<>[]:,;@\"!#$%&\'*+-/=?^_`{}|~.a"@example.org', true];
 
         // Valid with IP addresses
-        yield ['user@[255.255.255.255]', 1];
-        yield ['user@[IPv6:2001:db8:1ff::a0b:dbd0]', 1];
-        yield ['user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', 1];
-        yield ['user@[IPv6:2001::7344]', 1];
-        yield ['user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', 1];
+        yield ['user@[255.255.255.255]', true];
+        yield ['user@[IPv6:2001:db8:1ff::a0b:dbd0]', true];
+        yield ['user@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', true];
+        yield ['user@[IPv6:2001::7344]', true];
+        yield ['user@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true];
 
         // Valid with IDNA domains
-        yield ['test@exämple.com', 1];
-        yield ['test@ä.xe', 1];
-        yield ['test@subexample.wizard', 1];
-        yield ['test@wähwähwäh.ümläüts.de', 1];
-        yield ['"tes@t"@wähwähwäh.ümläüts.de', 1];
+        yield ['test@exämple.com', true];
+        yield ['test@ä.xe', true];
+        yield ['test@subexample.wizard', true];
+        yield ['test@wähwähwäh.ümläüts.de', true];
+        yield ['"tes@t"@wähwähwäh.ümläüts.de', true];
 
         // Valid with new TLDs
-        yield ['test@example.photography', 1];
-        yield ['test@sub-domain.example.photography', 1];
+        yield ['test@example.photography', true];
+        yield ['test@sub-domain.example.photography', true];
 
         // Valid with Unicode characters in the local part
-        yield ['niceändsimple@example.com', 1];
-        yield ['véry.çommon@example.com', 1];
-        yield ['a.lîttle.lengthy.but.fiñe@dept.example.com', 1];
-        yield ['dîsposable.style.émail.with+symbol@example.com', 1];
-        yield ['other.émail-with-dash@example.com', 1];
-        yield ['"verî.uñusual.@.uñusual.com"@example.com', 1];
-        yield ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', 1];
-        yield ['üñîçøðé@example.com', 1];
-        yield ['"üñîçøðé"@example.com', 1];
-        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', 1];
+        yield ['niceändsimple@example.com', true];
+        yield ['véry.çommon@example.com', true];
+        yield ['a.lîttle.lengthy.but.fiñe@dept.example.com', true];
+        yield ['dîsposable.style.émail.with+symbol@example.com', true];
+        yield ['other.émail-with-dash@example.com', true];
+        yield ['"verî.uñusual.@.uñusual.com"@example.com', true];
+        yield ['"verî.(),:;<>[]\".VERÎ.\"verî@\ \"verî\".unüsual"@strange.example.com', true];
+        yield ['üñîçøðé@example.com', true];
+        yield ['"üñîçøðé"@example.com', true];
+        yield ['ǅǼ੧ఘⅧ⒇৪@example.com', true];
 
         // Valid with IP addresses and Unicode characters in the local part
-        yield ['üser@[255.255.255.255]', 1];
-        yield ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', 1];
-        yield ['üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', 1];
-        yield ['üser@[IPv6:2001::7344]', 1];
-        yield ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', 1];
+        yield ['üser@[255.255.255.255]', true];
+        yield ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', true];
+        yield ['üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', true];
+        yield ['üser@[IPv6:2001::7344]', true];
+        yield ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', true];
 
         // Valid with IDNA domains and Unicode characters in the local part
-        yield ['tést@exämple.com', 1];
-        yield ['tést@ä.xe', 1];
-        yield ['tést@subexample.wizard', 1];
-        yield ['tést@wähwähwäh.ümläüts.de', 1];
-        yield ['"tés@t"@wähwähwäh.ümläüts.de', 1];
+        yield ['tést@exämple.com', true];
+        yield ['tést@ä.xe', true];
+        yield ['tést@subexample.wizard', true];
+        yield ['tést@wähwähwäh.ümläüts.de', true];
+        yield ['"tés@t"@wähwähwäh.ümläüts.de', true];
 
         // Valid with new TLDs and Unicode characters in the local part
-        yield ['tést@example.photography', 1];
-        yield ['tést@sub-domain.example.photography', 1];
+        yield ['tést@example.photography', true];
+        yield ['tést@sub-domain.example.photography', true];
 
         // Invalid ASCII
-        yield ['test..child@example.com', 0];
-        yield ['test@sub.-example.com', 0];
-        yield ['test@_smtp_.example.com', 0];
-        yield ['test@sub..example.com', 0];
-        yield ['test@subexamplecom', 0];
-        yield ['Abc.example.com', 0];
-        yield ['A@b@c@example.com', 0];
-        yield ['a"b(c)d,e:f;gi[j\k]l@example.com', 0];
-        yield ['just"not"right@example.com', 0];
-        yield ['this is"not\allowed@example.com', 0];
-        yield ['this\ still\"not\allowed@example.com', 0];
-        yield ['(comment)test@iana.org', 0];
-        yield ['test@[1.2.3.4', 0];
-        yield ['test@iana.org-', 0];
-        yield ['', 0];
-        yield ['test', 0];
-        yield ['@', 0];
-        yield ['test@', 0];
+        yield ['test..child@example.com', false];
+        yield ['test@sub.-example.com', false];
+        yield ['test@_smtp_.example.com', false];
+        yield ['test@sub..example.com', false];
+        yield ['test@subexamplecom', false];
+        yield ['Abc.example.com', false];
+        yield ['A@b@c@example.com', false];
+        yield ['a"b(c)d,e:f;gi[j\k]l@example.com', false];
+        yield ['just"not"right@example.com', false];
+        yield ['this is"not\allowed@example.com', false];
+        yield ['this\ still\"not\allowed@example.com', false];
+        yield ['(comment)test@iana.org', false];
+        yield ['test@[1.2.3.4', false];
+        yield ['test@iana.org-', false];
+        yield ['', false];
+        yield ['test', false];
+        yield ['@', false];
+        yield ['test@', false];
 
         // Invalid with IP addresses
-        yield ['test@a[255.255.255.255]', 0];
-        yield ['test@[255.255.255]', 0];
-        yield ['test@[255.255.255.255.255]', 0];
-        yield ['test@[255.255.255.256]', 0];
-        yield ['test@[2001::7344]', 0];
-        yield ['test@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', 0];
+        yield ['test@a[255.255.255.255]', false];
+        yield ['test@[255.255.255]', false];
+        yield ['test@[255.255.255.255.255]', false];
+        yield ['test@[255.255.255.256]', false];
+        yield ['test@[2001::7344]', false];
+        yield ['test@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', false];
 
         // Invalid with IDNA domain
-        yield ['tes@t@wähwähwäh.ümläüts.de', 0];
-        yield [' test@wähwähwäh.ümläüts.de', 0];
+        yield ['tes@t@wähwähwäh.ümläüts.de', false];
+        yield [' test@wähwähwäh.ümläüts.de', false];
 
         // Invalid with new TLDs
-        yield ['tes@t@example.photography', 0];
-        yield [' test@sub-domain.example.photography', 0];
+        yield ['tes@t@example.photography', false];
+        yield [' test@sub-domain.example.photography', false];
 
         // Invalid with Unicode characters in the local part
-        yield ['tést..child@example.com', 0];
-        yield ['tést@sub.-example.com', 0];
-        yield ['tést@_smtp_.example.com', 0];
-        yield ['tést@sub..example.com', 0];
-        yield ['tést@subexamplecom', 0];
-        yield ['Abç.example.com', 0];
-        yield ['Â@ఘ@ç@example.com', 0];
-        yield ['â"ఘ(ç)d,e:f;gi[j\k]l@example.com', 0];
-        yield ['jüst"not"rîght@example.com', 0];
-        yield ['this îs"not\alløwed@example.com', 0];
-        yield ['this\ stîll\"not\alløwed@example.com', 0];
-        yield ['(çommént)tést@iana.org', 0];
-        yield ['tést@[1.2.3.4', 0];
-        yield ['tést@iana.org-', 0];
-        yield ['tést@', 0];
+        yield ['tést..child@example.com', false];
+        yield ['tést@sub.-example.com', false];
+        yield ['tést@_smtp_.example.com', false];
+        yield ['tést@sub..example.com', false];
+        yield ['tést@subexamplecom', false];
+        yield ['Abç.example.com', false];
+        yield ['Â@ఘ@ç@example.com', false];
+        yield ['â"ఘ(ç)d,e:f;gi[j\k]l@example.com', false];
+        yield ['jüst"not"rîght@example.com', false];
+        yield ['this îs"not\alløwed@example.com', false];
+        yield ['this\ stîll\"not\alløwed@example.com', false];
+        yield ['(çommént)tést@iana.org', false];
+        yield ['tést@[1.2.3.4', false];
+        yield ['tést@iana.org-', false];
+        yield ['tést@', false];
 
         // Invalid with IP addresses and Unicode characters in the local part
-        yield ['tést@a[255.255.255.255]', 0];
-        yield ['tést@[255.255.255]', 0];
-        yield ['tést@[255.255.255.255.255]', 0];
-        yield ['tést@[255.255.255.256]', 0];
-        yield ['tést@[2001::7344]', 0];
-        yield ['tést@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', 0];
+        yield ['tést@a[255.255.255.255]', false];
+        yield ['tést@[255.255.255]', false];
+        yield ['tést@[255.255.255.255.255]', false];
+        yield ['tést@[255.255.255.256]', false];
+        yield ['tést@[2001::7344]', false];
+        yield ['tést@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', false];
 
         // Invalid with IDNA domains and Unicode characters in the local part
-        yield ['tés@t@wähwähwäh.ümläüts.de', 0];
-        yield [' tést@wähwähwäh.ümläüts.de', 0];
+        yield ['tés@t@wähwähwäh.ümläüts.de', false];
+        yield [' tést@wähwähwäh.ümläüts.de', false];
 
         // Invalid with new TLDs and Unicode characters in the local part
-        yield ['tés@t@example.photography', 0];
-        yield [' tést@sub-domain.example.photography', 0];
+        yield ['tés@t@example.photography', false];
+        yield [' tést@sub-domain.example.photography', false];
     }
 
     public function testExtractsEmailAddressesFromText(): void

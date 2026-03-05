@@ -294,13 +294,13 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
             $process
                 ->method('run')
-                ->with($this->callback(
+                ->willReturnCallback(
                     static function ($callable) use ($i) {
                         $callable('', "[output $i]");
 
-                        return true;
+                        return 0;
                     },
-                ))
+                )
             ;
 
             $process

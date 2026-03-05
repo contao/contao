@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\DcaLoader;
@@ -30,12 +33,13 @@ class DcaUrlAnalyzer
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly Security $securityHelper,
+        private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly RecordLabeler $recordLabeler,
         private readonly DcaRequestSwitcher $dcaRequestSwitcher,
         private readonly Connection $connection,
+        private readonly ContaoCsrfTokenManager $tokenManager,
     ) {
     }
 
@@ -48,7 +52,7 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string, label: string}>|null, treeSiblings: list<array{url: string, label: string, active: bool}>|null}>
+     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
      */
     public function getTrail(Request|string|null $request = null, int $limit = PHP_INT_MAX, bool $withTreeTrail = false): array
     {
@@ -112,6 +116,7 @@ class DcaUrlAnalyzer
                     )
                 ) {
                     $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+                    $query['rt'] = $this->tokenManager->getDefaultTokenValue();
                 }
 
                 return $query;
@@ -122,7 +127,7 @@ class DcaUrlAnalyzer
     }
 
     /**
-     * @return list<array{url: string, label: string, treeTrail: list<array{url: string, label: string}>|null, treeSiblings: list<array{url: string, label: string, active: bool}>|null}>
+     * @return list<array{url: string, label: string, treeTrail: list<array{url: string|null, label: string}>|null, treeSiblings: list<array{url: string|null, label: string, active: bool}>|null}>
      */
     private function doGetTrail(string|null $table, int|null $id, int $limit, bool $withTreeTrail): array
     {
@@ -166,7 +171,7 @@ class DcaUrlAnalyzer
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
                 if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
                     $links[] = [
-                        'url' => $this->router->generate('contao_backend', [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')]),
+                        'query' => [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')],
                         'label' => $this->translator->trans(
                             match ($this->findGet('act')) {
                                 'editAll', 'select' => 'MSC.all.0',
@@ -196,7 +201,7 @@ class DcaUrlAnalyzer
             }
 
             $links[] = [
-                'url' => $this->router->generate('contao_backend', $query),
+                'query' => $query,
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
                 'treeTrail' => $treeTrail,
                 'treeSiblings' => $treeSiblings,
@@ -204,15 +209,30 @@ class DcaUrlAnalyzer
         }
 
         $links[] = [
-            'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
+            'query' => ['do' => $do, 'table' => $table],
             'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
             'treeTrail' => null,
             'treeSiblings' => null,
         ];
 
+        // For these actions the pid parameter refers to the insert position
+        if (
+            (string) DataContainer::PASTE_INTO === $this->findGet('mode')
+            && \in_array($this->findGet('act'), ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)
+        ) {
+            array_unshift($links, [
+                'query' => $links[0]['query'],
+                'label' => $this->translator->trans('DCA.cut.0', [], 'contao_default'),
+                'treeTrail' => null,
+                'treeSiblings' => null,
+            ]);
+
+            unset($links[1]['query']['act']);
+        }
+
         if ($this->findGet('clipboard')) {
             array_unshift($links, [
-                'url' => $links[0]['url'].(str_contains($links[0]['url'], '?') ? '&' : '?').'clipboard=1',
+                'query' => [...$links[0]['query'], 'clipboard' => '1'],
                 'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
                 'treeTrail' => null,
                 'treeSiblings' => null,
@@ -221,6 +241,11 @@ class DcaUrlAnalyzer
 
         if (\count($links) > $limit) {
             array_splice($links, $limit);
+        }
+
+        foreach ($links as $i => $link) {
+            $links[$i]['url'] = $this->router->generate('contao_backend', $link['query']);
+            unset($links[$i]['query']);
         }
 
         return array_reverse($links);
@@ -258,7 +283,7 @@ class DcaUrlAnalyzer
             !$module
             || (
                 true !== ($module['disablePermissionChecks'] ?? null)
-                && !$this->securityHelper->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $do)
+                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $do)
             )
         ) {
             return [null, null];
@@ -303,13 +328,11 @@ class DcaUrlAnalyzer
 
         // For these actions the pid parameter refers to the insert position
         if (\in_array($act, ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)) {
-            // Mode "paste into"
-            if ('2' === $mode) {
+            if ((string) DataContainer::PASTE_INTO === $mode) {
                 return [$this->findPtable($table, $pid), $pid];
             }
 
-            // Mode "paste after"
-            $id = $pid;
+            $id = $pid; // paste after
         }
 
         if ('paste' === $act) {
@@ -476,13 +499,29 @@ class DcaUrlAnalyzer
 
         $links = [];
 
-        while ($id && $row = $this->getCurrentRecord($id, $table)) {
-            $links[] = [
-                'url' => $this->router->generate('contao_backend', [...$query, 'pn' => (int) $row['id']]),
-                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
-            ];
+        try {
+            while ($id && $row = $this->getCurrentRecord($id, $table)) {
+                $pn = (int) $row['id'];
 
-            $id = (int) $row['pid'];
+                $link = [
+                    'url' => null,
+                    'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
+                ];
+
+                if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE, $pn)) {
+                    $link['url'] = $this->router->generate('contao_backend', [
+                        ...$query,
+                        'pn' => $pn,
+                        'rt' => $this->tokenManager->getDefaultTokenValue(),
+                    ]);
+                }
+
+                $links[] = $link;
+
+                $id = (int) $row['pid'];
+            }
+        } catch (AccessDeniedException) {
+            // Skip tree trail items without read permission
         }
 
         return array_reverse($links);
@@ -503,7 +542,17 @@ class DcaUrlAnalyzer
             [$pid],
         );
 
-        $rows = array_map(fn ($row) => $this->getCurrentRecord($row['id'], $table), $rows);
+        $rows = array_filter(array_map(
+            function ($row) use ($table) {
+                try {
+                    return $this->getCurrentRecord($row['id'], $table);
+                } catch (AccessDeniedException) {
+                    // Skip tree siblings without read permission
+                    return null;
+                }
+            },
+            $rows,
+        ));
 
         usort(
             $rows,
@@ -519,8 +568,17 @@ class DcaUrlAnalyzer
         $links = [];
 
         foreach ($rows as $row) {
+            if (
+                ($query['act'] ?? null)
+                && !$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, new UpdateAction($table, $row))
+            ) {
+                $url = null;
+            } else {
+                $url = $this->router->generate('contao_backend', [...$query, 'id' => (int) $row['id']]);
+            }
+
             $links[] = [
-                'url' => $this->router->generate('contao_backend', [...$query, 'id' => (int) $row['id']]),
+                'url' => $url,
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
                 'active' => (int) $row['id'] === $id,
             ];

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Filesystem;
 
+use Contao\CoreBundle\Asset\Package\VirtualFilesystemStoragePackage;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
@@ -257,6 +258,23 @@ class FilesystemConfigurationTest extends TestCase
         $this->expectExceptionMessage('A virtual filesystem with the name "foo" does not exist.');
 
         $config->addDefaultDbafs('foo', 'tl_foo');
+    }
+
+    public function testAddAssetPackage(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $config = new FilesystemConfiguration($container);
+        $config->addVirtualFilesystem('foo', 'some/prefix');
+
+        $definition = $config->addAssetPackage('foo');
+        $this->assertTrue($container->hasDefinition('contao.assets.package.vfs.foo'));
+
+        $package = $container->getDefinition('contao.assets.package.vfs.foo');
+        $this->assertSame(VirtualFilesystemStoragePackage::class, $package->getClass());
+        $this->assertSame('contao.filesystem.virtual.foo', (string) $package->getArgument(0));
+        $this->assertTrue($definition->hasTag('assets.package'));
+        $this->assertSame('contao_vfs.foo', $definition->getTag('assets.package')[0]['package']);
     }
 
     private function getContainerBuilder(array $parameters = []): ContainerBuilder

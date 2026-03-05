@@ -47,7 +47,8 @@ class LoginController extends AbstractContentElementController
             return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
-        $targetPath = $this->getTargetPath($request);
+        $formId = 'tl_login_'.$model->id;
+        $targetPath = $this->getTargetPath($request, $formId);
         $isRemembered = $this->isGranted('IS_REMEMBERED');
         $isTwoFactorInProgress = $this->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
         $page = $this->getPageModel();
@@ -123,7 +124,7 @@ class LoginController extends AbstractContentElementController
             $redirect = $this->generateContentUrl($targetPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
-        $template->formId = 'tl_login_'.$model->id;
+        $template->formId = $formId;
         $template->forceTargetPath = (int) $redirectBack;
         $template->targetPath = base64_encode($redirect);
 
@@ -158,11 +159,11 @@ class LoginController extends AbstractContentElementController
         return $template->getResponse();
     }
 
-    private function getTargetPath(Request $request): string|null
+    private function getTargetPath(Request $request, string $formId): string|null
     {
         // If the form was submitted and the credentials were wrong, take the target path
         // from the submitted data as otherwise it would take the current page
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod('POST') && $request->request->get('FORM_SUBMIT') === $formId) {
             return base64_decode($request->request->get('_target_path'), true);
         }
 

@@ -44,6 +44,6 @@
     </select>
 
     {% if this.help|default %}
-        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
+        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>
     {% endif %}
 {% endblock %}

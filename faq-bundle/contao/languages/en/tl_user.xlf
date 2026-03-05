@@ -8,12 +8,6 @@
       <trans-unit id="tl_user.faqs.1">
         <source>Here you can grant access to one or more FAQ categories.</source>
       </trans-unit>
-      <trans-unit id="tl_user.faqp.0">
-        <source>FAQ category permissions</source>
-      </trans-unit>
-      <trans-unit id="tl_user.faqp.1">
-        <source>Here you can define the FAQ category permissions.</source>
-      </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
       </trans-unit>

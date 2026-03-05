@@ -1,9 +1,13 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="contao/languages/en/jobs.php" source-language="en" target-language="ja">
     <body>
-      <trans-unit id="jobs.tstamp.0">
+      <trans-unit id="jobs.created_at.0">
         <source>Created at</source>
         <target>作成日時</target>
+      </trans-unit>
+      <trans-unit id="jobs.progress.0">
+        <source>Progress</source>
+        <target>進捗</target>
       </trans-unit>
       <trans-unit id="jobs.status.0">
         <source>Status</source>
@@ -12,6 +16,10 @@
       <trans-unit id="jobs.owner.0">
         <source>Initiated by</source>
         <target>開始者</target>
+      </trans-unit>
+      <trans-unit id="jobs.attachments.0">
+        <source>Attachments</source>
+        <target>添付ファイル</target>
       </trans-unit>
       <trans-unit id="jobs.type.0">
         <source>Type</source>
@@ -29,9 +37,13 @@
         <source>Completed</source>
         <target>完了</target>
       </trans-unit>
-      <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
+      <trans-unit id="jobs.type_label.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>
         <target>バックエンドの検索インデックスを再構築</target>
+      </trans-unit>
+      <trans-unit id="jobs.type_label.crawl">
+        <source>Crawling the website</source>
+        <target>Webサイトをクローリング</target>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>

@@ -15,7 +15,7 @@ export default class extends Controller {
         this.messageTarget.innerHTML = this.renderMessage(this.unsupportedMessageValue);
     }
 
-    handleAssertionFailure(e) {
+    handleAssertionFailure() {
         this.messageTarget.innerHTML = this.renderMessage(this.assertionFailureMessageValue);
     }
 

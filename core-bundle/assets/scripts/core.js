@@ -317,7 +317,7 @@ window.AjaxRequest =
 					img = next.getFirst('div.list_icon');
 				}
 			} else if (el.closest('.tl_listing_container') && el.getParent('tr')) {
-				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
+				img = el.getParent('td').getPrevious('td').getElement('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
 				}
@@ -377,9 +377,9 @@ window.AjaxRequest =
 			image.set('data-state', !published ? 1 : 0);
 		});
 
-		if (!published && $(el).get('data-title')) {
+		if (el.title && !published && $(el).get('data-title')) {
 			el.title = label = $(el).get('data-title');
-		} else if (published && $(el).get('data-title-disabled')) {
+		} else if (el.title && published && $(el).get('data-title-disabled')) {
 			el.title = label = $(el).get('data-title-disabled');
 		}
 
@@ -531,7 +531,6 @@ window.Backend =
 			'width': width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -554,7 +553,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -579,7 +577,6 @@ window.Backend =
 			'width': opt.width,
 			'hideFooter': true,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
@@ -606,7 +603,6 @@ window.Backend =
 		var M = new SimpleModal({
 			'width': opt.width,
 			'draggable': false,
-			'overlayOpacity': .7,
 			'overlayClick': false,
 			'onShow': function() {
 				document.body.setStyle('overflow', 'hidden');
@@ -725,6 +721,8 @@ window.Backend =
 	 * @param {string} [id] The ID of the target element
 	 */
 	toggleCheckboxes: function(el, id) {
+		console.warn('Backend.toggleCheckboxes() is deprecated. Please use the Stimulus controllers instead.');
+
 		var items = $$('input'),
 			status = $(el).checked ? 'checked' : '';
 
@@ -772,6 +770,8 @@ window.Backend =
 	 * @param {string} cls The CSS class name
 	 */
 	toggleCheckboxElements: function(el, cls) {
+		console.warn('Backend.toggleCheckboxElements() is deprecated. Please use the Stimulus controllers instead.');
+
 		var status = $(el).checked ? 'checked' : '';
 
 		$$('.' + cls).each(function(checkbox) {
@@ -964,7 +964,7 @@ window.Backend =
 				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
-				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				x: cloneBase.getPosition(cloneBase.getOffsetParent()).x,
 				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
 			}).setStyle('display', 'none');
 
@@ -1885,93 +1885,6 @@ window.Backend =
 			currentHover = undefined;
 			currentHoverTime = undefined;
 		});
-	},
-
-	/**
-	 * Crawl the website
-	 */
-	crawl: function() {
-		var timeout = 2000,
-			crawl = $('tl_crawl'),
-			progressBar = crawl.getElement('div.progress-bar'),
-			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results'),
-			debugLog = crawl.getElement('p.debug-log');
-
-		function updateData(response) {
-			var total = response.total,
-				done = total - response.pending,
-				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
-				result;
-
-			// Initialize the status bar at 10%
-			if (done < 1 && percentage < 1) {
-				done = 1;
-				percentage = 10;
-				total = 10;
-			}
-
-			progressBar.setStyle('width', percentage + '%');
-			progressBar.set('html', percentage + '%');
-			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + total);
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (response.hasDebugLog) {
-				debugLog.setStyle('display', 'block');
-			}
-
-			if (!response.finished) {
-				return;
-			}
-
-			progressBar.removeClass('running').addClass('finished');
-			results.removeClass('running').addClass('finished');
-
-			for (result in response.results) {
-				if (response.results.hasOwnProperty(result)) {
-					var summary = results.getElement('.result[data-subscriber="' + result + '"] p.summary'),
-						warning = results.getElement('.result[data-subscriber="' + result + '"] p.warning'),
-						log = results.getElement('.result[data-subscriber="' + result + '"] p.subscriber-log'),
-						subscriberResults = response.results[result],
-						subscriberSummary = subscriberResults.summary;
-
-					if (subscriberResults.warning) {
-						warning.set('html', subscriberResults.warning);
-					}
-
-					if (subscriberResults.hasLog) {
-						log.setStyle('display', 'block');
-					}
-
-					summary.addClass(subscriberResults.wasSuccessful ? 'success' : 'failure');
-					summary.set('html', subscriberSummary);
-				}
-			}
-		}
-
-		function execRequest(onlyStatusUpdate = false) {
-			new Request({
-				url: window.location.href,
-				headers: {
-					'Only-Status-Update': onlyStatusUpdate
-				},
-				onSuccess: function(responseText) {
-					var response = JSON.decode(responseText);
-
-					updateData(response);
-
-					if (!response.finished) {
-						setTimeout(execRequest, timeout);
-					}
-				}
-			}).send();
-		}
-
-		execRequest(true);
 	}
 };
 
@@ -1987,6 +1900,10 @@ window.Theme =
 	 * Stop the propagation of click events of certain elements
 	 */
 	stopClickPropagation: function() {
+		if (window.console && $$('.picker_selector,.click2edit').length) {
+			console.warn('Theme.stopClickPropagation() is deprecated. Prevent propagation in your own event listeners instead.');
+		}
+
 		// Do not propagate the click events of the icons
 		$$('.picker_selector').each(function(ul) {
 			ul.getElements('a').each(function(el) {
@@ -2010,6 +1927,10 @@ window.Theme =
 	 * Set up the textarea resizing
 	 */
 	setupTextareaResizing: function() {
+		if (window.console) {
+			console.warn('Theme.setupTextareaResizing() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		$$('.tl_textarea').each(function(el) {
 			if (Browser.ie6 || Browser.ie7 || Browser.ie8) return;
 			if (el.hasClass('noresize') || el.retrieve('autogrow')) return;
@@ -2195,7 +2116,6 @@ window.addEvent('domready', function() {
 	Backend.tableWizardSetWidth();
 
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
 
 	if ($('sbtog')) {
 		Theme.setupSplitButtonToggle();

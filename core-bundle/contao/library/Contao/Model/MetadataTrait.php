@@ -38,7 +38,7 @@ trait MetadataTrait
 		$data = $this->row();
 
 		// Normalize keys
-		if (isset($data['imageTitle']))
+		if (\array_key_exists('imageTitle', $data))
 		{
 			$data[Metadata::VALUE_TITLE] = $data['imageTitle'];
 		}

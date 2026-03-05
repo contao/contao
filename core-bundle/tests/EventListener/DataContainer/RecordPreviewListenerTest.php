@@ -41,8 +41,7 @@ class RecordPreviewListenerTest extends TestCase
         $dcAdapter = $this->createAdapterStub(['getDriverForTable']);
         $dcAdapter
             ->method('getDriverForTable')
-            ->with($table)
-            ->willReturn($driver)
+            ->willReturnMap([[$table, $driver]])
         ;
 
         $framework = $this->createContaoFrameworkStub([

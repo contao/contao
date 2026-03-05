@@ -653,6 +653,10 @@
         <source>Show the details of page ID %s</source>
         <target>Показать детали страницы ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_page.versions.1">
+        <source>Show the versions of page ID %s</source>
+        <target>Показать версии страницы ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Редактировать страницу ID %s</target>
@@ -703,12 +707,15 @@
       </trans-unit>
       <trans-unit id="tl_page.pastenewtop.1">
         <source>Add a new page at the top</source>
+        <target>Добавить новую страницу вверху</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewafter.1">
         <source>Add a new page after page ID %s</source>
+        <target>Добавить новую страницу после страницы ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pastenewinto.1">
         <source>Add a new page inside page ID %s</source>
+        <target>Добавить новую страницу в страницу ID %s</target>
       </trans-unit>
       <trans-unit id="tl_page.articles.0">
         <source>Articles</source>
@@ -805,6 +812,10 @@
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
         <target>1 год</target>
+      </trans-unit>
+      <trans-unit id="tl_page.tableLabel">
+        <source>Page</source>
+        <target>Страница</target>
       </trans-unit>
     </body>
   </file>

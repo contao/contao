@@ -4,7 +4,7 @@ export default class extends Controller {
     connect() {
         this.observer = new IntersectionObserver(this.#handleIntersect.bind(this), {
             threshold: 1.0,
-            rootMargin: '0px 0px -1px 0px',
+            rootMargin: '-1px 0px -1px 0px',
         });
 
         this.observer.observe(this.element);

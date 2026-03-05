@@ -9,8 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image\ResizeOptions;
@@ -28,14 +26,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
-		'oncreate_callback' => array
-		(
-			array('tl_image_size', 'adjustPermissions')
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_image_size', 'adjustPermissions')
-		),
+		'userRoot'                   => 'imageSizes',
 		'sql' => array
 		(
 			'keys' => array
@@ -54,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
-			'panelLayout'             => 'filter;search,limit',
+			'panelLayout'             => 'search,filter,limit',
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 		),
@@ -195,97 +186,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
  */
 class tl_image_size extends Backend
 {
-	/**
-	 * Add the new image size to the permissions
-	 *
-	 * @param string|int $insertId
-	 */
-	public function adjustPermissions($insertId)
-	{
-		// The oncreate_callback passes $insertId as second argument
-		if (func_num_args() == 4)
-		{
-			$insertId = func_get_arg(1);
-		}
-
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		// Set the image sizes
-		if (empty($user->imageSizes) || !is_array($user->imageSizes))
-		{
-			$imageSizes = array();
-		}
-		else
-		{
-			$imageSizes = $user->imageSizes;
-		}
-
-		// The image size is enabled already
-		if (in_array($insertId, $imageSizes))
-		{
-			return;
-		}
-
-		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-		$arrNew = $objSessionBag->get('new_records');
-
-		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
-		{
-			$db = Database::getInstance();
-
-			// Add the permissions on group level
-			if ($user->inherit != 'custom')
-			{
-				$objGroup = $db->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
-
-				while ($objGroup->next())
-				{
-					$arrThemes = StringUtil::deserialize($objGroup->themes);
-
-					if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
-					{
-						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
-						$arrImageSizes[] = $insertId;
-
-						$db
-							->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
-							->execute(serialize($arrImageSizes), $objGroup->id);
-					}
-				}
-			}
-
-			// Add the permissions on user level
-			if ($user->inherit != 'group')
-			{
-				$objUser = $db
-					->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
-					->limit(1)
-					->execute($user->id);
-
-				$arrThemes = StringUtil::deserialize($objUser->themes);
-
-				if (is_array($arrThemes) && in_array('image_sizes', $arrThemes))
-				{
-					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
-					$arrImageSizes[] = $insertId;
-
-					$db
-						->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
-						->execute(serialize($arrImageSizes), $user->id);
-				}
-			}
-
-			// Add the new element to the user object
-			$imageSizes[] = $insertId;
-			$user->imageSizes = $imageSizes;
-		}
-	}
-
 	/**
 	 * List an image size
 	 *

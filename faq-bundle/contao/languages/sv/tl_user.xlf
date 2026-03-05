@@ -9,14 +9,6 @@
         <source>Here you can grant access to one or more FAQ categories.</source>
         <target>Här kan du ge tillträde till en eller flera FAQ-kategorier.</target>
       </trans-unit>
-      <trans-unit id="tl_user.faqp.0">
-        <source>FAQ category permissions</source>
-        <target>Behörigheter för FAQ-kategorier</target>
-      </trans-unit>
-      <trans-unit id="tl_user.faqp.1">
-        <source>Here you can define the FAQ category permissions.</source>
-        <target>Här kan du ändra behörigheter för FAQ-kategorier.</target>
-      </trans-unit>
       <trans-unit id="tl_user.faq_legend">
         <source>FAQ permissions</source>
         <target>FAQ-behörigheter</target>

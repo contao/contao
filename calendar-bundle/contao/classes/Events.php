@@ -30,12 +30,16 @@ abstract class Events extends Module
 	/**
 	 * Today 00:00:00
 	 * @var string
+	 *
+	 * @deprecated Deprecated sind Contao 5.7, to be removed in Contao 6
 	 */
 	protected $intTodayBegin;
 
 	/**
 	 * Today 23:59:59
 	 * @var string
+	 *
+	 * @deprecated Deprecated sind Contao 5.7, to be removed in Contao 6
 	 */
 	protected $intTodayEnd;
 

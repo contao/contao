@@ -199,7 +199,7 @@ export default class extends Controller {
         this.updateOperation(event);
     }
 
-    async updateState(el, id, state) {
+    async updateState(_el, id, state) {
         await fetch(location.href, {
             method: 'POST',
             headers: {

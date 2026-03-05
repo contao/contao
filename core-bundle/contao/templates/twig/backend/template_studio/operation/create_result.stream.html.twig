@@ -6,7 +6,7 @@
         {% set identifier_token -%}
             <span class="token">{{ identifier }}</span>
         {%- endset %}
-        {{ 'message.create.success'|trans([identifier_token])|raw }}
+        {{ 'template_studio.message.create.success'|trans([identifier_token])|raw }}
     {% endblock %}
 {% endembed %}
 

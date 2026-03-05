@@ -24,10 +24,11 @@
         .addClass('upload')
         .addClass(this.class|default)
         .set('aria-describedby', "help_ctrl_#{this.id}", this.help|default)
+        .set('multiple', true, this.multipleFiles|default)
         .mergeWith(getAttributes.invoke())
     }}>
 
     {% if this.help|default %}
-        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help }}</p>
+        <p class="help" id="help_ctrl_{{ this.id }}">{{ this.help|insert_tag_raw }}</p>
     {% endif %}
 {% endblock %}

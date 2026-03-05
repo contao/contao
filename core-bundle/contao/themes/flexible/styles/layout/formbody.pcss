@@ -12,11 +12,14 @@
 .tl_submit_container {
     padding: 8px 12px;
     background: var(--panel-bg);
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
 }
 
-.tl_formbody_submit.is-sticky .tl_submit_container {
-    border-radius: 0;
+.popup,
+.tl_formbody_submit.is-sticky {
+    .tl_submit_container {
+        border-radius: 0;
+    }
 }
 
 .tl_submit_container .tl_submit {

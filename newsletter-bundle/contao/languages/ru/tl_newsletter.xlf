@@ -229,6 +229,10 @@
         <source>Show the details of newsletter ID %s</source>
         <target>Показать детали новостной рассылки ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.versions.1">
+        <source>Show the versions of newsletter ID %s</source>
+        <target>Показать версии новостной рассылки ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
         <target>Редактировать новостную рассылку ID %s</target>
@@ -248,6 +252,10 @@
       <trans-unit id="tl_newsletter.pasteafter.0">
         <source>Paste into this channel</source>
         <target>Вставить в этот канал</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.tableLabel">
+        <source>Newsletter</source>
+        <target>Новостная рассылка</target>
       </trans-unit>
     </body>
   </file>

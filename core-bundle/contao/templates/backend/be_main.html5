@@ -5,6 +5,7 @@ $this->rootAttributes = $this
     ->set('lang', $this->language)
     ->set('data-controller', 'contao--scroll-offset')
     ->set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
+    ->set('data-turbo-prefetch', 'false', $this->isDebug)
     ->mergeWith($this->rootAttributes)
 ;
 
@@ -12,17 +13,28 @@ $this->bodyAttributes = $this
     ->attrs($this->attributes)
     ->set('id', 'top')
     ->addClass('be_main')
+    ->addClass($this->backendWidth)
     ->addClass('popup', $this->isPopup)
-    ->set('data-controller', 'contao--tooltips contao--toggle-state')
-    ->set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
-    ->set('data-contao--toggle-state-active-class', 'active')
+    ->set('data-controller', 'contao--tooltips')
+    ->set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     ->mergeWith($this->bodyAttributes)
 ;
 
-$this->containerAttributes = $this
+$this->mainAttributes = $this
     ->attrs()
-    ->addClass($this->containerClass)
-    ->mergeWith($this->containerAttributes)
+    ->set('id', 'main')
+    ->set('aria-labelledby', 'main_headline')
+    ->mergeWith($this->mainAttributes)
+;
+
+$this->asideAttributes = $this
+    ->attrs()
+    ->set('id', 'left')
+    ->set('data-controller', 'contao--toggle-receiver')
+    ->set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#burger')
+    ->set('data-contao--toggle-receiver-active-class', 'active')
+    ->set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+    ->mergeWith($this->asideAttributes)
 ;
 
 ?>
@@ -92,11 +104,11 @@ $this->containerAttributes = $this
   <?php $this->endblock(); ?>
 
   <?php $this->block('container'); ?>
-    <div id="container"<?= $this->containerAttributes ?>>
+    <div id="container">
 
       <?php $this->block('left'); ?>
         <?php if (!$this->renderMainOnly): ?>
-          <aside id="left" data-contao--toggle-state-target="controls">
+          <aside<?= $this->asideAttributes ?>>
             <?= $this->menu ?>
             <div class="version">
               <?php $this->block('version'); ?>
@@ -109,11 +121,15 @@ $this->containerAttributes = $this
 
       <?php $this->block('main'); ?>
         <turbo-frame id="contao-main" target="_top">
-          <main id="main" aria-labelledby="main_headline">
+          <main<?= $this->mainAttributes ?>>
             <?php $this->block('main_headline'); ?>
               <h1 id="main_headline">
-                <?= $this->headline ?>
-                <?= $this->toggleFavorites ?>
+                <?php if ($this->breadcrumb): ?>
+                  <?= $this->breadcrumb ?>
+                <?php else: ?>
+                  <?= $this->headline ?>
+                <?php endif; ?>
+                <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
               </h1>
             <?php $this->endblock(); ?>
             <div class="content">

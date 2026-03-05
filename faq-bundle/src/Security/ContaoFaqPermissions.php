@@ -18,7 +18,7 @@ final class ContaoFaqPermissions
 
     public const USER_CAN_EDIT_CATEGORY = 'contao_user.faqs';
 
-    public const USER_CAN_CREATE_CATEGORIES = 'contao_user.faqp.create';
+    public const USER_CAN_CREATE_CATEGORIES = 'contao_user.cud.tl_faq_category::create';
 
-    public const USER_CAN_DELETE_CATEGORIES = 'contao_user.faqp.delete';
+    public const USER_CAN_DELETE_CATEGORIES = 'contao_user.cud.tl_faq_category::delete';
 }

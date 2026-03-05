@@ -71,7 +71,7 @@
                             <p>{{ languages[lang] }}</p>
                             {% for field, value in data %}
                                 {% if value|default %}
-                                    {{ value }} ({{ labels['aw_' ~ field] }})<br>
+                                    {{ value }} ({{ labels['aw_' ~ field]|default }})<br>
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}
@@ -127,7 +127,7 @@
                         },
                         picture.img.width|default and picture.img.height|default,
                     ) }}>
-                        {{ include('@Contao/picture_default.html.twig', picture) }}
+                        {{ include('@Contao/picture_default.html.twig', picture, false) }}
                     </div>
                 {% endfor %}
             </div>

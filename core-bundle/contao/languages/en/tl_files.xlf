@@ -209,6 +209,9 @@
       <trans-unit id="tl_files.dragFile.1">
         <source>Drag file "%s"</source>
       </trans-unit>
+      <trans-unit id="tl_files.source.0">
+        <source>Edit source</source>
+      </trans-unit>
       <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file "%s"</source>
       </trans-unit>

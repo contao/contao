@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('startTime DESC'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected'),
-			'panelLayout'             => 'filter;sort,search,limit',
+			'panelLayout'             => 'search,filter,sort,limit',
 			'defaultSearchField'      => 'title',
 		),
 		'label' => array
@@ -321,10 +321,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
-			'options_callback' => static function () {
-				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
-			},
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'options_callback'        => array('contao.listener.image_size_options', '__invoke'),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'imageUrl' => array
 		(

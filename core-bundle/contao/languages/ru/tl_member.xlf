@@ -253,6 +253,10 @@
         <source>Show the details of member ID %s</source>
         <target>Показать детали участника ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_member.versions.1">
+        <source>Show the versions of member ID %s</source>
+        <target>Показать версии участника ID %s</target>
+      </trans-unit>
       <trans-unit id="tl_member.edit.1">
         <source>Edit member ID %s</source>
         <target>Редактировать участника ID %s</target>
@@ -296,6 +300,10 @@
       <trans-unit id="tl_member.su.1">
         <source>Preview the front end as member ID %s</source>
         <target>Просмотр внешнего интерфейса как участник ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_member.tableLabel">
+        <source>Member</source>
+        <target>Участник</target>
       </trans-unit>
     </body>
   </file>

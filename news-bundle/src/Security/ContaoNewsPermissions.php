@@ -18,7 +18,7 @@ final class ContaoNewsPermissions
 
     public const USER_CAN_EDIT_ARCHIVE = 'contao_user.news';
 
-    public const USER_CAN_CREATE_ARCHIVES = 'contao_user.newp.create';
+    public const USER_CAN_CREATE_ARCHIVES = 'contao_user.cud.tl_news_archive::create';
 
-    public const USER_CAN_DELETE_ARCHIVES = 'contao_user.newp.delete';
+    public const USER_CAN_DELETE_ARCHIVES = 'contao_user.cud.tl_news_archive::delete';
 }

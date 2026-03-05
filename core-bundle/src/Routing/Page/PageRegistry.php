@@ -18,8 +18,6 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class PageRegistry implements ResetInterface
 {
-    private const DISABLE_CONTENT_COMPOSITION = ['forward', 'logout'];
-
     private array|null $urlPrefixes = null;
 
     private array|null $urlSuffixes = null;
@@ -64,13 +62,9 @@ class PageRegistry implements ResetInterface
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         } elseif (null === $path) {
-            if ($this->isParameterless($pageModel)) {
-                $path = '/'.($pageModel->alias ?: $pageModel->id);
-            } else {
-                $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
-                $defaults['parameters'] ??= '';
-                $requirements['parameters'] ??= $pageModel->requireItem ? '/.+?' : '(/.+?)?';
-            }
+            $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
+            $defaults['parameters'] ??= '';
+            $requirements['parameters'] ??= $pageModel->requireItem ? '/.+?' : '(/.+?)?';
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
@@ -107,7 +101,7 @@ class PageRegistry implements ResetInterface
     public function supportsContentComposition(PageModel $pageModel): bool
     {
         if (!isset($this->contentComposition[$pageModel->type])) {
-            return !\in_array($pageModel->type, self::DISABLE_CONTENT_COMPOSITION, true);
+            return true;
         }
 
         $service = $this->contentComposition[$pageModel->type];
@@ -117,6 +111,15 @@ class PageRegistry implements ResetInterface
         }
 
         return (bool) $service;
+    }
+
+    public function getPageTemplate(PageModel $pageModel): string|null
+    {
+        if (!isset($this->routeConfigs[$pageModel->type])) {
+            return null;
+        }
+
+        return $this->routeConfigs[$pageModel->type]->getTemplate();
     }
 
     /**
@@ -241,10 +244,5 @@ class PageRegistry implements ResetInterface
 
         $this->urlSuffixes = array_values(array_unique(array_merge(...$urlSuffixes)));
         $this->urlPrefixes = array_values(array_unique(array_column($results, 'urlPrefix')));
-    }
-
-    private function isParameterless(PageModel $pageModel): bool
-    {
-        return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
     }
 }

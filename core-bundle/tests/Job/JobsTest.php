@@ -127,6 +127,37 @@ class JobsTest extends AbstractJobsTestCase
         $this->assertContains($uuid4, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
     }
 
+    public function testFindMyRecentIncludesJobsInWindow(): void
+    {
+        $securityUser1 = $this->mockSecurity(1);
+        $securityUser2 = $this->mockSecurity(2);
+
+        $clock = new MockClock();
+        $jobsUser1 = $this->getJobs($securityUser1, $clock);
+        $jobsUser2 = $this->getJobs($securityUser2, $clock);
+
+        $oldCompletedJob = $jobsUser1->createUserJob('my-type')->markCompleted();
+        $jobsUser1->persist($oldCompletedJob);
+
+        $clock->modify('+30 minutes');
+
+        $newJob = $jobsUser1->createUserJob('my-type');
+        $pendingJob = $jobsUser1->createUserJob('my-type')->markPending();
+        $completedJob = $jobsUser1->createUserJob('my-type')->markCompleted();
+        $otherJob = $jobsUser2->createUserJob('my-type');
+
+        $jobsUser1->persist($pendingJob);
+        $jobsUser1->persist($completedJob);
+
+        $uuids = $this->jobsToUuids($jobsUser1->findMyRecent(60));
+
+        $this->assertContains($newJob->getUuid(), $uuids);
+        $this->assertContains($pendingJob->getUuid(), $uuids);
+        $this->assertContains($completedJob->getUuid(), $uuids);
+        $this->assertNotContains($oldCompletedJob->getUuid(), $uuids);
+        $this->assertNotContains($otherJob->getUuid(), $uuids);
+    }
+
     public function testDispatchJob(): void
     {
         $message = new class() implements JobIdAwareMessageInterface {

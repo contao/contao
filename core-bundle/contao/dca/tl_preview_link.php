@@ -39,7 +39,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('createdAt'),
-			'panelLayout'             => 'filter;sort,search,limit'
+			'panelLayout'             => 'search,filter,sort,limit',
 		),
 		'label' => array
 		(
@@ -48,6 +48,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'share' => array
 			(
 				'icon'                => 'share.svg',

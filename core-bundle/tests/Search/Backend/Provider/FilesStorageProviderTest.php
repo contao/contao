@@ -88,12 +88,11 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
-            ->with('', true)
-            ->willReturn(new \ArrayIterator([
+            ->willReturnMap([['', true, new \ArrayIterator([
                 new FilesystemItem(true, 'foo', 3600),
                 new FilesystemItem(true, 'bar', 3601),
                 new FilesystemItem(true, 'baz', 0),
-            ]))
+            ])]])
         ;
 
         $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class));
@@ -129,12 +128,11 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getRecords')
-            ->with('', true)
-            ->willReturn(new \ArrayIterator([
+            ->willReturnMap([['', true, new \ArrayIterator([
                 new FilesystemItem(true, 'foo', 3600),
                 new FilesystemItem(true, 'bar', 3601),
                 new FilesystemItem(true, 'baz', 0),
-            ]))
+            ])]])
         ;
 
         $dbafsManager = new DbafsManager($this->createStub(EventDispatcherInterface::class));

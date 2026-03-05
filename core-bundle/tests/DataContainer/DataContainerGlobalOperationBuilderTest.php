@@ -130,6 +130,50 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         ];
     }
 
+    public function testAddFilterButton(): void
+    {
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(static fn (array $parameters) => isset($parameters['operations'])
+                    && 1 === \count($parameters['operations'])
+                    && ' style="display: none;"' === (string) $parameters['operations'][0]['listAttributes']
+                    && true === $parameters['operations'][0]['primary'],
+                ),
+            )
+            ->willReturn('')
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->exactly(4))
+            ->method('trans')
+            ->willReturnCallback(
+                static fn (string $id): string => match ($id) {
+                    'DCA.toggleFilter.0' => 'Filter',
+                    'DCA.toggleFilter.1' => 'Show the filters',
+                    'DCA.toggleFilter.2' => 'Hide the filters',
+                    default => throw new \InvalidArgumentException(\sprintf('Unknown translation id: %s', $id)),
+                },
+            )
+        ;
+
+        $builder = new DataContainerGlobalOperationsBuilder(
+            $this->createContaoFrameworkStub(),
+            $twig,
+            $this->createStub(UrlGeneratorInterface::class),
+            $translator,
+        );
+
+        $builder = $builder->initialize('tl_foo');
+        $builder->addFilterButton();
+
+        $this->assertSame('', (string) $builder);
+    }
+
     public function testAddClearClipboardButton(): void
     {
         $backendAdapter = $this->createAdapterMock(['addToUrl']);
@@ -246,8 +290,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $inputAdapter = $this->createAdapterStub(['get']);
         $inputAdapter
             ->method('get')
-            ->with('act')
-            ->willReturn($selectView ? 'select' : '')
+            ->willReturnMap([['act', $selectView ? 'select' : '']])
         ;
 
         $backendAdapter = $this->createAdapterStub(['addToUrl']);

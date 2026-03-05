@@ -4,23 +4,34 @@
     .set('lang', language)
     .set('data-controller', 'contao--scroll-offset')
     .set('data-action', 'store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore')
+    .set('data-turbo-prefetch', 'false', isDebug)
     .mergeWith(rootAttributes|default)
 -%}
 
 {%- set bodyAttributes = attrs(attributes|default)
     .set('id', 'top')
     .addClass('be_main')
+    .addClass(backendWidth)
     .addClass('popup', isPopup)
-    .set('data-controller', 'contao--tooltips contao--toggle-state')
-    .set('data-action', 'touchstart@document->contao--tooltips#touchStart keydown.esc@document->contao--toggle-state#close')
-    .set('data-contao--toggle-state-active-class', 'active')
+    .set('data-controller', 'contao--tooltips')
+    .set('data-action', 'touchstart@document->contao--tooltips#touchStart')
     .mergeWith(bodyAttributes|default)
 -%}
 
-{%- set containerAttributes = attrs()
-    .addClass(containerClass)
-    .mergeWith(containerAttributes|default)
--%}
+{% set mainAttributes = attrs()
+    .set('id', 'main')
+    .set('aria-labelledby', 'main_headline')
+    .mergeWith(mainAttributes|default)
+%}
+
+{% set asideAttributes = attrs()
+    .set('id', 'left')
+    .set('data-controller', 'contao--toggle-receiver')
+    .set('data-contao--toggle-receiver-contao--toggle-sender-outlet', '#burger')
+    .set('data-contao--toggle-receiver-active-class', 'active')
+    .set('data-action', 'click@document->contao--toggle-receiver#documentClick keydown.esc@document->contao--toggle-receiver#close')
+    .mergeWith(asideAttributes|default)
+%}
 
 <!DOCTYPE html>
 <html{{ rootAttributes }}>
@@ -87,11 +98,11 @@
 {% endblock %}
 
 {% block container %}
-    <div id="container"{{ containerAttributes }}>
+    <div id="container">
 
         {% block left %}
             {% if not renderMainOnly %}
-                <aside id="left" data-contao--toggle-state-target="controls">
+                <aside{{ asideAttributes }}>
                     {{ menu|raw }}
                     <div class="version">
                         {% block version %}
@@ -104,11 +115,15 @@
 
         {% block main %}
             <turbo-frame id="contao-main" target="_top">
-                <main id="main" aria-labelledby="main_headline">
+                <main{{ mainAttributes }}>
                     {% block main_headline %}
                         <h1 id="main_headline">
-                            {{ headline|raw }}
-                            {{ toggleFavorites|default|raw }}
+                            {% if breadcrumb|default %}
+                                {{ breadcrumb|raw }}
+                            {% else %}
+                                {{ headline|raw }}
+                            {% endif %}
+                            {{ include('@Contao/backend/component/_favorites.html.twig') }}
                         </h1>
                     {% endblock %}
                     <div class="content">

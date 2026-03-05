@@ -361,6 +361,10 @@
         <source>Show the details of event ID %s</source>
         <target>ID %sのイベントの詳細を表示</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.versions.1">
+        <source>Show the versions of event ID %s</source>
+        <target>ID %sのイベントのバージョンを表示</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
         <target>ID %sのイベントを編集</target>
@@ -428,6 +432,10 @@
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
         <target>このカレンダーに貼り付け</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tableLabel">
+        <source>Event</source>
+        <target>イベント</target>
       </trans-unit>
     </body>
   </file>

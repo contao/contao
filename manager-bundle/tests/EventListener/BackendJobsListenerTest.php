@@ -57,7 +57,7 @@ class BackendJobsListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@Contao/backend/jobs/_menu_item.html.twig',
+                '@Contao/backend/jobs/menu_item.html.twig',
                 [
                     'jobs_link' => '/contao?do=jobs',
                     'has_pending_jobs' => false,

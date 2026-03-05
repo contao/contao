@@ -2,8 +2,8 @@
   <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="de">
     <body>
       <trans-unit id="tl_module.name.0">
-        <source>Title</source>
-        <target>Titel</target>
+        <source>Internal title</source>
+        <target>Interner Titel</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -665,6 +665,10 @@ Wenn Sie diese E-Mail nicht angefordert haben, kontaktieren Sie bitte den Admini
         <source>Show the details of module ID %s</source>
         <target>Details des Moduls ID %s anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_module.versions.1">
+        <source>Show the versions of module ID %s</source>
+        <target>Versionen des Moduls ID %s anzeigen</target>
+      </trans-unit>
       <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>Modul ID %s bearbeiten</target>
@@ -680,6 +684,10 @@ Wenn Sie diese E-Mail nicht angefordert haben, kontaktieren Sie bitte den Admini
       <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>Modul ID %s löschen</target>
+      </trans-unit>
+      <trans-unit id="tl_module.tableLabel">
+        <source>Module</source>
+        <target>Modul</target>
       </trans-unit>
     </body>
   </file>

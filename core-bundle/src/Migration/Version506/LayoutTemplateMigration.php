@@ -83,6 +83,8 @@ class LayoutTemplateMigration extends AbstractMigration
             }
         }
 
+        $this->filesystemLoader->warmUp(true);
+
         return $this->createResult(!$error);
     }
 

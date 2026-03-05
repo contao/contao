@@ -1,0 +1,24 @@
+{% trans_default_domain 'contao_default' %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+
+{% if form|default %}
+    {% form_theme form '@Contao/form/contao_layout.html.twig' %}
+{% endif %}
+
+{% block content %}
+    {{ form_start(form) }}
+        <div class="formbody">
+            {{ form_row(form.REQUEST_TOKEN) }}
+
+            <div class="widget widget-text">
+                {{ form_label(form.password) }}
+                {{ form_errors(form.password) }}
+                {{ form_widget(form.password) }}
+            </div>
+
+            <div class="widget widget-submit">
+                {{ form_widget(form.submit) }}
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

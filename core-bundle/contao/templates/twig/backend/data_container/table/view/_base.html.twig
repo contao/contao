@@ -1,0 +1,23 @@
+{% trans_default_domain 'contao_default' %}
+
+<div{{ view_attributes|default }}>
+    {{ message|raw }}
+    {{ global_operations|raw }}
+
+    {% if not as_select %}
+        {% block listing %}{% endblock %}
+
+        {{ pagination|default|raw }}
+    {% else %}
+        {# Wrap listing in a form for select mode #}
+        <form id="tl_select" class="tl_form unselectable" method="post" novalidate>
+            <div class="tl_formbody_edit">
+                <input type="hidden" name="FORM_SUBMIT" value="tl_select">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                {{ block('listing') }}
+            </div>
+
+            {{ buttons|default|raw }}
+        </form>
+    {% endif %}
+</div>

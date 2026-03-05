@@ -15,7 +15,7 @@
     {% else %}
         <div class="ce_text block">
             {% if not addBefore %}
-                {{ teaser|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+                {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
             {% endif %}
 
             {% if addImage %}
@@ -23,7 +23,7 @@
             {% endif %}
 
             {% if addBefore %}
-                {{ teaser|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
+                {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_raw }}
             {% endif %}
         </div>
     {% endif %}

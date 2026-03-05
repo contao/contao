@@ -491,6 +491,9 @@
       <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_page.versions.1">
+        <source>Show the versions of page ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
       </trans-unit>
