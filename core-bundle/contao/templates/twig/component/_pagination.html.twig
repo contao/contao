@@ -3,7 +3,7 @@
 {% block pagination_component %}
     {% set page_count = pagination|default ? pagination.pageCount : number_of_pages|default(0) %}
     {% if page_count > 1 %}
-        {% set pagination_attributes = attrs(pagination_attributes|default)
+        {% set pagination_attributes = attrs()
             .addClass('pagination')
             .set('role', 'navigation')
             .set('aria-label', 'MSC.pagination'|trans)
