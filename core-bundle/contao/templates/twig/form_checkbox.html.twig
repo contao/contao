@@ -6,9 +6,9 @@
         {% if this.label %}
             <legend>
                 {% if this.mandatory|default %}
-                    <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label }}<span class="mandatory">*</span>
+                    <span class="invisible">{{ this.mandatoryField }} </span>{{ this.label|insert_tag_raw }}<span class="mandatory">*</span>
                 {% else %}
-                    {{ this.label }}
+                    {{ this.label|insert_tag_raw }}
                 {% endif %}
             </legend>
         {% endif %}
