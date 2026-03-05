@@ -37,7 +37,7 @@ services:
             - '%kernel.project_dir%'
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
-        alias: 'Contao\CoreBundle\Controller\Backend\CsvImportController'
+        alias: Contao\CoreBundle\Controller\Backend\CsvImportController
         deprecated:
             package: contao/core-bundle
             version: 5.7
