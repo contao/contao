@@ -529,10 +529,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function checkClickjackingPaths(array $extensionConfigs): array
     {
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
-                return $extensionConfigs;
-            }
+        if (array_any($extensionConfigs, static fn ($extensionConfig) => isset($extensionConfig['clickjacking']['paths']['^/.*']))) {
+            return $extensionConfigs;
         }
 
         $extensionConfigs[] = [
