@@ -113,12 +113,10 @@ class MakeHook extends AbstractMaker
     private function getAvailableHooks(): array
     {
         $yaml = Yaml::parseFile(__DIR__.'/../../config/hooks.yaml');
-        $hooks = [];
 
-        foreach ($yaml['hooks'] as $key => $config) {
-            $hooks[$key] = new MethodDefinition($config['return_type'] ?? null, $config['arguments'] ?? [], $config['body'] ?? null);
-        }
-
-        return $hooks;
+        return array_map(
+            static fn ($config) => new MethodDefinition($config['return_type'] ?? null, $config['arguments'] ?? [], $config['body'] ?? null),
+            $yaml['hooks'],
+        );
     }
 }

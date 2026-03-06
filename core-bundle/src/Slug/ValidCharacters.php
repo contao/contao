@@ -42,11 +42,10 @@ class ValidCharacters
      */
     public function getOptions(): array
     {
-        $options = [];
-
-        foreach (self::DEFAULT_OPTIONS as $option => $label) {
-            $options[$option] = $this->translator->trans('MSC.validCharacters.'.$label, [], 'contao_default');
-        }
+        $options = array_map(
+            fn ($label) => $this->translator->trans('MSC.validCharacters.'.$label, [], 'contao_default'),
+            self::DEFAULT_OPTIONS,
+        );
 
         $event = new SlugValidCharactersEvent($options);
 
