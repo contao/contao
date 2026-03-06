@@ -45,7 +45,7 @@ class FigureRenderer
      * @param array<string, mixed>                                $configuration Configuration for the FigureBuilder
      * @param string                                              $template      A Contao or Twig template
      */
-    public function render(FilesModel|FilesystemItem|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@Contao/component/_figure.html.twig'): string|null
+    public function render(FilesModel|FilesystemItem|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@Contao/insert_tag/figure.html.twig'): string|null
     {
         if (!$figure = $this->buildFigure($from, $size, $configuration)) {
             return null;
