@@ -298,7 +298,7 @@ class InsertTagsTest extends TestCase
 
     public static function provideFigureInsertTags(): iterable
     {
-        $defaultTemplate = '@Contao/component/_figure.html.twig';
+        $defaultTemplate = '@Contao/insert_tag/figure.html.twig';
 
         yield 'without any configuration' => [
             '{{figure::123}}',
