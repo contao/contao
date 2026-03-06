@@ -591,17 +591,7 @@ class DbafsManagerTest extends TestCase
         $dbafs = $this->createStub(DbafsInterface::class);
         $dbafs
             ->method('getPathFromUuid')
-            ->willReturnCallback(
-                static function (Uuid $uuidToCompare) use ($mapping): string|null {
-                    foreach ($mapping as $path => $uuid) {
-                        if (0 === $uuidToCompare->compare($uuid)) {
-                            return $path;
-                        }
-                    }
-
-                    return null;
-                },
-            )
+            ->willReturnCallback(static fn (Uuid $uuidToCompare): string|null => array_find_key($mapping, static fn ($uuid) => 0 === $uuidToCompare->compare($uuid)))
         ;
 
         return $dbafs;
