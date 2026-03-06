@@ -290,7 +290,7 @@ class ModuleEventlist extends Events
 
 			list($offset, $limit) = $pagination->getIndexRange();
 
-			$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+			$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/frontend_module/pagination.html.twig', array('pagination' => $pagination));
 		}
 
 		$strMonth = '';
