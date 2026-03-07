@@ -17,6 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Bundle\SecurityBundle\Security;
 
+#[AsCallback(table: 'tl_theme', target: 'list.operations.elements.button')]
 #[AsCallback(table: 'tl_theme', target: 'list.operations.modules.button')]
 #[AsCallback(table: 'tl_theme', target: 'list.operations.layout.button')]
 #[AsCallback(table: 'tl_theme', target: 'list.operations.imageSizes.button')]
@@ -31,6 +32,7 @@ class ThemeOperationsListener
         parse_str($operation['href'] ?? '', $result);
 
         $isGranted = match ($result['table'] ?? null) {
+            'tl_content' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS),
             'tl_module' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES),
             'tl_layout' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS),
             'tl_image_size' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES),
