@@ -184,11 +184,6 @@ class ErrorPageControllerTest extends TestCase
             ->willReturn(new LayoutTemplate('<template>', static fn () => new Response('<content>')))
         ;
 
-        $contentCompositionBuilder
-            ->method('setResponseContext')
-            ->willReturnSelf()
-        ;
-
         $contentComposition = $this->createStub(ContentComposition::class);
         $contentComposition
             ->method('createContentCompositionBuilder')
