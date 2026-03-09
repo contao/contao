@@ -16,13 +16,6 @@ use Contao\System;
 
 class BbCodeTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
-    }
-
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);
@@ -35,6 +28,8 @@ class BbCodeTest extends TestCase
      */
     public function testConvertToHtml(string $bbCode, string $expectedHtml): void
     {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
         $GLOBALS['TL_LANG']['MSC'] = [
             'com_quote' => '%s wrote:',
             'com_code' => 'Code:',
