@@ -368,8 +368,6 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->getUrl($config);
     }
 
-
-
     public function testGetUrlWithNestedDynamicPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
