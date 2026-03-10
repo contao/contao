@@ -14,6 +14,7 @@ use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
@@ -161,6 +162,10 @@ class ContentCompositionBuilder
      */
     public function buildLayoutTemplate(): LayoutTemplate
     {
+        if (!$responseContext = $this->responseContextAccessor->getResponseContext()) {
+            $responseContext = $this->responseContextFactory->createContaoWebpageResponseContext($this->page);
+        }
+
         $this->framework->initialize();
 
         // If no template was explicitly set, we try to find the associated user layout
@@ -229,7 +234,7 @@ class ContentCompositionBuilder
 
         $this->addDefaultDataToTemplate($template, $this->page, $layout);
         $this->addCompositedContentToTemplate($template, $this->elementReferencesBySlot);
-        $this->addResponseContextToTemplate($template, $this->page);
+        $this->addResponseContextToTemplate($template, $responseContext);
 
         $this->eventDispatcher->dispatch(new LayoutEvent($template, $this->page, $layout));
 
@@ -284,12 +289,8 @@ class ContentCompositionBuilder
         }
     }
 
-    private function addResponseContextToTemplate(LayoutTemplate $template, PageModel $page): void
+    private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext $responseContext): void
     {
-        if (!$responseContext = $this->responseContextAccessor->getResponseContext()) {
-            $responseContext = $this->responseContextFactory->createContaoWebpageResponseContext($page);
-        }
-
         $responseContextData = [
             'head' => $responseContext->has(HtmlHeadBag::class) ? $responseContext->get(HtmlHeadBag::class) : null,
             'end_of_head' => fn () => [
