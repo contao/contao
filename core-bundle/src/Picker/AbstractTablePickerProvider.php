@@ -70,7 +70,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             return $this->getUrlForValue($config, $module);
         }
 
-        return $this->getUrlForValue($config, $module, $table, $pid, $pptable);
+        return $this->getUrlForValue($config, $module, $table, $pid, $ptable !== $pptable ? $pptable : null);
     }
 
     public function addMenuItems(ItemInterface $menu, PickerConfig $config): void
@@ -196,7 +196,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         if (null !== $table) {
             $params['table'] = $table;
 
-            if (null !== $ptable) {
+            if ($ptable) {
                 $params['ptable'] = $ptable;
             }
 
