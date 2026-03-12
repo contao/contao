@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class AutoRefreshTemplateHierarchyListenerTest extends TestCase
 {
     #[DataProvider('provideRequestScenarios')]
-    public function testRefreshesHierarchyOnKernelRequest(bool $isMainRequest, string $environment, bool $shouldRefresh): void
+    public function testRefreshesHierarchyOnKernelRequest(bool $isMainRequest): void
     {
         $event = $this->createStub(RequestEvent::class);
         $event
@@ -31,20 +31,18 @@ class AutoRefreshTemplateHierarchyListenerTest extends TestCase
 
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
-            ->expects($shouldRefresh ? $this->once() : $this->never())
+            ->expects($isMainRequest ? $this->once() : $this->never())
             ->method('warmUp')
             ->with(true)
         ;
 
-        $listener = new AutoRefreshTemplateHierarchyListener($loader, $environment);
+        $listener = new AutoRefreshTemplateHierarchyListener($loader);
         $listener($event);
     }
 
     public static function provideRequestScenarios(): iterable
     {
-        yield 'dev env, main request' => [true, 'dev', true];
-        yield 'dev env, sub request' => [false, 'dev', false];
-        yield 'prod env, main request' => [true, 'prod', false];
-        yield 'prod env, sub request' => [false, 'prod', false];
+        yield 'main request' => [true];
+        yield 'sub request' => [false];
     }
 }

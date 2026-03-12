@@ -218,6 +218,7 @@ class TableDataContainerProvider implements ProviderInterface
 
         // Only select the rows we need so we don't transfer the entire database when indexing
         $select = array_unique(['id', ...array_map(static fn (string $field) => $virtualFields[$field] ?? $field, array_keys($searchableFields))]);
+        $select = array_map($this->connection->quoteIdentifier(...), $select);
 
         $qb = $this->createQueryBuilderForTable($table, implode(',', $select));
 
