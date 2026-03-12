@@ -13,14 +13,24 @@ declare(strict_types=1);
 namespace Contao\CommentsBundle\Tests\Util;
 
 use Contao\CommentsBundle\Util\BbCode;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 
 class BbCodeTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     #[DataProvider('provideBbCode')]
     public function testConvertToHtml(string $bbCode, string $expectedHtml): void
     {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
         $GLOBALS['TL_LANG']['MSC'] = [
             'com_quote' => '%s wrote:',
             'com_code' => 'Code:',
@@ -131,6 +141,21 @@ class BbCodeTest extends TestCase
         yield 'encodes URLs' => [
             '[url]https://example.com/foo&bar[/url]',
             '<a href="https://example.com/foo&amp;bar" rel="noopener noreferrer nofollow">https://example.com/foo&amp;bar</a>',
+        ];
+
+        yield 'encodes invalid url protocol' => [
+            '[url=special:protocol]foo[/url]',
+            '<a href="special%3Aprotocol" rel="noopener noreferrer nofollow">foo</a>',
+        ];
+
+        yield 'encodes javascript url protocol' => [
+            '[url]javascript:alert(1)[/url]',
+            '<a href="javascript%3Aalert(1)" rel="noopener noreferrer nofollow">javascript:alert(1)</a>',
+        ];
+
+        yield 'encodes encoded javascript url protocol' => [
+            '[url]javascript&colon;alert(1)[/url]',
+            'javascript&colon;alert(1)',
         ];
 
         yield 'encodes insert tags' => [

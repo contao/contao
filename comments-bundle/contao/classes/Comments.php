@@ -77,7 +77,7 @@ class Comments extends Frontend
 			$offset = $pagination->getOffset();
 
 			// Initialize the pagination menu
-			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/frontend_module/pagination.html.twig', array('pagination' => $pagination));
 		}
 
 		$objTemplate->allowComments = true;
