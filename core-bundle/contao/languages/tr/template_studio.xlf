@@ -25,6 +25,9 @@
         <source>Search templates…</source>
         <target>Kalıp ara…</target>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
         <target>Kaydet</target>
@@ -103,6 +106,7 @@
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
         <source>Create a new variant template for the %s legacy content element</source>
+        <target>%s eski içerik bileşeni için yeni bir çeşit kalıbı oluşturun</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
         <source>Create variant</source>
@@ -185,7 +189,7 @@
         <target>%identifier% kalıbı iki biçimde sunulur. Ayarlarken  Contao 6 ile uyumlu kalmak için Twig biçimini kullanın.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>Kalıp ilişkisi hatalar bulunduğundan incelenemedi.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">

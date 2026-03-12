@@ -2,6 +2,28 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.2] (2026-03-04)
+
+**Fixed issues:**
+
+- [#9581] Implement the error pages as proper page controllers ([fritzmg])
+- [#9580] Add the missing `Backend` JS deprecations ([zoglo])
+- [#9619] Fix the `CsvImportController` service definition ([fritzmg])
+- [#9590] Only use the VFS in `DC_Folder` when writing into "files" ([m-vo])
+- [#9612] Fix the field order in the default palette of `make:contao:content-element` ([fritzmg])
+- [#9606] Add `|default` to the `form_explanation` text variable ([lukasbableck])
+- [#9598] Fix the version of the `customSchemaOptions` deprecation ([fritzmg])
+- [#9594] Fix copying or moving multiple files ([qzminski])
+- [#9593] Fix timestamp fields in breadcrumb do not get formatted as expected  ([fiedsch])
+- [#9585] Fix the current page appearing twice in the breadcrumb ([qzminski])
+- [#9583] Add the missing `insert_tag_raw` in the form templates ([MarkejN])
+- [#9579] Use `MockClock` for time sensitive tests ([bytehead])
+- [#9575] Use the Symfony clock in the content composition listener ([bytehead])
+- [#9569] Fix the Template Studio filter ([leofeyer])
+- [#9555] Add an option to filter user modified templates in the Template Studio ([lukasbableck])
+- [#9559] Fix the animation of the SVG arrow in the Template Studio ([lukasbableck])
+- [#9561] Replace literal insert tags in insert tag parser ([ausi])
+
 ## [5.7.1] (2026-02-25)
 
 **Fixed issues:**
@@ -338,6 +360,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.2]: https://github.com/contao/contao/releases/tag/5.7.2
 [5.7.1]: https://github.com/contao/contao/releases/tag/5.7.1
 [5.7.0]: https://github.com/contao/contao/releases/tag/5.7.0
 [5.7.0-RC4]: https://github.com/contao/contao/releases/tag/5.7.0-RC4
@@ -350,10 +373,13 @@ This project adheres to [Semantic Versioning].
 [bytehead]: https://github.com/bytehead
 [de-es]: https://github.com/de-es
 [diekatrin]: https://github.com/diekatrin
+[fiedsch]: https://github.com/fiedsch
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
+[MarkejN]: https://github.com/MarkejN
+[qzminski]: https://github.com/qzminski
 [stefansl]: https://github.com/stefansl
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
@@ -655,3 +681,20 @@ This project adheres to [Semantic Versioning].
 [#9550]: https://github.com/contao/contao/pull/9550
 [#9552]: https://github.com/contao/contao/pull/9552
 [#9553]: https://github.com/contao/contao/pull/9553
+[#9555]: https://github.com/contao/contao/pull/9555
+[#9559]: https://github.com/contao/contao/pull/9559
+[#9561]: https://github.com/contao/contao/pull/9561
+[#9569]: https://github.com/contao/contao/pull/9569
+[#9575]: https://github.com/contao/contao/pull/9575
+[#9579]: https://github.com/contao/contao/pull/9579
+[#9580]: https://github.com/contao/contao/pull/9580
+[#9581]: https://github.com/contao/contao/pull/9581
+[#9583]: https://github.com/contao/contao/pull/9583
+[#9585]: https://github.com/contao/contao/pull/9585
+[#9590]: https://github.com/contao/contao/pull/9590
+[#9593]: https://github.com/contao/contao/pull/9593
+[#9594]: https://github.com/contao/contao/pull/9594
+[#9598]: https://github.com/contao/contao/pull/9598
+[#9606]: https://github.com/contao/contao/pull/9606
+[#9612]: https://github.com/contao/contao/pull/9612
+[#9619]: https://github.com/contao/contao/pull/9619

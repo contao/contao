@@ -2139,11 +2139,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$strSource = gzencode($strSource);
 				}
 
-				// Write the file using the VFS (see #9450)
-				System::getContainer()
-					->get('contao.filesystem.virtual.files')
-					->write(Path::makeRelative($objFile->path, 'files'), $strSource)
-				;
+				// Write the file using the VFS if possible (see #9450)
+				$uploadPath = System::getContainer()->getParameter('contao.upload_path');
+
+				if (Path::isBasePath($uploadPath, $objFile->path))
+				{
+					System::getContainer()
+						->get('contao.filesystem.virtual.files')
+						->write(Path::makeRelative($objFile->path, $uploadPath), $strSource)
+					;
+				}
+				else
+				{
+					$objFile->write($strSource);
+					$objFile->close();
+				}
 
 				// Update the database
 				if ($this->blnIsDbAssisted && $objMeta !== null)
