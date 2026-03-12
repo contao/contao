@@ -18,6 +18,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\Resolver\DateInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -137,6 +138,9 @@ class HtmlDecoderTest extends TestCase
             ->willReturnCallback(static fn (string $argument) => $argument)
         ;
 
-        return new DateInsertTag($this->createContaoFrameworkStub([Date::class => $dateAdapter]));
+        return new DateInsertTag(
+            $this->createContaoFrameworkStub([Date::class => $dateAdapter]),
+            $this->createStub(PageFinder::class),
+        );
     }
 }
