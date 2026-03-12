@@ -26,6 +26,12 @@
       <trans-unit id="tl_news_archive.groups.1">
         <source>These groups will be able to see the news items in this archive.</source>
       </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.0">
+        <source>JSON-LD type</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.jsonLdType.1">
+        <source>Please choose the JSON-LD type for the news items in this archive.</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
       </trans-unit>
