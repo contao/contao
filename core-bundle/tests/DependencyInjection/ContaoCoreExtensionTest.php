@@ -468,7 +468,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testConfiguresTheSearchIndexListenerCorrectly(): void
     {
         $container = $this->getContainerBuilder();
-
         $container->setDefinition('cache.app', new Definition());
 
         $extension = new ContaoCoreExtension();
@@ -529,7 +528,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
     {
         $container = $this->getContainerBuilder();
-
         $composerJsonFilePath = Path::join($this->getTempDir(), 'composer.json');
 
         $filesystem = new Filesystem();
