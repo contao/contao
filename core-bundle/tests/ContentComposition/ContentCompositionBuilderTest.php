@@ -179,7 +179,6 @@ class ContentCompositionBuilderTest extends TestCase
         unset($templateData['response_context']);
 
         $this->assertSame($expectedTemplateData, $templateData);
-
         $this->assertSame($page, $GLOBALS['objPage'], 'global $objPage is set after building');
     }
 

@@ -31,7 +31,7 @@ class ResponseContextAccessor
 
     public function setResponseContext(ResponseContext|null $responseContext): self
     {
-        // Unset some legacy globals (#7659)
+        // Unset some legacy globals (see #7659)
         unset(
             $GLOBALS['TL_HEAD'],
             $GLOBALS['TL_BODY'],
