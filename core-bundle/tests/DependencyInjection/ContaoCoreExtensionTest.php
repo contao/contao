@@ -438,13 +438,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testConfiguresTheSearchIndexListenerCorrectly(): void
     {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-                'kernel.charset' => 'UTF-8',
-            ]),
-        );
-
+        $container = $this->getContainerBuilder();
         $container->setDefinition('cache.app', new Definition());
 
         $extension = new ContaoCoreExtension();
@@ -504,13 +498,7 @@ class ContaoCoreExtensionTest extends TestCase
     #[DataProvider('provideComposerJsonContent')]
     public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
     {
-        $container = new ContainerBuilder(
-            new ParameterBag([
-                'kernel.project_dir' => Path::normalize($this->getTempDir()),
-                'kernel.charset' => 'UTF-8',
-            ]),
-        );
-
+        $container = $this->getContainerBuilder();
         $composerJsonFilePath = Path::join($this->getTempDir(), 'composer.json');
 
         $filesystem = new Filesystem();
@@ -1065,6 +1053,33 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'cronjob' => [AsCronJob::class];
         yield 'hook' => [AsHook::class];
         yield 'callback' => [AsCallback::class];
+    }
+
+    #[DataProvider('autoRefreshTemplateHierarchy')]
+    public function testRemovesAutoRefreshTemplateHierarchyListener(bool|null $refresh, bool $isDebug, bool $expected): void
+    {
+        $container = $this->getContainerBuilder();
+        $container->setParameter('kernel.debug', $isDebug);
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'auto_refresh_template_hierarchy' => $refresh,
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertSame($expected, $container->hasDefinition('contao.twig.loader.auto_refresh_template_hierarchy_listener'));
+    }
+
+    public static function autoRefreshTemplateHierarchy(): iterable
+    {
+        yield 'automatically enable for dev' => [null, true, true];
+        yield 'automatically disable for prod' => [null, false, false];
+        yield 'force enable for prod' => [true, false, true];
+        yield 'force disable for dev' => [false, true, false];
     }
 
     private function getContainerBuilder(array|null $params = null): ContainerBuilder
