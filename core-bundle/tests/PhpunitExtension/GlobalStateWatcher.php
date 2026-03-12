@@ -244,7 +244,7 @@ final class GlobalStateWatcher implements Extension
 
                 $value = $property->getValue();
 
-                if ($value === $property->getDefaultValue()) {
+                if ($property->hasDefaultValue() && $value === $property->getDefaultValue()) {
                     continue;
                 }
 

@@ -25,6 +25,9 @@
         <source>Search templates…</source>
         <target>Поиск шаблонов…</target>
       </trans-unit>
+      <trans-unit id="template_studio.user_filter">
+        <source>Show only my templates</source>
+      </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>
         <target>Сохранить</target>
@@ -97,6 +100,30 @@
         <source>Rename the %s variant template</source>
         <target>Переименовать %s вариант шаблона</target>
       </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.0">
+        <source>Create variant</source>
+        <target>Создать вариант</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_content_element_variant.1">
+        <source>Create a new variant template for the %s legacy content element</source>
+        <target>Создать новый вариант шаблона для %s устаревшего элемента контента</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.0">
+        <source>Create variant</source>
+        <target>Создать вариант</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_frontend_module_variant.1">
+        <source>Create a new variant template for the %s front end module</source>
+        <target>Создать новый вариант шаблона для %s модуля внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.0">
+        <source>Create variant</source>
+        <target>Создать вариант</target>
+      </trans-unit>
+      <trans-unit id="template_studio.operation.create_legacy_page_variant.1">
+        <source>Create a new variant template for the %s layout</source>
+        <target>Создать новый вариант шаблона для макета %s</target>
+      </trans-unit>
       <trans-unit id="template_studio.message.create.success">
         <source>Your template for %s was created.</source>
         <target>Шаблон для %s был создан.</target>
@@ -162,7 +189,7 @@
         <target>Шаблон %identifier% представлен в двух форматах. При внесении изменений предпочтительнее использовать формат Twig для обеспечения совместимости с Contao 6.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template&apos;s relation cannot be analyzed because it contains errors.</source>
         <target>Анализ связей шаблона невозможен, так как он содержит ошибки.</target>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">

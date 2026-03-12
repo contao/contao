@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,8 +28,21 @@ class FrontendIndex extends Frontend
 	 * @throws \LogicException
 	 * @throws PageNotFoundException
 	 * @throws AccessDeniedException
+	 *
+	 * @deprecated Deprecated since Contao 5.7, to be removed in Contao 6;
+	 *             use the AbstractPageController instead.
 	 */
-	public function renderPage(PageModel $pageModel)
+	public function renderPage(PageModel $pageModel): Response
+	{
+		trigger_deprecation('contao/core-bundle', '5.7', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the AbstractPageController instead.', __METHOD__);
+
+		return System::getContainer()->get(RegularPageController::class)($pageModel);
+	}
+
+	/**
+	 * @internal
+	 */
+	public function renderLegacy(PageModel $pageModel): Response
 	{
 		global $objPage;
 
@@ -55,6 +69,8 @@ class FrontendIndex extends Frontend
 			$GLOBALS['TL_JQUERY'] ?? array(),
 			$GLOBALS['TL_USER_CSS'] ?? array(),
 			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array(),
+			$GLOBALS['TL_JAVASCRIPT'] ?? array(),
+			$GLOBALS['TL_CSS'] ?? array(),
 			System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext()
 		);
 
@@ -65,9 +81,8 @@ class FrontendIndex extends Frontend
 
 			return $objHandler->getResponse($objPage, true);
 		}
-
 		// Render the error page (see #5570)
-		catch (UnusedArgumentsException $e)
+		catch (\Throwable $e)
 		{
 			// Restore the globals (see #7659)
 			list(
@@ -77,6 +92,8 @@ class FrontendIndex extends Frontend
 				$GLOBALS['TL_JQUERY'],
 				$GLOBALS['TL_USER_CSS'],
 				$GLOBALS['TL_FRAMEWORK_CSS'],
+				$GLOBALS['TL_JAVASCRIPT'],
+				$GLOBALS['TL_CSS'],
 				$responseContext
 			) = $arrBackup;
 

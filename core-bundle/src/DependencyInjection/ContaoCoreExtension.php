@@ -242,6 +242,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config
             ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
             ->addVirtualFilesystem($filesStorageName = 'files', $uploadPath)
+            ->setPublic(true)
         ;
 
         $config

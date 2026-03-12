@@ -42,8 +42,7 @@ class AdministratorEmailListenerTest extends TestCase
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
-            ->with('adminEmail')
-            ->willReturn('foobar@example.com')
+            ->willReturnMap([['adminEmail', 'foobar@example.com']])
         ;
 
         $framework = $this->createContaoFrameworkStub([Config::class => $configAdapter]);
@@ -63,8 +62,9 @@ class AdministratorEmailListenerTest extends TestCase
 
     public function testShowsMessageWithoutLinkIfSettingsModuleIsDisallowed(): void
     {
-        $security = $this->createStub(Security::class);
+        $security = $this->createMock(Security::class);
         $security
+            ->expects($this->once())
             ->method('isGranted')
             ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')
             ->willReturn(false)
@@ -85,14 +85,7 @@ class AdministratorEmailListenerTest extends TestCase
     private function createAdministratorEmailListener(ContaoFramework|null $framework = null, Security|null $security = null): AdministratorEmailListener
     {
         if (!$framework) {
-            $configAdapter = $this->createAdapterStub(['get']);
-            $configAdapter
-                ->method('get')
-                ->with('adminEmail')
-                ->willReturn(null)
-            ;
-
-            $framework = $this->createContaoFrameworkStub([Config::class => $configAdapter]);
+            $framework = $this->createContaoFrameworkStub([Config::class => $this->createAdapterStub(['get'])]);
         }
 
         $translator = $this->createStub(TranslatorInterface::class);
@@ -114,7 +107,6 @@ class AdministratorEmailListenerTest extends TestCase
             $security = $this->createStub(Security::class);
             $security
                 ->method('isGranted')
-                ->with(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'settings')
                 ->willReturn(true)
             ;
         }

@@ -72,15 +72,23 @@ services:
     contao.listener.data_container.article_column:
         class: Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener
         arguments:
-            - '@contao.twig.inspector'
             - '@contao.framework'
             - '@contao.routing.page_registry'
+            - '@contao.twig.inspector'
+            - '@request_stack'
+            - '@database_connection'
 
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
             - '@security.helper'
             - '@request_stack'
+
+    contao.listener.data_container.check_template_editor_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+        arguments:
+            - '@security.helper'
+            - '@translator'
 
     contao.listener.data_container.content_composition:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener
@@ -92,6 +100,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@router'
+            - '@clock'
 
     contao.listener.data_container.content_element_type:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
@@ -166,6 +175,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
             - '@translator'
+            - '@contao.data_container.value_formatter'
 
     contao.listener.data_container.file_image_preview:
         class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
@@ -267,7 +277,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '@security.helper'
             - '@request_stack'
             - '@translator'
@@ -606,6 +615,7 @@ services:
             - '@messenger.bus.default'
             - '%fragment.path%'
             - '%contao.backend.route_prefix%'
+            - '%kernel.debug%'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener

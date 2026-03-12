@@ -32,8 +32,7 @@ class ContentAliasDeleteVoterTest extends TestCase
         $connection = $this->createStub(Connection::class);
         $connection
             ->method('fetchAllKeyValue')
-            ->with("SELECT cteAlias, TRUE FROM tl_content WHERE type = 'alias' GROUP BY cteAlias")
-            ->willReturn(array_fill_keys($aliases, true))
+            ->willReturnMap([["SELECT cteAlias, TRUE FROM tl_content WHERE type = 'alias' GROUP BY cteAlias", array_fill_keys($aliases, true)]])
         ;
 
         $voter = new ContentAliasDeleteVoter($connection);

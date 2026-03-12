@@ -84,6 +84,7 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.routing.page_registry'
+            - '@event_dispatcher'
 
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
@@ -1198,6 +1199,11 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.preview_access_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\PreviewAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
     contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
@@ -1261,7 +1267,6 @@ services:
             - '@security.token_storage'
             - '@contao.routing.page_registry'
             - '@http_kernel'
-            - '@request_stack'
             - !abstract set by ContaoLoginFactory::createAuthenticator()
             - !abstract set by ContaoLoginFactory::createAuthenticator()
             - '@twig'
@@ -1526,7 +1531,7 @@ services:
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
         arguments:
-            - '@contao.framework'
+            - '@twig'
 
     contao.twig.loader.template_locator:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator

@@ -115,6 +115,36 @@ class ValueFormatterTest extends TestCase
             'foo,bar',
         ];
 
+        yield 'Serialized headline' => [
+            serialize(['unit' => 'h1', 'value' => 'foo']),
+            [],
+            'foo, h1',
+        ];
+
+        yield 'Serialized array (#1)' => [
+            serialize(['foo', 'bar']),
+            [],
+            'foo, bar',
+        ];
+
+        yield 'Serialized array (#2)' => [
+            serialize([['foo', 'bar', 'baz']]),
+            [],
+            'foo (bar, baz)',
+        ];
+
+        yield 'Serialized array (#3)' => [
+            serialize(['foo' => 'bar']),
+            [],
+            'foo: bar',
+        ];
+
+        yield 'Serialized array (#4)' => [
+            serialize(['foo' => 'bar', 'bar' => ['baz', 1, 2, 3]]),
+            [],
+            'foo: bar, bar: baz (1, 2, 3)',
+        ];
+
         yield 'Date' => [
             '1764689390',
             ['eval' => ['rgxp' => 'date']],
@@ -524,8 +554,7 @@ class ValueFormatterTest extends TestCase
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
-            ->with('dateFormat')
-            ->willReturn('Y-m-d')
+            ->willReturnMap([['dateFormat', 'Y-m-d']])
         ;
 
         $dateAdapter = $this->createAdapterStub(['parse']);

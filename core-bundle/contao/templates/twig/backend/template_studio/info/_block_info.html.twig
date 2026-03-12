@@ -37,11 +37,11 @@
         <form class="block_hierarchy" method="get" data-turbo-stream>
             {# Block description #}
             {% for element in hierarchy %}
-                {% set element_attrs = attrs()
+                {% set element_attributes = attrs()
                     .addClass('block')
                     .addClass('target', element.target)
                     .addClass('shadowed', element.shadowed) %}
-                <div{{ element_attrs }}>
+                <div{{ element_attributes }}>
                     {{ include('@Contao/backend/template_studio/_template_badges.html.twig', {
                         badges: [
                             element.template.namespace == 'Contao_Global' ? 'user' : null,

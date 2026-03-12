@@ -79,7 +79,6 @@ class ContentElementViewListenerTest extends TestCase
         $imageAdapter = $this->createAdapterStub(['getHtml']);
         $imageAdapter
             ->method('getHtml')
-            ->with('protected.svg')
             ->willReturnArgument(0)
         ;
 

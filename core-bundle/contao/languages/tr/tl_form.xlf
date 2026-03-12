@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_form.alias.1">
         <source>The form alias is a unique reference to the form which can be called instead of its numeric ID.</source>
-        <target>Form kısaltması formun sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Form kısaltması formun sayısal kimliği olarak kullanılacak benzersiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
@@ -255,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_form.versions.1">
         <source>Show the versions of form ID %s</source>
+        <target>%s kimlikli formun sürümlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>

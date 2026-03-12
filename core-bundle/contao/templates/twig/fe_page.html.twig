@@ -36,7 +36,7 @@
         {{ framework|raw }}
         {{ stylesheets|raw }}
         {{ mooScripts|raw }}
-        {{ head|raw }}
+        {{ head|insert_tag_raw|raw }}
     {% endblock %}
 
 </head>

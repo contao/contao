@@ -3,6 +3,7 @@
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
+use Contao\Tools\TwigCsFixer\Rules\HtmlAttributesVariableNameRule;
 use TwigCsFixer\Config\Config;
 use TwigCsFixer\File\Finder;
 use TwigCsFixer\Rules\File\DirectoryNameRule;
@@ -46,6 +47,7 @@ foreach ($templatePaths as $templatePath) {
 }
 
 $ruleset->addRule(new FileExtensionRule());
+$ruleset->addRule(new HtmlAttributesVariableNameRule());
 $ruleset->addRule(new ValidConstantFunctionRule());
 
 $ruleset->addRule(new ForbiddenFunctionRule([

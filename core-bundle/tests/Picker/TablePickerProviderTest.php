@@ -357,7 +357,40 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], true, true),
+            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], true, 'tl_news'),
+        );
+
+        $provider->getUrl($config);
+    }
+
+    public function testGetUrlWithNestedDynamicPtable(): void
+    {
+        $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
+        $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
+
+        $GLOBALS['TL_DCA']['tl_content'] = [
+            'config' => [
+                'dataContainer' => DC_Table::class,
+                'ptable' => 'tl_article',
+                'dynamicPtable' => true,
+            ],
+        ];
+
+        $params = [
+            'do' => 'news',
+            'popup' => '1',
+            'picker' => 'foobar',
+            'table' => 'tl_content',
+            'ptable' => 'tl_content',
+            'id' => 7,
+        ];
+
+        $config = $this->mockPickerConfig('tl_content', '2');
+
+        $provider = $this->createTableProvider(
+            $this->mockFrameworkWithDcaLoader('tl_content'),
+            $this->mockRouterWithExpectedParams($params),
+            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_content'], true, 'tl_news'),
         );
 
         $provider->getUrl($config);
@@ -382,7 +415,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => ''], true, true),
+            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => ''], true, ''),
         );
 
         $provider->getUrl($config);
@@ -603,7 +636,7 @@ class TablePickerProviderTest extends ContaoTestCase
             $expectedCurrent = [[$current]];
         }
 
-        $config = $this->createStub(PickerConfig::class);
+        $config = $expectedCurrent ? $this->createMock(PickerConfig::class) : $this->createStub(PickerConfig::class);
         $config
             ->method('getContext')
             ->willReturn('dc.'.$table)
@@ -698,7 +731,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $connection;
     }
 
-    private function mockConnectionForQuery(string $table, int $id, array|false $data, bool $ptable = false, bool $dynamicPtable = false): Connection&MockObject
+    private function mockConnectionForQuery(string $table, int $id, array|false $data, bool $ptable = false, string|null $dynamicPtable = null): Connection&MockObject
     {
         $expr = $this->createMock(ExpressionBuilder::class);
         $expr
@@ -743,7 +776,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturnSelf()
         ;
 
-        if ($ptable && $dynamicPtable) {
+        if ($ptable && null !== $dynamicPtable) {
             $expected = ['pid', 'ptable'];
 
             $queryBuilder
@@ -766,7 +799,7 @@ class TablePickerProviderTest extends ContaoTestCase
                 ->with('pid')
                 ->willReturnSelf()
             ;
-        } elseif ($dynamicPtable) {
+        } elseif (null !== $dynamicPtable) {
             $queryBuilder
                 ->expects($this->once())
                 ->method('addSelect')
@@ -792,6 +825,14 @@ class TablePickerProviderTest extends ContaoTestCase
             ->method('createQueryBuilder')
             ->willReturn($queryBuilder)
         ;
+
+        if ($dynamicPtable) {
+            $connection
+                ->expects($this->once())
+                ->method('fetchAllAssociative')
+                ->willReturn([['ptable' => $dynamicPtable, 'pid' => 0]])
+            ;
+        }
 
         return $connection;
     }
