@@ -79,7 +79,7 @@ class TemplateEditorModuleVoterTest extends TestCase
     {
         $token = $this->createStub(TokenInterface::class);
 
-        $accessDecisionManager = $this->createStub(AccessDecisionManagerInterface::class);
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
             ->expects($this->once())
             ->method('decide')
@@ -109,7 +109,7 @@ class TemplateEditorModuleVoterTest extends TestCase
     {
         $token = $this->createStub(TokenInterface::class);
 
-        $accessDecisionManager = $this->createStub(AccessDecisionManagerInterface::class);
+        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
             ->expects($this->once())
             ->method('decide')

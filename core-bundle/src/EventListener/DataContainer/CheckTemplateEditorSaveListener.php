@@ -21,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Checks whether "tpl_editor" is added to the allowed back end modules and denies
- * saving, if the user is not admin and the user or user group did not previously
+ * saving if the user is not admin and the user or user group did not previously
  * have access to the template editor.
  */
 #[AsCallback('tl_user', 'fields.modules.save')]
@@ -49,7 +49,7 @@ class CheckTemplateEditorSaveListener
 
         $currentModules = StringUtil::deserialize($dc->getCurrentRecord()['modules'] ?? null);
 
-        // Allow change if access to template editor was already granted
+        // Allow changing if access to template editor was already granted
         if (\is_array($currentModules) && \in_array('tpl_editor', $currentModules, true)) {
             return $value;
         }
