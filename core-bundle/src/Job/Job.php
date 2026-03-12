@@ -282,10 +282,8 @@ final class Job
     {
         $clone = clone $this;
 
-        foreach ($clone->children as $existingChild) {
-            if ($existingChild->getUuid() === $child->getUuid()) {
-                return $clone;
-            }
+        if (array_any($clone->children, static fn ($existingChild) => $existingChild->getUuid() === $child->getUuid())) {
+            return $clone;
         }
 
         $clone->children[] = $child->withParent($this);

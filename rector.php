@@ -22,10 +22,6 @@ use Rector\Php83\Rector\Class_\ReadOnlyAnonymousClassRector;
 use Rector\Php83\Rector\ClassConst\AddTypeToConstRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Php84\Rector\Class_\DeprecatedAnnotationToDeprecatedAttributeRector;
-use Rector\Php84\Rector\Foreach_\ForeachToArrayAllRector;
-use Rector\Php84\Rector\Foreach_\ForeachToArrayAnyRector;
-use Rector\Php84\Rector\Foreach_\ForeachToArrayFindKeyRector;
-use Rector\Php84\Rector\Foreach_\ForeachToArrayFindRector;
 
 return RectorConfig::configure()
     ->withPhpSets(php84: true)
@@ -66,10 +62,6 @@ return RectorConfig::configure()
             '*/src/Entity/*',
         ],
         DeprecatedAnnotationToDeprecatedAttributeRector::class,
-        ForeachToArrayAllRector::class,
-        ForeachToArrayAnyRector::class,
-        ForeachToArrayFindKeyRector::class,
-        ForeachToArrayFindRector::class,
         NullToStrictStringFuncCallArgRector::class,
         ReadOnlyAnonymousClassRector::class,
         ReadOnlyClassRector::class,
