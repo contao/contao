@@ -324,7 +324,6 @@ class RegisterFragmentsPassTest extends TestCase
         $pass->process($container);
 
         $definition = array_find($container->getDefinitions(), static fn ($def) => GlobalsMapListener::class === $def->getClass());
-
         $this->assertNotNull($definition);
 
         $this->assertSame(

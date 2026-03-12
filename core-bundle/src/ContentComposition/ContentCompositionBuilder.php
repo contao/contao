@@ -315,6 +315,18 @@ class ContentCompositionBuilder
                     },
                     array_unique($GLOBALS['TL_CSS'] ?? []),
                 ),
+                ...array_map(
+                    function (string $url): string {
+                        $options = StringUtil::resolveFlaggedUrl($url);
+
+                        if (!Path::isAbsolute($url) && $staticUrl = $this->assetsContext->getStaticUrl()) {
+                            $url = Path::join($staticUrl, $url);
+                        }
+
+                        return Template::generateScriptTag($url, $options->async, $options->mtime, defer: $options->defer);
+                    },
+                    array_unique($GLOBALS['TL_JAVASCRIPT'] ?? []),
+                ),
                 ...$GLOBALS['TL_STYLE_SHEETS'] ?? [],
                 ...$GLOBALS['TL_HEAD'] ?? [],
             ],
@@ -326,7 +338,7 @@ class ContentCompositionBuilder
 
         $template->set('response_context', new class($responseContextData) {
             /**
-             * @param array<string, \Closure():mixed|mixed> $data
+             * @param array<string, \Closure(): mixed|mixed> $data
              */
             public function __construct(private array $data)
             {

@@ -14,7 +14,7 @@ final class LayoutTemplate
     private array $context = [];
 
     /**
-     * @param \Closure(self, Response|null):Response $onGetResponse
+     * @param \Closure(self, Response|null): Response $onGetResponse
      *
      * @internal
      */

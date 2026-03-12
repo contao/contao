@@ -84,6 +84,12 @@ services:
             - '@security.helper'
             - '@request_stack'
 
+    contao.listener.data_container.check_template_editor_save:
+        class: Contao\CoreBundle\EventListener\DataContainer\CheckTemplateEditorSaveListener
+        arguments:
+            - '@security.helper'
+            - '@translator'
+
     contao.listener.data_container.content_composition:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener
         public: true
@@ -94,6 +100,7 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@router'
+            - '@clock'
 
     contao.listener.data_container.content_element_type:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
@@ -168,6 +175,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
         arguments:
             - '@translator'
+            - '@contao.data_container.value_formatter'
 
     contao.listener.data_container.file_image_preview:
         class: Contao\CoreBundle\EventListener\DataContainer\FileImagePreviewListener
@@ -231,7 +239,6 @@ services:
         arguments:
             - '@contao.routing.page_registry'
             - '@security.helper'
-            - '@?event_dispatcher'
 
     contao.listener.data_container.page_url:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUrlListener
@@ -698,4 +705,3 @@ services:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener
         arguments:
             - '@contao.twig.filesystem_loader'
-            - '%kernel.environment%'

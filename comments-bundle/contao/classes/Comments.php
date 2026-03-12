@@ -77,7 +77,7 @@ class Comments extends Frontend
 			$offset = $pagination->getOffset();
 
 			// Initialize the pagination menu
-			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/component/_pagination.html.twig', array('pagination' => $pagination));
+			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/frontend_module/pagination.html.twig', array('pagination' => $pagination));
 		}
 
 		$objTemplate->allowComments = true;
@@ -447,31 +447,6 @@ class Comments extends Frontend
 		);
 
 		return preg_replace(array_keys($arrReplace), array_values($arrReplace), $strComment);
-	}
-
-	/**
-	 * Purge subscriptions that have not been activated within 24 hours
-	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
-	 *             use CommentsNotifyModel::findExpiredSubscriptions() instead.
-	 */
-	public function purgeSubscriptions()
-	{
-		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" is deprecated and will no longer work in Contao 6. Use "CommentsNotifyModel::findExpiredSubscriptions()" instead.', __METHOD__);
-
-		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
-
-		if ($objNotify === null)
-		{
-			return;
-		}
-
-		while ($objNotify->next())
-		{
-			$objNotify->delete();
-		}
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the unactivated comment subscriptions');
 	}
 
 	/**

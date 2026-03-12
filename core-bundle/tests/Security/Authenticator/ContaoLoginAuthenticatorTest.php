@@ -29,7 +29,6 @@ use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFa
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -82,28 +81,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $request->request->set('FORM_SUBMIT', 'tl_login_1');
 
         $this->assertTrue($authenticator->supports($request));
-    }
-
-    public function testIfAuthenticationIsInteractive(): void
-    {
-        $authenticator = $this->getContaoLoginAuthenticator();
-
-        $this->assertFalse($authenticator->isInteractive());
-
-        $requestStack = new RequestStack([new Request()]);
-
-        $authenticator = $this->getContaoLoginAuthenticator(requestStack: $requestStack);
-
-        $this->assertFalse($authenticator->isInteractive());
-
-        $request = new Request();
-        $request->attributes->set('pageModel', $this->createStub(PageModel::class));
-
-        $requestStack = new RequestStack([$request]);
-
-        $authenticator = $this->getContaoLoginAuthenticator(requestStack: $requestStack);
-
-        $this->assertTrue($authenticator->isInteractive());
     }
 
     public function testCallsTheSuccessAndFailureHandlers(): void
@@ -486,7 +463,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
     /**
      * @param UserProviderInterface<UserInterface>|null $userProvider
      */
-    private function getContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, PageModel|null $errorPage = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = [], Environment|null $twig = null): ContaoLoginAuthenticator
+    private function getContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, PageModel|null $errorPage = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = [], Environment|null $twig = null): ContaoLoginAuthenticator
     {
         if ($errorPage) {
             $pageFinder = $this->createMock(PageFinder::class);
@@ -511,7 +488,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
             $tokenStorage ?? $this->createTokenStorageStub(FrontendUser::class),
             $pageRegistry ?? $this->createStub(PageRegistry::class),
             $httpKernel ?? $this->createStub(HttpKernelInterface::class),
-            $requestStack ?? $this->createStub(RequestStack::class),
             $twoFactorAuthenticator ?? $this->createStub(TwoFactorAuthenticator::class),
             $options,
             $twig ?? $this->createStub(Environment::class),

@@ -53,7 +53,8 @@ abstract class AbstractCreateLegacyVariantOperation extends AbstractOperation
         }
 
         // Create the variant template file with some default content
-        $skeleton = $this->getTemplateSkeletonFactory()
+        $skeleton = $this
+            ->getTemplateSkeletonFactory()
             ->create()
             ->getContent($context->getManagedNamespaceName())
         ;

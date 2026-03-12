@@ -45,7 +45,7 @@ class AccordionListenerTest extends TestCase
 
         $this->assertSame(
             '{section_legend},sectionHeadline;{type_legend},type,headline;{template_legend},customTpl',
-            (new AccordionListener())(self::PALETTE, $dc),
+            new AccordionListener()(self::PALETTE, $dc),
         );
     }
 
@@ -63,7 +63,7 @@ class AccordionListenerTest extends TestCase
             ->willReturn($currentRecord)
         ;
 
-        $this->assertSame(self::PALETTE, (new AccordionListener())(self::PALETTE, $dc));
+        $this->assertSame(self::PALETTE, new AccordionListener()(self::PALETTE, $dc));
     }
 
     public function testDoesNotAddTheSectionHeadlineIfTheParentIsNotAnAccordion(): void
@@ -89,6 +89,6 @@ class AccordionListenerTest extends TestCase
             )
         ;
 
-        $this->assertSame(self::PALETTE, (new AccordionListener())(self::PALETTE, $dc));
+        $this->assertSame(self::PALETTE, new AccordionListener()(self::PALETTE, $dc));
     }
 }

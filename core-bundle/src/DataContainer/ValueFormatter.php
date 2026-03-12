@@ -216,6 +216,8 @@ class ValueFormatter implements ResetInterface
 
     public function getLabel(string $table, string $field, mixed $value, mixed $dc): string
     {
+        $value = StringUtil::deserialize($value);
+
         // Translate UUIDs to paths
         if ('fileTree' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null)) {
             $objFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($value);
@@ -331,7 +333,7 @@ class ValueFormatter implements ResetInterface
             return Idna::decodeEmail((string) $value);
         }
 
-        return (string) $value;
+        return $this->flatten($value);
     }
 
     private function getDateOptions(string $table, string $field, array $values): array
@@ -431,7 +433,7 @@ class ValueFormatter implements ResetInterface
             return StringUtil::deserialize($value, true);
         }
 
-        return StringUtil::deserialize($value);
+        return $value;
     }
 
     private function fetchForeignValue(string $table, string $field, mixed $id): mixed
@@ -483,5 +485,31 @@ class ValueFormatter implements ResetInterface
         }
 
         return null;
+    }
+
+    private function flatten(mixed $value): string
+    {
+        if (\is_array($value)) {
+            if (isset($value['value'], $value['unit']) && 2 === \count($value)) {
+                return trim($value['value'].', '.$value['unit']);
+            }
+
+            foreach ($value as $kk => $vv) {
+                if (\is_array($vv)) {
+                    $vals = array_values($vv);
+                    $value[$kk] = array_shift($vals).' ('.implode(', ', array_filter($vals)).')';
+                }
+            }
+
+            if (ArrayUtil::isAssoc($value)) {
+                foreach ($value as $kk => $vv) {
+                    $value[$kk] = $kk.': '.$vv;
+                }
+            }
+
+            return implode(', ', $value);
+        }
+
+        return (string) $value;
     }
 }

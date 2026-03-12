@@ -115,10 +115,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         );
 
         // Check if any of the remaining request cookies is not a CSRF cookie
-        foreach ($requestCookies as $key => $value) {
-            if (!$this->isCsrfCookie($key, $value)) {
-                return true;
-            }
+        if (array_any($requestCookies, fn ($value, $key) => !$this->isCsrfCookie($key, $value))) {
+            return true;
         }
 
         // Check if there are any unexpired cookies remaining in the response

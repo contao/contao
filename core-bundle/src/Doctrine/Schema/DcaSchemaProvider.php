@@ -70,15 +70,6 @@ class DcaSchemaProvider
 
                     $options = $conf;
 
-                    if (isset($options['customSchemaOptions'])) {
-                        trigger_deprecation('contao/core-bundle', '5.3', 'Using the "customSchemaOptions" option is deprecated and will no longer work in Contao 6. Use the "platformOptions" option instead.');
-
-                        $options['platformOptions'] = [...($options['platformOptions'] ?? []), ...$options['customSchemaOptions']];
-
-                        // Deprecated in doctrine/dbal 3.x and removed in 4.x
-                        unset($options['customSchemaOptions']);
-                    }
-
                     // Use the binary collation if the "case_sensitive" option is set
                     if (true === ($options['platformOptions']['case_sensitive'] ?? null)) {
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);

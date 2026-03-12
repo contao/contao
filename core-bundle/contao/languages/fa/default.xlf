@@ -1,0 +1,3570 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/default.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="ERR.general">
+        <source>An error occurred!</source>
+        <target>خطایی رخ داد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
+        <target>داده‌ها ذخیره نمی‌شوند زیرا خطایی رخ داده است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.unique">
+        <source>This entry already exists!</source>
+        <target>این ورودی در حال حاضر وجود دارد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.mandatory">
+        <source>Field &quot;%s&quot; must not be empty!</source>
+        <target>فیلد &quot;%s&quot; نباید خالی باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.mdtryNoLabel">
+        <source>This field must not be empty!</source>
+        <target>این فیلد نباید خالی باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.minlength">
+        <source>Field &quot;%s&quot; has to be at least %d characters long!</source>
+        <target>فيلد &quot;%s&quot; دست‌کم بايد %d نویسه باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.maxlength">
+        <source>Field &quot;%s&quot; must not be longer than %d characters!</source>
+        <target>فیلد &quot;%s&quot; نباید بیشتر از %d نویسه باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.minval">
+        <source>Field &quot;%s&quot; has to be at least %s!</source>
+        <target>فیلد «%s» دست‌کم باید %s باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.maxval">
+        <source>Field &quot;%s&quot; must not be greater than %s!</source>
+        <target>فیلد «%s» نباید بزرگ‌تر از %s باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.digit">
+        <source>Please enter digits only!</source>
+        <target>لطفا فقط عدد وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.natural">
+        <source>Please enter natural numbers only!</source>
+        <target>لطفا فقط اعداد طبیعی وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.prcnt">
+        <source>Please enter a percentage between 0 and 100!</source>
+        <target>لطفا درصدی بین 0 و 100 وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.alpha">
+        <source>Please enter alphabetic characters only!</source>
+        <target>لطفا فقط نویسه‌های الفبائی وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.alnum">
+        <source>Please enter alphanumeric characters only!</source>
+        <target>لطفا فقط نویسه‌های حرفی-عددی وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.phone">
+        <source>Please enter a valid phone number!</source>
+        <target>لطفا یک شماره تلفن معتبر وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.extnd">
+        <source>For security reasons you can not use the following characters here: #&lt;&gt;()\=</source>
+        <target>به خاطر دلایل امنیتی نمی‌توانید از این کاراکترها استفاده کنید: #&lt;&gt;()\=</target>
+      </trans-unit>
+      <trans-unit id="ERR.email">
+        <source>Please enter a valid e-mail address!</source>
+        <target>لطفا یک نشانی ایمیل معتبر وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emails">
+        <source>There is at least one invalid e-mail address!</source>
+        <target>دست‌کم یک نشانی ایمیل نامعتبر وجود دارد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.url">
+        <source>Please enter a valid URL format and encode special characters!</source>
+        <target>لطفا ساختار نشانی وب معتبر وارد كرده و نویسه‌های ويژه را كد شده وارد نمائيد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.locale">
+        <source>Please enter a valid locale such as &quot;en&quot; or &quot;en_US&quot;!</source>
+        <target>لطفا زبان را به شکل صحیح وارد نمایید. مثل &quot;fa&quot; یا &quot;fa_IR&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.language">
+        <source>Please enter a valid language code such as &quot;en&quot; or &quot;en-US&quot;!</source>
+        <target>لطفا کد زبان را به شکل صحیح وارد نمایید. مثل &quot;fa&quot; یا &quot;fa_IR&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.alias">
+        <source>Please enter only alphanumeric characters and the following special characters: .-_</source>
+        <target>لطفا فقط از نویسه‌های حرفی-عددی و نویسه‌های ویژه .-_ استفاده نمایید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.folderalias">
+        <source>Please enter only alphanumeric characters and the following special characters: .-/_</source>
+        <target>لطفا فقط از نویسه‌های حرفی-عددی و نویسه‌های ویژه .-/_ استفاده نمایید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.date">
+        <source>Please enter the date as &quot;%s&quot;!</source>
+        <target>لطفا تاريخ را به شكل &quot;%s&quot; وارد نمائيد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.time">
+        <source>Please enter the time as &quot;%s&quot;!</source>
+        <target>لطفا ساعت را به شكل &quot;%s&quot; وارد نمائيد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.dateTime">
+        <source>Please enter date and time as &quot;%s&quot;!</source>
+        <target>لطفا تاريخ و ساعت را به شكل &quot;%s&quot; وارد نمائيد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidDate">
+        <source>Invalid date &quot;%s&quot;!</source>
+        <target>تاریخ نامعتبر &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.noSpace">
+        <source>Field &quot;%s&quot; must not contain any whitespace characters!</source>
+        <target>فيلد &quot;%s&quot; نبايد حاوی نویسه‌های فاصله خالی باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.filename">
+        <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!</source>
+        <target>نام دست‌کم یک از پرونده‌های بارگذاری شده نامعتبر یا از طول بیشینه‌ی 255 نویسه تجاوز کرده است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.filesize">
+        <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
+        <target>بیشترین حجم مجاز برای بارگذاری پرونده %s می‌باشد (تنظیمات کنتائو یا php.ini)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.filetype">
+        <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
+        <target>نوع پرونده %s برای بارگذاری مجاز نمی‌باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.filepartial">
+        <source>File %s was only partially uploaded!</source>
+        <target>پرونده %s به صورت ناقص بارگذاری شد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.filewidth">
+        <source>File %s exceeds the maximum image width of %d pixels!</source>
+        <target>پرونده %s از عرض بیشینه تصویر %d پیکسل بيشتر می‌باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.fileheight">
+        <source>File %s exceeds the maximum image height of %d pixels!</source>
+        <target>پرونده %s از ارتفاع بیشینه تصویر %d پیکسل بيشتر می‌باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.fileerror">
+        <source>Error %s occurred when uploading file %s!</source>
+        <target>خطای %s هنگام بارگذاری پرونده %s رخ داد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.filetarget">
+        <source>Cannot move %s to %s because the target exists!</source>
+        <target>نمی‌توان %s را به %s جابجا کرد زیرا مقصد موجود است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.multipleFilesNotAllowed">
+        <source>Uploading multiple files is not allowed for this field!</source>
+        <target>بارگذاری چند فایل برای این فیلد مجاز نیست!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidReferer">
+        <source>Access denied! The current host address (%s) does not match the referer host address (%s)!</source>
+        <target>دسترسی مجاز نمی‌باشد! نشانی جاری (%s) با نشانی ارجاعی (%s) مطابقت ندارد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPass">
+        <source>Invalid password!</source>
+        <target>گذرواژه نامعتبر!</target>
+      </trans-unit>
+      <trans-unit id="ERR.passwordLength">
+        <source>A password has to be at least %d characters long!</source>
+        <target>طول گذرواژه می‌بایست دست‌کم %d نویسه باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.passwordName">
+        <source>Your username and password must not be the same!</source>
+        <target>نام کاربری و گذرواژه‌تان نباید یکسان باشند!</target>
+      </trans-unit>
+      <trans-unit id="ERR.tooManyLoginAttempts">
+        <source>Too many failed login attempts, please try again later.</source>
+        <target>تعداد زیاد تلاش برای ورود ناموفق، لطفاً بعداً دوباره امتحان کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidLogin">
+        <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
+        <target>ورود ناموفق (توجه کنید که نام‌های کاربری و گذرواژه‌ها به حروف کوچک و بزرگ حساس هستند)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidColor">
+        <source>Invalid color format!</source>
+        <target>كد رنگ نامعتبر!</target>
+      </trans-unit>
+      <trans-unit id="ERR.all_fields">
+        <source>Please select at least one field!</source>
+        <target>لطفا دست‌کم یک فيلد را انتخاب نمائيد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyUpload">
+        <source>Please select at least one file!</source>
+        <target>لطفا دست‌کم یک پرونده انتخاب نمایید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.aliasExists">
+        <source>The alias &quot;%s&quot; already exists!</source>
+        <target>نام مستعار %s وجود دارد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>نام مستعار عددی پشتیبانی نمی‌شود!</target>
+      </trans-unit>
+      <trans-unit id="ERR.urlPrefixExists">
+        <source>The URL prefix &quot;%s&quot; is already used by another website root page with the same domain name!</source>
+        <target>پیشوند URL &quot;%s&quot; در حال حاضر توسط یک برگه ریشه دیگر با همین نام دامنه استفاده شده است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlExists">
+        <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>قبلا یک صفحه با URL &quot;%s&quot; وجود دارد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>این نام مستعار منجر به تداخل با برگه &quot;%s&quot; (شناسه %s) می‌شود!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlSuffix">
+        <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>این پسوند URL منجر به URLهای تکراری خواهد شد (مثلا %s)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pageUrlPrefix">
+        <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>این پیشوند URL منجر به URLهای تکراری خواهد شد (مثلا %s)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.importFolder">
+        <source>The folder &quot;%s&quot; cannot be imported!</source>
+        <target>پوشه &quot;%s&quot; قابل وارد کردن نمی‌باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.notWriteable">
+        <source>The file &quot;%s&quot; is not writeable and can therefore not be updated!</source>
+        <target>پرونده &quot;%s&quot; قابل نوشتن نیست و بنابراین نمی‌تواند به‌روزرسانی شود!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidName">
+        <source>This file or folder name is invalid!</source>
+        <target>این نام پرونده یا پوشه نامعتبر است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidFile">
+        <source>The file or folder &quot;%s&quot; is invalid!</source>
+        <target>پرونده یا پوشه &quot;%s&quot; نامعتبر است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.fileExists">
+        <source>The file &quot;%s&quot; already exists!</source>
+        <target>پرونده &quot;%s&quot; موجود است!</target>
+      </trans-unit>
+      <trans-unit id="ERR.filesOnly">
+        <source>You can only select files!</source>
+        <target>شما فقط می‌توانید پرونده‌ها را انتخاب کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.foldersOnly">
+        <source>You can only select folders!</source>
+        <target>فقط می‌توانید فولدرها را انتخاب کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.pathOnly">
+        <source>You can only select files or folders within &quot;%s&quot;!</source>
+        <target>شما فقط می‌توانید پرونده‌ها یا فولدرهای داخل «%s» را انتخاب کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.extensionsOnly">
+        <source>You can only select &quot;%s&quot; files!</source>
+        <target>شما می‌توانید فقط «%s» پرونده انتخاب کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.forbiddenExtensions">
+        <source>The following file extensions are not allowed: %s</source>
+        <target>پسوندها پرونده ذیل مجاز نیستند:‌%s</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidPages">
+        <source>Your selection contains invalid page IDs!</source>
+        <target>انتخاب شما شامل شناسه‌های برگه نادرست می‌باشد!</target>
+      </trans-unit>
+      <trans-unit id="ERR.circularReference">
+        <source>Invalid redirect target (circular reference)!</source>
+        <target>برگه‌ی تغییر مسیر نامعتبر (مرجع دایره‌ای)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.circularPicker">
+        <source>Invalid selection (circular reference)!</source>
+        <target>انتخاب نادرست (مرجع دایره‌ای)!</target>
+      </trans-unit>
+      <trans-unit id="ERR.noFallbackEmpty">
+        <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>هیچ کدام از برگه‌های ریشه وب‌سایت فعال بدون تنظیمات DNS مشخص، تنظیمات گزینه‌ی زبان پشتیبان را دارد.</target>
+      </trans-unit>
+      <trans-unit id="ERR.noFallbackDns">
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>هیچ کدام از برگه‌های ریشه وب‌سایت برای &lt;strong&gt;%s&lt;/strong&gt; گزینه‌ی تنظیم زبان جایگزین ندارند.</target>
+      </trans-unit>
+      <trans-unit id="ERR.multipleFallback">
+        <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>شما فقط می‌توانید یک برگه ریشه وب‌سایت را به عنوان زبان جایگزین برای هر دامنه تعریف کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.topLevelRoot">
+        <source>Top-level pages must be website root pages!</source>
+        <target>برگه‌های سطح بالا باید ریشه وب‌سایت باشند!</target>
+      </trans-unit>
+      <trans-unit id="ERR.topLevelRegular">
+        <source>There are top-level pages which are not website root pages.</source>
+        <target>برگه‌های سطح بالایی وجود دارد که برگه‌های ریشه وب‌سایت نیستند.</target>
+      </trans-unit>
+      <trans-unit id="ERR.form">
+        <source>The form could not be sent</source>
+        <target>فرم فرستاده نخواهد شد</target>
+      </trans-unit>
+      <trans-unit id="ERR.formCookieWarning">
+        <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>شما قادر به ارسال این فرم نخواهید بود، زیرا شما کوکی‌ها را در مرورگر خود غیرفعال کرده‌اید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.captcha">
+        <source>Please answer the security question!</source>
+        <target>لطفا به سوال امنیتی پاسخ دهید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.download">
+        <source>File &quot;%s&quot; is not available for download!</source>
+        <target>پرونده «%s» برای بارگیری در دسترس نیست!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalid">
+        <source>Invalid option value!</source>
+        <target>مقدار گزینه‌ی نامعتبر!</target>
+      </trans-unit>
+      <trans-unit id="ERR.fileNotFoundSync">
+        <source>No database entry found for %s. Please synchronize the file system.</source>
+        <target>ورودی پایگاه‌داده‌ای برای %s پیدا نشد. سامانه‌ی پرونده را هماهنگ‌سازی نمایید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidFieldName">
+        <source>Please enter only the following characters: A-Z0-9[]_-</source>
+        <target>لطفا فقط نویسه‌های پیرو را وارد نمایید: A-Z0-9[]_-</target>
+      </trans-unit>
+      <trans-unit id="ERR.largeImage">
+        <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>تصویر از ابعاد بیشینه %sx%s تجاوز کرده است.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidTwoFactor">
+        <source>Invalid verification code!</source>
+        <target>کد تایید نامعتبر!</target>
+      </trans-unit>
+      <trans-unit id="ERR.emptyTitleOrId">
+        <source>Please enter both title and ID!</source>
+        <target>لطفا هر دوی عنوان و شناسه را وارد کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionTitle">
+        <source>Duplicate layout section title &quot;%s&quot;!</source>
+        <target>عنوان بخش چیدمان تکراری &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.duplicateSectionId">
+        <source>Duplicate layout section ID &quot;%s&quot;!</source>
+        <target>شناسه بخش چیدمان تکراری &quot;%s&quot;!</target>
+      </trans-unit>
+      <trans-unit id="ERR.moduleWithoutColumn">
+        <source>Please assign all modules to a column!</source>
+        <target>لطفا همه ماژول‌ها را به یک ستون اختصاص دهید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidHttpUrl">
+        <source>Please enter an absolute URL starting with https:// or http://!</source>
+        <target>لطفا یک آدرس URL کامل که با https:// یا http:// شروع می‌شود وارد کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.customRgxp">
+        <source>Please enter a value that matches %s!</source>
+        <target>لطفا یه مقدار که با %s هم‌خوانی داشته باشد وارد کنید!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidCustomRgxp">
+        <source>Invalid custom regular expression!</source>
+        <target>عبارت باقاعده اختصاصی نامعتبر!</target>
+      </trans-unit>
+      <trans-unit id="ERR.applicationCache">
+        <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
+        <target>لطفا دستور &quot;cache:clear&quot; را اجرا کنید یا از Contao Manager برای بازسازی کش برنامه‌تان استفاده کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>مسیر قالب &quot;%s&quot; نباید شامل نویسه‌های ذیل باشد: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>نام کاربری ناشناس:‌ %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>نسخه %d قابل بازیابی نیست زیرا دیگر با ساختار پایگاه‌داده فعلی سازگار نیست. لطفا داده‌ها را به صورت دستی بازیابی کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.startStop">
+        <source>The end time must be later than the start time.</source>
+        <target>زمان پایان باید بعد از زمان شروع باشد.</target>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmailUrl">
+        <source>There is no administrator e-mail address set in the &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;system settings&lt;/a&gt;.</source>
+        <target>هیچ آدرس ایمیل مدیری در &lt;a href=&quot;%s&quot; target=&quot;_top&quot;&gt;تنظیمات سیستم&lt;/a&gt; تنظیم نشده است.</target>
+      </trans-unit>
+      <trans-unit id="ERR.noAdminEmail">
+        <source>There is no administrator e-mail address set, please contact the site administrator.</source>
+        <target>آدرس ایمیل مدیر تنظیم نشده است، لطفا با مدیر وب‌سایت تماس بگیرید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>جاوااسکریپت در حال حاضر غیرفعال یا مسدود شده است. بدون جاوااسکریپت، تأیید ضد هرزنامه انجام نخواهد شد. لطفاً برای ارسال فرم، جاوااسکریپت را به‌صورت موقت فعال کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>اعتبارسنجی ضداسپم شکست خورد. شما انسان هستید یا ربات؟</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+        <target>تأیید ناموفق بود. بعداً دوباره امتحان کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA بدون اتصال ایمن HTTPS در دسترس نیست. اگر وب‌سایت شما از HTTPS استفاده نمی‌کند (توصیه نمی‌شود)، لطفاً به جای این از سؤال امنیتی استفاده کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>حداقل یک ماژول &quot;داده‌های شخصی&quot; وجود دارد که اجازه می‌دهد گذرواژه را تغییر دهید. این یک ضعف امنیتی است و دیگر در Contao 6 کار نخواهد کرد. به جای آن از ماژول &quot;تغییر گذرواژه&quot; استفاده کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>کلیدهای عبور در این دستگاه پشتیبانی نمی‌شوند.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>ورود با کلیدعبور ناموفق بود.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>امکان ایجاد کلیدعبور وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>عنصر با شناسه‌ی %d نمی‌تواند در اینجا درج شود زیرا با یک عنصر موجود تداخل دارد.</target>
+      </trans-unit>
+      <trans-unit id="SEC.question1">
+        <source>Please add %d and %d.</source>
+        <target>لطفا %d و %d را با هم جمع نمایید.</target>
+      </trans-unit>
+      <trans-unit id="SEC.question2">
+        <source>What is the sum of %d and %d?</source>
+        <target>جمع %d و %d برابر است با؟</target>
+      </trans-unit>
+      <trans-unit id="SEC.question3">
+        <source>Please calculate %d plus %d.</source>
+        <target>لطفا جمع %d و %d را محاسبه نمایید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.texts">
+        <source>Text elements</source>
+        <target>المان‌های متنی</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.0">
+        <source>Change password</source>
+        <target>تغییر گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="CTE.change_password.1">
+        <source>Generates a form to change the password.</source>
+        <target>فرمی برای تغییر گذرواژه ایجاد می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.0">
+        <source>Close account</source>
+        <target>بستن حساب کاربری</target>
+      </trans-unit>
+      <trans-unit id="CTE.close_account.1">
+        <source>Generates a form to delete a member account.</source>
+        <target>فرمی برای حذف حساب کاربری عضو ایجاد می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.headline.0">
+        <source>Headline</source>
+        <target>سربرگ</target>
+      </trans-unit>
+      <trans-unit id="CTE.headline.1">
+        <source>Generates a headline (h1 - h6).</source>
+        <target>یک عنوان (h1-h6) تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>متفرقه</target>
+      </trans-unit>
+      <trans-unit id="CTE.text.0">
+        <source>Text</source>
+        <target>متن</target>
+      </trans-unit>
+      <trans-unit id="CTE.text.1">
+        <source>Generates a rich text element.</source>
+        <target>یک المان متنی غنی تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.html.0">
+        <source>HTML</source>
+        <target>HTML</target>
+      </trans-unit>
+      <trans-unit id="CTE.html.1">
+        <source>Allows you to add custom HTML code.</source>
+        <target>امکان افزودن کد HTML سفارشی را به شما می‌دهد</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+        <target>HTML فیلترنشده</target>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
+        <target>به شما امکان می دهد کد HTML سفارشی و بدون فیلتر اضافه کنید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.list.0">
+        <source>List</source>
+        <target>فهرست</target>
+      </trans-unit>
+      <trans-unit id="CTE.list.1">
+        <source>Generates an ordered or unordered list.</source>
+        <target>یک فهرست مرتب یا نامرتب تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>لیست شرح</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>یک لیست توضیحات با شرایط و جزئیات ایجاد می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.table.0">
+        <source>Table</source>
+        <target>جدول</target>
+      </trans-unit>
+      <trans-unit id="CTE.table.1">
+        <source>Generates an optionally sortable table.</source>
+        <target>یک جدول  با مرتب‌سازی اختیاری تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordion.0">
+        <source>Accordion</source>
+        <target>آکوردئون</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>یک آکاردئون تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>گروه المان</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>گروهی از عناصر تو در تو را تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordionStart.0">
+        <source>Accordion wrapper start</source>
+        <target>شروع لفاف آکاردئونی</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordionStart.1">
+        <source>Generates the opening part of the accordion wrapper.</source>
+        <target>قسمت ابتدایی لفاف آکاردیون را تولید می‌‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordionStop.0">
+        <source>Accordion wrapper stop</source>
+        <target>توقف لفاف آکاردئونی</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordionStop.1">
+        <source>Generates the closing part of the accordion wrapper.</source>
+        <target>قسمت انتهایی لفاف آکاردیون را تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordionSingle.0">
+        <source>Accordion single element</source>
+        <target>المان تکی آکاردئون</target>
+      </trans-unit>
+      <trans-unit id="CTE.accordionSingle.1">
+        <source>Generates a single accordion element.</source>
+        <target>یک المان آکوردئون تکی تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.code.0">
+        <source>Code</source>
+        <target>کد</target>
+      </trans-unit>
+      <trans-unit id="CTE.code.1">
+        <source>Highlights code snippets and prints them to the screen.</source>
+        <target>قطعه‌های کد را برجسته می‌کند و آنها را روی برگه نمایش چاپ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.markdown.0">
+        <source>Markdown</source>
+        <target>نشانه‌دار</target>
+      </trans-unit>
+      <trans-unit id="CTE.markdown.1">
+        <source>Generates HTML code from a Markdown text.</source>
+        <target>کد HTML را از متن Markdown تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>قالب اختصاصی</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>یک المان برای درج در قالب اختصاصی تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>اسلایدر محتوا</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>یک المان محتوای اسلایدر ایجاد می کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.slider">
+        <source>Content slider</source>
+        <target>اسلایدر محتوا</target>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStart.0">
+        <source>Slider wrapper start</source>
+        <target>شروع لفاف اسلایدر</target>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStart.1">
+        <source>Generates the opening part of the slider wrapper.</source>
+        <target>قسمت ابتدایی لفاف اسلایدر را تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStop.0">
+        <source>Slider wrapper stop</source>
+        <target>توقف لفاف اسلایدر</target>
+      </trans-unit>
+      <trans-unit id="CTE.sliderStop.1">
+        <source>Generates the closing part of the slider wrapper.</source>
+        <target>قسمت انتهایی لفاف اسلایدر را تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.links">
+        <source>Link elements</source>
+        <target>المان‌های پیوندی</target>
+      </trans-unit>
+      <trans-unit id="CTE.hyperlink.0">
+        <source>Hyperlink</source>
+        <target>پیوند</target>
+      </trans-unit>
+      <trans-unit id="CTE.hyperlink.1">
+        <source>Generates a link to another website.</source>
+        <target>یک پیوند به وب‌سایت دیگر ایجاد می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.toplink.0">
+        <source>Top link</source>
+        <target>پیوند بالا</target>
+      </trans-unit>
+      <trans-unit id="CTE.toplink.1">
+        <source>Generates a link to jump to the top of the page.</source>
+        <target>یک پیوند برای پرش به بالای برگه تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.media">
+        <source>Media elements</source>
+        <target>المان‌های رسانه‌ای</target>
+      </trans-unit>
+      <trans-unit id="CTE.image.0">
+        <source>Image</source>
+        <target>تصویر</target>
+      </trans-unit>
+      <trans-unit id="CTE.image.1">
+        <source>Generates a stand-alone image.</source>
+        <target>یک تصویر درجا تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.gallery.0">
+        <source>Gallery</source>
+        <target>گالری</target>
+      </trans-unit>
+      <trans-unit id="CTE.gallery.1">
+        <source>Generates a lightbox image gallery.</source>
+        <target>یک گالری تصویر لایت‌باکس  تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.player.0">
+        <source>Video/audio</source>
+        <target>صوتی/تصویری</target>
+      </trans-unit>
+      <trans-unit id="CTE.player.1">
+        <source>Generates a video or audio player.</source>
+        <target>یک پلیر تصویری یا صوتی تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.youtube.0">
+        <source>YouTube</source>
+        <target>یوتیوب</target>
+      </trans-unit>
+      <trans-unit id="CTE.youtube.1">
+        <source>Adds a YouTube video.</source>
+        <target>ویدیو یوتیوب اضافه می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.0">
+        <source>Vimeo</source>
+        <target>ویمو</target>
+      </trans-unit>
+      <trans-unit id="CTE.vimeo.1">
+        <source>Adds a Vimeo video.</source>
+        <target>یک ویدیو ویمو اضافه می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.files">
+        <source>File elements</source>
+        <target>المان‌های پرونده‌ای</target>
+      </trans-unit>
+      <trans-unit id="CTE.download.0">
+        <source>Download</source>
+        <target>بارگیری</target>
+      </trans-unit>
+      <trans-unit id="CTE.download.1">
+        <source>Generates a link to download a file.</source>
+        <target>پیوندی برای بارگیری یک پرونده تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.downloads.0">
+        <source>Downloads</source>
+        <target>بارگیری‌ها</target>
+      </trans-unit>
+      <trans-unit id="CTE.downloads.1">
+        <source>Generates multiple links to download files.</source>
+        <target>پیوندهای چندگانه برای بارگیری پرونده‌ها تولید می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="CTE.includes">
+        <source>Include elements</source>
+        <target>المان‌های گنجانیدنی</target>
+      </trans-unit>
+      <trans-unit id="CTE.article.0">
+        <source>Article</source>
+        <target>نوشته</target>
+      </trans-unit>
+      <trans-unit id="CTE.article.1">
+        <source>Includes another article.</source>
+        <target>مقاله‌ی دیگری را می‌گنجاند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.alias.0">
+        <source>Content element</source>
+        <target>نام المان</target>
+      </trans-unit>
+      <trans-unit id="CTE.alias.1">
+        <source>Includes another content element.</source>
+        <target>المان محتوایی دیگری را می‌گنجاند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.form.0">
+        <source>Form</source>
+        <target>فرم</target>
+      </trans-unit>
+      <trans-unit id="CTE.form.1">
+        <source>Includes a form.</source>
+        <target>یک فرم را می‌گنجاند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.module.0">
+        <source>Module</source>
+        <target>ماژول</target>
+      </trans-unit>
+      <trans-unit id="CTE.module.1">
+        <source>Includes a front end module.</source>
+        <target>یک ماژول بخش کاربری را می‌گنجاند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.teaser.0">
+        <source>Article teaser</source>
+        <target>تیزر مقاله</target>
+      </trans-unit>
+      <trans-unit id="CTE.teaser.1">
+        <source>Displays the teaser text of an article.</source>
+        <target>متن تیزر متن یک مقاله را نمایش می‌دهد.</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+        <target>احراز هویت دو عاملی</target>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication.</source>
+        <target>فرمی برای راه‌اندازی یا تغییر احراز هویت دو مرحله‌ای ایجاد می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>المان‌های میراثی</target>
+      </trans-unit>
+      <trans-unit id="CTE.user">
+        <source>User</source>
+        <target>کاربر</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.0">
+        <source>Manage passkeys</source>
+        <target>مدیریت کلیدهای عبور</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.1">
+        <source>Allows to manage the passkeys of a member.</source>
+        <target>امکان مدیریت کلیدهای عبور یک عضو کاربری را فراهم می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.0">
+        <source>Login form</source>
+        <target>فرم ورود</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.1">
+        <source>Generates a login form.</source>
+        <target>یک فرم ورود ایجاد می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.0">
+        <source>Explanation</source>
+        <target>توضیح</target>
+      </trans-unit>
+      <trans-unit id="FFL.explanation.1">
+        <source>A custom field to insert an explanation text.</source>
+        <target>فیلد سفارشی برای پرج یک متن توضیحی.</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.0">
+        <source>HTML code</source>
+        <target>کد HTML</target>
+      </trans-unit>
+      <trans-unit id="FFL.html.1">
+        <source>A custom field to insert HTML code.</source>
+        <target>یک فیلد سفارشی برای درج کد HTML.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.0">
+        <source>Fieldset start</source>
+        <target>شروع مجموعه فیلد</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStart.1">
+        <source>The opening part of a fieldset with an optional legend.</source>
+        <target>قسمت گشایش مجموعه فیلد با یک شرح اختیاری.</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.0">
+        <source>Fieldset stop</source>
+        <target>پایان مجموعه فیلد</target>
+      </trans-unit>
+      <trans-unit id="FFL.fieldsetStop.1">
+        <source>The closing part of a fieldset.</source>
+        <target>قسمت بستن یک مجموعه فیلد.</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.0">
+        <source>Text field</source>
+        <target>فیلد متن</target>
+      </trans-unit>
+      <trans-unit id="FFL.text.1">
+        <source>A single-line input field for a short or medium text.</source>
+        <target>یک فیلد وردی تک خط برای متن کوتاه یا متوسط.</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.0">
+        <source>Password field</source>
+        <target>فیلد گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="FFL.password.1">
+        <source>A single-line input field for a password. Contao automatically adds a confirmation field.</source>
+        <target>یک فیلد ورودی تک خطی برای گذرواژه. کنتائو به صورت خودکار یک فیلد تایید اضافه می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.0">
+        <source>Textarea</source>
+        <target>جعبه متن</target>
+      </trans-unit>
+      <trans-unit id="FFL.textarea.1">
+        <source>A multi-line input field for a medium or long text.</source>
+        <target>یک فیلد ورودی چند خطی برای متن‌های متوسط یا بلند.</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.0">
+        <source>Select menu</source>
+        <target>منوی انتخابی</target>
+      </trans-unit>
+      <trans-unit id="FFL.select.1">
+        <source>A single- or multi-line drop-down menu.</source>
+        <target>یک منوی افتادنی یک یا چند خطی.</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.0">
+        <source>Radio button menu</source>
+        <target>منوی دکمه رادیویی</target>
+      </trans-unit>
+      <trans-unit id="FFL.radio.1">
+        <source>A list of multiple options from which one can be selected.</source>
+        <target>فهرستی چند گزینه‌ای که یکی از آن‌ها قابل انتخاب است.</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.0">
+        <source>Checkbox menu</source>
+        <target>منوی جعبه‌ای</target>
+      </trans-unit>
+      <trans-unit id="FFL.checkbox.1">
+        <source>A list of multiple options from which any can be selected.</source>
+        <target>فهرستی چند گزینه‌‌ای که هر کدام از آن‌ها قابل انتخاب هستند.</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.0">
+        <source>File upload</source>
+        <target>بارگذاری پرونده</target>
+      </trans-unit>
+      <trans-unit id="FFL.upload.1">
+        <source>A single-line input field to upload a local file to the server.</source>
+        <target>فیلد ورودی تک خط برای بارگذاری پرونده محلی در سرور</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.0">
+        <source>Range slider</source>
+        <target>اسلایدر Range</target>
+      </trans-unit>
+      <trans-unit id="FFL.range.1">
+        <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>اسلایدر رنج برای انتخاب یک مقدار یا مقادیر بین مقدار کمینه و بیشینه.</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.0">
+        <source>Hidden field</source>
+        <target>فیلد پنهان</target>
+      </trans-unit>
+      <trans-unit id="FFL.hidden.1">
+        <source>A single-line input field that is not visible in the form.</source>
+        <target>فیلد ورودی یک خطی که در فرم قابل مشاهده نیست.</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+        <target>آنتی‌اسپم ALTCHA</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>یک فیلد فرم ضدهرزنامه ALTCHA برای تأیید اینکه فرم توسط یک انسان ارسال شده است (CAPTCHA) ارائه می‌دهد.</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.0">
+        <source>Security question</source>
+        <target>پرسش امنیتی</target>
+      </trans-unit>
+      <trans-unit id="FFL.captcha.1">
+        <source>A simple math question to verify that the form is being submitted by a human (CAPTCHA).</source>
+        <target>یک سوال ریاضی ساده برای بررسی اینکه فرم توسط یک انسان ارسال شده است (CAPTCHA).</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.0">
+        <source>Submit field</source>
+        <target>فیلد ارسال</target>
+      </trans-unit>
+      <trans-unit id="FFL.submit.1">
+        <source>A button to submit the form.</source>
+        <target>دکمه‌ای برای ارسال فرم</target>
+      </trans-unit>
+      <trans-unit id="PTY.regular.0">
+        <source>Regular page</source>
+        <target>برگه عادی</target>
+      </trans-unit>
+      <trans-unit id="PTY.regular.1">
+        <source>A regular page contains articles and content elements. It is the default page type.</source>
+        <target>برگه عادی شامل مقاله‌ها و المان‌های محتوایی می‌باشد. این نوع برگه پیش‌فرض است.</target>
+      </trans-unit>
+      <trans-unit id="PTY.redirect.0">
+        <source>External redirect</source>
+        <target>تغییر مسیر خارجی</target>
+      </trans-unit>
+      <trans-unit id="PTY.redirect.1">
+        <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
+        <target>اين نوع برگه به طور خودکار بازدیدکنندگان را به يک نشانی خارجی باز می‌گرداند. این مانند یک پیوند عمل می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="PTY.forward.0">
+        <source>Internal redirect</source>
+        <target>تغییر مسیر داخلی</target>
+      </trans-unit>
+      <trans-unit id="PTY.forward.1">
+        <source>This type of page automatically forwards visitors to another page.</source>
+        <target>این نوع برگه به طور خودکار بازدیدکنندگان را به برگه‌ی دیگری منتقل می‌نماید.</target>
+      </trans-unit>
+      <trans-unit id="PTY.root.0">
+        <source>Website root</source>
+        <target>ریشه وب‌سایت</target>
+      </trans-unit>
+      <trans-unit id="PTY.root.1">
+        <source>This type of page marks the starting point of a new website.</source>
+        <target>این نوع برگه نقطه شروع یک وب‌سایت جدید را مشخص می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.0">
+        <source>Logout</source>
+        <target>خروج</target>
+      </trans-unit>
+      <trans-unit id="PTY.logout.1">
+        <source>This type of page automatically logs out the user.</source>
+        <target>این نوع صفحه کاربر را به صورت خودکار خارج می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_401.0">
+        <source>401 Not authenticated</source>
+        <target>401 احراز هویت نشده</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_401.1">
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>اگر بازدیدکننده‌ای برگه‌ی حفاظت‌شده‌ای را بدون احراز هویت درخواست کند برگه‌ی خطای 401 در عوض بارگذاری خواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_403.0">
+        <source>403 Access denied</source>
+        <target>403 دسترسی ممنوع است</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_403.1">
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>اگر بازدیدکننده‌ای برگه‌ی حفاظت‌شده‌ای را بدون احراز مجوز درخواست کند برگه‌ی خطای 403 در عوض بارگذاری خواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_404.0">
+        <source>404 Page not found</source>
+        <target>404 برگه پیدا نشد</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_404.1">
+        <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>اگر بازدیدکننده‌ای برگه‌ای که وجود ندارد را درخواست کند برگه‌ی خطای 404 در عوض بارگذاری خواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 سرویس در دسترس نیست</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
+        <target>هنگامی که یک برگه‌ی ریشه وب‌سایت در حالت تعمیر و نگهداری است، همه درخواست‌ها برگه خطای 503 را نشان می‌دهند.</target>
+      </trans-unit>
+      <trans-unit id="FOP.fop.0">
+        <source>File operation permissions</source>
+        <target>مجوزهای عمليات پرونده</target>
+      </trans-unit>
+      <trans-unit id="FOP.fop.1">
+        <source>Here you can select the file operations you want to allow.</source>
+        <target>اینجا می‌توانید عملیات‌های پرونده که می‌خواهید اجازه دهید را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="FOP.f1">
+        <source>Upload files to the server</source>
+        <target>بارگذاری پرونده‌ها در سرور</target>
+      </trans-unit>
+      <trans-unit id="FOP.f2">
+        <source>Edit, copy or move files and folders</source>
+        <target>ویرایش، رونوشت یا جابجایی پرونده‌ها و پوشه‌ها</target>
+      </trans-unit>
+      <trans-unit id="FOP.f3">
+        <source>Delete single files and empty folders</source>
+        <target>حذف پرونده‌ها تکی و پوشه‌های خالی</target>
+      </trans-unit>
+      <trans-unit id="FOP.f4">
+        <source>Delete folders including all files and subfolders (!)</source>
+        <target>حذف پوشه به همراه تمامی پرونده‌ها و پوشه‌های درون آن (!)</target>
+      </trans-unit>
+      <trans-unit id="FOP.f5">
+        <source>Edit files in the source editor</source>
+        <target>ویرایش پرونده‌ها در ویرایشگر منبع</target>
+      </trans-unit>
+      <trans-unit id="FOP.f6">
+        <source>Synchronize the file system with the database</source>
+        <target>هماهنگ‌سازی ‌سامانه‌ی پرونده با پایگاه‌داده</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.editpage">
+        <source>Edit page</source>
+        <target>ویرایش برگه</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.editnavigation">
+        <source>Edit page hierarchy</source>
+        <target>ويرايش ساختار درختی برگه‌ها</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.deletepage">
+        <source>Delete page</source>
+        <target>حذف برگه</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.editarticles">
+        <source>Edit articles</source>
+        <target>ويرايش مقاله‌ها</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.movearticles">
+        <source>Edit article hierarchy</source>
+        <target>ويرايش ساختار مقاله</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.deletearticles">
+        <source>Delete articles</source>
+        <target>حدف مقاله‌ها</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.cuser">
+        <source>Owner</source>
+        <target>مالک</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.cgroup">
+        <source>Group</source>
+        <target>گروه</target>
+      </trans-unit>
+      <trans-unit id="CHMOD.cworld">
+        <source>Everybody</source>
+        <target>همه</target>
+      </trans-unit>
+      <trans-unit id="DATE.a">
+        <source>am</source>
+        <target>ق.ب.</target>
+      </trans-unit>
+      <trans-unit id="DATE.A">
+        <source>AM</source>
+        <target>ق.ب.</target>
+      </trans-unit>
+      <trans-unit id="DATE.d">
+        <source>DD</source>
+        <target>DD</target>
+      </trans-unit>
+      <trans-unit id="DATE.j">
+        <source>D</source>
+        <target>D</target>
+      </trans-unit>
+      <trans-unit id="DATE.m">
+        <source>MM</source>
+        <target>MM</target>
+      </trans-unit>
+      <trans-unit id="DATE.n">
+        <source>M</source>
+        <target>M</target>
+      </trans-unit>
+      <trans-unit id="DATE.y">
+        <source>YY</source>
+        <target>YY</target>
+      </trans-unit>
+      <trans-unit id="DATE.Y">
+        <source>YYYY</source>
+        <target>YYYY</target>
+      </trans-unit>
+      <trans-unit id="DATE.h">
+        <source>hh</source>
+        <target>hh</target>
+      </trans-unit>
+      <trans-unit id="DATE.H">
+        <source>hh</source>
+        <target>hh</target>
+      </trans-unit>
+      <trans-unit id="DATE.g">
+        <source>h</source>
+        <target>h</target>
+      </trans-unit>
+      <trans-unit id="DATE.G">
+        <source>h</source>
+        <target>h</target>
+      </trans-unit>
+      <trans-unit id="DATE.i">
+        <source>mm</source>
+        <target>mm</target>
+      </trans-unit>
+      <trans-unit id="DATE.s">
+        <source>ss</source>
+        <target>ss</target>
+      </trans-unit>
+      <trans-unit id="DAYS.0">
+        <source>Sunday</source>
+        <target>یک‌شنبه</target>
+      </trans-unit>
+      <trans-unit id="DAYS.1">
+        <source>Monday</source>
+        <target>دوشنبه</target>
+      </trans-unit>
+      <trans-unit id="DAYS.2">
+        <source>Tuesday</source>
+        <target>سه‌شنبه</target>
+      </trans-unit>
+      <trans-unit id="DAYS.3">
+        <source>Wednesday</source>
+        <target>چهارشنبه</target>
+      </trans-unit>
+      <trans-unit id="DAYS.4">
+        <source>Thursday</source>
+        <target>پنج‌شنبه</target>
+      </trans-unit>
+      <trans-unit id="DAYS.5">
+        <source>Friday</source>
+        <target>جمعه</target>
+      </trans-unit>
+      <trans-unit id="DAYS.6">
+        <source>Saturday</source>
+        <target>شنبه</target>
+      </trans-unit>
+      <trans-unit id="DAYS_SHORT.0">
+        <source>Sun</source>
+        <target>ی</target>
+      </trans-unit>
+      <trans-unit id="DAYS_SHORT.1">
+        <source>Mon</source>
+        <target>د</target>
+      </trans-unit>
+      <trans-unit id="DAYS_SHORT.2">
+        <source>Tue</source>
+        <target>س</target>
+      </trans-unit>
+      <trans-unit id="DAYS_SHORT.3">
+        <source>Wed</source>
+        <target>چ</target>
+      </trans-unit>
+      <trans-unit id="DAYS_SHORT.4">
+        <source>Thu</source>
+        <target>پ</target>
+      </trans-unit>
+      <trans-unit id="DAYS_SHORT.5">
+        <source>Fri</source>
+        <target>ج</target>
+      </trans-unit>
+      <trans-unit id="DAYS_SHORT.6">
+        <source>Sat</source>
+        <target>ش</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.0">
+        <source>January</source>
+        <target>ژانویه</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.1">
+        <source>February</source>
+        <target>فوریه</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.2">
+        <source>March</source>
+        <target>مارس</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.3">
+        <source>April</source>
+        <target>آوریل</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.4">
+        <source>May</source>
+        <target>مه</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.5">
+        <source>June</source>
+        <target>ژوئن</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.6">
+        <source>July</source>
+        <target>ژوئیه</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.7">
+        <source>August</source>
+        <target>اوت</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.8">
+        <source>September</source>
+        <target>سپتامبر</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.9">
+        <source>October</source>
+        <target>اکتبر</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.10">
+        <source>November</source>
+        <target>نوامبر</target>
+      </trans-unit>
+      <trans-unit id="MONTHS.11">
+        <source>December</source>
+        <target>دسامبر</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.0">
+        <source>Jan</source>
+        <target>ژان</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.1">
+        <source>Feb</source>
+        <target>فور</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.2">
+        <source>Mar</source>
+        <target>مار</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.3">
+        <source>Apr</source>
+        <target>آور</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.4">
+        <source>May</source>
+        <target>مه</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.5">
+        <source>Jun</source>
+        <target>ژوئ</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.6">
+        <source>Jul</source>
+        <target>جول</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.7">
+        <source>Aug</source>
+        <target>اوت</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.8">
+        <source>Sep</source>
+        <target>سپت</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.9">
+        <source>Oct</source>
+        <target>اکت</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.10">
+        <source>Nov</source>
+        <target>نوا</target>
+      </trans-unit>
+      <trans-unit id="MONTHS_SHORT.11">
+        <source>Dec</source>
+        <target>دسا</target>
+      </trans-unit>
+      <trans-unit id="MSC.dayShortLength">
+        <source>3</source>
+        <target>3</target>
+      </trans-unit>
+      <trans-unit id="MSC.monthShortLength">
+        <source>3</source>
+        <target>3</target>
+      </trans-unit>
+      <trans-unit id="MSC.weekOffset">
+        <source>0</source>
+        <target>0</target>
+      </trans-unit>
+      <trans-unit id="MSC.titleFormat">
+        <source>%B %d%o, %Y</source>
+        <target>%B %d%o, %Y</target>
+      </trans-unit>
+      <trans-unit id="MSC.url.0">
+        <source>Link target</source>
+        <target>پیوند مقصد</target>
+      </trans-unit>
+      <trans-unit id="MSC.url.1">
+        <source>Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.</source>
+        <target>لطفا نشانی وب (http://…), یک نشانی ایمیل (mailto:…) یا یک برچسب درجی وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.target.0">
+        <source>Open in new window</source>
+        <target>باز کردن در پنجره جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.target.1">
+        <source>Open the link in a new browser window.</source>
+        <target>پیوند در پنجره جدید مرورگر باز می‌گردد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>باز کردن در یک برگه جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.decimalSeparator">
+        <source>.</source>
+        <target>.</target>
+      </trans-unit>
+      <trans-unit id="MSC.thousandsSeparator">
+        <source>,</source>
+        <target>،</target>
+      </trans-unit>
+      <trans-unit id="MSC.separator.0">
+        <source>Separator</source>
+        <target>جداکننده</target>
+      </trans-unit>
+      <trans-unit id="MSC.separator.1">
+        <source>Please choose a field delimiter.</source>
+        <target>لطفا یک حائل فیلد انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.source.0">
+        <source>Source files</source>
+        <target>پرونده‌های منبع</target>
+      </trans-unit>
+      <trans-unit id="MSC.source.1">
+        <source>Please upload the CSV files to be imported.</source>
+        <target>لطفا پرونده‌های CSVای که باید وارد شوند را بارگذاری نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>اندازه تصویر</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>اینجا می‌توانید ابعاد تصویر و روش تغییر اندازه را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.comma">
+        <source>Comma</source>
+        <target>ویرگول</target>
+      </trans-unit>
+      <trans-unit id="MSC.semicolon">
+        <source>Semicolon</source>
+        <target>نقطه ویرگول</target>
+      </trans-unit>
+      <trans-unit id="MSC.tabulator">
+        <source>Tabulator</source>
+        <target>جدول‌بند</target>
+      </trans-unit>
+      <trans-unit id="MSC.linebreak">
+        <source>Line break</source>
+        <target>خط جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.lw_import.0">
+        <source>CSV import</source>
+        <target>وارد کردن پرونده CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.lw_import.1">
+        <source>Import list items from a CSV file</source>
+        <target>وارد کردن موارد فهرست از یک پرونده CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.lw_copy">
+        <source>Duplicate the element</source>
+        <target>تکثیر المان</target>
+      </trans-unit>
+      <trans-unit id="MSC.lw_up">
+        <source>Move the element one position up</source>
+        <target>جابجایی المان یک جایگاه به بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.lw_down">
+        <source>Move the element one position down</source>
+        <target>جابجایی المان یک جایگاه به پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.lw_delete">
+        <source>Delete the element</source>
+        <target>حذف المان</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.0">
+        <source>CSV import</source>
+        <target>وارد کردن پرونده CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_import.1">
+        <source>Import options from a CSV file</source>
+        <target>وارد کردن گزینه‌ها از پرونده‌ی CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_import.0">
+        <source>CSV import</source>
+        <target>وارد کردن پرونده CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_import.1">
+        <source>Import table items from a CSV file</source>
+        <target>واردن کردن آیتم‌ها از پرونده CSV</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_expand">
+        <source>Increase the input field size</source>
+        <target>افزایش اندازه فیلد ورودی</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_shrink">
+        <source>Decrease the input field size</source>
+        <target>کاهش اندازه فیلد ورودی</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_rcopy">
+        <source>Duplicate the row</source>
+        <target>تکثیر ردیف</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_rup">
+        <source>Move the row one position up</source>
+        <target>جابجایی ردیف یک جایگاه به بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_rdown">
+        <source>Move the row one position down</source>
+        <target>جابجایی ردیف یک جایگاه به پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_rdelete">
+        <source>Delete the row</source>
+        <target>حذف ردیف</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_ccopy">
+        <source>Duplicate the column</source>
+        <target>تکثیر ستون</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_cmovel">
+        <source>Move the column one position left</source>
+        <target>جابجایی ستون یک جایگاه به چپ</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_cmover">
+        <source>Move the column one position right</source>
+        <target>جابجایی ستون یک جایگاه به راست</target>
+      </trans-unit>
+      <trans-unit id="MSC.tw_cdelete">
+        <source>Delete the column</source>
+        <target>حذف ستون</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_copy">
+        <source>Duplicate the row</source>
+        <target>تکثیر ردیف</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_up">
+        <source>Move the row one position up</source>
+        <target>جابجایی ردیف یک جایگاه به بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_down">
+        <source>Move the row one position down</source>
+        <target>جابجایی ردیف یک جایگاه به پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_delete">
+        <source>Delete the row</source>
+        <target>حذف ردیف</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_value">
+        <source>Value</source>
+        <target>مقدار</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_label">
+        <source>Label</source>
+        <target>برچسب</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_key">
+        <source>Key</source>
+        <target>کلید</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_default">
+        <source>Default</source>
+        <target>پیش‌فرض</target>
+      </trans-unit>
+      <trans-unit id="MSC.ow_group">
+        <source>Group</source>
+        <target>گروه</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_copy">
+        <source>Duplicate the row</source>
+        <target>تکثیر ردیف</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_up">
+        <source>Move the row one position up</source>
+        <target>جابجایی ردیف یک جایگاه به بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_down">
+        <source>Move the row one position down</source>
+        <target>جابجایی ردیف یک جایگاه به پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_delete">
+        <source>Delete the row</source>
+        <target>حذف ردیف</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_module">
+        <source>Module or content element</source>
+        <target>ماژول یا عنصر محتوا</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_column">
+        <source>Layout section</source>
+        <target>بخش چیدمان</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_enable">
+        <source>Enable/disable the module or content element</source>
+        <target>فعال/غیرفعال کردن ماژول یا عنصر محتوا</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_modules">
+        <source>Front end modules</source>
+        <target>ماژول‌های بخش کاربری</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
+        <target>المان‌های محتوایی</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_title">
+        <source>Title</source>
+        <target>عنوان</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_alt">
+        <source>Alternate text</source>
+        <target>متن جایگزین</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_link">
+        <source>Link</source>
+        <target>پیوند</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_caption">
+        <source>Caption</source>
+        <target>زیرنویس</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License URL</source>
+        <target>URL مجوز</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_title">
+        <source>Title</source>
+        <target>عنوان</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_id">
+        <source>ID</source>
+        <target>شناسه</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_template">
+        <source>Template</source>
+        <target>قالب</target>
+      </trans-unit>
+      <trans-unit id="MSC.sw_position">
+        <source>Position</source>
+        <target>جایگاه</target>
+      </trans-unit>
+      <trans-unit id="MSC.image_sizes">
+        <source>Predefined dimensions</source>
+        <target>ابعاد از پیش تعریف شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.custom.0">
+        <source>Custom dimensions</source>
+        <target>ابعاد سفارشی</target>
+      </trans-unit>
+      <trans-unit id="MSC.custom.1">
+        <source>The image will be resized to the given dimensions.</source>
+        <target>اندازه تصویر به ابعاد داده شده تغییر خواهد یافت.</target>
+      </trans-unit>
+      <trans-unit id="MSC.proportional.0">
+        <source>Proportional</source>
+        <target>متناسب</target>
+      </trans-unit>
+      <trans-unit id="MSC.proportional.1">
+        <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <target>ضلع بزرگ‌تر تصویر به اندازه داده شده تنظیم شده و تصویر به صورت متناسب تغییر خواهد کرد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.box.0">
+        <source>Fit the box</source>
+        <target>تطبیق با جعبه</target>
+      </trans-unit>
+      <trans-unit id="MSC.box.1">
+        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <target>ضلع کوچک‌تر تصویر به اندازه داده شده تنظیم شده و تصویر به صورت متناسب تغییر خواهد کرد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.crop.0">
+        <source>Crop (important part)</source>
+        <target>بریدن (قسمت مهم)</target>
+      </trans-unit>
+      <trans-unit id="MSC.crop.1">
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
+        <target>قسمت مهم یک تصویر را همانطور که در مدیریت فایل مشخص شده حفظ می‌کند. در صورت لزوم، تصویر برش داده می‌شود.</target>
+      </trans-unit>
+      <trans-unit id="MSC.left_top.0">
+        <source>Left | Top</source>
+        <target>چپ | بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.left_top.1">
+        <source>Preserves the left part of a landscape image and the top part of a portrait image.</source>
+        <target>قسمت چپ تصویر خوابیده و قسمت بالای تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.center_top.0">
+        <source>Center | Top</source>
+        <target>وسط | بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.center_top.1">
+        <source>Preserves the center part of a landscape image and the top part of a portrait image.</source>
+        <target>قسمت وسط تصویر خوابیده و قسمت بالای تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.right_top.0">
+        <source>Right | Top</source>
+        <target>راست | بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.right_top.1">
+        <source>Preserves the right part of a landscape image and the top part of a portrait image.</source>
+        <target>قسمت راست تصویر خوابیده و قسمت بالای تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.left_center.0">
+        <source>Left | Center</source>
+        <target>چپ | وسط</target>
+      </trans-unit>
+      <trans-unit id="MSC.left_center.1">
+        <source>Preserves the left part of a landscape image and the center part of a portrait image.</source>
+        <target>قسمت چپ تصویر خوابیده و قسمت وسط تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.center_center.0">
+        <source>Center | Center</source>
+        <target>وسط | وسط</target>
+      </trans-unit>
+      <trans-unit id="MSC.center_center.1">
+        <source>Preserves the center part of a landscape image and the center part of a portrait image.</source>
+        <target>قسمت وسط تصویر خوابیده و قسمت وسط تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.right_center.0">
+        <source>Right | Center</source>
+        <target>راست | وسط</target>
+      </trans-unit>
+      <trans-unit id="MSC.right_center.1">
+        <source>Preserves the right part of a landscape image and the center part of a portrait image.</source>
+        <target>قسمت راست تصویر خوابیده و قسمت وسط تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.left_bottom.0">
+        <source>Left | Bottom</source>
+        <target>چپ | پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.left_bottom.1">
+        <source>Preserves the left part of a landscape image and the bottom part of a portrait image.</source>
+        <target>قسمت چپ تصویر خوابیده و قسمت پایین تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.center_bottom.0">
+        <source>Center | Bottom</source>
+        <target>وسط | پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.center_bottom.1">
+        <source>Preserves the center part of a landscape image and the bottom part of a portrait image.</source>
+        <target>قسمت وسط تصویر خوابیده و قسمت پایین تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.right_bottom.0">
+        <source>Right | Bottom</source>
+        <target>راست | پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.right_bottom.1">
+        <source>Preserves the right part of a landscape image and the bottom part of a portrait image.</source>
+        <target>قسمت راست تصویر خوابیده و قسمت پایین تصویر ایستاده را حفظ می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.id.0">
+        <source>ID</source>
+        <target>شناسه</target>
+      </trans-unit>
+      <trans-unit id="MSC.id.1">
+        <source>Note that changing the ID can break data integrity!</source>
+        <target>توجه داشته باشید که تغییر شناسه می‌تواند تمامیت اطلاعات را بشکند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.pid.0">
+        <source>Parent ID</source>
+        <target>شناسه والد</target>
+      </trans-unit>
+      <trans-unit id="MSC.pid.1">
+        <source>Note that changing the parent ID can break data integrity!</source>
+        <target>توجه داشته باشید که تغییر شناسه والد می‌تواند تمامیت اطلاعات را بشکند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.sorting.0">
+        <source>Sorting value</source>
+        <target>مقدار مرتب‌سازی</target>
+      </trans-unit>
+      <trans-unit id="MSC.sorting.1">
+        <source>The sorting value is usually assigned automatically.</source>
+        <target>مقدار مرتب‌سازی معمولا به صورت خودکار اختصاص داده می‌شود.</target>
+      </trans-unit>
+      <trans-unit id="MSC.all.0">
+        <source>Edit multiple</source>
+        <target>ویرایش چندتائی</target>
+      </trans-unit>
+      <trans-unit id="MSC.all.1">
+        <source>Edit multiple elements at once</source>
+        <target>ویرایش هم‌زمان چند المان</target>
+      </trans-unit>
+      <trans-unit id="MSC.all_override.0">
+        <source>Override multiple</source>
+        <target>رونویسی چندتایی</target>
+      </trans-unit>
+      <trans-unit id="MSC.all_override.1">
+        <source>Override multiple elements at once</source>
+        <target>رونویسی هم‌زمان چند المان</target>
+      </trans-unit>
+      <trans-unit id="MSC.all_fields.0">
+        <source>Available fields</source>
+        <target>فیلدهای موجود</target>
+      </trans-unit>
+      <trans-unit id="MSC.all_fields.1">
+        <source>Please select the fields you want to edit.</source>
+        <target>لطفا فیلدهائی را که می‌خواهید ویرایش نمایید، انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.password.0">
+        <source>Password</source>
+        <target>گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.password.1">
+        <source>Please enter a password.</source>
+        <target>لطفا گذرواژه را وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirm.0">
+        <source>Confirm password</source>
+        <target>تایید گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirm.1">
+        <source>Please confirm the password.</source>
+        <target>لطفا گذرواژه را تایید کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+        <target>نمایش گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
+        <target>پنهان کردن گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.dateAdded.0">
+        <source>Date added</source>
+        <target>تاریخ اضافه شد</target>
+      </trans-unit>
+      <trans-unit id="MSC.dateAdded.1">
+        <source>Date added: %s</source>
+        <target>تاریخ اضافه شد: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.lastLogin.0">
+        <source>Previous login</source>
+        <target>ورود قبلی</target>
+      </trans-unit>
+      <trans-unit id="MSC.lastLogin.1">
+        <source>Your previous login was %s. Welcome back!</source>
+        <target>ورودی قبلی شما %s بود. خوش آمدید!</target>
+      </trans-unit>
+      <trans-unit id="MSC.currentLogin.0">
+        <source>Last login</source>
+        <target>آخرین ورود</target>
+      </trans-unit>
+      <trans-unit id="MSC.currentLogin.1">
+        <source>Last login: %s</source>
+        <target>آخرین ورود: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.firstLogin">
+        <source>This seems to be your first login. Welcome to Contao!</source>
+        <target>این به نظر اولین ورود شما است. به کنتائو خوش آمدید!</target>
+      </trans-unit>
+      <trans-unit id="MSC.move">
+        <source>Move the item via drag and drop</source>
+        <target>جابجایی آیتم از طریق کشیدن و رها کردن</target>
+      </trans-unit>
+      <trans-unit id="MSC.move_up.0">
+        <source>Move up</source>
+        <target>جابجایی به بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.move_up.1">
+        <source>Move the item one position up</source>
+        <target>جابجایی به جایگاه بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.move_down.0">
+        <source>Move down</source>
+        <target>جابجایی به پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.move_down.1">
+        <source>Move the item one position down</source>
+        <target>جابجایی مورد به جایگاه پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.shortcuts.0">
+        <source>Back end keyboard shortcuts</source>
+        <target>کلید‌های میانبر بخش مدیریت</target>
+      </trans-unit>
+      <trans-unit id="MSC.shortcuts.1">
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>با استفاده از میانبرهای صفحه‌کلید، درباره سرعت بخشیدن به گردش کار خود بیشتر بیاموزید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.toggleAll.0">
+        <source>Toggle all</source>
+        <target>باز یا بستن همه</target>
+      </trans-unit>
+      <trans-unit id="MSC.toggleAll.1">
+        <source>Expand or collapse all nodes</source>
+        <target>بستن یا باز کردن همه گره‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.toggleMobile.0">
+        <source>Mobile version</source>
+        <target>نسخه موبایل</target>
+      </trans-unit>
+      <trans-unit id="MSC.toggleMobile.1">
+        <source>Go to the mobile version</source>
+        <target>رفتن به نسخه موبایل</target>
+      </trans-unit>
+      <trans-unit id="MSC.toggleDesktop.0">
+        <source>Desktop version</source>
+        <target>نسخه رومیزی</target>
+      </trans-unit>
+      <trans-unit id="MSC.toggleDesktop.1">
+        <source>Go to the desktop version</source>
+        <target>رفتن به نسخه رومیزی</target>
+      </trans-unit>
+      <trans-unit id="MSC.feLink">
+        <source>Go to front end</source>
+        <target>رفتن به بخش کاربری</target>
+      </trans-unit>
+      <trans-unit id="MSC.fePreview">
+        <source>Preview</source>
+        <target>پیش‌نمایش</target>
+      </trans-unit>
+      <trans-unit id="MSC.fePreviewTitle">
+        <source>Front end preview</source>
+        <target>پیش‌نمایش بخش کاربری</target>
+      </trans-unit>
+      <trans-unit id="MSC.profile">
+        <source>Profile</source>
+        <target>نمایه</target>
+      </trans-unit>
+      <trans-unit id="MSC.profileTitle">
+        <source>User profile</source>
+        <target>نمایه‌ی کاربر</target>
+      </trans-unit>
+      <trans-unit id="MSC.feUser">
+        <source>Member</source>
+        <target>عضو</target>
+      </trans-unit>
+      <trans-unit id="MSC.backToTop">
+        <source>Back to top</source>
+        <target>بازگشت به بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.backToTopTitle">
+        <source>Go to the top of the page</source>
+        <target>رفتن به بالای برگه</target>
+      </trans-unit>
+      <trans-unit id="MSC.home">
+        <source>Home</source>
+        <target>خانه</target>
+      </trans-unit>
+      <trans-unit id="MSC.homeTitle">
+        <source>Back to the back end start page</source>
+        <target>بازگشت به برگه شروع بخش مدیریت</target>
+      </trans-unit>
+      <trans-unit id="MSC.learnMore">
+        <source>Learn more on %s</source>
+        <target>بیشتر یاد بگیرید در %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.user">
+        <source>User</source>
+        <target>کاربر</target>
+      </trans-unit>
+      <trans-unit id="MSC.loginBT">
+        <source>Login</source>
+        <target>ورود</target>
+      </trans-unit>
+      <trans-unit id="MSC.logoutBT">
+        <source>Logout</source>
+        <target>خروج</target>
+      </trans-unit>
+      <trans-unit id="MSC.switchBT">
+        <source>Back to %s</source>
+        <target>بازگشت به %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.logoutBTTitle">
+        <source>Close the current session</source>
+        <target>بستن نشست جاری</target>
+      </trans-unit>
+      <trans-unit id="MSC.backBT">
+        <source>Go back</source>
+        <target>بازگشت</target>
+      </trans-unit>
+      <trans-unit id="MSC.backBTTitle">
+        <source>Go up one level</source>
+        <target>بالا رفتن یک سطح</target>
+      </trans-unit>
+      <trans-unit id="MSC.cancelBT">
+        <source>Cancel</source>
+        <target>لغو</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+        <source>Are you sure?</source>
+        <target>آیا مطمئن هستید؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.deleteConfirm">
+        <source>Do you really want to delete element ID %s?</source>
+        <target>آیا مطمئن هستید که می‌خواهید المان شناسه %s را حذف کنید؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.delAllConfirm">
+        <source>Do you really want to delete the selected records?</source>
+        <target>آیا واقعا می‌خواهید رکوردهای انتخاب‌شده را حذف نمایید؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.deleteConfirmFile">
+        <source>Do you really want to delete file or folder %s?</source>
+        <target>آیا واقعا می‌خواهید پرونده یا پوشه %s را حذف نمایید؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.delAllConfirmFile">
+        <source>Do you really want to delete the selected resources?</source>
+        <target>آیا واقعا می‌خواهید منابع انتخاب‌شده را حذف نمایید؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.filterRecords">
+        <source>Records</source>
+        <target>رکوردها</target>
+      </trans-unit>
+      <trans-unit id="MSC.filterAll">
+        <source>All</source>
+        <target>همه</target>
+      </trans-unit>
+      <trans-unit id="MSC.showRecord">
+        <source>Show the details of record %s</source>
+        <target>نمایش جزئیات رکورد %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.editRecord">
+        <source>Edit record %s</source>
+        <target>ویرایش رکورد %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.all_info">
+        <source>Edit selected records of table %s</source>
+        <target>ویرایش همه رکوردهای فعال جدول %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.showOnly">
+        <source>Show</source>
+        <target>نمایش</target>
+      </trans-unit>
+      <trans-unit id="MSC.sortBy">
+        <source>Sort</source>
+        <target>مرتب‌سازی</target>
+      </trans-unit>
+      <trans-unit id="MSC.filter">
+        <source>Filter</source>
+        <target>پالایه</target>
+      </trans-unit>
+      <trans-unit id="MSC.search">
+        <source>Search</source>
+        <target>جستجو</target>
+      </trans-unit>
+      <trans-unit id="MSC.file">
+        <source>File</source>
+        <target>پرونده</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResult">
+        <source>No records found.</source>
+        <target>رکوردی پیدا نشد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultWithFilter">
+        <source>No records match the current filter settings.</source>
+        <target>هیچ رکوردی با تنظیمات فیلتر فعلی مطابقت ندارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchExclude">
+        <source>Unsynchronized directories are not included in the search results.</source>
+        <target>دایرکتوری‌ها همگام‌سازی نشده در نتایج جستجو گنجانده نشده است.</target>
+      </trans-unit>
+      <trans-unit id="MSC.save">
+        <source>Save</source>
+        <target>ذخیره</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNclose">
+        <source>Save and close</source>
+        <target>ذخیره و بستن</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNedit">
+        <source>Save and edit child elements</source>
+        <target>ذخیره و ویرایش المان‌های فرزند</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNcreate">
+        <source>Save and new</source>
+        <target>ذخیره و جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveNduplicate">
+        <source>Save and duplicate</source>
+        <target>ذخیره و تکثیر</target>
+      </trans-unit>
+      <trans-unit id="MSC.continue">
+        <source>Continue</source>
+        <target>ادامه</target>
+      </trans-unit>
+      <trans-unit id="MSC.close">
+        <source>Close</source>
+        <target>بستن</target>
+      </trans-unit>
+      <trans-unit id="MSC.skipNavigation">
+        <source>Skip navigation</source>
+        <target>پریدن از ناوبری</target>
+      </trans-unit>
+      <trans-unit id="MSC.selectAll">
+        <source>Select all</source>
+        <target>انتخاب همه</target>
+      </trans-unit>
+      <trans-unit id="MSC.pw_new">
+        <source>Change password</source>
+        <target>تغییر گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.pw_change">
+        <source>Please enter a new password.</source>
+        <target>لطفا یک گذرواژه‌ی جدید را وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.pw_changed">
+        <source>The password has been updated.</source>
+        <target>گذرواژه به‌روزرسانی شده است.</target>
+      </trans-unit>
+      <trans-unit id="MSC.fallback">
+        <source>default</source>
+        <target>پیش‌فرض</target>
+      </trans-unit>
+      <trans-unit id="MSC.view">
+        <source>View in a new window</source>
+        <target>مشاهده در یک برگه جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.fullsize">
+        <source>Open full size image in a new window</source>
+        <target>باز کردن تصویر با اندازه واقعی در یک برگه جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.datepicker">
+        <source>Date picker</source>
+        <target>انتخابگر تاریخ</target>
+      </trans-unit>
+      <trans-unit id="MSC.colorpicker">
+        <source>Color picker</source>
+        <target>انتخابگر رنگ</target>
+      </trans-unit>
+      <trans-unit id="MSC.pagepicker">
+        <source>Page picker</source>
+        <target>انتخابگر برگه</target>
+      </trans-unit>
+      <trans-unit id="MSC.filepicker">
+        <source>File picker</source>
+        <target>انتخابگر پرونده</target>
+      </trans-unit>
+      <trans-unit id="MSC.ppHeadline">
+        <source>Contao pages</source>
+        <target>برگه‌های کنتائو</target>
+      </trans-unit>
+      <trans-unit id="MSC.fpHeadline">
+        <source>Contao files</source>
+        <target>پرونده‌های کنتائو</target>
+      </trans-unit>
+      <trans-unit id="MSC.yes">
+        <source>yes</source>
+        <target>بلی</target>
+      </trans-unit>
+      <trans-unit id="MSC.no">
+        <source>no</source>
+        <target>خیر</target>
+      </trans-unit>
+      <trans-unit id="MSC.goBack">
+        <source>Go back</source>
+        <target>بازگشت</target>
+      </trans-unit>
+      <trans-unit id="MSC.reload">
+        <source>Reload</source>
+        <target>بارگذاری مجدد</target>
+      </trans-unit>
+      <trans-unit id="MSC.above">
+        <source>above</source>
+        <target>بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.below">
+        <source>below</source>
+        <target>پایین</target>
+      </trans-unit>
+      <trans-unit id="MSC.date">
+        <source>Date</source>
+        <target>تاریخ</target>
+      </trans-unit>
+      <trans-unit id="MSC.tstamp">
+        <source>Revision date</source>
+        <target>تاریخ بازنگری</target>
+      </trans-unit>
+      <trans-unit id="MSC.entry">
+        <source>%s entry</source>
+        <target>%s داده</target>
+      </trans-unit>
+      <trans-unit id="MSC.entries">
+        <source>%s entries</source>
+        <target>%s ورودی</target>
+      </trans-unit>
+      <trans-unit id="MSC.files">
+        <source>%s file(s)</source>
+        <target>%s پرونده</target>
+      </trans-unit>
+      <trans-unit id="MSC.left">
+        <source>left</source>
+        <target>چپ</target>
+      </trans-unit>
+      <trans-unit id="MSC.center">
+        <source>center</source>
+        <target>وسط</target>
+      </trans-unit>
+      <trans-unit id="MSC.right">
+        <source>right</source>
+        <target>راست</target>
+      </trans-unit>
+      <trans-unit id="MSC.justify">
+        <source>justified</source>
+        <target>هم‌تراز</target>
+      </trans-unit>
+      <trans-unit id="MSC.male">
+        <source>Male</source>
+        <target>مرد</target>
+      </trans-unit>
+      <trans-unit id="MSC.female">
+        <source>Female</source>
+        <target>زن</target>
+      </trans-unit>
+      <trans-unit id="MSC.other">
+        <source>Other</source>
+        <target>دیگر</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileSize">
+        <source>File size</source>
+        <target>اندازه پرونده</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileCreated">
+        <source>Created</source>
+        <target>ایجاد شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileModified">
+        <source>Last modified</source>
+        <target>آخرین تغییر</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileAccessed">
+        <source>Last accessed</source>
+        <target>آخرین دسترسی</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileDownload">
+        <source>Download the file</source>
+        <target>بارگذاری پرونده</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileUuid">
+        <source>Unique ID</source>
+        <target>شناسه یکتا</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileImageSize">
+        <source>Width/height in pixel</source>
+        <target>عرض/ارتفاع در واحد پیکسل</target>
+      </trans-unit>
+      <trans-unit id="MSC.filePath">
+        <source>Relative path</source>
+        <target>مسیر نسبی</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileMeta">
+        <source>Metadata</source>
+        <target>فراداده</target>
+      </trans-unit>
+      <trans-unit id="MSC.imageMetadata">
+        <source>%s metadata</source>
+        <target>%sفراداده</target>
+      </trans-unit>
+      <trans-unit id="MSC.versioning">
+        <source>Version management</source>
+        <target>مدیریت نسخه</target>
+      </trans-unit>
+      <trans-unit id="MSC.version">
+        <source>Version</source>
+        <target>نسخه</target>
+      </trans-unit>
+      <trans-unit id="MSC.restore">
+        <source>Restore</source>
+        <target>بازگردانی</target>
+      </trans-unit>
+      <trans-unit id="MSC.backendModules">
+        <source>Back end modules</source>
+        <target>ماژول‌های بخش مدیریت</target>
+      </trans-unit>
+      <trans-unit id="MSC.dashboard">
+        <source>Dashboard</source>
+        <target>داشبورد</target>
+      </trans-unit>
+      <trans-unit id="MSC.updateVersion">
+        <source>Contao version %s is available.</source>
+        <target>کنتائو نسخه‌ی %s موجود می‌باشد</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveAlert">
+        <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
+        <target>توجه! شما همه تغییرات ذخیره نشده را از دست خواهید داد.، از ادامه كار اطمينان داريد؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.toggleNodes">
+        <source>Toggle all nodes</source>
+        <target>تمامی گره‌ها را باز یا بسته کردن</target>
+      </trans-unit>
+      <trans-unit id="MSC.expandNode">
+        <source>Expand node</source>
+        <target>باز کردن گره‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.collapseNode">
+        <source>Collapse node</source>
+        <target>بستن گره‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderC">
+        <source>Public folder</source>
+        <target>پوشه عمومی</target>
+      </trans-unit>
+      <trans-unit id="MSC.folderCP">
+        <source>Protected folder</source>
+        <target>پوشه محافظت‌شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.typeOfFile">
+        <source>%s file</source>
+        <target>%s پرونده</target>
+      </trans-unit>
+      <trans-unit id="MSC.loadingData">
+        <source>Loading data</source>
+        <target>بارگذاری اطلاعات</target>
+      </trans-unit>
+      <trans-unit id="MSC.deleteSelected">
+        <source>Delete</source>
+        <target>حذف</target>
+      </trans-unit>
+      <trans-unit id="MSC.editSelected">
+        <source>Edit</source>
+        <target>ویرایش</target>
+      </trans-unit>
+      <trans-unit id="MSC.overrideSelected">
+        <source>Override</source>
+        <target>بازنشانی</target>
+      </trans-unit>
+      <trans-unit id="MSC.moveSelected">
+        <source>Move</source>
+        <target>جابجایی</target>
+      </trans-unit>
+      <trans-unit id="MSC.copySelected">
+        <source>Copy</source>
+        <target>رونوشت</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyMultiple">
+        <source>Copy repeatedly</source>
+        <target>رونوشت مکرر</target>
+      </trans-unit>
+      <trans-unit id="MSC.aliasSelected">
+        <source>Generate aliases</source>
+        <target>تولید اسم مستعارها</target>
+      </trans-unit>
+      <trans-unit id="MSC.changeSelected">
+        <source>Change selection</source>
+        <target>تغییر انتخاب</target>
+      </trans-unit>
+      <trans-unit id="MSC.resetSelected">
+        <source>Reset selection</source>
+        <target>بازنشانی انتخاب</target>
+      </trans-unit>
+      <trans-unit id="MSC.filePicker">
+        <source>Files</source>
+        <target>پرونده‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.pagePicker">
+        <source>Pages</source>
+        <target>برگه‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.articlePicker">
+        <source>Articles</source>
+        <target>مقاله‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.systemMessages">
+        <source>Alerts</source>
+        <target>هشدارها</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSystemMessages">
+        <source>Currently there are no alerts.</source>
+        <target>در حال حاضر هشداری وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.clearClipboard">
+        <source>Clear clipboard</source>
+        <target>پاک کردن کلیپ بورد</target>
+      </trans-unit>
+      <trans-unit id="MSC.hiddenElements">
+        <source>Unpublished</source>
+        <target>منتشر نشده</target>
+      </trans-unit>
+      <trans-unit id="MSC.hiddenHide">
+        <source>hide</source>
+        <target>پنهان کردن</target>
+      </trans-unit>
+      <trans-unit id="MSC.hiddenShow">
+        <source>show</source>
+        <target>نشان دادن</target>
+      </trans-unit>
+      <trans-unit id="MSC.apply">
+        <source>Apply</source>
+        <target>اعمال</target>
+      </trans-unit>
+      <trans-unit id="MSC.applyTitle">
+        <source>Apply the changes</source>
+        <target>اعمال تغییرات</target>
+      </trans-unit>
+      <trans-unit id="MSC.reset">
+        <source>Reset</source>
+        <target>بازنشانی</target>
+      </trans-unit>
+      <trans-unit id="MSC.resetTitle">
+        <source>Reset the filters</source>
+        <target>بازنشانی پالایه‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.filterTitle">
+        <source>Filter</source>
+        <target>پالایه</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchAndFilter">
+        <source>Search and filter functions</source>
+        <target>تابع‌های جستجو و فیلتر</target>
+      </trans-unit>
+      <trans-unit id="MSC.mandatory">
+        <source>Mandatory field</source>
+        <target>فیلد اجباری</target>
+      </trans-unit>
+      <trans-unit id="MSC.create">
+        <source>Create</source>
+        <target>ایجاد</target>
+      </trans-unit>
+      <trans-unit id="MSC.delete">
+        <source>Delete</source>
+        <target>حذف</target>
+      </trans-unit>
+      <trans-unit id="MSC.protected">
+        <source>protected</source>
+        <target>حفاظت شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.guests">
+        <source>Guests (not logged in)</source>
+        <target>مهمان‌ها (وارد نشده‌اند)</target>
+      </trans-unit>
+      <trans-unit id="MSC.updateMode">
+        <source>Update mode</source>
+        <target>حالت به‌روزرسانی</target>
+      </trans-unit>
+      <trans-unit id="MSC.updateAdd">
+        <source>Add the selected values</source>
+        <target>افزودن مقادیر انتخاب‌شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.updateRemove">
+        <source>Remove the selected values</source>
+        <target>حذف مقادیر انتخاب‌شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.updateReplace">
+        <source>Replace the existing entries</source>
+        <target>جایگزینی ورودی موجود</target>
+      </trans-unit>
+      <trans-unit id="MSC.ascending">
+        <source>ascending</source>
+        <target>صعودی</target>
+      </trans-unit>
+      <trans-unit id="MSC.descending">
+        <source>descending</source>
+        <target>نزولی</target>
+      </trans-unit>
+      <trans-unit id="MSC.default">
+        <source>Default</source>
+        <target>پیش‌فرض</target>
+      </trans-unit>
+      <trans-unit id="MSC.helpWizard">
+        <source>Open the help wizard</source>
+        <target>بازکردن ویزارد کمک</target>
+      </trans-unit>
+      <trans-unit id="MSC.helpWizardTitle">
+        <source>Help wizard</source>
+        <target>ویزارد کمک</target>
+      </trans-unit>
+      <trans-unit id="MSC.jsDisabled">
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <target>به نظر می‌رسد که شما JavaScript را در مرورگر خود غیرفعال کرده‌اید. بخش مدیریت کنتائو بدون JavaScript به درستی کار نخواهد کرد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyOf">
+        <source>%s (copy)</source>
+        <target>%s (رونوشت)</target>
+      </trans-unit>
+      <trans-unit id="MSC.name">
+        <source>Name</source>
+        <target>نام</target>
+      </trans-unit>
+      <trans-unit id="MSC.emailAddress">
+        <source>E-mail address</source>
+        <target>نشانی ایمیل</target>
+      </trans-unit>
+      <trans-unit id="MSC.register">
+        <source>Register</source>
+        <target>ثبت‌نام</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendActivation">
+        <source>The activation mail has been re-sent to your e-mail address.</source>
+        <target>پست فعال‌سازی مجددا به آدرس ایمیل شما ارسال شده است.</target>
+      </trans-unit>
+      <trans-unit id="MSC.accountActivated">
+        <source>Your account has been activated.</source>
+        <target>حساب کاربری شما فعال گردید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.accountError">
+        <source>Unable to process the current request.</source>
+        <target>عدم توانائی در پردازش درخواست کنونی.</target>
+      </trans-unit>
+      <trans-unit id="MSC.emailSubject">
+        <source>Your registration on %s</source>
+        <target>ثبت‌نام شما در %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.adminSubject">
+        <source>New registration on %s</source>
+        <target>ثبت‌نام جدید در %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.adminText">
+        <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
+        <target>یک کاربر جدید (شناسه %s) در وب‌سایت شما عضو گردید. %s در صورتی که شما اجازه فعال شده نام‌نویسی را توسط ایمیل تصدیق نداده‌اید، لطفا به بخش مدیریت وب‌سایت رفته و به صورت معمولی کاربر را فعال نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.requestPassword">
+        <source>Request password</source>
+        <target>درخواست گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.setNewPassword">
+        <source>Set new password</source>
+        <target>تعیین گذرواژه جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.newPasswordSet">
+        <source>Your password has been updated.</source>
+        <target>گذرواژه شما به‌روز شد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passwordSubject">
+        <source>Your password request for %s</source>
+        <target>درخواست گذرواژه برای %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.accountNotFound">
+        <source>No matching account found</source>
+        <target>حساب کاربری درخواست شده پیدا نشد!</target>
+      </trans-unit>
+      <trans-unit id="MSC.oldPassword">
+        <source>Old password</source>
+        <target>گذرواژه قدیمی</target>
+      </trans-unit>
+      <trans-unit id="MSC.newPassword">
+        <source>New password</source>
+        <target>گذرواژه جدید</target>
+      </trans-unit>
+      <trans-unit id="MSC.changePassword">
+        <source>Change password</source>
+        <target>تغییر گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.oldPasswordWrong">
+        <source>The old password is not correct</source>
+        <target>گذرواژه قدیمی درست نیست</target>
+      </trans-unit>
+      <trans-unit id="MSC.securityQuestion">
+        <source>Security question</source>
+        <target>پرسش امنیتی</target>
+      </trans-unit>
+      <trans-unit id="MSC.closeAccount">
+        <source>Close account</source>
+        <target>بستن حساب کاربری</target>
+      </trans-unit>
+      <trans-unit id="MSC.changeSelection">
+        <source>Change selection</source>
+        <target>تغییر انتخاب</target>
+      </trans-unit>
+      <trans-unit id="MSC.currentlySelected">
+        <source>Selected</source>
+        <target>انتخاب‌شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.selectNode">
+        <source>Only show this node</source>
+        <target>نمایش فقط این گره</target>
+      </trans-unit>
+      <trans-unit id="MSC.selectAllNodes">
+        <source>Show all nodes</source>
+        <target>نمایش همه گره‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.showDifferences">
+        <source>Show differences</source>
+        <target>نمایش تفاوت‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.recordOfTable">
+        <source>Record %s of table %s</source>
+        <target>رکورد %s از جدول %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.editElement">
+        <source>Edit the element</source>
+        <target>ویرایش المان</target>
+      </trans-unit>
+      <trans-unit id="MSC.table">
+        <source>Table</source>
+        <target>جدول</target>
+      </trans-unit>
+      <trans-unit id="MSC.ptable">
+        <source>Parent table</source>
+        <target>جدول والد</target>
+      </trans-unit>
+      <trans-unit id="MSC.description">
+        <source>Description</source>
+        <target>شرح</target>
+      </trans-unit>
+      <trans-unit id="MSC.noVersions">
+        <source>Currently there are no versions.</source>
+        <target>در حال حاضر هیچ نسخه‌ایی وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.latestChanges">
+        <source>Latest changes</source>
+        <target>آخرین تغییرات</target>
+      </trans-unit>
+      <trans-unit id="MSC.identicalVersions">
+        <source>The two selected versions are identical.</source>
+        <target>دو نسخه انتخاب‌شده یکسان هستند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.selectNewPosition">
+        <source>Next, please choose the (new) position of the element</source>
+        <target>بعد، جایگاه (جدید) المان را انتخاب نمایید</target>
+      </trans-unit>
+      <trans-unit id="MSC.go">
+        <source>Go</source>
+        <target>برو</target>
+      </trans-unit>
+      <trans-unit id="MSC.quicknav">
+        <source>Quick navigation</source>
+        <target>ناوبری سریع</target>
+      </trans-unit>
+      <trans-unit id="MSC.quicklink">
+        <source>Quick link</source>
+        <target>پیوند سریع</target>
+      </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>گذرواژه‌تان را فراموش کرده‌اید؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.username">
+        <source>Username</source>
+        <target>نام کاربری</target>
+      </trans-unit>
+      <trans-unit id="MSC.login">
+        <source>Login</source>
+        <target>ورود</target>
+      </trans-unit>
+      <trans-unit id="MSC.logout">
+        <source>Logout</source>
+        <target>خروج</target>
+      </trans-unit>
+      <trans-unit id="MSC.loggedInAs">
+        <source>You are logged in as %s.</source>
+        <target>شما با نام کاربری %s وارد شده‌اید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.emptyField">
+        <source>Please enter your username and password!</source>
+        <target>لطفا نام کاربری و گذرواژه خود را وارد نمایید!</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>لطفا گذرواژه خود را برای تایید هویت وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>تایید کردن</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmation">
+        <source>Confirmation</source>
+        <target>تایید</target>
+      </trans-unit>
+      <trans-unit id="MSC.sMatches">
+        <source>%s occurrences for %s</source>
+        <target>%s رخداد برای %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.sEmpty">
+        <source>No matches for &lt;strong&gt;%s&lt;/strong&gt;</source>
+        <target>هیچ تطابقی برای &lt;strong&gt;%s&lt;/strong&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.sResults">
+        <source>Results %s - %s of %s for &lt;strong&gt;%s&lt;/strong&gt;</source>
+        <target>نتایج %s - %s از %s برای &lt;strong&gt;%s&lt;/strong&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.sNoResult">
+        <source>Your search for &lt;strong&gt;%s&lt;/strong&gt; returned no results.</source>
+        <target>جستجوی شما برای &lt;strong&gt;%s&lt;/strong&gt; نتیجه ای در بر نداشت.</target>
+      </trans-unit>
+      <trans-unit id="MSC.sKeywordHint">
+        <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>توجه داشته باشید که کلیدواژه‌های کوتاه‌تر از %s نویسه و بدون اصلاح‌کننده نادیده گرفته خواهند شد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.seconds">
+        <source>seconds</source>
+        <target>ثانیه</target>
+      </trans-unit>
+      <trans-unit id="MSC.up">
+        <source>Up</source>
+        <target>بالا</target>
+      </trans-unit>
+      <trans-unit id="MSC.first">
+        <source>First</source>
+        <target>نخستین</target>
+      </trans-unit>
+      <trans-unit id="MSC.previous">
+        <source>Previous</source>
+        <target>قبلی</target>
+      </trans-unit>
+      <trans-unit id="MSC.next">
+        <source>Next</source>
+        <target>بعدی</target>
+      </trans-unit>
+      <trans-unit id="MSC.last">
+        <source>Last</source>
+        <target>آخرین</target>
+      </trans-unit>
+      <trans-unit id="MSC.goToPage">
+        <source>Go to page %s</source>
+        <target>برو به برگه %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.totalPages">
+        <source>Page %s of %s</source>
+        <target>برگه %s از %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.global">
+        <source>global</source>
+        <target>سراسری</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileUploaded">
+        <source>File %s uploaded successfully.</source>
+        <target>پرونده %s با موفقیت بارگذاری شد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileExceeds">
+        <source>Image %s is too big to be resized automatically.</source>
+        <target>تصویر %s خیلی بزرگ است که به صورت خودکار تغییر اندازه داده شود.</target>
+      </trans-unit>
+      <trans-unit id="MSC.fileResized">
+        <source>Image %s was scaled down to the maximum dimensions.</source>
+        <target>تصویر %s به ابعاد بیشینه کاهش داده شد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchLabel">
+        <source>Search</source>
+        <target>جستجو</target>
+      </trans-unit>
+      <trans-unit id="MSC.keywords">
+        <source>Keywords</source>
+        <target>کلیدواژه‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.options">
+        <source>Options</source>
+        <target>گزینه‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.matchAll">
+        <source>match all words</source>
+        <target>تطابق با همه عبارت</target>
+      </trans-unit>
+      <trans-unit id="MSC.matchAny">
+        <source>match any word</source>
+        <target>تطابق با هر کلمه</target>
+      </trans-unit>
+      <trans-unit id="MSC.saveData">
+        <source>Save data</source>
+        <target>ذخیره اطلاعات</target>
+      </trans-unit>
+      <trans-unit id="MSC.savedData">
+        <source>Your data has been saved.</source>
+        <target>داده‌های شما ذخیره شده است.</target>
+      </trans-unit>
+      <trans-unit id="MSC.printPage">
+        <source>Print this page</source>
+        <target>چاپ این برگه</target>
+      </trans-unit>
+      <trans-unit id="MSC.facebookShare">
+        <source>Share on Facebook</source>
+        <target>اشتراک‌گذاری در فیسبوک</target>
+      </trans-unit>
+      <trans-unit id="MSC.twitterShare">
+        <source>Share on X (formerly Twitter)</source>
+        <target>اشتراک‌گذاری در X (توئیتر سابق)</target>
+      </trans-unit>
+      <trans-unit id="MSC.pleaseWait">
+        <source>Please wait</source>
+        <target>لطفا منتظر بمانید</target>
+      </trans-unit>
+      <trans-unit id="MSC.loading">
+        <source>Loading …</source>
+        <target>بارگذاری ...</target>
+      </trans-unit>
+      <trans-unit id="MSC.more">
+        <source>Read more …</source>
+        <target>بیشتر بخوانید ...</target>
+      </trans-unit>
+      <trans-unit id="MSC.readMore">
+        <source>Read the article: %s</source>
+        <target>خواندن مقاله: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.targetPage">
+        <source>Target page</source>
+        <target>برگه مقصد</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidPage">
+        <source>Sorry, item &quot;%s&quot; does not exist.</source>
+        <target>متاسفانه، آیتم &quot;%s&quot; وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.list_orderBy">
+        <source>Order by %s</source>
+        <target>مرتب شده بر اساس %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.list_perPage">
+        <source>Results per page</source>
+        <target>تعداد نتایج در هر برگه</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>یا</target>
+      </trans-unit>
+      <trans-unit id="MSC.published">
+        <source>Published</source>
+        <target>منتشر شده</target>
+      </trans-unit>
+      <trans-unit id="MSC.unpublished">
+        <source>Unpublished</source>
+        <target>منتشر نشده</target>
+      </trans-unit>
+      <trans-unit id="MSC.addComment">
+        <source>Add a comment</source>
+        <target>افزودن دیدگاه</target>
+      </trans-unit>
+      <trans-unit id="MSC.autologin">
+        <source>Remember me</source>
+        <target>مرا به یاد داشته باش</target>
+      </trans-unit>
+      <trans-unit id="MSC.createdOn">
+        <source>Created at</source>
+        <target>ایجاد شده در</target>
+      </trans-unit>
+      <trans-unit id="MSC.activation">
+        <source>Activation token</source>
+        <target>توکن فعال‌سازی</target>
+      </trans-unit>
+      <trans-unit id="MSC.relevance">
+        <source>%s relevance</source>
+        <target>ارتباط %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidToken">
+        <source>Invalid token</source>
+        <target>توکن نامعتبر</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenConfirmed">
+        <source>This token has already been confirmed</source>
+        <target>این توکن قبلا تایید شده است</target>
+      </trans-unit>
+      <trans-unit id="MSC.tokenEmailMismatch">
+        <source>The e-mail address of the token does not match</source>
+        <target>آدرس ایمیل توکن مطابقت ندارند</target>
+      </trans-unit>
+      <trans-unit id="MSC.resendToken">
+        <source>The token has been re-sent to %s.</source>
+        <target>توکنه به %s مجددا ارسال شده است.</target>
+      </trans-unit>
+      <trans-unit id="MSC.invalidTokenUrl">
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <target>پیوندی که شما سعی در باز کردنش دارید نمی‌تواند تایید شود. اگر شما خودتان پیوند را کلیک کرده‌اید یا از شخص مطمئنی آن را دریافت کرده‌اید، می‌توانید روند را از طریق زیر تایید نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>شما بیش از حد مجاز تلاش کرده‌اید تا گذرواژه خود را بازنشانی کنید. لطفاً ۱۵ دقیقه دیگر دوباره امتحان کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict">
+        <source>Version conflict</source>
+        <target>تصاد نسخه</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict1">
+        <source>Another user has created version %s while you were editing version %s of this record.</source>
+        <target>کاربر دیگری نسخه‌ی %s را ایجاد کرده است در حالی که شما نسخه‌ی %s را ویرایش می‌کردید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.versionConflict2">
+        <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
+        <target>تغییرات شما حالا به عنوان نسخه‌ی %s ذخیره شده‌اند و به طور بالقوه نسخه‌ی %s رونویسی کرده‌اند، بنابراین لطفا نسخه‌های زیر را مقایسه کنید:</target>
+      </trans-unit>
+      <trans-unit id="MSC.dragItemsHint">
+        <source>Drag the items to re-order them</source>
+        <target>آیتم‌ها را برای چیدن دوباره‌شان بکشید</target>
+      </trans-unit>
+      <trans-unit id="MSC.templatesTheme">
+        <source>Theme %s</source>
+        <target>پوسته %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.location">
+        <source>Location</source>
+        <target>محل</target>
+      </trans-unit>
+      <trans-unit id="MSC.download">
+        <source>Download %s</source>
+        <target>بارگیری %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.metaNoLanguages">
+        <source>You have to add a website root page to enter file metadata.</source>
+        <target>شما بایستی یک برگه ریشه وب‌سایت برای وارد کردن پرونده فراداده اضافه کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.breadcrumbMenu">
+        <source>Breadcrumb</source>
+        <target>مسیر راهنما</target>
+      </trans-unit>
+      <trans-unit id="MSC.mainNavigation">
+        <source>Main</source>
+        <target>اصلی</target>
+      </trans-unit>
+      <trans-unit id="MSC.headerNavigation">
+        <source>Header</source>
+        <target>سربرگ</target>
+      </trans-unit>
+      <trans-unit id="MSC.showProfile">
+        <source>Show user profile</source>
+        <target>نمایش پروفایل کاربر</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideProfile">
+        <source>Hide user profile</source>
+        <target>پنهان کردن پروفایل کاربر</target>
+      </trans-unit>
+      <trans-unit id="MSC.showMainNavigation">
+        <source>Show main navigation</source>
+        <target>نمایش ناوبری اصلی</target>
+      </trans-unit>
+      <trans-unit id="MSC.hideMainNavigation">
+        <source>Hide main navigation</source>
+        <target>پنهان کردن ناوبری اصلی</target>
+      </trans-unit>
+      <trans-unit id="MSC.pagination">
+        <source>Pagination</source>
+        <target>صفحه‌بندی</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicodeLowercase">
+        <source>Unicode numbers and lowercase letters</source>
+        <target>حروف کوچک و اعداد یونی‌کد</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.unicode">
+        <source>Unicode numbers and letters</source>
+        <target>حروف و اعداد یونی‌کد</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.asciiLowercase">
+        <source>ASCII numbers and lowercase letters</source>
+        <target>حروف کوچک و اعداد ASCII</target>
+      </trans-unit>
+      <trans-unit id="MSC.validCharacters.ascii">
+        <source>ASCII numbers and letters</source>
+        <target>حروف و اعداد ASCII</target>
+      </trans-unit>
+      <trans-unit id="MSC.sortOrder">
+        <source>Sort order</source>
+        <target>ترتیب مرتب‌سازی</target>
+      </trans-unit>
+      <trans-unit id="MSC.security">
+        <source>Security</source>
+        <target>امنیت</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorAuthentication">
+        <source>Two-factor authentication</source>
+        <target>احراز هویت دو عاملی</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerification">
+        <source>Verification code</source>
+        <target>کد تایید</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorVerificationHelp">
+        <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
+        <target>لطفا کد تولیدشده توسط اپلیکیشن 2FA/TOTP را وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorExplain">
+        <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>اینجا می‌توانید احراز هویت دو مرحله‌ای را فعال کنید، که یک لایه اضافی امنیتی به حساب کاربری شما اضافه می‌کند. علاوه بر این نام کاربری و گذرواژه، شما بایستی یک کد تایید تولیدشده توسط برنامه two-factor مانند1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator یا هر برنامه TOTP دیگر وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorScan">
+        <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>لطفا کد QR را با اپلیکیشن 2FA/TOTP اسکن کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorActive">
+        <source>Two-factor authentication has been enabled.</source>
+        <target>احراز هویت دو-مرحله‌ای فعال شده است.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorEnforced">
+        <source>Please enable up two-factor authentication before you continue.</source>
+        <target>لطفا قبلا از ادامه احراز هویت دو مرحله‌ای را فعال کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTextCode">
+        <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>اگر نمی‌توانید کد QR را اسکن کنید، در عوض این کلید را وارد کنید:</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesLabel">
+        <source>Backup codes</source>
+        <target>کدهای پشتیبان</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesExplain">
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>کدهای پشتیبان می‌توانند برای دسترسی به حساب کاربری استفاده شوند اگر شما ابزار احراز هویت را گم کرده باشید و دیگر نتوانید کدهای two-factor را تولید کنید. از این کدهای پشتیبان همانند گذرواژه‌تان نگهداری کنید! توصیه می‌شود آنها را توسط یک برنامه گذرواژه مانند Lastpass، 1Password یا Keeper ذخیره کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesInfo">
+        <source>Make sure to copy the codes now. You will not be able to see them again!</source>
+        <target>مطمئن شوید که کدها را همین حالا کپی کنید. بعدا دوباره قادر به مشاهده آن‌ها نخواهید بود.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesGenerate">
+        <source>Generate backup codes</source>
+        <target>تولید کدهای پشتیبان</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
+        <source>Regenerate backup codes</source>
+        <target>بازتولید کدهای پشتیبان</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
+        <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>وقتی کدهای پشتیبان جدید بازتولید می‌کنید، کدهای قدیمی شما دگر کار نخواهند کرد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.twoFactorTrustDevice">
+        <source>Trust this device</source>
+        <target>به این دستگاه اعتماد کن</target>
+      </trans-unit>
+      <trans-unit id="MSC.favorites">
+        <source>Favorites</source>
+        <target>علاقمندی‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.trail">
+        <source>Show trail</source>
+        <target>نمایش مسیر</target>
+      </trans-unit>
+      <trans-unit id="MSC.siblings">
+        <source>Show siblings</source>
+        <target>نمایش هم‌سطح‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.favorite">
+        <source>Save URL as favorite</source>
+        <target>ذخیره نشانی‌وب به عنوان علاقمندی</target>
+      </trans-unit>
+      <trans-unit id="MSC.unfavorite">
+        <source>Remove URL from favorites</source>
+        <target>حذف URL از علاقه‌مندی‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmUnfavorite">
+        <source>Do you really want to remove the current URL from your favorites?</source>
+        <target>آیا واقعا می‌خواهید URL فعلی را از علاقه‌مندی‌ها حذف کنید؟</target>
+      </trans-unit>
+      <trans-unit id="MSC.editFavorites">
+        <source>Edit favorites</source>
+        <target>ویرایش علاقمندی‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.userTemplateEditor">
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>حداقل یک کاربر معمولی با دسترسی به ویرایشگر قالب وجود دارد. از آنجایی که قالب‌ها فایل PHP هستند، این کاربران به طور ضمن کنترل کامل ی روی سیستم دارند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupTemplateEditor">
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>حداقل یک گروه کاربری به ویرایشگر قالب دسترسی دارد. از آنجایی که قالب‌ها فایل PHP هستند، کاربران این گروه‌ها به طور ضمن کنترل کامل ی روی سیستم دارند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userThemeImport">
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>حداقل یک کاربر با مجوزی وارد کردن پوسته‌ها وجود دارد. از آنجا که پوسته‌ها دارای قالب‌های اختیاری هستند و قالب‌ها پرونده‌های PHP هستند، این کاربران به طور ضمنی دسترسی کامل به سیستم را دارند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupThemeImport">
+        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>حداقل یک گروه کاربری مجوزی دسترسی به وارد کردن پوسته‌ها را دارد. از آنجا که پوسته‌ها دارای قالب‌های اختیاری هستند و قالب‌ها پرونده‌های PHP هستند، کاربران این گروه‌ها به طور ضمنی دسترسی کامل به سیستم را دارند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>حداقل یک گروه کاربری مجوز دسترسی به ماژول «فهرست» و فیلدهای «list_» را دارد. از آنجا که آنها می‌توانند شامل کوئری‌های SQL اختیاری هستند، کاربران این گروه‌ها کنترل کاملی روی سیستم دارند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+        <target>حداقل یک گروه کاربری وجود دارد که اجازه دسترسی به عنصر HTML فیلتر نشده را می‌دهد. از آنجایی که کد HTML این المان فیلتر نشده است، کاربران این گروه‌ها به طور ضمنی کنترل کاملی بر سیستم دارند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+        <target>حداقل یک کاربر معمولی وجود دارد که به عنصر HTML فیلترنشده دسترسی دارد. از آنجایی که کد HTML آن المان فیلتر نشده است، این کاربران به طور ضمنی کنترل کامل بر سیستم دارند!</target>
+      </trans-unit>
+      <trans-unit id="MSC.enable">
+        <source>Enable</source>
+        <target>فعال</target>
+      </trans-unit>
+      <trans-unit id="MSC.disable">
+        <source>Disable</source>
+        <target>غیرفعال</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>ویرایش</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.0">
+        <source>Google search results preview</source>
+        <target>پیش‌نمایش نتایج جستجوی گوگل</target>
+      </trans-unit>
+      <trans-unit id="MSC.serpPreview.1">
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>اینجا می‌توانید فراداده را در نتایج جستجوی گوگل از قبل ببینید. موتورهای جستجوی دیگر شاید متن‌های طولانی‌تری نمایش دهند یا در موقعیت متفاوتی کوتاه کنند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.0">
+        <source>Number of items</source>
+        <target>تعداد موردها</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.1">
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>اینجا می‌توانید تعداد کل آیتم‌ها را محدود کنید. برای مشاهده همه روی 0 تنظیم کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.clearTrustedDevices">
+        <source>Clear trusted devices</source>
+        <target>پاک کردن ابزارهای مورد اعتماد</target>
+      </trans-unit>
+      <trans-unit id="MSC.trustedDevices">
+        <source>Trusted devices</source>
+        <target>ابزارهای مورد اعتماد</target>
+      </trans-unit>
+      <trans-unit id="MSC.noTrustedDevices">
+        <source>Currently there are no trusted devices.</source>
+        <target>در حال حاضر هیچ ابزار تاییده‌شده‌ای وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.device">
+        <source>Device</source>
+        <target>ابزار</target>
+      </trans-unit>
+      <trans-unit id="MSC.browser">
+        <source>Browser</source>
+        <target>مرورگر</target>
+      </trans-unit>
+      <trans-unit id="MSC.operatingSystem">
+        <source>Operating system</source>
+        <target>سیستم عامل</target>
+      </trans-unit>
+      <trans-unit id="MSC.openToolbar">
+        <source>Open the Contao toolbar</source>
+        <target>باز کردن تولبار کنتائو</target>
+      </trans-unit>
+      <trans-unit id="MSC.closeToolbar">
+        <source>Close the Contao toolbar</source>
+        <target>یستن تولبار کنتائو</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>آدرس URL پیش‌نمایش نمی‌تواند تولید شود، زیرا مسیر پارامترهای الزامی نیاز دارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreviewPost">
+        <source>The preview URL cannot be generated, because the form has errors.</source>
+        <target>امکان ایجاد URL پیش‌نمایش وجود ندارد، زیرا فرم دارای خطا است.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpIndexSetting">
+        <source>The URL will not be indexed due to the robots tag settings.</source>
+        <target>این URL به‌خاطر تنظیمات برچسب robots نمایه‌گذاری نخواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option: %s</source>
+        <target>گزینه نامعلوم: %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyURL">
+        <source>Copy URL</source>
+        <target>کپی URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+        <target>اشتراک URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
+        <target>والد</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>دستی</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmJobAdded">
+        <source>The task has been queued. Check the jobs overview for status updates.</source>
+        <target>وظیفه در صف قرار گرفت. برای دریافت به‌روزرسانی‌ها وضعیت، نمای کلی وظایف را بررسی کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.jobs">
+        <source>Job overview</source>
+        <target>نمای کلی وظیفه</target>
+      </trans-unit>
+      <trans-unit id="MSC.viewAttachments">
+        <source>View attachments</source>
+        <target>نمایش پیوست‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.downloadAttachment">
+        <source>Download attachment %s</source>
+        <target>دانلود پیوست %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.splashScreen">
+        <source>Please click to load the video.</source>
+        <target>لطفا برای بارگذاری ویدیو کلیک کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.dataTransmission">
+        <source>Your IP address will be transmitted to %s.</source>
+        <target>نشانی IP شما باید به %s منتقل خواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.showFrom">
+        <source>visible from %s</source>
+        <target>نمایان از %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.showTo">
+        <source>visible until %s</source>
+        <target>نمایان تا %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.showFromTo">
+        <source>visible from %s to %s</source>
+        <target>نمایان از %s تا %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.editImageSize">
+        <source>Edit the image size</source>
+        <target>ویرایش اندازه تصویر</target>
+      </trans-unit>
+      <trans-unit id="MSC.booleanNot">
+        <source>Not %s</source>
+        <target>نه %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.darkMode">
+        <source>Dark mode</source>
+        <target>حالت تاریک</target>
+      </trans-unit>
+      <trans-unit id="MSC.lightMode">
+        <source>Light mode</source>
+        <target>حالت روشن</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>حفاظت شده توسط &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I&apos;m not a robot</source>
+        <target>من ربات نیستم</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I&apos;m human</source>
+        <target>من انسان هستم</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+        <target>در حال تایید...</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
+        <target>در حال تایید... لطفا صبر کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>کلیدهای عبور</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>کلیدهای عبور ورود امن و راحت را بدون نیاز به گذرواژه و احراز هویت دومرحله‌ای ممکن می‌سازند.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>ورود با کلیدعبور</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>نام/شناسه</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>برای این کلیدعبور یک نام وارد کنید…</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>ایجاد شده در</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>افزودن کلید عبور</target>
+      </trans-unit>
+      <trans-unit id="MSC.editPasskey">
+        <source>Edit passkey &quot;%s&quot;</source>
+        <target>ویرایش کلیدعبور «%s»</target>
+      </trans-unit>
+      <trans-unit id="MSC.savePasskey">
+        <source>Save passkey &quot;%s&quot;</source>
+        <target>ذخیره کلیدعبور «%s»</target>
+      </trans-unit>
+      <trans-unit id="MSC.deletePasskey">
+        <source>Delete passkey &quot;%s&quot;</source>
+        <target>حذف کلیدعبور «%s»</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>برای شروع جستجو تایپ کنید</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>لطفاً حداقل %s کاراکتر وارد کنید</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results …</source>
+        <target>در حال بارگذاری نتایج ...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcut">
+        <source>Ctrl+K</source>
+        <target>Ctrl+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchShortcutMacos">
+        <source>⌘+K</source>
+        <target>⌘+K</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>مشاهده‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>ویرایش %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.type">
+        <source>Type</source>
+        <target>تایپ کنید</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchFacetTitle.tags">
+        <source>Tags</source>
+        <target>برچسب‌ها</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResultsOrNotEnoughPermissions">
+        <source>No results found or not enough permissions to view the corresponding results.</source>
+        <target>هیچ نتیجه‌ای یافت نشد یا دسترسی کافی برای مشاهده نتایج مربوطه وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>نتیجه‌ای یافت نشد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>هیچ گزینه‌ای برای انتخاب وجود ندارد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>حذف آیتم</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuExpand">
+        <source>Expand menu: </source>
+        <target>گسترش منو:</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuCollapse">
+        <source>Collapse menu: </source>
+        <target>جمع کردن منو:</target>
+      </trans-unit>
+      <trans-unit id="MSC.skipToContent">
+        <source>Skip to content</source>
+        <target>رفتن به محتوا</target>
+      </trans-unit>
+      <trans-unit id="MSC.clipboardCopy">
+        <source>Copied to clipboard.</source>
+        <target>در کلیپ‌بورد کپی شد.</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer</source>
+        <target>ایندکس‌کننده جستجو</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
+        <target>در اینجا می‌توانید تنظیم برچسب meta robots را برای ایندکس جستجوی داخلی بازنویسی کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.always_index">
+        <source>Always index</source>
+        <target>همیشه ایندکس شود.</target>
+      </trans-unit>
+      <trans-unit id="MSC.never_index">
+        <source>Never index</source>
+        <target>هیچ‌وقت ایندکس نشود.</target>
+      </trans-unit>
+      <trans-unit id="MSC.field">
+        <source>Field</source>
+        <target>فیلد</target>
+      </trans-unit>
+      <trans-unit id="MSC.keyword">
+        <source>Keyword</source>
+        <target>کلیدواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.enter_fullscreen">
+        <source>Enter fullscreen mode</source>
+        <target>ورود به حالت تمام‌صفحه</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollLeft">
+        <source>Scroll left</source>
+        <target>اسکرول به چپ</target>
+      </trans-unit>
+      <trans-unit id="MSC.scrollRight">
+        <source>Scroll right</source>
+        <target>اسکرول به راست</target>
+      </trans-unit>
+      <trans-unit id="UNITS.0">
+        <source>Byte</source>
+        <target>بایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.1">
+        <source>KiB</source>
+        <target>کیلوبایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.2">
+        <source>MiB</source>
+        <target>مگابایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.3">
+        <source>GiB</source>
+        <target>گیگابایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.4">
+        <source>TiB</source>
+        <target>ترابایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.5">
+        <source>PiB</source>
+        <target>پتابایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.6">
+        <source>EiB</source>
+        <target>اگزابایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.7">
+        <source>ZiB</source>
+        <target>زتابایت</target>
+      </trans-unit>
+      <trans-unit id="UNITS.8">
+        <source>YiB</source>
+        <target>یوتابایت</target>
+      </trans-unit>
+      <trans-unit id="CONFIRM.do">
+        <source>Module</source>
+        <target>ماژول</target>
+      </trans-unit>
+      <trans-unit id="CONFIRM.table">
+        <source>Affected table</source>
+        <target>جدول متاثر</target>
+      </trans-unit>
+      <trans-unit id="CONFIRM.act">
+        <source>Action</source>
+        <target>کنش</target>
+      </trans-unit>
+      <trans-unit id="CONFIRM.id">
+        <source>Affected record</source>
+        <target>رکورد متاثر</target>
+      </trans-unit>
+      <trans-unit id="DP.select_a_time">
+        <source>Select a time</source>
+        <target>ساعت را انتخاب کنید</target>
+      </trans-unit>
+      <trans-unit id="DP.use_mouse_wheel">
+        <source>Use the mouse wheel to quickly change value</source>
+        <target>از چرخ ماوس برای انتخاب سریع مقدار استفاده کنید</target>
+      </trans-unit>
+      <trans-unit id="DP.time_confirm_button">
+        <source>OK</source>
+        <target>بسیار خوب</target>
+      </trans-unit>
+      <trans-unit id="DP.apply_range">
+        <source>Apply</source>
+        <target>اعمال</target>
+      </trans-unit>
+      <trans-unit id="DP.cancel">
+        <source>Cancel</source>
+        <target>لغو</target>
+      </trans-unit>
+      <trans-unit id="DP.week">
+        <source>Wk</source>
+        <target>Wk</target>
+      </trans-unit>
+      <trans-unit id="COLS.header">
+        <source>Header</source>
+        <target>سربرگ</target>
+      </trans-unit>
+      <trans-unit id="COLS.left">
+        <source>Left column</source>
+        <target>ستون چپ</target>
+      </trans-unit>
+      <trans-unit id="COLS.main">
+        <source>Main column</source>
+        <target>ستون اصلی</target>
+      </trans-unit>
+      <trans-unit id="COLS.right">
+        <source>Right column</source>
+        <target>ستون راست</target>
+      </trans-unit>
+      <trans-unit id="COLS.footer">
+        <source>Footer</source>
+        <target>پاورقی</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.top">
+        <source>Before the wrapper</source>
+        <target>قبل از wrapper</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.before">
+        <source>After the page header</source>
+        <target>بعد از سربرگ برگه</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.main">
+        <source>Inside the main column</source>
+        <target>در ستون اصلی</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.after">
+        <source>Before the page footer</source>
+        <target>قبل از پاورقی برگه</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.bottom">
+        <source>After the wrapper</source>
+        <target>بعد از wrapper</target>
+      </trans-unit>
+      <trans-unit id="SECTIONS.manual">
+        <source>Manual output</source>
+        <target>خروجی دستی</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.0">
+        <source>Edit multiple</source>
+        <target>ویرایش چندتائی</target>
+      </trans-unit>
+      <trans-unit id="DCA.all.1">
+        <source>Edit multiple elements at once</source>
+        <target>ویرایش هم‌زمان چند المان</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.0">
+        <source>Toggle all</source>
+        <target>باز یا بستن همه</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleNodes.1">
+        <source>Expand or collapse all nodes</source>
+        <target>بستن یا باز کردن همه گره‌ها</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.0">
+        <source>Expand all</source>
+        <target>باز کردن همه</target>
+      </trans-unit>
+      <trans-unit id="DCA.expandNodes.1">
+        <source>Expand all nodes</source>
+        <target>باز کردن همه گره‌ها</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.0">
+        <source>Collapse all</source>
+        <target>بستن همه</target>
+      </trans-unit>
+      <trans-unit id="DCA.collapseNodes.1">
+        <source>Collapse all nodes</source>
+        <target>بستن همه گره‌ها</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.0">
+        <source>Filter</source>
+        <target>پالایه</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.1">
+        <source>Show the filter panel</source>
+        <target>نمایش پنل فیلتر</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggleFilter.2">
+        <source>Hide the filter panel</source>
+        <target>پنهان کردن پنل فیلتر</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.0">
+        <source>New</source>
+        <target>جدید</target>
+      </trans-unit>
+      <trans-unit id="DCA.new.1">
+        <source>Create a new element</source>
+        <target>ایجاد یک المان جدید</target>
+      </trans-unit>
+      <trans-unit id="DCA.show.0">
+        <source>Details</source>
+        <target>جزئیات</target>
+      </trans-unit>
+      <trans-unit id="DCA.show.1">
+        <source>Show the details of element ID %s</source>
+        <target>نمایش جزئیات المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit.0">
+        <source>Edit</source>
+        <target>ویرایش</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit.1">
+        <source>Edit element ID %s</source>
+        <target>ویرایش المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut.0">
+        <source>Move</source>
+        <target>جابجایی</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut.1">
+        <source>Move element ID %s</source>
+        <target>جابجایی المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.copy.0">
+        <source>Copy</source>
+        <target>رونوشت</target>
+      </trans-unit>
+      <trans-unit id="DCA.copy.1">
+        <source>Copy element ID %s</source>
+        <target>کپی شناسه‌ی عنصر %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.0">
+        <source>Copy recursively</source>
+        <target>کپی مکرر</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.1">
+        <source>Copy element ID %s with child nodes</source>
+        <target>کپی شناسه‌ی عنصر %s همراه با گره‌های فرزند</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.0">
+        <source>Delete</source>
+        <target>حذف</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.1">
+        <source>Delete element ID %s</source>
+        <target>حذف المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.0">
+        <source>Versions</source>
+        <target>نسخه‌ها</target>
+      </trans-unit>
+      <trans-unit id="DCA.versions.1">
+        <source>Show the versions of element ID %s</source>
+        <target>نمایش نسخه‌های عنصر با شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.drag">
+        <source>Drag element ID %s</source>
+        <target>کشیدن المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.global_operations">
+        <source>Show all global operations</source>
+        <target>نمایش همه عملیات سراسری</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>نمایش عملیات برای عنصر با شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.0">
+        <source>Child elements</source>
+        <target>عنصرهای فرزند</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.1">
+        <source>Edit the child elements of element ID %s</source>
+        <target>ویرایش المان‌های فرزند المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.0">
+        <source>Publish/unpublish element</source>
+        <target>انتشار/عدم‌انتشار المان</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.1">
+        <source>Unpublish element ID %s</source>
+        <target>عدم‌انتشار المان شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.2">
+        <source>Publish element ID %s</source>
+        <target>انتشار المان شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.3">
+        <source>Unpublish</source>
+        <target>لغو انتشار</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.4">
+        <source>Publish</source>
+        <target>انتشار</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastetop">
+        <source>Paste at the top</source>
+        <target>جاگذاری در بالا</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteroot">
+        <source>Paste at the top</source>
+        <target>جاگذاری در بالا</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste into</source>
+        <target>جاگذاری در</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.1">
+        <source>Paste into element ID %s</source>
+        <target>جاگذاری به المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.0">
+        <source>Paste after</source>
+        <target>جاگذاری بعد از</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteafter.1">
+        <source>Paste after element ID %s</source>
+        <target>جاگذاری بعد از المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewtop.0">
+        <source>New at the top</source>
+        <target>جدید در بالا</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewtop.1">
+        <source>Create a new element at the top</source>
+        <target>ایجاد یک المان جدید در بالا</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.0">
+        <source>New after</source>
+        <target>جدید بعد از</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.1">
+        <source>Create a new element after element ID %s</source>
+        <target>ایجاد یک المان جدید بعد از المان شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.0">
+        <source>New inside</source>
+        <target>جدید درون</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.1">
+        <source>Create a new element inside element ID %s</source>
+        <target>ایجاد یک عنصر جدید درون عنصر با شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions_legend">
+        <source>Permissions</source>
+        <target>مجوزها</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.0">
+        <source>Back end permissions</source>
+        <target>مجوزهای بخش مدیریت</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.1">
+        <source>The changes made here are saved in the user and group settings.</source>
+        <target>تغییرات انجام‌شده در اینجا در تنظیمات کاربر و گروه ذخیره می‌شوند.</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.groups">
+        <source>Groups</source>
+        <target>گروه‌ها</target>
+      </trans-unit>
+      <trans-unit id="DCA.permissions.users">
+        <source>Users</source>
+        <target>کاربران</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.summary">
+        <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>%d URI با موفقیت فهرست شد. %d ناموفق بود.</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.searchIndex.warning">
+        <source>%d URI(s) were skipped.</source>
+        <target>%d URL نادیدگرفته شد.</target>
+      </trans-unit>
+      <trans-unit id="CRAWL.brokenLinkChecker.summary">
+        <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>%d لینک با موفقیت بررسی د. %d شکسته بودند.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

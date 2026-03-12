@@ -130,6 +130,14 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
                 ->append($this->addTemplateStudioNode())
+                ->scalarNode('auto_refresh_template_hierarchy')
+                    ->info('Automatically refreshes the template hierarchy on every request.')
+                    ->defaultNull()
+                    ->validate()
+                        ->ifTrue(static fn ($v) => null !== $v && !\is_bool($v))
+                        ->thenInvalid('Must be boolean or null.')
+                    ->end()
+                ->end()
             ->end()
         ;
 
@@ -405,9 +413,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
                     ->example(['+heic', '-svgz'])
                     ->validate()
-                        ->ifTrue(
-                            static fn (array $extensions): bool => array_any($extensions, static fn ($extension) => !preg_match('/^[+-]?[a-z0-9]+$/', $extension)),
-                        )
+                        ->ifTrue(static fn (array $extensions): bool => array_any($extensions, static fn ($extension) => !preg_match('/^[+-]?[a-z0-9]+$/', $extension)))
                         ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
                     ->end()
                     ->validate()

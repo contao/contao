@@ -74,7 +74,7 @@ class ModuleNewsletterList extends Module
 
 		$arrNewsletter = array();
 
-		$strRequest = StringUtil::ampersand(Environment::get('requestUri'));
+		$strRequest = Environment::get('requestUri');
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 		$container = System::getContainer();
 

@@ -68,11 +68,10 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
         }
 
         // Add localized metadata
-        $localizedMetadata = [];
-
-        foreach (StringUtil::deserialize($row['meta'] ?? null, true) as $lang => $data) {
-            $localizedMetadata[$lang] = new Metadata([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122(), ...$data]);
-        }
+        $localizedMetadata = array_map(
+            static fn ($data) => new Metadata([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122(), ...$data]),
+            StringUtil::deserialize($row['meta'] ?? null, true),
+        );
 
         $event->set('localized', new MetadataBag($localizedMetadata, $this->getDefaultLocales()));
     }

@@ -178,7 +178,7 @@ class ContentDownloads extends ContentDownload
 					$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 				}
 
-				$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path) . '&amp;cid=' . $this->id;
+				$strHref .= (str_contains($strHref, '?') ? '&' : '?') . 'file=' . System::urlEncode($objFiles->path) . '&cid=' . $this->id;
 
 				// Add the image
 				$files[$objFiles->path] = array
@@ -264,7 +264,7 @@ class ContentDownloads extends ContentDownload
 						$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 					}
 
-					$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objSubfiles->path);
+					$strHref .= (str_contains($strHref, '?') ? '&' : '?') . 'file=' . System::urlEncode($objSubfiles->path);
 
 					// Add the image
 					$files[$objSubfiles->path] = array

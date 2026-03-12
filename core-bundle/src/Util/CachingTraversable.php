@@ -21,7 +21,7 @@ namespace Contao\CoreBundle\Util;
 class CachingTraversable implements \IteratorAggregate
 {
     /**
-     * @var list<array{0:TKey, 1:TValue}>
+     * @var list<array{0: TKey, 1: TValue}>
      */
     private array $items = [];
 

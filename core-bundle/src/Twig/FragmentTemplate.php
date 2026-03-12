@@ -104,9 +104,4 @@ final class FragmentTemplate
     {
         return ($this->onGetResponse)($this, $preBuiltResponse);
     }
-
-    // We need to extend from the legacy Template class to keep existing type hints
-    // working. In the future, when people migrated their usages, we will drop the
-    // base class and the following overrides, that are only there to prevent usage
-    // of the base class functionalities.
 }

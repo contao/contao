@@ -69,7 +69,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->ensureInitialized();
 
         if (null === $href) {
-            $href = $this->framework->getAdapter(System::class)->getReferer(true);
+            $href = $this->framework->getAdapter(System::class)->getReferer();
         } elseif (str_contains($href, '=') && !str_contains($href, '?')) {
             $href = $this->urlGenerator->generate('contao_backend').'?'.$href;
         }

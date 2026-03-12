@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -111,7 +112,7 @@ class FileDownloadHelper
             $parameters[self::TOKEN_PARAM] = $tokenHash;
         }
 
-        $url = $this->router->generate('contao_file_stream', $parameters, RouterInterface::ABSOLUTE_URL);
+        $url = $this->router->generate('contao_file_stream', $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $this->signer->sign($url, new \DateInterval('PT'.$temporaryAccessOption->getTtl().'S'));
     }

@@ -26,14 +26,14 @@ class NamespaceLookupFileGeneratorTest extends TestCase
             ->method('getInheritanceChains')
             ->willReturn([
                 'a' => [
-                    '/project/templates/a.html.twig' => '@Contao_Global/a.html.twig',
+                    '/project/templates/a.html.twig' => '@Contao_User/a.html.twig',
                     '/project/contao/templates/a.html.twig' => '@Contao_App/a.html.twig',
                 ],
                 'b' => [
-                    '/project/templates/b.html.twig' => '@Contao_Global/b.html.twig',
+                    '/project/templates/b.html.twig' => '@Contao_User/b.html.twig',
                 ],
                 'foo/c' => [
-                    '/project/templates/foo/c.html.twig' => '@Contao_Global/foo/c.html.twig',
+                    '/project/templates/foo/c.html.twig' => '@Contao_User/foo/c.html.twig',
                 ],
                 'bar/d' => [
                     '/project/vendor/demo/bar/d.html.twig' => '@Contao_DemoBundle/bar/d.html.twig',
@@ -52,7 +52,7 @@ class NamespaceLookupFileGeneratorTest extends TestCase
                         $expectedData = [
                             'namespaces' => [
                                 ['namespace' => 'Contao', 'path' => '../../templates'],
-                                ['namespace' => 'Contao_Global', 'path' => '../../templates'],
+                                ['namespace' => 'Contao_User', 'path' => '../../templates'],
                                 ['namespace' => 'Contao', 'path' => '../../contao/templates'],
                                 ['namespace' => 'Contao_App', 'path' => '../../contao/templates'],
                                 ['namespace' => 'Contao', 'path' => '../../vendor/demo'],

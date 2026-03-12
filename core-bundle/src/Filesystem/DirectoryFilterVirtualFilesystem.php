@@ -327,10 +327,8 @@ class DirectoryFilterVirtualFilesystem implements VirtualFilesystemInterface
      */
     private function isAccessible(string $path, bool $requireFullOwnership = false): bool
     {
-        foreach ($this->prefixPaths as $prefixPath) {
-            if (Path::isBasePath($prefixPath, $path)) {
-                return true;
-            }
+        if (array_any($this->prefixPaths, static fn ($prefixPath) => Path::isBasePath($prefixPath, $path))) {
+            return true;
         }
 
         return !$requireFullOwnership && $this->isTrailPath($path);
