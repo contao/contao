@@ -40,6 +40,7 @@ class InsertTagsController
     {
         $this->framework->initialize();
 
+        // Backwards compatibility
         $pageModelBefore = $GLOBALS['objPage'] ?? null;
         $GLOBALS['objPage'] = $pageModel;
 
