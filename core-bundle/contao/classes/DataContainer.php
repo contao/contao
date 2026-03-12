@@ -597,10 +597,8 @@ abstract class DataContainer extends Backend
 					'input_name' => $this->strInputName,
 					'attributes' => $arrAttributes,
 					'error' => $objWidget->hasErrors(),
-					'js_date_format' => ($arrAttributes['datepicker'] ?? null) ?
-						Date::formatToJs(Config::get(($arrAttributes['rgxp'] ?? 'date') . 'Format')) : null,
-					'dca_picker_wizard' => $hasDcaPicker ?
-						Backend::getDcaPickerWizard($arrAttributes['dcaPicker'], $this->strTable, $this->strField, $this->strInputName) : null,
+					'js_date_format' => ($arrAttributes['datepicker'] ?? null) ? Date::formatToJs(Config::get(($arrAttributes['rgxp'] ?? 'date') . 'Format')) : null,
+					'dca_picker_wizard' => $hasDcaPicker ? Backend::getDcaPickerWizard($arrAttributes['dcaPicker'], $this->strTable, $this->strField, $this->strInputName) : null,
 					'custom_wizards' => $customWizards,
 				))
 			;

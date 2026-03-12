@@ -1,4 +1,3 @@
-
 {% trans_default_domain 'contao_default' %}
 
 {% set row_attributes = attrs()
@@ -53,7 +52,7 @@
                 {% set label_attributes = attrs()
                     .set('for', "opt_#{input_name}_update_#{i}")
                 %}
-                <input{{ input_attributes }}> <label{{ label_attributes }}>{{ "MSC.update#{operation|capitalize}"|trans }}</label><br>
+                <input{{ input_attributes }}><label{{ label_attributes }}>{{ "MSC.update#{operation|capitalize}"|trans }}</label><br>
             {% endfor %}
         </fieldset>
 

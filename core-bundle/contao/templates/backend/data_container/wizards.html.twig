@@ -10,26 +10,26 @@
     ) }}
     <script>
         {% autoescape 'js' %}
-        new Picker.Date($("{{ "ctrl_#{id}" }}"), {
-            draggable: false,
-            toggle: $("{{ "toggle_#{id}" }}"),
-            format: "{{ js_date_format }}",
-            positionOffset: {x: -211, y: -209},
-            pickerClass: "datepicker_bootstrap",
-            useFadeInOut: !Browser.ie,
-            startDay: {{ 'MSC.weekOffset'|trans }},
-            titleFormat: "{{ 'MSC.titleFormat'|trans }}",
-            {% if attributes.rgxp|default == 'datim' %}
-            timePicker: true,
-            {% elseif attributes.rgxp|default == 'time' %}
-            pickOnly: "time",
-            {% endif %}
-            {% if attributes.submitOnChange|default %}
-            onSelect: function () {
-                Backend.autoSubmit("{{ table }}}");
-            },
-            {% endif %}
-        });
+            new Picker.Date($("{{ "ctrl_#{id}" }}"), {
+                draggable: false,
+                toggle: $("{{ "toggle_#{id}" }}"),
+                format: "{{ js_date_format }}",
+                positionOffset: {x: -211, y: -209},
+                pickerClass: "datepicker_bootstrap",
+                useFadeInOut: !Browser.ie,
+                startDay: {{ 'MSC.weekOffset'|trans }},
+                titleFormat: "{{ 'MSC.titleFormat'|trans }}",
+                {% if attributes.rgxp|default == 'datim' %}
+                    timePicker: true,
+                {% elseif attributes.rgxp|default == 'time' %}
+                    pickOnly: "time",
+                {% endif %}
+                {% if attributes.submitOnChange|default %}
+                    onSelect: function () {
+                        Backend.autoSubmit("{{ table }}}");
+                    },
+                {% endif %}
+            });
         {% endautoescape %}
     </script>
 {% endif %}
