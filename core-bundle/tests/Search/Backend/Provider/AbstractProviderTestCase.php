@@ -51,6 +51,7 @@ abstract class AbstractProviderTestCase extends TestCase
                 foreach ($row as $key => $value) {
                     $rowQuoted[$connection->quoteIdentifier($key)] = $value;
                 }
+
                 $connection->insert($table, $rowQuoted);
             }
         }
