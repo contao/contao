@@ -31,6 +31,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Stub;
@@ -236,32 +238,26 @@ class DbafsTest extends TestCase
             ->willReturn(['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'])
         ;
 
-        $getColumn = function (string $name): Column {
-            $column = $this->createStub(Column::class);
-            $column
-                ->method('getName')
-                ->willReturn($name)
-            ;
-
-            return $column;
-        };
-
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
             ->expects($this->once())
-            ->method('listTableColumns')
+            ->method('introspectTableColumnsByUnquotedName')
             ->with('tl_files')
-            ->willReturn(
-                array_map(
-                    $getColumn,
-                    [
-                        'id', 'pid', 'uuid', 'path',
-                        'hash', 'lastModified', 'type',
-                        'extension', 'found', 'name', 'tstamp',
-                        'foo', 'baz',
-                    ],
-                ),
-            )
+            ->willReturn([
+                new Column('id', Type::getType(Types::INTEGER)),
+                new Column('pid', Type::getType(Types::INTEGER)),
+                new Column('uuid', Type::getType(Types::STRING)),
+                new Column('path', Type::getType(Types::STRING)),
+                new Column('hash', Type::getType(Types::STRING)),
+                new Column('lastModified', Type::getType(Types::INTEGER)),
+                new Column('type', Type::getType(Types::STRING)),
+                new Column('extension', Type::getType(Types::STRING)),
+                new Column('found', Type::getType(Types::BOOLEAN)),
+                new Column('name', Type::getType(Types::STRING)),
+                new Column('tstamp', Type::getType(Types::INTEGER)),
+                new Column('foo', Type::getType(Types::STRING)),
+                new Column('baz', Type::getType(Types::STRING)),
+            ])
         ;
 
         $connection
