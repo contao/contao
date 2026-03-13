@@ -99,11 +99,6 @@ class TemplateTest extends TestCase
     #[DataProvider('provideBuffer')]
     public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
     {
-        $page = new \stdClass();
-        $page->minifyMarkup = false;
-
-        $GLOBALS['objPage'] = $page;
-
         $template = new class($buffer) extends FrontendTemplate {
             public function __construct(private readonly string|null $testBuffer)
             {
@@ -129,8 +124,6 @@ class TemplateTest extends TestCase
         };
 
         $this->assertSame($expectedOutput, $template->testCompile());
-
-        unset($GLOBALS['objPage']);
     }
 
     public static function provideBuffer(): iterable
