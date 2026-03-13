@@ -14,6 +14,7 @@ use Contao\CommentsBundle\Util\BbCode;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
@@ -77,7 +78,7 @@ class Comments extends Frontend
 			$offset = $pagination->getOffset();
 
 			// Initialize the pagination menu
-			$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/frontend_module/pagination.html.twig', array('pagination' => $pagination));
+			$objTemplate->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 		}
 
 		$objTemplate->allowComments = true;
