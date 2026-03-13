@@ -363,7 +363,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 if ($objUpdate->numRows) {
                     $pageModel = $this->container->get('contao.routing.page_finder')->getCurrentPage();
-                    $result = Date::parse($insertTag->getParameters()->get(0) ?? ($pageModel->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? ''), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+                    $result = Date::parse($insertTag->getParameters()->get(0) ?? $pageModel->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
                 }
                 break;
 
