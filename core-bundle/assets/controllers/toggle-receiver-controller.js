@@ -86,7 +86,7 @@ export default class extends Controller {
             handler.setState(state);
         }
 
-        if (['mouseenter', 'mouseover', 'mouseleave'].includes(event?.type)) {
+        if (['mouseenter', 'mouseover', 'mouseleave', 'focusin', 'focusout'].includes(event?.type)) {
             return;
         }
 
