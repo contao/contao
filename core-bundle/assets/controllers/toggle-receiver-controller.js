@@ -22,6 +22,9 @@ export default class extends Controller {
     }
 
     open(event) {
+        // Cancel any pending close
+        clearTimeout(this.#closeDelay);
+
         if (this.isOpen()) {
             return;
         }
