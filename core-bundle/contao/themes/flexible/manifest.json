@@ -1,11 +1,11 @@
 {
-  "backend.css": "/system/themes/flexible/backend.css",
-  "confirm.css": "/system/themes/flexible/confirm.css",
-  "conflict.css": "/system/themes/flexible/conflict.css",
-  "diff.css": "/system/themes/flexible/diff.css",
-  "help.css": "/system/themes/flexible/help.css",
-  "login.css": "/system/themes/flexible/login.css",
-  "popup.css": "/system/themes/flexible/popup.css",
-  "tinymce.css": "/system/themes/flexible/tinymce.css",
-  "tinymce-dark.css": "/system/themes/flexible/tinymce-dark.css"
+  "backend.css": "/system/themes/flexible/backend.c506bd82.css",
+  "confirm.css": "/system/themes/flexible/confirm.68c6d22d.css",
+  "conflict.css": "/system/themes/flexible/conflict.7b2f4656.css",
+  "diff.css": "/system/themes/flexible/diff.cd2c4a75.css",
+  "help.css": "/system/themes/flexible/help.fa5ead80.css",
+  "login.css": "/system/themes/flexible/login.d3bebc9c.css",
+  "popup.css": "/system/themes/flexible/popup.25b82d46.css",
+  "tinymce.css": "/system/themes/flexible/tinymce.3c7bc5e0.css",
+  "tinymce-dark.css": "/system/themes/flexible/tinymce-dark.c3737507.css"
 }
