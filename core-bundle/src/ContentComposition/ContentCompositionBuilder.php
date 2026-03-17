@@ -11,9 +11,11 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -37,8 +39,6 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
 class ContentCompositionBuilder
 {
     private string|null $layoutTemplate = null;
-
-    private ResponseContext|null $responseContext = null;
 
     private string|null $defaultImageDensities = null;
 
@@ -72,6 +72,8 @@ class ContentCompositionBuilder
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly CoreResponseContextFactory $responseContextFactory,
         private readonly PageModel $page,
     ) {
         $this->slotRenderer = $this->renderer = $renderer;
@@ -85,17 +87,6 @@ class ContentCompositionBuilder
     public function useCustomLayoutTemplate(string $identifier): self
     {
         $this->layoutTemplate = $identifier;
-
-        return $this;
-    }
-
-    /**
-     * If a response context is set, default data queried from it will be available in
-     * the template through lazy accessors.
-     */
-    public function setResponseContext(ResponseContext $responseContext): self
-    {
-        $this->responseContext = $responseContext;
 
         return $this;
     }
@@ -171,6 +162,10 @@ class ContentCompositionBuilder
      */
     public function buildLayoutTemplate(): LayoutTemplate
     {
+        if (!$responseContext = $this->responseContextAccessor->getResponseContext()) {
+            $responseContext = $this->responseContextFactory->createContaoWebpageResponseContext($this->page);
+        }
+
         $this->framework->initialize();
 
         // If no template was explicitly set, we try to find the associated user layout
@@ -239,9 +234,9 @@ class ContentCompositionBuilder
 
         $this->addDefaultDataToTemplate($template, $this->page, $layout);
         $this->addCompositedContentToTemplate($template, $this->elementReferencesBySlot);
-        $this->addResponseContextToTemplate($template, $this->responseContext);
+        $this->addResponseContextToTemplate($template, $responseContext);
 
-        $this->eventDispatcher->dispatch(new LayoutEvent($template, $this->page, $layout, $this->responseContext));
+        $this->eventDispatcher->dispatch(new LayoutEvent($template, $this->page, $layout));
 
         return $template;
     }
@@ -294,12 +289,8 @@ class ContentCompositionBuilder
         }
     }
 
-    private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext|null $responseContext): void
+    private function addResponseContextToTemplate(LayoutTemplate $template, ResponseContext $responseContext): void
     {
-        if (!$responseContext) {
-            return;
-        }
-
         $responseContextData = [
             'head' => $responseContext->has(HtmlHeadBag::class) ? $responseContext->get(HtmlHeadBag::class) : null,
             'end_of_head' => fn () => [

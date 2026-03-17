@@ -31,6 +31,18 @@ class ResponseContextAccessor
 
     public function setResponseContext(ResponseContext|null $responseContext): self
     {
+        // Unset some legacy globals (see #7659)
+        unset(
+            $GLOBALS['TL_HEAD'],
+            $GLOBALS['TL_BODY'],
+            $GLOBALS['TL_MOOTOOLS'],
+            $GLOBALS['TL_JQUERY'],
+            $GLOBALS['TL_USER_CSS'],
+            $GLOBALS['TL_FRAMEWORK_CSS'],
+            $GLOBALS['TL_JAVASCRIPT'],
+            $GLOBALS['TL_CSS'],
+        );
+
         $request = $this->requestStack->getCurrentRequest();
         $request?->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);
 
