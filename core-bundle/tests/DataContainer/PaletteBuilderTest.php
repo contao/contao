@@ -18,7 +18,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
 use Contao\Input;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -611,10 +614,16 @@ class PaletteBuilderTest extends TestCase
 
     private function mockConnectionWithTableColumns(array $tableColumns): Connection&Stub
     {
+        $columns = [];
+
+        foreach ($tableColumns as $tableColumn) {
+            $columns[] = new Column($tableColumn, Type::getType(Types::STRING)); // Type is not relevant for the test
+        }
+
         $schemaManager = $this->createStub(MySQLSchemaManager::class);
         $schemaManager
-            ->method('listTableColumns')
-            ->willReturn(array_flip($tableColumns))
+            ->method('introspectTableColumnsByUnquotedName')
+            ->willReturn($columns)
         ;
 
         $connection = $this->createStub(Connection::class);
