@@ -80,7 +80,7 @@ class RegularPageControllerTest extends TestCase
         $responseContextFactory = $this->createStub(CoreResponseContextFactory::class);
         $responseContextFactory
             ->method('createContaoWebpageResponseContext')
-            ->willReturn($responseContext = new ResponseContext())
+            ->willReturn(new ResponseContext())
         ;
 
         $finalizedResponse = null;
@@ -98,7 +98,7 @@ class RegularPageControllerTest extends TestCase
         ;
 
         $controller = $this->getRegularPageController(
-            contentComposition: $this->getContentComposition(expectedResponseContext: $responseContext),
+            contentComposition: $this->getContentComposition(),
             responseContextFactory: $responseContextFactory,
             responseContextAccessor: $responseContextAccessor,
         );
@@ -164,24 +164,9 @@ class RegularPageControllerTest extends TestCase
         return $controller;
     }
 
-    private function getContentComposition(bool $build = true, ResponseContext|null $expectedResponseContext = null): ContentComposition
+    private function getContentComposition(bool $build = true): ContentComposition
     {
         $contentCompositionBuilder = $this->createMock(ContentCompositionBuilder::class);
-
-        if ($expectedResponseContext) {
-            $contentCompositionBuilder
-                ->expects($this->once())
-                ->method('setResponseContext')
-                ->with($expectedResponseContext)
-                ->willReturnSelf()
-            ;
-        } else {
-            $contentCompositionBuilder
-                ->method('setResponseContext')
-                ->willReturnSelf()
-            ;
-        }
-
         $contentCompositionBuilder
             ->expects($build ? $this->once() : $this->never())
             ->method('buildLayoutTemplate')
