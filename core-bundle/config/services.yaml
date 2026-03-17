@@ -18,6 +18,11 @@ services:
             - 100000
             - 86400
 
+    contao.asset.mtime_version_strategy:
+        class: Contao\CoreBundle\Asset\VersionStrategy\MtimeVersionStrategy
+        arguments:
+            - '%contao.web_dir%'
+
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         public: true
