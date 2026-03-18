@@ -51,8 +51,8 @@
                             <li>
                                 {% if pagination.current|default == page %}
                                     {% set active_attributes = attrs()
-                                        .addClass('active')
                                         .set('aria-current', 'page')
+                                        .addClass('active')
                                         .mergeWith(active_attributes|default)
                                     %}
                                     <strong{{ active_attributes }}>{% block pagination_active_label %}{{ page }}{% endblock %}</strong>
