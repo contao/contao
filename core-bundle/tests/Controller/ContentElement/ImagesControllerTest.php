@@ -314,7 +314,7 @@ class ImagesControllerTest extends ContentElementTestCase
                     <p>translated(contao_default:MSC.totalPages[1, 2])</p>
                     <ul>
                         <li>
-                            <a href="/foobar?page=1" aria-label="translated(contao_default:MSC.goToPage[1])" aria-current="page" class="link active">1</a>
+                            <strong class="active" aria-current="page">1</strong>
                         </li>
                         <li>
                             <a href="/foobar?page=2" aria-label="translated(contao_default:MSC.goToPage[2])" class="link">2</a>
