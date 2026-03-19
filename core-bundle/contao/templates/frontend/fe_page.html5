@@ -32,6 +32,9 @@ $this->bodyAttributes = $this
       <?php foreach ($this->metaTags ?? [] as $metaTag): ?>
         <meta<?= $metaTag ?>>
       <?php endforeach; ?>
+      <?php foreach ($this->linkTags ?? [] as $linkTag): ?>
+        <link<?= $linkTag ?>>
+      <?php endforeach; ?>
     <?php $this->endblock(); ?>
 
     <?php if ($this->canonical): ?>
