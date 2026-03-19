@@ -360,6 +360,8 @@ class ContentCompositionBuilder
 
             /**
              * @internal
+             *
+             * @return \Generator<string, mixed>
              */
             public function all(): \Generator
             {
