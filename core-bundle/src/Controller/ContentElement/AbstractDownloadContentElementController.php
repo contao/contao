@@ -147,7 +147,6 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             ->createFigureBuilder()
             ->setSize($size = $model->size)
             ->enableLightbox($fullsize = $model->fullsize)
-            ->disableMetadata()
             ->setLightboxGroupIdentifier(\sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
         ;
 
