@@ -56,7 +56,7 @@
                                             .addClass('link')
                                             .mergeWith(link_attributes|default)
                                         %}
-                                        <{{ link_element }}{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</a>
+                                        <{{ link_element }}{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</{{ link_element }}>
                                     {% endif %}
                                 </li>
                             {% endblock %}
