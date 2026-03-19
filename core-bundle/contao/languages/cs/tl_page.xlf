@@ -126,7 +126,7 @@
         <target>Přesměrování na jazykovou verzi</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Ukázat tuto stránku, pokud je operační systém návštěvníka v dané řeči či v nějaké jiné, v níž není ani jedna jazykových verzí Vaší webové stránky.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">

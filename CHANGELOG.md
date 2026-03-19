@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.7.3] (2026-03-19)
+
+**Fixed issues:**
+
+- [#9666] Add link tags to the default layout templates ([fritzmg])
+- [#9663] Fix the inconsistent active pagination element ([fritzmg])
+- [#9661] Fix nullable `html` variable being passed to the filter ([fritzmg])
+- [#9562] Return 404 for unused path parameters in modern layouts ([fritzmg])
+- [#9657] Add text overflow handling to the `tl_tip` class ([Tastaturberuf])
+- [#9609] Replace insert tags in form labels ([fritzmg])
+- [#9658] Ignore focus events when toggling ([fritzmg])
+- [#9652] Replace insert tags in article teasers ([fritzmg])
+- [#9637] Ensure that the minimum page count is `1` in the new pagination ([leofeyer])
+- [#9642] Fix a Twig issue in the `form_html.html.twig` template ([zoglo])
+- [#9641] Remove an obsolete `action` attribute ([bytehead])
+- [#9623] Do not auto map if there is no `inputType` ([fritzmg])
+- [#9615] Quote column identifiers in the `TableDataContainerProvider` ([alike03])
+- [#9632] Use `currentTarget` to set the active state of the search facets ([zoglo])
+- [#9627] Use a delegate template when rendering components ([m-vo])
+- [#9624] Adjust the pagination component to support attributes extension ([bauer00])
+- [#9439] Make the auto refresh of the template hierarchy configurable ([fritzmg])
+- [#9621] Flatten array values in the `ValueFormatter` ([aschempp])
+- [#9622] Escape backslashes in strings in Twig templates ([leofeyer])
+
 ## [5.7.2] (2026-03-04)
 
 **Fixed issues:**
@@ -360,6 +384,7 @@ This project adheres to [Semantic Versioning].
 - [#8896] Remove a superfluous `"` in the data-action attribute of the `be_main` template ([zoglo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.7.3]: https://github.com/contao/contao/releases/tag/5.7.3
 [5.7.2]: https://github.com/contao/contao/releases/tag/5.7.2
 [5.7.1]: https://github.com/contao/contao/releases/tag/5.7.1
 [5.7.0]: https://github.com/contao/contao/releases/tag/5.7.0
@@ -367,8 +392,10 @@ This project adheres to [Semantic Versioning].
 [5.7.0-RC3]: https://github.com/contao/contao/releases/tag/5.7.0-RC3
 [5.7.0-RC2]: https://github.com/contao/contao/releases/tag/5.7.0-RC2
 [5.7.0-RC1]: https://github.com/contao/contao/releases/tag/5.7.0-RC1
+[alike03]: https://github.com/alike03
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[bauer00]: https://github.com/bauer00
 [bright-cloud-studio]: https://github.com/bright-cloud-studio
 [bytehead]: https://github.com/bytehead
 [de-es]: https://github.com/de-es
@@ -638,6 +665,7 @@ This project adheres to [Semantic Versioning].
 [#9429]: https://github.com/contao/contao/pull/9429
 [#9433]: https://github.com/contao/contao/pull/9433
 [#9437]: https://github.com/contao/contao/pull/9437
+[#9439]: https://github.com/contao/contao/pull/9439
 [#9440]: https://github.com/contao/contao/pull/9440
 [#9441]: https://github.com/contao/contao/pull/9441
 [#9442]: https://github.com/contao/contao/pull/9442
@@ -684,6 +712,7 @@ This project adheres to [Semantic Versioning].
 [#9555]: https://github.com/contao/contao/pull/9555
 [#9559]: https://github.com/contao/contao/pull/9559
 [#9561]: https://github.com/contao/contao/pull/9561
+[#9562]: https://github.com/contao/contao/pull/9562
 [#9569]: https://github.com/contao/contao/pull/9569
 [#9575]: https://github.com/contao/contao/pull/9575
 [#9579]: https://github.com/contao/contao/pull/9579
@@ -696,5 +725,22 @@ This project adheres to [Semantic Versioning].
 [#9594]: https://github.com/contao/contao/pull/9594
 [#9598]: https://github.com/contao/contao/pull/9598
 [#9606]: https://github.com/contao/contao/pull/9606
+[#9609]: https://github.com/contao/contao/pull/9609
 [#9612]: https://github.com/contao/contao/pull/9612
+[#9615]: https://github.com/contao/contao/pull/9615
 [#9619]: https://github.com/contao/contao/pull/9619
+[#9621]: https://github.com/contao/contao/pull/9621
+[#9622]: https://github.com/contao/contao/pull/9622
+[#9623]: https://github.com/contao/contao/pull/9623
+[#9624]: https://github.com/contao/contao/pull/9624
+[#9627]: https://github.com/contao/contao/pull/9627
+[#9632]: https://github.com/contao/contao/pull/9632
+[#9637]: https://github.com/contao/contao/pull/9637
+[#9641]: https://github.com/contao/contao/pull/9641
+[#9642]: https://github.com/contao/contao/pull/9642
+[#9652]: https://github.com/contao/contao/pull/9652
+[#9657]: https://github.com/contao/contao/pull/9657
+[#9658]: https://github.com/contao/contao/pull/9658
+[#9661]: https://github.com/contao/contao/pull/9661
+[#9663]: https://github.com/contao/contao/pull/9663
+[#9666]: https://github.com/contao/contao/pull/9666

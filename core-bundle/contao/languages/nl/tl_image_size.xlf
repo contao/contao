@@ -202,7 +202,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.children.1">
         <source>Edit the media queries of image size ID %s</source>
-        <target>Bewerk de mediaquery's van afbeelding grootte ID %s</target>
+        <target>Bewerk de mediaquery&apos;s van afbeelding grootte ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cut.1">
         <source>Move image size ID %s</source>

@@ -413,6 +413,9 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>عنصر با شناسه‌ی %d نمی‌تواند در اینجا درج شود زیرا با یک عنصر موجود تداخل دارد.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>لطفا %d و %d را با هم جمع نمایید.</target>
