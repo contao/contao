@@ -49,15 +49,22 @@
                         {% set href = pagination|default ? pagination.urlForPage(page) : '#' %}
                         {% block pagination_link %}
                             <li>
-                                {% set link_attributes = attrs()
-                                    .set('href', href)
-                                    .set('aria-label', 'MSC.goToPage'|trans([page]))
-                                    .set('aria-current', 'page', pagination.current|default == page)
-                                    .addClass('link')
-                                    .addClass('active', pagination.current|default == page)
-                                    .mergeWith(link_attributes|default)
-                                %}
-                                <a{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</a>
+                                {% if pagination.current|default == page %}
+                                    {% set active_attributes = attrs()
+                                        .set('aria-current', 'page')
+                                        .addClass('active')
+                                        .mergeWith(active_attributes|default)
+                                    %}
+                                    <strong{{ active_attributes }}>{% block pagination_active_label %}{{ page }}{% endblock %}</strong>
+                                {% else %}
+                                    {% set link_attributes = attrs()
+                                        .set('href', href)
+                                        .set('aria-label', 'MSC.goToPage'|trans([page]))
+                                        .addClass('link')
+                                        .mergeWith(link_attributes|default)
+                                    %}
+                                    <a{{ link_attributes }}>{% block pagination_link_label %}{{ page }}{% endblock %}</a>
+                                {% endif %}
                             </li>
                         {% endblock %}
                     {% endfor %}

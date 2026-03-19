@@ -24,6 +24,9 @@ class Dumper implements DumperInterface
 {
     private array $quoteCache = [];
 
+    /**
+     * @return \Generator<string>
+     */
     public function dump(Connection $connection, CreateConfig $config): \Generator
     {
         try {

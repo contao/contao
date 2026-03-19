@@ -545,7 +545,7 @@ class DcaUrlAnalyzer
         $rows = array_filter(array_map(
             function ($row) use ($table) {
                 try {
-                    return $this->getCurrentRecord($row['id'], $table);
+                    return $this->getCurrentRecord((int) $row['id'], $table);
                 } catch (AccessDeniedException) {
                     // Skip tree siblings without read permission
                     return null;

@@ -27,6 +27,7 @@
       </trans-unit>
       <trans-unit id="template_studio.user_filter">
         <source>Show only my templates</source>
+        <target>Показать только мои шаблоны</target>
       </trans-unit>
       <trans-unit id="template_studio.operation.save.0">
         <source>Save</source>

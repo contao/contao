@@ -27,19 +27,19 @@
       </trans-unit>
       <trans-unit id="MOD.themes.0">
         <source>Themes</source>
-        <target>Thema's</target>
+        <target>Thema&apos;s</target>
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
-        <target>Beheer thema's, front-endmodules, paginalay-outs of afbeeldingsformaten</target>
+        <target>Beheer thema&apos;s, front-endmodules, paginalay-outs of afbeeldingsformaten</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Pages</source>
-        <target>Pagina's</target>
+        <target>Pagina&apos;s</target>
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the pages of your website(s)</source>
-        <target>Stel de pagina's van uw website(s) in</target>
+        <target>Stel de pagina&apos;s van uw website(s) in</target>
       </trans-unit>
       <trans-unit id="MOD.template_studio.0">
         <source>Template Studio</source>
@@ -239,7 +239,7 @@
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
         <source>Generates a navigation menu from the pages</source>
-        <target>Genereert een navigatiemenu van de pagina's</target>
+        <target>Genereert een navigatiemenu van de pagina&apos;s</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="FMD.customnav.1">
         <source>Generates a custom navigation menu</source>
-        <target>Genereert een individueel navigatiemenu van een aantal geselecteerde pagina's.</target>
+        <target>Genereert een individueel navigatiemenu van een aantal geselecteerde pagina&apos;s.</target>
       </trans-unit>
       <trans-unit id="FMD.breadcrumb.0">
         <source>Breadcrumb navigation</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
         <source>Generates a drop-down menu from the pages</source>
-        <target>Genereert een drop-down menu van de pagina's</target>
+        <target>Genereert een drop-down menu van de pagina&apos;s</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicklink.1">
         <source>Generates a custom drop-down menu</source>
-        <target>Genereert een drop-down navigatiemenu van een aantal door u geselecteerde pagina's.</target>
+        <target>Genereert een drop-down navigatiemenu van een aantal door u geselecteerde pagina&apos;s.</target>
       </trans-unit>
       <trans-unit id="FMD.booknav.0">
         <source>Book navigation</source>
@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="FMD.booknav.1">
         <source>Generates a book navigation menu</source>
-        <target>Genereert een boeknavigatie om te bladeren tussen gerelateerde pagina's.</target>
+        <target>Genereert een boeknavigatie om te bladeren tussen gerelateerde pagina&apos;s.</target>
       </trans-unit>
       <trans-unit id="FMD.articlenav.0">
         <source>Article navigation</source>
@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages</source>
-        <target>Genereert een lijst van alle pagina's</target>
+        <target>Genereert een lijst van alle pagina&apos;s</target>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -322,7 +322,7 @@
         <target>Persoonlijke gegevens</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>Genereert een formulier om de persoonlijke gegevens van een lid te bewerken</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">

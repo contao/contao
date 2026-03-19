@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
-        <target>Gérer les thèmes, modules front office, les présentations de page ou les tailles d'images.</target>
+        <target>Gérer les thèmes, modules front office, les présentations de page ou les tailles d&apos;images.</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Pages</source>
@@ -87,11 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
-        <target>Groupes d'utilisateurs</target>
+        <target>Groupes d&apos;utilisateurs</target>
       </trans-unit>
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end)</source>
-        <target>Gérer les groupes d'utilisateurs (back office).</target>
+        <target>Gérer les groupes d&apos;utilisateurs (back office).</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
-        <target>Profil de l'utilisateur</target>
+        <target>Profil de l&apos;utilisateur</target>
       </trans-unit>
       <trans-unit id="MOD.login.1">
         <source>Change your personal data or set a new password</source>
@@ -251,11 +251,11 @@
       </trans-unit>
       <trans-unit id="FMD.breadcrumb.0">
         <source>Breadcrumb navigation</source>
-        <target>Navigation &quot;fil d'Ariane&quot;</target>
+        <target>Navigation &quot;fil d&apos;Ariane&quot;</target>
       </trans-unit>
       <trans-unit id="FMD.breadcrumb.1">
         <source>Generates a breadcrumb navigation menu</source>
-        <target>Génère un menu de type &quot;fil d'Ariane&quot;.</target>
+        <target>Génère un menu de type &quot;fil d&apos;Ariane&quot;.</target>
       </trans-unit>
       <trans-unit id="FMD.quicknav.0">
         <source>Quick navigation</source>
@@ -283,7 +283,7 @@
       </trans-unit>
       <trans-unit id="FMD.articlenav.0">
         <source>Article navigation</source>
-        <target>Pagination d'articles</target>
+        <target>Pagination d&apos;articles</target>
       </trans-unit>
       <trans-unit id="FMD.articlenav.1">
         <source>Generates a pagination menu to navigate articles</source>
@@ -322,16 +322,16 @@
         <target>Données personnelles</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
-        <target>Génère un formulaire pour modifier les données personnelles d'un membre</target>
+        <source>Generates a form to edit a member&apos;s personal data</source>
+        <target>Génère un formulaire pour modifier les données personnelles d&apos;un membre</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
-        <target>Formulaire d'inscription</target>
+        <target>Formulaire d&apos;inscription</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
         <source>Generates a member registration form</source>
-        <target>Génère un formulaire d'inscription de membre</target>
+        <target>Génère un formulaire d&apos;inscription de membre</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>
@@ -355,7 +355,7 @@
       </trans-unit>
       <trans-unit id="FMD.closeAccount.1">
         <source>Generates a form to delete a member account</source>
-        <target>Crée un formulaire pour supprimer le compte d'un membre.</target>
+        <target>Crée un formulaire pour supprimer le compte d&apos;un membre.</target>
       </trans-unit>
       <trans-unit id="FMD.application">
         <source>Applications</source>
@@ -379,11 +379,11 @@
       </trans-unit>
       <trans-unit id="FMD.articlelist.0">
         <source>Article list</source>
-        <target>Liste d'articles</target>
+        <target>Liste d&apos;articles</target>
       </trans-unit>
       <trans-unit id="FMD.articlelist.1">
         <source>Generates a list of articles of a column</source>
-        <target>Génère une liste d'articles contenu dans une zone particulière.</target>
+        <target>Génère une liste d&apos;articles contenu dans une zone particulière.</target>
       </trans-unit>
       <trans-unit id="FMD.miscellaneous">
         <source>Miscellaneous</source>
@@ -403,7 +403,7 @@
       </trans-unit>
       <trans-unit id="FMD.html.1">
         <source>Allows you to add custom HTML code</source>
-        <target>Permet d'inclure du code HTML personnalisé.</target>
+        <target>Permet d&apos;inclure du code HTML personnalisé.</target>
       </trans-unit>
       <trans-unit id="FMD.unfiltered_html.0">
         <source>Unfiltered HTML</source>
@@ -411,7 +411,7 @@
       </trans-unit>
       <trans-unit id="FMD.unfiltered_html.1">
         <source>Allows you to add custom, unfiltered HTML code</source>
-        <target>Permet d'ajouter un code HTML personnalisé et non filtré</target>
+        <target>Permet d&apos;ajouter un code HTML personnalisé et non filtré</target>
       </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
@@ -443,7 +443,7 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
-        <target>Génère un formulaire pour configurer ou modifier l'authentication à deux facteurs</target>
+        <target>Génère un formulaire pour configurer ou modifier l&apos;authentication à deux facteurs</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
