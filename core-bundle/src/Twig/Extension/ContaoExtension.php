@@ -84,6 +84,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass('\Symfony\UX\TwigComponent\ComponentAttributes', ['html', 'contao_html']);
 
         $this->environment->addGlobal(
             'request_token',
