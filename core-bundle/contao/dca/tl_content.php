@@ -591,7 +591,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerAspect' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
+			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2', '9:16', '1:1'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default ''"
