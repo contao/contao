@@ -16,7 +16,7 @@
                     <p>{{ 'MSC.totalPages'|trans([pagination.current, pagination.pageCount]) }}</p>
                 {% endif %}
             {% endblock %}
-            <ul>
+            <ul{{ list_attributes|default }}>
                 {% if pagination|default %}
                     {% block pagination_first %}
                         {% if pagination.first %}
