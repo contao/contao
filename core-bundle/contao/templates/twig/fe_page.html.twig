@@ -114,7 +114,7 @@
     {{ contao_sections('bottom') }}
 {% endblock %}
 
-{{ mootools|raw }}
+{{ mootools|insert_tag_raw|raw }}
 {{ jsonLdScripts|raw }}
 
 </body>
