@@ -14,7 +14,12 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
 use Contao\CoreBundle\Controller\CspReporterController;
 use Contao\CoreBundle\Csp\CspParser;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Image\Studio\Figure;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
+use Contao\CoreBundle\Image\Studio\ImageResult;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
@@ -32,6 +37,7 @@ use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
+use Spatie\SchemaOrg\WebPage;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -66,12 +72,13 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
+            $this->createStub(Studio::class),
         );
 
         $factory->createResponseContext();
     }
 
-    public function testWebpageResponseContext(): void
+    public function testWebpageResponseContextWithoutImage(): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
@@ -89,6 +96,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -196,6 +204,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $cpHandlerFactory,
             $urlGenerator,
             $security,
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -234,6 +243,105 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertInstanceOf(CspHandler::class, $responseContext->get(CspHandler::class));
         $this->assertSame("'self'", $directives->getDirective('script-src'));
         $this->assertSame('https://example.com/csp/report', $directives->getDirective('report-uri'));
+    }
+
+    public function testContaoWebpageResponseContextWithPrimaryImage(): void
+    {
+        $responseAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseAccessor
+            ->expects($this->once())
+            ->method('setResponseContext')
+        ;
+
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser
+            ->expects($this->exactly(2))
+            ->method('replaceInline')
+            ->willReturnMap([
+                ['My title', 'My title'],
+                ['My description', 'My description'],
+            ])
+        ;
+
+        $requestStack = new RequestStack([Request::create('https://example.com/')]);
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
+        $pageModel->id = 1;
+        $pageModel->title = 'My title';
+        $pageModel->description = 'My description';
+        $pageModel->searchIndexer = '';
+        $pageModel->protected = false;
+        $pageModel->enableCsp = false;
+        $pageModel->primaryImage = 'uuid';
+
+        $imageResult = $this->createStub(ImageResult::class);
+        $imageResult
+            ->method('getImageSrc')
+            ->willReturn('https://example.com/files/foo.jpg')
+        ;
+
+        $figure = new Figure(
+            $imageResult,
+            new Metadata([
+                Metadata::VALUE_UUID => 'uuid',
+            ]),
+        );
+
+        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder
+            ->expects($this->once())
+            ->method('fromUuid')
+            ->with('uuid')
+            ->willReturnSelf()
+        ;
+
+        $figureBuilder
+            ->expects($this->once())
+            ->method('buildIfResourceExists')
+            ->willReturn($figure)
+        ;
+
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->expects($this->once())
+            ->method('createFigureBuilder')
+            ->willReturn($figureBuilder)
+        ;
+
+        $factory = new CoreResponseContextFactory(
+            $responseAccessor,
+            $this->createStub(EventDispatcherInterface::class),
+            $this->createStub(TokenChecker::class),
+            new HtmlDecoder($insertTagsParser),
+            $requestStack,
+            $insertTagsParser,
+            $this->createStub(CspHandlerFactory::class),
+            $this->createStub(UrlGeneratorInterface::class),
+            $this->createStub(Security::class),
+            $studio,
+        );
+
+        $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
+
+        $this->assertTrue($responseContext->has(JsonLdManager::class));
+        $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
+
+        $jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+        $this->assertInstanceOf(JsonLdManager::class, $jsonLdManager);
+
+        $this->assertSame(
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'WebPage',
+                'primaryImageOfPage' => [
+                    '@type' => 'ImageObject',
+                    'contentUrl' => 'https://example.com/files/foo.jpg',
+                    '@id' => '#/schema/image/uuid',
+                ],
+            ],
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->get(WebPage::class)->toArray(),
+        );
     }
 
     #[DataProvider('getContaoWebpageResponseContextCanonicalUrls')]
@@ -275,6 +383,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -322,6 +431,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createStub(CspHandlerFactory::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(Security::class),
+            $this->createStub(Studio::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
