@@ -442,7 +442,7 @@ class ValueFormatter implements ResetInterface
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
             $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE id=?", [$id]);
 
-            $this->foreignValueCache[$table][$field][$id] = false === $value ? $id : $value;
+            $this->foreignValueCache[$table][$field][$id] = false === $value ? null : $value;
         }
 
         return $this->foreignValueCache[$table][$field][$id];
