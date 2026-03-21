@@ -187,8 +187,6 @@ class ContaoDataCollectorTest extends TestCase
             ],
             $collector->getSummary(),
         );
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
