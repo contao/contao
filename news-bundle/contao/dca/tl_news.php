@@ -15,10 +15,8 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\LayoutModel;
 use Contao\News;
 use Contao\NewsArchiveModel;
-use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\System;
 
@@ -222,7 +220,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('title_tag_callback'=>array('tl_news', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'canonicalLink' => array
@@ -490,52 +488,6 @@ class tl_news extends Backend
 	public function loadTime($value)
 	{
 		return strtotime('1970-01-01 ' . date('H:i:s', $value));
-	}
-
-	/**
-	 * Return the title tag from the associated page layout
-	 *
-	 * @param NewsModel $model
-	 *
-	 * @return string
-	 */
-	public function getTitleTag(NewsModel $model)
-	{
-		if (!$archive = NewsArchiveModel::findById($model->pid))
-		{
-			return '';
-		}
-
-		if (!$page = PageModel::findById($archive->jumpTo))
-		{
-			return '';
-		}
-
-		$page->loadDetails();
-
-		if (!$layout = LayoutModel::findById($page->layout))
-		{
-			return '';
-		}
-
-		$origObjPage = $GLOBALS['objPage'] ?? null;
-
-		// Override the global page object, so we can replace the insert tags
-		$GLOBALS['objPage'] = $page;
-
-		$title = implode(
-			'%s',
-			array_map(
-				static function ($strVal) {
-					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
-				},
-				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
-			)
-		);
-
-		$GLOBALS['objPage'] = $origObjPage;
-
-		return $title;
 	}
 
 	/**
