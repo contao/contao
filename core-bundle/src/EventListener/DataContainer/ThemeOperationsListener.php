@@ -32,7 +32,7 @@ class ThemeOperationsListener
         parse_str($operation['href'] ?? '', $result);
 
         $isGranted = match ($result['table'] ?? null) {
-            'tl_content' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS),
+            'tl_content' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_THEME_ELEMENTS),
             'tl_module' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES),
             'tl_layout' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS),
             'tl_image_size' => $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES),

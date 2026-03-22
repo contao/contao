@@ -49,13 +49,13 @@ class ThemeOperationsListenerTest extends TestCase
     {
         yield [
             'table=tl_content',
-            ContaoCorePermissions::USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS,
+            ContaoCorePermissions::USER_CAN_ACCESS_THEME_ELEMENTS,
             true,
         ];
 
         yield [
             'table=tl_content',
-            ContaoCorePermissions::USER_CAN_ACCESS_THEME_CONTENT_ELEMENTS,
+            ContaoCorePermissions::USER_CAN_ACCESS_THEME_ELEMENTS,
             false,
         ];
 
