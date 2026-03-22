@@ -392,6 +392,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'mooClasses' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'alnum', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -650,6 +651,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerColor' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(6) COLLATE ascii_bin NOT NULL default ''"
@@ -675,6 +677,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderDelay' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
@@ -682,6 +685,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
+			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 300"
