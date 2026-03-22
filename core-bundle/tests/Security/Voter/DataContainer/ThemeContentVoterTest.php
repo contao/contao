@@ -47,7 +47,7 @@ class ThemeContentVoterTest extends TestCase
 
         $accessDecisionMap = [
             [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'themes', true],
-            [$token, [ContaoCorePermissions::USER_CAN_ACCESS_THEME_ELEMENTS], null, true]
+            [$token, [ContaoCorePermissions::USER_CAN_ACCESS_THEME_ELEMENTS], null, true],
         ];
 
         $parentChecks = 1;

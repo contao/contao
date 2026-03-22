@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -16,7 +24,7 @@ class ThemeContentVoter extends AbstractDynamicPtableVoter
 {
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
-        private readonly Connection $connection,
+        Connection $connection,
     ) {
         parent::__construct($connection);
     }
