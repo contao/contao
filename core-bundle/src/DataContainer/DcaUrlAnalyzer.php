@@ -443,7 +443,15 @@ class DcaUrlAnalyzer
             $ptable = (string) ($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
         }
 
-        if (!$ptable || !$pid || DataContainer::MODE_PARENT !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
+        if (
+            !$ptable
+            || !$pid
+            || \in_array(
+                $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
+                [DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED],
+                true,
+            )
+        ) {
             return [[$table, $currentRecord]];
         }
 
