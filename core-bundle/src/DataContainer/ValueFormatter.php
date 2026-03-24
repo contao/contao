@@ -304,7 +304,7 @@ class ValueFormatter implements ResetInterface
             $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
         }
 
-        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'])) {
+        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']) && \is_scalar($value)) {
             if ('' === (string) $value) {
                 return '';
             }
