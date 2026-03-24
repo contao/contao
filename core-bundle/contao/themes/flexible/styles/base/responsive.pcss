@@ -1,5 +1,12 @@
 /* Tablet */
 @media (width < 992px) {
+    #header h1 {
+        max-width: none;
+
+        a {
+        }
+    }
+
     #main {
         width: 100%;
         flex-shrink: 0;
@@ -43,7 +50,8 @@
 @media (width < 768px) {
     #header h1 a {
         min-width: 22px;
-        padding: 12px;
+        padding-left: 12px;
+        padding-right: 12px;
     }
 
     #header .app-title {
