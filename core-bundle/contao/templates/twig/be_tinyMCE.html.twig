@@ -86,7 +86,7 @@
             const target = document.querySelector('#{{ selector|e('js') }}');
             target.tinymceConfig = config;
             target.setAttribute('data-action', 'turbo:before-visit@window->contao--tinymce#leave');
-            target.setAttribute('data-controller', `${target.getAttribute('data-controller')} contao--tinymce`);
+            target.setAttribute('data-controller', `${target.getAttribute('data-controller') || ''} contao--tinymce`);
         }
     </script>
 {% endif %}
