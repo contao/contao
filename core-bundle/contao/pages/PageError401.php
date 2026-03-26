@@ -36,6 +36,7 @@ class PageError401 extends Frontend
 	{
 		global $objPage;
 
+		// TODO: find a solution that works with the PageFinder
 		$obj401 = $this->prepare($objRootPage);
 		$objPage = $obj401->loadDetails();
 

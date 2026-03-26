@@ -41,6 +41,7 @@ class InsertTagsController
         $this->framework->initialize();
 
         // Backwards compatibility
+        // TODO: find a solution that works with the PageFinder
         $pageModelBefore = $GLOBALS['objPage'] ?? null;
         $GLOBALS['objPage'] = $pageModel;
 
