@@ -19,11 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_opt_in.emailSubject">
         <source>E-mail subject</source>
-        <target>Sujet de l'email</target>
+        <target>Sujet de l&apos;email</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.emailText">
         <source>E-mail text</source>
-        <target>Texte de l'email</target>
+        <target>Texte de l&apos;email</target>
       </trans-unit>
       <trans-unit id="tl_opt_in.show.1">
         <source>Show the details of token ID %s</source>

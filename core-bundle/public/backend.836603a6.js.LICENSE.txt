@@ -7,7 +7,7 @@
  */
 
 /*!
-* focus-trap 7.8.0
+* focus-trap 8.0.0
 * @license MIT, https://github.com/focus-trap/focus-trap/blob/master/LICENSE
 */
 
@@ -15,3 +15,5 @@
 Turbo 8.0.23
 Copyright © 2026 37signals LLC
  */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */

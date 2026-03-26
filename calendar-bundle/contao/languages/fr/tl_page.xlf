@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_page.feedSource.0">
         <source>Export settings</source>
-        <target>Paramètres d'export</target>
+        <target>Paramètres d&apos;export</target>
       </trans-unit>
       <trans-unit id="tl_page.feedSource.1">
         <source>Here you can choose what will be exported.</source>

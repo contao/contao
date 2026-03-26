@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_user.news.0">
         <source>Allowed archives</source>
-        <target>Archives d'actualités autorisées</target>
+        <target>Archives d&apos;actualités autorisées</target>
       </trans-unit>
       <trans-unit id="tl_user.news.1">
         <source>Here you can grant access to one or more news archives.</source>
-        <target>Accorder l'accès à une ou plusieurs archives d'actualités.</target>
+        <target>Accorder l&apos;accès à une ou plusieurs archives d&apos;actualités.</target>
       </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
