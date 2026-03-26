@@ -76,10 +76,9 @@ class ModuleFaqPage extends Module
 			return;
 		}
 
-		global $objPage;
-
 		$tags = array();
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Add FAQs
 		foreach ($objFaqs as $objFaq)

@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
@@ -34,6 +35,7 @@ class TemplateTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class)));
+        $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
 
         System::setContainer($container);
     }

@@ -88,8 +88,6 @@ class ModuleNewsArchive extends ModuleNews
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$limit = null;
 		$offset = 0;
 		$intBegin = 0;
@@ -118,6 +116,8 @@ class ModuleNewsArchive extends ModuleNews
 					break;
 			}
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Create the date object
 		try

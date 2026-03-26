@@ -123,8 +123,7 @@ class ModuleSearch extends Module
 			// Website root
 			else
 			{
-				global $objPage;
-
+				$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
 			}
 

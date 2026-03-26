@@ -23,6 +23,7 @@ use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
@@ -48,13 +49,14 @@ class InsertTagsTest extends TestCase
         $container->set('fragment.handler', $this->createStub(FragmentHandler::class));
         $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('contao.framework', $this->createStub(ContaoFramework::class));
+        $container->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
 
         System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME'], $GLOBALS['objPage']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME']);
 
         InsertTags::reset();
 

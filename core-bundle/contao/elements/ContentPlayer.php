@@ -95,8 +95,6 @@ class ContentPlayer extends ContentElement
 	 */
 	protected function compile()
 	{
-		global $objPage;
-
 		$this->Template->poster = false;
 
 		// Optional poster
@@ -123,6 +121,8 @@ class ContentPlayer extends ContentElement
 
 			$arrFiles = array('m4a'=>null, 'mp3'=>null, 'wma'=>null, 'mpeg'=>null, 'wav'=>null, 'ogg'=>null);
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Convert the language to a locale (see #5678)
 		$strLanguage = LocaleUtil::formatAsLocale($objPage->language);
