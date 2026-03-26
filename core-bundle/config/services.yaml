@@ -603,6 +603,7 @@ services:
         class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
         arguments:
             - '@contao.framework'
+            - '@contao.routing.page_finder'
 
     contao.insert_tag.resolver.empty:
         class: Contao\CoreBundle\InsertTag\Resolver\EmptyInsertTag
