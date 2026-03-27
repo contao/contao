@@ -495,8 +495,7 @@ abstract class Model
 
 		return match (self::$arrColumnCastTypes[static::$strTable][$strKey] ?? null)
 		{
-			Types::INTEGER, Types::SMALLINT => (int) $varValue,
-			Types::BIGINT => (string) $varValue === (string) (int) $varValue ? (int) $varValue : $varValue,
+			Types::INTEGER, Types::SMALLINT, Types::BIGINT => \is_int($number = +$varValue) ? $number : $varValue,
 			Types::FLOAT => (float) $varValue,
 			Types::BOOLEAN => (bool) $varValue,
 			default => $varValue,
