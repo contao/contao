@@ -62,7 +62,7 @@ class CalendarEventsGenerator
             }
 
             foreach ($eventModels as $eventModel) {
-                $this->addEvent($events, $eventModel, $eventModel->startTime, $eventModel->endTime, $rangeEnd->getTimestamp(), $id, $noSpan);
+                $this->addEvent($events, $eventModel, (int) $eventModel->startTime, (int) $eventModel->endTime, $rangeEnd->getTimestamp(), $id, $noSpan);
 
                 // Recurring events
                 if ($eventModel->recurring) {
