@@ -522,6 +522,7 @@ class tl_news extends Backend
 		$origObjPage = $GLOBALS['objPage'] ?? null;
 
 		// Override the global page object, so we can replace the insert tags
+		// TODO: find a solution that works with the PageFinder
 		$GLOBALS['objPage'] = $page;
 
 		$title = implode(

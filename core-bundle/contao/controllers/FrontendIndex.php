@@ -46,6 +46,7 @@ class FrontendIndex extends Frontend
 	{
 		global $objPage;
 
+		// TODO: find a solution that works with the PageFinder
 		$objPage = $pageModel;
 
 		// Inherit the settings from the parent pages
