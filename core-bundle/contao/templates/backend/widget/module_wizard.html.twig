@@ -121,8 +121,6 @@
 
                     {% set enable_label_attributes = attrs()
                         .set('for', "#{id}_#{loop.index0}_enable")
-                        .set('title', 'MSC.mw_enable'|trans)
-                        .set('data-contao--tooltips-target', 'tooltip')
                         .set('data-action', 'click->contao--scroll-offset#store')
                         .addClass('mw_enable')
                     %}

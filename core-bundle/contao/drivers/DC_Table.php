@@ -4235,7 +4235,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$label = $this->generateRecordLabel($row[$i]);
 
 					$record['label'] = \is_array($label) ? ($label[0] ?? '') : $label;
-					$record['preview'] = \is_array($label) ? ($label[1] ?? '') : '';
+					$record['preview'] = \is_array($label) ? trim($label[1] ?? '') : '';
 					$record['state'] = \is_array($label) ? ($label[2] ?? '') : '';
 
 					$record['allow_dragging'] = $blnIsSortable && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i]));

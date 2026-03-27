@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -185,7 +186,7 @@ class ModuleNewsArchive extends ModuleNews
 				$offset = $pagination->getOffset();
 
 				// Add the pagination menu
-				$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/frontend_module/pagination.html.twig', array('pagination' => $pagination));
+				$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 			}
 		}
 

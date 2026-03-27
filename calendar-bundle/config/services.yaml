@@ -13,6 +13,7 @@ services:
             - '@contao.assets.files_context'
             - '@contao_calendar.feed_specification'
             - '%kernel.charset%'
+            - '%kernel.debug%'
 
     contao_calendar.feed_specification:
         class: FeedIo\Specification

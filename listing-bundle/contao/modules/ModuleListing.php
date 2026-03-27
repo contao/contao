@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\PageOutOfRangeException;
+use Contao\CoreBundle\Pagination\LegacyTemplatePaginationProxy;
 use Contao\CoreBundle\Pagination\PaginationConfig;
 
 /**
@@ -219,7 +220,7 @@ class ModuleListing extends Module
 			try
 			{
 				$pagination = System::getContainer()->get('contao.pagination.factory')->create(new PaginationConfig($id, $objTotal->count, $per_page));
-				$this->Template->pagination = System::getContainer()->get('twig')->render('@Contao/frontend_module/pagination.html.twig', array('pagination' => $pagination));
+				$this->Template->pagination = new LegacyTemplatePaginationProxy(System::getContainer()->get('twig'), $pagination);
 			}
 			catch (PageOutOfRangeException $e)
 			{

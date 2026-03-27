@@ -308,16 +308,19 @@ class Form extends Hybrid
 		// Remove any uploads, if form did not validate (#1185)
 		if (($doNotSubmit || $this->hasErrors()) && $hasUpload)
 		{
-			foreach ($arrFiles as $upload)
+			foreach ($arrFiles as $uploads)
 			{
-				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+				foreach ((array) $uploads as $upload)
 				{
-					$file->delete();
-				}
+					if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+					{
+						$file->delete();
+					}
 
-				if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
-				{
-					unlink($upload['tmp_name']);
+					if (isset($upload['tmp_name']) && is_file($upload['tmp_name']))
+					{
+						unlink($upload['tmp_name']);
+					}
 				}
 			}
 		}
