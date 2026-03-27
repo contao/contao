@@ -363,7 +363,7 @@ class Calendar extends Frontend
 		$span = self::calculateSpan($intStart, $intEnd);
 		$format = $objEvent->addTime ? 'datimFormat' : 'dateFormat';
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		if ($objPage instanceof PageModel)
 		{

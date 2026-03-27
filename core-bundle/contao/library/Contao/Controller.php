@@ -408,8 +408,6 @@ abstract class Controller extends System
 	 */
 	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
-		global $objPage;
-
 		if (\is_object($varId))
 		{
 			$objRow = $varId;
@@ -421,6 +419,7 @@ abstract class Controller extends System
 				return '';
 			}
 
+			$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 			$objRow = ArticleModel::findByIdOrAliasAndPid($varId, !$blnIsInsertTag ? $objPage->id : null);
 
 			if ($objRow === null)
@@ -804,8 +803,7 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
-		global $objPage;
-
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts && !System::getContainer()->getParameter('kernel.debug');
 
@@ -1402,7 +1400,7 @@ abstract class Controller extends System
 			$objFiles->reset();
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));

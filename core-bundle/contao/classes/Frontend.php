@@ -83,8 +83,6 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
-		global $objPage;
-
 		$arrGet = array();
 
 		if (!$blnIgnoreParams)
@@ -111,6 +109,8 @@ abstract class Frontend extends Controller
 				$arrGet[$key] = $value;
 			}
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Unset the language parameter
 		if ($objPage->urlPrefix)
@@ -147,7 +147,7 @@ abstract class Frontend extends Controller
 	 */
 	protected function jumpToOrReload($intId, $strParams=null)
 	{
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Always redirect if there are additional arguments (see #5734)
 		$blnForceRedirect = $strParams !== null;

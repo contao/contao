@@ -118,7 +118,7 @@ abstract class Events extends Module
 	{
 		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "addEvent" method of the "contao_calendar.generator.calendar_events" service instead.', __METHOD__);
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		$intDate = $intStart;
 		$intKey = date('Ymd', $intStart);

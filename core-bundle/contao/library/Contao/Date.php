@@ -503,7 +503,9 @@ class Date
 	 */
 	public static function getNumericDateFormat()
 	{
-		if (($format = ($GLOBALS['objPage'] ?? null)?->dateFormat) && static::isNumericFormat($format))
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
+
+		if (($format = $objPage?->dateFormat) && static::isNumericFormat($format))
 		{
 			return $format;
 		}
@@ -518,7 +520,9 @@ class Date
 	 */
 	public static function getNumericTimeFormat()
 	{
-		if (($format = ($GLOBALS['objPage'] ?? null)?->timeFormat) && static::isNumericFormat($format))
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
+
+		if (($format = $objPage?->timeFormat) && static::isNumericFormat($format))
 		{
 			return $format;
 		}
@@ -533,7 +537,9 @@ class Date
 	 */
 	public static function getNumericDatimFormat()
 	{
-		if (($format = ($GLOBALS['objPage'] ?? null)?->datimFormat) && static::isNumericFormat($format))
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
+
+		if (($format = $objPage?->datimFormat) && static::isNumericFormat($format))
 		{
 			return $format;
 		}

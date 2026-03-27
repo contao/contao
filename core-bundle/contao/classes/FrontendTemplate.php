@@ -112,7 +112,7 @@ class FrontendTemplate extends Template
 			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedRouteParameters()));
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Minify the markup
 		if ($objPage !== null && $objPage->minifyMarkup)
@@ -130,8 +130,6 @@ class FrontendTemplate extends Template
 	 */
 	private function setCacheHeaders(Response $response)
 	{
-		global $objPage;
-
 		// Do not cache the response if caching was not configured
 		if ($objPage->cache < 1 && $objPage->clientCache < 1)
 		{
@@ -139,6 +137,8 @@ class FrontendTemplate extends Template
 
 			return $response->setPrivate(); // Make sure the response is private
 		}
+
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Private cache
 		if ($objPage->clientCache > 0)

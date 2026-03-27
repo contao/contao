@@ -55,7 +55,7 @@ class InsertTagParserTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS'], $GLOBALS['objPage']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS']);
 
         $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 
@@ -346,7 +346,9 @@ class InsertTagParserTest extends TestCase
         $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'foo', null, true, false));
         $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createStub(TranslatorInterface::class)), '__invoke', 'foo_start', 'foo_end', true, false));
+
         System::getContainer()->set('contao.insert_tag.parser', $parser);
+        System::getContainer()->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
 
         $this->assertTrue($parser->hasInsertTag('foo'));
         $this->assertTrue($parser->hasInsertTag('foo_start'));
@@ -419,7 +421,9 @@ class InsertTagParserTest extends TestCase
         $parser = new InsertTagParser($this->createStub(ContaoFramework::class), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
         $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createStub(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
+
         System::getContainer()->set('contao.insert_tag.parser', $parser);
+        System::getContainer()->set('contao.routing.page_finder', $this->createStub(PageFinder::class));
 
         return $parser;
     }
