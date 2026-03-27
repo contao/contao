@@ -169,13 +169,14 @@ class DcaUrlAnalyzer
             }
 
             if ($index === \count($trail) - 1 && $this->findGet('act')) {
-                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'select'], true)) {
+                if (\in_array($this->findGet('act'), ['editAll', 'overrideAll', 'deleteAll', 'select'], true)) {
                     $links[] = [
                         'query' => [...$query, 'act' => $this->findGet('act'), 'rt' => $this->findGet('rt')],
                         'label' => $this->translator->trans(
                             match ($this->findGet('act')) {
                                 'editAll', 'select' => 'MSC.all.0',
                                 'overrideAll' => 'MSC.all_override.0',
+                                'deleteAll' => 'MSC.deleteSelected',
                                 default => throw new \LogicException(),
                             },
                             [],
