@@ -496,8 +496,7 @@ class ValueFormatter implements ResetInterface
 
             foreach ($value as $kk => $vv) {
                 if (\is_array($vv)) {
-                    $vals = array_values($vv);
-                    $value[$kk] = array_shift($vals).' ('.implode(', ', array_filter($vals)).')';
+                    $value[$kk] = '['.$this->flatten(array_filter($vv)).']';
                 }
             }
 

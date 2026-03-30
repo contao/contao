@@ -145,6 +145,18 @@ class ValueFormatterTest extends TestCase
             'foo: bar, bar: baz (1, 2, 3)',
         ];
 
+        yield 'Serialized array (#5)' => [
+            serialize(['foo' => 'bar', 'bar' => ['baz', [1, 2, 3]]]),
+            [],
+            'foo: bar, bar: baz (1 (2, 3))',
+        ];
+
+        yield 'Serialized array (#6)' => [
+            serialize(['foo' => 'bar', 'bar' => ['foo' => 'bar', 'bar' => ['foo' => 'bar']]]),
+            [],
+            'foo: bar, bar: bar (bar ())',
+        ];
+
         yield 'Date' => [
             '1764689390',
             ['eval' => ['rgxp' => 'date']],
