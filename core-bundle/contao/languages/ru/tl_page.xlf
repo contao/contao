@@ -126,7 +126,7 @@
         <target>Резервный язык</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.1">
-        <source>Show this page if there is none that matches the visitor's language.</source>
+        <source>Show this page if there is none that matches the visitor&apos;s language.</source>
         <target>Показать эту страницу, если нет страницы, которая соответствует языку посетителя.</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
-        <target>Вы можете управлять макетами страниц в модуле панели управления 'Темы'.</target>
+        <target>Вы можете управлять макетами страниц в модуле панели управления &apos;Темы&apos;.</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>

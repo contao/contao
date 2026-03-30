@@ -94,21 +94,21 @@ class ValueFormatter implements ResetInterface
     public function formatGroup(string $table, string $field, mixed $value, int $mode, mixed $dc): string
     {
         if (\in_array($mode, [DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_DAY_BOTH], true)) {
-            return $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
+            return $value ? Date::parse(Config::get('dateFormat'), (int) $value) : '-';
         }
 
         if (\in_array($mode, [DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_MONTH_BOTH], true)) {
-            $intMonth = $value ? date('m', $value) - 1 : '-';
+            $intMonth = $value ? date('m', (int) $value) - 1 : '-';
 
             if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth])) {
-                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.date('Y', $value) : '-';
+                return $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth].' '.date('Y', (int) $value) : '-';
             }
 
-            return $value ? date('Y-m', $value) : '-';
+            return $value ? date('Y-m', (int) $value) : '-';
         }
 
         if (\in_array($mode, [DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC, DataContainer::SORT_YEAR_BOTH], true)) {
-            return $value ? date('Y', $value) : '-';
+            return $value ? date('Y', (int) $value) : '-';
         }
 
         if ('checkbox' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null) && !($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['multiple'] ?? null)) {
@@ -217,6 +217,8 @@ class ValueFormatter implements ResetInterface
 
     public function getLabel(string $table, string $field, mixed $value, mixed $dc): string
     {
+        $value = StringUtil::deserialize($value);
+
         // Translate UUIDs to paths
         if ('fileTree' === ($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] ?? null)) {
             $objFile = $this->framework->getAdapter(FilesModel::class)->findByUuid($value);
@@ -303,7 +305,7 @@ class ValueFormatter implements ResetInterface
             $GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'] = $ptable.'.'.$showField;
         }
 
-        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey'])) {
+        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['foreignKey']) && \is_scalar($value)) {
             if ('' === (string) $value) {
                 return '';
             }
@@ -332,7 +334,7 @@ class ValueFormatter implements ResetInterface
             return Idna::decodeEmail((string) $value);
         }
 
-        return (string) $value;
+        return $this->flatten($value);
     }
 
     private function getDateOptions(string $table, string $field, array $values): array
@@ -432,7 +434,7 @@ class ValueFormatter implements ResetInterface
             return StringUtil::deserialize($value, true);
         }
 
-        return StringUtil::deserialize($value);
+        return $value;
     }
 
     private function fetchForeignValue(string $table, string $field, string $relationTable, string $relationField, mixed $id): mixed
@@ -445,7 +447,7 @@ class ValueFormatter implements ResetInterface
 
             $value = $this->connection->fetchOne("SELECT $field FROM $table WHERE $fk=?", [$id]);
 
-            $this->foreignValueCache[$table][$field][$id] = false === $value ? '' : $value;
+            $this->foreignValueCache[$table][$field][$id] = false === $value ? null : $value;
         }
 
         return $this->foreignValueCache[$table][$field][$id];
@@ -488,5 +490,31 @@ class ValueFormatter implements ResetInterface
         }
 
         return null;
+    }
+
+    private function flatten(mixed $value): string
+    {
+        if (\is_array($value)) {
+            if (isset($value['value'], $value['unit']) && 2 === \count($value)) {
+                return trim($value['value'].', '.$value['unit']);
+            }
+
+            foreach ($value as $kk => $vv) {
+                if (\is_array($vv)) {
+                    $vals = array_values($vv);
+                    $value[$kk] = array_shift($vals).' ('.implode(', ', array_filter($vals)).')';
+                }
+            }
+
+            if (ArrayUtil::isAssoc($value)) {
+                foreach ($value as $kk => $vv) {
+                    $value[$kk] = $kk.': '.$vv;
+                }
+            }
+
+            return implode(', ', $value);
+        }
+
+        return (string) $value;
     }
 }

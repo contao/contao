@@ -30,7 +30,7 @@
         <target>نویسنده</target>
       </trans-unit>
       <trans-unit id="tl_comments.name.1">
-        <source>Please enter the author's name.</source>
+        <source>Please enter the author&apos;s name.</source>
         <target>لطفا نام نویسنده را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_comments.email.0">
@@ -171,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.versions.1">
         <source>Show the versions of comment ID %s</source>
+        <target>نمایش نسخه‌های دیدگاه شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_comments.edit.1">
         <source>Edit comment ID %s</source>
@@ -194,9 +195,11 @@
       </trans-unit>
       <trans-unit id="tl_comments.toggle.3">
         <source>Unpublish</source>
+        <target>لغو انتشار</target>
       </trans-unit>
       <trans-unit id="tl_comments.toggle.4">
         <source>Publish</source>
+        <target>انتشار</target>
       </trans-unit>
       <trans-unit id="tl_comments.tableLabel">
         <source>Comment</source>

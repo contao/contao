@@ -12,224 +12,223 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\ArticleModel;
 use Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\DataContainer;
 use Contao\LayoutModel;
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Source;
 
 class ArticleColumnListenerTest extends TestCase
 {
-    public function testSetsSlotOptions(): void
+    public function testReturnsSlotsFromPageTemplate(): void
     {
-        $templateInformation = new TemplateInformation(
-            new Source('', ''),
-            slots: ['foo', 'bar'],
-        );
-
-        $inspector = $this->createStub(Inspector::class);
-        $inspector
-            ->method('inspectTemplate')
-            ->willReturnMap([['@Contao/layout/foo.html.twig', $templateInformation]])
-        ;
-
-        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
-        $pageModel
+        $dc = $this->createMock(DataContainer::class);
+        $dc
             ->expects($this->once())
-            ->method('loadDetails')
-            ->willReturnSelf()
-        ;
-
-        $pageModel->layout = 2;
-
-        $articleModel = $this->createStub(ArticleModel::class);
-        $articleModel
-            ->method('getRelated')
-            ->willReturnMap([['pid', $pageModel]])
-        ;
-
-        $articleAdapter = $this->createAdapterStub(['findById']);
-        $articleAdapter
-            ->method('findById')
-            ->willReturnMap([[1, $articleModel]])
-        ;
-
-        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
-        $layoutModel->type = 'modern';
-        $layoutModel->template = 'layout/foo';
-
-        $layoutAdapter = $this->createAdapterStub(['findById']);
-        $layoutAdapter
-            ->method('findById')
-            ->willReturnMap([[2, $layoutModel]])
-        ;
-
-        $framework = $this->createContaoFrameworkStub([
-            ArticleModel::class => $articleAdapter,
-            LayoutModel::class => $layoutAdapter,
-        ]);
-
-        $articleColumnListener = new ArticleColumnListener(
-            $inspector,
-            $framework,
-            $this->createStub(PageRegistry::class),
-        );
-
-        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
-        $dc->id = 1;
-
-        $this->assertSame(
-            'foo',
-            $articleColumnListener->setSlotOptions('foo', $dc),
-        );
-
-        $this->assertSame(
-            [
-                'foo' => '{% slot foo %}',
-                'bar' => '{% slot bar %}',
-            ],
-            $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options'],
-        );
-
-        $this->assertArrayNotHasKey(
-            'options_callback',
-            $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn'],
-        );
-
-        unset($GLOBALS['TL_DCA']);
-    }
-
-    public function testDoesNotSetSlotOptionsForLegacyLayouts(): void
-    {
-        $pageModel = $this->createClassWithPropertiesMock(PageModel::class);
-        $pageModel
-            ->expects($this->once())
-            ->method('loadDetails')
-            ->willReturnSelf()
-        ;
-
-        $pageModel->layout = 2;
-
-        $articleModel = $this->createStub(ArticleModel::class);
-        $articleModel
-            ->method('getRelated')
-            ->willReturnMap([['pid', $pageModel]])
-        ;
-
-        $articleAdapter = $this->createAdapterStub(['findById']);
-        $articleAdapter
-            ->method('findById')
-            ->willReturnMap([[1, $articleModel]])
-        ;
-
-        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class);
-        $layoutModel->type = 'default';
-        $layoutModel->template = 'fe_page';
-
-        $layoutAdapter = $this->createAdapterStub(['findById']);
-        $layoutAdapter
-            ->method('findById')
-            ->willReturnMap([[2, $layoutModel]])
-        ;
-
-        $framework = $this->createContaoFrameworkStub([
-            ArticleModel::class => $articleAdapter,
-            LayoutModel::class => $layoutAdapter,
-        ]);
-
-        $articleColumnListener = new ArticleColumnListener(
-            $this->createStub(Inspector::class),
-            $framework,
-            $this->createStub(PageRegistry::class),
-        );
-
-        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
-        $dc->id = 1;
-
-        $this->assertSame(
-            'foo',
-            $articleColumnListener->setSlotOptions('foo', $dc),
-        );
-
-        $this->assertArrayNotHasKey('TL_DCA', $GLOBALS);
-    }
-
-    public function testSetsSlotOptionsForRouteWithCustomTemplate(): void
-    {
-        $templateInformation = new TemplateInformation(
-            new Source('', ''),
-            slots: ['foo', 'bar'],
-        );
-
-        $inspector = $this->createStub(Inspector::class);
-        $inspector
-            ->method('inspectTemplate')
-            ->willReturnMap([['@Contao/layout/foo.html.twig', $templateInformation]])
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 42])
         ;
 
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class);
 
-        $articleModel = $this->createStub(ArticleModel::class);
-        $articleModel
-            ->method('getRelated')
-            ->willReturnMap([['pid', $pageModel]])
-        ;
-
-        $articleAdapter = $this->createAdapterStub(['findById']);
-        $articleAdapter
-            ->method('findById')
-            ->willReturnMap([[1, $articleModel]])
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findWithDetails')
+            ->with(42)
+            ->willReturn($pageModel)
         ;
 
         $framework = $this->createContaoFrameworkStub([
-            ArticleModel::class => $articleAdapter,
+            PageModel::class => $pageAdapter,
         ]);
 
-        $pageRoute = $this->createStub(PageRoute::class);
-        $pageRoute
-            ->method('getDefault')
-            ->willReturnMap([['_template', 'layout/foo']])
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getPageTemplate')
+            ->with($pageModel)
+            ->willReturn('layout/foo')
         ;
 
-        $pageRegistry = $this->createStub(PageRegistry::class);
-        $pageRegistry
-            ->method('getRoute')
-            ->willReturnMap([[$pageModel, $pageRoute]])
+        $templateInformation = new TemplateInformation(
+            new Source('', ''),
+            slots: ['foo', 'bar'],
+        );
+
+        $inspector = $this->createStub(Inspector::class);
+        $inspector
+            ->method('inspectTemplate')
+            ->willReturnMap([
+                ['@Contao/layout/foo.html.twig', $templateInformation],
+            ])
         ;
 
         $articleColumnListener = new ArticleColumnListener(
-            $inspector,
             $framework,
             $pageRegistry,
+            $inspector,
+            $this->createStub(RequestStack::class),
+            $this->createStub(Connection::class),
         );
 
-        $dc = $this->createClassWithPropertiesStub(DataContainer::class);
-        $dc->id = 1;
-
-        $this->assertSame(
-            'foo',
-            $articleColumnListener->setSlotOptions('foo', $dc),
-        );
+        $options = $articleColumnListener($dc);
 
         $this->assertSame(
             [
                 'foo' => '{% slot foo %}',
                 'bar' => '{% slot bar %}',
             ],
-            $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options'],
+            $options,
+        );
+    }
+
+    public function testReturnsSectionsFromDefaultLayout(): void
+    {
+        $dc = $this->createMock(DataContainer::class);
+        $dc
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 42])
+        ;
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 2]);
+
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findWithDetails')
+            ->with(42)
+            ->willReturn($pageModel)
+        ;
+
+        $layoutModel = $this->createClassWithPropertiesStub(LayoutModel::class, ['type' => 'modern', 'template' => 'layout/foo']);
+
+        $layoutAdapter = $this->createAdapterMock(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(2)
+            ->willReturn($layoutModel)
+        ;
+
+        $framework = $this->createContaoFrameworkStub([
+            PageModel::class => $pageAdapter,
+            LayoutModel::class => $layoutAdapter,
+        ]);
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getPageTemplate')
+            ->with($pageModel)
+            ->willReturn(null)
+        ;
+
+        $templateInformation = new TemplateInformation(
+            new Source('', ''),
+            slots: ['foo', 'bar'],
         );
 
-        $this->assertArrayNotHasKey(
-            'options_callback',
-            $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn'],
+        $inspector = $this->createStub(Inspector::class);
+        $inspector
+            ->method('inspectTemplate')
+            ->willReturnMap([
+                ['@Contao/layout/foo.html.twig', $templateInformation],
+            ])
+        ;
+
+        $articleColumnListener = new ArticleColumnListener(
+            $framework,
+            $pageRegistry,
+            $inspector,
+            $this->createStub(RequestStack::class),
+            $this->createStub(Connection::class),
         );
 
-        unset($GLOBALS['TL_DCA']);
+        $options = $articleColumnListener($dc);
+
+        $this->assertSame(
+            [
+                'foo' => '{% slot foo %}',
+                'bar' => '{% slot bar %}',
+            ],
+            $options,
+        );
+    }
+
+    public function testReturnsSlotsFromModernLayout(): void
+    {
+        $dc = $this->createMock(DataContainer::class);
+        $dc
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['pid' => 42])
+        ;
+
+        $pageModel = $this->createClassWithPropertiesStub(PageModel::class, ['layout' => 2]);
+
+        $pageAdapter = $this->createAdapterMock(['findWithDetails']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findWithDetails')
+            ->with(42)
+            ->willReturn($pageModel)
+        ;
+
+        $layoutModel = $this->createClassWithPropertiesStub(
+            LayoutModel::class,
+            ['type' => 'default', 'modules' => serialize([
+                ['mod' => 0, 'enable' => true, 'col' => 'foo'],
+                ['mod' => 0, 'enable' => true, 'col' => 'bar'],
+                ['mod' => 1, 'enable' => true, 'col' => 'baz'],
+                ['mod' => 0, 'enable' => false, 'col' => 'bak'],
+            ])],
+        );
+
+        $layoutAdapter = $this->createAdapterMock(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(2)
+            ->willReturn($layoutModel)
+        ;
+
+        $framework = $this->createContaoFrameworkStub([
+            PageModel::class => $pageAdapter,
+            LayoutModel::class => $layoutAdapter,
+        ]);
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getPageTemplate')
+            ->with($pageModel)
+            ->willReturn(null)
+        ;
+
+        $articleColumnListener = new ArticleColumnListener(
+            $framework,
+            $pageRegistry,
+            $this->createStub(Inspector::class),
+            $this->createStub(RequestStack::class),
+            $this->createStub(Connection::class),
+        );
+
+        $options = $articleColumnListener($dc);
+
+        $this->assertSame(
+            [
+                'bar' => 'bar',
+                'foo' => 'foo',
+            ],
+            $options,
+        );
     }
 }

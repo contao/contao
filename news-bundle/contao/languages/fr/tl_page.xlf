@@ -3,15 +3,15 @@
     <body>
       <trans-unit id="tl_page.newsArchives.0">
         <source>News archives</source>
-        <target>Archives d'actualités</target>
+        <target>Archives d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_page.newsArchives.1">
         <source>Here you can choose the news archives to be included in the feed.</source>
-        <target>Choisir les archives d'actualités qui seront incluses dans le flux.</target>
+        <target>Choisir les archives d&apos;actualités qui seront incluses dans le flux.</target>
       </trans-unit>
       <trans-unit id="tl_page.feedSource.0">
         <source>Export settings</source>
-        <target>Paramètres d'export</target>
+        <target>Paramètres d&apos;export</target>
       </trans-unit>
       <trans-unit id="tl_page.feedSource.1">
         <source>Here you can choose what will be exported.</source>
@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_page.archives_legend">
         <source>News archives</source>
-        <target>Archives d'actualités</target>
+        <target>Archives d&apos;actualités</target>
       </trans-unit>
       <trans-unit id="tl_page.source_teaser">
         <source>Teasers only</source>

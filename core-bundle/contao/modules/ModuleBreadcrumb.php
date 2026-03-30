@@ -64,7 +64,9 @@ class ModuleBreadcrumb extends Module
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Get all pages up to the root page
-		$objPages = PageModel::findParentsById($objPage->pid);
+		$parents = array_reverse($objPage->trail);
+		array_shift($parents); // Remove current page
+		$objPages = PageModel::findMultipleByIds($parents);
 
 		if ($objPages !== null)
 		{

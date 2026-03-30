@@ -265,6 +265,24 @@ class UserRootListenerTest extends TestCase
         $this->assertSame([1, 2, 3], $GLOBALS['TL_DCA']['tl_foo']['list']['sorting']['root']);
     }
 
+    public function testDoesNotFilterRecordsByNonNumericRoots(): void
+    {
+        $user = $this->createClassWithPropertiesStub(BackendUser::class, [
+            'foobars' => [1, 2, 3, 'foo'],
+        ]);
+
+        $this->registerCallbacks($this->mockSecurity(true, $user));
+
+        $GLOBALS['TL_DCA']['tl_foo']['config']['userRoot'] = 'foobars';
+
+        $callback = $GLOBALS['TL_DCA']['tl_foo']['config']['onload_callback'][0] ?? null;
+        $this->assertIsCallable($callback);
+        $callback();
+
+        $this->assertArrayHasKey('root', $GLOBALS['TL_DCA']['tl_foo']['list']['sorting'] ?? []);
+        $this->assertSame([1, 2, 3], $GLOBALS['TL_DCA']['tl_foo']['list']['sorting']['root']);
+    }
+
     public function testDoesNotAdjustsPermissionsIfIdIsAlreadyEnabled(): void
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, [

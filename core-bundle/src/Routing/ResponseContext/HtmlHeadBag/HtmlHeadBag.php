@@ -32,6 +32,11 @@ final class HtmlHeadBag
      */
     private array $metaTags = [];
 
+    /**
+     * @var list<HtmlAttributes>
+     */
+    private array $linkTags = [];
+
     public function getTitle(): string
     {
         return $this->title;
@@ -149,6 +154,32 @@ final class HtmlHeadBag
     public function removeMetaTag(string $key, string $value): self
     {
         $this->metaTags = array_filter($this->metaTags, static fn (HtmlAttributes $metaTag): bool => ($metaTag[$key] ?? null) !== $value);
+
+        return $this;
+    }
+
+    public function getLinkTags(): array
+    {
+        return $this->linkTags;
+    }
+
+    public function setLinkTags(array $linkTags): self
+    {
+        $this->linkTags = $linkTags;
+
+        return $this;
+    }
+
+    public function addLinkTag(HtmlAttributes $linkTag): self
+    {
+        $this->linkTags[] = $linkTag;
+
+        return $this;
+    }
+
+    public function removeLinkTag(string $key, string $value): self
+    {
+        $this->linkTags = array_filter($this->linkTags, static fn (HtmlAttributes $linkTag): bool => ($linkTag[$key] ?? null) !== $value);
 
         return $this;
     }

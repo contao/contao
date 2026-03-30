@@ -17,10 +17,13 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\Renderer\RendererInterface;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
@@ -39,6 +42,9 @@ class ContentComposition
         private readonly RequestStack $requestStack,
         private readonly LocaleAwareInterface $translator,
         private readonly PageRegistry $pageRegistry,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly CoreResponseContextFactory $responseContextFactory,
     ) {
     }
 
@@ -53,13 +59,16 @@ class ContentComposition
             $this->defaultRenderer,
             $this->requestStack,
             $this->translator,
+            $this->eventDispatcher,
+            $this->responseContextAccessor,
+            $this->responseContextFactory,
             $page,
         );
 
         // Always use the deferred renderer for the layout template
         $builder->setRenderer($this->deferredRenderer);
 
-        if ($template = $this->pageRegistry->getRoute($page)->getDefault('_template')) {
+        if ($template = $this->pageRegistry->getPageTemplate($page)) {
             $builder->useCustomLayoutTemplate($template);
         }
 

@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(
     '%contao.backend.route_prefix%/search',
     name: '_contao_backend_search.stream',
-    defaults: ['_scope' => 'backend', '_store_referrer' => false, '_token_check' => false],
+    defaults: ['_scope' => 'backend', '_token_check' => false],
     methods: ['GET', 'POST'],
     condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
 )]
