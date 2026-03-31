@@ -16,6 +16,7 @@ use Contao\ArrayUtil;
 use Contao\CoreBundle\Event\JsonLdEvent;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Spatie\SchemaOrg\Graph;
+use Spatie\SchemaOrg\MultiTypedEntity;
 use Spatie\SchemaOrg\Type;
 
 class JsonLdManager
@@ -90,14 +91,35 @@ class JsonLdManager
             throw new \InvalidArgumentException('Must provide the @type property!');
         }
 
-        $schemaClass = '\Spatie\SchemaOrg\\'.$jsonLd['@type'];
+        if (is_array($jsonLd['@type'])) {
+            if (empty(array_filter($jsonLd['@type'], is_string(...)))) {
+                throw new \InvalidArgumentException('The @type property must be a string or an array of strings!');
+            }
+            $schema = new MultiTypedEntity();
+            foreach ($jsonLd['@type'] as $type) {
+                $schema->add($this->buildInstance($type, $jsonLd));
+            }
+        } else {
+            $schema = $this->buildInstance($jsonLd['@type'], $jsonLd);
+        }
+
+        return $schema;
+    }
+
+    private function buildInstance(string $type, array $jsonLd = []): mixed
+    {
+        $schemaClass = '\Spatie\SchemaOrg\\' . $type;
 
         if (!class_exists($schemaClass)) {
-            throw new \InvalidArgumentException(\sprintf('Unknown schema.org type "%s" provided!', $jsonLd['@type']));
+            throw new \InvalidArgumentException(\sprintf('Unknown schema.org type "%s" provided!', $type));
         }
 
         $schema = new $schemaClass();
         unset($jsonLd['@type']);
+
+        if (empty($jsonLd)) {
+            return $schema;
+        }
 
         foreach ($jsonLd as $k => $v) {
             if (\is_array($v) && isset($v['@type'])) {
@@ -106,7 +128,6 @@ class JsonLdManager
 
             $schema->setProperty($k, $v);
         }
-
         return $schema;
     }
 }
