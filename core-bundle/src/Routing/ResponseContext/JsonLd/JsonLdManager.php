@@ -91,11 +91,12 @@ class JsonLdManager
             throw new \InvalidArgumentException('Must provide the @type property!');
         }
 
-        if (is_array($jsonLd['@type'])) {
-            if (empty(array_filter($jsonLd['@type'], is_string(...)))) {
+        if (\is_array($jsonLd['@type'])) {
+            if ([] === array_filter($jsonLd['@type'], is_string(...))) {
                 throw new \InvalidArgumentException('The @type property must be a string or an array of strings!');
             }
             $schema = new MultiTypedEntity();
+
             foreach ($jsonLd['@type'] as $type) {
                 $schema->add($this->buildInstance($type, $jsonLd));
             }
@@ -108,7 +109,7 @@ class JsonLdManager
 
     private function buildInstance(string $type, array $jsonLd = []): mixed
     {
-        $schemaClass = '\Spatie\SchemaOrg\\' . $type;
+        $schemaClass = '\Spatie\SchemaOrg\\'.$type;
 
         if (!class_exists($schemaClass)) {
             throw new \InvalidArgumentException(\sprintf('Unknown schema.org type "%s" provided!', $type));
@@ -117,7 +118,7 @@ class JsonLdManager
         $schema = new $schemaClass();
         unset($jsonLd['@type']);
 
-        if (empty($jsonLd)) {
+        if ([] === $jsonLd) {
             return $schema;
         }
 
@@ -128,6 +129,7 @@ class JsonLdManager
 
             $schema->setProperty($k, $v);
         }
+
         return $schema;
     }
 }
