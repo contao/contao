@@ -18,6 +18,8 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use PHPUnit\Framework\TestCase;
 use Spatie\SchemaOrg\ImageObject;
 use Spatie\SchemaOrg\MultiTypedEntity;
+use Spatie\SchemaOrg\Museum;
+use Spatie\SchemaOrg\TouristAttraction;
 
 class JsonLdManagerTest extends TestCase
 {
@@ -153,8 +155,8 @@ class JsonLdManagerTest extends TestCase
         ]);
 
         $this->assertInstanceOf(MultiTypedEntity::class, $type);
-        $type->has(TouristAttraction::class);
-        $type->has(Museum::class);
+        $this->assertTrue($type->has(TouristAttraction::class));
+        $this->assertTrue($type->has(Museum::class));
     }
 
     public function testCreateSchemaOrgTypeFromArrayWithValidType(): void
