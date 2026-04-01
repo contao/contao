@@ -392,7 +392,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'mooClasses' => array
 		(
 			'search'                  => true,
-			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'alnum', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
