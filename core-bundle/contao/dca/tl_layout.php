@@ -242,7 +242,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'cssClass' => array
 		(
 			'search'                  => true,
-			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
