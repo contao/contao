@@ -204,7 +204,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		'formID' => array
 		(
 			'search'                  => true,
-			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>true, 'doNotCopy'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
