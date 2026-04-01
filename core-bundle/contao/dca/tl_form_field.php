@@ -316,7 +316,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'class' => array
 		(
 			'search'                  => true,
-			'backendSearch' 		  => false,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
