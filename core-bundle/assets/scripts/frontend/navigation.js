@@ -136,6 +136,7 @@ export class Navigation {
     #init() {
         this.#createSubMenuButton();
         this.#initMobileToggleEvents();
+        this.#initMobileAnchorClose();
 
         this.navigation.querySelectorAll('li').forEach(item => {
 
@@ -316,6 +317,37 @@ export class Navigation {
             this.#focusMenu();
         });
     }
+
+    #initMobileAnchorClose() {
+    this.navigation.addEventListener('click', (e) => {
+        if (this.#isDesktop() || !this.state) {
+            return;
+        }
+
+        const link = e.target.closest('a[href]');
+        if (!link || !this.navigation.contains(link)) {
+            return;
+        }
+
+        const href = link.getAttribute('href')?.trim();
+        if (!href) {
+            return;
+        }
+
+        const url = new URL(href, window.location.href);
+        const isSamePage =
+            url.origin === window.location.origin &&
+            url.pathname === window.location.pathname &&
+            url.hash;
+
+        if (!isSamePage) {
+            return;
+        }
+
+        this.#toggleMenuState();
+        this.#focusMenu();
+    });
+}
 
     /**
      * Registers the mouse dropdown events
