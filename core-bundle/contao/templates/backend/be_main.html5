@@ -123,14 +123,16 @@ $this->asideAttributes = $this
         <turbo-frame id="contao-main" target="_top">
           <main<?= $this->mainAttributes ?>>
             <?php $this->block('main_headline'); ?>
-              <h1 id="main_headline">
-                <?php if ($this->breadcrumb): ?>
-                  <?= $this->breadcrumb ?>
-                <?php else: ?>
-                  <?= $this->headline ?>
-                <?php endif; ?>
+              <div class="headline-wrapper">
+                <h1 id="main_headline">
+                  <?php if ($this->breadcrumb): ?>
+                    <?= $this->breadcrumb ?>
+                  <?php else: ?>
+                    <?= $this->headline ?>
+                  <?php endif; ?>
+                </h1>
                 <?php $this->insert('@Contao/backend/component/_favorites.html.twig') ?>
-              </h1>
+              </div>
             <?php $this->endblock(); ?>
             <div class="content">
               <?php if ($this->pickerMenu): ?>
