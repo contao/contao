@@ -92,7 +92,7 @@ class JsonLdManager
         }
 
         if (\is_array($jsonLd['@type'])) {
-            if ([] !== array_filter($jsonLd['@type'], static fn ($type) => !is_string($type))) {
+            if ([] !== array_filter($jsonLd['@type'], static fn ($type) => !\is_string($type))) {
                 throw new \InvalidArgumentException('The @type property must be a string or an array of strings!');
             }
             $schema = new MultiTypedEntity();
