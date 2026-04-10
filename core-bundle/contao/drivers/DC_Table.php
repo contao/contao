@@ -567,6 +567,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				continue;
 			}
 
+			$this->strField = $i;
 			$row[$i] = $valueFormatter->format($this->strTable, $i, $row[$i], $this);
 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'textarea' && (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['allowHtml'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['preserveTags'] ?? null)))
@@ -3999,6 +4000,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		foreach ($headerFields as $v)
 		{
+			$this->strField = $v;
 			$_v = $valueFormatter->format($this->ptable, $v, $objParent->$v, $this);
 
 			// Add the sorting field
@@ -4129,6 +4131,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Add the group header
 				if ($firstOrderBy != 'sorting' && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
 				{
+					$this->strField = $firstOrderBy;
 					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null);
 					$group = $this->formatGroupHeader($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode, $row[$i]);
 
