@@ -49,6 +49,7 @@ class CaptchaController extends AbstractController
             'sum' => $captcha->sum,
             'hash' => $captcha->sum.$captcha->hash,
         ]);
+
         $response->headers->set('Cache-Control', 'no-cache, no-store');
         $response->setVary('X-Requested-With');
 
