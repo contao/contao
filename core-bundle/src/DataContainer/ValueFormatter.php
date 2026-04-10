@@ -262,7 +262,7 @@ class ValueFormatter implements ResetInterface
             return $value ? $dateAdapter->parse($configAdapter->get('datimFormat'), (int) $value) : '';
         }
 
-        if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
+        if (\is_scalar($value) && isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
             if (\is_array($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value])) {
                 return (string) ($GLOBALS['TL_DCA'][$table]['fields'][$field]['reference'][$value][0] ?? $value);
             }
