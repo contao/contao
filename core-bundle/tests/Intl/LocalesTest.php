@@ -175,8 +175,7 @@ class LocalesTest extends TestCase
         $translator = $this->createStub(Translator::class);
         $translator
             ->method('getCatalogue')
-            ->with('de')
-            ->willReturn($catalogue)
+            ->willReturnMap([['de', $catalogue]])
         ;
 
         $translator

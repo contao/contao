@@ -74,6 +74,6 @@ final class SaveOperation extends AbstractOperation
             $state['extends'] = $templateInformation->getExtends();
         }
 
-        return md5(json_encode($state, JSON_THROW_ON_ERROR));
+        return hash('xxh3', json_encode($state, JSON_THROW_ON_ERROR));
     }
 }

@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.versions.1">
         <source>Show the versions of user group ID %s</source>
+        <target>Показать версии группы пользователей ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>

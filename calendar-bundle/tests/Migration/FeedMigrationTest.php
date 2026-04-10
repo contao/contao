@@ -17,6 +17,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
+use Symfony\Component\Filesystem\Filesystem;
 
 class FeedMigrationTest extends ContaoTestCase
 {
@@ -37,7 +38,13 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn($schemaManager)
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->never())
+            ->method('remove')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertFalse($migration->shouldRun());
     }
@@ -65,7 +72,13 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn(0)
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->never())
+            ->method('remove')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertFalse($migration->shouldRun());
     }
@@ -99,8 +112,8 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn([[
                 'id' => 1,
                 'tstamp' => 16000000,
-                'title' => 'Some event',
-                'alias' => 'some-event',
+                'title' => 'Upcoming Events',
+                'alias' => 'upcoming-events',
                 'description' => 'This is an example calendar feed',
                 'calendars' => serialize([42]),
                 'maxItems' => 0,
@@ -139,8 +152,8 @@ class FeedMigrationTest extends ContaoTestCase
                     'pid' => 1,
                     'sorting' => 256,
                     'type' => 'calendar_feed',
-                    'title' => 'Some event',
-                    'alias' => 'share/some-event',
+                    'title' => 'Upcoming Events',
+                    'alias' => 'share/upcoming-events',
                     'feedSource' => 'source_teaser',
                     'feedFormat' => 'rss',
                     'eventCalendars' => serialize([42]),
@@ -172,7 +185,14 @@ class FeedMigrationTest extends ContaoTestCase
             ->with('tl_layout', ['calendarfeeds' => serialize([42])], ['id' => 21])
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('remove')
+            ->with('public/share/upcoming-events.xml')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertTrue($migration->shouldRun());
         $this->assertEquals(new MigrationResult(true, 'Contao\CalendarBundle\Migration\FeedMigration executed successfully'), $migration->run());
@@ -207,8 +227,8 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn([[
                 'id' => 1,
                 'tstamp' => 16000000,
-                'title' => 'Some event',
-                'alias' => 'some-event',
+                'title' => 'Upcoming Events',
+                'alias' => 'upcoming-events',
                 'description' => 'This is an example calendar feed',
                 'calendars' => serialize([42]),
                 'maxItems' => 0,
@@ -253,8 +273,8 @@ class FeedMigrationTest extends ContaoTestCase
                     'pid' => 2,
                     'sorting' => 896,
                     'type' => 'calendar_feed',
-                    'title' => 'Some event',
-                    'alias' => 'share/some-event',
+                    'title' => 'Upcoming Events',
+                    'alias' => 'share/upcoming-events',
                     'feedSource' => 'source_teaser',
                     'feedFormat' => 'rss',
                     'eventCalendars' => serialize([42]),
@@ -279,7 +299,14 @@ class FeedMigrationTest extends ContaoTestCase
             )
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('remove')
+            ->with('public/share/upcoming-events.xml')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertTrue($migration->shouldRun());
         $this->assertEquals(new MigrationResult(true, 'Contao\CalendarBundle\Migration\FeedMigration executed successfully'), $migration->run());

@@ -363,6 +363,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.versions.1">
         <source>Show the versions of event ID %s</source>
+        <target>Показать версии события ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>

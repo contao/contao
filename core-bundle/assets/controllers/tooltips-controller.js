@@ -27,6 +27,7 @@ export default class TooltipsController extends Controller {
         'input[title]': { x: -9, y: 30 },
         'time[title]': { x: -9, y: 26 },
         'span[title]': { x: -9, y: 26 },
+        'label.mw_enable': { x: -9, y: 30, useContent: true },
     };
 
     /**

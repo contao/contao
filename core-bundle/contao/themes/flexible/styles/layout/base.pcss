@@ -12,7 +12,7 @@ html {
 
 /* Skip link */
 .show-on-focus:focus {
-    clip: unset;
+    clip-path: revert;
     height: auto;
     width: auto;
     margin: 4px;
@@ -31,4 +31,16 @@ body {
 
 body.popup {
     background: var(--content-bg);
+}
+
+.mw1280 {
+    --backend-width: 1280px;
+}
+
+.mw1440 {
+    --backend-width: 1440px;
+}
+
+.mw1920 {
+    --backend-width: 1920px;
 }

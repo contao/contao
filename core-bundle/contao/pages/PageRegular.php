@@ -279,6 +279,7 @@ class PageRegular extends Frontend
 
 		// Additional meta tags
 		$this->Template->metaTags = $headBag->getMetaTags();
+		$this->Template->linkTags = $headBag->getLinkTags();
 
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);

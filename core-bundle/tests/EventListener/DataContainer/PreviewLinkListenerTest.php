@@ -14,17 +14,14 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
-use Contao\Input;
 use Contao\Message;
-use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Clock\MockClock;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -45,7 +42,6 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub(),
-            $this->createStub(Connection::class),
             $this->createStub(Security::class),
             $this->createStub(RequestStack::class),
             $this->createStub(TranslatorInterface::class),
@@ -69,7 +65,6 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub(),
-            $this->createStub(Connection::class),
             $this->createStub(Security::class),
             $this->createStub(RequestStack::class),
             $this->createStub(TranslatorInterface::class),
@@ -91,7 +86,6 @@ class PreviewLinkListenerTest extends TestCase
 
         $listener = new PreviewLinkListener(
             $this->createContaoFrameworkStub(),
-            $this->createStub(Connection::class),
             $this->createStub(Security::class),
             $this->createStub(RequestStack::class),
             $this->createStub(TranslatorInterface::class),
@@ -121,14 +115,13 @@ class PreviewLinkListenerTest extends TestCase
             ],
         ];
 
-        $input = $this->mockInputAdapter(['url' => $url, 'showUnpublished' => $showUnpublished]);
+        $request = Request::create("/contao?do=preview_link&act=edit&url=$url&showUnpublished=$showUnpublished");
         $clock = new MockClock();
 
         $listener = new PreviewLinkListener(
-            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
-            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->mockSecurity($userId),
-            $this->createStub(RequestStack::class),
+            new RequestStack([$request]),
             $this->createStub(TranslatorInterface::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(UriSigner::class),
@@ -169,13 +162,12 @@ class PreviewLinkListenerTest extends TestCase
             'config' => ['notCreatable' => true],
         ];
 
-        $input = $this->mockInputAdapter(['act' => 'create', 'url' => '/preview.php/foo/bar']);
+        $request = Request::create('/contao?do=preview_link&act=create&url=/preview.php/foo/bar');
 
         $listener = new PreviewLinkListener(
-            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
-            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->mockSecurity(),
-            $this->createStub(RequestStack::class),
+            new RequestStack([$request]),
             $this->createStub(TranslatorInterface::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(UriSigner::class),
@@ -197,13 +189,12 @@ class PreviewLinkListenerTest extends TestCase
             'config' => ['notCreatable' => true],
         ];
 
-        $input = $this->mockInputAdapter(['act' => 'create']);
+        $request = Request::create('/contao?do=preview_link&act=create');
 
         $listener = new PreviewLinkListener(
-            $this->createContaoFrameworkStub([Input::class => $input, Message::class => $this->createAdapterStub(['addInfo'])]),
-            $this->createStub(Connection::class),
+            $this->createContaoFrameworkStub([Message::class => $this->createAdapterStub(['addInfo'])]),
             $this->mockSecurity(),
-            $this->createStub(RequestStack::class),
+            new RequestStack([$request]),
             $this->createStub(TranslatorInterface::class),
             $this->createStub(UrlGeneratorInterface::class),
             $this->createStub(UriSigner::class),
@@ -229,27 +220,6 @@ class PreviewLinkListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_ADMIN')
-            ->willReturn(true)
-        ;
-
         return $security;
-    }
-
-    /**
-     * @return Adapter<Input>&Stub
-     */
-    private function mockInputAdapter(array $inputData): Adapter&Stub
-    {
-        $inputAdapter = $this->createAdapterStub(['get']);
-        $inputAdapter
-            ->method('get')
-            ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)
-        ;
-
-        return $inputAdapter;
     }
 }

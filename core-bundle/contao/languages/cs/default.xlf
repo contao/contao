@@ -413,6 +413,9 @@
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
         <target>Element s ID %d nelze sem vložit, jelikož došlo k potížím s již existujícím elementem.</target>
       </trans-unit>
+      <trans-unit id="ERR.grantTemplateEditor">
+        <source>You can only grant access to the template editor if you are an admin.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Prosím sečtěte %d a %d.</target>
@@ -3051,11 +3054,11 @@
         <target>Chráněno pomocí &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
-        <source>I'm not a robot</source>
+        <source>I&apos;m not a robot</source>
         <target>Jsem robot</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
-        <source>I'm human</source>
+        <source>I&apos;m human</source>
         <target>Jsem člověk</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">

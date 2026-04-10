@@ -431,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_user.versions.1">
         <source>Show the versions of user ID %s</source>
+        <target>Показать версии пользователя ID %s</target>
       </trans-unit>
       <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>

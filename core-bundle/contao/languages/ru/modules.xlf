@@ -322,7 +322,7 @@
         <target>Личные данные</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a member's personal data</source>
+        <source>Generates a form to edit a member&apos;s personal data</source>
         <target>Создает форму для заполнения личных данных участника</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">

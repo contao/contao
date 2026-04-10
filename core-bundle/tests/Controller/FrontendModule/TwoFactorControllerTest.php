@@ -25,6 +25,7 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,7 +54,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $this->createStub(BackendUser::class),
             true,
         );
@@ -76,7 +77,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $this->createStub(BackendUser::class),
             true,
         );
@@ -96,7 +97,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
         );
 
         $controller = new TwoFactorController();
@@ -122,7 +123,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -151,7 +152,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -179,7 +180,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -228,7 +229,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -299,7 +300,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, false),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -343,7 +344,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, true),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -384,7 +385,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -412,7 +413,7 @@ class TwoFactorControllerTest extends TestCase
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
-            $this->mockAuthenticationUtils(),
+            $this->createStub(AuthenticationUtils::class),
             $user,
             true,
         );
@@ -471,18 +472,14 @@ class TwoFactorControllerTest extends TestCase
         return $authenticator;
     }
 
-    private function mockAuthenticationUtils(AuthenticationException|null $authenticationException = null): AuthenticationUtils&Stub
+    private function mockAuthenticationUtils(AuthenticationException $authenticationException): AuthenticationUtils&MockObject
     {
-        if ($authenticationException instanceof AuthenticationException) {
-            $authenticationUtils = $this->createMock(AuthenticationUtils::class);
-            $authenticationUtils
-                ->expects($this->once())
-                ->method('getLastAuthenticationError')
-                ->willReturn($authenticationException)
-            ;
-        } else {
-            $authenticationUtils = $this->createStub(AuthenticationUtils::class);
-        }
+        $authenticationUtils = $this->createMock(AuthenticationUtils::class);
+        $authenticationUtils
+            ->expects($this->once())
+            ->method('getLastAuthenticationError')
+            ->willReturn($authenticationException)
+        ;
 
         return $authenticationUtils;
     }
@@ -512,14 +509,12 @@ class TwoFactorControllerTest extends TestCase
         $framework = $this->createContaoFrameworkStub([PageModel::class => $adapter]);
         $framework
             ->method('createInstance')
-            ->with(FrontendTemplate::class, ['mod_two_factor'])
-            ->willReturn($template)
+            ->willReturnMap([[FrontendTemplate::class, ['mod_two_factor'], $template]])
         ;
 
         $authorizationChecker = $this->createStub(AuthorizationCheckerInterface::class);
         $authorizationChecker
             ->method('isGranted')
-            ->with('IS_AUTHENTICATED_FULLY')
             ->willReturn($isFullyAuthenticated)
         ;
 

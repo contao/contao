@@ -115,6 +115,48 @@ class ValueFormatterTest extends TestCase
             'foo,bar',
         ];
 
+        yield 'Serialized headline' => [
+            serialize(['unit' => 'h1', 'value' => 'foo']),
+            [],
+            'foo, h1',
+        ];
+
+        yield 'Serialized array (#1)' => [
+            serialize(['foo', 'bar']),
+            [],
+            'foo, bar',
+        ];
+
+        yield 'Serialized array (#2)' => [
+            serialize([['foo', 'bar', 'baz']]),
+            [],
+            '[foo, bar, baz]',
+        ];
+
+        yield 'Serialized array (#3)' => [
+            serialize(['foo' => 'bar']),
+            [],
+            'foo: bar',
+        ];
+
+        yield 'Serialized array (#4)' => [
+            serialize(['foo' => 'bar', 'bar' => ['baz', 1, 2, 3]]),
+            [],
+            'foo: bar, bar: [baz, 1, 2, 3]',
+        ];
+
+        yield 'Serialized array (#5)' => [
+            serialize(['foo' => 'bar', 'bar' => ['baz', [1, 2, 3]]]),
+            [],
+            'foo: bar, bar: [baz, [1, 2, 3]]',
+        ];
+
+        yield 'Serialized array (#6)' => [
+            serialize(['foo' => 'bar', 'bar' => ['foo' => 'bar', 'bar' => ['foo' => 'bar']]]),
+            [],
+            'foo: bar, bar: [foo: bar, bar: [foo: bar]]',
+        ];
+
         yield 'Date' => [
             '1764689390',
             ['eval' => ['rgxp' => 'date']],
@@ -388,6 +430,51 @@ class ValueFormatterTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
+    public function testFormatArrayValueIgnoresForeignKey(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = [
+            'foreignKey' => 'tl_foo.name',
+        ];
+
+        $configAdapter = $this->createAdapterStub(['get']);
+        $dateAdapter = $this->createAdapterStub(['parse']);
+
+        $framework = $this->createContaoFrameworkStub([
+            Date::class => $dateAdapter,
+            Config::class => $configAdapter,
+        ]);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('fetchOne')
+        ;
+
+        $foreignKeyParser = $this->createMock(ForeignKeyParser::class);
+        $foreignKeyParser
+            ->expects($this->never())
+            ->method('parse')
+        ;
+
+        $valueFormatter = new ValueFormatter(
+            $framework,
+            $connection,
+            $foreignKeyParser,
+            $this->createStub(TranslatorInterface::class),
+        );
+
+        $result = $valueFormatter->format(
+            'tl_foo',
+            'foo',
+            serialize(['value' => 'foo', 'unit' => 'h1']),
+            $this->createStub(DataContainer::class),
+        );
+
+        $this->assertSame('foo, h1', $result);
+
+        unset($GLOBALS['TL_DCA']);
+    }
+
     #[DataProvider('formatFilterOptionsProvider')]
     public function testFormatFilterOptions(array $dca, array $values, array $expected): void
     {
@@ -524,8 +611,7 @@ class ValueFormatterTest extends TestCase
         $configAdapter = $this->createAdapterStub(['get']);
         $configAdapter
             ->method('get')
-            ->with('dateFormat')
-            ->willReturn('Y-m-d')
+            ->willReturnMap([['dateFormat', 'Y-m-d']])
         ;
 
         $dateAdapter = $this->createAdapterStub(['parse']);

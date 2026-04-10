@@ -24,7 +24,10 @@
             <meta name="description" content="{{ description|u.truncate(320, '…') }}">
             <meta name="generator" content="Contao Open Source CMS">
             {% for metaTag in metaTags|default %}
-                <meta{{ attrs(metaTag) }}>
+                <meta{{ metaTag }}>
+            {% endfor %}
+            {% for linkTag in linkTags|default %}
+                <meta{{ linkTag }}>
             {% endfor %}
         {% endblock %}
 
@@ -36,7 +39,7 @@
         {{ framework|raw }}
         {{ stylesheets|raw }}
         {{ mooScripts|raw }}
-        {{ head|raw }}
+        {{ head|insert_tag_raw|raw }}
     {% endblock %}
 
 </head>
@@ -111,7 +114,7 @@
     {{ contao_sections('bottom') }}
 {% endblock %}
 
-{{ mootools|raw }}
+{{ mootools|insert_tag_raw|raw }}
 {{ jsonLdScripts|raw }}
 
 </body>

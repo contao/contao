@@ -153,6 +153,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		$this->intId = Input::get('id', true);
+		$this->strTable = $strTable;
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
@@ -232,7 +233,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? false;
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
 
@@ -497,9 +497,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$operations->addBackButton();
 		}
 
-		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
-			if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('type' => 'folder'))))
 			{
 				$operations->append(array(
 					'href' => $this->addToUrl($hrfNew),
@@ -578,7 +578,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </form>';
 		}
 
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
+		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null))
 		{
 			$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
 			$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
@@ -637,7 +637,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function create()
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
 		{
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
@@ -2139,9 +2139,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$strSource = gzencode($strSource);
 				}
 
-				// Write the file
-				$objFile->write($strSource);
-				$objFile->close();
+				// Write the file using the VFS if possible (see #9450)
+				$uploadPath = System::getContainer()->getParameter('contao.upload_path');
+
+				if (Path::isBasePath($uploadPath, $objFile->path))
+				{
+					System::getContainer()
+						->get('contao.filesystem.virtual.files')
+						->write(Path::makeRelative($objFile->path, $uploadPath), $strSource)
+					;
+				}
+				else
+				{
+					$objFile->write($strSource);
+					$objFile->close();
+				}
 
 				// Update the database
 				if ($this->blnIsDbAssisted && $objMeta !== null)
@@ -2791,10 +2803,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Default buttons
 				else
 				{
-					// Only show the upload button for mounted folders
+					// Show the upload button for mounted folders. This is added here because regular operations are not rendered for the root mounts.
 					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
 					{
-						if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
+						if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notMovable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder, 'type' => 'file'))))
 						{
 							$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 
@@ -2993,7 +3005,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
       <legend>' . $GLOBALS['TL_LANG']['MSC']['search'] . '</legend>
       <label for="tl_search">' . $GLOBALS['TL_LANG']['MSC']['field'] . '</label>
       <div class="tl_select_wrapper" data-controller="contao--choices">
-          <select id="tl_search" name="tl_search" class="tl_select' . ($active ? ' active' : '') . '">
+          <select id="tl_search" name="tl_search" class="tl_select">
             ' . implode("\n", $options) . '
           </select>
       </div>

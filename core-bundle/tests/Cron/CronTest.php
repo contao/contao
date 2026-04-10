@@ -68,12 +68,7 @@ class CronTest extends TestCase
 
     public function testLoggingOfExecutedCronJobs(): void
     {
-        $cronjob = $this
-            ->getMockBuilder(TestCronJob::class)
-            ->setMockClassName('TestCronJob')
-            ->getMock()
-        ;
-
+        $cronjob = $this->createMock(TestCronJob::class);
         $cronjob
             ->expects($this->once())
             ->method('onMinutely')
@@ -85,8 +80,8 @@ class CronTest extends TestCase
         ;
 
         $expectedMessages = [
-            'Executing cron job "TestCronJob::onMinutely"',
-            'Executing cron job "TestCronJob::onHourly"',
+            'Executing cron job "'.$cronjob::class.'::onMinutely"',
+            'Executing cron job "'.$cronjob::class.'::onHourly"',
         ];
 
         $logger = $this->createMock(LoggerInterface::class);
@@ -133,23 +128,24 @@ class CronTest extends TestCase
             ->willReturn((new \DateTime())->modify('-1 hours'))
         ;
 
+        $cronjob = $this->createMock(TestCronJob::class);
+        $cronjob
+            ->expects($this->once())
+            ->method('onHourly')
+        ;
+
         $repository = $this->createMock(CronJobRepository::class);
         $repository
             ->expects($this->once())
             ->method('__call')
-            ->with('findOneByName', ['UpdateEntitiesCron::onHourly'])
+            ->with('findOneByName', [$cronjob::class.'::onHourly'])
             ->willReturn($entity)
         ;
 
-        $cronjob = $this
-            ->getMockBuilder(TestCronJob::class)
-            ->setMockClassName('UpdateEntitiesCron')
-            ->getMock()
-        ;
-
-        $cronjob
+        $repository
             ->expects($this->once())
-            ->method('onHourly')
+            ->method('purgeOldRecords')
+            ->with([$cronjob::class.'::onHourly'])
         ;
 
         $manager = $this->createEntityManagerMock(false);
@@ -260,6 +256,12 @@ class CronTest extends TestCase
             ->willReturn($entity)
         ;
 
+        $repository
+            ->expects($this->once())
+            ->method('purgeOldRecords')
+            ->with([$cronjob::class.'::onHourly'])
+        ;
+
         $cron = new Cron(
             static fn () => $repository,
             fn () => $this->createEntityManagerMock(false),
@@ -302,6 +304,12 @@ class CronTest extends TestCase
             ->willReturn($entity)
         ;
 
+        $repository
+            ->expects($this->once())
+            ->method('purgeOldRecords')
+            ->with([$cronjob::class.'::onHourly'])
+        ;
+
         $cron = new Cron(
             static fn () => $repository,
             fn () => $this->createEntityManagerMock(false),
@@ -339,6 +347,12 @@ class CronTest extends TestCase
             ->method('__call')
             ->with('findOneByName', ['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron'])
             ->willReturn($entity)
+        ;
+
+        $repository
+            ->expects($this->once())
+            ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron'])
         ;
 
         $cache = new ArrayAdapter();
@@ -386,6 +400,12 @@ class CronTest extends TestCase
             ->method('__call')
             ->with($this->equalTo('findOneByName'), $this->equalTo(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron']))
             ->willReturn($entity)
+        ;
+
+        $repository
+            ->expects($this->once())
+            ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron'])
         ;
 
         $cache = new ArrayAdapter();
@@ -437,6 +457,12 @@ class CronTest extends TestCase
             ->method('__call')
             ->with('findOneByName', ['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingMethod'])
             ->willReturn($entity)
+        ;
+
+        $repository
+            ->expects($this->once())
+            ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingMethod'])
         ;
 
         $cronjob = new TestCronJob();
@@ -496,6 +522,12 @@ class CronTest extends TestCase
             ->willReturn($entity)
         ;
 
+        $repository
+            ->expects($this->once())
+            ->method('purgeOldRecords')
+            ->with(['Contao\CoreBundle\Fixtures\Cron\TestCronJob::skippingAsyncMethod'])
+        ;
+
         $cronjob = new TestCronJob();
 
         $manager = $this->createEntityManagerMock(true);
@@ -526,6 +558,11 @@ class CronTest extends TestCase
         $repository
             ->expects($this->never())
             ->method('__call')
+        ;
+
+        $repository
+            ->expects($this->never())
+            ->method('purgeOldRecords')
         ;
 
         $cron = new Cron(

@@ -35,6 +35,9 @@ $GLOBALS['TL_DCA']['tl_content'] =
             'search' => false,
             'backendSearch' => true,
         ],
+        'default' => [
+            'search' => true,
+        ],
         'foo' => [
             'search' => true,
             'targetColumn' => 'jsonData',

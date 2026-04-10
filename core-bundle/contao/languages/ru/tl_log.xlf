@@ -83,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_log.show.1">
         <source>Show the details of log entry ID %s</source>
+        <target>Показать детали записи журнала ID %s</target>
       </trans-unit>
       <trans-unit id="tl_log.delete.1">
         <source>Delete log entry ID %s</source>
+        <target>Удалить запись журнала ID %s</target>
       </trans-unit>
     </body>
   </file>

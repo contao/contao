@@ -6,6 +6,6 @@
         {% set identifier_token -%}
             <span class="token">{{ identifier }}</span>
         {%- endset %}
-        {{ 'message.open_tab.error'|trans([identifier_token])|raw }}
+        {{ 'template_studio.message.open_tab.error'|trans([identifier_token])|raw }}
     {% endblock %}
 {% endembed %}

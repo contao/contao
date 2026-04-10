@@ -17,6 +17,7 @@ use Contao\NewsBundle\Migration\FeedMigration;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
+use Symfony\Component\Filesystem\Filesystem;
 
 class FeedMigrationTest extends ContaoTestCase
 {
@@ -37,7 +38,13 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn($schemaManager)
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->never())
+            ->method('remove')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertFalse($migration->shouldRun());
     }
@@ -65,7 +72,13 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn(0)
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->never())
+            ->method('remove')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertFalse($migration->shouldRun());
     }
@@ -172,7 +185,14 @@ class FeedMigrationTest extends ContaoTestCase
             ->with('tl_layout', ['newsfeeds' => serialize([42])], ['id' => 21])
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('remove')
+            ->with('public/share/latest-news.xml')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertTrue($migration->shouldRun());
         $this->assertEquals(new MigrationResult(true, 'Contao\NewsBundle\Migration\FeedMigration executed successfully'), $migration->run());
@@ -279,7 +299,14 @@ class FeedMigrationTest extends ContaoTestCase
             )
         ;
 
-        $migration = new FeedMigration($connection);
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->expects($this->once())
+            ->method('remove')
+            ->with('public/share/latest-news.xml')
+        ;
+
+        $migration = new FeedMigration($connection, $filesystem, 'public');
 
         $this->assertTrue($migration->shouldRun());
         $this->assertEquals(new MigrationResult(true, 'Contao\NewsBundle\Migration\FeedMigration executed successfully'), $migration->run());

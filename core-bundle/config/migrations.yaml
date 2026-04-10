@@ -68,6 +68,12 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_503.caption_basic_entities:
+        class: Contao\CoreBundle\Migration\Version503\CaptionBasicEntitiesMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+
     contao.migration.version_503.file_extension:
         class: Contao\CoreBundle\Migration\Version503\FileExtensionMigration
         arguments:

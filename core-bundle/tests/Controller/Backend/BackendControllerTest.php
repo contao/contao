@@ -151,8 +151,9 @@ class BackendControllerTest extends TestCase
     #[DataProvider('provideErrorTemplateScenarios')]
     public function testRendersFallbackRoute(bool $legacyTemplateExists, string $expectedTemplate): void
     {
-        $loader = $this->createStub(LoaderInterface::class);
+        $loader = $this->createMock(LoaderInterface::class);
         $loader
+            ->expects($this->once())
             ->method('exists')
             ->with('@ContaoCore/Error/backend.html.twig')
             ->willReturn($legacyTemplateExists)

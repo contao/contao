@@ -208,16 +208,16 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public static function getXMLFeedFormats(): iterable
     {
-        yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml'];
-        yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml'];
-        yield 'RSS (debug)' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/xml', true];
-        yield 'Atom (debug)' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/xml', true];
+        yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml; charset=UTF-8'];
+        yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml; charset=UTF-8'];
+        yield 'RSS (debug)' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/xml; charset=UTF-8', true];
+        yield 'Atom (debug)' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/xml; charset=UTF-8', true];
     }
 
     public static function getJSONFeedFormats(): iterable
     {
-        yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json'];
-        yield 'JSON (debug)' => ['json', '.json', 'https://example.org/latest-news.json', 'application/json', true];
+        yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json; charset=UTF-8'];
+        yield 'JSON (debug)' => ['json', '.json', 'https://example.org/latest-news.json', 'application/json; charset=UTF-8', true];
     }
 
     private function getController(bool $isDebug = false): NewsFeedController

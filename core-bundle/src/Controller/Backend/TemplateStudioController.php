@@ -27,7 +27,6 @@ use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
-use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,7 +104,7 @@ class TemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-tree',
         name: '_contao_template_studio_tree.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -122,7 +121,7 @@ class TemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio/select_theme',
         name: '_contao_template_studio_select_theme.stream',
-        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_token_check' => false],
         methods: ['POST'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -149,7 +148,7 @@ class TemplateStudioController extends AbstractBackendController
         '/%contao.backend.route_prefix%/template-studio/resource/{identifier}',
         name: '_contao_template_studio_editor_tab.stream',
         requirements: ['identifier' => '.+'],
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -193,26 +192,12 @@ class TemplateStudioController extends AbstractBackendController
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
             $isComponent = $templateInformation->isComponent();
             $isLegacyTemplate = str_ends_with($logicalName, '.html5');
-
-            $getLegacyTemplateCode = static function (string $identifier): string {
-                $template = new class($identifier) extends Template {
-                    public function getCode(): string
-                    {
-                        $path = $this->getTemplatePath($this->strTemplate, $this->strFormat);
-
-                        return @file_get_contents($path) ?: '(Template not found)';
-                    }
-                };
-
-                return $template->getCode();
-            };
-
             $templateNameInformation = $this->getTemplateNameInformation($logicalName);
 
             $template = [
                 ...$templateNameInformation,
                 'path' => $source->getPath(),
-                'code' => $isLegacyTemplate ? $getLegacyTemplateCode($templateNameInformation['identifier']) : $source->getCode(),
+                'code' => $isLegacyTemplate ? (string) @file_get_contents($source->getPath()) : $source->getCode(),
                 'type' => $isLegacyTemplate ? 'php' : $templateNameInformation['extension'],
                 'is_origin' => $i === $numTemplates - 1,
                 'is_component' => $isComponent,
@@ -264,7 +249,7 @@ class TemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-follow',
         name: '_contao_template_studio_follow.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -283,7 +268,7 @@ class TemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-block-info',
         name: '_contao_template_studio_block_info.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -375,7 +360,7 @@ class TemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-annotations-data',
         name: '_contao_template_studio_annotations_data.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -404,7 +389,7 @@ class TemplateStudioController extends AbstractBackendController
         '/%contao.backend.route_prefix%/template-studio/resource/{identifier}',
         name: '_contao_template_studio_operation.stream',
         requirements: ['identifier' => '.+'],
-        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_token_check' => false],
         methods: ['POST'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]

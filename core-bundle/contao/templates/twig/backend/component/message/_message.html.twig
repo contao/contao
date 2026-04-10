@@ -2,7 +2,7 @@
 
 {% block message_component %}
     {% set success = success is defined ? success : true %}
-    {% set autoclose = success and (constant('class', app.user) != 'Contao\BackendUser' or app.user.doNotHideMessages|default(false)) %}
+    {% set autoclose = success and (constant('class', app.user) != 'Contao\\BackendUser' or app.user.doNotHideMessages|default(false)) %}
 
     {% set message_attributes = attrs()
         .addClass('message')

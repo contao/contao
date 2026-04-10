@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="FMD.comments.1">
         <source>Manage comments or guestbook entries</source>
-        <target>Gérer les commentaires ou les entrées d'un livre d'or.</target>
+        <target>Gérer les commentaires ou les entrées d&apos;un livre d&apos;or.</target>
       </trans-unit>
       <trans-unit id="MOD.comments.0">
         <source>Comments</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="MOD.comments.1">
         <source>Manage comments or guestbook entries</source>
-        <target>Gérer les commentaires ou les entrées d'un livre d'or.</target>
+        <target>Gérer les commentaires ou les entrées d&apos;un livre d&apos;or.</target>
       </trans-unit>
     </body>
   </file>
