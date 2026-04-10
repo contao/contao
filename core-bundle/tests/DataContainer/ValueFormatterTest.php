@@ -130,7 +130,7 @@ class ValueFormatterTest extends TestCase
         yield 'Serialized array (#2)' => [
             serialize([['foo', 'bar', 'baz']]),
             [],
-            'foo (bar, baz)',
+            '[foo, bar, baz]',
         ];
 
         yield 'Serialized array (#3)' => [
@@ -142,7 +142,19 @@ class ValueFormatterTest extends TestCase
         yield 'Serialized array (#4)' => [
             serialize(['foo' => 'bar', 'bar' => ['baz', 1, 2, 3]]),
             [],
-            'foo: bar, bar: baz (1, 2, 3)',
+            'foo: bar, bar: [baz, 1, 2, 3]',
+        ];
+
+        yield 'Serialized array (#5)' => [
+            serialize(['foo' => 'bar', 'bar' => ['baz', [1, 2, 3]]]),
+            [],
+            'foo: bar, bar: [baz, [1, 2, 3]]',
+        ];
+
+        yield 'Serialized array (#6)' => [
+            serialize(['foo' => 'bar', 'bar' => ['foo' => 'bar', 'bar' => ['foo' => 'bar']]]),
+            [],
+            'foo: bar, bar: [foo: bar, bar: [foo: bar]]',
         ];
 
         yield 'Date' => [
