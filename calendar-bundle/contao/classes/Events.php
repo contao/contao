@@ -137,7 +137,7 @@ abstract class Events extends Module
 					while ($intEndTime < $intEnd)
 					{
 						// If the range is open-ended, show infinitely repeating events only once (see #9730)
-						if ($rangeCount > 0 && $intEnd >= min(4294967295, PHP_INT_MAX) && $objEvent->recurrences < 1)
+						if ($rangeCount > 0 && $intEnd >= min(4294967295, PHP_INT_MAX) && $objEvent->recurrences === 0)
 						{
 							break;
 						}
