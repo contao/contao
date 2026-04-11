@@ -79,6 +79,7 @@ class CalendarEventsGenerator
                     $rangeCount = $eventEndTime < $rangeStart || $eventStartTime > $rangeEnd ? 0 : 1;
 
                     while ($eventEndTime < $rangeEnd) {
+                        // If the range is open-ended, show infinitely repeating events only once (see #9730)
                         if ($rangeCount > 0 && $rangeEnd->getTimestamp() >= min(4294967295, PHP_INT_MAX) && 0 === $eventModel->recurrences) {
                             break;
                         }
