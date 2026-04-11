@@ -79,7 +79,7 @@ class CalendarEventsGenerator
                     $rangeCount = $eventEndTime < $rangeStart || $eventStartTime > $rangeEnd ? 0 : 1;
 
                     while ($eventEndTime < $rangeEnd) {
-                        if ($rangeCount > 0 && $rangeEnd->getTimestamp() >= min(4294967295, PHP_INT_MAX) && $eventModel->recurrences < 1) {
+                        if ($rangeCount > 0 && $rangeEnd->getTimestamp() >= min(4294967295, PHP_INT_MAX) && 0 === $eventModel->recurrences) {
                             break;
                         }
 
