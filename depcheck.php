@@ -80,7 +80,7 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('symfony/polyfill-intl-idn', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('symfony/polyfill-mbstring', [ErrorType::UNUSED_DEPENDENCY])
 
-    // Polyfill for PHP 8.4
+    // Polyfills for PHP versions.
     ->ignoreErrorsOnPackage('symfony/polyfill-php84', [ErrorType::UNUSED_DEPENDENCY])
 
     // The rate limiter is required for the functional tests.
