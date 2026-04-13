@@ -103,6 +103,16 @@ class JobsListener
         $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['filter'][] = $query;
     }
 
+    #[AsCallback(table: 'tl_job', target: 'config.ondelete')]
+    public function onDeleteCallback(DC_Table $dc): void
+    {
+        if (($currentRecord = $dc->getCurrentRecord()) === null) {
+            return;
+        }
+
+        $this->jobs->removeAttachments($currentRecord['uuid']);
+    }
+
     /**
      * @return int 0 if no Contao back end user was given
      */

@@ -155,6 +155,17 @@ class Jobs
         return $attachments;
     }
 
+    public function removeAttachments(Job|string $jobOrUuid): void
+    {
+        $jobUuid = $jobOrUuid instanceof Job ? $jobOrUuid->getUuid() : $jobOrUuid;
+
+        if (!$this->jobAttachmentsStorage->directoryExists($jobUuid)) {
+            return;
+        }
+
+        $this->jobAttachmentsStorage->deleteDirectory($jobUuid);
+    }
+
     public function getAttachment(Job|string $jobOrUuid, string $identifier): Attachment|null
     {
         $job = $jobOrUuid instanceof Job ? $jobOrUuid : $this->getByUuid($jobOrUuid);
@@ -268,10 +279,7 @@ class Jobs
     public function removeJob(Job $job): void
     {
         $this->connection->delete('tl_job', ['uuid' => $job->getUuid()]);
-
-        if ($this->jobAttachmentsStorage->directoryExists($job->getUuid())) {
-            $this->jobAttachmentsStorage->deleteDirectory($job->getUuid());
-        }
+        $this->removeAttachments($job);
     }
 
     public function prune(int $period): void
