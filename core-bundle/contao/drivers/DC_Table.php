@@ -3964,7 +3964,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return 0;
 		}
 
-		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? ($this->strTable === 'tl_page' ? self::DEFAULT_TREE_RECORD_LIMIT : 0));
+		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? self::DEFAULT_TREE_RECORD_LIMIT);
 	}
 
 	private function generateTreeRecordLimitNotice(int $intMargin): string
