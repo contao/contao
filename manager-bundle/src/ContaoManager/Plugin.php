@@ -251,6 +251,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function addDefaultPdoDriverOptions(array $extensionConfigs, ContainerBuilder $container): array
     {
+        if (!class_exists(Mysql::class)) {
+            return $extensionConfigs;
+        }
+
         [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Do not add PDO options if custom options have been defined
