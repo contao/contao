@@ -1406,6 +1406,9 @@
       <trans-unit id="MSC.filterAll">
         <source>All</source>
       </trans-unit>
+      <trans-unit id="MSC.treeRecordLimitReached">
+        <source>Additional records are available but are not displayed for performance reasons. Use the filters to restrict the view.</source>
+      </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
       </trans-unit>
