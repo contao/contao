@@ -62,7 +62,7 @@ class CalendarEventsGenerator
             }
 
             foreach ($eventModels as $eventModel) {
-                $this->addEvent($events, $eventModel, $eventModel->startTime, $eventModel->endTime, $rangeEnd->getTimestamp(), $id, $noSpan);
+                $this->addEvent($events, $eventModel, (int) $eventModel->startTime, (int) $eventModel->endTime, $rangeEnd->getTimestamp(), $id, $noSpan);
 
                 // Recurring events
                 if ($eventModel->recurring) {
@@ -73,8 +73,8 @@ class CalendarEventsGenerator
                     }
 
                     $count = 0;
-                    $eventStartTime = (new \DateTime())->setTimestamp($eventModel->startTime);
-                    $eventEndTime = (new \DateTime())->setTimestamp($eventModel->endTime);
+                    $eventStartTime = (new \DateTime())->setTimestamp((int) $eventModel->startTime);
+                    $eventEndTime = (new \DateTime())->setTimestamp((int) $eventModel->endTime);
                     $modifier = '+ '.$repeat['value'].' '.$repeat['unit'];
 
                     while ($eventEndTime < $rangeEnd) {
