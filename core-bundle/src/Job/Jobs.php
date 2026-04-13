@@ -265,6 +265,15 @@ class Jobs
         return $child;
     }
 
+    public function removeJob(Job $job): void
+    {
+        $this->connection->delete('tl_job', ['uuid' => $job->getUuid()]);
+
+        if ($this->jobAttachmentsStorage->directoryExists($job->getUuid())) {
+            $this->jobAttachmentsStorage->deleteDirectory($job->getUuid());
+        }
+    }
+
     public function prune(int $period): void
     {
         if ($period <= 0) {
