@@ -141,19 +141,19 @@ class JobAccessVoterTest extends TestCase
 
         yield [
             ['id' => 42],
-            new ReadAction('tl_job', ['public' => true]),
+            new ReadAction('tl_job', ['owner' => 0, 'public' => true]),
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield [
             ['id' => 42],
-            new ReadAction('tl_job', ['owner' => 42]),
+            new ReadAction('tl_job', ['owner' => 42, 'public' => false]),
             VoterInterface::ACCESS_ABSTAIN,
         ];
 
         yield [
             ['id' => 42],
-            new ReadAction('tl_job', ['owner' => 21]),
+            new ReadAction('tl_job', ['owner' => 21, 'public' => false]),
             VoterInterface::ACCESS_DENIED,
         ];
     }

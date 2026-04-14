@@ -11,6 +11,7 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -196,6 +197,7 @@ class JobsListenerTest extends AbstractJobsTestCase
         $this->assertSame('attachments.html.twig output', $columnsNew[5]);
     }
 
+    #[AllowMockObjectsWithoutExpectations]
     public function testDeleteCallback(): void
     {
         $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
