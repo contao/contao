@@ -114,8 +114,8 @@
         {% block main %}
             <turbo-frame id="contao-main" target="_top">
                 <main{{ mainAttributes }}>
-                    <div class="content-top">
-                        {% block main_headline %}
+                    {% block main_headline %}
+                        <div class="content-top">
                             {% if breadcrumb|default %}
                                 <nav id="main_breadcrumb">
                                     {{ breadcrumb|raw }}
@@ -126,8 +126,8 @@
                                 </h1>
                             {% endif %}
                             {{ include('@Contao/backend/component/_favorites.html.twig') }}
-                        {% endblock %}
-                    </div>
+                        </div>
+                    {% endblock %}
                     <div class="content">
                         {% if pickerMenu|default %}
                             <div id="picker-menu">
