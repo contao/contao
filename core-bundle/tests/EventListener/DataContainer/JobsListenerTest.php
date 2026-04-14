@@ -200,7 +200,7 @@ class JobsListenerTest extends AbstractJobsTestCase
     {
         $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
 
-        $jobs = $this->createStub(Jobs::class);
+        $jobs = $this->createMock(Jobs::class);
         $jobs
             ->expects($this->once())
             ->method('removeAttachments')
