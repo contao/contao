@@ -425,7 +425,7 @@ class DcaExtractor extends Controller
 
 					if (isset($config['foreignKey']))
 					{
-						$table = explode('.', $config['foreignKey'])[0];
+						$table = System::getContainer()->get('contao.data_container.foreign_key_parser')->parse($config['foreignKey'])->getTableName();
 					}
 
 					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);

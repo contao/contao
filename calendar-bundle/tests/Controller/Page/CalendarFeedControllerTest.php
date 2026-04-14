@@ -166,7 +166,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
     #[DataProvider('getXMLFeedFormats')]
     #[DataProvider('getJSONFeedFormats')]
-    public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType): void
+    public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType, bool $isDebug = false): void
     {
         $pageModel = $this->createClassWithPropertiesStub(PageModel::class, [
             'id' => 42,
@@ -203,7 +203,7 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
         $container->set('event_dispatcher', $dispatcher);
 
-        $controller = $this->getController();
+        $controller = $this->getController($isDebug);
         $controller->setContainer($container);
 
         $response = $controller(Request::create($url), $pageModel);
@@ -214,21 +214,23 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
     public static function getXMLFeedFormats(): iterable
     {
-        yield 'RSS' => ['rss', '.xml', 'https://example.org/next-events.xml', 'application/rss+xml'];
-        yield 'Atom' => ['atom', '.xml', 'https://example.org/next-events.xml', 'application/atom+xml'];
+        yield 'RSS' => ['rss', '.xml', 'https://example.org/next-events.xml', 'application/rss+xml; charset=UTF-8'];
+        yield 'Atom' => ['atom', '.xml', 'https://example.org/next-events.xml', 'application/atom+xml; charset=UTF-8'];
+        yield 'RSS (debug)' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/xml; charset=UTF-8', true];
+        yield 'Atom (debug)' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/xml; charset=UTF-8', true];
     }
 
     public static function getJSONFeedFormats(): iterable
     {
-        yield 'JSON' => ['json', '.json', 'https://example.org/next-events.json', 'application/feed+json'];
+        yield 'JSON' => ['json', '.json', 'https://example.org/next-events.json', 'application/feed+json; charset=UTF-8'];
     }
 
-    private function getController(): CalendarFeedController
+    private function getController(bool $isDebug = false): CalendarFeedController
     {
         $contaoContext = $this->createStub(ContaoContext::class);
         $specification = new Specification(new NullLogger());
 
-        return new CalendarFeedController($contaoContext, $specification, 'UTF-8');
+        return new CalendarFeedController($contaoContext, $specification, 'UTF-8', $isDebug);
     }
 
     private function getEvents(): array
