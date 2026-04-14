@@ -148,17 +148,17 @@ class Image
 	/**
 	 * Generate an image tag and return it as string
 	 *
-	 * @param string $src        The image path
-	 * @param string $alt        An optional alt attribute
-	 * @param string $attributes A string of other attributes
+	 * @param string                $src        The image path
+	 * @param string                $alt        An optional alt attribute
+	 * @param string|HtmlAttributes $attributes A string of other attributes
 	 *
 	 * @return string The image HTML tag
 	 */
-	public static function getHtml($src, $alt='', $attributes='')
+	public static function getHtml(string $src, string $alt='', HtmlAttributes|string $attributes='')
 	{
 		list($template, $defaultSize) = self::getHtmlTemplateAndDefaultSize($src);
 
-		$attributesObject = new HtmlAttributes($attributes);
+		$attributesObject = $attributes instanceof HtmlAttributes ? $attributes : new HtmlAttributes($attributes);
 
 		$search = array('{width}', '{height}', '{alt}', '{attributes}');
 		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ??  $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
