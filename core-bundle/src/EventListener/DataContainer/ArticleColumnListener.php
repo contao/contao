@@ -46,7 +46,11 @@ class ArticleColumnListener
             return $this->getPageOptions((int) $currentRecord['pid']);
         }
 
-        // Show all sections (e.g. "override all" mode)
+        if (!\in_array($this->requestStack->getCurrentRequest()?->query->get('act'), ['editAll', 'overrideAll'], true)) {
+            return [];
+        }
+
+        // Show all sections in "override all" and "edit all" mode
         $selectedIds = $this->requestStack->getSession()->all()['CURRENT']['IDS'] ?? [];
 
         if ([] === $selectedIds) {

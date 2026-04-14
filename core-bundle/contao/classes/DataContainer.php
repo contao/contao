@@ -1304,6 +1304,7 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
+			$this->strField = $k;
 			$args[$k] = $valueFormatter->formatListing($table ?? $this->strTable, $v, $row, $this);
 		}
 

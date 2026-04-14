@@ -106,16 +106,11 @@ class DcaUrlAnalyzer
 
                 new DcaLoader($table)->load();
                 $currentRecord = $this->getCurrentRecord($id, $table);
+                $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null;
 
                 // Select the parent node
-                if (
-                    \in_array(
-                        $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
-                        [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
-                        true,
-                    )
-                ) {
-                    $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+                if (\in_array($mode, [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE], true)) {
+                    $query['pn'] = (int) ($currentRecord[DataContainer::MODE_TREE === $mode ? 'id' : 'pid'] ?? null);
                     $query['rt'] = $this->tokenManager->getDefaultTokenValue();
                 }
 
