@@ -33,7 +33,10 @@ class CaptchaController extends AbstractController
     public function __invoke(Request $request): Response
     {
         if (!$request->isXmlHttpRequest()) {
-            return new Response($this->getScriptSource(), 200, ['Content-Type' => 'text/javascript', 'Cache-Control' => 'private, max-age=604800']);
+            $response = new Response($this->getScriptSource(), 200, ['Content-Type' => 'text/javascript', 'Cache-Control' => 'private, max-age=604800']);
+            $response->setVary('X-Requested-With');
+
+            return $response;
         }
 
         $this->framework->initialize();
@@ -41,11 +44,16 @@ class CaptchaController extends AbstractController
 
         $captcha = new FormCaptcha();
 
-        return new JsonResponse([
+        $response = new JsonResponse([
             'question' => html_entity_decode($captcha->question, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
             'sum' => $captcha->sum,
             'hash' => $captcha->sum.$captcha->hash,
         ]);
+
+        $response->headers->set('Cache-Control', 'no-cache, no-store');
+        $response->setVary('X-Requested-With');
+
+        return $response;
     }
 
     private function getScriptSource(): string
