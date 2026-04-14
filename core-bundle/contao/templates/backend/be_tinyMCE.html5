@@ -92,7 +92,7 @@ if ($this->enableTinyMce):
   const target = document.querySelector('#<?= $this->selector ?>');
   target.tinymceConfig = config;
   target.setAttribute('data-action', 'turbo:before-visit@window->contao--tinymce#leave');
-  target.setAttribute('data-controller', `${target.getAttribute('data-controller') || ''} contao--tinymce`);
+  target.setAttribute('data-controller', `${target.getAttribute('data-controller') || ''} contao--tinymce`.trim());
 }
 </script>
 <?php endif; ?>
