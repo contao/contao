@@ -196,6 +196,44 @@ class JobsListenerTest extends AbstractJobsTestCase
         $this->assertSame('attachments.html.twig output', $columnsNew[5]);
     }
 
+    public function testDeleteCallback(): void
+    {
+        $framework = $this->createContaoFrameworkStub([System::class => $this->createAdapterStub(['loadLanguageFile'])]);
+
+        $jobs = $this->createStub(Jobs::class);
+        $jobs
+            ->expects($this->once())
+            ->method('removeAttachments')
+        ;
+
+        $listener = new JobsListener(
+            $jobs,
+            $this->createMock(Security::class),
+            $this->createStub(Connection::class),
+            $this->getRequestStack(Request::create('/contao?do=jobs')),
+            $framework,
+            $this->createStub(Environment::class),
+        );
+
+        $dcTable = $this->createStub(DC_Table::class);
+        $dcTable
+            ->method('getCurrentRecord')
+            ->willReturn(null)
+        ;
+
+        // The empty current record should return early
+        $listener->onDeleteCallback($dcTable);
+
+        $dcTable = $this->createStub(DC_Table::class);
+        $dcTable
+            ->method('getCurrentRecord')
+            ->willReturn(['uuid' => '6461058f-ebed-4249-80ae-496b502fb6af'])
+        ;
+
+        // The valid current record should call removeAttachments()
+        $listener->onDeleteCallback($dcTable);
+    }
+
     private function getRequestStack(Request|null $request = null): RequestStack
     {
         $requestStack = new RequestStack();
