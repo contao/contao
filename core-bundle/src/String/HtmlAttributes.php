@@ -61,7 +61,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         if ($attributes instanceof self) {
             foreach ($attributes->attributes as $name => $value) {
-                $this->mergeAttribute($name, $value, true);
+                $this->mergeAttribute((string) $name, $value, true);
             }
 
             return $this;
