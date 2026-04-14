@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
@@ -42,10 +41,6 @@ class JobAccessVoter extends AbstractDataContainerVoter
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'jobs')) {
-            return false;
-        }
-
         if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
             return true;
         }
