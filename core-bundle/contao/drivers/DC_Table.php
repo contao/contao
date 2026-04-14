@@ -3411,6 +3411,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Call a recursive function that builds the tree
 		$records = array();
+
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
 
@@ -3495,6 +3496,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = '';
 		$table = $this->strTable;
 		$blnPtable = false;
+
 		$this->treeRecordCount = 0;
 		$this->treeRecordLimitReached = false;
 
@@ -3584,7 +3586,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!$this->canRenderTreeRecord())
 		{
-			return $this->generateTreeRecordLimitNotice($intMargin);
+			return $this->generateTreeRecordLimitNotice();
 		}
 
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
@@ -3967,11 +3969,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['treeRecordLimit'] ?? self::DEFAULT_TREE_RECORD_LIMIT);
 	}
 
-	private function generateTreeRecordLimitNotice(int $intMargin): string
+	private function generateTreeRecordLimitNotice(): string
 	{
 		return System::getContainer()
 			->get('twig')
-			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig', array('level' => $intMargin / 16 + 1));
+			->render('@Contao/backend/data_container/table/view/tree_record_limit.html.twig');
 	}
 
 	/**

@@ -1407,7 +1407,7 @@
         <source>All</source>
       </trans-unit>
       <trans-unit id="MSC.treeRecordLimitReached">
-        <source>Additional records are available but are not displayed for performance reasons. Use the filters to restrict the view.</source>
+        <source>More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.</source>
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
