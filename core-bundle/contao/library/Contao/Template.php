@@ -36,7 +36,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $class
  * @property string       $inColumn
  * @property string       $headline
- * @property array        $hl
+ * @property string       $hl
  * @property string       $content
  * @property string       $action
  * @property boolean      $enforceTwoFactor
