@@ -154,7 +154,7 @@ class Image
 	 *
 	 * @return string The image HTML tag
 	 */
-	public static function getHtml(string $src, string $alt='', HtmlAttributes|string $attributes='')
+	public static function getHtml($src, $alt='', $attributes='')
 	{
 		list($template, $defaultSize) = self::getHtmlTemplateAndDefaultSize($src);
 
