@@ -407,9 +407,9 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     private function mergeAttribute(string $name, \Stringable|bool|float|int|string|null $value, bool $trusted = false): void
     {
-        if ('class' === $name) {
+        if ('class' === $name && (!$trusted || isset($this->attributes[$name]))) {
             $this->addClass((string) $value);
-        } elseif ('style' === $name) {
+        } elseif ('style' === $name && (!$trusted || isset($this->attributes[$name]))) {
             $this->addStyle((string) $value);
         } elseif ($trusted) {
             $this->attributes[$name] = (string) $value;
