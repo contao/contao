@@ -240,6 +240,11 @@ class DcaUrlAnalyzer
         }
 
         foreach ($links as $i => $link) {
+            // Remove the table from query string, if the parent table is the same as the current table (e.g. jobs module)
+            if (isset($link['query']['table']) && ($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) === $table) {
+                unset($link['query']['table']);
+            }
+
             $links[$i]['url'] = $this->router->generate('contao_backend', $link['query']);
             unset($links[$i]['query']);
         }
