@@ -43,7 +43,7 @@ use Symfony\Component\String\UnicodeString;
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
-	private const DEFAULT_TREE_RECORD_LIMIT = 20;
+	private const DEFAULT_TREE_RECORD_LIMIT = 300;
 
 	/**
 	 * Name of the parent table
