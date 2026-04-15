@@ -139,7 +139,7 @@ class LegacyRouteParametersListenerTest extends TestCase
         $listener($responseEvent);
     }
 
-    public function testDoesNotThrowUnusedArgumentsExceptionWithUnusedRoutParametersOnUnsuccessfulResponses(): void
+    public function testDoesNotThrowUnusedArgumentsExceptionWithUnusedRouteParametersOnUnsuccessfulResponses(): void
     {
         $responseEvent = new ResponseEvent(
             $this->createStub(KernelInterface::class),
