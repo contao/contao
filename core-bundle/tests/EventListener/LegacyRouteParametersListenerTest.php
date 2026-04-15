@@ -94,7 +94,7 @@ class LegacyRouteParametersListenerTest extends TestCase
         $listener($event);
     }
 
-    public function testThrowsUnusedArgumentsExceptionWithUnusedRoutParameters(): void
+    public function testThrowsUnusedArgumentsExceptionWithUnusedRouteParameters(): void
     {
         $this->expectException(UnusedArgumentsException::class);
         $this->expectExceptionMessage('Unused arguments: foo');
